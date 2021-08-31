@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_NAME_CONFIRM, SEND, WALLET_LIST } from '../../constants/SceneKeys.js'
@@ -14,6 +13,7 @@ import { getRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
+import { Actions } from '../../types/routerTypes.js'
 import type { FioDomain, GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
@@ -141,7 +141,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
       if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
-        Actions[FIO_NAME_CONFIRM]({
+        Actions.push(FIO_NAME_CONFIRM, {
           fioName: fioAddress,
           paymentWallet,
           fee: feeValue,
@@ -175,12 +175,12 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
                 sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
                 [{ text: s.strings.string_ok_cap }]
               )
-              Actions[WALLET_LIST]()
+              Actions.jump(WALLET_LIST)
             }
           }
         }
 
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo,
           selectedWalletId: walletId,
           selectedCurrencyCode: paymentCurrencyCode

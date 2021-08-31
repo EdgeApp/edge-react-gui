@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import s from '../../locales/strings.js'
+import { Actions } from '../../types/routerTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'

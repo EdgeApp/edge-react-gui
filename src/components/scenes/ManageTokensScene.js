@@ -4,23 +4,24 @@ import type { EdgeMetaToken } from 'edge-core-js'
 import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { DividerLine } from '../themed/DividerLine'
 import { MainButton } from '../themed/MainButton.js'
 import ManageTokensHeader from '../themed/ManageTokensHeader'
 import ManageTokensRow from '../themed/ManageTokensRow'
-import SceneFooter from '../themed/SceneFooter'
+import { type OutlinedTextInputRef } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
@@ -34,6 +35,7 @@ type DispatchProps = {
 type StateProps = {
   wallets: { [walletId: string]: GuiWallet },
   manageTokensPending: boolean,
+  metaTokens: EdgeMetaToken[],
   settingsCustomTokens: CustomTokenInfo[]
 }
 
@@ -43,12 +45,11 @@ type State = {
   walletId: string,
   enabledList: string[],
   combinedCurrencyInfos: EdgeMetaToken[],
-  tokens: EdgeMetaToken[],
   searchValue: string
 }
 
 class ManageTokensSceneComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -59,7 +60,6 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       walletId: id,
       enabledList: [...enabledTokens],
       combinedCurrencyInfos: [],
-      tokens: this.getTokens(),
       searchValue: ''
     }
   }
@@ -71,11 +71,12 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   updateTokens() {
-    this.setState({ tokens: this.getTokens(), enabledList: [...this.props.guiWallet.enabledTokens] })
+    this.setState({ enabledList: [...this.props.guiWallet.enabledTokens] })
   }
 
   getTokens(): EdgeMetaToken[] {
-    const { metaTokens, currencyCode } = this.props.guiWallet
+    const { metaTokens } = this.props
+    const { currencyCode } = this.props.guiWallet
 
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
 
@@ -156,7 +157,8 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   getFilteredTokens = (): EdgeMetaToken[] => {
-    const { searchValue, tokens } = this.state
+    const { searchValue } = this.state
+    const tokens = this.getTokens()
 
     const RegexObj = new RegExp(searchValue, 'i')
     return tokens.filter(({ currencyCode, currencyName }) => RegexObj.test(currencyCode) || RegexObj.test(currencyName))
@@ -200,7 +202,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[ADD_TOKEN]({
+    Actions.push(ADD_TOKEN, {
       walletId: id,
       metaTokens,
       onAddToken: this.onAddToken
@@ -209,7 +211,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[EDIT_TOKEN]({
+    Actions.push(EDIT_TOKEN, {
       walletId: id,
       currencyCode,
       metaTokens,
@@ -227,48 +229,41 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper>
-        <View style={styles.container}>
-          <SceneHeader underline>
-            <ManageTokensHeader
-              textInput={this.textInput}
-              walletName={name}
+        <SceneHeader underline>
+          <ManageTokensHeader
+            textInput={this.textInput}
+            walletName={name}
+            walletId={this.props.guiWallet.id}
+            currencyCode={currencyCode}
+            changeSearchValue={this.changeSearchValue}
+            onSearchClear={this.onSearchClear}
+            onSelectWallet={this.onSelectWallet}
+            searchValue={this.state.searchValue}
+          />
+        </SceneHeader>
+        <FlatList
+          keyExtractor={item => item.currencyCode}
+          data={this.getFilteredTokens()}
+          renderItem={metaToken => (
+            <ManageTokensRow
+              goToEditTokenScene={this.goToEditTokenScene}
+              metaToken={metaToken}
               walletId={this.props.guiWallet.id}
-              currencyCode={currencyCode}
-              changeSearchValue={this.changeSearchValue}
-              onSearchClear={this.onSearchClear}
-              onSelectWallet={this.onSelectWallet}
-              searchValue={this.state.searchValue}
+              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
+              toggleToken={this.toggleToken}
+              enabledList={this.state.enabledList}
+              metaTokens={this.props.guiWallet.metaTokens}
             />
-          </SceneHeader>
-          <View style={styles.tokensWrapper}>
-            <View style={styles.tokensArea}>
-              <FlatList
-                keyExtractor={item => item.currencyCode}
-                data={this.getFilteredTokens()}
-                renderItem={metaToken => (
-                  <ManageTokensRow
-                    goToEditTokenScene={this.goToEditTokenScene}
-                    metaToken={metaToken}
-                    walletId={this.props.guiWallet.id}
-                    symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
-                    toggleToken={this.toggleToken}
-                    enabledList={this.state.enabledList}
-                    metaTokens={this.props.guiWallet.metaTokens}
-                  />
-                )}
-              />
-            </View>
-            <SceneFooter style={styles.buttonsArea} underline>
-              <MainButton
-                label={s.strings.string_save}
-                marginRem={[0.75]}
-                paddingRem={[0.3, 0, 0.5, 0]}
-                spinner={manageTokensPending}
-                type="secondary"
-                onPress={this.saveEnabledTokenList}
-              />
-              <MainButton label={s.strings.addtoken_add} marginRem={[0.75]} paddingRem={[0.3, 0, 0.5, 0]} type="secondary" onPress={this.goToAddTokenScene} />
-            </SceneFooter>
+          )}
+          style={styles.tokensArea}
+        />
+        <DividerLine marginRem={[0, 1]} />
+        <View style={styles.buttonsArea}>
+          <View style={styles.buttonWrapper}>
+            <MainButton label={s.strings.string_save} marginRem={0.5} spinner={manageTokensPending} type="secondary" onPress={this.saveEnabledTokenList} />
+          </View>
+          <View style={styles.buttonWrapper}>
+            <MainButton label={s.strings.addtoken_add} marginRem={0.5} type="secondary" onPress={this.goToAddTokenScene} />
           </View>
         </View>
       </SceneWrapper>
@@ -277,31 +272,33 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    position: 'relative',
-    flex: 1
-  },
-  tokensWrapper: {
-    flex: 1
-  },
   tokensArea: {
+    marginTop: theme.rem(-0.5),
     flex: 4
   },
+  buttonWrapper: {
+    flex: 1
+  },
   buttonsArea: {
-    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch'
+    padding: theme.rem(0.5)
   }
 }))
 
 export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    manageTokensPending: state.ui.wallets.manageTokensPending,
-    settingsCustomTokens: state.ui.settings.customTokens,
-    wallets: state.ui.wallets.byId
-  }),
+  (state, ownProps) => {
+    const wallets = state.ui.wallets.byId
+    const wallet = wallets[ownProps.guiWallet.id]
+    return {
+      manageTokensPending: state.ui.wallets.manageTokensPending,
+      settingsCustomTokens: state.ui.settings.customTokens,
+      metaTokens: wallet.metaTokens,
+      wallets
+    }
+  },
   dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
       dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))

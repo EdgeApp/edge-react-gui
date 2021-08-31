@@ -150,7 +150,7 @@ export class SwapSettings extends React.Component<Props, State> {
         : {
             instructions: s.strings.swap_preferred_instructions,
             handlePress: this.handlePreferredModal,
-            right: null
+            right: <AntDesignIcon name="right" color={theme.iconTappable} size={iconSize} style={styles.swapIcon} />
           }
 
     // Pick the selection row:

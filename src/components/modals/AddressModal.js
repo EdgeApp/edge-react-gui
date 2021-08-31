@@ -3,6 +3,7 @@
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
@@ -16,11 +17,10 @@ import { connect } from '../../types/reactRedux.js'
 import { ResolutionError, ResolutionErrorCode } from '../../types/ResolutionError.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { type AirshipBridge } from './modalParts.js'
 
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
@@ -49,18 +49,17 @@ type DispatchProps = {
 type State = {
   uri: string,
   statusLabel: string,
-  fieldError: string,
+  fieldError: string | void,
   cryptoAddress?: string,
   fioAddresses: FioAddresses,
-  filteredFioAddresses: string[],
-  isFocused: boolean
+  filteredFioAddresses: string[]
 }
 
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -69,10 +68,9 @@ class AddressModalComponent extends React.Component<Props, State> {
       uri: '',
       statusLabel: s.strings.fragment_send_address,
       cryptoAddress: undefined,
-      fieldError: '',
+      fieldError: undefined,
       fioAddresses: { addresses: {} },
-      filteredFioAddresses: [],
-      isFocused: false
+      filteredFioAddresses: []
     }
   }
 
@@ -142,14 +140,6 @@ class AddressModalComponent extends React.Component<Props, State> {
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
-  }
-
-  fieldOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  fieldOnBlur = () => {
-    this.setState({ isFocused: false })
   }
 
   onChangeTextDelayed = (domain: string) => {
@@ -261,7 +251,7 @@ class AddressModalComponent extends React.Component<Props, State> {
 
   checkIfFioAddress = async (uri: string) => {
     const { useUserFioAddressesOnly, checkAddressConnected } = this.props
-    this.setState({ fieldError: '' })
+    this.setState({ fieldError: undefined })
 
     if (await this.isFioAddressValid(uri)) {
       if (useUserFioAddressesOnly) return
@@ -314,7 +304,7 @@ class AddressModalComponent extends React.Component<Props, State> {
   handleSubmit = () => {
     const { uri, cryptoAddress, fieldError } = this.state
     const submitData = cryptoAddress || uri
-    if (fieldError) return
+    if (fieldError != null) return
     this.props.bridge.resolve(submitData)
   }
 
@@ -322,7 +312,7 @@ class AddressModalComponent extends React.Component<Props, State> {
   keyExtractor = (item: string, index: number) => index.toString()
 
   render() {
-    const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } = this.state
+    const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
     const { title, userFioAddressesLoading } = this.props
     const styles = getStyles(this.props.theme)
 
@@ -332,8 +322,7 @@ class AddressModalComponent extends React.Component<Props, State> {
           {title || s.strings.address_modal_default_header}
         </ModalTitle>
         <View style={styles.container}>
-          <EdgeTextFieldOutlined
-            size="small"
+          <OutlinedTextInput
             autoFocus
             autoCorrect={false}
             returnKeyType="search"
@@ -341,11 +330,9 @@ class AddressModalComponent extends React.Component<Props, State> {
             label={statusLabel}
             onChangeText={this.onChangeTextDelayed}
             onSubmitEditing={this.handleSubmit}
-            onFocus={this.fieldOnFocus}
-            onBlur={this.fieldOnBlur}
             value={uri}
             onClear={this.clearText}
-            isClearable={isFocused}
+            clearIcon
             marginRem={[0, 1]}
             ref={this.textInput}
             error={fieldError}

@@ -3,21 +3,22 @@
 import { bns } from 'biggystring'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
+import { REQUEST, SEND } from '../../constants/SceneKeys.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 import { SceneHeader } from './SceneHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -52,7 +53,7 @@ type State = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -119,6 +120,14 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     this.props.onSearchTransaction(this.state.input)
   }
 
+  handleRequest = (): void => {
+    Actions.push(REQUEST)
+  }
+
+  handleSend = (): void => {
+    Actions.push(SEND)
+  }
+
   handleSearchDone = () => {
     this.clearText()
     this.props.onChangeSortingState(false)
@@ -145,7 +154,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
           {!isEmpty && (
             <View style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
-                <EdgeTextFieldOutlined
+                <OutlinedTextInput
                   returnKeyType="search"
                   label={s.strings.transaction_list_search}
                   onChangeText={this.handleOnChangeText}
@@ -153,9 +162,10 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   onFocus={this.handleTextFieldFocus}
                   onBlur={this.handleTextFieldBlur}
                   ref={this.textInput}
-                  isClearable={searching}
+                  clearIcon
                   onClear={this.clearText}
                   marginRem={0}
+                  searchIcon
                 />
               </View>
               {searching && (
@@ -170,12 +180,12 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
             <>
               {this.renderBalanceBox()}
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
+                <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
                   <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
                 <View style={styles.buttonsDivider} />
-                <TouchableOpacity onPress={Actions.send} style={styles.buttons}>
+                <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
                   <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>

@@ -1,11 +1,11 @@
 // @flow
 
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
-import { Actions } from 'react-native-router-flux'
 
 import { showError } from '../components/services/AirshipInstance.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
 export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {

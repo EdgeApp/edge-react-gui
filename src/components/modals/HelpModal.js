@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { Image, Linking, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
 
@@ -15,7 +16,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
-import { type AirshipBridge } from './modalParts.js'
 
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()

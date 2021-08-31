@@ -16,7 +16,6 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
@@ -33,6 +32,7 @@ import {
   getPrimaryExchangeDenomination
 } from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
@@ -45,7 +45,7 @@ export type SetNativeAmountInfo = {
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  Actions[EXCHANGE_QUOTE_PROCESSING_SCENE]()
+  Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   const state = getState()
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -71,7 +71,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
 
     const swapInfo = await fetchSwapQuote(state, request)
 
-    Actions[EXCHANGE_QUOTE_SCENE]({
+    Actions.push(EXCHANGE_QUOTE_SCENE, {
       swapInfo
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
@@ -112,11 +112,11 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
   if (Actions.currentScene !== EXCHANGE_QUOTE_SCENE) return
-  Actions[EXCHANGE_QUOTE_PROCESSING_SCENE]()
+  Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   try {
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-    Actions[EXCHANGE_QUOTE_SCENE]({
+    Actions.push(EXCHANGE_QUOTE_SCENE, {
       swapInfo
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
@@ -348,7 +348,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       name,
       category
     }
-    Actions[EXCHANGE_SUCCESS_SCENE]()
+    Actions.push(EXCHANGE_SUCCESS_SCENE)
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     dispatch({ type: 'SHIFT_COMPLETE' })

@@ -1,86 +1,41 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import { PrimaryButton } from 'edge-components'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { ScrollView } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { showToast } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle } from './modalParts.js'
+import { MainButton } from '../themed/MainButton.js'
+import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import { ThemedModal } from '../themed/ThemedModal.js'
 
-type OwnProps = {
+type Props = {|
   bridge: AirshipBridge<void>,
   body: string,
-  icon?: React.Node,
-  title: string,
+  title?: string,
   disableCopy?: boolean
-}
-type Props = OwnProps & ThemeProps
+|}
 
-export class RawTextModalComponent extends React.Component<Props> {
-  copyToClipboard = () => {
-    Clipboard.setString(this.props.body)
+export function RawTextModal(props: Props) {
+  const { bridge, body, title, disableCopy = false } = props
+
+  const handleCancel = () => bridge.resolve(undefined)
+  const handleCopy = () => {
+    Clipboard.setString(body)
     showToast(s.strings.fragment_copied)
-    this.props.bridge.resolve()
+    bridge.resolve()
   }
 
-  render() {
-    const { body, bridge, icon, theme, title, disableCopy } = this.props
-    const styles = getStyles(theme)
-    return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
-        <IconCircle>{icon || <EntypoIcon name="info" size={theme.rem(2)} color={theme.tileBackground} />}</IconCircle>
-        <Text style={styles.header}>{title}</Text>
-        <ContentArea grow>
-          <ScrollView style={styles.textContainer}>
-            <Text>{body}</Text>
-          </ScrollView>
-        </ContentArea>
-        <View style={styles.buttonContainer}>
-          {!disableCopy && (
-            <PrimaryButton style={styles.buttonLeft} onPress={this.copyToClipboard}>
-              <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
-            </PrimaryButton>
-          )}
-          <PrimaryButton style={styles.buttonRight} onPress={() => bridge.resolve()}>
-            <PrimaryButton.Text>{s.strings.string_ok_cap}</PrimaryButton.Text>
-          </PrimaryButton>
-        </View>
-      </AirshipModal>
-    )
-  }
+  return (
+    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+      <ScrollView>
+        <ModalMessage>{body}</ModalMessage>
+      </ScrollView>
+      {disableCopy ? null : <MainButton alignSelf="center" label={s.strings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} />}
+      <ModalCloseArrow onPress={handleCancel} />
+    </ThemedModal>
+  )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  header: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: theme.rem(1.5),
-    paddingTop: theme.rem(0.75)
-  },
-  textContainer: {
-    flex: 1
-  },
-  buttonContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: theme.rem(1),
-    paddingBottom: theme.rem(1)
-  },
-  buttonLeft: {
-    width: '100%',
-    marginRight: theme.rem(0.5)
-  },
-  buttonRight: {
-    width: '100%',
-    marginLeft: theme.rem(0.5)
-  }
-}))
-
-export const RawTextModal = withTheme(RawTextModalComponent)

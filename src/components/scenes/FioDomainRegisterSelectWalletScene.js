@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -15,6 +14,7 @@ import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
+import { Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -128,7 +128,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
       if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
-        Actions[FIO_DOMAIN_CONFIRM]({
+        Actions.push(FIO_DOMAIN_CONFIRM, {
           fioName: fioDomain,
           paymentWallet,
           fee: feeValue,
@@ -167,12 +167,12 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   }}
                 />
               ))
-              Actions[WALLET_LIST]()
+              Actions.jump(WALLET_LIST)
             }
           }
         }
 
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo,
           selectedWalletId: walletId,
           selectedCurrencyCode: paymentCurrencyCode

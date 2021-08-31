@@ -33,6 +33,7 @@ const specialBranches: { [branch: string]: string } = {
   yolo: '-yolo',
   'test-feta': '-feta',
   'test-gouda': '-gouda',
+  'test-halloumi': '-halloumi',
   'test-paneer': '-paneer'
 }
 

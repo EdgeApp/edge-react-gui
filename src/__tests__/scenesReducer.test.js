@@ -43,15 +43,7 @@ test('initialState', () => {
     },
     scan: {
       scanEnabled: false,
-      torchEnabled: false,
-      privateKeyModal: {
-        error: null,
-        isSweeping: false,
-        secondaryModal: {
-          isActive: false
-        }
-      },
-      parsedUri: null
+      torchEnabled: false
     },
     sendConfirmation: SendConfirmationInitialState,
     transactionDetails: {
@@ -64,17 +56,6 @@ test('initialState', () => {
       currentEndIndex: 0,
       numTransactions: 0,
       currentWalletId: ''
-    },
-    walletList: {
-      viewXPubWalletModalVisible: false,
-      xPubExplorer: '',
-      xPubSyntax: '',
-      walletArchivesVisible: false,
-      walletId: ''
-    },
-    uniqueIdentifierModal: {
-      isActive: false,
-      uniqueIdentifier: undefined
     }
   }
   const actual = scenesReducer(undefined, dummyAction)

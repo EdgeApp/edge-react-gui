@@ -36,6 +36,7 @@ describe('MyComponent', () => {
         // DispatchProps:
         confirmPassword={nop}
         dispatchUpdateEnableTouchIdEnable={nop}
+        handleSendLogs={nop}
         lockSettings={nop}
         onTogglePinLoginEnabled={nop}
         resetConfirmPasswordError={nop}
@@ -67,6 +68,7 @@ describe('MyComponent', () => {
         confirmPassword={nop}
         dispatchUpdateEnableTouchIdEnable={nop}
         lockSettings={nop}
+        handleSendLogs={nop}
         onTogglePinLoginEnabled={nop}
         resetConfirmPasswordError={nop}
         setAutoLogoutTimeInSeconds={nop}

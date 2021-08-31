@@ -18,7 +18,6 @@ import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type OwnProps = {
-  currentCustomTokens: CustomTokenInfo[],
   onAddToken: (currencyCode: string) => void,
   walletId: string,
 
@@ -35,6 +34,7 @@ type DispatchProps = {
 
 type StateProps = {
   addTokenPending: boolean,
+  currentCustomTokens: CustomTokenInfo[],
   wallet: GuiWallet
 }
 
@@ -227,6 +227,7 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 export const AddTokenScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
     addTokenPending: state.ui.wallets.addTokenPending,
+    currentCustomTokens: state.ui.settings.customTokens,
     wallet: state.ui.wallets.byId[ownProps.walletId]
   }),
   dispatch => ({

@@ -13,24 +13,24 @@ import {
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
-import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/SceneKeys.js'
+import { CHANGE_MINING_FEE } from '../../constants/SceneKeys.js'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
-import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
+import { Actions } from '../../types/routerTypes.js'
+import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
-import { UniqueIdentifierModal } from '../modals/UniqueIdentifierModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -69,7 +69,6 @@ type DispatchProps = {
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   updateSpendPending: boolean => void,
-  uniqueIdentifierButtonPressed: () => void,
   onChangePin: (pin: string) => void,
   selectWallet: (walletId: string, currencyCode: string) => void
 }
@@ -241,7 +240,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFeesChange = () =>
-    Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({
+    Actions.push(CHANGE_MINING_FEE, {
       wallet: this.state.coreWallet,
       currencyCode: this.state.selectedCurrencyCode
     })
@@ -470,20 +469,33 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderUniqueIdentifier() {
-    const { sendConfirmationUpdateTx, uniqueIdentifier, uniqueIdentifierButtonPressed } = this.props
+    const { uniqueIdentifier } = this.props
     const { recipientAddress, selectedCurrencyCode } = this.state
-    const uniqueIdentifierInfo = getSpecialCurrencyInfo(selectedCurrencyCode || '').uniqueIdentifier
+    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(selectedCurrencyCode)
 
-    if (recipientAddress && uniqueIdentifierInfo) {
-      const { addButtonText, identifierName } = uniqueIdentifierInfo
+    if (recipientAddress && uniqueIdentifierInfo != null) {
+      const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
+
+      const handleUniqueIdentifier = () => {
+        Airship.show(bridge => (
+          <TextInputModal
+            bridge={bridge}
+            inputLabel={identifierName}
+            keyboardType={keyboardType}
+            message={sprintf(s.strings.unique_identifier_modal_description, identifierName)}
+            submitLabel={s.strings.unique_identifier_modal_confirm}
+            title={identifierName}
+          />
+        )).then(uniqueIdentifier => {
+          if (uniqueIdentifier == null) return
+          this.props.sendConfirmationUpdateTx({ uniqueIdentifier })
+        })
+      }
 
       return (
-        <>
-          <Tile type="touchable" title={identifierName} onPress={uniqueIdentifierButtonPressed}>
-            <EdgeText>{uniqueIdentifier || addButtonText}</EdgeText>
-          </Tile>
-          <UniqueIdentifierModal onConfirm={sendConfirmationUpdateTx} currencyCode={selectedCurrencyCode} />
-        </>
+        <Tile type="touchable" title={identifierName} onPress={handleUniqueIdentifier}>
+          <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
+        </Tile>
       )
     }
 
@@ -534,7 +546,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="theme">
-        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)}>
+        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
           {this.renderAmount()}
@@ -617,9 +629,6 @@ export const SendScene = connect<StateProps, DispatchProps, RouteProps>(
     },
     signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
       dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
-    },
-    uniqueIdentifierButtonPressed() {
-      dispatch({ type: 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED' })
     },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })

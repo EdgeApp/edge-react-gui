@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { Platform, StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -8,7 +9,7 @@ import FormattedText from '../../modules/UI/components/FormattedText/FormattedTe
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale } from '../../util/scaling.js'
-import { type AirshipBridge, AirshipModal } from './modalParts.js'
+import { AirshipModal } from '../common/AirshipModal.js'
 
 type Props = {
   bridge: AirshipBridge<string>,

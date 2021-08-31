@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { sprintf } from 'sprintf-js'
 
@@ -18,6 +17,7 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
+import { type NavigationProp, Actions } from '../../types/routerTypes.js'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -55,7 +55,7 @@ type DispatchProps = {
 }
 
 type OwnProps = {
-  navigation: any
+  navigation: NavigationProp
 }
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
@@ -191,7 +191,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'ok') {
-      return Actions[FIO_ADDRESS_SETTINGS]({
+      return Actions.push(FIO_ADDRESS_SETTINGS, {
         showRenew: true,
         fioWallet,
         fioAddressName
@@ -425,7 +425,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       }
     }
 
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId: walletId,
       selectedCurrencyCode
@@ -437,7 +437,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    Actions[FIO_SENT_REQUEST_DETAILS]({
+    Actions.push(FIO_SENT_REQUEST_DETAILS, {
       selectedFioSentRequest: fioRequest
     })
   }

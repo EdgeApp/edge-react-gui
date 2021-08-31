@@ -1,24 +1,26 @@
 // @flow
 
-import type { EdgeParsedUri } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
 import { type Action } from '../../types/reduxTypes.js'
-import { parsedUri } from '../ParsedUriReducer.js'
-import { type PrivateKeyModalState, privateKeyModal } from '../PrivateKeyModalReducer.js'
-import { scanEnabled } from '../ScanEnabledReducer.js'
-import { torchEnabled } from '../TorchEnabledReducer.js'
 
 export type ScanState = {
-  +parsedUri: EdgeParsedUri | null,
   +torchEnabled: boolean,
-  +scanEnabled: boolean,
-  +privateKeyModal: PrivateKeyModalState
+  +scanEnabled: boolean
 }
 
 export const scan: Reducer<ScanState, Action> = combineReducers({
-  parsedUri,
-  privateKeyModal,
-  scanEnabled,
-  torchEnabled
+  scanEnabled(state = false, action: Action): boolean {
+    switch (action.type) {
+      case 'ENABLE_SCAN':
+        return true
+      case 'DISABLE_SCAN':
+        return false
+    }
+    return state
+  },
+
+  torchEnabled(state = false, action: Action): boolean {
+    return action.type === 'TOGGLE_ENABLE_TORCH' ? !state : state
+  }
 })

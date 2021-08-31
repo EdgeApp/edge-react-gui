@@ -1,7 +1,6 @@
 // @flow
-import { Actions } from 'react-native-router-flux'
-
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 
 export const openDrawer = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

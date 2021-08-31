@@ -1,16 +1,21 @@
 // @flow
 
-import { PrimaryButton, SecondaryButton } from 'edge-components'
 import * as React from 'react'
 import { Appearance, Picker, Platform, Text, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
+import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime.js'
+import { AirshipModal } from '../common/AirshipModal.js'
+import { ContentArea } from '../common/ContentArea.js'
+import { IconCircle } from '../common/IconCircle.js'
 import { LadderLayout } from '../common/LadderLayout.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
-import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle } from './modalParts.js'
 
 type OwnProps = {
   bridge: AirshipBridge<number | null>,

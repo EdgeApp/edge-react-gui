@@ -6,8 +6,8 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 import Title from './Title'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -19,7 +19,7 @@ type Props = {
   onSearchClear: () => void,
   onSelectWallet: () => Promise<void>,
   searchValue: string,
-  textInput: any
+  textInput: { current: OutlinedTextInputRef | null }
 }
 
 function ManageTokensHeader(props: Props) {
@@ -41,7 +41,7 @@ function ManageTokensHeader(props: Props) {
 
       <View style={styles.searchContainer}>
         <View style={styles.searchView}>
-          <EdgeTextFieldOutlined
+          <OutlinedTextInput
             returnKeyType="search"
             label={s.strings.search_tokens}
             onChangeText={changeSearchValue}
@@ -49,8 +49,8 @@ function ManageTokensHeader(props: Props) {
             ref={textInput}
             onClear={onSearchClear}
             marginRem={0}
-            isClearable
-            size="small"
+            clearIcon
+            searchIcon
           />
         </View>
       </View>

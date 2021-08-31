@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Alert, FlatList, Image, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { CREATE_WALLET_ACCOUNT_SETUP, CREATE_WALLET_NAME } from '../../constants/SceneKeys.js'
@@ -10,11 +9,12 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -29,19 +29,17 @@ type Props = OwnProps & StateProps & ThemeProps
 
 type State = {
   searchTerm: string,
-  selectedFiat: string,
-  isFocused: boolean
+  selectedFiat: string
 }
 
 class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
-      selectedFiat: '',
-      isFocused: true
+      selectedFiat: ''
     }
   }
 
@@ -70,7 +68,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
       } else {
         nextSceneKey = CREATE_WALLET_ACCOUNT_SETUP
       }
-      Actions[nextSceneKey]({
+      Actions.push(nextSceneKey, {
         selectedWalletType: selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat),
         cleanedPrivateKey
@@ -106,14 +104,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
-  }
-
   renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     const styles = getStyles(this.props.theme)
     const fiatCountry = FIAT_COUNTRY[data.item.value]
@@ -137,7 +127,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { isFocused } = this.state
     const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
@@ -148,22 +137,20 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
-            <EdgeTextFieldOutlined
+            <OutlinedTextInput
               autoFocus
-              onFocus={this.handleOnFocus}
-              onBlur={this.handleOnBlur}
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
-              size="small"
               onClear={this.clearText}
-              isClearable={isFocused}
+              clearIcon
               marginRem={[0, 1.75]}
               ref={this.textInput}
               blurOnSubmit
+              searchIcon
             />
             <FlatList
               style={styles.resultList}

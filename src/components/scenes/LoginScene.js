@@ -4,11 +4,12 @@ import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
+import { type ImageSourcePropType, Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { getBundleId } from 'react-native-device-info'
 
 import ENV from '../../../env.json'
+import { showSendLogsModal } from '../../actions/LogActions.js'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
@@ -18,9 +19,9 @@ import { type DeepLink } from '../../types/DeepLink.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
-import { SendLogsModal } from '../modals/SendLogsModal'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+import { getBackgroundImage } from './../../util/ThemeCache.js'
 import { LoadingScene } from './LoadingScene.js'
 
 type StateProps = {
@@ -32,6 +33,7 @@ type StateProps = {
 }
 type DispatchProps = {
   deepLinkHandled: () => void,
+  handleSendLogs: () => void,
   initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
   logout: () => void
 }
@@ -39,7 +41,8 @@ type Props = StateProps & DispatchProps
 
 type State = {
   counter: number,
-  passwordRecoveryKey?: string
+  passwordRecoveryKey?: string,
+  backgroundImage: ImageSourcePropType | null
 }
 
 let firstRun = true
@@ -50,7 +53,8 @@ class LoginSceneComponent extends React.Component<Props, State> {
 
     this.state = {
       counter: 0,
-      needsUpdate: false
+      needsUpdate: false,
+      backgroundImage: null
     }
   }
 
@@ -59,6 +63,9 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
+    getBackgroundImage(this.props.disklet, edgeBackgroundImage)
+      .then(backgroundImage => this.setState({ backgroundImage }))
+      .catch(e => this.setState({ backgroundImage: edgeBackgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
     if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
       const { context, initializeAccount } = this.props
@@ -121,30 +128,29 @@ class LoginSceneComponent extends React.Component<Props, State> {
     this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
   }
 
-  showSendLogsModal = () => {
-    Airship.show(bridge => <SendLogsModal bridge={bridge} />)
-  }
-
   render() {
-    const { counter, passwordRecoveryKey } = this.state
+    const { context, handleSendLogs, username } = this.props
+    const { counter, passwordRecoveryKey, backgroundImage } = this.state
 
     return this.props.account.username == null ? (
       <View style={styles.container} testID="edge: login-scene">
-        <LoginScreen
-          username={this.props.username}
-          accountOptions={{ pauseWallets: true }}
-          context={this.props.context}
-          recoveryLogin={passwordRecoveryKey}
-          onLogin={this.onLogin}
-          fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
-          key={String(counter)}
-          appName={s.strings.app_name_short}
-          backgroundImage={edgeBackgroundImage}
-          primaryLogo={edgeLogo}
-          primaryLogoCallback={this.showSendLogsModal}
-          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
-          skipSecurityAlerts
-        />
+        {backgroundImage == null ? null : (
+          <LoginScreen
+            username={username}
+            accountOptions={{ pauseWallets: true }}
+            context={context}
+            recoveryLogin={passwordRecoveryKey}
+            onLogin={this.onLogin}
+            fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
+            key={String(counter)}
+            appName={s.strings.app_name_short}
+            backgroundImage={backgroundImage}
+            primaryLogo={edgeLogo}
+            primaryLogoCallback={handleSendLogs}
+            parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+            skipSecurityAlerts
+          />
+        )}
       </View>
     ) : (
       <LoadingScene />
@@ -178,6 +184,9 @@ export const LoginScene = connect<StateProps, DispatchProps, {}>(
   dispatch => ({
     deepLinkHandled() {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
+    },
+    handleSendLogs() {
+      dispatch(showSendLogsModal())
     },
     initializeAccount(account, touchIdInfo) {
       dispatch(initializeAccount(account, touchIdInfo))

@@ -1,6 +1,5 @@
 // @flow
 
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
@@ -8,6 +7,7 @@ import s from '../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../modules/Core/Account/settings'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import * as UTILS from '../util/utils.js'
 import * as WALLET_ACTIONS from './WalletActions.js'

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { useState } from '../../types/reactHooks.js'
+import { usePendingPress } from '../../hooks/usePendingPress.js'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
@@ -48,16 +48,7 @@ export function MainButton(props: Props) {
   const { alignSelf = 'auto', children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, spinner = false } = props
 
   // `onPress` promise logic:
-  const [pending, setPending] = useState(false)
-  const handlePress = () => {
-    if (onPress == null || pending) return
-    const out = onPress()
-    if (out != null && typeof out.then === 'function') {
-      setPending(true)
-      const onDone = () => setPending(false)
-      out.then(onDone, onDone)
-    }
-  }
+  const [pending, handlePress] = usePendingPress(onPress)
 
   // Styles:
   const theme = useTheme()
@@ -74,7 +65,11 @@ export function MainButton(props: Props) {
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={[touchableStyle, dynamicStyles]} onPress={handlePress}>
-      {label != null && !pending ? <Text style={textStyle}>{label}</Text> : null}
+      {label != null && !pending ? (
+        <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
+          {label}
+        </Text>
+      ) : null}
       {!pending ? children : null}
       {spinner || pending ? <ActivityIndicator color={spinnerColor} style={styles.spinner} /> : null}
     </TouchableOpacity>
@@ -88,12 +83,12 @@ const getStyles = cacheStyles((theme: Theme) => {
     borderWidth: theme.rem(0.1),
     flexDirection: 'row',
     justifyContent: 'center',
+    minHeight: theme.rem(3),
     minWidth: theme.rem(9)
   }
   const commonText = {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1),
-    lineHeight: theme.rem(2),
     marginHorizontal: theme.rem(0.5)
   }
 
@@ -119,9 +114,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
 
     // Common styles:
-    disabled: {
-      opacity: 0.7
-    },
     spinner: {
       height: theme.rem(2),
       marginHorizontal: theme.rem(0.5)
