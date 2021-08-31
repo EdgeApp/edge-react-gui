@@ -63,6 +63,9 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
+    getBackgroundImage(this.props.disklet, edgeBackgroundImage)
+      .then(backgroundImage => this.setState({ backgroundImage }))
+      .catch(e => this.setState({ backgroundImage: edgeBackgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
     if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
       const { context, initializeAccount } = this.props
@@ -97,9 +100,6 @@ class LoginSceneComponent extends React.Component<Props, State> {
         />
       ))
     }
-    getBackgroundImage(this.props.disklet, edgeBackgroundImage)
-      .then(backgroundImage => this.setState({ backgroundImage }))
-      .catch(e => this.setState({ backgroundImage: edgeBackgroundImage }))
   }
 
   componentDidUpdate(oldProps: Props) {
