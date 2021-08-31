@@ -45,7 +45,11 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
   // See if the server even has an image for us in the first place:
   const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
   const { start, expiration } = await getThemeItemTimestamps(fromUrl)
-  if (expiration.valueOf() < Date.now()) return
+  if (expiration.valueOf() < Date.now()) {
+    delete cache.assets[fromUrl]
+    await setThemeCache(disklet, cache)
+    return
+  }
   const cacheTimes = cache.assets[fromUrl]
   if (cacheTimes != null && cacheTimes.start.valueOf() === start.valueOf() && cacheTimes.expiration.valueOf() === expiration.valueOf()) return
 
