@@ -282,7 +282,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingToggle}
           />
-          <MainButton label={s.strings.settings_button_send_logs} marginRem={2} onPress={handleSendLogs} />
+          <MainButton alignSelf="center" label={s.strings.settings_button_send_logs} marginRem={2} type="secondary" onPress={handleSendLogs} />
         </ScrollView>
       </SceneWrapper>
     )

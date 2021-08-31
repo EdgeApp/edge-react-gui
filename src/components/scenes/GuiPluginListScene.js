@@ -26,6 +26,7 @@ import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
 
 const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
 const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
@@ -270,7 +271,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="header">
-        <EdgeText style={styles.header}>{direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell}</EdgeText>
+        <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
             <Image
@@ -296,12 +297,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  header: {
-    marginVertical: theme.rem(1),
-    marginHorizontal: theme.rem(1.5),
-    fontSize: theme.rem(1.25),
-    fontFamily: theme.fontFaceMedium
-  },
   selectedCountryRow: {
     marginTop: theme.rem(1),
     marginBottom: theme.rem(1.5),

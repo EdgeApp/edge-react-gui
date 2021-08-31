@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Dimensions, Platform, StatusBar } from 'react-native'
-// $FlowFixMe See https://github.com/react-native-community/react-native-safe-area-view/pull/77
 import { getInset } from 'react-native-safe-area-view'
 
 export type SafeAreaGap = {

@@ -1383,9 +1383,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           style={
             Object {
               "alignItems": "center",
-              "alignSelf": "auto",
-              "backgroundColor": "#66EDA8",
-              "borderColor": "rgba(255, 255, 255, 0)",
+              "alignSelf": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "borderColor": "#66EDA8",
               "borderRadius": 6,
               "borderWidth": 2,
               "flexDirection": "row",
@@ -1410,7 +1410,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             numberOfLines={1}
             style={
               Object {
-                "color": "#0E4B75",
+                "color": "#66EDA8",
                 "fontFamily": "Quicksand-Bold",
                 "fontSize": 22,
                 "marginHorizontal": 11,
@@ -2809,9 +2809,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           style={
             Object {
               "alignItems": "center",
-              "alignSelf": "auto",
-              "backgroundColor": "#66EDA8",
-              "borderColor": "rgba(255, 255, 255, 0)",
+              "alignSelf": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "borderColor": "#66EDA8",
               "borderRadius": 6,
               "borderWidth": 2,
               "flexDirection": "row",
@@ -2836,7 +2836,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             numberOfLines={1}
             style={
               Object {
-                "color": "#0E4B75",
+                "color": "#66EDA8",
                 "fontFamily": "Quicksand-Bold",
                 "fontSize": 22,
                 "marginHorizontal": 11,

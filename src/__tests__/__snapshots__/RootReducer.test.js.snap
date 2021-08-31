@@ -581,7 +581,6 @@ Object {
       "isAccountBalanceVisible": true,
       "isTouchEnabled": false,
       "isTouchSupported": false,
-      "isWalletFiatBalanceVisible": false,
       "loginStatus": null,
       "merchantMode": false,
       "mostRecentWallets": Array [],
