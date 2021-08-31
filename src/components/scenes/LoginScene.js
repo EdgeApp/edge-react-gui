@@ -21,7 +21,7 @@ import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
-import { getBackgroundImageFromCDN } from './../../util/ThemeCache.js'
+import { getBackgroundImage } from './../../util/ThemeCache.js'
 import { LoadingScene } from './LoadingScene.js'
 
 type StateProps = {
@@ -97,7 +97,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
         />
       ))
     }
-    getBackgroundImageFromCDN(this.props.disklet)
+    getBackgroundImage(this.props.disklet, edgeBackgroundImage)
       .then(backgroundImage => this.setState({ backgroundImage }))
       .catch(e => this.setState({ backgroundImage: edgeBackgroundImage }))
   }
