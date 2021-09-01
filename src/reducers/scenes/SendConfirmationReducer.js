@@ -235,7 +235,7 @@ const isSendUsingFioAddress = (state: boolean = false, action: Action): boolean 
       const { spendInfo } = action.data
       let isSendUsingFioAddress = false
       for (const spendTarget of spendInfo.spendTargets) {
-        if (spendTarget.otherParams && spendTarget.otherParams.isSendUsingFioAddress != null) {
+        if (spendTarget.otherParams != null && spendTarget.otherParams.isSendUsingFioAddress != null) {
           isSendUsingFioAddress = spendTarget.otherParams.isSendUsingFioAddress
         }
       }

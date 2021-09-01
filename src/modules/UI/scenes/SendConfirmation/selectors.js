@@ -89,7 +89,7 @@ const getUniqueIdentifier = (state: RootState): string => {
 const getSpendTargetOtherParams = (state: RootState): Object => {
   try {
     const { spendInfo } = state.ui.scenes.sendConfirmation
-    if (!spendInfo) return {}
+    if (spendInfo == null) return {}
     return spendInfo.spendTargets[0].otherParams || {}
   } catch (e) {
     return {}

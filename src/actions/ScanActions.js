@@ -194,7 +194,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       }
     ]
 
-    if (fioAddress) {
+    if (fioAddress != null) {
       spendTargets[0].otherParams = {
         fioAddress,
         isSendUsingFioAddress: true
