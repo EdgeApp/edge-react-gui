@@ -132,7 +132,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { fioDomainName, fioWallet } = route.params
 
     const guiMakeSpendInfo = {
-      nativeAmount: `${transferFee}`,
+      nativeAmount: '',
       currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
         fioAction: 'transferFioDomain',
