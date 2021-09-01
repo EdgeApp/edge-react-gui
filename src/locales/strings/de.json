@@ -274,8 +274,6 @@
   "settings_title_pin_login": "Wiedereinloggen mit PIN",
   "settings_title": "Einstellungen",
   "settings_enable_custom_nodes": "Benutzerdefinierte Node's aktivieren",
-  "settings_set_custom_nodes_modal_title": "Benutzerdefinierte Node's definieren",
-  "settings_set_custom_nodes_modal_instructions": "Bitte geben Sie die benutzerdefinierten Knoten ein, die Sie unten verwenden möchten (eine pro Zeile):",
   "settings_promotion_affiliation_header": "Affiliation-Programm",
   "settings_promotion_header": "Promotion-Code",
   "settings_promotion_add": "Promotion-Code hinzufügen",
