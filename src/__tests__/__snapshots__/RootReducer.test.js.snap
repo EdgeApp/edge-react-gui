@@ -164,6 +164,7 @@ Object {
           "publicAddress": "",
         },
         "isEditable": true,
+        "isSendUsingFioAddress": false,
         "maxSpendSet": false,
         "nativeAmount": "",
         "pending": false,
