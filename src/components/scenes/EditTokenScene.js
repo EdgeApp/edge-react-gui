@@ -54,8 +54,8 @@ type State = {
 class EditTokenComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { customTokens } = props
-    const { currencyCode } = this.state
+    const { customTokens, route } = props
+    const { currencyCode } = route.params
     const tokenInfoIndex = _.findIndex(customTokens, item => item.currencyCode === currencyCode)
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
