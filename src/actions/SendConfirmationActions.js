@@ -272,17 +272,21 @@ export const signBroadcastAndSave =
       edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
       await wallet.saveTx(edgeSignedTransaction)
       let edgeMetadata = { ...spendInfo.metadata }
+      let payeeFioAddress: string | null = null
+      if (spendInfo.spendTargets[0].otherParams != null) {
+        payeeFioAddress = spendInfo.spendTargets[0].otherParams.fioAddress
+      }
       if (state.ui.scenes.sendConfirmation.transactionMetadata) {
         edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
       }
-      if (guiMakeSpendInfo.fioAddress) {
-        edgeMetadata.name = guiMakeSpendInfo.fioAddress
+      if (payeeFioAddress != null) {
+        edgeMetadata.name = payeeFioAddress
       }
       const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
       if (!edgeMetadata.amountFiat) {
         edgeMetadata.amountFiat = amountFiat
       }
-      if (guiMakeSpendInfo.fioAddress && fioSender) {
+      if (payeeFioAddress != null && fioSender != null) {
         let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
         fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}` : ''
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
@@ -292,14 +296,13 @@ export const signBroadcastAndSave =
       edgeSignedTransaction.metadata = edgeMetadata
       edgeSignedTransaction.wallet = wallet
 
-      if (guiMakeSpendInfo.fioAddress) {
-        addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
+      if (payeeFioAddress != null) {
+        addToFioAddressCache(account, [payeeFioAddress])
       }
 
       // fio
-      if (fioSender) {
+      if (fioSender != null) {
         const { fioAddress, fioWallet, memo, skipRecord } = fioSender
-        const payeeFioAddress = guiMakeSpendInfo.fioAddress
         if (payeeFioAddress && fioAddress && fioWallet) {
           if (guiMakeSpendInfo.fioPendingRequest) {
             const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo

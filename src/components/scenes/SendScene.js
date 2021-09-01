@@ -204,7 +204,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (parsedUri) {
       const nativeAmount = parsedUri.nativeAmount || ''
       const otherParams = {}
-      if (newGuiMakeSpendInfo.fioAddress) {
+      if (newGuiMakeSpendInfo.fioAddress != null) {
         otherParams.fioAddress = newGuiMakeSpendInfo.fioAddress
         otherParams.isSendUsingFioAddress = newGuiMakeSpendInfo.isSendUsingFioAddress
       }
@@ -287,7 +287,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const isFioPendingRequest = guiMakeSpendInfo && guiMakeSpendInfo?.fioPendingRequest
     if (isSendUsingFioAddress || isFioPendingRequest) {
       const { fioSender } = this.state
-      if (fioSender.fioWallet && fioSender.fioAddress && !isFioPendingRequest) {
+      if (fioSender.fioWallet != null && fioSender.fioAddress != null && !isFioPendingRequest) {
         updateSpendPending(true)
         try {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
