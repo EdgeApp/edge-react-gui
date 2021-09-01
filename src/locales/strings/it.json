@@ -274,8 +274,6 @@
   "settings_title_pin_login": "PIN Re-login",
   "settings_title": "Impostazioni",
   "settings_enable_custom_nodes": "Abilita nodi personalizzati",
-  "settings_set_custom_nodes_modal_title": "Imposta i nodi personalizzati",
-  "settings_set_custom_nodes_modal_instructions": "Inserisci qui in basso i nodi personalizzati che vuoi usare (uno per riga):",
   "settings_promotion_affiliation_header": "Programma di affiliazione",
   "settings_promotion_header": "Codici promozionali",
   "settings_promotion_add": "Aggiungi codice promozionale",
