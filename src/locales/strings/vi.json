@@ -172,8 +172,6 @@
   "settings_title_pin_login": "Đăng nhập lại PIN",
   "settings_title": "Cài đặt",
   "settings_enable_custom_nodes": "Bật các nút tùy chỉnh",
-  "settings_set_custom_nodes_modal_title": "Thiết lập các nút tuỳ chỉnh",
-  "settings_set_custom_nodes_modal_instructions": "Vui lòng nhập các nút tùy chỉnh bạn muốn sử dụng dưới đây (một cho mỗi hàng):",
   "string_cancel_cap": "Huỷ",
   "string_cancel": "HUỶ",
   "string_ok_cap": "Đồng ý",
