@@ -293,8 +293,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.getQuote}
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
-          {this.renderButton()}
           {this.renderAlert()}
+          {this.renderButton()}
           <View style={styles.spacer} />
         </KeyboardAwareScrollView>
       </SceneWrapper>
