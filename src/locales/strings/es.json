@@ -213,8 +213,6 @@
   "settings_title_pin_login": "PIN Re-login",
   "settings_title": "Configuración",
   "settings_enable_custom_nodes": "Activar nodos personalizados",
-  "settings_set_custom_nodes_modal_title": "Configurar nodos personalizados",
-  "settings_set_custom_nodes_modal_instructions": "Introduce los nodos personalizados que quieres usar debajo: (uno por fila):",
   "settings_promotion_affiliation_header": "Programa de afiliación",
   "settings_promotion_header": "Códigos de promoción",
   "settings_promotion_add": "Introduce el código de promoción",
