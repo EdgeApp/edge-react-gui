@@ -28,7 +28,9 @@ export type SendConfirmationState = {
 
   toggleCryptoOnTop: number,
 
-  maxSpendSet: boolean
+  maxSpendSet: boolean,
+
+  isSendUsingFioAddress: boolean
 }
 
 const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
@@ -227,6 +229,24 @@ const maxSpendSet = (state: boolean = false, action: Action): boolean => {
   }
 }
 
+const isSendUsingFioAddress = (state: boolean = false, action: Action): boolean => {
+  switch (action.type) {
+    case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
+      const { spendInfo } = action.data
+      let isSendUsingFioAddress = false
+      for (const spendTarget of spendInfo.spendTargets) {
+        if (spendTarget.otherParams && spendTarget.otherParams.isSendUsingFioAddress != null) {
+          isSendUsingFioAddress = spendTarget.otherParams.isSendUsingFioAddress
+        }
+      }
+      return isSendUsingFioAddress
+    }
+
+    default:
+      return state
+  }
+}
+
 export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIRMATION/RESET') return initialState
 
@@ -245,6 +265,7 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
     address: address(state.address, action),
     authRequired: authRequired(state.authRequired, action),
     toggleCryptoOnTop: toggleCryptoOnTop(state.toggleCryptoOnTop, action),
-    maxSpendSet: maxSpendSet(state.maxSpendSet, action)
+    maxSpendSet: maxSpendSet(state.maxSpendSet, action),
+    isSendUsingFioAddress: isSendUsingFioAddress(state.isSendUsingFioAddress, action)
   }
 }

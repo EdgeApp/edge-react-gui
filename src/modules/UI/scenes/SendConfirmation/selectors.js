@@ -53,7 +53,9 @@ export const initialState = {
 
   toggleCryptoOnTop: 0,
 
-  maxSpendSet: false
+  maxSpendSet: false,
+
+  isSendUsingFioAddress: false
 }
 
 export const getTransaction = (state: RootState): EdgeTransaction => state.ui.scenes.sendConfirmation.transaction || initialState.transaction
