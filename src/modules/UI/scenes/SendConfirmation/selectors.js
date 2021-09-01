@@ -86,6 +86,15 @@ const getUniqueIdentifier = (state: RootState): string => {
   const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier || ''
   return uniqueIdentifier || ''
 }
+const getSpendTargetOtherParams = (state: RootState): Object => {
+  try {
+    const { spendInfo } = state.ui.scenes.sendConfirmation
+    if (!spendInfo) return {}
+    return spendInfo.spendTargets[0].otherParams || {}
+  } catch (e) {
+    return {}
+  }
+}
 
 export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || getUniqueIdentifier(state)
@@ -98,7 +107,8 @@ export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo =
         nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
         publicAddress: newSpendInfo.publicAddress || getPublicAddress(state),
         otherParams: {
-          uniqueIdentifier
+          uniqueIdentifier,
+          ...getSpendTargetOtherParams(state)
         }
       }
     ]
@@ -125,7 +135,8 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
         nativeAmount: newSpendInfo.nativeAmount || sceneState.nativeAmount,
         publicAddress: newSpendInfo.publicAddress || initialState.guiMakeSpendInfo.publicAddress || sceneState.spendInfo.spendTargets[0].publicAddress,
         otherParams: {
-          uniqueIdentifier
+          uniqueIdentifier,
+          ...sceneState.spendInfo.spendTargets[0].otherParams
         }
       }
     ]

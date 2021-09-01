@@ -203,10 +203,16 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (parsedUri) {
       const nativeAmount = parsedUri.nativeAmount || ''
+      const otherParams = {}
+      if (newGuiMakeSpendInfo.fioAddress) {
+        otherParams.fioAddress = newGuiMakeSpendInfo.fioAddress
+        otherParams.isSendUsingFioAddress = newGuiMakeSpendInfo.isSendUsingFioAddress
+      }
       const spendTargets: EdgeSpendTarget[] = [
         {
           publicAddress: parsedUri.publicAddress,
-          nativeAmount
+          nativeAmount,
+          otherParams
         }
       ]
       newGuiMakeSpendInfo = {
@@ -272,15 +278,16 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   submit = async () => {
-    const { updateSpendPending, signBroadcastAndSave, route } = this.props
+    const { updateSpendPending, isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { selectedWalletId, selectedCurrencyCode } = this.state
 
     this.setState({ loading: true })
 
-    if (guiMakeSpendInfo && (guiMakeSpendInfo?.isSendUsingFioAddress || guiMakeSpendInfo?.fioPendingRequest)) {
+    const isFioPendingRequest = !!guiMakeSpendInfo?.fioPendingRequest
+    if (isSendUsingFioAddress || isFioPendingRequest) {
       const { fioSender } = this.state
-      if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
+      if (fioSender.fioWallet && fioSender.fioAddress && !isFioPendingRequest) {
         updateSpendPending(true)
         try {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
@@ -588,10 +595,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => {
-    const routeSpendInfo = params.guiMakeSpendInfo
-    const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
-    const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (routeSpendInfo && routeSpendInfo.isSendUsingFioAddress)
+  state => {
+    const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
 
     return {
       account: state.core.account,
