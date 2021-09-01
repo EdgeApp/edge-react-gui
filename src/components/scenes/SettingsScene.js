@@ -4,7 +4,6 @@ import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Image, ScrollView } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -46,7 +45,6 @@ import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTh
 import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
@@ -228,8 +226,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
             text={`${s.strings.settings_account_title_cap}: ${account.username}`}
           />
-          <SettingsRow
-            right={<AntDesignIcon color={theme.iconTappable} name={isLocked ? 'lock' : 'unlock'} size={iconSize} />}
+          <SettingsTappableRow
+            action={isLocked ? 'lock' : 'unlock'}
             text={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
             onPress={this.handleUnlock}
           />

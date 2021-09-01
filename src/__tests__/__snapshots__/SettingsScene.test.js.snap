@@ -146,46 +146,47 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Tap to Unlock Account Settings
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "anticon",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {},
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 28,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "anticon",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -214,48 +215,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#87939E",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#87939E",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Change Password
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -284,48 +286,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#87939E",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#87939E",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Change PIN
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -354,48 +357,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#87939E",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#87939E",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Set Up 2-Factor Security
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -424,48 +428,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#87939E",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#87939E",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Set Up Password Recovery
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -562,48 +567,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Exchange Settings
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -632,48 +638,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Spending Limits
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -702,37 +709,35 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Auto Log Off After
             </Text>
-            <View
+            <Text
               style={
                 Object {
-                  "paddingLeft": 17,
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
                 }
               }
             >
-              <Text
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                10 Minute(s)
-              </Text>
-            </View>
+              10 Minute(s)
+            </Text>
           </View>
         </View>
         <View
@@ -761,37 +766,35 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Default Currency
             </Text>
-            <View
+            <Text
               style={
                 Object {
-                  "paddingLeft": 17,
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
                 }
               }
             >
-              <Text
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                USD
-              </Text>
-            </View>
+              USD
+            </Text>
           </View>
         </View>
         <View
@@ -820,51 +823,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               PIN Re-login
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -894,48 +895,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Notifications
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -964,48 +966,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Promotion Settings
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1034,51 +1037,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Developer Mode
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -1108,51 +1109,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Dark Theme
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -1182,48 +1181,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Restore Wallets
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1252,48 +1252,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Terms of Service
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1322,51 +1323,49 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Verbose Logging
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -1572,46 +1571,47 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Tap to Lock Account Settings
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "anticon",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {},
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 28,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "anticon",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1640,48 +1640,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Change Password
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1710,48 +1711,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Change PIN
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1780,48 +1782,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Set Up 2-Factor Security
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1850,48 +1853,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Set Up Password Recovery
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -1988,48 +1992,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Exchange Settings
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -2058,48 +2063,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Spending Limits
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -2128,37 +2134,35 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Auto Log Off After
             </Text>
-            <View
+            <Text
               style={
                 Object {
-                  "paddingLeft": 17,
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
                 }
               }
             >
-              <Text
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                10 Minute(s)
-              </Text>
-            </View>
+              10 Minute(s)
+            </Text>
           </View>
         </View>
         <View
@@ -2187,37 +2191,35 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Default Currency
             </Text>
-            <View
+            <Text
               style={
                 Object {
-                  "paddingLeft": 17,
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
                 }
               }
             >
-              <Text
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                USD
-              </Text>
-            </View>
+              USD
+            </Text>
           </View>
         </View>
         <View
@@ -2246,51 +2248,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               PIN Re-login
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -2320,48 +2320,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Notifications
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -2390,48 +2391,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Promotion Settings
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -2460,51 +2462,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Developer Mode
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -2534,51 +2534,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Dark Theme
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
@@ -2608,48 +2606,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Restore Wallets
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -2678,48 +2677,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Terms of Service
             </Text>
-            <View
+            <Text
+              allowFontScaling={false}
               style={
-                Object {
-                  "paddingLeft": 17,
-                }
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  Array [
-                    Object {
-                      "color": "#66EDA8",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    Object {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    Object {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
         <View
@@ -2748,51 +2748,49 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                }
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "textAlign": "left",
+                  },
+                  Object {
+                    "marginLeft": 0,
+                    "marginRight": 17,
+                  },
+                ]
               }
             >
               Verbose Logging
             </Text>
             <View
-              style={
-                Object {
-                  "paddingLeft": 17,
-                }
-              }
+              pointerEvents="none"
             >
-              <View
-                pointerEvents="none"
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  disabled={false}
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#66EDA8"
-                  style={
-                    Array [
-                      Object {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      Object {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
