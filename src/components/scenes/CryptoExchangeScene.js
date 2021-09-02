@@ -140,6 +140,19 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
   }
 
+  checkExceedsAmount(): boolean {
+    const { fromWallet, fromCurrencyCode, toWallet, toCurrencyCode } = this.props
+    const { fromAmountNative, toAmountNative, whichWalletFocus } = this.state
+    const fromNativeBalance = fromWallet.nativeBalances[fromCurrencyCode] ?? '0'
+    const toNativeBalance = toWallet.nativeBalances[toCurrencyCode] ?? '0'
+
+    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0')
+      ? bns.gt(fromAmountNative, fromNativeBalance)
+      : whichWalletFocus === 'to' && bns.gte(toNativeBalance, '0')
+      ? bns.gt(toAmountNative, toNativeBalance)
+      : false
+  }
+
   launchFromWalletSelector = () => {
     this.renderDropUp('from')
   }
@@ -176,6 +189,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const primaryNativeAmount = this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !this.props.calculatingMax && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
+    if (this.checkExceedsAmount()) return null
     return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.getQuote} />
   }
 
@@ -197,6 +211,17 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       const title = genericError != null ? s.strings.exchange_generic_error_title : insufficient ? s.strings.exchange_insufficient_funds_title : ''
       const message = genericError != null ? genericError : insufficient ? s.strings.exchange_insufficient_funds_message : ''
       return <Alert marginRem={[1.5, 1]} title={title} message={message} type="error" />
+    }
+
+    if (this.checkExceedsAmount()) {
+      return (
+        <Alert
+          marginRem={[1.5, 1]}
+          title={s.strings.exchange_insufficient_funds_title}
+          message={s.strings.exchange_insufficient_funds_below_balance}
+          type="error"
+        />
+      )
     }
 
     return null

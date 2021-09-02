@@ -843,6 +843,7 @@ const strings = {
   exchange_generic_error_title: 'Exchange Error',
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
+  exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
