@@ -158,3 +158,7 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
 
   return exceedsLimit ? 'pin' : 'none'
 }
+
+export const getAmountRequired = (guiMakeSpendInfo: EdgeSpendInfo): boolean => {
+  return guiMakeSpendInfo.otherParams == null || guiMakeSpendInfo.otherParams.fioAction == null
+}
