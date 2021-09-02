@@ -209,11 +209,6 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
         duration: 0,
         useNativeDriver: true
       }).start()
-      setTimeout(() => {
-        this.setState({
-          secondaryDisplayAmount: ''
-        })
-      }, 10)
     }
 
     if (this.props.isFocus) {
