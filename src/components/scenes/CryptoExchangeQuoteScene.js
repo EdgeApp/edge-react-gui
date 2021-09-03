@@ -49,21 +49,15 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   calledApprove: true
 
   componentDidMount = () => {
-    const { route } = this.props
-    const { pluginId } = route.params.swapInfo.quote
-    const check = {
-      changelly: this.checkChangellyKYC,
-      changenow: this.checkChangeNowKYC,
-      coinswitch: this.checkCoinswitchKYC,
-      foxExchange: this.checkFoxExchangeKYC,
-      switchain: this.checkSwitchainKYC
-    }
-    try {
-      if (check[pluginId]) check[pluginId]()
-    } catch (e) {
-      showError(e)
-    }
+    const { route, account, timeExpired } = this.props
+    const { swapInfo } = route.params
+    const { pluginId } = swapInfo.quote
+    const swapConfig = account.swapConfig[pluginId]
+
     logEvent('SwapQuote')
+    swapVerifyTerms(swapConfig).then(result => {
+      if (!result) timeExpired(swapInfo)
+    }, showError)
   }
 
   componentWillUnmount() {
@@ -88,91 +82,6 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
 
     if (!expirationDate) return null
     return <CircleTimer timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
-  }
-
-  async checkChangellyKYC() {
-    const { route, account, timeExpired } = this.props
-    const { swapInfo } = route.params
-
-    const result = await swapVerifyTerms(account.swapConfig.changelly, [
-      {
-        text: s.strings.swap_terms_terms_link,
-        uri: 'https://changelly.com/terms-of-use'
-      },
-      {
-        text: s.strings.swap_terms_privacy_link,
-        uri: 'https://changelly.com/privacy-policy'
-      },
-      {
-        text: s.strings.swap_terms_kyc_link,
-        uri: 'https://changelly.com/aml-kyc'
-      }
-    ])
-    if (!result) timeExpired(swapInfo)
-  }
-
-  async checkSwitchainKYC() {
-    const { route, account, timeExpired } = this.props
-    const { swapInfo } = route.params
-    const result = await swapVerifyTerms(account.swapConfig.switchain, [
-      {
-        text: s.strings.swap_terms_terms_link,
-        uri: 'https://www.switchain.com/tos'
-      },
-      {
-        text: s.strings.swap_terms_privacy_link,
-        uri: 'https://www.switchain.com/policy'
-      },
-      {
-        text: s.strings.swap_terms_kyc_link,
-        uri: 'https://www.switchain.com/policy'
-      }
-    ])
-    if (!result) timeExpired(swapInfo)
-  }
-
-  async checkChangeNowKYC() {
-    const { route, account, timeExpired } = this.props
-    const { swapInfo } = route.params
-    const result = await swapVerifyTerms(account.swapConfig.changenow, [
-      {
-        text: s.strings.swap_terms_terms_link,
-        uri: 'https://changenow.io/terms-of-use'
-      },
-      {
-        text: s.strings.swap_terms_privacy_link,
-        uri: 'https://changenow.io/privacy-policy'
-      },
-      {
-        text: s.strings.swap_terms_kyc_link,
-        uri: 'https://changenow.io/faq/kyc'
-      }
-    ])
-    if (!result) timeExpired(swapInfo)
-  }
-
-  async checkCoinswitchKYC() {
-    const { route, account, timeExpired } = this.props
-    const { swapInfo } = route.params
-    const result = await swapVerifyTerms(account.swapConfig.coinswitch, [
-      {
-        text: s.strings.swap_terms_terms_link,
-        uri: 'https://coinswitch.co/terms'
-      }
-    ])
-    if (!result) timeExpired(swapInfo)
-  }
-
-  async checkFoxExchangeKYC() {
-    const { route, account, timeExpired } = this.props
-    const { swapInfo } = route.params
-    const result = await swapVerifyTerms(account.swapConfig.foxExchange, [
-      {
-        text: s.strings.swap_terms_terms_link,
-        uri: 'https://fox.exchange/tos'
-      }
-    ])
-    if (!result) timeExpired(swapInfo)
   }
 
   showExplanationForEstimate = () => {
@@ -274,27 +183,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => {
-    const { swapInfo } = params
-    const { request } = swapInfo
-
-    const { account } = state.core
-    const { fromWallet, toWallet } = state.cryptoExchange
-
-    const toWalletCurrencyName = toWallet != null ? toWallet.currencyNames[request.toCurrencyCode] : ''
-    const fromWalletCurrencyName = fromWallet != null ? fromWallet.currencyNames[request.fromCurrencyCode] : ''
-
-    return {
-      account,
-      fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
-      fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-      fromWalletCurrencyName,
-      pending: state.cryptoExchange.shiftPendingTransaction,
-      toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
-      toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-      toWalletCurrencyName
-    }
-  },
+  (state, { route: { params } }) => ({
+    account: state.core.account,
+    fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon ?? '',
+    fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+    fromWalletCurrencyName: state.cryptoExchange.fromWallet?.currencyNames[params.swapInfo.request.fromCurrencyCode] ?? '',
+    pending: state.cryptoExchange.shiftPendingTransaction,
+    toCurrencyIcon: state.cryptoExchange.toCurrencyIcon ?? '',
+    toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+    toWalletCurrencyName: state.cryptoExchange.toWallet?.currencyNames[params.swapInfo.request.toCurrencyCode] ?? ''
+  }),
   dispatch => ({
     shift(swapInfo: GuiSwapInfo) {
       dispatch(shiftCryptoCurrency(swapInfo))
