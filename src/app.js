@@ -2,6 +2,7 @@
 /* global __DEV__ */
 
 import Bugsnag from '@bugsnag/react-native'
+import NetInfo from '@react-native-community/netinfo'
 import { LogBox, Platform, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
@@ -145,7 +146,7 @@ if (ENABLE_PERF_LOGGING) {
 }
 
 const realFetch = fetch
-fetch = (...args: any) => {
+fetch = async (...args: any) => {
   return realFetch(...args).catch(e => {
     Bugsnag.leaveBreadcrumb('realFetchError', {
       url: args[0],
@@ -153,7 +154,11 @@ fetch = (...args: any) => {
       errorMsg: e.message
     })
     console.log(`realFetchError: ${args[0]} ${e.name} ${e.message}`)
-    throw e
+    NetInfo.fetch().then(state => {
+      if (state.isInternetReachable || state.isInternetReachable == null) {
+        throw e
+      }
+    })
   })
 }
 
