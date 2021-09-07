@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioAddress, FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
+import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
@@ -508,6 +508,20 @@ export const recordSend = async (
       throw new Error(e.message)
     }
   }
+}
+
+export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
+  let obtDataRecords = []
+  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+    try {
+      const { obt_data_records: lastRecords } = await fioWallet.otherMethods.fioAction('getObtData', {})
+      obtDataRecords = [...obtDataRecords, ...lastRecords]
+    } catch (e) {
+      //
+    }
+  }
+
+  return obtDataRecords
 }
 
 export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {
