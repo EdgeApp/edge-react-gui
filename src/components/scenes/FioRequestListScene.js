@@ -401,6 +401,16 @@ class FioRequestList extends React.Component<Props, LocalState> {
       currencyCode,
       metadata: parsedUri.metadata,
       uniqueIdentifier: parsedUri.uniqueIdentifier,
+      spendTargets: [
+        {
+          nativeAmount,
+          publicAddress: parsedUri.legacyAddress || parsedUri.publicAddress,
+          otherParams: {
+            uniqueIdentifier: parsedUri.uniqueIdentifier,
+            fioAddress: pendingRequest.payee_fio_address
+          }
+        }
+      ],
       lockInputs: true,
       beforeTransaction: async () => {
         try {

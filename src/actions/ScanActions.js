@@ -194,6 +194,13 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       }
     ]
 
+    if (fioAddress != null) {
+      spendTargets[0].otherParams = {
+        fioAddress,
+        isSendUsingFioAddress: true
+      }
+    }
+
     const guiMakeSpendInfo: GuiMakeSpendInfo = {
       spendTargets,
       lockInputs: false,
@@ -202,10 +209,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       nativeAmount
     }
 
-    if (fioAddress) {
-      guiMakeSpendInfo.fioAddress = fioAddress
-      guiMakeSpendInfo.isSendUsingFioAddress = true
-    }
     Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId,
