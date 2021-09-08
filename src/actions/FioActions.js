@@ -86,7 +86,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
 
       if (edgeMetadata.notes == null) edgeMetadata.notes = ''
       let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
-      if (obtForTx.content.memo != null) fioNotes += `\n${s.strings.fio_sender_memo_label}: ${obtForTx.content.memo}`
+      if (obtForTx.content.memo != null && obtForTx.content.memo !== '') fioNotes += `\n${s.strings.fio_sender_memo_label}: ${obtForTx.content.memo}`
       edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
       edgeMetadata.name = obtForTx.payer_fio_address
 
