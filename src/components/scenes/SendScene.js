@@ -284,7 +284,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     this.setState({ loading: true })
 
-    const isFioPendingRequest = guiMakeSpendInfo && guiMakeSpendInfo?.fioPendingRequest
+    const isFioPendingRequest = !!guiMakeSpendInfo?.fioPendingRequest
     if (isSendUsingFioAddress || isFioPendingRequest) {
       const { fioSender } = this.state
       if (fioSender.fioWallet != null && fioSender.fioAddress != null && !isFioPendingRequest) {
