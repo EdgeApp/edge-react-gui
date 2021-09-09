@@ -4176,10 +4176,10 @@ create-react-context@0.2.2:
     fbjs "^0.8.0"
     gud "^1.0.0"
 
-cross-fetch@^3.0.4:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.2.tgz#ee0c2f18844c4fde36150c2a4ddc068d20c1bc41"
-  integrity sha512-+JhD65rDNqLbGmB3Gzs3HrEKC0aQnD+XA3SY6RjgkF88jV2q5cTc5+CwxlS3sdmLk98gpPt5CF9XRnPdlxZe6w==
+cross-fetch@^3.0.4, cross-fetch@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   dependencies:
     node-fetch "2.6.1"
 
@@ -4763,10 +4763,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.18.5:
-  version "0.18.5"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.5.tgz#afbc41603d7bad62f094b82049090e0cc8da2b02"
-  integrity sha512-qG949aPLBcekdtlLUYPevJl+NVqNzvUHlCNP5J1ec0cVyOAnkZTqSANqT6pz2YJ/l/rUMsaGQR4aIu+hslDA6A==
+edge-core-js@^0.18.6:
+  version "0.18.6"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.6.tgz#ed5cd08eafb26c20d1009a527b40494767ecfbc1"
+  integrity sha512-ei35IbCQw1vJnPVsgCwKgBtFIjgS45eQleOj3rEeOA+V7Jq4J9wAqE+MoBRMwZgfu63Ukv0Hpf+NJSp9TGpMsw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4774,6 +4774,7 @@ edge-core-js@^0.18.5:
     cleaners "^0.3.8"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
+    edge-sync-client "^0.2.0"
     elliptic "^6.4.0"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
@@ -4908,6 +4909,14 @@ edge-login-ui-rn@^0.9.16:
     cleaners "^0.2.0"
     js-sha256 "^0.9.0"
     moment "^2.22.2"
+
+edge-sync-client@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/edge-sync-client/-/edge-sync-client-0.2.0.tgz#4db5b00e15330f7f23295f41e7838fb69d448634"
+  integrity sha512-s0rjQU/+CYaswdN2xFHNQYjCFYTcJxARV12OXnk/o4czT9JZBw7yui/+3Uskhb4gT/NlIZUPm/vHzWzltTi65A==
+  dependencies:
+    cleaners "^0.3.9"
+    cross-fetch "^3.1.4"
 
 ee-first@1.1.1:
   version "1.1.1"
