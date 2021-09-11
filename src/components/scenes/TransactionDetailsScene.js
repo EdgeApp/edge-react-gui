@@ -182,7 +182,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         amount={this.state.amountFiat}
         onChange={this.onChangeFiat}
       />
-    )).then(_ => {})
+    )).then(_ => {
+      const { amountFiat } = this.state
+      if (UTILS.zeroString(amountFiat)) {
+        this.onChangeFiat('0.00')
+      }
+    })
   }
 
   onChangeCategory = (category: string, subCategory: string) => this.setState({ category, subCategory })
