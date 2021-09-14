@@ -7,21 +7,51 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import { dayText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { AirshipModal } from '../common/AirshipModal.js'
-import { ContentArea } from '../common/ContentArea.js'
-import { IconCircle } from '../common/IconCircle.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { MainButton } from '../themed/MainButton'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ThemedModal } from '../themed/ThemedModal'
 
-export async function swapVerifyTerms(swapConfig: EdgeSwapConfig, links: Array<{ text: string, uri: string }>): Promise<boolean> {
+type TermsUri = {
+  termsUri?: string,
+  privacyUri?: string,
+  kycUri?: string
+}
+
+const pluginData: { [pluginId: string]: TermsUri } = {
+  changelly: {
+    termsUri: 'https://changelly.com/terms-of-use',
+    privacyUri: 'https://changelly.com/privacy-policy',
+    kycUri: 'https://changelly.com/aml-kyc'
+  },
+  switchain: {
+    termsUri: 'https://www.switchain.com/tos',
+    privacyUri: 'https://www.switchain.com/policy',
+    kycUri: 'https://www.switchain.com/policy'
+  },
+  changenow: {
+    termsUri: 'https://changenow.io/terms-of-use',
+    privacyUri: 'https://changenow.io/privacy-policy',
+    kycUri: 'https://changenow.io/faq/kyc'
+  },
+  coinswitch: {
+    termsUri: 'https://coinswitch.co/terms'
+  },
+  foxExchange: {
+    termsUri: 'https://fox.exchange/tos'
+  }
+}
+
+export async function swapVerifyTerms(swapConfig: EdgeSwapConfig): Promise<boolean> {
+  const { pluginId } = swapConfig.swapInfo
+  const uris = pluginData[pluginId]
+  if (uris == null) return true
   if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) {
     return true
   }
 
-  const result = await Airship.show(bridge => <SwapVerifyTermsModal bridge={bridge} swapInfo={swapConfig.swapInfo} links={links} />)
+  const result = await Airship.show(bridge => <SwapVerifyTermsModal bridge={bridge} swapInfo={swapConfig.swapInfo} uris={uris} />)
 
   if (result) {
     await swapConfig.changeUserSettings({ agreedToTerms: true })
@@ -35,38 +65,65 @@ export async function swapVerifyTerms(swapConfig: EdgeSwapConfig, links: Array<{
 type Props = {
   bridge: AirshipBridge<boolean>,
   swapInfo: EdgeSwapInfo,
-  links: Array<{ text: string, uri: string }>
+  uris: TermsUri
 }
 
 function SwapVerifyTermsModal(props: Props) {
-  const { bridge, swapInfo, links } = props
+  const { bridge, swapInfo, uris } = props
   const { displayName, pluginId } = swapInfo
-  const iconSize = THEME.rem(1.75)
-  const linkStyle = dayText('small', 'link')
+  const { termsUri, privacyUri, kycUri } = uris
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   return (
-    <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
-      <IconCircle>
-        <Image source={swapPluginIcons[pluginId]} resizeMode="contain" style={{ height: iconSize, width: iconSize }} />
-      </IconCircle>
-
-      <ContentArea padding="wide">
-        <Text style={dayText('title')}>{displayName}</Text>
-        <Text style={dayText()}>{s.strings.swap_terms_statement}</Text>
-        <PrimaryButton onPress={() => bridge.resolve(true)}>
-          <PrimaryButton.Text>{s.strings.swap_terms_accept_button}</PrimaryButton.Text>
-        </PrimaryButton>
-        <SecondaryButton onPress={() => bridge.resolve(false)}>
-          <SecondaryButton.Text>{s.strings.swap_terms_reject_button}</SecondaryButton.Text>
-        </SecondaryButton>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          {links.map(({ text, uri }) => (
-            <Text style={linkStyle} key={text} onPress={() => Linking.openURL(uri)}>
-              {text}
-            </Text>
-          ))}
-        </View>
-      </ContentArea>
-    </AirshipModal>
+    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
+      <View style={styles.titleContainer}>
+        <Image style={styles.titleImage} source={swapPluginIcons[pluginId]} resizeMode="contain" />
+        <ModalTitle>{displayName}</ModalTitle>
+      </View>
+      <ModalMessage>{s.strings.swap_terms_statement}</ModalMessage>
+      <MainButton label={s.strings.swap_terms_accept_button} marginRem={0.5} onPress={() => bridge.resolve(true)} />
+      <MainButton label={s.strings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
+      <View style={styles.linkContainer}>
+        {termsUri == null ? null : (
+          <Text style={styles.linkText} onPress={() => Linking.openURL(termsUri)}>
+            {s.strings.swap_terms_terms_link}
+          </Text>
+        )}
+        {privacyUri == null ? null : (
+          <Text style={styles.linkText} onPress={() => Linking.openURL(privacyUri)}>
+            {s.strings.swap_terms_privacy_link}
+          </Text>
+        )}
+        {kycUri == null ? null : (
+          <Text style={styles.linkText} onPress={() => Linking.openURL(kycUri)}>
+            {s.strings.swap_terms_kyc_link}
+          </Text>
+        )}
+      </View>
+    </ThemedModal>
   )
 }
+
+const getStyles = cacheStyles(theme => ({
+  linkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  linkText: {
+    color: theme.iconTappable,
+    flexShrink: 1,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.84),
+    margin: theme.rem(0.5)
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  titleImage: {
+    height: theme.rem(1.75),
+    margin: theme.rem(0.5),
+    width: theme.rem(1.75)
+  }
+}))

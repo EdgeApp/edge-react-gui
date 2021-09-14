@@ -107,7 +107,7 @@ class MainComponent extends React.Component<Props> {
   }
 }
 
-const goToScene = (scene: $Keys<ParamList>, sceneProps?: any) => {
+const goToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
   const { currentScene, drawerClose } = Actions
 
   if (currentScene !== scene) {

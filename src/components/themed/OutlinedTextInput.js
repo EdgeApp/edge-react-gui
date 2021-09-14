@@ -213,7 +213,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
           ref={inputRef}
           {...inputProps}
           multiline={multiline}
-          selectionColor={hasError ? theme.dangerText : theme.primaryText}
+          selectionColor={hasError ? theme.dangerText : theme.iconTappable}
           style={[styles.textInput, textInputStyle]}
           textAlignVertical="top"
           value={value}

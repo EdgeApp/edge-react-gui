@@ -68,8 +68,10 @@ export const getFiatSymbol = (code: string) => {
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-// $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: $ReadOnly<EdgeMetaToken | CustomTokenInfo>[], edgeMetaTokens: CustomTokenInfo[]) => {
+export const mergeTokens = (
+  preferredEdgeMetaTokens: EdgeMetaToken[] | CustomTokenInfo[],
+  edgeMetaTokens: CustomTokenInfo[]
+): Array<EdgeMetaToken | CustomTokenInfo> => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of edgeMetaTokens) {
     // loops through the account-level array

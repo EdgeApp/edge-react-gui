@@ -6,31 +6,36 @@ import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
-import { EXCHANGE, PLUGIN_BUY, PLUGIN_SELL, WALLET_LIST, WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
-  navigation: NavigationProp
+  navigation: NavigationProp<'edge'>
 }
 
 type Props = OwnProps & ThemeProps
 
-const title = {
-  [WALLET_LIST]: s.strings.title_wallets,
-  [PLUGIN_BUY]: s.strings.title_buy,
-  [PLUGIN_SELL]: s.strings.title_sell,
-  [EXCHANGE]: s.strings.title_exchange
+const title: { [name: $Keys<ParamList>]: string } = {
+  walletList: s.strings.title_wallets,
+  pluginBuy: s.strings.title_buy,
+  pluginSell: s.strings.title_sell,
+  exchange: s.strings.title_exchange
 }
 
 class MenuTabComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: $Keys<ParamList>) => {
-    if (route === WALLET_LIST) {
-      return Actions.jump(WALLET_LIST_SCENE)
+  handleOnPress = (route: 'walletList' | 'pluginBuy' | 'pluginSell' | 'exchange') => {
+    switch (route) {
+      case 'walletList':
+        return Actions.jump('walletListScene')
+      case 'pluginBuy':
+        return Actions.jump('pluginBuy', { direction: 'buy' })
+      case 'pluginSell':
+        return Actions.jump('pluginSell', { direction: 'sell' })
+      case 'exchange':
+        return Actions.jump('exchange')
     }
-    Actions.jump(route)
   }
 
   render() {
@@ -43,10 +48,10 @@ class MenuTabComponent extends React.PureComponent<Props> {
         {state.routes.map((element, index) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon = {
-            [WALLET_LIST]: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-            [PLUGIN_BUY]: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-            [PLUGIN_SELL]: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-            [EXCHANGE]: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
+            walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+            pluginBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+            pluginSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+            exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
           }
           return (
             <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>

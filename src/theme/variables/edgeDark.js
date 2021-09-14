@@ -80,6 +80,7 @@ export const edgeDark: Theme = {
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },
+  isDark: true,
 
   // Common border
   defaultBorderColor: palette.white,
@@ -104,7 +105,6 @@ export const edgeDark: Theme = {
 
   // Modal
   modal: palette.edgeNavy,
-  modalBlurType: 'light',
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,

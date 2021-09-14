@@ -53,7 +53,7 @@ export type PluginLink = {
   type: 'plugin',
   pluginId: string,
   path: string,
-  query: { [key: string]: string }
+  query: { [key: string]: string | null }
 }
 
 export type PromotionLink = {

@@ -3,7 +3,6 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { CURRENCY_NOTIFICATION_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
@@ -15,8 +14,8 @@ import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type StateProps = {
   currencyInfos: EdgeCurrencyInfo[],
@@ -86,7 +85,6 @@ class NotificationComponent extends React.Component<Props, State> {
     const { theme } = this.props
     const { enabled } = this.state
     const styles = getStyles(theme)
-    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
@@ -106,7 +104,7 @@ class NotificationComponent extends React.Component<Props, State> {
                     })
                   : undefined
 
-              return <SettingsRow disabled={!enabled} key={currencyCode} icon={icon} text={displayName} right={rightArrow} onPress={onPress} />
+              return <SettingsTappableRow disabled={!enabled} key={currencyCode} icon={icon} text={displayName} onPress={onPress} />
             })}
           </ScrollView>
         )}

@@ -5,13 +5,13 @@ import { Platform, StyleSheet, Text } from 'react-native'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
-type OwnProps = {
+type OwnProps = {|
   children: React.Node,
   ellipsizeMode?: string,
   numberOfLines?: number,
   style?: StyleSheet.Styles,
   disableFontScaling?: boolean
-}
+|}
 
 class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
   render() {

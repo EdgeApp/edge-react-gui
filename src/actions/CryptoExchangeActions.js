@@ -96,7 +96,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       ))
       switch (result) {
         case 'buy':
-          Actions.jump(PLUGIN_BUY)
+          Actions.jump(PLUGIN_BUY, { direction: 'buy' })
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })
@@ -326,23 +326,20 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
   const { quote, request } = swapInfo
   const { pluginId, toNativeAmount } = quote
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-
   try {
     logEvent('SwapStart')
     const result: EdgeSwapResult = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
-    const si = account.swapConfig[pluginId].swapInfo
+    const { swapInfo } = account.swapConfig[pluginId]
 
-    let category: string
-    let name: string
-    if (pluginId === 'transfer') {
-      category = sprintf('transfer:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toWallet.name)
-      name = toWallet.name || ''
-    } else {
-      category = sprintf('exchange:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toCurrencyCode)
-      name = si.displayName
-    }
+    // Build the category string:
+    const isTransfer = pluginId === 'transfer'
+    const toWalletName = toWallet.name ?? ''
+    const name = isTransfer ? toWalletName : swapInfo.displayName
+    const swapType = isTransfer ? 'transfer' : 'exchange'
+    const swapTarget = isTransfer ? toWalletName : toCurrencyCode
+    const category = `${swapType}:${fromCurrencyCode} ${s.strings.word_to_in_convert_from_to_string} ${swapTarget}`
 
     const edgeMetaData: EdgeMetadata = {
       name,

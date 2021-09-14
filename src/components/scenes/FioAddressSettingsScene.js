@@ -10,7 +10,7 @@ import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getRenewalFee, getTransferFee, renewFioName } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -34,15 +34,11 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type NavigationProps = {
-  fioWallet: EdgeCurrencyWallet,
-  fioAddressName: string,
-  expiration?: string,
-  showRenew?: boolean,
-  refreshAfterRenew?: boolean
+type OwnProps = {
+  route: RouteProp<'fioAddressSettings'>
 }
 
-type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   state: LocalState = {
@@ -51,7 +47,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   componentDidMount(): * {
-    const { showRenew, refreshAllFioAddresses } = this.props
+    const { refreshAllFioAddresses, route } = this.props
+    const { showRenew } = route.params
     refreshAllFioAddresses()
     if (showRenew) {
       this.setState({ showRenew: true })
@@ -59,7 +56,9 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   afterRenewSuccess = ({ expiration }) => {
-    const { fioAddressName, refreshAllFioAddresses, refreshAfterRenew } = this.props
+    const { refreshAllFioAddresses, route } = this.props
+    const { fioAddressName, refreshAfterRenew } = route.params
+
     refreshAllFioAddresses()
 
     this.setState({ showRenew: false })
@@ -73,7 +72,10 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   afterTransferSuccess = async () => {
-    const addressName = `@${this.props.fioAddressName || ''}`
+    const { route } = this.props
+    const { fioAddressName = '' } = route.params
+
+    const addressName = `@${fioAddressName}`
     // todo: styles for message
     const transferredMessage = `${addressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
     await Airship.show(bridge => (
@@ -91,7 +93,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   getExpiration = (): string => {
-    const { fioAddresses, fioAddressName } = this.props
+    const { fioAddresses, route } = this.props
+    const { fioAddressName } = route.params
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
     if (fioAddress) return fioAddress.expiration
     return ''
@@ -114,7 +117,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
 
   renewAddress = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
-    const { fioAddressName, isConnected } = this.props
+    const { isConnected, route } = this.props
+    const { fioAddressName } = route.params
 
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
@@ -124,16 +128,19 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   goToTransfer = (params: { fee: number }) => {
+    const { route } = this.props
+    const { fioWallet, fioAddressName } = route.params
+
     const { fee: transferFee } = params
     if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
     this.cancelOperation()
 
     const guiMakeSpendInfo = {
       nativeAmount: '',
-      currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
         fioAction: 'transferFioAddress',
-        fioParams: { fioAddress: this.props.fioAddressName, newOnwerKey: '', maxFee: transferFee }
+        fioParams: { fioAddress: fioAddressName, newOnwerKey: '', maxFee: transferFee }
       },
       onDone: (err, edgeTransaction) => {
         if (!err) {
@@ -144,8 +151,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
     Actions.push(SEND, {
       guiMakeSpendInfo,
-      selectedWalletId: this.props.fioWallet.id,
-      selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      selectedWalletId: fioWallet.id,
+      selectedCurrencyCode: fioWallet.currencyInfo.currencyCode,
       lockTilesMap: {
         wallet: true
       },
@@ -153,18 +160,14 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: s.strings.fio_address_to_transfer, value: this.props.fioAddressName }]
+      infoTiles: [{ label: s.strings.fio_address_to_transfer, value: fioAddressName }]
     })
   }
 
   render() {
-    const { fioAddressName, fioWallet } = this.props
-    let { expiration } = this.props
+    const { route } = this.props
+    const { fioAddressName, fioWallet, expiration = this.getExpiration() } = route.params
     const { showRenew, showTransfer } = this.state
-
-    if (!expiration) {
-      expiration = this.getExpiration()
-    }
 
     return (
       <SceneWrapper background="header">
@@ -195,7 +198,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 }
 
-export const FioAddressSettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
+export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     isConnected: state.network.isConnected

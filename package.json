@@ -106,12 +106,12 @@
     "detect-bundler": "^1.0.0",
     "detox": "^18.10.0",
     "disklet": "^0.4.5",
-    "edge-core-js": "^0.18.5",
+    "edge-core-js": "^0.18.7",
     "edge-currency-accountbased": "^0.7.71",
     "edge-currency-bitcoin": "^4.9.18",
     "edge-currency-monero": "^0.3.2",
-    "edge-exchange-plugins": "^0.11.32",
-    "edge-login-ui-rn": "^0.9.16",
+    "edge-exchange-plugins": "^0.11.33",
+    "edge-login-ui-rn": "^0.9.17",
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#f04ee29c23bf5621f87dedb6d2fb1c83a18781bc",
     "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#efb0f2280192894e4c24e28e297d0e466f2d333b",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#5aa2379dbd4045b8a514427b442bd59ca57c21b0",
@@ -137,7 +137,6 @@
     "react-native-localize": "^2.0.2",
     "react-native-mail": "^6.0.0",
     "react-native-material-textfield": "^0.16.1",
-    "react-native-modal": "^11.0.1",
     "react-native-mymonero-core": "^0.1.0",
     "react-native-patina": "^0.1.5",
     "react-native-permissions": "^3.0.0",
@@ -163,8 +162,7 @@
     "redux-thunk": "^2.3.0",
     "rn-qr-generator": "^1.1.7",
     "sprintf-js": "^1.1.1",
-    "url-parse": "^1.4.4",
-    "why-did-you-update": "^0.1.1"
+    "url-parse": "^1.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

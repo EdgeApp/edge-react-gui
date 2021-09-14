@@ -1,177 +1,182 @@
 // @flow
 
-import { type EdgeCurrencyInfo } from 'edge-core-js'
+import { asArray, asBoolean, asMaybe, asObject, asOptional, asString } from 'cleaners'
+import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, Text } from 'react-native'
+import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
-import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
+import { setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
-import { getDenominations, getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
+import { getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
+import { useEffect, useState } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
-import type { GuiDenomination } from '../../types/types.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
-import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
+import { Airship } from '../services/AirshipInstance.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
-type NavigationProps = {
-  // eslint-disable-next-line react/no-unused-prop-types
-  currencyInfo: EdgeCurrencyInfo
+type OwnProps = {
+  route: RouteProp<'currencySettings'>
 }
 type StateProps = {
-  denominations: GuiDenomination[],
-  selectedDenominationKey: string,
-  electrumServers: string[],
-  disableFetchingServers: boolean,
-  defaultElectrumServer: string
+  account: EdgeAccount,
+  selectedDenominationKey: string
 }
 type DispatchProps = {
-  disableCustomNodes: () => void,
-  enableCustomNodes: () => void,
-  saveCustomNodesList: (nodes: string[]) => void,
-  selectDenomination: (denominationKey: string) => void
+  selectDenomination: (currencyCode: string, denominationKey: string) => Promise<void>
 }
-type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
-type State = {
-  isSetCustomNodesModalVisible: boolean,
-  activatedBy: string | null
-}
+const asElectrumDefaults = asObject({
+  electrumServers: asArray(asString)
+})
 
-export class CurrencySettingsComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      isSetCustomNodesModalVisible: false,
-      activatedBy: null
+const asElectrumSettings = asObject({
+  disableFetchingServers: asOptional(asBoolean),
+  electrumServers: asOptional(asArray(asString))
+})
+
+export function CurrencySettingsComponent(props: Props) {
+  const { account, selectDenomination, selectedDenominationKey, theme, route } = props
+  const { currencyInfo } = route.params
+  const { currencyCode, defaultSettings, denominations, pluginId } = currencyInfo
+  const currencyConfig = account.currencyConfig[pluginId]
+  const styles = getStyles(theme)
+
+  // Follow the on-disk currency settings:
+  const [userSettings = {}, setUserSettings] = useState(currencyConfig.userSettings)
+  useEffect(() => currencyConfig.watch('userSettings', setUserSettings), [currencyConfig])
+
+  // Are the electrum servers enabled? What are they?
+  const defaults = asMaybe(asElectrumDefaults)(defaultSettings)
+  const settings = asMaybe(asElectrumSettings)(userSettings)
+
+  function renderCustomNodes(defaults: $Call<typeof asElectrumDefaults>, settings: $Call<typeof asElectrumSettings>) {
+    const { electrumServers: defaultServers } = defaults
+    const { disableFetchingServers = false, electrumServers = [] } = settings
+
+    async function handleToggleNodes(): Promise<void> {
+      await currencyConfig.changeUserSettings({
+        ...currencyConfig.userSettings,
+        disableFetchingServers: !disableFetchingServers,
+        electrumServers: electrumServers.length > 0 ? electrumServers : defaultServers
+      })
     }
-  }
 
-  selectDenomination = (key: string) => () => {
-    return this.props.selectDenomination(key)
-  }
+    async function handleDeleteNode(i: number): Promise<void> {
+      const list = [...electrumServers]
+      list.splice(i, 1)
 
-  closeSetCustomNodesModal = (callback: () => mixed) => {
-    this.setState(
-      {
-        isSetCustomNodesModalVisible: false
-      },
-      callback
-    )
-  }
-
-  openSetCustomNodesModal = (activatedBy: string) => {
-    this.setState({
-      isSetCustomNodesModalVisible: true,
-      activatedBy
-    })
-  }
-
-  enableSetCustomNodes = () => {
-    this.props.enableCustomNodes()
-  }
-
-  disableSetCustomNodes = () => {
-    this.props.disableCustomNodes()
-  }
-
-  onChangeEnableCustomNodes = () => {
-    if (!this.props.disableFetchingServers) {
-      this.setState(
-        {
-          isSetCustomNodesModalVisible: true
-        },
-        this.enableSetCustomNodes
-      )
-      this.openSetCustomNodesModal('switch')
-    } else {
-      this.disableSetCustomNodes()
+      await currencyConfig.changeUserSettings({
+        ...currencyConfig.userSettings,
+        electrumServers: list
+      })
     }
-  }
 
-  render() {
-    const { theme } = this.props
+    function handleEditNode(i?: number): void {
+      async function handleSubmit(text: string) {
+        const list = [...electrumServers]
+        if (i == null) list.push(text)
+        else list[i] = text
+
+        await currencyConfig.changeUserSettings({
+          ...currencyConfig.userSettings,
+          electrumServers: list
+        })
+        return true
+      }
+
+      Airship.show(bridge => (
+        <TextInputModal
+          autoCorrect={false}
+          bridge={bridge}
+          initialValue={i == null ? '' : electrumServers[i]}
+          inputLabel={s.strings.settings_custom_node_url}
+          title={s.strings.settings_edit_custom_node}
+          onSubmit={handleSubmit}
+        />
+      ))
+    }
+
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
-        <ScrollView>
-          {this.props.defaultElectrumServer.length !== 0 && (
-            <SetCustomNodesModal
-              isActive={this.state.isSetCustomNodesModalVisible}
-              onExit={this.closeSetCustomNodesModal}
-              electrumServers={this.props.electrumServers}
-              saveCustomNodesList={this.props.saveCustomNodesList}
-              defaultElectrumServer={this.props.defaultElectrumServer}
-              disableCustomNodes={this.props.disableCustomNodes}
-              activatedBy={this.state.activatedBy}
-            />
-          )}
-          <SettingsHeaderRow text={s.strings.settings_denominations_title} />
-          {this.props.denominations.map(denomination => {
-            const key = denomination.multiplier
-            const left = (
-              <Text style={{ fontFamily: theme.fontFaceDefault, fontSize: theme.rem(1), textAlign: 'left', flexShrink: 1, color: theme.primaryText }}>
-                <Text style={{ fontFamily: theme.fontFaceSymbols }}>{denomination.symbol}</Text>
-                {' - ' + denomination.name}
-              </Text>
-            )
-            const isSelected = key === this.props.selectedDenominationKey
-            const onPress = this.selectDenomination(key)
-            return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" value={isSelected} onPress={onPress} />
-          })}
-          {this.props.defaultElectrumServer.length !== 0 && (
-            <>
-              <SettingsHeaderRow text={s.strings.settings_custom_nodes_title} />
-              <SettingsSwitchRow
-                text={s.strings.settings_enable_custom_nodes}
-                value={this.props.disableFetchingServers}
-                onPress={this.onChangeEnableCustomNodes}
+      <>
+        <SettingsHeaderRow text={s.strings.settings_custom_nodes_title} />
+        <SettingsSwitchRow text={s.strings.settings_enable_custom_nodes} value={disableFetchingServers} onPress={handleToggleNodes} />
+        {!disableFetchingServers ? null : (
+          <>
+            {electrumServers.map((server, i) => (
+              <SettingsTappableRow
+                key={`row${i}`}
+                action="delete"
+                icon={
+                  <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
+                    <Text style={styles.labelText}>{server}</Text>
+                  </TouchableOpacity>
+                }
+                text=""
+                onPress={() => handleDeleteNode(i)}
               />
-              <SettingsRow
-                disabled={!this.props.disableFetchingServers}
-                text={s.strings.settings_set_custom_nodes_modal_title}
-                onPress={() => this.openSetCustomNodesModal('row')}
-              />
-            </>
-          )}
-        </ScrollView>
-      </SceneWrapper>
+            ))}
+            <SettingsTappableRow action="add" text={s.strings.settings_add_custom_node} onPress={handleEditNode} />
+          </>
+        )}
+      </>
     )
   }
+
+  return (
+    <SceneWrapper background="theme" hasTabs={false}>
+      <ScrollView>
+        <SettingsHeaderRow text={s.strings.settings_denominations_title} />
+        {denominations.map(denomination => {
+          const key = denomination.multiplier
+          const left = (
+            <Text style={styles.labelText}>
+              <Text style={styles.symbolText}>{denomination.symbol}</Text>
+              {' - ' + denomination.name}
+            </Text>
+          )
+          const isSelected = key === selectedDenominationKey
+          return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" value={isSelected} onPress={() => selectDenomination(currencyCode, key)} />
+        })}
+        {defaults == null || settings == null ? null : renderCustomNodes(defaults, settings)}
+      </ScrollView>
+    </SceneWrapper>
+  )
 }
 
-export const CurrencySettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
-  (state, ownProps) => {
-    const { currencyInfo } = ownProps
-    const { currencyCode, defaultSettings, pluginId } = currencyInfo
-
-    const { account } = state.core
-    const defaultElectrumServer = defaultSettings.electrumServers ? defaultSettings.electrumServers[0] : ''
-    const userSettings = account.currencyConfig[pluginId].userSettings
-    const electrumServers = userSettings ? userSettings.electrumServers : []
-    const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
-    return {
-      denominations: getDenominations(state, currencyCode),
-      selectedDenominationKey: getDisplayDenominationKey(state, currencyCode),
-      electrumServers,
-      disableFetchingServers,
-      defaultElectrumServer
-    }
+const getStyles = cacheStyles(theme => ({
+  labelContainer: {
+    flexGrow: 10,
+    flexShrink: 1,
+    margin: -theme.rem(1),
+    padding: theme.rem(1)
   },
-  (dispatch, ownProps) => ({
-    disableCustomNodes() {
-      dispatch(disableCustomNodes(ownProps.currencyInfo.currencyCode))
-    },
-    enableCustomNodes() {
-      dispatch(enableCustomNodes(ownProps.currencyInfo.currencyCode))
-    },
-    selectDenomination(denominationKey) {
-      dispatch(setDenominationKeyRequest(ownProps.currencyInfo.currencyCode, denominationKey))
-    },
-    saveCustomNodesList(nodesList: string[]) {
-      dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
+  labelText: {
+    color: theme.primaryText,
+    flexShrink: 1,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'left'
+  },
+  symbolText: {
+    fontFamily: theme.fontFaceSymbols
+  }
+}))
+
+export const CurrencySettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, { route: { params } }) => ({
+    account: state.core.account,
+    selectedDenominationKey: getDisplayDenominationKey(state, state.core.account.currencyConfig[params.currencyInfo.pluginId].currencyInfo.currencyCode)
+  }),
+  dispatch => ({
+    async selectDenomination(currencyCode, denominationKey) {
+      await dispatch(setDenominationKeyRequest(currencyCode, denominationKey))
     }
   })
 )(withTheme(CurrencySettingsComponent))

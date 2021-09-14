@@ -35,7 +35,8 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props> {
   }
 
   renderRow = () => {
-    return <WalletListRow {...this.props} onLongPress={this.handleOpenWalletListMenuModal} currencyCode="" walletName="" />
+    const { gradient, walletId } = this.props
+    return <WalletListRow currencyCode="" gradient={gradient} onLongPress={this.handleOpenWalletListMenuModal} walletId={walletId} walletName="" />
   }
 
   render() {

@@ -16,6 +16,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -33,8 +34,7 @@ import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
-  edgeTransaction: EdgeTransaction,
-  thumbnailPath?: string
+  route: RouteProp<'transactionDetails'>
 }
 type StateProps = {
   contacts: GuiContact[],
@@ -104,10 +104,10 @@ const getAbsoluteAmount = (edgeTransaction: EdgeTransaction): string =>
 export class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { thumbnailPath } = props
+    const { thumbnailPath, edgeTransaction: edgeTx } = props.route.params
     const edgeTransaction = {
-      ...props.edgeTransaction,
-      date: UTILS.autoCorrectDate(props.edgeTransaction.date)
+      ...edgeTx,
+      date: UTILS.autoCorrectDate(edgeTx.date)
     }
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const category = this.initializeFormattedCategories(edgeTransaction.metadata, direction)
@@ -182,7 +182,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         amount={this.state.amountFiat}
         onChange={this.onChangeFiat}
       />
-    )).then(_ => {})
+    )).then(_ => {
+      const { amountFiat } = this.state
+      if (UTILS.zeroString(amountFiat)) {
+        this.onChangeFiat('0.00')
+      }
+    })
   }
 
   onChangeCategory = (category: string, subCategory: string) => this.setState({ category, subCategory })
@@ -214,7 +219,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { edgeTransaction, guiWallet } = this.props
+    const { guiWallet, route } = this.props
+    const { edgeTransaction } = route.params
     const { wallet } = edgeTransaction
 
     if (wallet) {
@@ -225,25 +231,27 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAdvancedDetails = async () => {
-    const { currencyInfo } = this.props
+    const { currencyInfo, route } = this.props
+    const { edgeTransaction } = route.params
 
     Airship.show(bridge => (
       <TransactionAdvanceDetails
         bridge={bridge}
-        feeRateUsed={this.props.edgeTransaction.feeRateUsed}
-        networkFeeOption={this.props.edgeTransaction.networkFeeOption}
-        requestedCustomFee={this.props.edgeTransaction.requestedCustomFee}
-        signedTx={this.props.edgeTransaction.signedTx}
-        txid={this.props.edgeTransaction.txid}
-        txSecret={this.props.edgeTransaction.txSecret}
-        recipientAddress={this.props.edgeTransaction.spendTargets ? this.props.edgeTransaction.spendTargets[0].publicAddress : ''}
-        url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, this.props.edgeTransaction.txid) : undefined}
+        feeRateUsed={edgeTransaction.feeRateUsed}
+        networkFeeOption={edgeTransaction.networkFeeOption}
+        requestedCustomFee={edgeTransaction.requestedCustomFee}
+        signedTx={edgeTransaction.signedTx}
+        txid={edgeTransaction.txid}
+        txSecret={edgeTransaction.txSecret}
+        recipientAddress={edgeTransaction.spendTargets ? edgeTransaction.spendTargets[0].publicAddress : ''}
+        url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : undefined}
       />
     ))
   }
 
   renderExchangeData = (symbolString: string) => {
-    const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps, theme } = this.props
+    const { destinationDenomination, destinationWallet, guiWallet, walletDefaultDenomProps, theme, route } = this.props
+    const { edgeTransaction } = route.params
     const { swapData, spendTargets } = edgeTransaction
     const styles = getStyles(theme)
 
@@ -327,8 +335,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   onSaveTxDetails = () => {
+    const { route } = this.props
     const { payeeName, notes, bizId, category, subCategory, amountFiat } = this.state
-    const { edgeTransaction } = this.props
+    const { edgeTransaction } = route.params
     let finalAmountFiat
     const fullCategory = category ? `${UTILS.capitalize(category)}:${subCategory}` : undefined
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
@@ -345,7 +354,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Crypto Amount Logic
   getReceivedCryptoAmount(): FiatCryptoAmountUI {
-    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
+    const { walletDefaultDenomProps, guiWallet, route } = this.props
+    const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
@@ -362,7 +372,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   getSentCryptoAmount(): FiatCryptoAmountUI {
-    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
+    const { walletDefaultDenomProps, guiWallet, route } = this.props
+    const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const symbolString =
@@ -414,7 +425,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { guiWallet, edgeTransaction, theme } = this.props
+    const { guiWallet, theme, route } = this.props
+    const { edgeTransaction } = route.params
     const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
@@ -573,8 +585,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
-    const { edgeTransaction } = ownProps
+  (state, { route: { params } }) => {
+    const { edgeTransaction } = params
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
     const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
