@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
-import Reamimated, { Easing, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
+import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
@@ -539,7 +539,7 @@ const BlinkingCursor = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: withRepeat(withSequence(withTiming(1, { easing: Easing.in(Easing.exp) }), withTiming(0, { easing: Easing.out(Easing.exp) })), -1)
+    opacity: withRepeat(withSequence(withDelay(500, withTiming(1, { duration: 1 })), withDelay(500, withTiming(0, { duration: 1 }))), -1)
   }))
 
   // eslint-disable-next-line react-native/no-raw-text
