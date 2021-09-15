@@ -19,7 +19,7 @@ export function TransactionDetailsTitle(props: Props) {
   const { date } = props.edgeTransaction
   const txDate = new Date(date * 1000)
   const dateString = format(txDate, 'MMM d, yyyy')
-  const time = format(txDate, 'h:mm bb')
+  const time = format(txDate, 'h:mm aaa')
 
   return (
     <View style={styles.container}>
