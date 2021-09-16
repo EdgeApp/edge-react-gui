@@ -42,26 +42,26 @@ export const currencyPlugins = {
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
-  bitcoincashtestnet: false,
-  bitcoingold: true,
-  bitcoingoldtestnet: false,
-  bitcoinsv: true,
+  // bitcoincashtestnet: false,
+  // bitcoingold: true,
+  // bitcoingoldtestnet: false,
+  // bitcoinsv: true,
   bitcointestnet: true,
-  dash: true,
-  digibyte: true,
-  dogecoin: true,
-  eboost: true,
-  feathercoin: true,
-  groestlcoin: true,
-  litecoin: true,
-  qtum: true,
-  ravencoin: true,
-  smartcash: true,
-  ufo: true,
-  vertcoin: true,
-  zcoin: true,
+  // dash: true,
+  // digibyte: true,
+  // dogecoin: true,
+  // eboost: true,
+  // feathercoin: true,
+  // groestlcoin: true,
+  litecoin: true
+  // qtum: true,
+  // ravencoin: true,
+  // smartcash: true,
+  // ufo: true,
+  // vertcoin: true,
+  // zcoin: true,
   // edge-currency-monero:
-  monero: ENV.MONERO_INIT
+  // monero: ENV.MONERO_INIT
 }
 
 export const ratePlugins = {
