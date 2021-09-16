@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
-import Reamimated, { Easing, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
+import { Easing, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
@@ -542,8 +542,12 @@ const BlinkingCursor = () => {
     opacity: withRepeat(withSequence(withTiming(1, { easing: Easing.in(Easing.exp) }), withTiming(0, { easing: Easing.out(Easing.exp) })), -1)
   }))
 
-  // eslint-disable-next-line react-native/no-raw-text
-  return <Reamimated.Text style={[styles.blinkingCursor, animatedStyle]}>|</Reamimated.Text>
+  return (
+    // eslint-disable-next-line react-native/no-raw-text
+    <EdgeText styles={[styles.bottomAmount, styles.blinkingCursor, animatedStyle]} animated>
+      |
+    </EdgeText>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -616,11 +620,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.deactivatedText
   },
   blinkingCursor: {
-    color: theme.deactivatedText,
-    fontSize: theme.rem(1.5),
-    position: 'absolute',
-    right: theme.rem(-0.25),
-    top: 0
+    color: theme.deactivatedText
   },
   hiddenTextInput: {
     position: 'absolute',
