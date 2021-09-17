@@ -92,6 +92,7 @@ export function TextInputModal(props: Props) {
         label={inputLabel}
         returnKeyType={returnKeyType}
         secureTextEntry={secureTextEntry}
+        multiline
         // Our props:
         autoFocus
         error={errorMessage}

@@ -19,6 +19,7 @@ type Props = {|
   clearIcon?: boolean,
   marginRem?: number | number[],
   multiline?: boolean,
+  multilineRemHeight?: number,
   searchIcon?: boolean,
 
   // Callbacks:
@@ -65,6 +66,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     clearIcon = false,
     marginRem,
     multiline = false,
+    multilineRemHeight = 8,
     searchIcon = false,
 
     // Callbacks:
@@ -141,6 +143,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     ...containerPadding,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem)),
     flexGrow: multiline ? 1 : 0,
+    maxHeight: multiline ? theme.rem(multilineRemHeight) : undefined,
     paddingVertical: multiline
       ? // Tweaked to align the first input line with the label text:
         Platform.OS === 'android'
@@ -250,7 +253,7 @@ const getStyles = cacheStyles(theme => {
     // Provides a layout container for the text input:
     container: {
       justifyContent: 'center',
-      minHeight: theme.rem(3),
+      maxHeight: theme.rem(5),
       paddingHorizontal: theme.rem(1)
     },
 

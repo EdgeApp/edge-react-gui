@@ -22,10 +22,10 @@ import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
-import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -208,12 +208,17 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   onChangeNotes = (notes: string) => this.setState({ notes })
   openNotesInput = () => {
     Airship.show(bridge => (
-      <TransactionDetailsNotesInput
+      <TextInputModal
+        autoCorrect={false}
         bridge={bridge}
+        initialValue={this.state.notes}
+        inputLabel={s.strings.transaction_details_notes_title}
+        returnKeyType="go"
         title={s.strings.transaction_details_notes_title}
-        placeholder={s.strings.transaction_details_notes_title}
-        notes={this.state.notes}
-        onChange={this.onChangeNotes}
+        onSubmit={async notes => {
+          await this.onChangeNotes(notes)
+          return true
+        }}
       />
     )).then(_ => {})
   }
