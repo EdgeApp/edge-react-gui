@@ -3693,10 +3693,15 @@ cleaners@^0.2.0:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.1.tgz#535849cfabc91e3ae1fc872b43d450446cd1a1a1"
   integrity sha512-DSz39+aAcvfqwruSz7H7xY9kE3tRbMTiq2GQtZHpNWox2npyoQGdMUYR7pYgApJNSDY5Q9GNRo+JyncxI5USIA==
 
-cleaners@^0.3.1, cleaners@^0.3.7, cleaners@^0.3.8, cleaners@^0.3.9:
+cleaners@^0.3.1, cleaners@^0.3.7, cleaners@^0.3.9:
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.9.tgz#e9d2b7ebbbf62c0ae9f7bf1f1cf0aa5544acb3fa"
   integrity sha512-DAddE949KDyTFcb6LdVpEd4BBHa55wNfm63tE0AYT2hDZyg0IR6lwOqjPhP/6GwF1z9FWeKqjw20T27/UHjM+Q==
+
+cleaners@^0.3.11:
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.11.tgz#7168178df8223965acfea1b81883250c574fedfe"
+  integrity sha512-Iq/spAHw/Ca2O8+kRaYy60+XWQrnqYa7KuuHM7z+RV8wvrN2JTWtBpY0uZWfhVuooGY7SoaY6Cwvbqo8oE4OYQ==
 
 cli-boxes@^2.2.1:
   version "2.2.1"
@@ -4763,15 +4768,15 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.18.7:
-  version "0.18.7"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.7.tgz#5b555e33fc05ca4115626541ceea4cafb3beb6d7"
-  integrity sha512-fJIjidQ9pQSPuAIRak9DB7CZiTR1A+FGvX6vb587+jxGYTCRrDuzgIVKA/e1+4vU/FKplYibxBNxO9xPI2n0wg==
+edge-core-js@^0.18.8:
+  version "0.18.8"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.8.tgz#18a8a4e0e30f2d9f501716dad2ac0d5a27345fe1"
+  integrity sha512-jqFG7ikLB63EuRTJbpVttjesX7dxzEgicu9XLxBaV9Fob3fKvxW77mZBtgtcv6e07a6pNvwFrpbuAb2wUKCn3Q==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
-    cleaners "^0.3.8"
+    cleaners "^0.3.11"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
     edge-sync-client "^0.2.1"
