@@ -4789,10 +4789,10 @@ edge-core-js@^0.18.7:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.7.71:
-  version "0.7.71"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.71.tgz#8164ccf8129a46e32541a6a4ab05c86f86496a96"
-  integrity sha512-A7ORa2bJDofuCiZb/Ps+zzz3L7xArvRJ53ncV54EXEqUS8rZ94djjoCEM7PUrJFfKc0we9U3vU6Gyh9nYS1XHg==
+edge-currency-accountbased@^0.7.72:
+  version "0.7.72"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.72.tgz#2380ab317e6d70a060d6d41f3f1b09285cabc04c"
+  integrity sha512-TpJEebI4Lt9x5DrpFKK93l3Lky4w0ooLuKlPibKX2Jef+CVy0WOQNydvqsgESr1vezlUT1IFdLpLmS9QxGaCqg==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
@@ -4811,7 +4811,6 @@ edge-currency-accountbased@^0.7.71:
     ethereumjs-wallet "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
     eztz.js "git://github.com/EdgeApp/eztz.git#edge-fixes"
     jsonschema "^1.1.1"
-    postinstall-postinstall "^2.1.0"
     ripple-address-codec "^4.1.3"
     ripple-keypairs "^0.10.0"
     ripple-lib "^1.0.0"
@@ -9970,11 +9969,6 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
-
-postinstall-postinstall@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
-  integrity sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==
 
 prebuild-install@^5.2.4, prebuild-install@^5.3.0:
   version "5.3.0"
