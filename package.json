@@ -37,6 +37,7 @@
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "precommit": "npm run localize && lint-staged && flow && npm test",
     "prepare": "./prepare-assets.sh",
+    "prepare.dev": "EDGE_MODE=development ./prepare-assets.sh",
     "server": "node ./loggingServer.js",
     "start": "react-native start",
     "test": "jest --config jest.config.js",
@@ -44,7 +45,7 @@
     "test-ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
     "test:e2e": "detox test -c ios.sim.debug",
     "test:e2e:build": "detox build",
-    "updot": "updot",
+    "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"
   },
   "husky": {
