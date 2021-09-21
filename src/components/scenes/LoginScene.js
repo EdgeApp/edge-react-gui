@@ -4,9 +4,8 @@ import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { type ImageSourcePropType, Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
+import { type ImageSourcePropType, Keyboard, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
-import { getBundleId } from 'react-native-device-info'
 
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions.js'
@@ -77,22 +76,12 @@ class LoginSceneComponent extends React.Component<Props, State> {
           .catch(showError)
       }, 500)
     }
-
     const response = await checkVersion()
     const skipUpdate = (await this.getSkipUpdate()) === response.version
     if (response.needsUpdate && !skipUpdate) {
       Airship.show(bridge => (
         <UpdateModal
           bridge={bridge}
-          onUpdate={() => {
-            const bundleId = getBundleId()
-            const url =
-              Platform.OS === 'android'
-                ? `http://play.app.goo.gl/?link=http://play.google.com/store/apps/details?id=${bundleId}`
-                : `https://itunes.apple.com/app/id1344400091`
-            Linking.openURL(url)
-            bridge.resolve()
-          }}
           onSkip={() => {
             this.props.disklet.setText('ignoreUpdate.json', response.version)
             bridge.resolve()

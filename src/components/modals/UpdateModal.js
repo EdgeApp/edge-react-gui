@@ -1,67 +1,60 @@
 // @flow
 
 import * as React from 'react'
-import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { Image, Linking, Platform, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import { getBundleId } from 'react-native-device-info'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { dayText, textSize } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { AirshipModal } from '../common/AirshipModal.js'
-import { IconCircle } from '../common/IconCircle.js'
-import { LadderLayout } from '../common/LadderLayout'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { MainButton } from '../themed/MainButton'
+import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ThemedModal } from '../themed/ThemedModal'
 
 type Props = {
   bridge: AirshipBridge<void>,
-  onUpdate(): void,
-  onSkip(): void
+  onSkip: () => void
 }
 
-export class UpdateModal extends React.Component<Props> {
-  render() {
-    const { bridge } = this.props
+export function UpdateModal(props: Props) {
+  const { bridge, onSkip } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-    return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
-        <IconCircle>
-          <View
-            style={{
-              width: THEME.rem(3.5),
-              height: THEME.rem(3.5),
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: THEME.COLORS.PRIMARY
-            }}
-          >
-            <Image source={edgeLogo} />
-          </View>
-        </IconCircle>
-
-        <View
-          style={{
-            padding: THEME.rem(1),
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <LadderLayout padding={THEME.rem(1)}>
-            <Text style={dayText('title')}>{s.strings.update_header}</Text>
-
-            <Text style={[dayText('center'), { lineHeight: textSize.large }]}>{s.strings.update_fresh}</Text>
-
-            <PrimaryButton style={{ width: '70%' }} onPress={this.props.onUpdate}>
-              <Text style={[dayText(), { color: THEME.COLORS.WHITE }]}>{s.strings.update_now}</Text>
-            </PrimaryButton>
-
-            <TouchableHighlight onPress={this.props.onSkip}>
-              <Text style={[dayText(), { color: THEME.COLORS.PRIMARY }]}>{s.strings.update_later}</Text>
-            </TouchableHighlight>
-          </LadderLayout>
-        </View>
-      </AirshipModal>
-    )
+  const handleUpdate = () => {
+    const url =
+      Platform.OS === 'android'
+        ? `http://play.app.goo.gl/?link=http://play.google.com/store/apps/details?id=${getBundleId()}`
+        : `https://itunes.apple.com/app/id1344400091`
+    Linking.openURL(url)
+    bridge.resolve()
   }
+
+  const handleClose = () => bridge.resolve()
+
+  return (
+    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
+      <View style={styles.titleContainer}>
+        <Image style={styles.titleImage} source={edgeLogo} />
+        <ModalTitle>{s.strings.update_header}</ModalTitle>
+      </View>
+      <ModalMessage>{s.strings.update_fresh}</ModalMessage>
+      <MainButton label={s.strings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
+      <MainButton label={s.strings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
+      <ModalCloseArrow onPress={handleClose} />
+    </ThemedModal>
+  )
 }
+
+const getStyles = cacheStyles(theme => ({
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  titleImage: {
+    height: theme.rem(1.75),
+    margin: theme.rem(0.5),
+    width: theme.rem(1.75)
+  }
+}))
