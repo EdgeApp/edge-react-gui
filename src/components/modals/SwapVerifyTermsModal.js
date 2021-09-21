@@ -35,9 +35,6 @@ const pluginData: { [pluginId: string]: TermsUri } = {
     privacyUri: 'https://changenow.io/privacy-policy',
     kycUri: 'https://changenow.io/faq/kyc'
   },
-  coinswitch: {
-    termsUri: 'https://coinswitch.co/terms'
-  },
   foxExchange: {
     termsUri: 'https://fox.exchange/tos'
   }

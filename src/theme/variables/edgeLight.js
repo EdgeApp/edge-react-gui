@@ -4,9 +4,7 @@ import { Platform } from 'react-native'
 
 import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
 import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
-import coinswitchLogo from '../../assets/images/exchange/settingsExchangeCoinswitch.png'
 import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
-import faastLogo from '../../assets/images/exchange/settingsExchangeFaast.png'
 import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
@@ -271,9 +269,7 @@ export const edgeLight: Theme = {
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
-  settingsCoinswitchLogo: coinswitchLogo,
   settingsDefaultLogo: defaultLogo,
-  settingsFaastLogo: faastLogo,
   settingsFoxExchangeLogo: foxExchangeLogo,
   settingsGodexLogo: godexLogo,
   settingsSideshiftLogo: sideshiftLogo,

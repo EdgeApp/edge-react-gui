@@ -208,9 +208,7 @@ export type Theme = {
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
-  settingsCoinswitchLogo: string,
   settingsDefaultLogo: string,
-  settingsFaastLogo: string,
   settingsFoxExchangeLogo: string,
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
