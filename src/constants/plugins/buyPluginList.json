@@ -325,7 +325,7 @@
       "credit"
     ],
     "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $5500\nMonthly Limit: $54000\nDoge supported on USA",
-    "title": "Credit Card",
+    "title": "Credit and Debit Card",
     "partnerIconPath": "https://content.edge.app/icon_black_small.png",
     "forCountries": [
       "AF",
@@ -935,7 +935,7 @@
       "applepay"
     ],
     "paymentTypeLogoKey": "applepay",
-    "title": "Apple Pay and Credit Card"
+    "title": "Apple Pay, Credit, and Debit Card"
   },
   "----- Country Specifics -----",
   {

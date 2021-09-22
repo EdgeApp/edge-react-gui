@@ -159,7 +159,7 @@ Doge supported on USA",
       "credit",
     ],
     "pluginId": "moonpay",
-    "title": "Credit Card",
+    "title": "Credit and Debit Card",
   },
 ]
 `;
@@ -239,7 +239,7 @@ Doge supported on USA",
       "applepay",
     ],
     "pluginId": "moonpay",
-    "title": "Apple Pay and Credit Card",
+    "title": "Apple Pay, Credit, and Debit Card",
   },
   Object {
     "cryptoCodes": Array [
