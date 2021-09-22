@@ -33,7 +33,8 @@ type Props = {|
   autoCorrect?: boolean,
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
-  secureTextEntry?: boolean
+  secureTextEntry?: boolean,
+  multiline?: boolean
 |}
 
 export function TextInputModal(props: Props) {
@@ -48,6 +49,7 @@ export function TextInputModal(props: Props) {
     onSubmit,
     returnKeyType,
     secureTextEntry,
+    multiline = false,
     submitLabel = s.strings.submit,
     title
   } = props
@@ -92,7 +94,7 @@ export function TextInputModal(props: Props) {
         label={inputLabel}
         returnKeyType={returnKeyType}
         secureTextEntry={secureTextEntry}
-        multiline
+        multiline={multiline}
         // Our props:
         autoFocus
         error={errorMessage}
@@ -104,7 +106,7 @@ export function TextInputModal(props: Props) {
       />
       {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
-        Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
+        Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
       }
       {spinning ? (
         <MainButton alignSelf="center" disabled marginRem={0.5} spinner />

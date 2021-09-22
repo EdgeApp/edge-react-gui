@@ -214,6 +214,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         initialValue={this.state.notes}
         inputLabel={s.strings.transaction_details_notes_title}
         returnKeyType="go"
+        multiline
         title={s.strings.transaction_details_notes_title}
         onSubmit={async notes => {
           await this.onChangeNotes(notes)
