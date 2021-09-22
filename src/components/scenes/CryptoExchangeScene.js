@@ -20,7 +20,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import Alert from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent.js'
-import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton.js'
@@ -52,7 +51,11 @@ type StateProps = {
   creatingWallet: boolean,
 
   // Determines if a coin can have Exchange Max option
-  hasMaxSpend: boolean
+  hasMaxSpend: boolean,
+
+  // Errors
+  insufficient: boolean,
+  genericError: string | null
 }
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
@@ -179,7 +182,9 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   renderAlert = () => {
     const {
       fromWallet: { primaryNativeBalance },
-      fromCurrencyCode
+      fromCurrencyCode,
+      insufficient,
+      genericError
     } = this.props
 
     const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
@@ -187,6 +192,13 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     if (minimumPopupModals && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
       return <Alert marginRem={[1.5, 1]} title={s.strings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
     }
+
+    if (insufficient || genericError != null) {
+      const title = genericError != null ? s.strings.exchange_generic_error_title : insufficient ? s.strings.exchange_insufficient_funds_title : ''
+      const message = genericError != null ? genericError : insufficient ? s.strings.exchange_insufficient_funds_message : ''
+      return <Alert marginRem={[1.5, 1]} title={title} message={message} type="error" />
+    }
+
     return null
   }
 
@@ -241,7 +253,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       <SceneWrapper background="theme">
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
-          <CryptoExchangeMessageBox />
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
             guiWallet={this.props.fromWallet}
@@ -362,7 +373,9 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       toCurrencyIcon: cryptoExchange.toCurrencyIcon ?? '',
       forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: cryptoExchange.calculatingMax,
-      creatingWallet: cryptoExchange.creatingWallet
+      creatingWallet: cryptoExchange.creatingWallet,
+      insufficient: state.cryptoExchange.insufficientError,
+      genericError: state.cryptoExchange.genericShapeShiftError
     }
   },
   dispatch => ({

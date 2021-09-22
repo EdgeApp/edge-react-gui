@@ -839,6 +839,11 @@ const strings = {
   // Request Scene
   request_balance: 'You have %s',
 
+  // Crypto Exchange Scene
+  exchange_generic_error_title: 'Exchange Error',
+  exchange_insufficient_funds_title: 'Insufficient Funds',
+  exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',
