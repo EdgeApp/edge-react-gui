@@ -26,7 +26,7 @@ import { TextInputModal } from '../modals/TextInputModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
-import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
+import { TransactionDetailsPersonInputModal } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -163,7 +163,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show(bridge => (
-      <TransactionDetailsPersonInput
+      <TransactionDetailsPersonInputModal
         bridge={bridge}
         personStatus={personLabel}
         personName={this.state.payeeName}

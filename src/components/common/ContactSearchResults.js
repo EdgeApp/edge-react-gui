@@ -12,8 +12,7 @@ import { scale } from '../../util/scaling.js'
 type Props = {
   contacts: GuiContact[],
   currentPayeeText: string,
-  onSelectPayee: (string, string) => void,
-  bottomGap?: number
+  onSelectPayee: (string, string) => void
 }
 
 type FlatListItem = {
@@ -38,7 +37,6 @@ export class ContactSearchResults extends React.Component<Props> {
     return (
       <FlatList
         style={styles.resultList}
-        contentContainerStyle={{ paddingBottom: this.props.bottomGap }}
         data={filteredArray}
         initialNumToRender={12}
         keyboardShouldPersistTaps="handled"
