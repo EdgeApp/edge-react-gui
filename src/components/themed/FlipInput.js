@@ -542,8 +542,12 @@ const BlinkingCursor = () => {
     opacity: withRepeat(withSequence(withDelay(500, withTiming(1, { duration: 1 })), withDelay(500, withTiming(0, { duration: 1 }))), -1)
   }))
 
-  // eslint-disable-next-line react-native/no-raw-text
-  return <Reamimated.Text style={[styles.blinkingCursor, animatedStyle]}>|</Reamimated.Text>
+  return (
+    // eslint-disable-next-line react-native/no-raw-text
+    <Reamimated.Text style={[styles.bottomAmount, styles.blinkingCursor, Platform.OS === 'android' ? styles.blinkingCursorandroidAdjust : null, animatedStyle]}>
+      |
+    </Reamimated.Text>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -617,10 +621,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   blinkingCursor: {
     color: theme.deactivatedText,
-    fontSize: theme.rem(1.5),
-    position: 'absolute',
-    right: theme.rem(-0.25),
-    top: 0
+    includeFontPadding: false
+  },
+  blinkingCursorandroidAdjust: {
+    top: -1
   },
   hiddenTextInput: {
     position: 'absolute',
