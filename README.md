@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/EdgeApp/edge-react-gui.svg?branch=develop)](https://travis-ci.com/EdgeApp/edge-react-gui)
 
-## A multicurrency mobile wallet for Bitcoin, Bitcoin Cash, Ethereum, Dash, Litecoin, Ripple/XRP and Monero
+## A multi-currency mobile wallet for Bitcoin, Bitcoin Cash, Ethereum, Dash, Litecoin, Ripple/XRP and Monero
 
 ![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
 
@@ -19,37 +19,21 @@ Edge Wallet is:
 
 ---
 
-## Requirements
-
-Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
-
-- macOS Catalina 10.15.6
-- Xcode 12.1
-- Android Studio 4.1
-- CocoaPods 1.10.1
-- Android NDK r21d
-- NodeJS 14.15.0
-- NPM 6.14.8
-- Yarn 1.22.10
-- Java 1.8.0_202
-
 ## Getting Started
 
-### Install NodeJS & NPM
+### Prepare React Native Development Tools
 
-    https://nodejs.org/en/download/
+The React Native documentation contains [detailed instructions on how to prepare your computer for React Native development](https://reactnative.dev/docs/0.64/environment-setup). Follow the instructions in the "React Native CLI Quickstart" for your specific platform.
+
+If you are using a Mac, follow both the iOS and Android target instructions. Otherwise, you only need the Android target instructions.
 
 ### Install Yarn
 
+This project uses Yarn to manage Javascript dependencies:
+
     https://yarnpkg.com
 
-### Install React Native CLI
-
-    npm install -g react-native-cli
-
-### Install CocoaPods (macOS)
-
-    sudo gem install cocoapods
+Do not use NPM to install dependencies, since that will not work.
 
 ### Checkout develop branch & install node_modules
 
@@ -60,41 +44,7 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
     yarn start
 
-### XCode Setup - Use Legacy Build System
-
-    Open edge-react-gui/ios/edge.xcworkspace in Xcode
-    File -> Workspace Settings
-    Set `Build System` to `Legacy Build System`
-
-### Android NDK Setup
-
-Use Android Studio's Preferences to install NDK (Side by side):
-
-![Android Studio Preferences Screenshot](docs/images/android-studio-ndk-preferences.png)
-
-1. Open Preferences
-2. Navigate to `Appearance & Behavior -> System Settings -> Android SDK` in the sidebar
-3. Navigate to `SDK Tools` tab
-4. Check `NDK (Side by side)` checkbox
-5. Click OK or Apply and follow the download instructions.
-
-> If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle` (macOS) or `C:\Users\[username]\AppData\Local\Android\Sdk\ndk-bundle` (Windows).
-
-### Set the following environment vars
-
-The following environment variables should be exported from your `.bashrc` or equivalent file.
-
-    export ANDROID_NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
-    export NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
-    export SDK_HOME=/Users/[username]/Library/Android/sdk
-    export ANDROID_HOME=/Users/[username]/Library/Android/sdk
-    export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
-
-### Android Recommended Versioning & Configuration
-
-For best results, please consider using the following versions (up-to-date as of 2020-11-16)
-
-- **Java 8 & Java JDK** version 8u202 (([link](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)))
+This bundler process needs to run in the background, so feel free to run this in its own terminal window.
 
 ### Add API key in env.json
 
@@ -110,6 +60,12 @@ Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to th
 - Choose a target device or simulator and tap the Play button on the top nav bar
 
 #### Android
+
+To build, install, and start the app on a simulator or physical phone with USB debugging, run:
+
+    yarn android
+
+Otherwise, to get an APK, do:
 
     cd android
     ./gradlew assembleDebug
