@@ -173,8 +173,6 @@
   "settings_title_pin_login": "Re-connexion de PIN",
   "settings_title": "Réglages",
   "settings_enable_custom_nodes": "Activer la personalisation de Nodes ",
-  "settings_set_custom_nodes_modal_title": "Configurer la personalisation de Nodes ",
-  "settings_set_custom_nodes_modal_instructions": "Veuillez saisir les nodes de client que vous souhaitez à utiliser ci-dessous (une par ligne) ",
   "string_cancel_cap": "Annuler",
   "string_cancel": "ANNULER",
   "string_ok_cap": "OK",
