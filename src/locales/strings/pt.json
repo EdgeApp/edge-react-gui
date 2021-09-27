@@ -117,8 +117,6 @@
   "settings_title_pin_login": "PIN Re-login",
   "settings_title": "Configurações",
   "settings_enable_custom_nodes": "Habilitar nós personalizados",
-  "settings_set_custom_nodes_modal_title": "Configurar Nós Personalizados",
-  "settings_set_custom_nodes_modal_instructions": "Por favor insira abaixo os nós personalizados que deseja usar (um por linha):",
   "string_cancel_cap": "Cancelar",
   "string_cancel": "CANCELAR",
   "string_delete": "Excluir",

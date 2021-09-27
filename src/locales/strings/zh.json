@@ -173,8 +173,6 @@
   "settings_title_pin_login": "PIN码 重新登入:",
   "settings_title": "设置",
   "settings_enable_custom_nodes": "启用自定义节点",
-  "settings_set_custom_nodes_modal_title": "设定自定义节点",
-  "settings_set_custom_nodes_modal_instructions": "请在下面输入要使用的自定义节点 (每行一个):",
   "string_cancel_cap": "取消",
   "string_cancel": "取消",
   "string_ok_cap": "确定",
