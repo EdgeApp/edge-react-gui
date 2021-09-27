@@ -37,6 +37,7 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '.
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
+import { getCurrencyIcon } from './../util/CurrencyInfoHelpers'
 import { updateSwapCount } from './RequestReviewActions.js'
 
 export type SetNativeAmountInfo = {
@@ -391,7 +392,8 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
     wallet,
     balanceMessage: await getBalanceMessage(state, wallet, cc),
     currencyCode: cc,
-    primaryInfo
+    primaryInfo,
+    ...getCurrencyIcon(wallet.currencyCode, cc)
   }
 
   if (direction === 'from') {

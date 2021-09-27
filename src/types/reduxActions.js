@@ -150,7 +150,9 @@ export type Action =
         balanceMessage: string,
         currencyCode: string,
         primaryInfo: GuiCurrencyInfo,
-        wallet: GuiWallet
+        wallet: GuiWallet,
+        symbolImage: string,
+        symbolImageDarkMono: string
       }
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }
