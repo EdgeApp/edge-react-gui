@@ -1,6 +1,5 @@
 // @flow
 
-import { format } from 'date-fns'
 import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
@@ -91,9 +90,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
 
     for (const tx of transactions) {
       // for each transaction, add some meta info
-      const txDate = new Date(tx.date * 1000)
-      const dateString = format(txDate, 'MMM d, yyyy')
-      const time = format(txDate, 'h:mm bb')
+      const { date, time } = UTILS.unixToLocaleDateTime(tx.date)
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
         transactionIdMap[tx.txid] = key
@@ -101,7 +98,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
         transactionsWithKeys.push({
           // then add it
           ...tx,
-          dateString,
+          dateString: date,
           time,
           key
         })

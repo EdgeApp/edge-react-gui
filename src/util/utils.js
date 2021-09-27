@@ -7,7 +7,7 @@ import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
-import { formatNumber } from '../locales/intl.js'
+import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
@@ -814,5 +814,14 @@ export function getCryptoAmount(
       throw new Error(errorMessage)
     }
     throw new Error(error)
+  }
+}
+
+export function unixToLocaleDateTime(unixDate: number): { date: string, time: string, dateTime: string } {
+  const date = new Date(unixDate * 1000)
+  return {
+    date: toLocaleDate(date),
+    time: toLocaleTime(date),
+    dateTime: toLocaleDateTime(date)
   }
 }
