@@ -113,7 +113,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     return (
       <View style={styles.exchangeRateContainer}>
-        {errorMessage ? (
+        {errorMessage != null ? (
           <EdgeText numberOfLines={1} style={styles.exchangeRateErrorText}>
             {errorMessage}
           </EdgeText>
