@@ -52,7 +52,8 @@ export type GuiPlugin = {
   originWhitelist?: string[],
 
   // Device permissions to acquire before launching the plugin:
-  permissions?: Permission[]
+  permissions?: Permission[],
+  mandatoryPermissions?: boolean
 }
 
 /**

@@ -14,9 +14,9 @@ import { type RouteProp } from '../../types/routerTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { setPluginScene } from '../navigation/GuiPluginBackButton.js'
+import { handlePluginBack, setPluginScene } from '../navigation/GuiPluginBackButton.js'
 import { showError, showToast } from '../services/AirshipInstance.js'
-import { requestPermission } from '../services/PermissionsManager.js'
+import { requestPermissionOnSettings } from '../services/PermissionsManager.js'
 
 // WebView bridge managemer --------------------------------------------
 
@@ -194,10 +194,18 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   async checkPermissions() {
-    const { route } = this.props
+    const { route, state } = this.props
     const { plugin } = route.params
     const { permissions = [] } = plugin
-    for (const name of permissions) await requestPermission(name)
+    const { displayName, mandatoryPermissions } = plugin
+    const mandatory = mandatoryPermissions != null && mandatoryPermissions ? mandatoryPermissions : false
+    for (const permission of permissions) {
+      const deniedPermission = await requestPermissionOnSettings(state.core.disklet, permission, displayName, mandatory)
+      if (deniedPermission) {
+        handlePluginBack()
+        return
+      }
+    }
   }
 
   goBack(): boolean {
