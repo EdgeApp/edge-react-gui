@@ -109,7 +109,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   section = (transactions: TransactionListTx[]) => {
     const sections: Section[] = []
     for (const transaction of transactions) {
-      const dateString = transaction.dateString || s.strings.fragment_transaction_list_no_date
+      const dateString = transaction.dateString
       const checkTitle = sections.find(section => section.title === dateString)
       if (!checkTitle) {
         sections.push({
