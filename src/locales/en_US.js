@@ -813,6 +813,8 @@ const strings = {
   contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
   contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
   contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
+  contacts_permission_modal_enable_settings: 'To use %1$s, please enable your %2$s permission.',
+  contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',
