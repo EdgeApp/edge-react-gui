@@ -15,7 +15,7 @@ export function TransactionDetailsTitle(props: Props) {
   const styles = getStyles(useTheme())
 
   if (props.edgeTransaction == null) return null // Should never happen!?
-  const { dateString = '', time } = props.edgeTransaction
+  const { dateString, time } = props.edgeTransaction
 
   return (
     <View style={styles.container}>
