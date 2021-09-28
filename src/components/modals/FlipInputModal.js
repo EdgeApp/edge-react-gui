@@ -114,7 +114,9 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.exchangeRateContainer}>
         {errorMessage != null ? (
-          <EdgeText style={styles.exchangeRateErrorText}>{errorMessage}</EdgeText>
+          <EdgeText numberOfLines={1} style={styles.exchangeRateErrorText}>
+            {errorMessage}
+          </EdgeText>
         ) : (
           <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} />
         )}
