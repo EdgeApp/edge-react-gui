@@ -91,7 +91,6 @@
   "fragment_transaction_list_tx_dropped": "Saltata",
   "fragment_transaction_list_tx_synchronizing": "Sincronizzazione...",
   "fragment_transaction_list_confirmation_progress": "%s di %s conferme",
-  "fragment_transaction_list_no_date": "Nessuna data",
   "fragment_transaction_list_transaction": "Transazioni",
   "transaction_list_buy_crypto_message": "Compra %s",
   "transaction_list_no_tx_yet": "Ancora nessuna transazione!",
