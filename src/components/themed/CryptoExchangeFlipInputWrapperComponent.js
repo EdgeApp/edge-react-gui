@@ -42,13 +42,13 @@ type StateProps = {
   cryptoAmount?: string
 }
 
+type State = {
+  errorMessage?: string
+}
+
 type Props = OwnProps & StateProps & ThemeProps
 
-class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
-  launchSelector = () => {
-    this.props.launchWalletSelector()
-  }
-
+class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     this.props.onCryptoExchangeAmountChanged(amounts)
   }
@@ -75,6 +75,20 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
         {s.strings.string_wallet_balance + ': ' + cryptoAmount + ' ' + primaryCurrencyInfo.displayDenomination.name}
       </EdgeText>
     )
+  }
+
+  onError = (errorMessage?: string) => this.setState({ errorMessage })
+
+  clearError = () => this.onError()
+
+  launchSelector = () => {
+    this.clearError()
+    this.props.launchWalletSelector()
+  }
+
+  focusMe = () => {
+    this.clearError()
+    this.props.focusMe()
   }
 
   render() {
@@ -105,7 +119,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
             <SelectableRow
               autoWidth
               arrowTappable
-              onPress={this.props.focusMe}
+              onPress={this.focusMe}
               icon={this.renderLogo(this.props.currencyLogo)}
               title={
                 <EdgeText style={styles.iconText} numberOfLines={1}>
@@ -120,6 +134,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
 
     return (
       <>
+        {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
         <Card>
           <ExchangedFlipInput
@@ -135,6 +150,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
             overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
             forceUpdateGuiCounter={forceUpdateGuiCounter}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
+            onError={this.onError}
             keyboardVisible={false}
             isFiatOnTop
             isFocus={false}
@@ -200,6 +216,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(1),
     marginBottom: theme.rem(0.5),
     color: theme.secondaryText
+  },
+  errorText: {
+    alignSelf: 'flex-start',
+    marginLeft: theme.rem(1),
+    marginBottom: theme.rem(0.75),
+    color: theme.dangerText
   }
 }))
 

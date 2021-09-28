@@ -73,7 +73,8 @@ export type FlipInputOwnProps = {
   headerLogo: string | void,
   headerCallback?: () => void,
   keyboardVisible: boolean,
-  flipInputRef: (FlipInput: any) => void
+  flipInputRef: (FlipInput: any) => void,
+  onError?: (error: string | void) => void
 }
 
 type Props = FlipInputOwnProps & ThemeProps
@@ -368,11 +369,24 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  handleOnError(error?: string) {
+    if (this.props.onError != null) {
+      this.props.onError(error)
+    }
+  }
+
+  clearError() {
+    this.handleOnError()
+  }
+
   onKeyPress(keyPressed: string, decimalAmount: string, maxEntryDecimals: number, setAmounts: (Props, string) => Amounts) {
     keyPressed = keyPressed.replace(',', '.')
     if (keyPressed === 'Backspace') {
       this.setStateAmounts(truncateDecimals(decimalAmount.slice(0, -1), maxEntryDecimals), setAmounts)
-    } else if (checkKeyPress(keyPressed, decimalAmount)) {
+    } else if (!checkKeyPress(keyPressed, decimalAmount)) {
+      this.handleOnError(s.strings.invalid_character_error)
+    } else {
+      this.clearError()
       this.setStateAmounts(truncateDecimals(decimalAmount + keyPressed, maxEntryDecimals), setAmounts)
     }
   }
