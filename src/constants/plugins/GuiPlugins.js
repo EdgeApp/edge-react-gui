@@ -23,7 +23,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy' },
     queryPromoCode: 'apiKey',
     displayName: 'MoonPay',
-    permissions: ['camera']
+    permissions: ['camera'],
+    mandatoryPermissions: true
   },
   safello: {
     pluginId: 'safello',
