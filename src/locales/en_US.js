@@ -106,7 +106,6 @@ const strings = {
   fragment_transaction_list_tx_dropped: 'Dropped',
   fragment_transaction_list_tx_synchronizing: 'Synchronizing',
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
-  fragment_transaction_list_no_date: 'No Date',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_no_tx_yet: 'No transactions yet!',
@@ -772,6 +771,7 @@ const strings = {
   NamingServiceDown: '%3$s naming service is down at the moment',
   UnsupportedCurrency: '%2$s is not supported for %1%s',
   RecordNotFound: 'No %2%s record found for %1$s',
+  invalid_character_error: 'Invalid input characters',
 
   update_header: 'Update Available',
   update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
@@ -802,6 +802,7 @@ const strings = {
   export_transaction_export_error: 'No transactions in the date range chosen',
   string_allow: 'Allow',
   string_deny: 'Deny',
+  string_wallet_balance: 'Wallet Balance',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
@@ -838,6 +839,12 @@ const strings = {
 
   // Request Scene
   request_balance: 'You have %s',
+
+  // Crypto Exchange Scene
+  exchange_generic_error_title: 'Exchange Error',
+  exchange_insufficient_funds_title: 'Insufficient Funds',
+  exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
+  exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

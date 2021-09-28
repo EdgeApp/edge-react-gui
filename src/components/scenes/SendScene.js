@@ -408,11 +408,14 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderError() {
     const { error, theme } = this.props
+    const styles = getStyles(theme)
 
     if (error && asMaybeNoAmountSpecifiedError(error) == null) {
       return (
         <Tile type="static" title={s.strings.send_scene_error_title}>
-          <EdgeText style={{ color: theme.dangerText }}>{error.message}</EdgeText>
+          <EdgeText style={styles.errorMessage} numberOfLines={3}>
+            {error.message}
+          </EdgeText>
         </Tile>
       )
     }
@@ -591,6 +594,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     width: 0,
     height: 0
+  },
+  errorMessage: {
+    color: theme.dangerText
   }
 }))
 

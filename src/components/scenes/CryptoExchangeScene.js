@@ -20,7 +20,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import Alert from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent.js'
-import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton.js'
@@ -52,7 +51,11 @@ type StateProps = {
   creatingWallet: boolean,
 
   // Determines if a coin can have Exchange Max option
-  hasMaxSpend: boolean
+  hasMaxSpend: boolean,
+
+  // Errors
+  insufficient: boolean,
+  genericError: string | null
 }
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
@@ -137,6 +140,19 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
   }
 
+  checkExceedsAmount(): boolean {
+    const { fromWallet, fromCurrencyCode, toWallet, toCurrencyCode } = this.props
+    const { fromAmountNative, toAmountNative, whichWalletFocus } = this.state
+    const fromNativeBalance = fromWallet.nativeBalances[fromCurrencyCode] ?? '0'
+    const toNativeBalance = toWallet.nativeBalances[toCurrencyCode] ?? '0'
+
+    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0')
+      ? bns.gt(fromAmountNative, fromNativeBalance)
+      : whichWalletFocus === 'to' && bns.gte(toNativeBalance, '0')
+      ? bns.gt(toAmountNative, toNativeBalance)
+      : false
+  }
+
   launchFromWalletSelector = () => {
     this.renderDropUp('from')
   }
@@ -173,13 +189,16 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const primaryNativeAmount = this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !this.props.calculatingMax && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
+    if (this.checkExceedsAmount()) return null
     return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.getQuote} />
   }
 
   renderAlert = () => {
     const {
       fromWallet: { primaryNativeBalance },
-      fromCurrencyCode
+      fromCurrencyCode,
+      insufficient,
+      genericError
     } = this.props
 
     const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
@@ -187,6 +206,24 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     if (minimumPopupModals && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
       return <Alert marginRem={[1.5, 1]} title={s.strings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
     }
+
+    if (insufficient || genericError != null) {
+      const title = genericError != null ? s.strings.exchange_generic_error_title : insufficient ? s.strings.exchange_insufficient_funds_title : ''
+      const message = genericError != null ? genericError : insufficient ? s.strings.exchange_insufficient_funds_message : ''
+      return <Alert marginRem={[1.5, 1]} title={title} message={message} type="error" />
+    }
+
+    if (this.checkExceedsAmount()) {
+      return (
+        <Alert
+          marginRem={[1.5, 1]}
+          title={s.strings.exchange_insufficient_funds_title}
+          message={s.strings.exchange_insufficient_funds_below_balance}
+          type="error"
+        />
+      )
+    }
+
     return null
   }
 
@@ -241,7 +278,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       <SceneWrapper background="theme">
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
-          <CryptoExchangeMessageBox />
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
             guiWallet={this.props.fromWallet}
@@ -282,8 +318,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.getQuote}
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
-          {this.renderButton()}
           {this.renderAlert()}
+          {this.renderButton()}
           <View style={styles.spacer} />
         </KeyboardAwareScrollView>
       </SceneWrapper>
@@ -362,7 +398,9 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       toCurrencyIcon: cryptoExchange.toCurrencyIcon ?? '',
       forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: cryptoExchange.calculatingMax,
-      creatingWallet: cryptoExchange.creatingWallet
+      creatingWallet: cryptoExchange.creatingWallet,
+      insufficient: state.cryptoExchange.insufficientError,
+      genericError: state.cryptoExchange.genericShapeShiftError
     }
   },
   dispatch => ({

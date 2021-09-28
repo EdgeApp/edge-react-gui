@@ -216,3 +216,15 @@ export function setIntlLocale(l: IntlLocaleType): void {
     locale = l
   }
 }
+
+export function toLocaleDate(date: Date): string {
+  return format(date, 'MMM d, yyyy')
+}
+
+export function toLocaleTime(date: Date): string {
+  return format(date, 'h:mm aa')
+}
+
+export function toLocaleDateTime(date: Date): string {
+  return toLocaleDate(date) + ' ' + toLocaleTime(date)
+}

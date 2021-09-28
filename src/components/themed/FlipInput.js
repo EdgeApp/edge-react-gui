@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
-import Reamimated, { Easing, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
+import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
@@ -73,7 +73,8 @@ export type FlipInputOwnProps = {
   headerLogo: string | void,
   headerCallback?: () => void,
   keyboardVisible: boolean,
-  flipInputRef: (FlipInput: any) => void
+  flipInputRef: (FlipInput: any) => void,
+  onError?: (error: string | void) => void
 }
 
 type Props = FlipInputOwnProps & ThemeProps
@@ -368,11 +369,24 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  handleOnError(error?: string) {
+    if (this.props.onError != null) {
+      this.props.onError(error)
+    }
+  }
+
+  clearError() {
+    this.handleOnError()
+  }
+
   onKeyPress(keyPressed: string, decimalAmount: string, maxEntryDecimals: number, setAmounts: (Props, string) => Amounts) {
     keyPressed = keyPressed.replace(',', '.')
     if (keyPressed === 'Backspace') {
       this.setStateAmounts(truncateDecimals(decimalAmount.slice(0, -1), maxEntryDecimals), setAmounts)
-    } else if (checkKeyPress(keyPressed, decimalAmount)) {
+    } else if (!checkKeyPress(keyPressed, decimalAmount)) {
+      this.handleOnError(s.strings.invalid_character_error)
+    } else {
+      this.clearError()
       this.setStateAmounts(truncateDecimals(decimalAmount + keyPressed, maxEntryDecimals), setAmounts)
     }
   }
@@ -539,11 +553,15 @@ const BlinkingCursor = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: withRepeat(withSequence(withTiming(1, { easing: Easing.in(Easing.exp) }), withTiming(0, { easing: Easing.out(Easing.exp) })), -1)
+    opacity: withRepeat(withSequence(withDelay(500, withTiming(1, { duration: 1 })), withDelay(500, withTiming(0, { duration: 1 }))), -1)
   }))
 
-  // eslint-disable-next-line react-native/no-raw-text
-  return <Reamimated.Text style={[styles.blinkingCursor, animatedStyle]}>|</Reamimated.Text>
+  return (
+    // eslint-disable-next-line react-native/no-raw-text
+    <Reamimated.Text style={[styles.bottomAmount, styles.blinkingCursor, Platform.OS === 'android' ? styles.blinkingCursorandroidAdjust : null, animatedStyle]}>
+      |
+    </Reamimated.Text>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -617,10 +635,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   blinkingCursor: {
     color: theme.deactivatedText,
-    fontSize: theme.rem(1.5),
-    position: 'absolute',
-    right: theme.rem(-0.25),
-    top: 0
+    includeFontPadding: false
+  },
+  blinkingCursorandroidAdjust: {
+    top: -1
   },
   hiddenTextInput: {
     position: 'absolute',

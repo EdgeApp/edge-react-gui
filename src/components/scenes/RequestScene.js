@@ -68,7 +68,8 @@ type State = {
   legacyAddress: string,
   encodedURI: string,
   minimumPopupModalState: CurrencyMinimumPopupState,
-  isFioMode: boolean
+  isFioMode: boolean,
+  errorMessage?: string
 }
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
@@ -268,6 +269,8 @@ export class RequestComponent extends React.Component<Props, State> {
     Airship.show(bridge => <QrModal bridge={bridge} data={this.state.encodedURI} />)
   }
 
+  onError = (errorMessage?: string) => this.setState({ errorMessage })
+
   render() {
     const { currencyIcon, exchangeSecondaryToPrimaryRatio, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
@@ -285,6 +288,8 @@ export class RequestComponent extends React.Component<Props, State> {
         {keysOnlyMode !== true ? (
           <View style={styles.container}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+
+            {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
             <Card marginRem={0}>
               <ExchangedFlipInput
@@ -304,6 +309,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
                 inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
                 headerCallback={this.handleOpenWalletListModal}
+                onError={this.onError}
               />
             </Card>
 
@@ -515,6 +521,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   loader: {
     flex: 1,
     alignSelf: 'center'
+  },
+  errorText: {
+    marginBottom: theme.rem(0.75),
+    color: theme.dangerText
   }
 }))
 

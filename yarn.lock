@@ -3693,10 +3693,15 @@ cleaners@^0.2.0:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.1.tgz#535849cfabc91e3ae1fc872b43d450446cd1a1a1"
   integrity sha512-DSz39+aAcvfqwruSz7H7xY9kE3tRbMTiq2GQtZHpNWox2npyoQGdMUYR7pYgApJNSDY5Q9GNRo+JyncxI5USIA==
 
-cleaners@^0.3.1, cleaners@^0.3.7, cleaners@^0.3.8, cleaners@^0.3.9:
+cleaners@^0.3.1, cleaners@^0.3.7, cleaners@^0.3.9:
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.9.tgz#e9d2b7ebbbf62c0ae9f7bf1f1cf0aa5544acb3fa"
   integrity sha512-DAddE949KDyTFcb6LdVpEd4BBHa55wNfm63tE0AYT2hDZyg0IR6lwOqjPhP/6GwF1z9FWeKqjw20T27/UHjM+Q==
+
+cleaners@^0.3.11:
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.11.tgz#7168178df8223965acfea1b81883250c574fedfe"
+  integrity sha512-Iq/spAHw/Ca2O8+kRaYy60+XWQrnqYa7KuuHM7z+RV8wvrN2JTWtBpY0uZWfhVuooGY7SoaY6Cwvbqo8oE4OYQ==
 
 cli-boxes@^2.2.1:
   version "2.2.1"
@@ -4342,6 +4347,11 @@ date-fns@^2.22.1:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.22.1.tgz#1e5af959831ebb1d82992bf67b765052d8f0efc4"
   integrity sha512-yUFPQjrxEmIsMqlHhAhmxkuH769baF21Kk+nZwZGyrMoyLA+LugaQtC0+Tqf9CBUUULWwUJt6Q5ySI3LJDDCGg==
 
+date-fns@^2.23.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.24.0.tgz#7d86dc0d93c87b76b63d213b4413337cfd1c105d"
+  integrity sha512-6ujwvwgPID6zbI0o7UbURi2vlLDR9uP26+tW6Lg+Ji3w7dd0i3DOcjcClLjLPranT60SSEFBwdSyYwn/ZkPIuw==
+
 dateformat@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
@@ -4763,15 +4773,15 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.18.7:
-  version "0.18.7"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.7.tgz#5b555e33fc05ca4115626541ceea4cafb3beb6d7"
-  integrity sha512-fJIjidQ9pQSPuAIRak9DB7CZiTR1A+FGvX6vb587+jxGYTCRrDuzgIVKA/e1+4vU/FKplYibxBNxO9xPI2n0wg==
+edge-core-js@^0.18.9:
+  version "0.18.9"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.9.tgz#3da7592fa90a671b04f5ed8f3aab10e833072e99"
+  integrity sha512-bUO14gBe+vVKo8s5J9gduxsbh/FZsRas1d+I9bmaXNik861emOj3a5lT/MNTTzqV/9sP0GmP0ecMQ5rgHuiT2A==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
-    cleaners "^0.3.8"
+    cleaners "^0.3.11"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
     edge-sync-client "^0.2.1"
@@ -4789,10 +4799,10 @@ edge-core-js@^0.18.7:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.7.71:
-  version "0.7.71"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.71.tgz#8164ccf8129a46e32541a6a4ab05c86f86496a96"
-  integrity sha512-A7ORa2bJDofuCiZb/Ps+zzz3L7xArvRJ53ncV54EXEqUS8rZ94djjoCEM7PUrJFfKc0we9U3vU6Gyh9nYS1XHg==
+edge-currency-accountbased@^0.7.74:
+  version "0.7.74"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.74.tgz#13548012174ff45c68721d94187816bd642819b9"
+  integrity sha512-GPImDLvbvIP9cgBZqKGgCAPQcXulUnjw+kYa8c2WrISRfxmLKiQZ3wlNmMVODLWmyqWGIQyloGBhcW7gYKMPeQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
@@ -4811,7 +4821,6 @@ edge-currency-accountbased@^0.7.71:
     ethereumjs-wallet "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
     eztz.js "git://github.com/EdgeApp/eztz.git#edge-fixes"
     jsonschema "^1.1.1"
-    postinstall-postinstall "^2.1.0"
     ripple-address-codec "^4.1.3"
     ripple-keypairs "^0.10.0"
     ripple-lib "^1.0.0"
@@ -4842,10 +4851,10 @@ edge-currency-bitcoin@^4.9.18:
     uri-js "^4.4.1"
     url-parse "^1.5.1"
 
-edge-currency-monero@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.2.tgz#3f4ea28044420231d32fecfeaabd9a6aef7c435a"
-  integrity sha512-tTn3xG7x6DN5qOfiAfhaROs/zQI2+pI9KYIPWPAiqeT49hTOIcXUaG4zE9IBZxatFKSjIMX5RDp7d/F1JV9+Fw==
+edge-currency-monero@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.3.tgz#31539d53393c268c6871e60ae5c8201beb4be552"
+  integrity sha512-QeRBhxPH/pAyWI9Ax/2hTmnNyxo7xwmD4iv/BCuF17atda7EL60+8RcigleA9h6wanbENBdJqLt9DDmOBk3/qA==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -4853,10 +4862,10 @@ edge-currency-monero@^0.3.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.33:
-  version "0.11.33"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.33.tgz#42fa30cae5adceca3ac5c61d23ff54615eb671a8"
-  integrity sha512-AyeXLlflYhKUA1eUgqh0NjNqeo4xQn0OyjFlJeksrBP3LarWkAIuwM8bLCgZexWeubVep4JAMseVJRn/UDEjBQ==
+edge-exchange-plugins@^0.11.36:
+  version "0.11.36"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.36.tgz#6fcc3c0fd4bf2aeef3feaa0b3e0c249f217e2240"
+  integrity sha512-iD6M29pP+iIqbMr2WbN3MEEVBnVdjpizNmA13Uvv7TOQzbBXp3HdN7N6lygAZ5gyJ1hH+n9g9RqRfaKwxVFWGw==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
@@ -4865,12 +4874,13 @@ edge-exchange-plugins@^0.11.33:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.17:
-  version "0.9.17"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.17.tgz#91a8df10490a2ba0ab0a63b4198c98d027c54708"
-  integrity sha512-xsp8OOfwc5YQELss/EJeXiHnMGdcpa5U6a3x3hsCO/CS9zgMMNKbm8ZXmNdWtST96Pld+BDVAkV3C5AfGo+GxA==
+edge-login-ui-rn@^0.9.20:
+  version "0.9.20"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.20.tgz#64ea0bdc5b9caea744fee74bf396756d49571192"
+  integrity sha512-4/DrIazGcXJTfbd+Y7HN1a5tmy5hp2W31dILkGG/t0QR49Ygu5FlIjrL7ApOwsYiuSEr/S98OxhKKDQJGdD44w==
   dependencies:
     cleaners "^0.3.1"
+    date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
     react-native-airship "^0.2.6"
     react-native-gesture-handler "^1.10.3"
@@ -9970,11 +9980,6 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
-
-postinstall-postinstall@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
-  integrity sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==
 
 prebuild-install@^5.2.4, prebuild-install@^5.3.0:
   version "5.3.0"

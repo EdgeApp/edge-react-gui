@@ -67,18 +67,6 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'Faa.st',
-    hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/faast.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
     givenName: 'Simplex',
     hasThumbnail: true,
     thumbnailPath: 'https://developer.edge.app/content/simplex.png',
@@ -130,18 +118,6 @@ const merchantPartners = [
     givenName: 'Fox Exchange',
     hasThumbnail: true,
     thumbnailPath: 'https://developer.edge.app/content/foxEchange.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Coinswitch',
-    hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/coinswitch.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',

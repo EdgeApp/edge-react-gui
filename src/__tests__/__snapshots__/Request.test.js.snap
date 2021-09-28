@@ -38,6 +38,7 @@ exports[`Request should render with loaded props 1`] = `
         isFiatOnTop={true}
         isFocus={false}
         keyboardVisible={false}
+        onError={[Function]}
         onExchangeAmountChanged={[Function]}
         onNext={[Function]}
         overridePrimaryExchangeAmount=""
