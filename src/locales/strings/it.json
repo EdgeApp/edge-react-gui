@@ -755,6 +755,8 @@
   "contacts_permission_modal_text_1": "Edge vorrebbe accedere ai tuoi contatti per permetterti di assegnare manualmente le tue transazioni a persone dalla tua rubrica.",
   "contacts_permission_modal_text_2": "Nessuna informazione di contatto è condivisa con Edge o con altre entità. Tutte le informazioni sono cifrate e visualizzate solo da TE.",
   "contacts_permission_modal_text_3": "Se si nega l'accesso, Edge può ancora funzionare per comprare, vendere e scambiare criptovalute.",
+  "contacts_permission_modal_enable_settings": "Per utilizzare %1$s, abilita il tuo permesso %2$s.",
+  "contacts_permission_modal_enable_settings_mandatory": "Per utilizzare %1$s, abilita il tuo permesso %2$s.",
   "wallet_list_sort_title": "Ordina Portafogli",
   "wallet_list_sort_manual": "Ordinamento manuale",
   "wallet_list_sort_name": "Ordina per nome",
