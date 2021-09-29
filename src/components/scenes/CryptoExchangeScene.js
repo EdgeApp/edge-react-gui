@@ -133,7 +133,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
     if (!zeroString(data.primaryNativeAmount)) {
-      this.props.getQuoteForTransaction(data)
+      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data)
       Keyboard.dismiss()
       return
     }
