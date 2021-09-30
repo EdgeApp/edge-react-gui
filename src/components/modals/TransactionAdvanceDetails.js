@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -27,13 +28,7 @@ const feeString = {
 
 type OwnProps = {
   bridge: AirshipBridge<null>,
-  networkFeeOption?: 'high' | 'standard' | 'low' | 'custom',
-  requestedCustomFee?: Object,
-  feeRateUsed?: Object,
-  signedTx: string,
-  txid: string,
-  txSecret?: string,
-  recipientAddress?: string,
+  transaction: EdgeTransaction,
   url?: string
 }
 
@@ -58,6 +53,8 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
     })
   }
 
+  getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
+
   openUrl = () => {
     const { url } = this.props
     if (url) {
@@ -78,7 +75,8 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
   }
 
   openProveUrl = () => {
-    const { recipientAddress, txid, txSecret } = this.props
+    const { txid, txSecret } = this.props.transaction
+    const recipientAddress = this.getRecipientAddress()
     // Early return to satisfy flow. Button isn't visible without all params present.
     if (!recipientAddress || !txid || !txSecret) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
@@ -100,7 +98,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
   }
 
   renderFeeOptions(styles: StyleSheet) {
-    const { networkFeeOption, requestedCustomFee } = this.props
+    const { networkFeeOption, requestedCustomFee } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
       return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
@@ -128,7 +126,9 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
   }
 
   render() {
-    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, recipientAddress, url } = this.props
+    const { bridge, theme, url } = this.props
+    const { feeRateUsed, networkFeeOption, signedTx, txid, txSecret } = this.props.transaction
+    const recipientAddress = this.getRecipientAddress()
     const styles = getStyles(theme)
 
     return (

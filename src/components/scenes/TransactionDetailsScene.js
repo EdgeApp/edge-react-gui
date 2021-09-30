@@ -244,13 +244,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     Airship.show(bridge => (
       <TransactionAdvanceDetails
         bridge={bridge}
-        feeRateUsed={edgeTransaction.feeRateUsed}
-        networkFeeOption={edgeTransaction.networkFeeOption}
-        requestedCustomFee={edgeTransaction.requestedCustomFee}
-        signedTx={edgeTransaction.signedTx}
-        txid={edgeTransaction.txid}
-        txSecret={edgeTransaction.txSecret}
-        recipientAddress={edgeTransaction.spendTargets ? edgeTransaction.spendTargets[0].publicAddress : ''}
+        transaction={edgeTransaction}
         url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : undefined}
       />
     ))
