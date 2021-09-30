@@ -33,7 +33,7 @@ class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> 
     const styles = getStyles(this.props.theme)
     return (
       <TouchableOpacity style={[styles.container, this.props.placement === 'left' ? styles.left : styles.right]} onPress={this.handlePress}>
-        <EdgeText>{title[this.props.type]}</EdgeText>
+        <EdgeText style={styles.text}>{title[this.props.type]}</EdgeText>
       </TouchableOpacity>
     )
   }
@@ -52,6 +52,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   right: {
     paddingLeft: theme.rem(2.5),
     paddingRight: theme.rem(1)
+  },
+  text: {
+    fontFamily: theme.fontFaceMedium
   }
 }))
 
