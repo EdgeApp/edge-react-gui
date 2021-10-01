@@ -4862,10 +4862,10 @@ edge-currency-monero@^0.3.3:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.36:
-  version "0.11.36"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.36.tgz#6fcc3c0fd4bf2aeef3feaa0b3e0c249f217e2240"
-  integrity sha512-iD6M29pP+iIqbMr2WbN3MEEVBnVdjpizNmA13Uvv7TOQzbBXp3HdN7N6lygAZ5gyJ1hH+n9g9RqRfaKwxVFWGw==
+edge-exchange-plugins@^0.11.37:
+  version "0.11.37"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.37.tgz#3a766148d2df5af40b39a099b383ab0aba35867b"
+  integrity sha512-srtt1wSxCpcQ3Wix6fsZmsCookrGwJP/1u9oFv1qM0zMyNGubm8ZvJvHeUUrObu4aR4hqc4O98hmW92/adSktQ==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
