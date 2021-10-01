@@ -35,7 +35,6 @@ import { RawTextModal } from '../modals/RawTextModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
-import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -165,9 +164,19 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openFiatInput = () => {
+    const {
+      guiWallet: { fiatCurrencyCode }
+    } = this.props
     Airship.show(bridge => (
-      <TransactionDetailsFiatInput bridge={bridge} currency={this.props.guiWallet.fiatCurrencyCode} amountFiat={this.state.amountFiat} />
-    )).then(amount => this.onSaveTxDetails(amount))
+      <TextInputModal
+        bridge={bridge}
+        initialValue={this.state.amountFiat}
+        inputLabel={sprintf(s.strings.transaction_details_fiat_modal_header, fiatCurrencyCode)}
+        returnKeyType="done"
+        keyboardType="decimal-pad"
+        title={s.strings.transaction_details_fiat_label}
+      />
+    )).then(amountFiat => (amountFiat != null ? this.onSaveTxDetails({ amountFiat }) : null))
   }
 
   openCategoryInput = () => {
