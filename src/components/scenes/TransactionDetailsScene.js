@@ -499,12 +499,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               </View>
             </Tile>
             <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
-              <View style={styles.tileRow}>
-                <View style={styles.tileCategory}>
-                  <EdgeText style={styles.tileCategoryText}>{categories[category].syntax}</EdgeText>
-                </View>
-                <EdgeText style={styles.tileSubCategoryText}>{subCategory}</EdgeText>
-              </View>
+              <EdgeText style={styles.tileCategory}>{categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')}</EdgeText>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData(crypto.symbolString)}
@@ -563,22 +558,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1)
   },
   tileCategory: {
-    height: theme.rem(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: theme.rem(0.5),
     marginVertical: theme.rem(0.25),
-    borderWidth: 1,
-    borderColor: theme.secondaryButtonOutline,
-    borderRadius: 3
-  },
-  tileCategoryText: {
-    color: theme.secondaryButtonText,
-    fontSize: theme.rem(1)
-  },
-  tileSubCategoryText: {
-    marginVertical: theme.rem(0.25),
-    marginHorizontal: theme.rem(0.75),
     color: theme.primaryText
   },
   textAdvancedTransaction: {
