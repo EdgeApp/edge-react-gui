@@ -106,7 +106,6 @@ const strings = {
   fragment_transaction_list_tx_dropped: 'Dropped',
   fragment_transaction_list_tx_synchronizing: 'Synchronizing',
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
-  fragment_transaction_list_no_date: 'No Date',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_no_tx_yet: 'No transactions yet!',
@@ -295,8 +294,9 @@ const strings = {
   settings_title_pin_login: 'PIN Re-login',
   settings_title: 'Settings',
   settings_enable_custom_nodes: 'Enable Custom Nodes',
-  settings_set_custom_nodes_modal_title: 'Set Custom Nodes',
-  settings_set_custom_nodes_modal_instructions: 'Please enter the custom nodes you wish to use below (one per row):',
+  settings_add_custom_node: 'Add Custom Node',
+  settings_edit_custom_node: 'Edit Custom Node',
+  settings_custom_node_url: 'Node URL',
   settings_promotion_affiliation_header: 'Affiliation Program',
   settings_promotion_header: 'Promotion Codes',
   settings_promotion_add: 'Add promotion code',
@@ -726,8 +726,6 @@ const strings = {
   fio_confirm_request_from: 'Send Request From',
   fio_confirm_request_to: 'Send Request To',
   fio_confirm_request_fio_title: 'Choose FIO Address',
-  fio_confirm_request_fio_subtitle_from: 'Send request from which address?',
-  fio_confirm_request_fio_subtitle_to: 'Enter address to request payment from',
   fio_confirm_request_amount: 'Amount',
   fio_confirm_request_memo: 'Memo',
   fio_confirm_request_input_title_memo: 'Enter Request Memo',
@@ -773,6 +771,7 @@ const strings = {
   NamingServiceDown: '%3$s naming service is down at the moment',
   UnsupportedCurrency: '%2$s is not supported for %1%s',
   RecordNotFound: 'No %2%s record found for %1$s',
+  invalid_character_error: 'Invalid input characters',
 
   update_header: 'Update Available',
   update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
@@ -801,9 +800,9 @@ const strings = {
   string_expiration: 'Expiration',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
-  export_transaction_loading: 'Exporting Transactions…',
   string_allow: 'Allow',
   string_deny: 'Deny',
+  string_wallet_balance: 'Wallet Balance',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
@@ -814,6 +813,8 @@ const strings = {
   contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
   contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
   contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
+  contacts_permission_modal_enable_settings: 'To use %1$s, please enable your %2$s permission.',
+  contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',
@@ -840,6 +841,12 @@ const strings = {
 
   // Request Scene
   request_balance: 'You have %s',
+
+  // Crypto Exchange Scene
+  exchange_generic_error_title: 'Exchange Error',
+  exchange_insufficient_funds_title: 'Insufficient Funds',
+  exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
+  exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

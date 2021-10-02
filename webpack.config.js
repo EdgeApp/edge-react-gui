@@ -4,8 +4,8 @@ const path = require('path')
 
 const webpack = require('webpack')
 
-// Set this to false for easier debugging:
-const production = true
+// Use "yarn prepare.dev" to make a debug-friendly build:
+const production = process.env.EDGE_MODE !== 'development'
 
 module.exports = {
   devtool: 'cheap-source-map',

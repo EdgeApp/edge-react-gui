@@ -13,7 +13,7 @@ import { EXCHANGE_SCENE, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/Sc
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
-import { getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
+import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -84,7 +84,8 @@ export const sendConfirmationUpdateTx =
       data: { spendInfo, authRequired }
     })
 
-    if (guiMakeSpendInfo.nativeAmount === '') return
+    const amountRequired = getAmountRequired(spendInfo)
+    if (amountRequired && guiMakeSpendInfo.nativeAmount === '') return
 
     if (maxSpendSet && isFeeChanged) {
       return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
@@ -123,7 +124,7 @@ export const sendConfirmationUpdateTx =
           ))
           switch (result) {
             case 'buy':
-              Actions.jump(PLUGIN_BUY)
+              Actions.jump(PLUGIN_BUY, { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
@@ -271,17 +272,21 @@ export const signBroadcastAndSave =
       edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
       await wallet.saveTx(edgeSignedTransaction)
       let edgeMetadata = { ...spendInfo.metadata }
+      let payeeFioAddress: string | null = null
+      if (spendInfo.spendTargets[0].otherParams != null) {
+        payeeFioAddress = spendInfo.spendTargets[0].otherParams.fioAddress
+      }
       if (state.ui.scenes.sendConfirmation.transactionMetadata) {
         edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
       }
-      if (guiMakeSpendInfo.fioAddress) {
-        edgeMetadata.name = guiMakeSpendInfo.fioAddress
+      if (payeeFioAddress != null) {
+        edgeMetadata.name = payeeFioAddress
       }
       const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
       if (!edgeMetadata.amountFiat) {
         edgeMetadata.amountFiat = amountFiat
       }
-      if (guiMakeSpendInfo.fioAddress && fioSender) {
+      if (payeeFioAddress != null && fioSender != null) {
         let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
         fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}` : ''
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
@@ -291,14 +296,13 @@ export const signBroadcastAndSave =
       edgeSignedTransaction.metadata = edgeMetadata
       edgeSignedTransaction.wallet = wallet
 
-      if (guiMakeSpendInfo.fioAddress) {
-        addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
+      if (payeeFioAddress != null) {
+        addToFioAddressCache(account, [payeeFioAddress])
       }
 
       // fio
-      if (fioSender) {
+      if (fioSender != null) {
         const { fioAddress, fioWallet, memo, skipRecord } = fioSender
-        const payeeFioAddress = guiMakeSpendInfo.fioAddress
         if (payeeFioAddress && fioAddress && fioWallet) {
           if (guiMakeSpendInfo.fioPendingRequest) {
             const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo

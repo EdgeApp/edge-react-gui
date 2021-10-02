@@ -74,9 +74,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
     return (
       <SceneWrapper background="theme">
         <View style={styles.container}>
-          <EdgeText style={styles.title} isBold>
-            {s.strings.exchange_congratulations}
-          </EdgeText>
+          <EdgeText style={styles.title}>{s.strings.exchange_congratulations}</EdgeText>
           <EdgeText style={styles.text} numberOfLines={2}>
             {s.strings.exchange_congratulations_msg}
           </EdgeText>

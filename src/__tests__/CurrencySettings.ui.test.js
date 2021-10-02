@@ -7,34 +7,40 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { CurrencySettingsComponent } from '../components/scenes/CurrencySettingsScene.js'
 import { edgeDark } from '../theme/variables/edgeDark.js'
 
-const typeHack: any = {}
-
 describe('CurrencySettings', () => {
   it('should render', () => {
     const renderer = new ShallowRenderer()
-    const props = {
-      // NavigationProps:
-      currencyInfo: typeHack,
 
-      // StateProps:
+    const currencyInfo: any = {
+      currencyCode: 'BTG',
+      defaultSettings: {},
       denominations: [
         { name: 'BTG', multiplier: '100000000', symbol: '₿' },
         { name: 'mBTG', multiplier: '100000', symbol: 'm₿' },
         { name: 'bits', multiplier: '100', symbol: 'ƀ' }
       ],
-      selectedDenominationKey: '100',
-      electrumServers: [],
-      disableFetchingServers: false,
-      defaultElectrumServer: '',
-
-      // DispatchProps:
-      disableCustomNodes: jest.fn(),
-      enableCustomNodes: jest.fn(),
-      saveCustomNodesList: jest.fn(),
-      selectDenomination: jest.fn(),
-      theme: edgeDark
+      pluginId: 'bitcoin-gold'
     }
-    const actual = renderer.render(<CurrencySettingsComponent {...props} />)
+    const account: any = {
+      currencyConfig: {
+        'bitcoin-gold': { currencyInfo }
+      }
+    }
+    const route = {
+      name: 'currencySettings',
+      params: { currencyInfo }
+    }
+
+    const actual = renderer.render(
+      <CurrencySettingsComponent
+        account={account}
+        currencyInfo={currencyInfo}
+        route={route}
+        selectDenomination={jest.fn()}
+        selectedDenominationKey="100"
+        theme={edgeDark}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

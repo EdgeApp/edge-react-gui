@@ -54,7 +54,7 @@ class TileComponent extends React.PureComponent<Props> {
               {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
               <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
               {typeof body === 'string' && (
-                <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                <EdgeText style={styles.textBody} numberOfLines={3}>
                   {body}
                 </EdgeText>
               )}

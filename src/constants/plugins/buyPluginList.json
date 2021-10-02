@@ -325,7 +325,7 @@
       "credit"
     ],
     "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $5500\nMonthly Limit: $54000\nDoge supported on USA",
-    "title": "Credit Card",
+    "title": "Credit and Debit Card",
     "partnerIconPath": "https://content.edge.app/icon_black_small.png",
     "forCountries": [
       "AF",
@@ -569,7 +569,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
+    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -619,7 +619,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 3% / Settlement: Instant\nLimit: $50000/day",
+    "description": "Fee: 5.5% / Settlement: Instant\nLimit: $50000/day",
     "title": "PayID",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -643,7 +643,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 4.5% / Settlement: Instant\nMonthly Limit: $2000",
+    "description": "Fee: 5.5% / Settlement: Instant\nMonthly Limit: $2000",
     "title": "Australia Post",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -667,7 +667,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 1.99% / Settlement: Instant\nLimit: $5000/day",
+    "description": "Fee: 6% / Settlement: Instant\nLimit: $5000/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -692,7 +692,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.15% / Settlement: Instant - 3days\nDaily Limit: €14000\nMonthly Limit: €150000",
+    "description": "Fee: 5.5% / Settlement: Instant - 3days\nDaily Limit: €14000\nMonthly Limit: €150000",
     "title": "Sofort - Klarna",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -795,9 +795,7 @@
     "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
     "title": "United Payments Interface",
     "partnerIconPath": "https://content.edge.app/transak_logo.png",
-    "forCountries": [
-      "IN"
-    ],
+    "forCountries": [],
     "cryptoCodes": [
       "BTC",
       "ETH",
@@ -819,9 +817,7 @@
     "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
     "title": "NEFT Transfer",
     "partnerIconPath": "https://content.edge.app/transak_logo.png",
-    "forCountries": [
-      "IN"
-    ],
+    "forCountries": [],
     "cryptoCodes": [
       "BTC",
       "ETH",
@@ -935,7 +931,7 @@
       "applepay"
     ],
     "paymentTypeLogoKey": "applepay",
-    "title": "Apple Pay and Credit Card"
+    "title": "Apple Pay, Credit, and Debit Card"
   },
   "----- Country Specifics -----",
   {
@@ -981,7 +977,7 @@
     },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: 2.5% / Settlement: Instant - 1hour\nLimit: £6000",
+    "description": "Fee: 5.5% / Settlement: Instant - 1hour\nLimit: £6000",
     "sortIndex": 1
   },
   {
@@ -1011,7 +1007,7 @@
     },
     "title": "iDEAL",
     "paymentTypeLogoKey": "ideal",
-    "description": "Fee: 2.9% / Settlement: Instant\nLimit: €10000",
+    "description": "Fee: 5.5% / Settlement: Instant\nLimit: €10000",
     "sortIndex": 1
   },
   {
@@ -1023,7 +1019,7 @@
       "country": "hk",
       "payment_id": "6026"
     },
-    "description": "Fee: 1.99% / Settlement: Instant\nLimit: HK$50000/day"
+    "description": "Fee: 6% / Settlement: Instant\nLimit: HK$50000/day"
   },
   {
     "id": "banxa.credit",

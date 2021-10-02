@@ -42,13 +42,13 @@ type DispatchProps = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioAddressList'>
 }
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 class FioAddressList extends React.Component<Props, LocalState> {
-  willFocusSubscription: { remove: () => void } | null = null
+  willFocusSubscription: (() => void) | null = null
   state: LocalState = {
     initLoading: true,
     prevLoading: false
@@ -88,7 +88,7 @@ class FioAddressList extends React.Component<Props, LocalState> {
   }
 
   componentWillUnmount(): void {
-    this.willFocusSubscription && this.willFocusSubscription.remove()
+    if (this.willFocusSubscription != null) this.willFocusSubscription()
   }
 
   onAddressPress = (fioAddress: FioAddress) => {
@@ -103,6 +103,7 @@ class FioAddressList extends React.Component<Props, LocalState> {
     const { fioWallets } = this.props
     const { name, expiration, walletId, isPublic } = fioDomain
     const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
+    if (fioWallet == null) return
     Actions.push(FIO_DOMAIN_SETTINGS, {
       fioWallet,
       fioDomainName: name,

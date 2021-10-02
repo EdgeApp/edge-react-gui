@@ -5,9 +5,7 @@ import { Platform } from 'react-native'
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
 import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
-import coinswitchLogo from '../../assets/images/exchange/settingsExchangeCoinswitch.png'
 import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
-import faastLogo from '../../assets/images/exchange/settingsExchangeFaast.png'
 import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
@@ -80,6 +78,7 @@ export const edgeDark: Theme = {
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },
+  isDark: true,
 
   // Common border
   defaultBorderColor: palette.white,
@@ -104,7 +103,6 @@ export const edgeDark: Theme = {
 
   // Modal
   modal: palette.edgeNavy,
-  modalBlurType: 'light',
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,
@@ -273,9 +271,7 @@ export const edgeDark: Theme = {
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
-  settingsCoinswitchLogo: coinswitchLogo,
   settingsDefaultLogo: defaultLogo,
-  settingsFaastLogo: faastLogo,
   settingsFoxExchangeLogo: foxExchangeLogo,
   settingsGodexLogo: godexLogo,
   settingsSideshiftLogo: sideshiftLogo,

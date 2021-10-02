@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW_DEEP, SCAN, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW, SCAN, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -76,7 +76,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push(PLUGIN_VIEW_DEEP, {
+      Actions.push(PLUGIN_VIEW, {
         plugin,
         deepPath: path,
         deepQuery: query
@@ -94,7 +94,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'returnAddress': {
       if (!hasCurrentWallet) return false
       // The code for dealing with this is a mess, so fake a barcode scan:
-      Actions.push(SCAN)
+      Actions.push(SCAN, {})
       const edgeWallet = currencyWallets[selectedWalletId]
       const guiWallet = byId[selectedWalletId]
       doRequestAddress(dispatch, edgeWallet, guiWallet, link)

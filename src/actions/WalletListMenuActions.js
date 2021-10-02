@@ -130,7 +130,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const wallet = currencyWallets[walletId]
         Actions.push(TRANSACTIONS_EXPORT, {
           sourceWallet: wallet,
-          currencyCode
+          currencyCode: currencyCode ?? ''
         })
       }
     }

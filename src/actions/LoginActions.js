@@ -5,7 +5,7 @@ import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
-import { showError } from '../components/services/AirshipInstance.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
@@ -265,6 +265,7 @@ export const mergeSettings = (
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
   Actions.popTo(LOGIN)
+  Airship.clear()
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'LOGOUT', data: { username } })

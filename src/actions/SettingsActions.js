@@ -7,11 +7,10 @@ import * as React from 'react'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { WALLET_LIST } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
-import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { DECIMAL_PRECISION } from '../util/utils.js'
 import { validatePassword } from './AccountActions.js'
@@ -125,9 +124,9 @@ export const updateTouchIdEnabled = (isTouchEnabled: boolean, account: EdgeAccou
     data: { isTouchEnabled }
   })
   if (isTouchEnabled) {
-    enableTouchId(account)
+    await enableTouchId(account)
   } else {
-    disableTouchId(account)
+    await disableTouchId(account)
   }
 }
 
@@ -177,42 +176,6 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
   } else {
     account.disableOtp()
   } // if default of null (press backdrop) do not change anything and keep reminding
-}
-
-export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: RootState = getState()
-  const { account } = state.core
-  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
-    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: true })
-  } catch (error) {
-    showError(error)
-  }
-}
-
-export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: RootState = getState()
-  const { account } = state.core
-  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
-    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: false })
-  } catch (error) {
-    showError(error)
-  }
-}
-
-export const saveCustomNodesList = (currencyCode: string, nodesList: string[]) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: RootState = getState()
-  const { account } = state.core
-  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
-    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, electrumServers: nodesList })
-  } catch (error) {
-    showError(error)
-  }
 }
 
 export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState: GetState) => {

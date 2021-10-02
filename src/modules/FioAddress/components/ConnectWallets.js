@@ -84,10 +84,11 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           return acc
         }, {})
       })
+      const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
       Actions.push(FIO_CONNECT_TO_WALLETS_CONFIRM, {
         fioAddressName,
         fioWallet,
-        walletsToConnect: Object.values(connectWalletsMap),
+        walletsToConnect,
         walletsToDisconnect
       })
     } else {

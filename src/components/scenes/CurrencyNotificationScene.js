@@ -1,6 +1,5 @@
 // @flow
 
-import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -8,13 +7,13 @@ import { sprintf } from 'sprintf-js'
 import { enableNotifications, fetchSettings } from '../../actions/NotificationActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
-type NavigationProps = {
-  currencyInfo: EdgeCurrencyInfo
+type OwnProps = {
+  route: RouteProp<'currencyNotificationSettings'>
 }
 type StateProps = {
   userId: string
@@ -22,7 +21,7 @@ type StateProps = {
 type DispatchProps = {
   enableNotifications: (currencyCode: string, hours: string, enabled: boolean) => void
 }
-type Props = NavigationProps & StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OwnProps
 
 type State = {
   hours: { [hours: string]: boolean }
@@ -37,9 +36,10 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
   }
 
   async componentDidMount() {
-    const { userId, currencyInfo } = this.props
+    const { userId, route } = this.props
+    const { currencyCode } = route.params.currencyInfo
     try {
-      const settings = await fetchSettings(userId, currencyInfo.currencyCode)
+      const settings = await fetchSettings(userId, currencyCode)
       if (settings) this.setState({ hours: settings })
     } catch (err) {
       showError(err)
@@ -48,6 +48,8 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
   }
 
   render() {
+    const { enableNotifications, route } = this.props
+    const { currencyCode } = route.params.currencyInfo
     const rows = []
     for (const hours of Object.keys(this.state.hours)) {
       const enabled: boolean = this.state.hours[hours]
@@ -65,7 +67,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
           value={enabled}
           onPress={() => {
             this.setState(state => ({ hours: { ...state.hours, [hours]: !enabled } }))
-            this.props.enableNotifications(this.props.currencyInfo.currencyCode, hours, !enabled)
+            enableNotifications(currencyCode, hours, !enabled)
           }}
         />
       )
@@ -79,7 +81,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
   }
 }
 
-export const CurrencyNotificationScene = connect<StateProps, DispatchProps, NavigationProps>(
+export const CurrencyNotificationScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     userId: state.core.account.rootLoginId
   }),

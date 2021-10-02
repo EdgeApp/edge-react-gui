@@ -5,6 +5,10 @@ export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
 
+  // Used to control the OS status bar, modal blur,
+  // and other binary light / dark choices:
+  isDark: boolean,
+
   // Common border
   defaultBorderColor: string,
 
@@ -28,7 +32,6 @@ export type Theme = {
 
   // Modal
   modal: string,
-  modalBlurType: 'light' | 'dark',
   modalCloseIcon: string,
   // modalFullGradientLeft: string,
   // modalFullGradientRight: string,
@@ -205,9 +208,7 @@ export type Theme = {
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
-  settingsCoinswitchLogo: string,
   settingsDefaultLogo: string,
-  settingsFaastLogo: string,
   settingsFoxExchangeLogo: string,
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,

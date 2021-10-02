@@ -7,7 +7,7 @@ import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
-import { formatNumber } from '../locales/intl.js'
+import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
@@ -68,8 +68,10 @@ export const getFiatSymbol = (code: string) => {
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-// $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: $ReadOnly<EdgeMetaToken | CustomTokenInfo>[], edgeMetaTokens: CustomTokenInfo[]) => {
+export const mergeTokens = (
+  preferredEdgeMetaTokens: EdgeMetaToken[] | CustomTokenInfo[],
+  edgeMetaTokens: CustomTokenInfo[]
+): Array<EdgeMetaToken | CustomTokenInfo> => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
@@ -812,5 +814,14 @@ export function getCryptoAmount(
       throw new Error(errorMessage)
     }
     throw new Error(error)
+  }
+}
+
+export function unixToLocaleDateTime(unixDate: number): { date: string, time: string, dateTime: string } {
+  const date = new Date(unixDate * 1000)
+  return {
+    date: toLocaleDate(date),
+    time: toLocaleTime(date),
+    dateTime: toLocaleDateTime(date)
   }
 }

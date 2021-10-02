@@ -18,13 +18,13 @@ import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin: (pluginId: string | void) => void,
   ignoreAccountSwap: () => void,
-  removePromotion: (installerId: string) => void
+  removePromotion: (installerId: string) => Promise<void>
 }
 
 type StateProps = {
@@ -114,12 +114,18 @@ export class SwapSettings extends React.Component<Props, State> {
     const { displayName } = exchanges[pluginId].swapInfo
     const logo = this.renderPluginIcon(pluginId)
 
-    function handlePress() {
-      const newValue = !exchanges[pluginId].enabled
-      exchanges[pluginId].changeEnabled(newValue)
-    }
-
-    return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
+    return (
+      <SettingsSwitchRow
+        key={pluginId}
+        icon={logo}
+        text={displayName}
+        value={this.state.enabled[pluginId]}
+        onPress={async () => {
+          const newValue = !exchanges[pluginId].enabled
+          await exchanges[pluginId].changeEnabled(newValue)
+        }}
+      />
+    )
   }
 
   renderPluginIcon(pluginId: string): React.Node {
@@ -139,21 +145,7 @@ export class SwapSettings extends React.Component<Props, State> {
     const pluginId = activePlugins.preferredSwapPluginId
     const { swapSource } = activePlugins
 
-    // Pick the instructions format:
-    const { instructions, handlePress, right } =
-      swapSource.type === 'promotion'
-        ? {
-            instructions: s.strings.swap_preferred_promo_instructions,
-            handlePress: () => this.props.removePromotion(swapSource.installerId),
-            right: <AntDesignIcon name="close" color={theme.icon} size={iconSize} style={styles.swapIcon} />
-          }
-        : {
-            instructions: s.strings.swap_preferred_instructions,
-            handlePress: this.handlePreferredModal,
-            right: <AntDesignIcon name="right" color={theme.iconTappable} size={iconSize} style={styles.swapIcon} />
-          }
-
-    // Pick the selection row:
+    // Pick the plugin description:
     const { text, icon } =
       pluginId != null && exchanges[pluginId] != null
         ? {
@@ -165,13 +157,24 @@ export class SwapSettings extends React.Component<Props, State> {
             icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
 
+    // If a promo controls the swap plugin, provide a disable option:
+    if (swapSource.type === 'promotion') {
+      return (
+        <>
+          <View style={styles.instructionArea}>
+            <Text style={styles.instructionText}>{s.strings.swap_preferred_promo_instructions}</Text>
+          </View>
+          <SettingsTappableRow action="delete" icon={icon} text={text} onPress={() => this.props.removePromotion(swapSource.installerId)} />
+        </>
+      )
+    }
+
     return (
       <>
         <View style={styles.instructionArea}>
-          <Text style={styles.instructionText}>{instructions}</Text>
+          <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
         </View>
-
-        <SettingsRow icon={icon} text={text} onPress={handlePress} right={right} />
+        <SettingsTappableRow icon={icon} text={text} onPress={this.handlePreferredModal} />
       </>
     )
   }
@@ -207,8 +210,8 @@ export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
     ignoreAccountSwap() {
       dispatch(ignoreAccountSwap())
     },
-    removePromotion(installerId: string) {
-      dispatch(removePromotion(installerId))
+    async removePromotion(installerId: string) {
+      await dispatch(removePromotion(installerId))
     }
   })
 )(withTheme(SwapSettings))

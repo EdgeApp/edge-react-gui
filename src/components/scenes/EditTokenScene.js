@@ -1,6 +1,5 @@
 // @flow
 
-import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
@@ -13,19 +12,17 @@ import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButt
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import type { CustomTokenInfo } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
-import { Airship, showActivity } from '../services/AirshipInstance.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type OwnProps = {
-  currencyCode: string,
-  metaTokens: EdgeMetaToken[],
-  onDeleteToken(currencyCode: string): void,
-  walletId: string
+  route: RouteProp<'editToken'>
 }
 type StateProps = {
   customTokens: CustomTokenInfo[],
@@ -42,7 +39,7 @@ type DispatchProps = {
     oldCurrencyCode: string
   ) => void
 }
-type Props = OwnProps & StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OwnProps
 
 type State = {
   currencyName: string,
@@ -57,7 +54,9 @@ type State = {
 class EditTokenComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)
+    const { customTokens, route } = props
+    const { currencyCode } = route.params
+    const tokenInfoIndex = _.findIndex(customTokens, item => item.currencyCode === currencyCode)
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
       const { currencyName, contractAddress, denomination } = tokenInfo
@@ -67,7 +66,7 @@ class EditTokenComponent extends React.Component<Props, State> {
         contractAddress,
         decimalPlaces,
         multiplier: '',
-        currencyCode: props.currencyCode,
+        currencyCode,
         errorMessage: ''
       }
     } else {
@@ -144,23 +143,27 @@ class EditTokenComponent extends React.Component<Props, State> {
     )
   }
 
-  deleteToken = async () => {
-    const { walletId, currencyCode } = this.props
-    const result = await Airship.show(bridge => (
+  deleteToken = () => {
+    const { deleteCustomToken, route } = this.props
+    const { walletId, currencyCode, onDeleteToken } = route.params
+    Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.string_delete}
         message={s.strings.edittoken_delete_prompt}
         buttons={{
-          ok: { label: s.strings.string_delete },
+          ok: {
+            label: s.strings.string_delete,
+            async onPress() {
+              await deleteCustomToken(walletId, currencyCode)
+              onDeleteToken(currencyCode)
+              return true
+            }
+          },
           cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
         }}
       />
     ))
-    if (result === 'ok') {
-      showActivity(s.strings.string_delete, this.props.deleteCustomToken(walletId, currencyCode))
-      this.props.onDeleteToken(currencyCode)
-    }
   }
 
   onChangeName = (input: string) => {
@@ -196,10 +199,12 @@ class EditTokenComponent extends React.Component<Props, State> {
       () => {
         const { currencyName, decimalPlaces, contractAddress } = this.state
         if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-          const { walletId } = this.props
-          const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
+          const { route } = this.props
+          const { walletId, metaTokens } = route.params
+
+          const visibleTokens = UTILS.mergeTokensRemoveInvisible(metaTokens, this.props.customTokens)
           const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
-          if (currencyCode !== this.props.currencyCode) {
+          if (currencyCode !== route.params.currencyCode) {
             // if the currencyCode will change
             if (indexInVisibleTokens >= 0) {
               // if the new currency code is already taken / visible
@@ -208,7 +213,7 @@ class EditTokenComponent extends React.Component<Props, State> {
               // not in the array of visible tokens, CASE 3
               if (parseInt(decimalPlaces) !== 'NaN') {
                 const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
-                this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
+                this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, route.params.currencyCode)
               } else {
                 Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
               }
@@ -216,7 +221,7 @@ class EditTokenComponent extends React.Component<Props, State> {
           } else {
             if (parseInt(decimalPlaces) !== 'NaN') {
               const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
-              this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
+              this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, route.params.currencyCode)
             } else {
               Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
             }

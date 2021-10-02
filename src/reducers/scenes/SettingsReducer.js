@@ -54,7 +54,6 @@ export const initialState = {
     supportedWalletTypes: []
   },
   pinLoginEnabled: false,
-  account: null,
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
@@ -105,7 +104,6 @@ export type SettingsState = {
   HERC: CurrencySetting,
   AGLD: CurrencySetting,
 
-  account: ?Object,
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean, // Never read or updated, but on disk
   changesLocked: any,

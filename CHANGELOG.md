@@ -1,5 +1,67 @@
 # edge-react-gui
 
+## 2.2.0 (2021-09-27)
+
+- Use new sync servers
+- Fix token icons on exchange scene
+- Fix RIF trading on Godex
+- Fix missing FIO request metadata
+- Fix status bar visual consistency
+- Add wallet balance to exchange scene
+- New themed notes modal
+- New themed version update modal
+- Add spinners to buttons waiting on background tasks
+- Add loading gif while app completes new account creation
+- Fix issue empty amount issue when user edits amount metadata
+- Fix slow loading exchange rate on exchange scene
+- Fix flip input cursor blink animation
+- Fix XMR spendable amount error display
+- Cleanup exchange scene error visuals
+- Fix keyboard persistence when unfocusing a text field
+- Fix FIO domain transfer requiring a transaction fee change
+- Fix modals persisting after logging out
+- Remove deprecated exchange providers
+- Support adding a memo for FIO transactions
+- Various visual fixes and improvements
+- Temporarily block FTM trading for some exchange partners
+- Replace custom node modal with list
+- FIO: Save request data locally
+- Create new tappable settings row component
+- Add type-checking to scene navigation props
+- Update build instructions
+- Fix Xcode 13 legacy build system issues
+- Update partner descriptions
+- Update translations
+- Upgrade edge-core-js to v0.18.9
+  - fixed: Allow import 'edge-core-js/types' to work in TypeScript.
+  - changed: Upgrade cleaners to v0.3.11
+  - fixed: Restore Webpack production mode
+  - fixed: Limit the number of documents uploaded to the sync server in one request.
+  - fixed: Upgrade to edge-sync-client v0.2.1, which improves the sync-server retry logic.
+  - changed: Use edge-sync-client to retrieve the list of sync servers instead of a hard-coded list.
+- Upgrade edge-currency-accountbased to v0.7.74
+  - FIO: Remove new otherLocalData cache and use existing walletLocalData cache
+  - FIO: Add request fetching to engine loop and save data locally
+  - Remove postinstall-postinstall dependency
+- Upgrade edge-exchange-plugins to v0.11.36
+  - Remove inactive swap plugins Faast and Coinswitch
+  - Coingecko: add HBAR
+  - Nomics: Fix error handling
+  - Disable FTM trading on all plugins that do not identify the version of FTM is supported (ERC20 or mainnet)
+  - Plugins will be updated as mainnet identification is added.
+  - Godex: Add support for RBTC network name
+  - Move edge-core-js to devDependencies
+- Upgrade edge-login-ui-rn to v0.9.20
+  - rn: Fix handling for the START_RESECURE action type.
+  - rn: Fix date handling in 2FA scenes
+  - rn: Fix date handling in alert modal
+  - rn: Fix keyboard hiding in recovery scene
+  - rn: Rename any instance of 'screen' to 'scene'
+  - rn: Update translations
+  - rn: Add gif loader to wait screen
+- Upgrade edge-currency-monero to v0.3.3
+  - Reformat spendable balance error into 3 lines
+
 ## 2.1.0 (2021-08-23)
 
 - New UI2 themed Scan scene
