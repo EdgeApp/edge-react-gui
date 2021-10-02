@@ -144,51 +144,16 @@ exports[`TransactionDetails.ui should render 1`] = `
         title="Category"
         type="editable"
       >
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "alignItems": "center",
-              "flexDirection": "row",
+              "color": "#FFFFFF",
+              "marginVertical": 6,
             }
           }
         >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "borderColor": "#66EDA8",
-                "borderRadius": 3,
-                "borderWidth": 1,
-                "height": 45,
-                "justifyContent": "center",
-                "marginVertical": 6,
-                "paddingHorizontal": 11,
-              }
-            }
-          >
-            <WithTheme(EdgeTextComponent)
-              style={
-                Object {
-                  "color": "#66EDA8",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Income
-            </WithTheme(EdgeTextComponent)>
-          </View>
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#FFFFFF",
-                "marginHorizontal": 17,
-                "marginVertical": 6,
-              }
-            }
-          >
-            
-          </WithTheme(EdgeTextComponent)>
-        </View>
+          Income
+        </WithTheme(EdgeTextComponent)>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
         body=""
@@ -373,51 +338,16 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         title="Category"
         type="editable"
       >
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "alignItems": "center",
-              "flexDirection": "row",
+              "color": "#FFFFFF",
+              "marginVertical": 6,
             }
           }
         >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "borderColor": "#66EDA8",
-                "borderRadius": 3,
-                "borderWidth": 1,
-                "height": 45,
-                "justifyContent": "center",
-                "marginVertical": 6,
-                "paddingHorizontal": 11,
-              }
-            }
-          >
-            <WithTheme(EdgeTextComponent)
-              style={
-                Object {
-                  "color": "#66EDA8",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Expense
-            </WithTheme(EdgeTextComponent)>
-          </View>
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#FFFFFF",
-                "marginHorizontal": 17,
-                "marginVertical": 6,
-              }
-            }
-          >
-            
-          </WithTheme(EdgeTextComponent)>
-        </View>
+          Expense
+        </WithTheme(EdgeTextComponent)>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
         body=""
@@ -602,51 +532,16 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         title="Category"
         type="editable"
       >
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "alignItems": "center",
-              "flexDirection": "row",
+              "color": "#FFFFFF",
+              "marginVertical": 6,
             }
           }
         >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "borderColor": "#66EDA8",
-                "borderRadius": 3,
-                "borderWidth": 1,
-                "height": 45,
-                "justifyContent": "center",
-                "marginVertical": 6,
-                "paddingHorizontal": 11,
-              }
-            }
-          >
-            <WithTheme(EdgeTextComponent)
-              style={
-                Object {
-                  "color": "#66EDA8",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Income
-            </WithTheme(EdgeTextComponent)>
-          </View>
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#FFFFFF",
-                "marginHorizontal": 17,
-                "marginVertical": 6,
-              }
-            }
-          >
-            
-          </WithTheme(EdgeTextComponent)>
-        </View>
+          Income
+        </WithTheme(EdgeTextComponent)>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
         body=""
@@ -831,51 +726,16 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         title="Category"
         type="editable"
       >
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "alignItems": "center",
-              "flexDirection": "row",
+              "color": "#FFFFFF",
+              "marginVertical": 6,
             }
           }
         >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "borderColor": "#66EDA8",
-                "borderRadius": 3,
-                "borderWidth": 1,
-                "height": 45,
-                "justifyContent": "center",
-                "marginVertical": 6,
-                "paddingHorizontal": 11,
-              }
-            }
-          >
-            <WithTheme(EdgeTextComponent)
-              style={
-                Object {
-                  "color": "#66EDA8",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Income
-            </WithTheme(EdgeTextComponent)>
-          </View>
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#FFFFFF",
-                "marginHorizontal": 17,
-                "marginVertical": 6,
-              }
-            }
-          >
-            
-          </WithTheme(EdgeTextComponent)>
-        </View>
+          Income
+        </WithTheme(EdgeTextComponent)>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
         body=""
