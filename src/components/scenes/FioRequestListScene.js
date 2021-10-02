@@ -432,7 +432,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       },
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
-          this.getFioRequestsPending()
+          this.removeFioPendingRequest(pendingRequest.fio_request_id)
           Actions.replace(TRANSACTION_DETAILS, { edgeTransaction })
         }
       }
