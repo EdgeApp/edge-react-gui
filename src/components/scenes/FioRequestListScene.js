@@ -123,7 +123,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
     let newRequests = []
     try {
-      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING, true)
+      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING)
     } catch (e) {
       showError(e.message)
     }
@@ -154,12 +154,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  getFioRequests = async (
-    fioWallets: EdgeCurrencyWallet[],
-    paging: { [fioPublicKey: string]: number },
-    requestsType: string,
-    newFirst: boolean = false
-  ): Promise<FioRequest[]> => {
+  getFioRequests = async (fioWallets: EdgeCurrencyWallet[], paging: { [fioPublicKey: string]: number }, requestsType: string): Promise<FioRequest[]> => {
     const nextFioRequests: FioRequest[] = []
     if (fioWallets.length) {
       try {
@@ -167,7 +162,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
           const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
           if (paging[fioPublicKey] == null) paging[fioPublicKey] = 1
 
-          const fioRequests = await wallet.otherMethods.getFioRequests(requestsType, paging[fioPublicKey], ITEMS_PER_PAGE, newFirst)
+          const fioRequests = await wallet.otherMethods.getFioRequests(requestsType, paging[fioPublicKey], ITEMS_PER_PAGE)
           nextFioRequests.push(...fioRequests.map((request: FioRequest) => ({ ...request, fioWalletId: wallet.id })))
           paging[fioPublicKey]++
         }
@@ -175,10 +170,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         throw new Error(s.strings.fio_get_requests_error)
       }
     }
-    if (newFirst) {
-      return nextFioRequests.sort((a, b) => (a.time_stamp < b.time_stamp ? 1 : -1))
-    }
-    return nextFioRequests.sort((a, b) => (a.time_stamp < b.time_stamp ? -1 : 1))
+    return nextFioRequests
   }
 
   showRenewAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
