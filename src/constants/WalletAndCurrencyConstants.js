@@ -227,7 +227,6 @@ export const SPECIAL_CURRENCY_INFO: {
     isPrivateKeySweepable: true
   },
   BSV: {
-    displayBuyCrypto: true,
     isPrivateKeySweepable: true
   },
   DGB: {
