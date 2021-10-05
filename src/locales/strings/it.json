@@ -747,6 +747,7 @@
   "string_allow": "Consenti",
   "string_deny": "Nega",
   "string_wallet_balance": "Saldo portafoglio",
+  "string_max_cap": "MAX",
   "step": "Passaggio",
   "scan_as_in_scan_barcode": "Scansiona",
   "enter_as_in_enter_address_with_keyboard": "Inserisci",
