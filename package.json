@@ -155,6 +155,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-swipe-list-view": "^3.2.5",
     "react-native-tcp": "git://github.com/EdgeApp/react-native-tcp.git#rn62",
+    "react-native-ticker": "^4.0.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.2.3",
     "react-redux": "^7.2.4",

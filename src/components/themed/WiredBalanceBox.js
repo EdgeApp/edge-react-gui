@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
+import { Ticker } from 'react-native-ticker'
 
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { formatNumber } from '../../locales/intl.js'
@@ -48,9 +49,9 @@ class BalanceBox extends React.PureComponent<Props> {
           {showBalance && !noExchangeRates ? (
             <>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
-              <EdgeText style={styles.balanceBody}>
+              <Ticker textStyle={[styles.balanceHeader, styles.balanceTicker]} duration={500}>
                 {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
-              </EdgeText>
+              </Ticker>
             </>
           ) : (
             <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
@@ -69,9 +70,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     color: theme.secondaryText
   },
-  balanceBody: {
+  balanceTicker: {
     fontSize: theme.rem(1.5),
-    fontFamily: theme.fontFaceMedium
+    fontFamily: theme.fontFaceMedium,
+    color: theme.primaryText
   },
   showBalance: {
     fontSize: theme.rem(1.5),
