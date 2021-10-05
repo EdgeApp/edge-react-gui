@@ -29,7 +29,6 @@
   "azteco_invalid_code": "Codice Azteco non valido.",
   "azteco_service_unavailable": "Errore: server Azteco non raggiungibile. Riprova più tardi.",
   "azteco_btc_only": "Per favore scegli un portafoglio BTC e scansiona di nuovo.",
-  "exchange_max_amount": "Scambia il massimo",
   "max_spend_unavailable_modal_title": "Spesa massima non disponibile",
   "max_spend_unavailable_modal_message": "Impossibile calcolare la quantità massima spendibile per la moneta %s. Inserisci un importo.",
   "edge_description": "Questa applicazione vorrebbe creare il suo portafoglio nel tuo account Edge o accedervi.\n\nNon avrà accesso a nessun altro portafoglio elettronico.",
