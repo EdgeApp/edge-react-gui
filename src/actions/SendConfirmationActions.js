@@ -269,7 +269,11 @@ export const signBroadcastAndSave =
         if (!isAuthorized) throw new Error(s.strings.incorrect_pin)
       }
       edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
-      edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+      if (guiMakeSpendInfo.alternateBroadcast != null) {
+        edgeSignedTransaction = await guiMakeSpendInfo.alternateBroadcast(edgeSignedTransaction)
+      } else {
+        edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+      }
       await wallet.saveTx(edgeSignedTransaction)
       let edgeMetadata = { ...spendInfo.metadata }
       let payeeFioAddress: string | null = null
