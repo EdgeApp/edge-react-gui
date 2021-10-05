@@ -42,6 +42,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   FTC: s.strings.string_first_feather_coin_wallet_name,
   GRS: s.strings.string_first_groestlcoin_wallet_name,
   HERC: s.strings.string_first_hercules_wallet_name,
+  HBAR: s.strings.string_first_hedera_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
   RBTC: s.strings.string_first_rsk_wallet_name,
@@ -115,7 +116,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ufo',
   'wallet:telos',
   'wallet:wax',
-  'wallet:fantom'
+  'wallet:fantom',
+  'wallet:hedera'
 ]
 
 // Put these in reverse order of preference
@@ -139,6 +141,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   FTC: 'feathercoin',
   FTM: 'fantom',
   GRS: 'groestlcoin',
+  HBAR: 'hedera',
   LTC: 'litecoin',
   QTUM: 'qtum',
   RBTC: 'rsk',
@@ -186,6 +189,7 @@ type SpecialCurrencyInfo = {|
   isRbfSupported?: boolean,
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
+  skipAccountNameValidation?: boolean,
   noChangeMiningFee?: boolean,
   noMaxSpend?: boolean,
   keysOnlyMode?: boolean,
@@ -433,6 +437,22 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true
+  },
+  HBAR: {
+    dummyPublicAddress: '0.0.14625',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isAccountActivationRequired: true,
+    skipAccountNameValidation: true,
+    noMaxSpend: true,
+    noChangeMiningFee: true,
+    uniqueIdentifierInfo: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      keyboardType: 'default'
+    }
   }
 }
 
