@@ -80,14 +80,14 @@ const getStyles = cacheStyles((theme: Theme) => {
   const commonButton = {
     alignItems: 'center',
     borderRadius: theme.rem(0.25),
-    borderWidth: theme.rem(0.1),
+    borderWidth: theme.thinLineWidth,
     flexDirection: 'row',
     justifyContent: 'center',
     minHeight: theme.rem(3),
     minWidth: theme.rem(9)
   }
   const commonText = {
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     marginHorizontal: theme.rem(0.5)
   }
