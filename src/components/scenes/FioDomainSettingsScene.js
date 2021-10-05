@@ -16,9 +16,9 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
-import { ClickableText } from '../themed/ThemedButtons.js'
 import { Tile } from '../themed/Tile'
 
 type State = {
@@ -161,11 +161,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme, route } = this.props
+    const { route } = this.props
     const { fioWallet, fioDomainName, expiration, isPublic } = route.params
 
     const { showRenew, showVisibility, showTransfer } = this.state
-    const styles = getStyles(theme)
 
     return (
       <SceneWrapper background="header">
@@ -200,9 +199,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
           <>
             <MainButton label={s.strings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
             <MainButton label={s.strings.title_fio_transfer_domain} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
-            <ClickableText onPress={this.onVisibilityPress} marginRem={[0.25, 1]}>
-              <EdgeText style={styles.visibilityText}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</EdgeText>
-            </ClickableText>
+            <ClickableText
+              label={isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}
+              marginRem={[0.75, 1.5]}
+              onPress={this.onVisibilityPress}
+            />
           </>
         )}
       </SceneWrapper>
@@ -211,10 +212,6 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  visibilityText: {
-    color: theme.textLink,
-    textAlign: 'center'
-  },
   spacer: {
     paddingTop: theme.rem(1.25)
   },

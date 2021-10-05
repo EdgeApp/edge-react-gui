@@ -22,11 +22,11 @@ import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { ClickableText } from '../themed/ThemedButtons.js'
 import { Tile } from '../themed/Tile'
 
 type State = {
@@ -430,11 +430,8 @@ class FioAddressRegister extends React.Component<Props, State> {
             </View>
             {this.renderButton()}
             {this.props.fioWallets.length && showFreeAddressLink ? (
-              <ClickableText onPress={this.registerFreeAddress}>
-                <View style={styles.linkContainer}>
-                  <Fontello name="register-new-fio-icon" style={styles.linkIcon} color={theme.iconTappable} size={theme.rem(1)} />
-                  <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
-                </View>
+              <ClickableText alignSelf="center" label={s.strings.fio_address_reg_free} marginRem={1} onPress={this.registerFreeAddress}>
+                <Fontello name="register-new-fio-icon" color={theme.iconTappable} size={theme.rem(1)} />
               </ClickableText>
             ) : null}
             {this.renderErrorMessage()}
@@ -532,20 +529,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(0.75),
     paddingRight: theme.rem(0.75),
     paddingVertical: theme.rem(0.75)
-  },
-  linkContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  linkIcon: {
-    alignSelf: 'center',
-    marginRight: theme.rem(0.5)
-  },
-  link: {
-    fontSize: theme.rem(1),
-    color: theme.textLink,
-    textAlign: 'center'
   },
   errorMessage: {
     color: theme.dangerText
