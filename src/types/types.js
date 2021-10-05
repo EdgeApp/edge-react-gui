@@ -316,5 +316,6 @@ export type GuiMakeSpendInfo = {
   isSendUsingFioAddress?: boolean,
   onBack?: () => void,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
-  beforeTransaction?: () => Promise<void>
+  beforeTransaction?: () => Promise<void>,
+  alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
 }
