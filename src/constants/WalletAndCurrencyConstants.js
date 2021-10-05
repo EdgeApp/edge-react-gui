@@ -683,3 +683,6 @@ export const FIO_DOMAIN_DEFAULT = {
   walletId: ''
 }
 export const FIO_ADDRESS_DELIMITER = '@'
+
+export const UNSTOPPABLE_DOMAINS = ['.coin', '.wallet', '.bitcoin', '.x', '.888', '.nft', '.dao', '.blockchain', '.zil', '.crypto']
+export const ENS_DOMAINS = ['.eth', '.luxe', '.kred', '.xyz', '.art']
