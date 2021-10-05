@@ -41,13 +41,13 @@ class HeaderTitleComponent extends React.PureComponent<Props> {
     const styles = getStyles(this.props.theme)
     if (this.props.selectedWalletName) {
       return (
-        <EdgeText>
+        <EdgeText style={styles.text}>
           {this.props.selectedWalletName + ': '}
           <EdgeText style={styles.boldText}>{this.props.selectedWalletCurrencyCode}</EdgeText>
         </EdgeText>
       )
     } else {
-      return <EdgeText>{s.strings.loading}</EdgeText>
+      return <EdgeText style={styles.text}>{s.strings.loading}</EdgeText>
     }
   }
 
@@ -69,6 +69,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1.5)
+  },
+  text: {
+    fontFamily: theme.fontFaceMedium
   },
   boldText: {
     fontFamily: theme.fontFaceBold
