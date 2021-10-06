@@ -14,37 +14,33 @@ import { ContactSearchResults } from '../common/ContactSearchResults.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 type Props = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<{ payeeName: string, thumbnailPath: string } | null>,
   personStatus: string,
-  personName: string,
-  contacts: GuiContact[],
-  onChangePerson: (string, string) => void
+  payeeName: string,
+  contacts: GuiContact[]
 }
 
 type State = {
-  personName: string
+  payeeName: string
 }
 
 export class TransactionDetailsPersonInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { personName: props.personName }
+    this.state = { payeeName: props.payeeName }
   }
 
-  onChangePerson = (value: string) => {
-    this.props.onChangePerson(value, '')
-    this.setState({ personName: value })
+  onChangePerson = (payeeName: string) => {
+    this.setState({ payeeName })
   }
 
-  onSelectPerson = (personName: string, thumbnail: string) => {
-    this.props.onChangePerson(personName, thumbnail)
-    this.setState({ personName: personName })
-    this.props.bridge.resolve(null)
+  onSelectPerson = (payeeName: string, thumbnailPath: string) => {
+    this.props.bridge.resolve({ payeeName, thumbnailPath })
   }
 
   render() {
     const { bridge, personStatus, contacts } = this.props
-    const { personName } = this.state
+    const { payeeName } = this.state
     const personStatusString = sprintf(s.strings.transaction_details_person_input, personStatus)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
@@ -64,10 +60,10 @@ export class TransactionDetailsPersonInput extends React.Component<Props, State>
               returnKeyType="done"
               label={personStatusString}
               onChangeText={this.onChangePerson}
-              onSubmitEditing={() => bridge.resolve(null)}
-              value={personName}
+              onSubmitEditing={() => bridge.resolve({ payeeName, thumbnailPath: '' })}
+              value={payeeName}
             />
-            <ContactSearchResults contacts={contacts} currentPayeeText={personName} onSelectPayee={this.onSelectPerson} />
+            <ContactSearchResults contacts={contacts} currentPayeeText={payeeName} onSelectPayee={this.onSelectPerson} />
           </View>
         </TouchableWithoutFeedback>
       </AirshipModal>

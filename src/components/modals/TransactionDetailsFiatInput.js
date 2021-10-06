@@ -10,15 +10,14 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { truncateDecimals } from '../../util/utils.js'
+import { truncateDecimals, zeroString } from '../../util/utils.js'
 import { AirshipModal } from '../common/AirshipModal.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 type Props = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<string | null>,
   currency: string,
-  amount: string,
-  onChange: string => void
+  amount: string
 }
 
 type State = {
@@ -32,7 +31,6 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
   }
 
   changeAmount = (amount: string) => {
-    this.props.onChange(amount)
     this.setState({ amount })
   }
 
@@ -79,7 +77,9 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               onChangeText={this.onChange}
-              onSubmitEditing={() => bridge.resolve(null)}
+              onSubmitEditing={() => {
+                bridge.resolve(zeroString(amount) ? '0.00' : amount)
+              }}
               value={truncateDecimals(amount.toString().replace('-', ''), 2, true)}
             />
           </View>
