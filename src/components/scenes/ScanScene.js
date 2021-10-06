@@ -9,19 +9,19 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { loginQrCodeScanned, parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
-import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
 type OwnProps = {
+  navigation: NavigationProp<'scan'>,
   route: RouteProp<'scan'>
 }
 
@@ -48,10 +48,10 @@ export const LOGIN_QR = 'loginQR'
 
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { data } = route.params
-    if (data !== prevProps.route.params.data && Actions.currentScene !== 'DrawerOpen') {
-      Actions.drawerClose()
+    if (data !== prevProps.route.params.data) {
+      navigation.closeDrawer()
     }
   }
 
@@ -82,9 +82,9 @@ export class Scan extends React.Component<Props> {
   }
 
   _onPressTransfer = () => {
-    const { selectFromWalletForExchange, currentWalletId, currentCurrencyCode } = this.props
+    const { selectFromWalletForExchange, currentWalletId, currentCurrencyCode, navigation } = this.props
     selectFromWalletForExchange(currentWalletId, currentCurrencyCode)
-    Actions.push(EXCHANGE_SCENE)
+    navigation.navigate('exchangeScene')
   }
 
   _onToggleTorch = () => {

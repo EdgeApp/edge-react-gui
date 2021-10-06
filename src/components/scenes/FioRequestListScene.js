@@ -7,7 +7,6 @@ import { ActivityIndicator, View } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_ADDRESS_SETTINGS, FIO_SENT_REQUEST_DETAILS, SEND, TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -18,7 +17,7 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
-import { type NavigationProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -174,6 +173,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   showRenewAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
+    const { navigation } = this.props
     const answer = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -186,7 +186,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'ok') {
-      return Actions.push(FIO_ADDRESS_SETTINGS, {
+      return navigation.navigate('fioAddressSettings', {
         showRenew: true,
         fioWallet,
         fioAddressName
@@ -379,7 +379,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
-    const { fioWallets = [], currencyWallets, state } = this.props
+    const { fioWallets = [], currencyWallets, navigation, state } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())
@@ -425,12 +425,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
-          Actions.replace(TRANSACTION_DETAILS, { edgeTransaction })
+          navigation.navigate('transactionDetails', { edgeTransaction })
         }
       }
     }
 
-    Actions.push(SEND, {
+    navigation.navigate('send', {
       guiMakeSpendInfo,
       selectedWalletId: walletId,
       selectedCurrencyCode
@@ -438,11 +438,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   selectSentRequest = (fioRequest: FioRequest) => {
+    const { navigation } = this.props
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    Actions.push(FIO_SENT_REQUEST_DETAILS, {
+    navigation.navigate('fioSentRequestDetails', {
       selectedFioSentRequest: fioRequest
     })
   }

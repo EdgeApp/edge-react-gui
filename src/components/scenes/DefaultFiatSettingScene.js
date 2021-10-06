@@ -9,20 +9,23 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'defaultFiatSetting'>
+}
 type StateProps = {
   supportedFiats: GuiFiatType[]
 }
 type DispatchProps = {
   onSelectFiat: (selectedDefaultFiat: string) => void
 }
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OwnProps
 
 type State = {
   supportedFiats: GuiFiatType[],
@@ -80,12 +83,14 @@ class DefaultFiatSettingComponent extends React.Component<Props, State> {
   }
 
   onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
+    const { navigation } = this.props
     if (!this.isValidFiat(selectedFiat)) {
       Alert.alert(s.strings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
       this.props.onSelectFiat(selectedFiat)
+      navigation.goBack()
     }
   }
 
@@ -170,14 +175,13 @@ const stylesRaw = {
 }
 const styles: typeof stylesRaw = StyleSheet.create(stylesRaw)
 
-export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, {}>(
+export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
   dispatch => ({
     onSelectFiat(selectedDefaultFiat) {
       dispatch(setDefaultFiatRequest(selectedDefaultFiat))
-      Actions.pop()
     }
   })
 )(DefaultFiatSettingComponent)

@@ -5,10 +5,9 @@ import { Image, Keyboard, View } from 'react-native'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
-import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -20,6 +19,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../themed/Tile'
 
 type OwnProps = {
+  navigation: NavigationProp<'createWalletReview'>,
   route: RouteProp<'createWalletReview'>
 }
 type DispatchProps = {
@@ -43,7 +43,10 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
     Keyboard.dismiss()
   }
 
-  goToWalletList = () => Actions.popTo(WALLET_LIST_SCENE)
+  goToWalletList = () => {
+    const { navigation } = this.props
+    navigation.navigate('walletListScene')
+  }
 
   async createWallet() {
     const { createCurrencyWallet, route } = this.props

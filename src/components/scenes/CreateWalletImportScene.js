@@ -4,7 +4,6 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
-import { CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -14,13 +13,14 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'createWalletImport'>,
   route: RouteProp<'createWalletImport'>
 }
 type StateProps = {
@@ -47,7 +47,7 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
   }
 
   handleNext = (): void => {
-    const { route, account } = this.props
+    const { account, navigation, route } = this.props
     const { selectedWalletType } = route.params
     const { input } = this.state
     const { currencyCode } = selectedWalletType
@@ -58,7 +58,7 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     currencyPlugin
       .importKey(input)
       .then(() => {
-        Actions.push(CREATE_WALLET_SELECT_FIAT, {
+        navigation.navigate('createWalletSelectFiat', {
           selectedWalletType,
           cleanedPrivateKey: input
         })

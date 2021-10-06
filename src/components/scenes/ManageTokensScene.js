@@ -6,11 +6,10 @@ import * as React from 'react'
 import { FlatList, View } from 'react-native'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -26,6 +25,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
 type OwnProps = {
+  navigation: NavigationProp<'manageTokens'>,
   route: RouteProp<'manageTokens'>
 }
 type DispatchProps = {
@@ -135,6 +135,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   onSelectWallet = async () => {
+    const { navigation } = this.props
     const { walletId, currencyCode } = await Airship.show(bridge => (
       <WalletListModal
         allowedCurrencyCodes={this.getAllowedWalletCurrencyCodes()}
@@ -145,7 +146,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     ))
 
     if (walletId && currencyCode) {
-      Actions.refresh({ guiWallet: this.props.wallets[walletId] })
+      navigation.setParams({ guiWallet: this.props.wallets[walletId] })
     }
   }
 
@@ -182,7 +183,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   saveEnabledTokenList = () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { guiWallet } = route.params
     const { id } = guiWallet
     const disabledList: string[] = []
@@ -191,7 +192,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       if (this.state.enabledList.indexOf(val.currencyCode) === -1) disabledList.push(val.currencyCode)
     }
     this.props.setEnabledTokensList(id, this.state.enabledList, disabledList)
-    Actions.pop()
+    navigation.goBack()
   }
 
   onDeleteToken = (currencyCode: string) => {
@@ -209,20 +210,20 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   goToAddTokenScene = () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { guiWallet } = route.params
     const { id } = guiWallet
-    Actions.push(ADD_TOKEN, {
+    navigation.navigate('addToken', {
       walletId: id,
       onAddToken: this.onAddToken
     })
   }
 
   goToEditTokenScene = (currencyCode: string) => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { guiWallet } = route.params
     const { id, metaTokens } = guiWallet
-    Actions.push(EDIT_TOKEN, {
+    navigation.navigate('editToken', {
       walletId: id,
       currencyCode,
       metaTokens,

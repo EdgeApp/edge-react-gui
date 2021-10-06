@@ -3,13 +3,12 @@
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
-import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -31,6 +30,7 @@ type StateProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioConnectToWalletsConfirm'>,
   route: RouteProp<'fioConnectToWalletsConfirm'>
 }
 
@@ -48,7 +48,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
   }
 
   confirm = async (): Promise<void> => {
-    const { updateConnectedWallets, ccWalletMap, isConnected, route } = this.props
+    const { updateConnectedWallets, ccWalletMap, isConnected, navigation, route } = this.props
     const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
@@ -115,7 +115,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             }
           }
           if (walletsToConnectLeft.length || walletsToDisconnectLeft.length) {
-            Actions.refresh({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
+            navigation.setParams({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
             this.resetSlider()
           }
           throw error || removedError
@@ -125,7 +125,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
         } else {
           if (walletsToDisconnect.length) showToast(s.strings.fio_disconnect_wallets_success)
         }
-        Actions.pop()
+        navigation.goBack()
       } catch (e) {
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.setState({ connectWalletsLoading: false })
@@ -141,7 +141,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             />
           ))
           if (answer === 'ok') {
-            Actions.push(FIO_ADDRESS_SETTINGS, {
+            navigation.navigate('fioAddressSettings', {
               showRenew: true,
               fioWallet,
               fioAddressName: fioAddressName

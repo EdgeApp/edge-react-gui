@@ -7,24 +7,25 @@ import { StatusBar, StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'securityAlerts'>
+}
 type StateProps = {
   account: EdgeAccount,
   context: EdgeContext
 }
-type DispatchProps = {
-  onComplete: () => void
-}
-type Props = StateProps & DispatchProps
+type Props = StateProps & OwnProps
 
 class SecurityAlertsComponent extends React.Component<Props> {
   render() {
-    const { context, account, onComplete } = this.props
+    const { context, account, navigation } = this.props
+    const handleComplete = () => navigation.goBack()
 
     return (
       <View style={styles.container}>
-        <SecurityAlertsScreen account={account} context={context} onComplete={onComplete} />
+        <SecurityAlertsScreen account={account} context={context} onComplete={handleComplete} />
       </View>
     )
   }
@@ -39,14 +40,10 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const SecurityAlertsScene = connect<StateProps, DispatchProps, {}>(
+export const SecurityAlertsScene = connect<StateProps, {}, OwnProps>(
   state => ({
     context: state.core.context,
     account: state.core.account
   }),
-  dispatch => ({
-    onComplete() {
-      Actions.pop()
-    }
-  })
+  dispatch => ({})
 )(SecurityAlertsComponent)

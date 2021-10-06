@@ -7,12 +7,13 @@ import { sprintf } from 'sprintf-js'
 import { enableNotifications, fetchSettings } from '../../actions/NotificationActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'currencyNotificationSettings'>,
   route: RouteProp<'currencyNotificationSettings'>
 }
 type StateProps = {
@@ -36,14 +37,14 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
   }
 
   async componentDidMount() {
-    const { userId, route } = this.props
+    const { userId, navigation, route } = this.props
     const { currencyCode } = route.params.currencyInfo
     try {
       const settings = await fetchSettings(userId, currencyCode)
       if (settings) this.setState({ hours: settings })
     } catch (err) {
       showError(err)
-      Actions.pop()
+      navigation.goBack()
     }
   }
 

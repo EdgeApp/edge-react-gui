@@ -13,13 +13,14 @@ import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/se
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type FeeOption } from '../../types/types.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'changeMiningFee'>,
   route: RouteProp<'changeMiningFee'>
 }
 
@@ -69,7 +70,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
-    const { spendTargets = [], maxSpendSet, route } = this.props
+    const { spendTargets = [], maxSpendSet, navigation, route } = this.props
     const { currencyCode, wallet } = route.params
     const testSpendInfo = {
       spendTargets: spendTargets.map(spendTarget => ({
@@ -84,7 +85,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
       .makeSpend(testSpendInfo)
       .then(() => {
         this.props.onSubmit(networkFeeOption, customNetworkFee, wallet.id, currencyCode)
-        Actions.pop()
+        navigation.goBack()
       })
       .catch(e => {
         let message = e.message

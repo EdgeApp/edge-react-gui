@@ -5,13 +5,12 @@ import * as React from 'react'
 import { Alert } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { alreadyExpired, expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -24,6 +23,7 @@ type StateProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioAddressDetails'>,
   route: RouteProp<'fioAddressDetails'>
 }
 
@@ -61,11 +61,11 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   _onPressAccountSettings = (): void => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { fioAddressName, expiration } = route.params
     const { fioWallet } = this.state
     if (fioWallet) {
-      Actions.push(FIO_ADDRESS_SETTINGS, {
+      navigation.navigate('fioAddressSettings', {
         fioWallet,
         fioAddressName,
         expiration,
