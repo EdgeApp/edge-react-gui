@@ -163,7 +163,7 @@
     "redux-thunk": "^2.3.0",
     "rn-qr-generator": "^1.1.7",
     "sprintf-js": "^1.1.1",
-    "url-parse": "^1.4.4"
+    "url-parse": "^1.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
