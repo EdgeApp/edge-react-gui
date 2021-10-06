@@ -15,8 +15,7 @@ type Props = {
   bridge: AirshipBridge<string>,
   title: string,
   placeholder?: string,
-  notes: string,
-  onChange?: string => void
+  notes: string
 }
 
 type State = {
@@ -33,9 +32,6 @@ export class TransactionDetailsNotesInput extends React.Component<Props, State> 
 
   onChange = (notes: string) => {
     this.setState({ notes })
-    if (this.props.onChange) {
-      this.props.onChange(notes)
-    }
   }
 
   render() {

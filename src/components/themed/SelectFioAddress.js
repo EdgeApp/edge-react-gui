@@ -134,9 +134,10 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
         title={s.strings.fio_sender_memo_label}
         placeholder={s.strings.fio_sender_memo_placeholder}
         notes={this.props.memo}
-        onChange={this.handleMemoChange}
       />
-    )).then(_ => {})
+    )).then(memo => {
+      this.handleMemoChange(memo)
+    })
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
