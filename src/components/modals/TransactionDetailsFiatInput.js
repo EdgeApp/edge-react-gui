@@ -10,15 +10,14 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { truncateDecimals } from '../../util/utils.js'
+import { truncateDecimals, zeroString } from '../../util/utils.js'
 import { AirshipModal } from '../common/AirshipModal.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 type Props = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<{ amountFiat: string }>,
   currency: string,
-  amount: string,
-  onChange: string => void
+  amountFiat: string
 }
 
 type State = {
@@ -28,16 +27,16 @@ type State = {
 export class TransactionDetailsFiatInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { amount: props.amount }
+    this.state = { amount: props.amountFiat }
   }
 
   changeAmount = (amount: string) => {
-    this.props.onChange(amount)
     this.setState({ amount })
   }
 
   onFocus = () => {
-    this.changeAmount(this.state.amount !== '0.00' && this.state.amount !== '0,00' ? this.state.amount : '')
+    const { amount } = this.state
+    this.changeAmount(amount !== '0.00' && amount !== '0,00' ? amount : '')
   }
 
   onBlur = () => {
@@ -58,11 +57,11 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
   }
 
   render() {
-    const { bridge, currency } = this.props
+    const { bridge, currency, amountFiat } = this.props
     const { amount } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve({ amountFiat })}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve({ amountFiat })}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{sprintf(s.strings.transaction_details_fiat_modal_header, currency)}</FormattedText>
             <FormField
@@ -79,8 +78,11 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               onChangeText={this.onChange}
-              onSubmitEditing={() => bridge.resolve(null)}
-              value={truncateDecimals(amount.toString().replace('-', ''), 2, true)}
+              onSubmitEditing={() => {
+                const amountFiat = zeroString(amount) ? '0.00' : amount
+                bridge.resolve({ amountFiat })
+              }}
+              value={truncateDecimals(amount.replace('-', ''), 2, true)}
             />
           </View>
         </TouchableWithoutFeedback>

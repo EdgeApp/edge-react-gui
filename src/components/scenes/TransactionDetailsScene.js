@@ -28,8 +28,7 @@ import {
   getFiatSymbol,
   isCryptoParentCurrency,
   splitTransactionCategory,
-  truncateDecimals,
-  zeroString
+  truncateDecimals
 } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
@@ -42,7 +41,6 @@ import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPerso
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
@@ -160,42 +158,19 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     this.props.getSubcategories()
   }
 
-  // Inputs Components
-  onChangePayee = (payeeName: string, thumbnailPath?: string) => {
-    this.setState({ payeeName, thumbnailPath })
-  }
-
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show(bridge => (
-      <TransactionDetailsPersonInput
-        bridge={bridge}
-        personStatus={personLabel}
-        personName={this.state.payeeName}
-        onChangePerson={this.onChangePayee}
-        contacts={this.props.contacts}
-      />
-    )).then(_ => {})
+      <TransactionDetailsPersonInput bridge={bridge} personStatus={personLabel} payeeName={this.state.payeeName} contacts={this.props.contacts} />
+    )).then(person => this.onSaveTxDetails(person))
   }
 
-  onChangeFiat = (amountFiat: string) => this.setState({ amountFiat })
   openFiatInput = () => {
     Airship.show(bridge => (
-      <TransactionDetailsFiatInput
-        bridge={bridge}
-        currency={this.props.guiWallet.fiatCurrencyCode}
-        amount={this.state.amountFiat}
-        onChange={this.onChangeFiat}
-      />
-    )).then(_ => {
-      const { amountFiat } = this.state
-      if (zeroString(amountFiat)) {
-        this.onChangeFiat('0.00')
-      }
-    })
+      <TransactionDetailsFiatInput bridge={bridge} currency={this.props.guiWallet.fiatCurrencyCode} amountFiat={this.state.amountFiat} />
+    )).then(amount => this.onSaveTxDetails(amount))
   }
 
-  onChangeCategory = (category: string, subCategory: string) => this.setState({ category, subCategory })
   openCategoryInput = () => {
     Airship.show(bridge => (
       <TransactionDetailsCategoryInput
@@ -205,28 +180,22 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         category={this.state.category}
         subCategory={this.state.subCategory}
         setNewSubcategory={this.props.setNewSubcategory}
-        onChange={this.onChangeCategory}
       />
-    )).then(_ => {})
+    )).then(categoryInfo => this.onSaveTxDetails(categoryInfo))
   }
 
-  onChangeNotes = (notes: string) => this.setState({ notes })
   openNotesInput = () => {
     Airship.show(bridge => (
       <TextInputModal
-        autoCorrect={false}
         bridge={bridge}
         initialValue={this.state.notes}
         inputLabel={s.strings.transaction_details_notes_title}
-        returnKeyType="go"
+        returnKeyType="done"
         multiline
+        submitLabel={s.strings.string_save}
         title={s.strings.transaction_details_notes_title}
-        onSubmit={async notes => {
-          await this.onChangeNotes(notes)
-          return true
-        }}
       />
-    )).then(_ => {})
+    )).then(notes => (notes != null ? this.onSaveTxDetails({ notes }) : null))
   }
 
   openAccelerateModel = () => {
@@ -339,9 +308,10 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     )
   }
 
-  onSaveTxDetails = () => {
+  onSaveTxDetails = (newDetails?: any) => {
+    if (newDetails == null) return
     const { route } = this.props
-    const { payeeName, notes, bizId, category, subCategory, amountFiat } = this.state
+    const { payeeName: name, notes, bizId, category, subCategory, amountFiat } = { ...this.state, ...newDetails }
     const { edgeTransaction } = route.params
     let finalAmountFiat
     const fullCategory = category ? `${capitalize(category)}:${subCategory}` : undefined
@@ -353,8 +323,15 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    edgeTransaction.metadata = { name: payeeName, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId }
+    edgeTransaction.metadata = {
+      name,
+      category: fullCategory,
+      notes,
+      amountFiat: finalAmountFiat,
+      bizId
+    }
     this.props.setTransactionDetails(edgeTransaction, edgeTransaction.metadata)
+    this.setState(newDetails)
   }
 
   // Crypto Amount Logic
@@ -505,7 +482,6 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <MainButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
           </View>
         </ScrollView>
       </SceneWrapper>
