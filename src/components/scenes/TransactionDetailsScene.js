@@ -12,7 +12,6 @@ import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
-import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
@@ -23,6 +22,7 @@ import {
   autoCorrectDate,
   capitalize,
   convertNativeToDisplay,
+  displayFiatAmount,
   getCurrencyInfo,
   getDenomination,
   getFiatSymbol,
@@ -121,28 +121,21 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       ...edgeTx,
       date: autoCorrectDate(edgeTx.date)
     }
+    const { metadata } = edgeTransaction
+    const { name: payeeName = '', notes = '', amountFiat } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
-    const category = this.initializeFormattedCategories(edgeTransaction.metadata, direction)
+    const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
 
     this.state = {
-      amountFiat: this.initalizeAmountBalance(edgeTransaction.metadata),
-      payeeName: edgeTransaction.metadata && edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '', // remove commenting once metaData in Redux
-      notes: edgeTransaction.metadata && edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : '',
-      category: category.category,
-      subCategory: category.subCategory,
+      amountFiat: displayFiatAmount(amountFiat),
+      payeeName,
+      notes,
+      category,
+      subCategory,
       thumbnailPath,
       direction,
       bizId: 0
     }
-  }
-
-  initalizeAmountBalance = (metadata: ?EdgeMetadata) => {
-    if (metadata && metadata.amountFiat) {
-      const initialAmount = metadata.amountFiat.toFixed(2)
-      const absoluteAmount = bns.abs(initialAmount)
-      return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
-    }
-    return formatNumber('0.00')
   }
 
   initializeFormattedCategories = (metadata: ?EdgeMetadata, direction: string) => {
@@ -443,7 +436,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = getFiatSymbol(guiWallet.fiatCurrencyCode)
-    const fiatValue = truncateDecimals(amountFiat.replace('-', ''), 2, true)
+    const fiatValue = displayFiatAmount(parseFloat(amountFiat))
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
