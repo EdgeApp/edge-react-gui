@@ -19,7 +19,18 @@ import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenominati
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils.js'
+import {
+  autoCorrectDate,
+  capitalize,
+  convertNativeToDisplay,
+  getCurrencyInfo,
+  getDenomination,
+  getFiatSymbol,
+  isCryptoParentCurrency,
+  splitTransactionCategory,
+  truncateDecimals,
+  zeroString
+} from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
@@ -108,7 +119,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { thumbnailPath, edgeTransaction: edgeTx } = props.route.params
     const edgeTransaction = {
       ...edgeTx,
-      date: UTILS.autoCorrectDate(edgeTx.date)
+      date: autoCorrectDate(edgeTx.date)
     }
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const category = this.initializeFormattedCategories(edgeTransaction.metadata, direction)
@@ -140,7 +151,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       const fullCategory = metadata.category || ''
       const colonOccurrence = fullCategory.indexOf(':')
       if (fullCategory && colonOccurrence) {
-        const splittedFullCategory = UTILS.splitTransactionCategory(fullCategory)
+        const splittedFullCategory = splitTransactionCategory(fullCategory)
         const { subCategory } = splittedFullCategory
         const category = splittedFullCategory.category.toLowerCase()
         return {
@@ -185,7 +196,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       />
     )).then(_ => {
       const { amountFiat } = this.state
-      if (UTILS.zeroString(amountFiat)) {
+      if (zeroString(amountFiat)) {
         this.onChangeFiat('0.00')
       }
     })
@@ -259,8 +270,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     if (!swapData || !spendTargets || !destinationDenomination) return null
 
     const { plugin, isEstimate, orderId, payoutAddress, refundAddress } = swapData
-    const sourceAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(spendTargets[0].nativeAmount)
-    const destinationAmount = UTILS.convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
+    const sourceAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(spendTargets[0].nativeAmount)
+    const destinationAmount = convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
     const destinationCurrencyCode = destinationDenomination.name
 
     const createExchangeDataString = (newline: string = '\n') => {
@@ -340,7 +351,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { payeeName, notes, bizId, category, subCategory, amountFiat } = this.state
     const { edgeTransaction } = route.params
     let finalAmountFiat
-    const fullCategory = category ? `${UTILS.capitalize(category)}:${subCategory}` : undefined
+    const fullCategory = category ? `${capitalize(category)}:${subCategory}` : undefined
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
     if (isNaN(decimalAmountFiat)) {
       // if invalid number set to previous saved amountFiat
@@ -359,10 +370,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
+    const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
-    const symbolString =
-      UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
     return {
       amountString: convertedAmount,
@@ -377,16 +387,15 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const symbolString =
-      UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
 
     if (edgeTransaction.networkFee) {
-      const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-      const convertedFee = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
+      const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
+      const convertedFee = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
       const amountMinusFee = sub(convertedAmount, convertedFee)
 
-      const feeAbsolute = abs(UTILS.truncateDecimals(convertedFee, 6))
+      const feeAbsolute = abs(truncateDecimals(convertedFee, 6))
       const feeString = symbolString
         ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, feeAbsolute)
         : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeAbsolute, walletDefaultDenomProps.name)
@@ -433,8 +442,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
-    const fiatSymbol = UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode)
-    const fiatValue = UTILS.truncateDecimals(amountFiat.replace('-', ''), 2, true)
+    const fiatSymbol = getFiatSymbol(guiWallet.fiatCurrencyCode)
+    const fiatValue = truncateDecimals(amountFiat.replace('-', ''), 2, true)
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
@@ -575,10 +584,10 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
     const { settings } = state.ui
     const currencyCode = edgeTransaction.currencyCode
     const { allCurrencyInfos } = state.ui.settings.plugins
-    const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
-    const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
-      ? UTILS.getDenomination(wallet.currencyCode, settings, 'exchange')
-      : UTILS.getDenomination(edgeTransaction.currencyCode, settings, 'exchange')
+    const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
+    const walletDefaultDenomProps: EdgeDenomination = isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
+      ? getDenomination(wallet.currencyCode, settings, 'exchange')
+      : getDenomination(edgeTransaction.currencyCode, settings, 'exchange')
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
