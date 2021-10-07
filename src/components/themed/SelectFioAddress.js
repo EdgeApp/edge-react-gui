@@ -136,7 +136,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
         notes={this.props.memo}
       />
     )).then(memo => {
-      this.handleMemoChange(memo)
+      if (memo != null) this.handleMemoChange(memo)
     })
   }
 

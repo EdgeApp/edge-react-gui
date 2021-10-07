@@ -242,7 +242,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const memo = await Airship.show(bridge => (
       <TransactionDetailsNotesInput bridge={bridge} title={s.strings.fio_confirm_request_input_title_memo} notes={this.state.memo} />
     ))
-
+    if (memo == null) return
     if (memo.length > 64) return showError(s.strings.send_fio_request_error_memo_inline)
     if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo)) return showError(s.strings.send_fio_request_error_memo_invalid_character)
     this.setState({ memo })
