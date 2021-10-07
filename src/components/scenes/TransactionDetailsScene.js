@@ -174,6 +174,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         inputLabel={sprintf(s.strings.transaction_details_fiat_modal_header, fiatCurrencyCode)}
         returnKeyType="done"
         keyboardType="decimal-pad"
+        submitLabel={s.strings.string_save}
         title={s.strings.transaction_details_fiat_label}
       />
     )).then(amountFiat => (amountFiat != null ? this.onSaveTxDetails({ amountFiat }) : null))
