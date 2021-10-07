@@ -10,15 +10,19 @@ import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
-import * as UTILS from '../../util/utils'
 import {
   DECIMAL_PRECISION,
+  decimalOrZero,
+  displayFiatAmount,
   getDenomFromIsoCode,
   getDenomination,
   getFiatSymbol,
+  isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
-  precisionAdjust
-} from '../../util/utils.js'
+  precisionAdjust,
+  truncateDecimals,
+  unspacedLowercase
+} from '../../util/utils'
 import { showError } from '../services/AirshipInstance.js'
 import { TransactionRow } from './TransactionRow.js'
 
@@ -79,6 +83,7 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { currencyCode, walletId, transaction } = ownProps
     const { metadata } = transaction
+    const { name, amountFiat } = metadata ?? {}
     const guiWallet = state.ui.wallets.byId[walletId]
     const { fiatCurrencyCode } = guiWallet
     const { settings } = state.ui
@@ -95,10 +100,10 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     // Thumbnail
     let thumbnailPath
     const contacts = state.contacts || []
-    const transactionContactName = metadata && metadata.name ? UTILS.unspacedLowercase(metadata.name) : null
+    const transactionContactName = name != null ? unspacedLowercase(name) : null
     for (const contact of contacts) {
       const { givenName, familyName } = contact
-      const fullName = UTILS.unspacedLowercase(givenName + (familyName || ''))
+      const fullName = unspacedLowercase(givenName + (familyName ?? ''))
       if (contact.thumbnailPath && fullName === transactionContactName) {
         thumbnailPath = contact.thumbnailPath
         break
@@ -117,17 +122,13 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
       })
       maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
     }
-    const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount || '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
-    const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
-
-    // FiatAmount
-    const fiatAmount = metadata && metadata.amountFiat ? bns.abs(metadata.amountFiat.toFixed(2)) : '0.00'
-    const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
+    const cryptoAmountFormat = intl.formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
     return {
-      isSentTransaction: UTILS.isSentTransaction(transaction),
+      isSentTransaction: isSentTransaction(transaction),
       cryptoAmount: cryptoAmountFormat,
-      fiatAmount: fiatAmountFormat,
+      fiatAmount: displayFiatAmount(amountFiat),
       fiatSymbol: getFiatSymbol(fiatCurrencyCode),
       walletBlockHeight: guiWallet.blockHeight || 0,
       denominationSymbol: displayDenomination.symbol,
