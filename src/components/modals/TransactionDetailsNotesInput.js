@@ -12,7 +12,7 @@ import { scale } from '../../util/scaling.js'
 import { AirshipModal } from '../common/AirshipModal.js'
 
 type Props = {
-  bridge: AirshipBridge<string>,
+  bridge: AirshipBridge<string | null>,
   title: string,
   placeholder?: string,
   notes: string
@@ -38,8 +38,8 @@ export class TransactionDetailsNotesInput extends React.Component<Props, State> 
     const { bridge, title, placeholder } = this.props
     const { notes } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(notes)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(notes)}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{title}</FormattedText>
             <TouchableWithoutFeedback onPress={() => this.notesInput.focus()}>
