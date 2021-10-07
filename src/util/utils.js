@@ -67,6 +67,13 @@ export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
+export const displayFiatAmount = (fiatAmount?: number) => {
+  if (fiatAmount == null || fiatAmount === 0) return formatNumber('0.00')
+  const initialAmount = fiatAmount.toFixed(2)
+  const absoluteAmount = bns.abs(initialAmount)
+  return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
+}
+
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 export const mergeTokens = (
   preferredEdgeMetaTokens: EdgeMetaToken[] | CustomTokenInfo[],
