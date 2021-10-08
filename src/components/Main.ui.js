@@ -490,7 +490,6 @@ export class MainComponent extends React.Component<Props> {
               key={CHANGE_MINING_FEE}
               component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />

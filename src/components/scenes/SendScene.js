@@ -60,7 +60,9 @@ type StateProps = {
   transactionMetadata: EdgeMetadata | null,
   uniqueIdentifier?: string,
   wallets: { [walletId: string]: GuiWallet },
-  isSendUsingFioAddress?: boolean
+  isSendUsingFioAddress?: boolean,
+  guiMakeSpendInfo: GuiMakeSpendInfo,
+  maxSpendSet: boolean
 }
 
 type DispatchProps = {
@@ -236,11 +238,15 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFeesChange = () => {
-    const { navigation } = this.props
+    const { navigation, sendConfirmationUpdateTx, guiMakeSpendInfo, maxSpendSet } = this.props
     if (this.state.coreWallet == null) return
     navigation.navigate('changeMiningFee', {
+      guiMakeSpendInfo,
+      maxSpendSet,
       wallet: this.state.coreWallet,
-      currencyCode: this.state.selectedCurrencyCode
+      onSubmit: (networkFeeOption, customNetworkFee) => {
+        sendConfirmationUpdateTx({ ...guiMakeSpendInfo, customNetworkFee, networkFeeOption }, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+      }
     })
   }
 
@@ -624,7 +630,9 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       transactionMetadata,
       uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
       wallets: state.ui.wallets.byId,
-      isSendUsingFioAddress
+      isSendUsingFioAddress,
+      guiMakeSpendInfo,
+      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
     }
   },
   dispatch => ({
