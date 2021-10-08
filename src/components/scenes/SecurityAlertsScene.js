@@ -21,7 +21,7 @@ type Props = StateProps & OwnProps
 class SecurityAlertsComponent extends React.Component<Props> {
   render() {
     const { context, account, navigation } = this.props
-    const handleComplete = () => navigation.goBack()
+    const handleComplete = () => navigation.pop()
 
     return (
       <View style={styles.container}>
