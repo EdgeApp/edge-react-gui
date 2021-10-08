@@ -12,6 +12,7 @@ import { showSendLogsModal } from '../../actions/LogActions.js'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import { type ThemeProps, withTheme } from '../../components/services/ThemeContext.js'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLink.js'
@@ -36,7 +37,7 @@ type DispatchProps = {
   initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
   logout: () => void
 }
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   counter: number,
@@ -118,7 +119,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { context, handleSendLogs, username } = this.props
+    const { context, handleSendLogs, theme, username } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
 
     return this.props.account.username == null ? (
@@ -130,7 +131,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
             context={context}
             recoveryLogin={passwordRecoveryKey}
             onLogin={this.onLogin}
-            fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
+            fontDescription={{ regularFontFamily: theme.fontFaceDefault }}
             key={String(counter)}
             appName={s.strings.app_name_short}
             backgroundImage={backgroundImage}
@@ -184,4 +185,4 @@ export const LoginScene = connect<StateProps, DispatchProps, {}>(
       dispatch(logoutRequest())
     }
   })
-)(LoginSceneComponent)
+)(withTheme(LoginSceneComponent))
