@@ -238,6 +238,9 @@ Object {
       "ASNX": Object {
         "denomination": "1000000000000000000",
       },
+      "ASSY": Object {
+        "denomination": "1000000000000000000",
+      },
       "ASUSD": Object {
         "denomination": "1000000000000000000",
       },
@@ -277,6 +280,12 @@ Object {
       "BCH": Object {
         "denomination": "100000000",
       },
+      "BCP": Object {
+        "denomination": "1000000000000000000",
+      },
+      "BDI": Object {
+        "denomination": "1000000000000000000",
+      },
       "BNB": Object {
         "denomination": "100000000",
       },
@@ -288,6 +297,9 @@ Object {
       },
       "BTC": Object {
         "denomination": "100000000",
+      },
+      "BTC2X-FLI": Object {
+        "denomination": "1000000000000000000",
       },
       "CBAT": Object {
         "denomination": "100000000",
@@ -334,6 +346,15 @@ Object {
       "DASH": Object {
         "denomination": "100000000",
       },
+      "DEFI++": Object {
+        "denomination": "1000000000000000000",
+      },
+      "DEFI+L": Object {
+        "denomination": "1000000000000000000",
+      },
+      "DEFI+S": Object {
+        "denomination": "1000000000000000000",
+      },
       "DGB": Object {
         "denomination": "100000000",
       },
@@ -353,6 +374,9 @@ Object {
         "denomination": "1000000000000000000",
       },
       "ETH": Object {
+        "denomination": "1000000000000000000",
+      },
+      "ETH2X-FLI": Object {
         "denomination": "1000000000000000000",
       },
       "ETHBNT": Object {
@@ -421,6 +445,9 @@ Object {
       "MKR": Object {
         "denomination": "1000000000000000000",
       },
+      "MVI": Object {
+        "denomination": "1000000000000000000",
+      },
       "NEXO": Object {
         "denomination": "1000000000000000000",
       },
@@ -445,6 +472,9 @@ Object {
       "PICKLE": Object {
         "denomination": "1000000000000000000",
       },
+      "PLAY": Object {
+        "denomination": "1000000000000000000",
+      },
       "POLY": Object {
         "denomination": "1000000000000000000",
       },
@@ -463,6 +493,12 @@ Object {
       "RENBTC": Object {
         "denomination": "100000000",
       },
+      "RENDOGE": Object {
+        "denomination": "1000000000000000000",
+      },
+      "RENFIL": Object {
+        "denomination": "1000000000000000000",
+      },
       "RENZEC": Object {
         "denomination": "100000000",
       },
@@ -476,6 +512,9 @@ Object {
         "denomination": "1000000000000000000",
       },
       "ROOK": Object {
+        "denomination": "1000000000000000000",
+      },
+      "RUNE": Object {
         "denomination": "1000000000000000000",
       },
       "RVN": Object {
@@ -496,6 +535,9 @@ Object {
       "SNX": Object {
         "denomination": "1000000000000000000",
       },
+      "STETH": Object {
+        "denomination": "1000000000000000000",
+      },
       "STORJ": Object {
         "denomination": "100000000",
       },
@@ -506,6 +548,9 @@ Object {
         "denomination": "1000000000000000000",
       },
       "TBTC": Object {
+        "denomination": "1000000000000000000",
+      },
+      "TCAP": Object {
         "denomination": "1000000000000000000",
       },
       "TESTBTC": Object {
@@ -566,6 +611,9 @@ Object {
         "denomination": "1000000000000000000",
       },
       "YFI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "YPIE": Object {
         "denomination": "1000000000000000000",
       },
       "ZRX": Object {
