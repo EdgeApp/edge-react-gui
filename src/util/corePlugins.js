@@ -47,6 +47,8 @@ export const currencyPlugins = {
   bitcoingoldtestnet: false,
   bitcoinsv: true,
   bitcointestnet: true,
+  bitcoinvault: true,
+  bitcoinvaulttestnet: true,
   dash: true,
   digibyte: true,
   dogecoin: true,

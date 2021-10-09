@@ -13,6 +13,7 @@ export const IMAGE_SERVER_URL = 'https://content.edge.app'
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: `${IMAGE_SERVER_URL}/bitcoincash-logo-solo-64.png`,
   BTC: `${IMAGE_SERVER_URL}/bitcoin-logo-solo-64.png`,
+  BTCV: `${IMAGE_SERVER_URL}/bitcoinvault-logo-solo-64.png`,
   ETH: `${IMAGE_SERVER_URL}/ethereum-logo-solo-64.png`,
   ETC: `${IMAGE_SERVER_URL}/ethereum-classic-logo-solo-64.png`
 }
@@ -29,6 +30,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   BNB: s.strings.string_first_bnb_wallet_name,
   BSV: s.strings.string_first_bitcoin_sv_wallet_name,
   BTC: s.strings.string_first_bitcoin_wallet_name,
+  BTCV: s.strings.string_first_bitcoinvault_wallet_name,
   BTG: s.strings.string_first_bitcoin_gold_wallet_name,
   DASH: s.strings.string_first_dash_wallet_name,
   DGB: s.strings.string_first_digibyte_wallet_name,
@@ -81,7 +83,9 @@ export const CURRENCY_SETTINGS_KEYS = [
   'smartcash',
   'groestlcoin',
   'eboost',
-  'ufo'
+  'ufo',
+  'bitcoinvault',
+  'bitcoinvaulttestnet'
 ]
 
 /**
@@ -115,7 +119,9 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ufo',
   'wallet:telos',
   'wallet:wax',
-  'wallet:fantom'
+  'wallet:fantom',
+  'wallet:bitcoinvault',
+  'wallet:bitcoinvaulttestnet'
 ]
 
 // Put these in reverse order of preference
@@ -153,7 +159,9 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  FIRO: 'zcoin'
+  FIRO: 'zcoin',
+  BTCV: 'bitcoinvault',
+  TBTCV: 'bitcoinvaulttestnet'
 }
 
 type SpecialCurrencyInfo = {|
@@ -426,6 +434,9 @@ export const SPECIAL_CURRENCY_INFO: {
   QTUM: {
     isPrivateKeySweepable: true
   },
+  BTCV: {
+    isPrivateKeySweepable: true
+  },
   FTM: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: {
@@ -490,7 +501,9 @@ export const WALLET_LIST_MENU: Array<{
       'RVN',
       'RBTC',
       'TESTBTC',
-      'XMR'
+      'XMR',
+      'BTCV',
+      'TBTCV'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'

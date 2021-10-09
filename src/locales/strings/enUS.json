@@ -300,6 +300,7 @@
   "string_first_ethereum_wallet_name": "My Ether",
   "string_first_bitcoin_wallet_name": "My Bitcoin",
   "string_first_bitcoincash_wallet_name": "My Bitcoin Cash",
+  "string_first_bitcoinvault_wallet_name": "My Bitcoin Vault",
   "string_first_bitcoin_sv_wallet_name": "My Bitcoin SV",
   "string_first_bitcoin_gold_wallet_name": "My Bitcoin Gold",
   "string_first_dash_wallet_name": "My Dash",
