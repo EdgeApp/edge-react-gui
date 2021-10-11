@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { CREATE_WALLET_ACCOUNT_SETUP } from '../constants/SceneKeys.js'
+import { CREATE_WALLET_ACCOUNT_SELECT, CREATE_WALLET_ACCOUNT_SETUP } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
@@ -99,14 +99,25 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: D
     const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
     if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
     const selectedWalletType = makeCreateWalletType(currencyInfo)
-    const createWalletAccountSetupSceneProps = {
-      accountHandle: guiWallet.name,
-      selectedWalletType,
-      selectedFiat,
-      isReactivation: true,
-      existingWalletId: walletId
+    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    if (specialCurrencyInfo.skipAccountNameValidation) {
+      Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
+        selectedFiat: selectedFiat,
+        selectedWalletType,
+        accountName: guiWallet.name,
+        existingWalletId: walletId
+      })
+    } else {
+      const createWalletAccountSetupSceneProps = {
+        accountHandle: guiWallet.name,
+        selectedWalletType,
+        selectedFiat,
+        isReactivation: true,
+        existingWalletId: walletId
+      }
+      Actions.push(CREATE_WALLET_ACCOUNT_SETUP, createWalletAccountSetupSceneProps)
     }
-    Actions.push(CREATE_WALLET_ACCOUNT_SETUP, createWalletAccountSetupSceneProps)
+
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}

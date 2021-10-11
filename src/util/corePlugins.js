@@ -28,6 +28,7 @@ if (ENV.CHANGE_NOW_INIT == null && ENV.CHANGE_NOW_API_KEY) {
 export const currencyPlugins = {
   // edge-currency-accountbased:
   binance: true,
+  hedera: true,
   eos: true,
   telos: true,
   wax: true,
