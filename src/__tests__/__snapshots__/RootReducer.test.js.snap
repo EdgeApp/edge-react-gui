@@ -385,6 +385,9 @@ Object {
       "GUSD": Object {
         "denomination": "100",
       },
+      "HBAR": Object {
+        "denomination": "100000000",
+      },
       "HERC": Object {
         "denomination": "1000000000000000000",
       },
