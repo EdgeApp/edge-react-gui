@@ -448,12 +448,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isAccountActivationRequired: true,
     skipAccountNameValidation: true,
     noMaxSpend: true,
-    noChangeMiningFee: true,
-    uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
-      keyboardType: 'default'
-    }
+    noChangeMiningFee: true
   }
 }
 
