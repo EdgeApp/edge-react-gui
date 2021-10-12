@@ -147,7 +147,7 @@
     "react-native-router-flux": "4.0.6",
     "react-native-safari-view": "^2.1.0",
     "react-native-safe-area-view": "0.14.9",
-    "react-native-share": "^5.1.4",
+    "react-native-share": "^7.1.2",
     "react-native-smart-splash-screen": "git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59",
     "react-native-sortable-listview": "git://github.com/EdgeApp/react-native-sortable-listview.git",
     "react-native-sound": "^0.11.0",

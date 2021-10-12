@@ -530,7 +530,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNShare (5.1.4):
+  - RNShare (7.1.2):
     - React-Core
   - RNSound (0.11.0):
     - React
@@ -912,7 +912,7 @@ SPEC CHECKSUMS:
   RNPermissions: 58c1eb5638504e3afda963a8b0f43b6752132b05
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
-  RNShare: 8af5349f05fc042d230674dd650d19789187ff9c
+  RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e

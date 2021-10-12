@@ -10592,6 +10592,11 @@ react-native-share@^5.1.4:
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-5.1.4.tgz#0b9d51f6ca724728cb0c5b3ed3a883ee54d7a11b"
   integrity sha512-/eNBTuimOmzeeBbnZkwW6hbzSZvJnhfkx5cSdQkFS45KRHekD9twP6F8QHn+zJxeJGAP+EgpVCXoA7yCrgKrhQ==
 
+react-native-share@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
+  integrity sha512-kmwp11XYL1TBvKQ1s3Y4HTxu5QNZM6W1SopItAovoC+UD+9g4lVFIPL64bww16Oz15xQTTDtvDHCG8zDWKOVPA==
+
 "react-native-smart-splash-screen@git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
   version "2.3.5"
   resolved "git://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
