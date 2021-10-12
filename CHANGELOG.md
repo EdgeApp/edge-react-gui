@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 2.3.0 (2021-10-11)
+
+- Add Hedera (HBAR) support
+- Fix react-native-share crash on iOS 10 devices
+
 ## 2.2.0 (2021-09-27)
 
 - Use new sync servers

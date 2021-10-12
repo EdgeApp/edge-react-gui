@@ -119,6 +119,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   ANTV1: {
     denomination: '1000000000000000000'
   },
+  HBAR: {
+    denomination: '100000000'
+  },
   ANT: {
     denomination: '1000000000000000000'
   },
@@ -535,6 +538,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   UNI: 'object',
   FTM: 'object',
   FUSDT: 'object',
+  HBAR: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object',

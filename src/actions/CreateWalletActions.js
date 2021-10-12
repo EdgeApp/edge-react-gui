@@ -137,6 +137,7 @@ export const createAccountTransaction =
     const { account } = state.core
     const { currencyWallets } = account
     const createdWallet = state.ui.wallets.byId[createdWalletId]
+    const createdCurrencyWallet = currencyWallets[createdWalletId]
     const paymentWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdWallet.currencyCode
     const currencyPluginName = CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
@@ -180,7 +181,9 @@ export const createAccountTransaction =
               }, 750)
             })
           }
-        }
+        },
+        alternateBroadcast:
+          createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
       }
       Actions.push(SEND, {
         guiMakeSpendInfo,

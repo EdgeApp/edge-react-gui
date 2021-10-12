@@ -4,7 +4,8 @@ import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { CREATE_WALLET_REVIEW } from '../../constants/SceneKeys.js'
+import { CREATE_WALLET_ACCOUNT_SELECT, CREATE_WALLET_REVIEW } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -50,7 +51,17 @@ export class CreateWalletName extends React.Component<Props, State> {
   onNext = () => {
     const { route } = this.props
     const { cleanedPrivateKey, selectedFiat, selectedWalletType } = route.params
-    if (this.isValidWalletName()) {
+    const { currencyCode } = selectedWalletType
+    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+
+    if (this.isValidWalletName() && specialCurrencyInfo.skipAccountNameValidation && !cleanedPrivateKey) {
+      Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
+        selectedFiat: selectedFiat,
+        selectedWalletType,
+        accountName: this.state.walletName,
+        existingWalletId: ''
+      })
+    } else if (this.isValidWalletName()) {
       Actions.push(CREATE_WALLET_REVIEW, {
         walletName: this.state.walletName,
         selectedFiat: selectedFiat,
