@@ -97,7 +97,7 @@ const getSpendTargetOtherParams = (state: RootState): Object => {
 }
 
 export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
-  const uniqueIdentifier = newSpendInfo.uniqueIdentifier || getUniqueIdentifier(state)
+  const uniqueIdentifier = newSpendInfo.uniqueIdentifier != null ? newSpendInfo.uniqueIdentifier : getUniqueIdentifier(state)
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
     spendTargets = newSpendInfo.spendTargets
@@ -107,8 +107,8 @@ export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo =
         nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
         publicAddress: newSpendInfo.publicAddress || getPublicAddress(state),
         otherParams: {
-          uniqueIdentifier,
-          ...getSpendTargetOtherParams(state)
+          ...getSpendTargetOtherParams(state),
+          uniqueIdentifier
         }
       }
     ]
