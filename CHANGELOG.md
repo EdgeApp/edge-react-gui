@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 2.3.1 (2021-10-12)
+
+- Fix uniqueIdentifier logic in spendInfo selector
+- Enable HBAR uniqueIdentifier
+
 ## 2.3.0 (2021-10-11)
 
 - Add Hedera (HBAR) support
