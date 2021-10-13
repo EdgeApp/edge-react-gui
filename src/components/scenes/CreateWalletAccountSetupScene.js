@@ -3,6 +3,7 @@
 import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
@@ -124,7 +125,7 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={styles.scrollableView}>
-            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
+            <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>

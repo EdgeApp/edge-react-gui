@@ -2,7 +2,8 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, FlatList, Image, View } from 'react-native'
+import { Alert, FlatList, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -101,7 +102,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         onPress={() => this.handleSelectWalletType(data.item)}
-        icon={symbolImageDarkMono ? <Image source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={symbolImageDarkMono ? <FastImage source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={currencyCode}
         subTitle={currencyName}
         selected={walletType === this.state.selectedWalletType}

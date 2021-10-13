@@ -2,7 +2,8 @@
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView } from 'react-native'
+import { ActivityIndicator, ScrollView } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
@@ -98,7 +99,7 @@ class NotificationComponent extends React.Component<Props, State> {
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
               const { displayName, currencyCode } = currencyInfo
               const { symbolImage } = getCurrencyIcon(currencyCode)
-              const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
+              const icon = <FastImage style={styles.currencyLogo} source={{ uri: symbolImage }} />
               const onPress = () =>
                 enabled
                   ? navigation.navigate('currencyNotificationSettings', {

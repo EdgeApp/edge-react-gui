@@ -2,7 +2,8 @@
 
 import type { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
 
@@ -87,7 +88,7 @@ class EdgeLoginSceneComponent extends React.Component<Props> {
 
   renderImage() {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
-      return <Image style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
+      return <FastImage style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
   }

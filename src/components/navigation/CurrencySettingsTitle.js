@@ -2,7 +2,8 @@
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -18,7 +19,7 @@ export function CurrencySettingsTitle(props: Props) {
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: symbolImage }} />
+      <FastImage style={styles.image} source={{ uri: symbolImage }} />
       <EdgeText style={styles.text}>{displayName}</EdgeText>
     </View>
   )

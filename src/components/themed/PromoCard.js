@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
@@ -51,7 +52,7 @@ class PromoCardComponent extends React.PureComponent<Props> {
     return (
       <ButtonBox marginRem={1} onPress={this.handlePress}>
         <View style={styles.container}>
-          {message.iconUri != null ? <Image resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
+          {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
           <EdgeText numberOfLines={0} style={styles.text}>
             {message.message}
           </EdgeText>

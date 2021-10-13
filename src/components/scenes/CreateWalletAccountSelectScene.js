@@ -2,7 +2,8 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -204,7 +205,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
           </View>
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
-              {symbolImageDarkMono && <Image style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              {symbolImageDarkMono && <FastImage style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
@@ -279,7 +280,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
+              <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>

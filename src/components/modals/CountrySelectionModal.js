@@ -1,8 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { FlatList, Image } from 'react-native'
+import { FlatList } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import FastImage from 'react-native-fast-image'
 import { getCountry } from 'react-native-localize'
 
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
@@ -64,7 +65,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     return (
       <SelectableRow
         onPress={() => this.handleSelectCountry(data.item['alpha-2'])}
-        icon={<Image source={{ uri: logoUrl }} style={styles.image} />}
+        icon={<FastImage source={{ uri: logoUrl }} style={styles.image} />}
         title={data.item['alpha-2']}
         subTitle={data.item.name}
         selected={data.item['alpha-2'] === countryCode}

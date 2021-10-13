@@ -5,6 +5,7 @@ import { asObject, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
@@ -274,7 +275,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
-            <Image
+            <FastImage
               source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
               style={styles.selectedCountryFlag}
             />
