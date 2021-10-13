@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, Image, View } from 'react-native'
+import { Alert, FlatList, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
@@ -116,7 +117,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         onPress={() => this.handleSelectFiatType(data.item)}
-        icon={fiatCountry.logoUrl ? <Image source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={data.item.value}
         subTitle={s.strings[`currency_label_${data.item.value}`]}
         selected={data.item.value === this.state.selectedFiat}

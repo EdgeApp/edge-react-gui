@@ -3,7 +3,8 @@
 import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Image, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -253,7 +254,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName, currencyCode } = currencyInfo
             const { symbolImage } = getCurrencyIcon(currencyCode)
-            const icon = <Image source={{ uri: symbolImage }} style={styles.currencyLogo} />
+            const icon = <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} />
             const onPress = () =>
               navigation.navigate('currencySettings', {
                 currencyInfo

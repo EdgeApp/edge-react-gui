@@ -2,7 +2,8 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { refreshWallet } from '../../actions/WalletActions.js'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
@@ -120,7 +121,7 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <Image style={styles.iconSize} source={{ uri: createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? '' }} />
+        <FastImage style={styles.iconSize} source={{ uri: createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? '' }} />
       </View>
     )
   }

@@ -2,7 +2,8 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { ActivityIndicator, Image, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -57,7 +58,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <Image style={styles.currencyIcon} source={{ uri: logo || '' }} />
+        <FastImage style={styles.currencyIcon} source={{ uri: logo || '' }} />
       </View>
     )
   }

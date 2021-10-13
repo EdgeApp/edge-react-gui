@@ -2,7 +2,8 @@
 
 import type { EdgeMetaToken } from 'edge-core-js'
 import * as React from 'react'
-import { Image, Switch, View } from 'react-native'
+import { Switch, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -29,7 +30,7 @@ function ManageTokensRow(props: Props) {
 
   const Icon = () => (
     <View style={styles.iconContainer}>
-      <Image style={styles.iconSize} source={{ uri: symbolImage }} />
+      <FastImage style={styles.iconSize} source={{ uri: symbolImage }} />
     </View>
   )
 

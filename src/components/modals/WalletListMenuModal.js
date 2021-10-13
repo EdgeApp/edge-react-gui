@@ -2,8 +2,9 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
@@ -122,7 +123,7 @@ export function WalletListMenuModal(props: Props) {
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       {walletName ? <ModalTitle>{walletName}</ModalTitle> : null}
       <View style={styles.headerRow}>
-        {image ? <Image resizeMode="cover" source={{ uri: image }} style={styles.currencyImage} /> : null}
+        {image ? <FastImage resizeMode="cover" source={{ uri: image }} style={styles.currencyImage} /> : null}
         {currencyCode ? <ModalTitle>{currencyCode}</ModalTitle> : null}
       </View>
       {options.map((option: Option) => (
