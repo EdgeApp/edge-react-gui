@@ -3,248 +3,74 @@
 exports[`Change Mining Fees should render with custom props 1`] = `
 <SceneWrapper
   avoidKeyboard={true}
-  background="body"
+  background="theme"
   hasTabs={false}
 >
-  <ScrollView
-    style={
-      Object {
-        "backgroundColor": "#FFFFFF",
-        "flexGrow": 1,
-        "padding": 31,
-      }
-    }
-  >
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
+  <WithTheme(SceneHeaderComponent)
+    title="Change Mining Fee"
+    underline={true}
+    withTopMargin={true}
+  />
+  <ScrollView>
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer"
+          size={28}
         />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          High
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Standard
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Low
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              Object {
-                "backgroundColor": "#0073D9",
-                "borderColor": "#0073D9",
-              },
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Custom
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <View
-      style={
-        Object {
-          "marginBottom": 22,
-        }
       }
-    >
-      <FormField
-        autoCapitalize="none"
-        autoCorrect={false}
-        keyboardType="numeric"
-        label="Satoshi Per Byte"
-        onChangeText={[Function]}
-        returnKeyType="go"
-        value=""
-      />
-    </View>
-    <View
-      style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#F1AA19",
-          "borderRadius": 11,
-          "flexDirection": "column",
-          "justifyContent": "space-between",
-          "padding": 11,
-        }
-      }
-    >
-      <Icon
-        allowFontScaling={false}
-        color="#FFFFFF"
-        name="warning"
-        size={31}
-      />
-      <Text
-        style={
-          Object {
-            "color": "#FFFFFF",
-            "fontFamily": "SourceSansPro-Black",
-            "fontSize": 19,
-          }
-        }
-      >
-        Using a low fee may increase the amount of time it takes for your transaction to confirm.
-      </Text>
-    </View>
-    <PrimaryButton
       onPress={[Function]}
-      style={
-        Object {
-          "marginTop": 28,
-        }
+      text="High"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-medium"
+          size={28}
+        />
       }
-    >
-      <Text>
-        Save
-      </Text>
-    </PrimaryButton>
+      onPress={[Function]}
+      text="Optimal"
+      value={true}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-slow"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Low"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="gear"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Custom"
+      value={false}
+    />
+    <MainButton
+      alignSelf="center"
+      label="Done"
+      marginRem={2}
+      onPress={[Function]}
+      type="secondary"
+    />
   </ScrollView>
 </SceneWrapper>
 `;
@@ -252,201 +78,74 @@ exports[`Change Mining Fees should render with custom props 1`] = `
 exports[`Change Mining Fees should render with high props 1`] = `
 <SceneWrapper
   avoidKeyboard={true}
-  background="body"
+  background="theme"
   hasTabs={false}
 >
-  <ScrollView
-    style={
-      Object {
-        "backgroundColor": "#FFFFFF",
-        "flexGrow": 1,
-        "padding": 31,
+  <WithTheme(SceneHeaderComponent)
+    title="Change Mining Fee"
+    underline={true}
+    withTopMargin={true}
+  />
+  <ScrollView>
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer"
+          size={28}
+        />
       }
-    }
-  >
-    <TouchableWithoutFeedback
       onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              Object {
-                "backgroundColor": "#0073D9",
-                "borderColor": "#0073D9",
-              },
-            ]
-          }
+      text="High"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-medium"
+          size={28}
         />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          High
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Standard
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Low
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Custom
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <PrimaryButton
-      onPress={[Function]}
-      style={
-        Object {
-          "marginTop": 28,
-        }
       }
-    >
-      <Text>
-        Save
-      </Text>
-    </PrimaryButton>
+      onPress={[Function]}
+      text="Optimal"
+      value={true}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-slow"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Low"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="gear"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Custom"
+      value={false}
+    />
+    <MainButton
+      alignSelf="center"
+      label="Done"
+      marginRem={2}
+      onPress={[Function]}
+      type="secondary"
+    />
   </ScrollView>
 </SceneWrapper>
 `;
@@ -454,231 +153,74 @@ exports[`Change Mining Fees should render with high props 1`] = `
 exports[`Change Mining Fees should render with low props 1`] = `
 <SceneWrapper
   avoidKeyboard={true}
-  background="body"
+  background="theme"
   hasTabs={false}
 >
-  <ScrollView
-    style={
-      Object {
-        "backgroundColor": "#FFFFFF",
-        "flexGrow": 1,
-        "padding": 31,
+  <WithTheme(SceneHeaderComponent)
+    title="Change Mining Fee"
+    underline={true}
+    withTopMargin={true}
+  />
+  <ScrollView>
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer"
+          size={28}
+        />
       }
-    }
-  >
-    <TouchableWithoutFeedback
       onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
+      text="High"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-medium"
+          size={28}
         />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          High
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Standard
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              Object {
-                "backgroundColor": "#0073D9",
-                "borderColor": "#0073D9",
-              },
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Low
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Custom
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <View
-      style={
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "#F1AA19",
-          "borderRadius": 11,
-          "flexDirection": "column",
-          "justifyContent": "space-between",
-          "padding": 11,
-        }
       }
-    >
-      <Icon
-        allowFontScaling={false}
-        color="#FFFFFF"
-        name="warning"
-        size={31}
-      />
-      <Text
-        style={
-          Object {
-            "color": "#FFFFFF",
-            "fontFamily": "SourceSansPro-Black",
-            "fontSize": 19,
-          }
-        }
-      >
-        Using a low fee may increase the amount of time it takes for your transaction to confirm.
-      </Text>
-    </View>
-    <PrimaryButton
       onPress={[Function]}
-      style={
-        Object {
-          "marginTop": 28,
-        }
+      text="Optimal"
+      value={true}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-slow"
+          size={28}
+        />
       }
-    >
-      <Text>
-        Save
-      </Text>
-    </PrimaryButton>
+      onPress={[Function]}
+      text="Low"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="gear"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Custom"
+      value={false}
+    />
+    <MainButton
+      alignSelf="center"
+      label="Done"
+      marginRem={2}
+      onPress={[Function]}
+      type="secondary"
+    />
   </ScrollView>
 </SceneWrapper>
 `;
@@ -686,201 +228,74 @@ exports[`Change Mining Fees should render with low props 1`] = `
 exports[`Change Mining Fees should render with standard props 1`] = `
 <SceneWrapper
   avoidKeyboard={true}
-  background="body"
+  background="theme"
   hasTabs={false}
 >
-  <ScrollView
-    style={
-      Object {
-        "backgroundColor": "#FFFFFF",
-        "flexGrow": 1,
-        "padding": 31,
+  <WithTheme(SceneHeaderComponent)
+    title="Change Mining Fee"
+    underline={true}
+    withTopMargin={true}
+  />
+  <ScrollView>
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer"
+          size={28}
+        />
       }
-    }
-  >
-    <TouchableWithoutFeedback
       onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
+      text="High"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-medium"
+          size={28}
         />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          High
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              Object {
-                "backgroundColor": "#0073D9",
-                "borderColor": "#0073D9",
-              },
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Standard
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Low
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback
-      onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "marginBottom": 22,
-          }
-        }
-      >
-        <View
-          style={
-            Array [
-              Object {
-                "borderColor": "#87939E",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "height": 22,
-                "marginRight": 11,
-                "width": 22,
-              },
-              null,
-            ]
-          }
-        />
-        <Text
-          style={
-            Object {
-              "color": "#25292C",
-              "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Custom
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
-    <PrimaryButton
-      onPress={[Function]}
-      style={
-        Object {
-          "marginTop": 28,
-        }
       }
-    >
-      <Text>
-        Save
-      </Text>
-    </PrimaryButton>
+      onPress={[Function]}
+      text="Optimal"
+      value={true}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="speedometer-slow"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Low"
+      value={false}
+    />
+    <WithTheme(SettingsRadioRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="gear"
+          size={28}
+        />
+      }
+      onPress={[Function]}
+      text="Custom"
+      value={false}
+    />
+    <MainButton
+      alignSelf="center"
+      label="Done"
+      marginRem={2}
+      onPress={[Function]}
+      type="secondary"
+    />
   </ScrollView>
 </SceneWrapper>
 `;

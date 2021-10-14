@@ -30,7 +30,9 @@ const strings = {
   error_token_exists: 'A currency named %s already exists',
 
   // Warning messages:
-  warning_low_or_custom_fee: 'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
+  warning_low_fee_selected: 'Low Fee Selected',
+  warning_low_or_custom_fee:
+    'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',
 
   // Alert component:
@@ -214,7 +216,7 @@ const strings = {
   mining_fee_custom_label_choice: 'Custom',
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
-  mining_fee_standard_label_choice: 'Standard',
+  mining_fee_standard_label_choice: 'Optimal',
   request_deprecated_currency_code:
     'Support for %1$s has been deprecated. To continue using this wallet, extract the private keys and import into a %1$s supporting wallet.',
   request_qr_email_title: 'Pay with %1$s:',
