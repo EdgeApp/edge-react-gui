@@ -43,7 +43,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   title: {
     fontSize: theme.rem(1.2),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   }
 }))
 
