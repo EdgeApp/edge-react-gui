@@ -123,7 +123,6 @@
   "loading": "読み込み中...",
   "mining_fee_high_label_choice": "高く",
   "mining_fee_low_label_choice": "低く",
-  "mining_fee_standard_label_choice": "スタンダード",
   "request_qr_your_receiving_wallet_address": "あなたの受取ウォレットアドレス",
   "select_recv_wallet": "受取アドレスを選択",
   "select_src_wallet": "ソースウォレットを選択",
