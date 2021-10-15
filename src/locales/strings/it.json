@@ -21,6 +21,7 @@
   "fio_address_expired": "L'indirizzo FIO è scaduto",
   "scan_qr_label": "Scansiona il codice QR",
   "error_token_exists": "Una valuta denominata %s esiste già",
+  "warning_low_fee_selected": "Commissione bassa selezionata",
   "warning_alphanumeric": "Sono consentite solo lettere e numeri",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
