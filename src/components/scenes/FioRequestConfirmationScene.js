@@ -20,7 +20,7 @@ import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Tile } from '../themed/Tile'
@@ -240,7 +240,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   openMemoModal = async () => {
     const memo = await Airship.show(bridge => (
-      <TransactionDetailsNotesInput bridge={bridge} title={s.strings.fio_confirm_request_input_title_memo} notes={this.state.memo} />
+      <TextInputModal
+        bridge={bridge}
+        initialValue={this.state.memo}
+        inputLabel={s.strings.fio_confirm_request_memo}
+        returnKeyType="done"
+        multiline
+        submitLabel={s.strings.string_save}
+        title={s.strings.fio_confirm_request_input_title_memo}
+      />
     ))
     if (memo == null) return
     if (memo.length > 64) return showError(s.strings.send_fio_request_error_memo_inline)
