@@ -113,6 +113,9 @@ export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
   !isNaN(+input) || input === '.'
 
+// Used to check if a string is an actual number and not empty or any other type
+export const isNotEmptyNumber = (input: string | void): boolean => input != null && input !== '' && isValidInput(input)
+
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
 export const truncateDecimals = (input: string, precision: number, allowBlank: boolean = false): string => {
