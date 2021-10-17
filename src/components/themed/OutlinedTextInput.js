@@ -11,15 +11,15 @@ import { cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 type Props = {|
   // Contents:
+  value: string,
   error?: string,
   label?: string,
-  value: string,
 
   // Appearance:
-  clearIcon?: boolean,
-  marginRem?: number | number[],
-  multiline?: boolean,
-  searchIcon?: boolean,
+  clearIcon?: boolean, // Defaults to 'true'
+  marginRem?: number | number[], // Defaults to 0.5
+  multiline?: boolean, // Defaults to 'false'
+  searchIcon?: boolean, // Defaults to 'false'
 
   // Callbacks:
   onBlur?: () => void,
@@ -28,16 +28,16 @@ type Props = {|
   onFocus?: () => void,
 
   // Other React Native TextInput properties:
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
-  autoCorrect?: boolean,
-  autoFocus?: boolean,
-  blurOnSubmit?: boolean,
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters', // Defaults to 'sentences'
+  autoCorrect?: boolean, // Defaults to 'true'
+  autoFocus?: boolean, // Defaults to 'false'
+  blurOnSubmit?: boolean, // Defaults to 'true'
   inputAccessoryViewID?: string,
-  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad', // Defaults to 'default'
   maxLength?: number,
   onSubmitEditing?: () => void,
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
-  secureTextEntry?: boolean,
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send', // Defaults to 'done'
+  secureTextEntry?: boolean, // Defaults to 'false'
   testID?: string
 |}
 
