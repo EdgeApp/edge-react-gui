@@ -98,7 +98,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
         </ModalTitle>
         <OutlinedTextInput
           autoFocus
-          keyboardType="default"
           label={s.strings.buy_sell_crypto_select_country_button}
           onChangeText={this.updateCountryInput}
           value={input}
@@ -109,7 +108,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           clearIcon
           marginRem={[0, 1.75]}
           ref={this.textInput}
-          blurOnSubmit
           searchIcon
         />
         <FlatList

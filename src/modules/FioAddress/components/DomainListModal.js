@@ -175,7 +175,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
             autoFocus
             autoCorrect={false}
             returnKeyType="search"
-            keyboardType="default"
             autoCapitalize="none"
             label={s.strings.fio_domain_label}
             onChangeText={this.onSearchFilterChange}
@@ -185,7 +184,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
             clearIcon
             marginRem={[0, 1]}
             ref={this.textInput}
-            blurOnSubmit
             searchIcon
           />
         </View>

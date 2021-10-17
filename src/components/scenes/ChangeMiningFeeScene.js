@@ -160,7 +160,6 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
             returnKeyType="search"
             clearIcon
             marginRem={[1.75, 1.75]}
-            blurOnSubmit
             keyboardType="numeric"
           />
         ))}

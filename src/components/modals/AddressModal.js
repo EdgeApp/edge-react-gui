@@ -332,7 +332,6 @@ class AddressModalComponent extends React.Component<Props, State> {
             marginRem={[0, 1]}
             ref={this.textInput}
             error={fieldError}
-            blurOnSubmit
           />
           {!userFioAddressesLoading ? (
             <FlatList

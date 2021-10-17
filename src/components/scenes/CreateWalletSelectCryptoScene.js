@@ -145,7 +145,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               clearIcon
               marginRem={[0, 1.75]}
               ref={this.textInput}
-              blurOnSubmit
               searchIcon
             />
             <FlatList
