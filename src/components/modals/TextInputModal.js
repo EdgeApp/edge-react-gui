@@ -98,7 +98,6 @@ export function TextInputModal(props: Props) {
         // Our props:
         autoFocus
         error={errorMessage}
-        clearIcon
         marginRem={[1, 0.5]}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}

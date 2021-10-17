@@ -49,7 +49,6 @@ function ManageTokensHeader(props: Props) {
             ref={textInput}
             onClear={onSearchClear}
             marginRem={0}
-            clearIcon
             searchIcon
           />
         </View>

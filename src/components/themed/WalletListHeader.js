@@ -70,7 +70,6 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
               value={searchText}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
-              clearIcon
               onClear={this.clearText}
               marginRem={[0, 0, 1]}
               searchIcon

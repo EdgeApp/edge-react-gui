@@ -181,7 +181,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
             onSubmitEditing={this.selectCustom}
             value={input}
             onClear={this.clearText}
-            clearIcon
             marginRem={[0, 1]}
             ref={this.textInput}
             searchIcon

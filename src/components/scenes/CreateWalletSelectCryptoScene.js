@@ -142,7 +142,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
               onClear={this.clearText}
-              clearIcon
               marginRem={[0, 1.75]}
               ref={this.textInput}
               searchIcon

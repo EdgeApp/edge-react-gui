@@ -91,7 +91,6 @@ export class CreateWalletName extends React.Component<Props, State> {
           returnKeyType="next"
           label={s.strings.fragment_wallets_addwallet_name_hint}
           onClear={this.clearText}
-          clearIcon
           marginRem={[0, 1.75]}
           ref={this.textInput}
         />

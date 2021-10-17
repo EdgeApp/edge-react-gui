@@ -162,7 +162,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   onFocus={this.handleTextFieldFocus}
                   onBlur={this.handleTextFieldBlur}
                   ref={this.textInput}
-                  clearIcon
                   onClear={this.clearText}
                   marginRem={0}
                   searchIcon

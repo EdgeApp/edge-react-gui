@@ -328,7 +328,6 @@ class AddressModalComponent extends React.Component<Props, State> {
             onSubmitEditing={this.handleSubmit}
             value={uri}
             onClear={this.clearText}
-            clearIcon
             marginRem={[0, 1]}
             ref={this.textInput}
             error={fieldError}

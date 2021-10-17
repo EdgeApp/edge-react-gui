@@ -62,7 +62,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     value,
 
     // Appearance:
-    clearIcon = false,
+    clearIcon = true,
     marginRem,
     multiline = false,
     searchIcon = false,
