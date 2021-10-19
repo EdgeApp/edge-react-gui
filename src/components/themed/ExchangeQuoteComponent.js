@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -51,7 +51,7 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
     return (
       <Card>
         <CardContent
-          image={<Image style={styles.currencyIcon} source={{ uri: this.props.walletIcon }} />}
+          image={<FastImage style={styles.currencyIcon} source={{ uri: this.props.walletIcon }} />}
           title={this.props.currency}
           subTitle={this.props.walletName}
           value={`${this.props.cryptoAmount} ${this.props.currencyCode}`}

@@ -1,15 +1,15 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, Image, View } from 'react-native'
+import { Alert, FlatList, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
-import { CREATE_WALLET_ACCOUNT_SETUP, CREATE_WALLET_NAME } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -19,6 +19,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
 type OwnProps = {
+  navigation: NavigationProp<'createWalletSelectFiat'>,
   route: RouteProp<'createWalletSelectFiat'>
 }
 type StateProps = {
@@ -56,7 +57,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
   }
 
   onNext = () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { cleanedPrivateKey, selectedWalletType } = route.params
 
     if (this.isValidFiatType()) {
@@ -64,13 +65,13 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
       const specialCurrencyInfo = getSpecialCurrencyInfo(selectedWalletType.currencyCode)
       // check if eos-like
       if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
-        Actions.push(CREATE_WALLET_NAME, {
+        navigation.navigate('createWalletName', {
           selectedWalletType: selectedWalletType,
           selectedFiat: this.getFiatType(this.state.selectedFiat),
           cleanedPrivateKey
         })
       } else {
-        Actions.push(CREATE_WALLET_ACCOUNT_SETUP, {
+        navigation.navigate('createWalletAccountSetup', {
           selectedWalletType: selectedWalletType,
           selectedFiat: this.getFiatType(this.state.selectedFiat)
         })
@@ -116,7 +117,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         onPress={() => this.handleSelectFiatType(data.item)}
-        icon={fiatCountry.logoUrl ? <Image source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={data.item.value}
         subTitle={s.strings[`currency_label_${data.item.value}`]}
         selected={data.item.value === this.state.selectedFiat}

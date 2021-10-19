@@ -2,7 +2,8 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, Image, ScrollView, Switch, View } from 'react-native'
+import { FlatList, ScrollView, Switch, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
@@ -141,7 +142,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
               {wallet.symbolImage ? (
-                <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" />
+                <FastImage style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" />
               ) : (
                 <EdgeText>{noWalletSymbol}</EdgeText>
               )}

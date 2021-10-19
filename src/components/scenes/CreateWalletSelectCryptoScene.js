@@ -2,13 +2,13 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, FlatList, Image, View } from 'react-native'
+import { Alert, FlatList, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
-import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -17,10 +17,13 @@ import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/Outlined
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
+type OwnProps = {
+  navigation: NavigationProp<'createWalletReview'>
+}
 type StateProps = {
   account: EdgeAccount
 }
-type Props = StateProps & ThemeProps
+type Props = StateProps & OwnProps & ThemeProps
 
 type State = {
   selectedWalletType: string,
@@ -44,6 +47,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
   }
 
   onNext = () => {
+    const { navigation } = this.props
     const { selectedWalletType } = this.state
 
     // Find the details about the wallet type:
@@ -59,11 +63,11 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
     // Go to the next screen:
     if (isImportKeySupported) {
-      Actions.push(CREATE_WALLET_CHOICE, {
+      navigation.navigate('createWalletChoice', {
         selectedWalletType: createWalletType
       })
     } else {
-      Actions.push(CREATE_WALLET_SELECT_FIAT, {
+      navigation.navigate('createWalletSelectFiat', {
         selectedWalletType: createWalletType
       })
     }
@@ -98,7 +102,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         onPress={() => this.handleSelectWalletType(data.item)}
-        icon={symbolImageDarkMono ? <Image source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={symbolImageDarkMono ? <FastImage source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={currencyCode}
         subTitle={currencyName}
         selected={walletType === this.state.selectedWalletType}
@@ -176,7 +180,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoScene = connect<StateProps, {}, {}>(
+export const CreateWalletSelectCryptoScene = connect<StateProps, {}, OwnProps>(
   state => ({
     account: state.core.account
   }),

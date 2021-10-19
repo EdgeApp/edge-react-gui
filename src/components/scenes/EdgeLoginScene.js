@@ -2,7 +2,8 @@
 
 import type { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
 
@@ -12,9 +13,12 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'edgeLogin'>
+}
 type StateProps = {
   error: string | null,
   isProcessing: boolean,
@@ -22,11 +26,10 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  accept: () => void,
-  decline: () => void
+  accept: () => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OwnProps
 
 class EdgeLoginSceneComponent extends React.Component<Props> {
   renderBody() {
@@ -48,6 +51,9 @@ class EdgeLoginSceneComponent extends React.Component<Props> {
   }
 
   renderButtons() {
+    const { navigation } = this.props
+    const handleDecline = () => navigation.goBack()
+
     if (this.props.isProcessing) {
       return (
         <View style={styles.buttonsProcessing}>
@@ -59,7 +65,7 @@ class EdgeLoginSceneComponent extends React.Component<Props> {
       return (
         <View style={styles.buttonContainer}>
           <View style={styles.buttons}>
-            <SecondaryButton style={styles.cancelSolo} onPress={this.props.decline}>
+            <SecondaryButton style={styles.cancelSolo} onPress={handleDecline}>
               <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
             </SecondaryButton>
           </View>
@@ -69,7 +75,7 @@ class EdgeLoginSceneComponent extends React.Component<Props> {
     return (
       <View style={styles.buttonContainer}>
         <View style={styles.buttons}>
-          <SecondaryButton style={styles.cancel} onPress={this.props.decline}>
+          <SecondaryButton style={styles.cancel} onPress={handleDecline}>
             <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
           </SecondaryButton>
           <PrimaryButton style={styles.submit} onPress={this.props.accept}>
@@ -82,7 +88,7 @@ class EdgeLoginSceneComponent extends React.Component<Props> {
 
   renderImage() {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
-      return <Image style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
+      return <FastImage style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
   }
@@ -224,7 +230,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const EdgeLoginScene = connect<StateProps, DispatchProps, {}>(
+export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     error: state.core.edgeLogin.error,
     isProcessing: state.core.edgeLogin.isProcessing,
@@ -233,9 +239,6 @@ export const EdgeLoginScene = connect<StateProps, DispatchProps, {}>(
   dispatch => ({
     accept() {
       dispatch(lobbyLogin())
-    },
-    decline() {
-      Actions.pop()
     }
   })
 )(EdgeLoginSceneComponent)

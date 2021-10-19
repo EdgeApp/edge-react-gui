@@ -6,11 +6,10 @@ import { ActivityIndicator, ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
-import { FIO_DOMAIN_REGISTER_SELECT_WALLET } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
@@ -35,6 +34,9 @@ type LocalState = {
   errorMessage: string
 }
 
+type OwnProps = {
+  navigation: NavigationProp<'fioDomainRegister'>
+}
 type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig,
@@ -45,7 +47,7 @@ type DispatchProps = {
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   fioCheckQueue: number = 0
@@ -89,12 +91,12 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   handleNextButton = (): void => {
-    const { isConnected } = this.props
+    const { isConnected, navigation } = this.props
     const { fioDomain, selectedWallet, isValid, isAvailable, loading, walletLoading } = this.state
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
-        Actions.push(FIO_DOMAIN_REGISTER_SELECT_WALLET, {
+        navigation.navigate('fioDomainRegisterSelectWallet', {
           fioDomain,
           selectedWallet
         })
@@ -330,7 +332,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-export const FioDomainRegisterScene = connect<StateProps, DispatchProps, {}>(
+export const FioDomainRegisterScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,

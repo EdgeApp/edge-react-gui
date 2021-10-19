@@ -3,7 +3,8 @@
 import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
@@ -510,7 +511,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <>
         <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
-          {headerLogo ? <Image style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
+          {headerLogo ? <FastImage style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
         <View style={styles.clipboardContainer}>

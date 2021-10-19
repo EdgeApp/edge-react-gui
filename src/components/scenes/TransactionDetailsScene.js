@@ -3,7 +3,8 @@
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -243,13 +244,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     Airship.show(bridge => (
       <TransactionAdvanceDetails
         bridge={bridge}
-        feeRateUsed={edgeTransaction.feeRateUsed}
-        networkFeeOption={edgeTransaction.networkFeeOption}
-        requestedCustomFee={edgeTransaction.requestedCustomFee}
-        signedTx={edgeTransaction.signedTx}
-        txid={edgeTransaction.txid}
-        txSecret={edgeTransaction.txSecret}
-        recipientAddress={edgeTransaction.spendTargets ? edgeTransaction.spendTargets[0].publicAddress : ''}
+        transaction={edgeTransaction}
         url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : undefined}
       />
     ))
@@ -471,7 +466,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
               <View style={styles.tileRow}>
                 {thumbnailPath ? (
-                  <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
+                  <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
                 ) : (
                   <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
                 )}

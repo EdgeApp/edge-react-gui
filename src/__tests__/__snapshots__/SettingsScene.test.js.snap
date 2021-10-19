@@ -1386,7 +1386,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "backgroundColor": "rgba(255, 255, 255, 0)",
               "borderColor": "#66EDA8",
               "borderRadius": 6,
-              "borderWidth": 2,
+              "borderWidth": 1,
               "flexDirection": "row",
               "justifyContent": "center",
               "marginBottom": 45,
@@ -1410,7 +1410,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#66EDA8",
-                "fontFamily": "Quicksand-Bold",
+                "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 11,
               }
@@ -2811,7 +2811,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "backgroundColor": "rgba(255, 255, 255, 0)",
               "borderColor": "#66EDA8",
               "borderRadius": 6,
-              "borderWidth": 2,
+              "borderWidth": 1,
               "flexDirection": "row",
               "justifyContent": "center",
               "marginBottom": 45,
@@ -2835,7 +2835,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#66EDA8",
-                "fontFamily": "Quicksand-Bold",
+                "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 11,
               }

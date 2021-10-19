@@ -1,8 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
+import FastImage from 'react-native-fast-image'
 
 import { connect } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -88,7 +89,7 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
         backgroundColor={theme.walletProgressIconBackground}
         rotation={0}
       >
-        {() => (icon != null ? <Image style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
+        {() => (icon != null ? <FastImage style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
       </AnimatedCircularProgress>
     )
   }

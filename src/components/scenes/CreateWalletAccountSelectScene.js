@@ -2,7 +2,8 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -20,7 +21,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -106,10 +107,6 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
 
   componentDidMount() {
     logEvent('ActivateWalletSelect')
-  }
-
-  onBack = () => {
-    Actions.pop()
   }
 
   onPressSelect = () => {
@@ -208,7 +205,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
           </View>
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
-              {symbolImageDarkMono && <Image style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              {symbolImageDarkMono && <FastImage style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
@@ -283,7 +280,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
+              <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>
