@@ -30,7 +30,6 @@ type Props = {|
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters', // Defaults to 'sentences'
   autoCorrect?: boolean, // Defaults to 'true'
-  autoFocus?: boolean, // Defaults to 'false'
   blurOnSubmit?: boolean, // Defaults to 'true'
   inputAccessoryViewID?: string,
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad', // Defaults to 'default'
@@ -38,7 +37,10 @@ type Props = {|
   onSubmitEditing?: () => void,
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send', // Defaults to 'done'
   secureTextEntry?: boolean, // Defaults to 'false'
-  testID?: string
+  testID?: string,
+
+  // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
+  autoFocus?: boolean // Defaults to 'true'
 |}
 
 /**
@@ -73,6 +75,8 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     onClear,
     onFocus,
 
+    // TextInput:
+    autoFocus = !searchIcon,
     ...inputProps
   } = props
   const theme = useTheme()
@@ -212,6 +216,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
         <TextInput
           ref={inputRef}
           {...inputProps}
+          autoFocus={autoFocus}
           multiline={multiline}
           selectionColor={hasError ? theme.dangerText : theme.iconTappable}
           style={[styles.textInput, textInputStyle]}

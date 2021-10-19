@@ -172,7 +172,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
         </ModalTitle>
         <View style={{ marginHorizontal: theme.rem(0.75) }}>
           <OutlinedTextInput
-            autoFocus
             autoCorrect={false}
             returnKeyType="search"
             autoCapitalize="none"

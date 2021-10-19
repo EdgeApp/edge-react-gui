@@ -86,7 +86,6 @@ export class CreateWalletName extends React.Component<Props, State> {
           onChangeText={this.handleChangeWalletName}
           value={this.state.walletName}
           onSubmitEditing={this.onNext}
-          autoFocus
           autoCorrect={false}
           returnKeyType="next"
           label={s.strings.fragment_wallets_addwallet_name_hint}

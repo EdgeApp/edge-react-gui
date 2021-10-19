@@ -141,7 +141,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
             <OutlinedTextInput
-              autoFocus
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}

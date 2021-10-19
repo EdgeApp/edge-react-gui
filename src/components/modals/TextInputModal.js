@@ -96,7 +96,6 @@ export function TextInputModal(props: Props) {
         secureTextEntry={secureTextEntry}
         multiline={multiline}
         // Our props:
-        autoFocus
         error={errorMessage}
         marginRem={[1, 0.5]}
         onChangeText={handleChangeText}

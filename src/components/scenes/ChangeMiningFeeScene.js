@@ -148,6 +148,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
       <View style={styles.view}>
         {customFormat.map(key => (
           <OutlinedTextInput
+            autoFocus={false}
             key={key}
             autoCorrect={false}
             onChangeText={text =>

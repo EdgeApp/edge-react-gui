@@ -97,7 +97,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           {s.strings.buy_sell_crypto_select_country_button}
         </ModalTitle>
         <OutlinedTextInput
-          autoFocus
           label={s.strings.buy_sell_crypto_select_country_button}
           onChangeText={this.updateCountryInput}
           value={input}

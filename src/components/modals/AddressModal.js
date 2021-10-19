@@ -319,7 +319,6 @@ class AddressModalComponent extends React.Component<Props, State> {
         </ModalTitle>
         <View style={styles.container}>
           <OutlinedTextInput
-            autoFocus
             autoCorrect={false}
             returnKeyType="search"
             autoCapitalize="none"
