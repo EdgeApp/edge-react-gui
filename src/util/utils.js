@@ -2,7 +2,6 @@
 
 import { bns, div, eq, gt, gte, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
-import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
@@ -52,7 +51,7 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
   if (denomination) {
     multiplier = denomination[settings[currencyCode].denomination].multiplier
   } else {
-    const customDenom = _.find(settings.customTokens, item => item.currencyCode === currencyCode)
+    const customDenom = settings.customTokens.find(item => item.currencyCode === currencyCode)
     if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
       multiplier = customDenom.denominations[0].multiplier
     } else {
@@ -99,7 +98,7 @@ export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToke
   const tokensToAdd = []
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
-    if (x.isVisible !== false && _.findIndex(tokensEnabled, walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
+    if (x.isVisible !== false && tokensEnabled.findIndex(walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
       tokensToAdd.push(x)
     }
   }
