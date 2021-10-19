@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js b/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js
+index 268547d..ca181ff 100644
+--- a/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js
++++ b/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js
+@@ -19,7 +19,7 @@ export default (Navigator, navigatorConfig) =>
+     }
+ 
+     _handleGestureBegin = () => {
+-      this._previouslyFocusedTextInput = TextInput.State.currentlyFocusedField();
++      this._previouslyFocusedTextInput = TextInput.State.currentlyFocusedInput();
+       if (this._previouslyFocusedTextInput) {
+         TextInput.State.blurTextInput(this._previouslyFocusedTextInput);
+       }
+@@ -43,7 +43,7 @@ export default (Navigator, navigatorConfig) =>
+       // in the case where the index did not change, I believe. We
+       // should revisit this after 2.0 release.
+       if (transitionProps.index !== prevTransitionProps.index) {
+-        const currentField = TextInput.State.currentlyFocusedField();
++        const currentField = TextInput.State.currentlyFocusedInput();
+         if (currentField) {
+           TextInput.State.blurTextInput(currentField);
+         }
