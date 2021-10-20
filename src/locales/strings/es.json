@@ -331,8 +331,6 @@
   "transaction_details_tx_id_modal_title": "ID de la transacción",
   "transaction_details_show_advanced_block_explorer": "Mostrar en el explorador de bloques",
   "transaction_history_permission": "¿Quieres compartir todo el historial de transacciones de %s con este socio?",
-  "transaction_details_fiat_modal_header": "Cantidad de %s",
-  "transaction_details_fiat_label": "Elegir una cantidad",
   "transaction_details_error_invalid": "Transacción inválida",
   "transaction_details_choose_a_sub_category": "Elegir sub-categoría",
   "transaction_details_recipient_addresses": "Dirección del destinatario",
