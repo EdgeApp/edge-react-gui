@@ -5,7 +5,6 @@ import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from
 import { showError } from '../components/services/AirshipInstance.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
 export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {
@@ -15,7 +14,6 @@ export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata
     .saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
     .then(() => {
       dispatch(refreshTransactionsRequest(wallet.id, [transaction]))
-      Actions.pop()
     })
     .catch(showError)
 }

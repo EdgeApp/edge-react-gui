@@ -67,6 +67,13 @@ export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
+export const displayFiatAmount = (fiatAmount?: number) => {
+  if (fiatAmount == null || fiatAmount === 0) return formatNumber('0.00')
+  const initialAmount = fiatAmount.toFixed(2)
+  const absoluteAmount = bns.abs(initialAmount)
+  return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
+}
+
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 export const mergeTokens = (
   preferredEdgeMetaTokens: EdgeMetaToken[] | CustomTokenInfo[],
@@ -105,6 +112,9 @@ export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToke
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
   !isNaN(+input) || input === '.'
+
+// Used to check if a string is an actual number and not empty or any other type
+export const isNotEmptyNumber = (input: string | void): boolean => input != null && input !== '' && isValidInput(input)
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed

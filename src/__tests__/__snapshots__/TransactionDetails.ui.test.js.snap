@@ -178,17 +178,6 @@ exports[`TransactionDetails.ui should render 1`] = `
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
-        label="Save"
-        marginRem={
-          Array [
-            0,
-            2,
-            2,
-          ]
-        }
-        onPress={[Function]}
-      />
     </View>
   </ScrollView>
 </SceneWrapper>
@@ -372,17 +361,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
-        label="Save"
-        marginRem={
-          Array [
-            0,
-            2,
-            2,
-          ]
-        }
-        onPress={[Function]}
-      />
     </View>
   </ScrollView>
 </SceneWrapper>
@@ -566,17 +544,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
-        label="Save"
-        marginRem={
-          Array [
-            0,
-            2,
-            2,
-          ]
-        }
-        onPress={[Function]}
-      />
     </View>
   </ScrollView>
 </SceneWrapper>
@@ -760,17 +727,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
-        label="Save"
-        marginRem={
-          Array [
-            0,
-            2,
-            2,
-          ]
-        }
-        onPress={[Function]}
-      />
     </View>
   </ScrollView>
 </SceneWrapper>

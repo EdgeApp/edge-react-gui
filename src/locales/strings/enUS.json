@@ -417,8 +417,6 @@
   "transaction_details_tx_id_modal_title": "Transaction ID",
   "transaction_details_show_advanced_block_explorer": "Show in Block Explorer",
   "transaction_history_permission": "Would you like to share the entire transaction history of %s with this partner?",
-  "transaction_details_fiat_modal_header": "%s Amount",
-  "transaction_details_fiat_label": "Choose an amount",
   "transaction_details_error_invalid": "Invalid Transaction",
   "transaction_details_choose_a_sub_category": "Choose a sub-category",
   "transaction_details_recipient_addresses": "Recipient Addresses",
