@@ -53,7 +53,6 @@ export class TransactionDetailsNotesInput extends React.Component<Props, State> 
                   multiline
                   autoCorrect={false}
                   style={styles.inputNotes}
-                  autoCapitalize="sentences"
                   underlineColorAndroid={THEME.COLORS.TRANSPARENT}
                   placeholderTextColor={THEME.COLORS.GRAY_3}
                   value={notes}

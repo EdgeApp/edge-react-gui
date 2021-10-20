@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import type { CountryData } from '../../types/types'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
-import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -28,7 +28,6 @@ type CountrySelectionModalState = {
 type Props = CountrySelectionModalProps & ThemeProps
 
 class CountrySelectionModalComponent extends React.Component<Props, CountrySelectionModalState> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
   constructor(props: Props) {
     super(props)
     const deviceCountry = getCountry() // "US"
@@ -47,13 +46,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
   handleSelectCountry = (selected: string) => this.props.bridge.resolve(selected)
 
   handleClose = () => this.props.bridge.resolve(this.state.countryCode)
-
-  clearText = () => {
-    this.setState({ input: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
-  }
 
   _renderItem = (data: { item: CountryData }) => {
     const { theme } = this.props
@@ -97,19 +89,13 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           {s.strings.buy_sell_crypto_select_country_button}
         </ModalTitle>
         <OutlinedTextInput
-          autoFocus
-          keyboardType="default"
           label={s.strings.buy_sell_crypto_select_country_button}
           onChangeText={this.updateCountryInput}
           value={input}
           autoCorrect={false}
           autoCapitalize="words"
           returnKeyType="search"
-          onClear={this.clearText}
-          clearIcon
           marginRem={[0, 1.75]}
-          ref={this.textInput}
-          blurOnSubmit
           searchIcon
         />
         <FlatList

@@ -19,7 +19,7 @@ import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
@@ -59,7 +59,6 @@ type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -76,10 +75,6 @@ class AddressModalComponent extends React.Component<Props, State> {
 
   componentDidMount() {
     this.getFioAddresses()
-
-    if (this.textInput.current) {
-      this.textInput.current.focus()
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -133,13 +128,6 @@ class AddressModalComponent extends React.Component<Props, State> {
     }
 
     this.setState({ filteredFioAddresses: fioAddressesArray.sort() })
-  }
-
-  clearText = () => {
-    this.setState({ uri: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   onChangeTextDelayed = (domain: string) => {
@@ -319,7 +307,6 @@ class AddressModalComponent extends React.Component<Props, State> {
         </ModalTitle>
         <View style={styles.container}>
           <OutlinedTextInput
-            autoFocus
             autoCorrect={false}
             returnKeyType="search"
             autoCapitalize="none"
@@ -327,12 +314,8 @@ class AddressModalComponent extends React.Component<Props, State> {
             onChangeText={this.onChangeTextDelayed}
             onSubmitEditing={this.handleSubmit}
             value={uri}
-            onClear={this.clearText}
-            clearIcon
             marginRem={[0, 1]}
-            ref={this.textInput}
             error={fieldError}
-            blurOnSubmit
           />
           {!userFioAddressesLoading ? (
             <FlatList

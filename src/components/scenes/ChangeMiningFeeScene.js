@@ -148,6 +148,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
       <View style={styles.view}>
         {customFormat.map(key => (
           <OutlinedTextInput
+            autoFocus={false}
             key={key}
             autoCorrect={false}
             onChangeText={text =>
@@ -158,9 +159,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
             value={customNetworkFee[key]}
             label={FEE_STRINGS[key] || key}
             returnKeyType="search"
-            clearIcon
             marginRem={[1.75, 1.75]}
-            blurOnSubmit
             keyboardType="numeric"
           />
         ))}

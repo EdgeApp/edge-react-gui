@@ -13,7 +13,7 @@ import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -31,8 +31,6 @@ type State = {
 }
 
 class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -83,13 +81,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     this.setState({ selectedWalletType: item.walletType }, this.onNext)
   }
 
-  clearText = () => {
-    this.setState({ searchTerm: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
-  }
-
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { theme } = this.props
     const { walletType, symbolImageDarkMono, currencyCode } = data.item
@@ -134,18 +125,13 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
             <OutlinedTextInput
-              autoFocus
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
-              onClear={this.clearText}
-              clearIcon
               marginRem={[0, 1.75]}
-              ref={this.textInput}
-              blurOnSubmit
               searchIcon
             />
             <FlatList
