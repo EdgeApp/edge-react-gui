@@ -413,8 +413,6 @@
   "transaction_details_tx_id_modal_title": "Transaktions-ID",
   "transaction_details_show_advanced_block_explorer": "Im Blockexplorer öffnen",
   "transaction_history_permission": "Möchten Sie den gesamten Transaktionsverlauf von %s mit diesem Partner teilen?",
-  "transaction_details_fiat_modal_header": "%s Betrag",
-  "transaction_details_fiat_label": "Wählen Sie einen Betrag",
   "transaction_details_error_invalid": "Ungültige Transaktion",
   "transaction_details_choose_a_sub_category": "Wähle eine Unterkategorie",
   "transaction_details_recipient_addresses": "Empfänger-Adressen",
