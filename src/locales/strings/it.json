@@ -417,8 +417,6 @@
   "transaction_details_tx_id_modal_title": "ID di transazione",
   "transaction_details_show_advanced_block_explorer": "Mostra Block Explorer",
   "transaction_history_permission": "Vuoi condividere l'intera cronologia delle transazioni di %s con questo partner?",
-  "transaction_details_fiat_modal_header": "Importo in %s",
-  "transaction_details_fiat_label": "Scegli un importo",
   "transaction_details_error_invalid": "Transazione non valida",
   "transaction_details_choose_a_sub_category": "Scegli una sotto-categoria",
   "transaction_details_recipient_addresses": "Indirizzi destinatario",
