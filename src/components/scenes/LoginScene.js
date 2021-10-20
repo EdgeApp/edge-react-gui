@@ -131,7 +131,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
             context={context}
             recoveryLogin={passwordRecoveryKey}
             onLogin={this.onLogin}
-            fontDescription={{ regularFontFamily: theme.fontFaceDefault }}
+            fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceBold }}
             key={String(counter)}
             appName={s.strings.app_name_short}
             backgroundImage={backgroundImage}
