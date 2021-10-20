@@ -179,7 +179,6 @@
   "transaction_details_view_advanced_data": "Посмотреть расширенные детали транзакции",
   "transaction_details_tx_id_modal_title": "Идентификатор транзакции",
   "transaction_details_show_advanced_block_explorer": "Показать в проводнике транзакций",
-  "transaction_details_fiat_modal_header": "%s сумма",
   "tx_detail_picker_title": "Выберите категорию:",
   "transaction_details_notes_title": "Примечания",
   "fragment_tx_detail_mining_fee_with_symbol": "+ %1s комиссия",
