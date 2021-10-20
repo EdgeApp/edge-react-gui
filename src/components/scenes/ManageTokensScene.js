@@ -20,7 +20,6 @@ import { DividerLine } from '../themed/DividerLine'
 import { MainButton } from '../themed/MainButton.js'
 import ManageTokensHeader from '../themed/ManageTokensHeader'
 import ManageTokensRow from '../themed/ManageTokensRow'
-import { type OutlinedTextInputRef } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
@@ -49,8 +48,6 @@ type State = {
 }
 
 class ManageTokensSceneComponent extends React.Component<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
-
   constructor(props: Props) {
     super(props)
     const { route } = this.props
@@ -175,13 +172,6 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     this.setState({ searchValue: value })
   }
 
-  onSearchClear = () => {
-    this.setState({ searchValue: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
-  }
-
   saveEnabledTokenList = () => {
     const { navigation, route } = this.props
     const { guiWallet } = route.params
@@ -242,12 +232,10 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       <SceneWrapper>
         <SceneHeader underline>
           <ManageTokensHeader
-            textInput={this.textInput}
             walletName={name}
             walletId={guiWallet.id}
             currencyCode={currencyCode}
             changeSearchValue={this.changeSearchValue}
-            onSearchClear={this.onSearchClear}
             onSelectWallet={this.onSelectWallet}
             searchValue={searchValue}
           />

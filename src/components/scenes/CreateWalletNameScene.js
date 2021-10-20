@@ -9,7 +9,7 @@ import s from '../../locales/strings.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { MainButton } from '../themed/MainButton.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 export type CreateWalletNameOwnProps = {
@@ -22,8 +22,6 @@ type State = {
 }
 
 export class CreateWalletName extends React.Component<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
-
   constructor(props: Props) {
     super(props)
     const { route } = props
@@ -39,13 +37,6 @@ export class CreateWalletName extends React.Component<Props, State> {
     const isValid = walletName.length > 0
 
     return isValid
-  }
-
-  clearText = () => {
-    this.setState({ walletName: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   onNext = () => {
@@ -89,9 +80,7 @@ export class CreateWalletName extends React.Component<Props, State> {
           autoCorrect={false}
           returnKeyType="next"
           label={s.strings.fragment_wallets_addwallet_name_hint}
-          onClear={this.clearText}
           marginRem={[0, 1.75]}
-          ref={this.textInput}
         />
         <MainButton alignSelf="center" label={s.strings.string_next_capitalized} marginRem={[3, 1]} type="secondary" onPress={this.onNext} />
       </SceneWrapper>

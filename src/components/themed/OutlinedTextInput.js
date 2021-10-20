@@ -40,7 +40,10 @@ type Props = {|
   testID?: string,
 
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
-  autoFocus?: boolean // Defaults to 'true'
+  autoFocus?: boolean, // Defaults to 'true'
+
+  // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
+  blurOnClear?: boolean // Defaults to 'false'
 |}
 
 /**
@@ -77,6 +80,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
 
     // TextInput:
     autoFocus = !searchIcon,
+    blurOnClear = searchIcon,
     ...inputProps
   } = props
   const theme = useTheme()
@@ -94,6 +98,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   function clear(): void {
     if (inputRef.current != null) inputRef.current.clear()
     if (onChangeText != null) onChangeText('')
+    if (blurOnClear) blur()
     if (onClear != null) onClear()
   }
   function focus(): void {

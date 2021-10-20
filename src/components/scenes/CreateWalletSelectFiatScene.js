@@ -14,7 +14,7 @@ import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -33,8 +33,6 @@ type State = {
 }
 
 class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -100,13 +98,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     }
   }
 
-  clearText = () => {
-    this.setState({ searchTerm: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
-  }
-
   renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     const styles = getStyles(this.props.theme)
     const fiatCountry = FIAT_COUNTRY[data.item.value]
@@ -147,9 +138,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
-              onClear={this.clearText}
               marginRem={[0, 1.75]}
-              ref={this.textInput}
               searchIcon
             />
             <FlatList
