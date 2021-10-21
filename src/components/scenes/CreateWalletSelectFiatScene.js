@@ -111,7 +111,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
         icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={data.item.value}
         subTitle={s.strings[`currency_label_${data.item.value}`]}
-        selected={data.item.value === this.state.selectedFiat}
       />
     )
   }

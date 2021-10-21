@@ -8,7 +8,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+type Props = {|
   onPress: () => void | (() => Promise<void>),
   title: string | React.Node,
   subTitle?: string,
@@ -19,7 +19,7 @@ type Props = {
 
   marginRem?: number[] | number,
   paddingRem?: number[] | number
-}
+|}
 
 class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
