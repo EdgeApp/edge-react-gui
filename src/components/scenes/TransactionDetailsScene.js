@@ -179,7 +179,13 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         submitLabel={s.strings.string_save}
         title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
       />
-    )).then(amount => this.onSaveTxDetails(isNotEmptyNumber(amount) ? { amountFiat: displayFiatAmount(parseFloat(amount)) } : null))
+    )).then(fiatAmount => {
+      const amount = fiatAmount != null ? fiatAmount.replace(',', '.') : ''
+      if (isNotEmptyNumber(amount)) {
+        const amountFiat = displayFiatAmount(parseFloat(amount))
+        this.onSaveTxDetails({ amountFiat })
+      }
+    })
   }
 
   openCategoryInput = () => {
@@ -408,7 +414,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const percentage = bns.toFixed(percentageFloat, 2, 2)
 
     return {
-      amount,
+      amount: displayFiatAmount(parseFloat(currentFiatAmount.replace(',', '.'))),
       difference,
       percentage: bns.abs(percentage)
     }
@@ -424,7 +430,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = getFiatSymbol(guiWallet.fiatCurrencyCode)
-    const fiatValue = displayFiatAmount(parseFloat(amountFiat))
+    const fiatValue = displayFiatAmount(parseFloat(amountFiat.replace(',', '.')))
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
