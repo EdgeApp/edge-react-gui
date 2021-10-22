@@ -1,5 +1,18 @@
 # edge-react-gui
 
+## 2.4.0 (2021-10-22)
+
+- New themed change mining fee scene
+- Add support for new UD domains (.coin, .wallet, .bitcoin, .x, .888, .nft, .dao, and .blockchain)
+- Fix inability to cancel security alert modal
+- Upgrade react-native-share to v7.1.12 to fix iOS crash
+- Pass Quicksand font to login UI
+- Use react-native-fast-image for remote assets
+- Simplify advanced tx details props
+- Bits of Gold: Removed GB support (temporary)
+- Update partner descriptions
+- Various visual fixes
+
 ## 2.3.1 (2021-10-12)
 
 - Fix uniqueIdentifier logic in spendInfo selector
