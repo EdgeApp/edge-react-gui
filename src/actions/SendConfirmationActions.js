@@ -65,12 +65,13 @@ export const sendConfirmationUpdateTx =
     const state = getState()
     const { currencyWallets } = state.core.account
 
-    const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
+    const walletId = selectedWalletId ?? state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[walletId]
     const maxSpendSet = state.ui.scenes.sendConfirmation.maxSpendSet
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
     if (maxSpendSet && isFeeChanged) guiMakeSpendInfoClone.nativeAmount = '0'
-    const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode)
+    const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
+    const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, currencyCode)
 
     if (isFeeChanged) {
       spendInfo.spendTargets = spendInfo.spendTargets.map(spendTarget => ({
@@ -88,7 +89,7 @@ export const sendConfirmationUpdateTx =
     if (amountRequired && guiMakeSpendInfo.nativeAmount === '') return
 
     if (maxSpendSet && isFeeChanged) {
-      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
+      return dispatch(updateMaxSpend(walletId, currencyCode, guiMakeSpendInfoClone))
     }
     await edgeWallet
       .makeSpend(spendInfo)
@@ -163,7 +164,7 @@ export const updateMaxSpend =
 
         const wallets = state.ui.wallets.byId
         const guiWallet = wallets[walletId]
-        const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
+        const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
         const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
         const exchangeDenomination = getExchangeDenomination(state, currencyCode)
 

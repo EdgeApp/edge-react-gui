@@ -239,18 +239,15 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   handleFeesChange = () => {
     const { navigation, sendConfirmationUpdateTx, guiMakeSpendInfo, maxSpendSet } = this.props
-    if (this.state.coreWallet == null) return
+    const { coreWallet: wallet, selectedWalletId, selectedCurrencyCode } = this.state
+    if (wallet == null) return
     navigation.navigate('changeMiningFee', {
       guiMakeSpendInfo,
       maxSpendSet,
-      wallet: this.state.coreWallet,
+      wallet,
       onSubmit: (networkFeeOption, customNetworkFee) => {
-        sendConfirmationUpdateTx(
-          { ...guiMakeSpendInfo, customNetworkFee, networkFeeOption },
-          this.state.selectedWalletId,
-          this.state.selectedCurrencyCode,
-          true
-        )
+        const spendInfo = { ...guiMakeSpendInfo, customNetworkFee, networkFeeOption }
+        sendConfirmationUpdateTx(spendInfo, selectedWalletId, selectedCurrencyCode, true)
       }
     })
   }
@@ -614,30 +611,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
+    const { transaction, error, pending = false, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
+    const { lockInputs, uniqueIdentifier } = guiMakeSpendInfo
+    const resetSlider = error != null && (error.message === 'broadcastError' || error.message === 'transactionCancelled')
+    const sliderDisabled = transaction == null || error != null || pending
 
     return {
+      ...state.ui.scenes.sendConfirmation,
       account: state.core.account,
-      authRequired: state.ui.scenes.sendConfirmation.authRequired,
       defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
-      error,
-      exchangeRates: state.exchangeRates,
-      lockInputs: guiMakeSpendInfo.lockInputs,
-      metadata: guiMakeSpendInfo && guiMakeSpendInfo.metadata ? guiMakeSpendInfo : undefined,
-      nativeAmount,
-      pending,
-      pin: state.ui.scenes.sendConfirmation.pin,
-      resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
-      settings: state.ui.settings,
-      sliderDisabled: !transaction || !!error || !!pending,
-      transaction,
-      transactionMetadata,
-      uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
       wallets: state.ui.wallets.byId,
-      isSendUsingFioAddress,
-      guiMakeSpendInfo,
-      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
+      exchangeRates: state.exchangeRates,
+      settings: state.ui.settings,
+      sliderDisabled,
+      resetSlider,
+      lockInputs,
+      uniqueIdentifier
     }
   },
   dispatch => ({

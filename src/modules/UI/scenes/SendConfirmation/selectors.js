@@ -104,8 +104,8 @@ export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo =
   } else {
     spendTargets = [
       {
-        nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
-        publicAddress: newSpendInfo.publicAddress || getPublicAddress(state),
+        nativeAmount: newSpendInfo.nativeAmount ?? getNativeAmount(state),
+        publicAddress: newSpendInfo.publicAddress ?? getPublicAddress(state),
         otherParams: {
           ...getSpendTargetOtherParams(state),
           uniqueIdentifier
@@ -159,8 +159,8 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
 
   const currencyCode = spendInfo.currencyCode
   const { nativeAmount } = spendInfo.spendTargets[0]
-  if (nativeAmount === '') return 'none' // TODO: Future change will make this null instead of ''
-  if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
+  if (currencyCode == null || nativeAmount == null) throw new Error('Invalid Spend Request')
+  if (nativeAmount === '') return 'none'
 
   const { spendingLimits } = state.ui.settings
   const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat

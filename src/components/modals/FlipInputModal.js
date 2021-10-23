@@ -283,7 +283,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       state.ui.scenes.sendConfirmation.transaction,
       state.ui.settings
     )
-    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+    const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
     const feeSyntaxStyle = transactionFee.fiatStyle
 
     // Error
@@ -300,7 +300,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
-      flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
+      flipInputHeaderLogo: guiWallet.symbolImageDarkMono ?? '',
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto: fiatPerCrypto ?? '0',
