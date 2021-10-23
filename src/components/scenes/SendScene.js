@@ -67,7 +67,7 @@ type StateProps = {
 
 type DispatchProps = {
   reset: () => void,
-  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void,
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   updateSpendPending: boolean => void,
   onChangePin: (pin: string) => void,
@@ -245,7 +245,12 @@ class SendComponent extends React.PureComponent<Props, State> {
       maxSpendSet,
       wallet: this.state.coreWallet,
       onSubmit: (networkFeeOption, customNetworkFee) => {
-        sendConfirmationUpdateTx({ ...guiMakeSpendInfo, customNetworkFee, networkFeeOption }, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+        sendConfirmationUpdateTx(
+          { ...guiMakeSpendInfo, customNetworkFee, networkFeeOption },
+          this.state.selectedWalletId,
+          this.state.selectedCurrencyCode,
+          true
+        )
       }
     })
   }
@@ -639,8 +644,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
-    sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode))
+    sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
+      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
     updateSpendPending(pending: boolean) {
       dispatch({
