@@ -242,10 +242,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         url,
         filename: file.fileName,
         subject: title
-      }).catch(error => {
-        console.log('Share error', error)
-        showError(error)
-      })
+      }).catch(error => console.log('Share error', error))
     } catch (error) {
       console.log('Error writing file to disk', error)
       showError(error)
