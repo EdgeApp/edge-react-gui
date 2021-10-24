@@ -4,13 +4,12 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getRenewalFee, getTransferFee, renewFioName } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -35,6 +34,7 @@ type DispatchProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioAddressSettings'>,
   route: RouteProp<'fioAddressSettings'>
 }
 
@@ -55,24 +55,28 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     }
   }
 
-  afterRenewSuccess = ({ expiration }) => {
-    const { refreshAllFioAddresses, route } = this.props
-    const { fioAddressName, refreshAfterRenew } = route.params
+  afterRenewSuccess = ({ expiration = '' }) => {
+    const { refreshAllFioAddresses, navigation, route } = this.props
+    const { fioWallet, fioAddressName, refreshAfterRenew } = route.params
 
     refreshAllFioAddresses()
 
     this.setState({ showRenew: false })
     showToast(s.strings.fio_request_renew_ok_text)
-    Actions.pop()
+    navigation.goBack()
     if (refreshAfterRenew) {
       window.requestAnimationFrame(() => {
-        Actions.refresh({ fioAddressName, expiration: expiration ? new Date(expiration) : '' })
+        navigation.setParams({
+          fioWallet,
+          fioAddressName,
+          expiration
+        })
       })
     }
   }
 
   afterTransferSuccess = async () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { fioAddressName = '' } = route.params
 
     const addressName = `@${fioAddressName}`
@@ -89,7 +93,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
-    return Actions.popTo(FIO_ADDRESS_LIST)
+    return navigation.navigate('fioAddressList')
   }
 
   getExpiration = (): string => {
@@ -128,7 +132,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { fioWallet, fioAddressName } = route.params
 
     const { fee: transferFee } = params
@@ -149,7 +153,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       }
     }
 
-    Actions.push(SEND, {
+    navigation.navigate('send', {
       guiMakeSpendInfo,
       selectedWalletId: fioWallet.id,
       selectedCurrencyCode: fioWallet.currencyInfo.currencyCode,

@@ -5,18 +5,18 @@ import { asObject, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
-import { PLUGIN_VIEW } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -56,6 +56,7 @@ const pluginPartnerLogos = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'pluginBuy'> | NavigationProp<'pluginSell'>,
   route: RouteProp<'pluginBuy'> | RouteProp<'pluginSell'>
 }
 
@@ -155,7 +156,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode } = this.props
+    const { countryCode, navigation } = this.props
     const { pluginId, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -191,7 +192,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions.push(PLUGIN_VIEW, {
+    navigation.navigate('pluginView', {
       plugin,
       deepPath,
       deepQuery
@@ -274,7 +275,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
-            <Image
+            <FastImage
               source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
               style={styles.selectedCountryFlag}
             />

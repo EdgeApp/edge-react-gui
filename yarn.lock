@@ -10607,6 +10607,11 @@ react-native-fast-crypto@^2.0.0:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
 
+react-native-fast-image@^8.3.7:
+  version "8.3.7"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.3.7.tgz#c4877de17903101f6d94b6736a4f7e5d7b019224"
+  integrity sha512-J++Ad04PTUe4YgjyGv63gfgV8Fz1gZKAgQHpblf8Z87D9dxfc8UfXHTPv9VLGdTJU4IzdTnQqzoFgDtWdsvBsQ==
+
 react-native-flipper@^0.87.0:
   version "0.87.0"
   resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.87.0.tgz#7442994a5dd3fadd64b78293835af36bcf7fa891"
@@ -10750,6 +10755,11 @@ react-native-share@^5.1.4:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-5.1.4.tgz#0b9d51f6ca724728cb0c5b3ed3a883ee54d7a11b"
   integrity sha512-/eNBTuimOmzeeBbnZkwW6hbzSZvJnhfkx5cSdQkFS45KRHekD9twP6F8QHn+zJxeJGAP+EgpVCXoA7yCrgKrhQ==
+
+react-native-share@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
+  integrity sha512-kmwp11XYL1TBvKQ1s3Y4HTxu5QNZM6W1SopItAovoC+UD+9g4lVFIPL64bww16Oz15xQTTDtvDHCG8zDWKOVPA==
 
 "react-native-smart-splash-screen@git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
   version "2.3.5"
@@ -13253,10 +13263,10 @@ url-parse-lax@^3.0.0:
   dependencies:
     prepend-http "^2.0.0"
 
-url-parse@^1.4.1, url-parse@^1.4.3, url-parse@^1.4.4, url-parse@^1.4.7, url-parse@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.1.tgz#d5fa9890af8a5e1f274a2c98376510f6425f6e3b"
-  integrity sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==
+url-parse@^1.4.1, url-parse@^1.4.3, url-parse@^1.4.7, url-parse@^1.5.1, url-parse@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.2.tgz#a4eff6fd5ff9fe6ab98ac1f79641819d13247cda"
+  integrity sha512-6bTUPERy1muxxYClbzoRo5qtQuyoGEbzbQvi0SW4/8U8UyVkAQhWFBlnigqJkRm4su4x1zDQfNbEzWkt+vchcg==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"

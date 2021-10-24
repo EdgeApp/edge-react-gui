@@ -27,7 +27,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           }
         >
-          <Image
+          <FastImage
             source={
               Object {
                 "uri": "thumb/nail/path",
@@ -221,7 +221,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           }
         >
-          <Image
+          <FastImage
             source={
               Object {
                 "uri": "thumb/nail/path",
@@ -415,7 +415,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           }
         >
-          <Image
+          <FastImage
             source={
               Object {
                 "uri": "thumb/nail/path",
@@ -609,7 +609,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           }
         >
-          <Image
+          <FastImage
             source={
               Object {
                 "uri": "thumb/nail/path",

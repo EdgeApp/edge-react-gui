@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type OtpError } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type JsonObject, type OtpError } from 'edge-core-js'
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
@@ -8,6 +8,7 @@ import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFl
 import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
 import {
   type CreateWalletType,
+  type FeeOption,
   type FioConnectionWalletItem,
   type FioDomain,
   type FioRequest,
@@ -16,7 +17,6 @@ import {
   type GuiSwapInfo,
   type GuiWallet
 } from './types.js'
-
 /**
  * Defines the acceptable route parameters for each scene key.
  */
@@ -35,7 +35,9 @@ export type ParamList = {
     walletId: string
   |},
   changeMiningFee: {|
-    currencyCode?: string,
+    guiMakeSpendInfo: GuiMakeSpendInfo,
+    maxSpendSet: boolean,
+    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void,
     wallet: EdgeCurrencyWallet
   |},
   changePassword: void,

@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { PLUGIN_BUY } from '../../constants/SceneKeys.js'
@@ -43,7 +44,7 @@ class BuyCryptoComponent extends React.PureComponent<Props> {
           <ButtonBox onPress={this.handlePress} paddingRem={1}>
             <View style={styles.container}>
               <View style={styles.buyCrypto}>
-                <Image style={styles.buyCryptoImage} source={{ uri: currencyImage }} resizeMode="cover" />
+                <FastImage style={styles.buyCryptoImage} source={{ uri: currencyImage }} resizeMode="cover" />
                 <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, currencyName)}</EdgeText>
               </View>
             </View>

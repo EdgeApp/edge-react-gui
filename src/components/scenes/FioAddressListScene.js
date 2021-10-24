@@ -8,13 +8,12 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
-import { FIO_ADDRESS_DETAILS, FIO_ADDRESS_REGISTER, FIO_DOMAIN_REGISTER, FIO_DOMAIN_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { PLATFORM } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -92,19 +91,20 @@ class FioAddressList extends React.Component<Props, LocalState> {
   }
 
   onAddressPress = (fioAddress: FioAddress) => {
+    const { navigation } = this.props
     const { name, expiration } = fioAddress
-    Actions.push(FIO_ADDRESS_DETAILS, {
+    navigation.navigate('fioAddressDetails', {
       fioAddressName: name,
       expiration
     })
   }
 
   onDomainPress = (fioDomain: FioDomain) => {
-    const { fioWallets } = this.props
+    const { fioWallets, navigation } = this.props
     const { name, expiration, walletId, isPublic } = fioDomain
     const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
     if (fioWallet == null) return
-    Actions.push(FIO_DOMAIN_SETTINGS, {
+    navigation.navigate('fioDomainSettings', {
       fioWallet,
       fioDomainName: name,
       expiration,
@@ -113,7 +113,7 @@ class FioAddressList extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { fioAddresses, fioDomains, loading, theme } = this.props
+    const { fioAddresses, fioDomains, loading, navigation, theme } = this.props
     const { initLoading } = this.state
     const styles = getStyles(theme)
 
@@ -157,13 +157,13 @@ class FioAddressList extends React.Component<Props, LocalState> {
           </ScrollView>
 
           <View>
-            <ClickableText marginRem={[1, 1, 0]} onPress={() => Actions.push(FIO_ADDRESS_REGISTER)}>
+            <ClickableText marginRem={[1, 1, 0]} onPress={() => navigation.navigate('fioAddressRegister')}>
               <View style={styles.actionButton}>
                 <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
               </View>
             </ClickableText>
-            <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => Actions.push(FIO_DOMAIN_REGISTER)}>
+            <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => navigation.navigate('fioDomainRegister')}>
               <View style={styles.actionButton}>
                 <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>

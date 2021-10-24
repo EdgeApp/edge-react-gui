@@ -6,11 +6,13 @@ import RNPermissions from 'react-native-permissions'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { Scan } from '../components/scenes/ScanScene.js'
+import { fakeNavigation } from '../util/fake/fakeNavigation.js'
 
 describe('Scan component', () => {
   it('should render with BLOCKED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      navigation: fakeNavigation,
       route: {
         name: 'scan',
         params: {
@@ -41,6 +43,7 @@ describe('Scan component', () => {
   it('should render with GRANTED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      navigation: fakeNavigation,
       route: {
         name: 'scan',
         params: {

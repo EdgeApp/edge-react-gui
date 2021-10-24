@@ -30,7 +30,9 @@ const strings = {
   error_token_exists: 'A currency named %s already exists',
 
   // Warning messages:
-  warning_low_or_custom_fee: 'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
+  warning_low_fee_selected: 'Low Fee Selected',
+  warning_low_or_custom_fee:
+    'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',
 
   // Alert component:
@@ -41,7 +43,6 @@ const strings = {
   azteco_invalid_code: 'Invalid Azteco code.',
   azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
   azteco_btc_only: 'Please choose a BTC wallet and scan again.',
-  exchange_max_amount: 'Exchange Max',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
@@ -215,7 +216,7 @@ const strings = {
   mining_fee_custom_label_choice: 'Custom',
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
-  mining_fee_standard_label_choice: 'Standard',
+  mining_fee_standard_label_choice: 'Optimal',
   request_deprecated_currency_code:
     'Support for %1$s has been deprecated. To continue using this wallet, extract the private keys and import into a %1$s supporting wallet.',
   request_qr_email_title: 'Pay with %1$s:',
@@ -804,6 +805,7 @@ const strings = {
   string_allow: 'Allow',
   string_deny: 'Deny',
   string_wallet_balance: 'Wallet Balance',
+  string_max_cap: 'MAX',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',

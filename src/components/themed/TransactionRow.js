@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -122,7 +123,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
           <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
             {thumbnailPath ? null : transactionIcon}
           </View>
-          <Image style={styles.icon} source={{ uri: thumbnailPath }} />
+          <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
         </View>
         <View style={styles.transactionContainer}>
           <View style={styles.transactionRow}>

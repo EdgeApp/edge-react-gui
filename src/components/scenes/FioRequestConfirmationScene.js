@@ -5,7 +5,6 @@ import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-c
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { FIO_ADDRESS_SETTINGS, REQUEST } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -14,7 +13,7 @@ import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils'
@@ -41,6 +40,7 @@ type StateProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioRequestConfirmation'>,
   route: RouteProp<'fioRequestConfirmation'>
 }
 
@@ -103,7 +103,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   onConfirm = async () => {
-    const { fioPlugin, primaryCurrencyInfo, isConnected, publicAddress, chainCode, account, route } = this.props
+    const { fioPlugin, primaryCurrencyInfo, isConnected, publicAddress, chainCode, account, navigation, route } = this.props
     const { amounts } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
@@ -135,7 +135,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
               />
             ))
             if (answer === 'ok') {
-              Actions.push(FIO_ADDRESS_SETTINGS, {
+              navigation.navigate('fioAddressSettings', {
                 showRenew: true,
                 fioWallet,
                 fioAddressName: this.state.fioAddressFrom
@@ -172,7 +172,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
         addToFioAddressCache(account, [this.state.fioAddressTo])
-        Actions.popTo(REQUEST)
+        navigation.navigate('request')
       } catch (error) {
         this.setState({ loading: false })
         this.resetSlider()

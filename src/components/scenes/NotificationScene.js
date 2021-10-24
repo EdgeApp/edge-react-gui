@@ -2,14 +2,14 @@
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView } from 'react-native'
+import { ActivityIndicator, ScrollView } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
-import { CURRENCY_NOTIFICATION_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -17,6 +17,9 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'notificationSettings'>
+}
 type StateProps = {
   currencyInfos: EdgeCurrencyInfo[],
   userId: string
@@ -27,7 +30,7 @@ type State = {
   loading: boolean
 }
 
-type Props = StateProps & ThemeProps
+type Props = StateProps & OwnProps & ThemeProps
 
 class NotificationComponent extends React.Component<Props, State> {
   mounted: boolean
@@ -82,7 +85,7 @@ class NotificationComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
+    const { navigation, theme } = this.props
     const { enabled } = this.state
     const styles = getStyles(theme)
 
@@ -96,10 +99,10 @@ class NotificationComponent extends React.Component<Props, State> {
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
               const { displayName, currencyCode } = currencyInfo
               const { symbolImage } = getCurrencyIcon(currencyCode)
-              const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
+              const icon = <FastImage style={styles.currencyLogo} source={{ uri: symbolImage }} />
               const onPress = () =>
                 enabled
-                  ? Actions.push(CURRENCY_NOTIFICATION_SETTINGS, {
+                  ? navigation.navigate('currencyNotificationSettings', {
                       currencyInfo
                     })
                   : undefined
@@ -125,7 +128,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const NotificationScene = connect<StateProps, {}, {}>(
+export const NotificationScene = connect<StateProps, {}, OwnProps>(
   state => ({
     currencyInfos: getActiveWalletCurrencyInfos(state),
     userId: state.core.account.rootLoginId

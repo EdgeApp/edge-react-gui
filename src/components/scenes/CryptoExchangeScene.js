@@ -296,7 +296,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.getQuote}
           >
             {this.props.hasMaxSpend && (
-              <MiniButton alignSelf="center" label={s.strings.exchange_max_amount} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
+              <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
             )}
           </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />

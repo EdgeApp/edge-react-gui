@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
+import { CURRENCY_PLUGIN_NAMES, ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type FioAddresses, checkExpiredFioAddress, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -155,13 +155,9 @@ class AddressModalComponent extends React.Component<Props, State> {
     return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
   }
 
-  checkIfUnstoppableDomain = (domain: string): boolean => {
-    return domain.endsWith('.zil') || domain.endsWith('.crypto')
-  }
+  checkIfUnstoppableDomain = (name: string): boolean => UNSTOPPABLE_DOMAINS.some(domain => name.endsWith(domain))
 
-  checkIfEnsDomain = (domain: string): boolean => {
-    return domain.endsWith('.eth') || domain.endsWith('.luxe') || domain.endsWith('.kred') || domain.endsWith('.xyz')
-  }
+  checkIfEnsDomain = (name: string): boolean => ENS_DOMAINS.some(domain => name.endsWith(domain))
 
   fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()

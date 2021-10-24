@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -27,13 +28,7 @@ const feeString = {
 
 type OwnProps = {
   bridge: AirshipBridge<null>,
-  networkFeeOption?: 'high' | 'standard' | 'low' | 'custom',
-  requestedCustomFee?: Object,
-  feeRateUsed?: Object,
-  signedTx: string,
-  txid: string,
-  txSecret?: string,
-  recipientAddress?: string,
+  transaction: EdgeTransaction,
   url?: string
 }
 
@@ -58,60 +53,59 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
     })
   }
 
+  getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
+
   openUrl = () => {
     const { url } = this.props
-    if (url) {
-      if (Platform.OS === 'ios') {
-        return SafariView.isAvailable()
-          .then(SafariView.show({ url }))
-          .catch(error => {
-            Linking.openURL(url)
-            console.log(error)
-          })
-      }
-      Linking.canOpenURL(url).then(supported => {
-        if (supported) {
+    if (url == null || url === '') return
+    if (Platform.OS === 'ios') {
+      return SafariView.isAvailable()
+        .then(SafariView.show({ url }))
+        .catch(error => {
           Linking.openURL(url)
-        }
-      })
+          console.log(error)
+        })
     }
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url)
+      }
+    })
   }
 
   openProveUrl = () => {
-    const { recipientAddress, txid, txSecret } = this.props
-    // Early return to satisfy flow. Button isn't visible without all params present.
-    if (!recipientAddress || !txid || !txSecret) return
+    const { txid, txSecret } = this.props.transaction
+    const recipientAddress = this.getRecipientAddress()
+    if (recipientAddress === '' || txid === '' || txSecret == null) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
-    if (url) {
-      if (Platform.OS === 'ios') {
-        return SafariView.isAvailable()
-          .then(SafariView.show({ url }))
-          .catch(error => {
-            Linking.openURL(url)
-            console.log(error)
-          })
-      }
-      Linking.canOpenURL(url).then(supported => {
-        if (supported) {
+    if (Platform.OS === 'ios') {
+      return SafariView.isAvailable()
+        .then(SafariView.show({ url }))
+        .catch(error => {
           Linking.openURL(url)
-        }
-      })
+          console.log(error)
+        })
     }
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url)
+      }
+    })
   }
 
   renderFeeOptions(styles: StyleSheet) {
-    const { networkFeeOption, requestedCustomFee } = this.props
+    const { networkFeeOption, requestedCustomFee } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
       return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
     }
-    return <EdgeText style={styles.text}>{networkFeeOption ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</EdgeText>
+    return <EdgeText style={styles.text}>{networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</EdgeText>
   }
 
   renderFees(styles: StyleSheet, title: string, fees: Object = {}) {
     const feeRows = []
     for (const feeKey of Object.keys(fees)) {
-      const feeString = localizedFeeText[feeKey] || feeKey
+      const feeString = localizedFeeText[feeKey] ?? feeKey
       feeRows.push(
         <View key={feeKey} style={styles.feesRow}>
           <EdgeText style={styles.feesRowText}>{feeString + ' '}</EdgeText>
@@ -128,7 +122,9 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
   }
 
   render() {
-    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, recipientAddress, url } = this.props
+    const { bridge, theme, url } = this.props
+    const { feeRateUsed, networkFeeOption, signedTx, txid, txSecret } = this.props.transaction
+    const recipientAddress = this.getRecipientAddress()
     const styles = getStyles(theme)
 
     return (
@@ -139,7 +135,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
         <View style={styles.body}>
           <ScrollView>
             <Tile type="copy" title={s.strings.transaction_details_tx_id_modal_title} body={txid} />
-            {url && (
+            {url != null && url !== '' && (
               <Tile
                 type="touchable"
                 title={s.strings.transaction_details_tx_id_modal_title}
@@ -147,14 +143,14 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
                 onPress={this.openUrl}
               />
             )}
-            {(networkFeeOption || feeRateUsed) && (
+            {(networkFeeOption != null || feeRateUsed != null) && (
               <Tile type="static" title={s.strings.transaction_details_advance_details_fee_info}>
-                {networkFeeOption ? this.renderFeeOptions(styles) : null}
-                {feeRateUsed ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
+                {networkFeeOption != null ? this.renderFeeOptions(styles) : null}
+                {feeRateUsed != null ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
               </Tile>
             )}
-            {txSecret && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
-            {txSecret && recipientAddress && txid && (
+            {txSecret != null && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
+            {txSecret != null && recipientAddress !== '' && txid !== '' && (
               <Tile
                 type="touchable"
                 title={s.strings.transaction_details_advance_details_payment_proof}
@@ -162,7 +158,9 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
                 onPress={this.openProveUrl}
               />
             )}
-            {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
+            {signedTx != null && signedTx !== '' ? (
+              <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} />
+            ) : null}
 
             <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={this.state.deviceName} />
           </ScrollView>

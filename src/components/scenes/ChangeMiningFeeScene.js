@@ -1,50 +1,55 @@
 // @flow
 
-import { type EdgeSpendTarget } from 'edge-core-js/types'
+import { type JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
-import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { ScrollView, View } from 'react-native'
+import Evilicons from 'react-native-vector-icons/EvilIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
-import { dayText, nightText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type FeeOption } from '../../types/types.js'
-import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import Alert from '../themed/Alert'
+import { MainButton } from '../themed/MainButton.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { SceneHeader } from '../themed/SceneHeader'
+import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'changeMiningFee'>,
   route: RouteProp<'changeMiningFee'>
 }
 
-type StateProps = {
-  networkFeeOption?: FeeOption,
-  customNetworkFee?: Object,
-  spendTargets?: EdgeSpendTarget[],
-  maxSpendSet: boolean
-}
-
-type DispatchProps = {
-  onSubmit: (networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) => void
-}
-
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & ThemeProps
 
 type State = {
   networkFeeOption: FeeOption,
-  customNetworkFee: Object
+  customNetworkFee: JsonObject
 }
 
-export class ChangeMiningFee extends React.Component<Props, State> {
+const feeOptions = {
+  high: {
+    text: s.strings.mining_fee_high_label_choice,
+    icon: 'speedometer'
+  },
+  standard: {
+    text: s.strings.mining_fee_standard_label_choice,
+    icon: 'speedometer-medium'
+  },
+  low: {
+    text: s.strings.mining_fee_low_label_choice,
+    icon: 'speedometer-slow'
+  }
+}
+
+export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { networkFeeOption = 'standard', customNetworkFee = {} } = props
+    const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.guiMakeSpendInfo
     const customFormat = this.getCustomFormat()
 
     if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
@@ -69,8 +74,9 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
-    const { spendTargets = [], maxSpendSet, route } = this.props
-    const { currencyCode, wallet } = route.params
+    const { navigation, route } = this.props
+    const { guiMakeSpendInfo, wallet, maxSpendSet } = route.params
+    const { currencyCode, spendTargets = [] } = guiMakeSpendInfo
     const testSpendInfo = {
       spendTargets: spendTargets.map(spendTarget => ({
         ...spendTarget,
@@ -83,8 +89,8 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
-        this.props.onSubmit(networkFeeOption, customNetworkFee, wallet.id, currencyCode)
-        Actions.pop()
+        this.props.route.params.onSubmit(networkFeeOption, customNetworkFee)
+        navigation.goBack()
       })
       .catch(e => {
         let message = e.message
@@ -94,48 +100,56 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   render() {
+    const { theme } = this.props
+
     const customFormat = this.getCustomFormat()
+    const iconSize = theme.rem(1.25)
+    const { networkFeeOption } = this.state
 
     return (
-      <SceneWrapper background="body" hasTabs={false} avoidKeyboard>
-        <ScrollView style={styles.content}>
-          {this.renderRadioRow('high', s.strings.mining_fee_high_label_choice)}
-          {this.renderRadioRow('standard', s.strings.mining_fee_standard_label_choice)}
-          {this.renderRadioRow('low', s.strings.mining_fee_low_label_choice)}
-          {customFormat != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
-          {customFormat != null ? this.renderCustomFee(customFormat) : null}
+      <SceneWrapper background="theme" hasTabs={false} avoidKeyboard>
+        <SceneHeader withTopMargin underline title={s.strings.title_change_mining_fee} />
+        <ScrollView>
+          {Object.keys(feeOptions).map(feeSetting => {
+            return (
+              <SettingsRadioRow
+                icon={<MaterialCommunityIcons name={feeOptions[feeSetting].icon} size={iconSize} color={theme.iconTappable} />}
+                key={feeOptions[feeSetting].text}
+                text={feeOptions[feeSetting].text}
+                value={networkFeeOption === feeSetting}
+                onPress={() => this.setState({ networkFeeOption: feeSetting })}
+              />
+            )
+          })}
+          {customFormat != null ? (
+            <SettingsRadioRow
+              icon={<Evilicons name="gear" size={iconSize} color={theme.iconTappable} />}
+              key={s.strings.mining_fee_custom_label_choice}
+              text={s.strings.mining_fee_custom_label_choice}
+              value={networkFeeOption === 'custom'}
+              onPress={() => this.setState({ networkFeeOption: 'custom' })}
+            />
+          ) : null}
+          {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
           {this.renderFeeWarning()}
-          <PrimaryButton onPress={this.onSubmit} style={styles.saveButton}>
-            <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
-          </PrimaryButton>
+          <MainButton alignSelf="center" label={s.strings.string_done_cap} marginRem={2} type="secondary" onPress={this.onSubmit} />
         </ScrollView>
       </SceneWrapper>
     )
   }
 
-  renderRadioRow(value: FeeOption, label: string) {
-    const { networkFeeOption } = this.state
-
-    return (
-      <TouchableWithoutFeedback onPress={() => this.setState({ networkFeeOption: value })}>
-        <View style={styles.radioRow}>
-          <View style={[styles.radio, networkFeeOption === value ? styles.selected : null]} />
-          <Text style={dayText('row-left')}>{label}</Text>
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  renderCustomFee(customFormat: string[]): React.Node {
+  renderCustomFeeTextInput(customFormat: string[]): React.Node {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 
     return (
-      <View style={styles.customArea}>
+      <View style={styles.view}>
         {customFormat.map(key => (
-          <FormField
+          <OutlinedTextInput
             key={key}
-            keyboardType="numeric"
+            autoCorrect={false}
             onChangeText={text =>
               this.setState({
                 customNetworkFee: { ...customNetworkFee, [key]: text }
@@ -143,6 +157,11 @@ export class ChangeMiningFee extends React.Component<Props, State> {
             }
             value={customNetworkFee[key]}
             label={FEE_STRINGS[key] || key}
+            returnKeyType="search"
+            clearIcon
+            marginRem={[1.75, 1.75]}
+            blurOnSubmit
+            keyboardType="numeric"
           />
         ))}
       </View>
@@ -151,76 +170,30 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   renderFeeWarning() {
     const { networkFeeOption } = this.state
+    const { theme } = this.props
+    const styles = getStyles(theme)
     if (networkFeeOption !== 'custom' && networkFeeOption !== 'low') return null
 
     return (
-      <View style={styles.warningBox}>
-        <EntypoIcon name="warning" color={THEME.COLORS.WHITE} size={THEME.rem(1.4)} />
-        <Text style={nightText('small')}>{s.strings.warning_low_or_custom_fee}</Text>
+      <View style={styles.view}>
+        <Alert title={s.strings.warning_low_fee_selected} message={s.strings.warning_low_or_custom_fee} type="warning" marginRem={[1.5, 1]} />
       </View>
     )
   }
 }
 
-const rawStyles = {
-  content: {
-    flexGrow: 1,
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: THEME.rem(1.4)
-  },
-
-  // Radio input:
-  radioRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: THEME.rem(1)
-  },
-  radio: {
-    borderRadius: THEME.rem(0.5),
-    marginRight: THEME.rem(0.5),
-    width: THEME.rem(1),
-    height: THEME.rem(1),
-    borderWidth: THEME.rem(1 / 16),
-    borderColor: THEME.COLORS.GRAY_2
-  },
-  selected: {
-    borderColor: THEME.COLORS.ACCENT_BLUE,
-    backgroundColor: THEME.COLORS.ACCENT_BLUE
-  },
-
-  // Custom fee area:
-  customArea: {
-    marginBottom: THEME.rem(1)
-  },
-
-  // Warning box:
-  warningBox: {
-    padding: THEME.rem(0.5),
-
-    backgroundColor: THEME.COLORS.ACCENT_ORANGE,
-    borderRadius: THEME.rem(0.5),
-
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-between'
-  },
-
-  saveButton: {
-    marginTop: THEME.rem(1.25)
-  }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export const ChangeMiningFeeScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    networkFeeOption: getGuiMakeSpendInfo(state).networkFeeOption,
-    customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee,
-    spendTargets: getGuiMakeSpendInfo(state).spendTargets,
-    maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
-  }),
-  dispatch => ({
-    onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) {
-      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }, true, walletId, currencyCode, true))
+const getStyles = cacheStyles((theme: Theme) => {
+  const iconSize = theme.rem(1.25)
+  return {
+    view: {
+      flex: 1
+    },
+    currencyLogo: {
+      height: iconSize,
+      width: iconSize,
+      resizeMode: 'contain'
     }
-  })
-)(ChangeMiningFee)
+  }
+})
+
+export const ChangeMiningFeeScene = withTheme(ChangeMiningFeeComponent)

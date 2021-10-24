@@ -2,7 +2,8 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { formatNumberInput } from '../../locales/intl.js'
@@ -70,7 +71,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
             </View>
             <View style={styles.iconContainer}>
-              {symbolImageDarkMono && <Image style={styles.icon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              {symbolImageDarkMono && <FastImage style={styles.icon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
             </View>
             <View style={styles.detailsContainer}>
               <View style={styles.detailsRow}>

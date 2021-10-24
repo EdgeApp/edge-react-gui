@@ -17,14 +17,13 @@ import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
-import { CHANGE_MINING_FEE } from '../../constants/SceneKeys.js'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -61,12 +60,14 @@ type StateProps = {
   transactionMetadata: EdgeMetadata | null,
   uniqueIdentifier?: string,
   wallets: { [walletId: string]: GuiWallet },
-  isSendUsingFioAddress?: boolean
+  isSendUsingFioAddress?: boolean,
+  guiMakeSpendInfo: GuiMakeSpendInfo,
+  maxSpendSet: boolean
 }
 
 type DispatchProps = {
   reset: () => void,
-  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void,
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   updateSpendPending: boolean => void,
   onChangePin: (pin: string) => void,
@@ -74,6 +75,7 @@ type DispatchProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'send'>,
   route: RouteProp<'send'>
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -236,10 +238,20 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFeesChange = () => {
+    const { navigation, sendConfirmationUpdateTx, guiMakeSpendInfo, maxSpendSet } = this.props
     if (this.state.coreWallet == null) return
-    Actions.push(CHANGE_MINING_FEE, {
+    navigation.navigate('changeMiningFee', {
+      guiMakeSpendInfo,
+      maxSpendSet,
       wallet: this.state.coreWallet,
-      currencyCode: this.state.selectedCurrencyCode
+      onSubmit: (networkFeeOption, customNetworkFee) => {
+        sendConfirmationUpdateTx(
+          { ...guiMakeSpendInfo, customNetworkFee, networkFeeOption },
+          this.state.selectedWalletId,
+          this.state.selectedCurrencyCode,
+          true
+        )
+      }
     })
   }
 
@@ -623,15 +635,17 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       transactionMetadata,
       uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
       wallets: state.ui.wallets.byId,
-      isSendUsingFioAddress
+      isSendUsingFioAddress,
+      guiMakeSpendInfo,
+      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
     }
   },
   dispatch => ({
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
-    sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode))
+    sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
+      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
     updateSpendPending(pending: boolean) {
       dispatch({

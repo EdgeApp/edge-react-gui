@@ -7,6 +7,7 @@ import renderer from 'react-test-renderer'
 
 import { SettingsSceneComponent } from '../components/scenes/SettingsScene.js'
 import { edgeDark } from '../theme/variables/edgeDark.js'
+import { fakeNavigation } from '../util/fake/fakeNavigation.js'
 
 const typeHack: any = {
   currencyConfig: {},
@@ -23,6 +24,7 @@ describe('MyComponent', () => {
     const element = (
       <SettingsSceneComponent
         theme={edgeDark}
+        navigation={fakeNavigation}
         // StateProps:
         account={account}
         context={context}
@@ -54,6 +56,7 @@ describe('MyComponent', () => {
     const element = (
       <SettingsSceneComponent
         theme={edgeDark}
+        navigation={fakeNavigation}
         // StateProps:
         account={account}
         context={context}
