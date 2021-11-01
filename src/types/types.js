@@ -319,3 +319,12 @@ export type GuiMakeSpendInfo = {
   beforeTransaction?: () => Promise<void>,
   alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
 }
+
+export type WcConnectionInfo = {
+  dAppName: string,
+  dAppUrl: string,
+  timeConnected: string,
+  walletName: string,
+  walletId: string,
+  uri: string
+}
