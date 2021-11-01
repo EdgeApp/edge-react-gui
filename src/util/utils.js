@@ -6,8 +6,9 @@ import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
+import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
+import s from '../locales/strings.js'
 import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
@@ -23,11 +24,22 @@ export function capitalize(string: string): string {
   return `${firstLetter}${otherLetters}`
 }
 
-export const cutOffText = (str: string, lng: number) => {
-  if (str.length >= lng) {
-    return str.slice(0, lng) + '...'
+// Replaces extra chars with '...' either in the middle or end of the input string
+export const truncateString = (input: string | number, maxLength: number, isMidTrunc?: boolean = false) => {
+  const inputStr = typeof input !== 'string' ? String(input) : input
+  const strLen = inputStr.length
+  if (strLen >= maxLength) {
+    const delimStr = s.strings.util_truncate_delimeter
+    if (isMidTrunc) {
+      const segmentLen = Math.round(maxLength / 2)
+      const seg1 = inputStr.slice(0, segmentLen)
+      const seg2 = inputStr.slice(-1 * segmentLen)
+      return seg1 + delimStr + seg2
+    } else {
+      return inputStr.slice(0, maxLength) + delimStr
+    }
   } else {
-    return str
+    return inputStr
   }
 }
 
@@ -733,7 +745,7 @@ export const convertToFiatFee = (
   const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
   const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
   return {
-    amount: bns.toFixed(fiatFeeAmount, 2, 2),
+    amount: bns.toFixed(fiatFeeAmount, FIAT_PRECISION, FIAT_PRECISION),
     style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
   }
 }
@@ -796,6 +808,22 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 // End of convert Transaction Fee to Display Fee
+
+export function getFiatAmountString(
+  state: RootState,
+  cryptoAmount: string | number,
+  cryptoCurrencyCode: string,
+  isoFiatCurrencyCode: string,
+  isAppendFiatCurrencyCode?: boolean = false
+): string {
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
+  const cryptoAmountStr = String(cryptoAmount)
+  const fiatAmount = formatNumber(convertCurrencyFromExchangeRates(state.exchangeRates, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmountStr), {
+    toFixed: FIAT_PRECISION
+  })
+  const fiatCurrencyCode = isAppendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
+  return `${fiatSymbol}${fiatAmount}${fiatCurrencyCode}`
+}
 
 export function getCryptoAmount(
   balance: string,
