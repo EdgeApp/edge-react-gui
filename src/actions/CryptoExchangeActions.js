@@ -45,7 +45,7 @@ export type SetNativeAmountInfo = {
   primaryNativeAmount: string
 }
 
-export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
+export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   const state = getState()
@@ -73,7 +73,8 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     const swapInfo = await fetchSwapQuote(state, request)
 
     Actions.push(EXCHANGE_QUOTE_SCENE, {
-      swapInfo
+      swapInfo,
+      onApprove
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
@@ -111,14 +112,15 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
   }
 }
 
-export const exchangeTimerExpired = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
+export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   if (Actions.currentScene !== EXCHANGE_QUOTE_SCENE) return
   Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   try {
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
     Actions.push(EXCHANGE_QUOTE_SCENE, {
-      swapInfo
+      swapInfo,
+      onApprove
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
@@ -319,7 +321,7 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
   })
 }
 
-export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
+export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
@@ -349,7 +351,9 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     Actions.push(EXCHANGE_SUCCESS_SCENE)
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
+    // Dispatch the success action and callback
     dispatch({ type: 'SHIFT_COMPLETE' })
+    onApprove()
 
     updateSwapCount(state)
 

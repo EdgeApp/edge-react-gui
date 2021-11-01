@@ -38,8 +38,8 @@ type StateProps = {
   toWalletCurrencyName: string
 }
 type DispatchProps = {
-  shift: (swapInfo: GuiSwapInfo) => void,
-  timeExpired: (swapInfo: GuiSwapInfo) => void
+  shift: (swapInfo: GuiSwapInfo, onApprove: () => void) => void,
+  timeExpired: (swapInfo: GuiSwapInfo, onApprove: () => void) => void
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -50,13 +50,13 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
 
   componentDidMount = () => {
     const { route, account, timeExpired } = this.props
-    const { swapInfo } = route.params
+    const { swapInfo, onApprove } = route.params
     const { pluginId } = swapInfo.quote
     const swapConfig = account.swapConfig[pluginId]
 
     logEvent('SwapQuote')
     swapVerifyTerms(swapConfig).then(result => {
-      if (!result) timeExpired(swapInfo)
+      if (!result) timeExpired(swapInfo, onApprove)
     }, showError)
   }
 
@@ -70,18 +70,18 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
 
   doShift = () => {
     const { shift, route } = this.props
-    const { swapInfo } = route.params
+    const { swapInfo, onApprove } = route.params
     this.calledApprove = true
-    shift(swapInfo)
+    shift(swapInfo, onApprove)
   }
 
   renderTimer = () => {
     const { timeExpired, route } = this.props
-    const { swapInfo } = route.params
+    const { swapInfo, onApprove } = route.params
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
+    return <CircleTimer timeExpired={() => timeExpired(swapInfo, onApprove)} expiration={expirationDate} />
   }
 
   showExplanationForEstimate = () => {
@@ -194,11 +194,11 @@ export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
     toWalletCurrencyName: state.cryptoExchange.toWallet?.currencyNames[params.swapInfo.request.toCurrencyCode] ?? ''
   }),
   dispatch => ({
-    shift(swapInfo: GuiSwapInfo) {
-      dispatch(shiftCryptoCurrency(swapInfo))
+    shift(swapInfo, onApprove) {
+      dispatch(shiftCryptoCurrency(swapInfo, onApprove))
     },
-    timeExpired(swapInfo: GuiSwapInfo) {
-      dispatch(exchangeTimerExpired(swapInfo))
+    timeExpired(swapInfo, onApprove) {
+      dispatch(exchangeTimerExpired(swapInfo, onApprove))
     }
   })
 )(withTheme(CryptoExchangeQuoteScreenComponent))

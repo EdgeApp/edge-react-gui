@@ -93,7 +93,8 @@ export type ParamList = {
   |},
   exchange: void,
   exchangeQuote: {|
-    swapInfo: GuiSwapInfo
+    swapInfo: GuiSwapInfo,
+    onApprove: () => void
   |},
   exchangeQuoteProcessing: void,
   exchangeScene: void,
