@@ -95,11 +95,10 @@ class NotificationComponent extends React.Component<Props, State> {
           <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
         ) : (
           <ScrollView>
-            <SettingsSwitchRow key="notifications" text={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
+            <SettingsSwitchRow label={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
               const { displayName, currencyCode } = currencyInfo
               const { symbolImage } = getCurrencyIcon(currencyCode)
-              const icon = <FastImage style={styles.currencyLogo} source={{ uri: symbolImage }} />
               const onPress = () =>
                 enabled
                   ? navigation.navigate('currencyNotificationSettings', {
@@ -107,7 +106,11 @@ class NotificationComponent extends React.Component<Props, State> {
                     })
                   : undefined
 
-              return <SettingsTappableRow disabled={!enabled} key={currencyCode} icon={icon} text={displayName} onPress={onPress} />
+              return (
+                <SettingsTappableRow disabled={!enabled} key={currencyCode} label={displayName} onPress={onPress}>
+                  <FastImage style={styles.currencyLogo} source={{ uri: symbolImage }} />
+                </SettingsTappableRow>
+              )
             })}
           </ScrollView>
         )}
@@ -120,6 +123,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
     height: theme.rem(1.25),
     width: theme.rem(1.25),
+    marginHorizontal: theme.rem(0.5),
     resizeMode: 'contain'
   },
   loader: {

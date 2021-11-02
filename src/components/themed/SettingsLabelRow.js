@@ -3,13 +3,19 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
+  children?: React.Node,
+
+  // Show with a dim style when set. Defaults to false:
   disabled?: boolean,
-  icon?: React.Node,
-  text: string,
+
+  // Insert a text label after the other children when set:
+  label?: string,
+
+  // An interactive text label to render on the right:
   right: string,
 
   // Called when the user presses the row.
@@ -24,18 +30,21 @@ type Props = OwnProps & ThemeProps
  * A settings row with a smaller text on the right side.
  */
 export function SettingsLabelRowComponent(props: Props): React.Node {
-  const { disabled, icon, text, theme, right, onPress } = props
-  const styles = getStyles(theme)
+  const { children, disabled, label, right, theme, onPress } = props
 
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress} />
-}
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  labelText: {
+  const style = {
+    color: disabled ? theme.deactivatedText : theme.textLink,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    color: theme.textLink
+    marginHorizontal: theme.rem(0.5)
   }
-}))
+
+  const rightText = <Text style={style}>{right}</Text>
+  return (
+    <SettingsRow disabled={disabled} label={label} right={rightText} onPress={onPress}>
+      {children}
+    </SettingsRow>
+  )
+}
 
 export const SettingsLabelRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsLabelRowComponent)

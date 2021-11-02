@@ -101,9 +101,9 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
 
   render() {
     const { theme } = this.props
+    const styles = getStyles(theme)
 
     const customFormat = this.getCustomFormat()
-    const iconSize = theme.rem(1.25)
     const { networkFeeOption } = this.state
 
     return (
@@ -113,22 +113,24 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
-                icon={<MaterialCommunityIcons name={feeOptions[feeSetting].icon} size={iconSize} color={theme.iconTappable} />}
                 key={feeOptions[feeSetting].text}
-                text={feeOptions[feeSetting].text}
+                label={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
                 onPress={() => this.setState({ networkFeeOption: feeSetting })}
-              />
+              >
+                <MaterialCommunityIcons name={feeOptions[feeSetting].icon} style={styles.settingsIcon} />
+              </SettingsRadioRow>
             )
           })}
           {customFormat != null ? (
             <SettingsRadioRow
-              icon={<Evilicons name="gear" size={iconSize} color={theme.iconTappable} />}
               key={s.strings.mining_fee_custom_label_choice}
-              text={s.strings.mining_fee_custom_label_choice}
+              label={s.strings.mining_fee_custom_label_choice}
               value={networkFeeOption === 'custom'}
               onPress={() => this.setState({ networkFeeOption: 'custom' })}
-            />
+            >
+              <Evilicons name="gear" style={styles.settingsIcon} />
+            </SettingsRadioRow>
           ) : null}
           {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
           {this.renderFeeWarning()}
@@ -191,6 +193,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       height: iconSize,
       width: iconSize,
       resizeMode: 'contain'
+    },
+    settingsIcon: {
+      color: theme.iconTappable,
+      fontSize: theme.rem(1.25),
+      paddingHorizontal: theme.rem(0.5)
     }
   }
 })

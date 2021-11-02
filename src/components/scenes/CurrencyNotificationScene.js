@@ -56,7 +56,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
       const enabled: boolean = this.state.hours[hours]
       const num = Number(hours)
       const percent = num === 1 ? 3 : 10
-      const text =
+      const label =
         num === 1
           ? sprintf(s.strings.settings_currency_notifications_percent_change_hour, percent)
           : sprintf(s.strings.settings_currency_notifications_percent_change_hours, percent, hours)
@@ -64,7 +64,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
       rows.push(
         <SettingsSwitchRow
           key={hours}
-          text={text}
+          label={label}
           value={enabled}
           onPress={() => {
             this.setState(state => ({ hours: { ...state.hours, [hours]: !enabled } }))

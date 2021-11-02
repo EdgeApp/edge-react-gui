@@ -225,59 +225,62 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            text={`${s.strings.settings_account_title_cap}: ${account.username}`}
+            label={`${s.strings.settings_account_title_cap}: ${account.username}`}
           />
           <SettingsTappableRow
             action={isLocked ? 'lock' : 'unlock'}
-            text={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
+            label={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
             onPress={this.handleUnlock}
           />
-          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
-          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_pin} onPress={this.handleChangePin} />
-          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
 
-          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} text={s.strings.settings_options_title_cap} />
-          <SettingsTappableRow text={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
-          <SettingsTappableRow text={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
-          <SettingsLabelRow right={autoLogoutRightText} text={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
-          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} text={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
+          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
+          <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
+          <SettingsTappableRow label={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
+          <SettingsLabelRow right={autoLogoutRightText} label={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
+          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
 
-          <SettingsSwitchRow key="pinRelogin" text={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
+          <SettingsSwitchRow key="pinRelogin" label={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
           {this.props.supportsTouchId && (
-            <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
+            <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsTappableRow text={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
+          <SettingsTappableRow label={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName, currencyCode } = currencyInfo
             const { symbolImage } = getCurrencyIcon(currencyCode)
-            const icon = <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} />
             const onPress = () =>
               navigation.navigate('currencySettings', {
                 currencyInfo
               })
 
-            return <SettingsTappableRow key={pluginId} icon={icon} text={displayName} onPress={onPress} />
+            return (
+              <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
+                <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} />
+              </SettingsTappableRow>
+            )
           })}
 
-          <SettingsTappableRow text={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
+          <SettingsTappableRow label={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
           <SettingsSwitchRow
             key="developerMode"
-            text={s.strings.settings_developer_mode}
+            label={s.strings.settings_developer_mode}
             value={this.props.developerModeOn}
             onPress={this.handleDeveloperToggle}
           />
           {this.props.developerModeOn && (
-            <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
+            <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow text={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
-          <SettingsTappableRow text={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
+          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
-            text={s.strings.settings_verbose_logging}
+            label={s.strings.settings_verbose_logging}
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingToggle}
           />
@@ -294,6 +297,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     currencyLogo: {
       height: iconSize,
       width: iconSize,
+      marginHorizontal: theme.rem(0.5),
       resizeMode: 'contain'
     }
   }

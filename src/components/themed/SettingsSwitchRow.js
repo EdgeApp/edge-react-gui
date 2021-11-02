@@ -7,9 +7,15 @@ import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
+  children?: React.Node,
+
+  // Show with a dim style when set. Defaults to false:
   disabled?: boolean,
-  icon?: React.Node,
-  text: string,
+
+  // Insert a text label after the other children when set:
+  label?: string,
+
+  // Whether the switch component is active or not:
   value: boolean,
 
   // Called when the user presses the row.
@@ -24,10 +30,15 @@ type Props = OwnProps & ThemeProps
  * A settings row with a switch component on the right side.
  */
 function SettingsSwitchRowComponent(props: Props): React.Node {
-  const { disabled = false, icon, text, theme, value, onPress } = props
+  const { children, disabled, label, theme, value, onPress } = props
+
+  const style = {
+    marginHorizontal: theme.rem(0.5),
+    padding: 0
+  }
 
   const right = (
-    <View pointerEvents="none">
+    <View pointerEvents="none" style={style}>
       <Switch
         disabled={disabled}
         ios_backgroundColor={theme.toggleButtonOff}
@@ -40,7 +51,11 @@ function SettingsSwitchRowComponent(props: Props): React.Node {
       />
     </View>
   )
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={right} onPress={onPress} />
+  return (
+    <SettingsRow disabled={disabled} label={label} right={right} onPress={onPress}>
+      {children}
+    </SettingsRow>
+  )
 }
 
 export const SettingsSwitchRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsSwitchRowComponent)
