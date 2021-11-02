@@ -1,7 +1,6 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
-import _ from 'lodash'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
@@ -160,7 +159,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
     if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
       isTransactionForSelectedWallet = true
       // this next part may be unnecessary
-      const indexOfNewTransaction = _.findIndex(currentViewableTransactions, tx => tx.txid === transaction.txid)
+      const indexOfNewTransaction = currentViewableTransactions.findIndex(tx => tx.txid === transaction.txid)
       if (indexOfNewTransaction === -1) {
         numberOfRelevantTransactions++
       }

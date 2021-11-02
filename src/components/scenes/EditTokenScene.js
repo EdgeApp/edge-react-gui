@@ -1,6 +1,5 @@
 // @flow
 
-import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 
@@ -56,7 +55,7 @@ class EditTokenComponent extends React.Component<Props, State> {
     super(props)
     const { customTokens, route } = props
     const { currencyCode } = route.params
-    const tokenInfoIndex = _.findIndex(customTokens, item => item.currencyCode === currencyCode)
+    const tokenInfoIndex = customTokens.findIndex(item => item.currencyCode === currencyCode)
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
       const { currencyName, contractAddress, denomination } = tokenInfo
@@ -203,7 +202,7 @@ class EditTokenComponent extends React.Component<Props, State> {
           const { walletId, metaTokens } = route.params
 
           const visibleTokens = UTILS.mergeTokensRemoveInvisible(metaTokens, this.props.customTokens)
-          const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
+          const indexInVisibleTokens = visibleTokens.findIndex(token => token.currencyCode === currencyCode)
           if (currencyCode !== route.params.currencyCode) {
             // if the currencyCode will change
             if (indexInVisibleTokens >= 0) {
