@@ -366,6 +366,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   textInputFrontFocus = async () => {
     this.openClipboardMenu()
     if (this.textInputFront) {
+      this.textInputFront.blur()
       this.textInputFront.focus()
     }
   }
@@ -426,6 +427,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   textInputBackFocus = async () => {
     this.openClipboardMenu()
     if (this.textInputBack) {
+      this.textInputFront.blur()
       this.textInputBack.focus()
     }
   }
