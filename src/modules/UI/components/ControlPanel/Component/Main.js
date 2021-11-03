@@ -7,6 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { logoutRequest } from '../../../../../actions/LoginActions.js'
 import { selectWalletFromModal } from '../../../../../actions/WalletActions.js'
+import accounts from '../../../../../assets/images/sidenav/accounts.png'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
@@ -72,6 +73,8 @@ class MainComponent extends React.Component<Props> {
               <SellButton />
               <Separator />
               <ExchangeButton />
+              <Separator />
+              <WalletConnectButton />
               <Separator />
               <FioAddressButton />
               <Separator />
@@ -271,6 +274,25 @@ const ExchangeButton = () => {
         <Button.Center>
           <Button.Text>
             <Text>{s.strings.drawer_exchange}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const popToWalletConnect = () => goToScene('wcConnections')
+const WalletConnectButton = () => {
+  return (
+    <Button onPress={popToWalletConnect}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={accounts} style={styles.iconImage} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{s.strings.wc_walletconnect_title}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

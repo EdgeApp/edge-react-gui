@@ -15,7 +15,8 @@ import {
   type GuiFiatType,
   type GuiMakeSpendInfo,
   type GuiSwapInfo,
-  type GuiWallet
+  type GuiWallet,
+  type WcConnectionInfo
 } from './types.js'
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -217,7 +218,10 @@ export type ParamList = {
     currencyCode: string
   |},
   walletList: void,
-  walletListScene: void
+  walletListScene: void,
+  wcConnections: void,
+  wcDisconnect: {| wcConnectionInfo: WcConnectionInfo |},
+  wcConnect: {| dAppName: string, wcQRUri: string |}
 }
 
 /**

@@ -849,6 +849,37 @@ const strings = {
   exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
   exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
 
+  // WalletConnect Scenes/Modals
+  wc_walletconnect_title: 'WalletConnect',
+  wc_walletconnect_subtitle: 'Connect your wallet to make transactions.',
+  wc_walletconnect_new_connection_button: 'New Connection',
+  wc_walletconnect_active_connections: 'Active Connections',
+  wc_details_disconnect_button: 'Disconnect',
+  wc_details_time_connected: 'Time Connected',
+  wc_details_connected_wallet: 'Connected Wallet',
+  wc_details_cannot_disconnect: 'Cannot disconnect at this time',
+  wc_confirm_connect_button: 'Connect',
+  wc_confirm_title: 'Confirm Connection',
+  wc_confirm_subtitle: '%s wants to connect your wallet.',
+  wc_confirm_body_title: 'Allow %s to:',
+  wc_confirm_body: 'Request approval for transactions\nView your wallet and balance activity',
+  wc_confirm_select_wallet: 'Select wallet to connect with',
+  wc_confirm_return_to_browser: 'You may now return to browser',
+  wc_confirm_cannot_connect: 'Cannot connect at this time',
+  wc_smartcontract_title: 'Smart Contract Call',
+  wc_smartcontract_warning_title: 'Warning',
+  wc_smartcontract_warning_text: 'Make sure this is an application you can trust. Executing this transaction gives the application access to your funds.',
+  wc_smartcontract_insufficient_title: 'Insufficient Funds',
+  wc_smartcontract_insufficient_text: "You don't have enough %s to cover network fees.",
+  wc_smartcontract_wallet: 'Wallet',
+  wc_smartcontract_dapp: 'DApp',
+  wc_smartcontract_network_fee: 'Network Fee',
+  wc_smartcontract_max_total: 'Max Total',
+  wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
+
+  // Util
+  util_truncate_delimeter: '...',
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',
