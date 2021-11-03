@@ -70,9 +70,10 @@ export const WcConnectScene = (props: Props) => {
   const handleRequestDapp = async walletId => {
     try {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri: wcQRUri })
+      const dAppName = String(dApp.peerMeta.name).split(' ')[0]
       setDappDetails({
-        subTitleText: sprintf(s.strings.wc_confirm_subtitle, dApp.peerMeta.name),
-        bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dApp.peerMeta.name),
+        subTitleText: sprintf(s.strings.wc_confirm_subtitle, dAppName),
+        bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dAppName),
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e) {
@@ -155,6 +156,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1),
     marginBottom: theme.rem(1.5),
     marginHorizontal: theme.rem(0.5),
+    marginRight: theme.rem(2),
     flexDirection: 'row',
     alignItems: 'flex-start'
   },
