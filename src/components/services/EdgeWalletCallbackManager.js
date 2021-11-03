@@ -8,6 +8,8 @@ import { newTransactionsRequest, refreshTransactionsRequest } from '../../action
 import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../actions/WalletActions.js'
 import { connect } from '../../types/reactRedux.js'
 import { isReceivedTransaction } from '../../util/utils.js'
+import { WcSmartContractModal } from '../modals/WcSmartContractModal.js'
+import { Airship } from './AirshipInstance.js'
 
 type OwnProps = {
   id: string
@@ -96,6 +98,11 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
       console.log(`${this.props.id} - onWalletNameChanged with new name:${walletName || ''}`)
 
       this.props.refreshWallet(this.props.id)
+    })
+
+    wallet.on('wcNewContractCall', obj => {
+      const { dApp, payload, uri } = obj
+      Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={this.props.id} dApp={dApp} payload={payload} uri={uri} />)
     })
   }
 }

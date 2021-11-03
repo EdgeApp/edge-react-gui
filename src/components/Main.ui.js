@@ -150,6 +150,9 @@ import { SpendingLimitsScene } from './scenes/SpendingLimitsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
+import { WcConnectionsScene } from './scenes/WcConnectionsScene'
+import { WcConnectScene } from './scenes/WcConnectScene'
+import { WcDisconnectScene } from './scenes/WcDisconnectScene'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
 
@@ -806,6 +809,33 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="wcConnections">
+            <Scene
+              key="wcConnections"
+              component={withNavigation(ifLoggedIn(WcConnectionsScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="wcDisconnect"
+              component={withNavigation(ifLoggedIn(WcDisconnectScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="wcConnect"
+              component={withNavigation(ifLoggedIn(WcConnectScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>

@@ -185,6 +185,20 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   }
 }
 
+export function removeHexPrefix(s: string) {
+  const noHexPrefix = s.replace('0x', '')
+  return noHexPrefix
+}
+
+export function isHex(h: string) {
+  const out = /^[0-9A-F]+$/i.test(h)
+  return out
+}
+
+export function hexToDecimal(num: string) {
+  return bns.add(num, '0', 10)
+}
+
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
   if (nativeAmount === '') return nativeAmount
   const displayAmount = div(nativeAmount, multiplier, DECIMAL_PRECISION)
