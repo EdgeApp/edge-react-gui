@@ -1,6 +1,5 @@
 // @flow
 
-import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 
@@ -150,8 +149,8 @@ class AddToken extends React.Component<Props, State> {
         const { currencyName, decimalPlaces, contractAddress } = this.state
         const { walletId, onAddToken } = route.params
 
-        const currentCustomTokenIndex = _.findIndex(currentCustomTokens, item => item.currencyCode === currencyCode)
-        const metaTokensIndex = _.findIndex(wallet.metaTokens, item => item.currencyCode === currencyCode)
+        const currentCustomTokenIndex = currentCustomTokens.findIndex(item => item.currencyCode === currencyCode)
+        const metaTokensIndex = wallet.metaTokens.findIndex(item => item.currencyCode === currencyCode)
         // if token is hard-coded into wallets of this type
         if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
         // if that token already exists and is visible (ie not deleted)

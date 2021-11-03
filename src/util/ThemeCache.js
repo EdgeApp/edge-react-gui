@@ -61,21 +61,21 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
   await setThemeCache(disklet, cache)
 }
 
-export async function getBackgroundImage(disklet: Disklet, fallback: ImageSourcePropType): Promise<ImageSourcePropType> {
+export async function getBackgroundImage(disklet: Disklet): Promise<ImageSourcePropType | null> {
   const BACKGROUND_IMAGE_FILE_NAME = 'login_bg.gif'
   const BACKGROUND_IMAGE_URL = `${EDGE_CONTENT_SERVER}/${BACKGROUND_IMAGE_FILE_NAME}`
   const BACKGROUND_IMAGE_LOCAL_URI = `file://${directory}/${BACKGROUND_IMAGE_FILE_NAME}`
   const now = Date.now()
-  let image = fallback
 
   const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
   const cacheTimes = cache.assets[BACKGROUND_IMAGE_URL]
-  if (cacheTimes != null && cacheTimes.start.valueOf() < now && cacheTimes.expiration.valueOf() > now && (await RNFS.exists(BACKGROUND_IMAGE_LOCAL_URI))) {
-    image = { uri: BACKGROUND_IMAGE_LOCAL_URI }
-  }
   // Always return existing local file but query and download new remote file in the background
   downloadFile(disklet, BACKGROUND_IMAGE_URL, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
     console.warn(`Error downloading ${BACKGROUND_IMAGE_LOCAL_URI}`)
   })
-  return image
+  if (cacheTimes != null && cacheTimes.start.valueOf() < now && cacheTimes.expiration.valueOf() > now && (await RNFS.exists(BACKGROUND_IMAGE_LOCAL_URI))) {
+    return { uri: BACKGROUND_IMAGE_LOCAL_URI }
+  } else {
+    return null
+  }
 }

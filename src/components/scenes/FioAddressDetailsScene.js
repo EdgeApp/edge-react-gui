@@ -83,20 +83,23 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   renderAccountSettings = () => {
     const { theme } = this.props
     const styles = getStyles(theme)
-    let icon, displayName
+
     if (this.checkExpiredSoon()) {
-      icon = <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
-      displayName = (
-        <EdgeText style={styles.warning}>
-          {this.checkAlreadyExpired() ? s.strings.fio_address_details_already_expired : s.strings.fio_address_details_expired_soon}
-        </EdgeText>
+      return (
+        <SettingsTappableRow onPress={this._onPressAccountSettings}>
+          <IonIcon name="ios-warning" color={theme.warningIcon} style={styles.settingsIcon} />
+          <EdgeText style={styles.settingsWarning}>
+            {this.checkAlreadyExpired() ? s.strings.fio_address_details_already_expired : s.strings.fio_address_details_expired_soon}
+          </EdgeText>
+        </SettingsTappableRow>
       )
-    } else {
-      icon = <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
-      displayName = <EdgeText style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</EdgeText>
     }
 
-    return <SettingsTappableRow icon={icon} text={displayName} onPress={this._onPressAccountSettings} />
+    return (
+      <SettingsTappableRow label={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
+        <IonIcon name="ios-settings" color={theme.icon} style={styles.settingsIcon} />
+      </SettingsTappableRow>
+    )
   }
 
   render() {
@@ -111,8 +114,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
         {this.renderAccountSettings()}
         <SettingsHeaderRow
           icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
-          numberOfLines={2}
-          text={s.strings.fio_address_details_connect_to_wallets}
+          label={s.strings.fio_address_details_connect_to_wallets}
         />
         <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
       </SceneWrapper>
@@ -132,20 +134,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(-0.5),
     paddingBottom: theme.rem(0.75)
   },
-  settingsText: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
+  settingsIcon: {
+    fontSize: theme.rem(1.5),
+    paddingHorizontal: theme.rem(0.5)
   },
-  settingsTile: {
-    paddingHorizontal: theme.rem(1)
-  },
-  settingsTitle: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  warning: {
+  settingsWarning: {
     fontSize: theme.rem(1),
-    color: theme.warningText
+    color: theme.warningText,
+    paddingHorizontal: theme.rem(0.5)
   }
 }))
 

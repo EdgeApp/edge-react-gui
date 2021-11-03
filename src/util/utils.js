@@ -2,12 +2,12 @@
 
 import { bns, div, eq, gt, gte, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
-import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
+import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
+import s from '../locales/strings.js'
 import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
@@ -23,11 +23,22 @@ export function capitalize(string: string): string {
   return `${firstLetter}${otherLetters}`
 }
 
-export const cutOffText = (str: string, lng: number) => {
-  if (str.length >= lng) {
-    return str.slice(0, lng) + '...'
+// Replaces extra chars with '...' either in the middle or end of the input string
+export const truncateString = (input: string | number, maxLength: number, isMidTrunc?: boolean = false) => {
+  const inputStr = typeof input !== 'string' ? String(input) : input
+  const strLen = inputStr.length
+  if (strLen >= maxLength) {
+    const delimStr = s.strings.util_truncate_delimeter
+    if (isMidTrunc) {
+      const segmentLen = Math.round(maxLength / 2)
+      const seg1 = inputStr.slice(0, segmentLen)
+      const seg2 = inputStr.slice(-1 * segmentLen)
+      return seg1 + delimStr + seg2
+    } else {
+      return inputStr.slice(0, maxLength) + delimStr
+    }
   } else {
-    return str
+    return inputStr
   }
 }
 
@@ -52,7 +63,7 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
   if (denomination) {
     multiplier = denomination[settings[currencyCode].denomination].multiplier
   } else {
-    const customDenom = _.find(settings.customTokens, item => item.currencyCode === currencyCode)
+    const customDenom = settings.customTokens.find(item => item.currencyCode === currencyCode)
     if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
       multiplier = customDenom.denominations[0].multiplier
     } else {
@@ -65,6 +76,13 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
 export const getFiatSymbol = (code: string) => {
   code = code.replace('iso:', '')
   return getSymbolFromCurrency(code)
+}
+
+export const displayFiatAmount = (fiatAmount?: number) => {
+  if (fiatAmount == null || fiatAmount === 0) return formatNumber('0.00')
+  const initialAmount = fiatAmount.toFixed(2)
+  const absoluteAmount = bns.abs(initialAmount)
+  return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
@@ -92,7 +110,7 @@ export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToke
   const tokensToAdd = []
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
-    if (x.isVisible !== false && _.findIndex(tokensEnabled, walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
+    if (x.isVisible !== false && tokensEnabled.findIndex(walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
       tokensToAdd.push(x)
     }
   }
@@ -105,6 +123,9 @@ export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToke
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
   !isNaN(+input) || input === '.'
+
+// Used to check if a string is an actual number and not empty or any other type
+export const isNotEmptyNumber = (input: string | void): boolean => input != null && input !== '' && isValidInput(input)
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
@@ -162,6 +183,20 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
       return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
     }
   }
+}
+
+export function removeHexPrefix(s: string) {
+  const noHexPrefix = s.replace('0x', '')
+  return noHexPrefix
+}
+
+export function isHex(h: string) {
+  const out = /^[0-9A-F]+$/i.test(h)
+  return out
+}
+
+export function hexToDecimal(num: string) {
+  return bns.add(num, '0', 10)
 }
 
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
@@ -723,7 +758,7 @@ export const convertToFiatFee = (
   const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
   const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
   return {
-    amount: bns.toFixed(fiatFeeAmount, 2, 2),
+    amount: bns.toFixed(fiatFeeAmount, FIAT_PRECISION, FIAT_PRECISION),
     style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
   }
 }
@@ -786,6 +821,22 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 // End of convert Transaction Fee to Display Fee
+
+export function getFiatAmountString(
+  state: RootState,
+  cryptoAmount: string | number,
+  cryptoCurrencyCode: string,
+  isoFiatCurrencyCode: string,
+  isAppendFiatCurrencyCode?: boolean = false
+): string {
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
+  const cryptoAmountStr = String(cryptoAmount)
+  const fiatAmount = formatNumber(convertCurrencyFromExchangeRates(state.exchangeRates, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmountStr), {
+    toFixed: FIAT_PRECISION
+  })
+  const fiatCurrencyCode = isAppendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
+  return `${fiatSymbol}${fiatAmount}${fiatCurrencyCode}`
+}
 
 export function getCryptoAmount(
   balance: string,

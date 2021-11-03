@@ -129,18 +129,9 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   handleSearchDone = () => {
-    this.clearText()
     this.props.onChangeSortingState(false)
     if (this.textInput.current) {
       this.textInput.current.clear()
-    }
-  }
-
-  clearText = () => {
-    this.setState({ input: '' })
-    this.props.onSearchTransaction('')
-    if (this.textInput.current) {
-      this.textInput.current.blur()
     }
   }
 
@@ -162,8 +153,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   onFocus={this.handleTextFieldFocus}
                   onBlur={this.handleTextFieldBlur}
                   ref={this.textInput}
-                  clearIcon
-                  onClear={this.clearText}
                   marginRem={0}
                   searchIcon
                 />

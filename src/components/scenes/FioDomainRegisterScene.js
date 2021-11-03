@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
@@ -212,12 +212,11 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       return (
         <MainButton
           marginRem={1}
-          onPress={this.handleNextButton}
           label={walletLoading ? '' : s.strings.string_next_capitalized}
           disabled={!isAvailable || walletLoading}
-        >
-          {walletLoading ? <ActivityIndicator color={this.props.theme.iconTappable} /> : null}
-        </MainButton>
+          spinner={walletLoading}
+          onPress={this.handleNextButton}
+        />
       )
     }
 

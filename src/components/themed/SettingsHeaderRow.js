@@ -1,15 +1,15 @@
 // @flow
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   icon?: React.Node,
-  numberOfLines?: number,
-  text: string
+
+  // Insert a text node after the other children when set:
+  label?: string
 }
 
 type Props = OwnProps & ThemeProps
@@ -18,15 +18,13 @@ type Props = OwnProps & ThemeProps
  * A blue header row in a settings scene.
  */
 export function SettingsHeaderRowComponent(props: Props): React.Node {
-  const { icon, text, numberOfLines, theme } = props
+  const { icon, label, theme } = props
   const styles = getStyles(theme)
 
   return (
     <View style={styles.row}>
       {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
-      <EdgeText style={styles.text} numberOfLines={numberOfLines || 1}>
-        {text}
-      </EdgeText>
+      <Text style={styles.text}>{label}</Text>
     </View>
   )
 }

@@ -59,7 +59,7 @@ type StateProps = {
 }
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
-  getQuoteForTransaction: SetNativeAmountInfo => void,
+  getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void,
   exchangeMax: () => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps
@@ -94,17 +94,19 @@ const defaultToWalletInfo = {
   toFiatToCrypto: '1'
 }
 
+const defaultState = {
+  whichWalletFocus: 'from',
+  forceUpdateGuiCounter: 0,
+  fromExchangeAmount: '',
+  toExchangeAmount: '',
+  fromAmountNative: '',
+  toAmountNative: ''
+}
+
 class CryptoExchangeComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const newState: State = {
-      whichWalletFocus: 'from',
-      forceUpdateGuiCounter: 0,
-      fromExchangeAmount: '',
-      toExchangeAmount: '',
-      fromAmountNative: '',
-      toAmountNative: ''
-    }
+    const newState: State = defaultState
     this.state = newState
   }
 
@@ -133,11 +135,15 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
     if (!zeroString(data.primaryNativeAmount)) {
-      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data)
+      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data, this.resetState)
       Keyboard.dismiss()
       return
     }
     showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
+  }
+
+  resetState = () => {
+    this.setState(defaultState)
   }
 
   checkExceedsAmount(): boolean {
@@ -404,8 +410,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     }
   },
   dispatch => ({
-    getQuoteForTransaction(fromWalletNativeAmount) {
-      dispatch(getQuoteForTransaction(fromWalletNativeAmount))
+    getQuoteForTransaction(fromWalletNativeAmount, onApprove) {
+      dispatch(getQuoteForTransaction(fromWalletNativeAmount, onApprove))
     },
     onSelectWallet(walletId, currencyCode, direction) {
       dispatch(selectWalletForExchange(walletId, currencyCode, direction))

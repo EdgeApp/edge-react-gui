@@ -1,7 +1,6 @@
 // @flow
 
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
-import _ from 'lodash'
 import { type Reducer, combineReducers } from 'redux'
 
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
@@ -79,26 +78,24 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
       // sending token will already be disabled because it was deleted
-      coreWalletsToUpdate.forEach(wallet => {
+      return coreWalletsToUpdate.reduce((state, wallet) => {
         // just disable sending coin from relevant wallet
         const guiWallet = state[wallet.id]
-        const enabledTokens = guiWallet.enabledTokens
-        let newEnabledTokens = enabledTokens
-        // replace old code in enabledTokens with new code for each relevant wallet
-        if (newEnabledTokens.indexOf(oldCurrencyCode) >= 0) {
-          newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
-          newEnabledTokens.push(tokenObj.currencyCode)
-        }
-        const newState = {
-          ...state,
-          [wallet.id]: {
-            ...state[wallet.id],
-            enabledTokens: newEnabledTokens
+        if (guiWallet.enabledTokens.indexOf(oldCurrencyCode) >= 0) {
+          // replace old code in enabledTokens with new code for each relevant wallet
+          const newEnabledTokens = guiWallet.enabledTokens.filter(currencyCode => currencyCode !== oldCurrencyCode).concat(tokenObj.currencyCode)
+          //   newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
+          //   newEnabledTokens.push(tokenObj.currencyCode)
+          return {
+            ...state,
+            [wallet.id]: {
+              ...guiWallet,
+              enabledTokens: newEnabledTokens
+            }
           }
         }
-        return newState
-      })
-      return state
+        return state
+      }, state)
     }
 
     case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
@@ -107,21 +104,18 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
       // sending token will already be disabled because it was deleted
-      coreWalletsToUpdate.forEach(wallet => {
+      return coreWalletsToUpdate.reduce((state, wallet) => {
         // just disable sending coin from relevant wallet
         const guiWallet = state[wallet.id]
-        const enabledTokens = guiWallet.enabledTokens
-        const newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
-        const newState = {
+        const newEnabledTokens = guiWallet.enabledTokens.filter(currencyCode => currencyCode !== oldCurrencyCode)
+        return {
           ...state,
           [wallet.id]: {
-            ...state[wallet.id],
+            ...guiWallet,
             enabledTokens: newEnabledTokens
           }
         }
-        return newState
-      })
-      return state
+      }, state)
     }
 
     case 'UI/WALLETS/UPSERT_WALLETS': {

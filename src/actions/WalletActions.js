@@ -1,7 +1,6 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
-import _ from 'lodash'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -298,7 +297,7 @@ export const editCustomToken = (
     const { customTokens } = state.ui.settings
     const guiWallet = state.ui.wallets.byId[walletId]
     const allTokens = mergeTokens(guiWallet.metaTokens, customTokens)
-    const indexInAllTokens = _.findIndex(allTokens, token => token.currencyCode === currencyCode)
+    const indexInAllTokens = allTokens.findIndex(token => token.currencyCode === currencyCode)
     const tokenObj = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, guiWallet.type)
     if (indexInAllTokens >= 0) {
       // currently exists in some form
@@ -372,7 +371,7 @@ export async function deleteCustomTokenAsync(walletId: string, currencyCode: str
   const receivedSyncSettings = await getSyncedSettings(account)
   receivedSyncSettings[currencyCode].isVisible = false
   const syncedCustomTokens: CustomTokenInfo[] = [...receivedSyncSettings.customTokens]
-  const indexOfSyncedToken: number = _.findIndex(syncedCustomTokens, item => item.currencyCode === currencyCode)
+  const indexOfSyncedToken: number = syncedCustomTokens.findIndex(item => item.currencyCode === currencyCode)
   syncedCustomTokens[indexOfSyncedToken].isVisible = false
   receivedSyncSettings.customTokens = syncedCustomTokens
   await setSyncedSettings(account, receivedSyncSettings)
@@ -408,8 +407,8 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       if (localSettings[currencyCode]) localSettings[currencyCode].isVisible = false
       const customTokensOnFile = [...settings.customTokens] // should use '|| []' as catch-all or no?
       const customTokensOnLocal = [...localSettings.customTokens]
-      const indexOfToken = _.findIndex(customTokensOnFile, item => item.currencyCode === currencyCode)
-      const indexOfTokenOnLocal = _.findIndex(customTokensOnLocal, item => item.currencyCode === currencyCode)
+      const indexOfToken = customTokensOnFile.findIndex(item => item.currencyCode === currencyCode)
+      const indexOfTokenOnLocal = customTokensOnLocal.findIndex(item => item.currencyCode === currencyCode)
       customTokensOnFile[indexOfToken].isVisible = false
       customTokensOnLocal[indexOfTokenOnLocal].isVisible = false
       settings.customTokens = customTokensOnFile
@@ -437,10 +436,12 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     .then(() => {
       coreWalletsToUpdate.forEach(wallet => {
         dispatch(upsertWallets([wallet]))
-        const newEnabledTokens = _.difference(guiWallets[wallet.id].enabledTokens, [currencyCode])
         dispatch({
           type: 'UPDATE_WALLET_ENABLED_TOKENS',
-          data: { walletId: wallet.id, tokens: newEnabledTokens }
+          data: {
+            walletId: wallet.id,
+            tokens: guiWallets[wallet.id].enabledTokens.filter(token => token !== currencyCode)
+          }
         })
       })
     })
@@ -564,7 +565,7 @@ export const updateWalletsEnabledTokens = (getState: GetState) => {
         const customTokens = state.ui.settings.customTokens
         const enabledNotHiddenTokens = enabledTokens.filter(token => {
           let isVisible = true // assume we will enable token
-          const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
+          const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
           // if token is not supposed to be visible, not point in enabling it
           if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
           return isVisible

@@ -93,28 +93,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Account: some user
@@ -130,64 +117,56 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Tap to Unlock Account Settings
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "anticon",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {},
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Tap to Unlock Account Settings
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -199,66 +178,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#87939E",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#87939E",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Change Password
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "rgba(255, 255, 255, .75)",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Change Password
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "rgba(255, 255, 255, .75)",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -270,66 +241,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#87939E",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#87939E",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Change PIN
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "rgba(255, 255, 255, .75)",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Change PIN
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "rgba(255, 255, 255, .75)",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -341,66 +304,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#87939E",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#87939E",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Set Up 2-Factor Security
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "rgba(255, 255, 255, .75)",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Set Up 2-Factor Security
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "rgba(255, 255, 255, .75)",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -412,66 +367,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#87939E",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#87939E",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Set Up Password Recovery
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "rgba(255, 255, 255, .75)",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Set Up Password Recovery
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "rgba(255, 255, 255, .75)",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           style={
@@ -514,28 +461,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Options
@@ -551,194 +485,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Exchange Settings
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
+            Exchange Settings
+          </Text>
+          <Text
+            allowFontScaling={false}
             style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Spending Limits
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Auto Log Off After
-            </Text>
-            <Text
-              style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
                 Object {
                   "color": "#66EDA8",
-                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                }
-              }
-            >
-              10 Minute(s)
-            </Text>
-          </View>
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -750,51 +548,223 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Default Currency
-            </Text>
-            <Text
-              style={
+            Spending Limits
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
                 Object {
                   "color": "#66EDA8",
-                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                }
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
-            >
-              USD
-            </Text>
+            }
+          >
+            Auto Log Off After
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 11,
+              }
+            }
+          >
+            10 Minute(s)
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Default Currency
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 11,
+              }
+            }
+          >
+            USD
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            PIN Re-login
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
+              style={
+                Array [
+                  Object {
+                    "height": 31,
+                    "width": 51,
+                  },
+                  Object {
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
+                  },
+                ]
+              }
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -807,66 +777,188 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
+            Notifications
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Promotion Settings
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Developer Mode
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
               style={
                 Array [
                   Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
+                    "height": 31,
+                    "width": 51,
                   },
                   Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
                   },
                 ]
               }
-            >
-              PIN Re-login
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -879,65 +971,62 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
+            Dark Theme
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
               style={
                 Array [
                   Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
+                    "height": 31,
+                    "width": 51,
                   },
                   Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
                   },
                 ]
               }
-            >
-              Notifications
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -950,66 +1039,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Promotion Settings
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Restore Wallets
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -1021,67 +1102,58 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Developer Mode
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
-          </View>
+            Terms of Service
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -1093,280 +1165,62 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Dark Theme
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+            Verbose Logging
+          </Text>
           <View
+            pointerEvents="none"
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "marginHorizontal": 11,
+                "padding": 0,
               }
             }
           >
-            <Text
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
               style={
                 Array [
                   Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
+                    "height": 31,
+                    "width": 51,
                   },
                   Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
                   },
                 ]
               }
-            >
-              Restore Wallets
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Terms of Service
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Verbose Logging
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -1518,28 +1372,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Account: some user
@@ -1555,64 +1396,56 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Tap to Lock Account Settings
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "anticon",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {},
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Tap to Lock Account Settings
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -1624,66 +1457,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Change Password
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Change Password
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -1695,66 +1520,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Change PIN
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Change PIN
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -1766,66 +1583,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Set Up 2-Factor Security
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Set Up 2-Factor Security
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -1837,66 +1646,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Set Up Password Recovery
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Set Up Password Recovery
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           style={
@@ -1939,28 +1740,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Options
@@ -1976,194 +1764,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Exchange Settings
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
+            Exchange Settings
+          </Text>
+          <Text
+            allowFontScaling={false}
             style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Spending Limits
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Auto Log Off After
-            </Text>
-            <Text
-              style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
                 Object {
                   "color": "#66EDA8",
-                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                }
-              }
-            >
-              10 Minute(s)
-            </Text>
-          </View>
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -2175,51 +1827,223 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Default Currency
-            </Text>
-            <Text
-              style={
+            Spending Limits
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
                 Object {
                   "color": "#66EDA8",
-                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                }
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
-            >
-              USD
-            </Text>
+            }
+          >
+            Auto Log Off After
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 11,
+              }
+            }
+          >
+            10 Minute(s)
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Default Currency
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 11,
+              }
+            }
+          >
+            USD
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            PIN Re-login
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
+              style={
+                Array [
+                  Object {
+                    "height": 31,
+                    "width": 51,
+                  },
+                  Object {
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
+                  },
+                ]
+              }
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -2232,66 +2056,188 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
+            Notifications
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Promotion Settings
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Developer Mode
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
               style={
                 Array [
                   Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
+                    "height": 31,
+                    "width": 51,
                   },
                   Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
                   },
                 ]
               }
-            >
-              PIN Re-login
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -2304,65 +2250,62 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
+            Dark Theme
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
               style={
                 Array [
                   Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
+                    "height": 31,
+                    "width": 51,
                   },
                   Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
                   },
                 ]
               }
-            >
-              Notifications
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View
@@ -2375,66 +2318,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Promotion Settings
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            Restore Wallets
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -2446,67 +2381,58 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Developer Mode
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
-          </View>
+            Terms of Service
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <View
           accessible={true}
@@ -2518,280 +2444,62 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
         >
-          <View
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Dark Theme
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+            Verbose Logging
+          </Text>
           <View
+            pointerEvents="none"
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
+                "marginHorizontal": 11,
+                "padding": 0,
               }
             }
           >
-            <Text
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
               style={
                 Array [
                   Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
+                    "height": 31,
+                    "width": 51,
                   },
                   Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
                   },
                 ]
               }
-            >
-              Restore Wallets
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Terms of Service
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-        <View
-          accessible={true}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "marginBottom": 1,
-                "minHeight": 62,
-                "padding": 22,
-              }
-            }
-          >
-            <Text
-              style={
-                Array [
-                  Object {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "textAlign": "left",
-                  },
-                  Object {
-                    "marginLeft": 0,
-                    "marginRight": 17,
-                  },
-                ]
-              }
-            >
-              Verbose Logging
-            </Text>
-            <View
-              pointerEvents="none"
-            >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
-            </View>
+              tintColor="#87939E"
+              value={true}
+            />
           </View>
         </View>
         <View

@@ -10,7 +10,6 @@ import { checkVersion } from 'react-native-check-version'
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions.js'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
-import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import { type ThemeProps, withTheme } from '../../components/services/ThemeContext.js'
 import s from '../../locales/strings.js'
@@ -63,9 +62,9 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    getBackgroundImage(this.props.disklet, edgeBackgroundImage)
+    getBackgroundImage(this.props.disklet)
       .then(backgroundImage => this.setState({ backgroundImage }))
-      .catch(e => this.setState({ backgroundImage: edgeBackgroundImage }))
+      .catch(e => console.log(e?.message ?? ''))
     const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
     if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
       const { context, initializeAccount } = this.props
@@ -124,23 +123,21 @@ class LoginSceneComponent extends React.Component<Props, State> {
 
     return this.props.account.username == null ? (
       <View style={styles.container} testID="edge: login-scene">
-        {backgroundImage == null ? null : (
-          <LoginScreen
-            username={username}
-            accountOptions={{ pauseWallets: true }}
-            context={context}
-            recoveryLogin={passwordRecoveryKey}
-            onLogin={this.onLogin}
-            fontDescription={{ regularFontFamily: theme.fontFaceDefault }}
-            key={String(counter)}
-            appName={s.strings.app_name_short}
-            backgroundImage={backgroundImage}
-            primaryLogo={edgeLogo}
-            primaryLogoCallback={handleSendLogs}
-            parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
-            skipSecurityAlerts
-          />
-        )}
+        <LoginScreen
+          username={username}
+          accountOptions={{ pauseWallets: true }}
+          context={context}
+          recoveryLogin={passwordRecoveryKey}
+          onLogin={this.onLogin}
+          fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceBold }}
+          key={String(counter)}
+          appName={s.strings.app_name_short}
+          backgroundImage={backgroundImage}
+          primaryLogo={edgeLogo}
+          primaryLogoCallback={handleSendLogs}
+          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+          skipSecurityAlerts
+        />
       </View>
     ) : (
       <LoadingScene />

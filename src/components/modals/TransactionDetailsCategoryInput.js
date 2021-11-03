@@ -18,12 +18,11 @@ type CategoriesType = Array<{
 }>
 
 type Props = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<{ category: string, subCategory: string } | void>,
   categories: Object,
   subCategories: string[],
   category: string,
   subCategory: string,
-  onChange: (string, string) => void,
   setNewSubcategory: (string, string[]) => void
 }
 
@@ -52,12 +51,10 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
 
   onChangeCategory = (category: string) => {
     this.setState({ category })
-    this.props.onChange(category, this.state.subCategory)
   }
 
   onChangeSubCategory = (subCategory: string) => {
     this.setState({ subCategory })
-    this.props.onChange(this.state.category, subCategory)
   }
 
   onSelectSubCategory = (input: string) => {
@@ -65,20 +62,18 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
     const splittedFullCategory = splitTransactionCategory(input)
     const { subCategory } = splittedFullCategory
     const category = splittedFullCategory.category.toLowerCase()
-    this.setState({ category, subCategory })
-    this.props.onChange(category, subCategory)
     if (!subCategories.find(item => item === input)) {
       setNewSubcategory(input, subCategories)
     }
-    bridge.resolve(null)
+    bridge.resolve({ category, subCategory })
   }
 
   render() {
     const { bridge } = this.props
     const { categories, category, subCategory } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve()}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
             <View style={styles.inputCategoryMainContainter}>
@@ -111,7 +106,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
                 fontSize={THEME.rem(0.9)}
                 labelFontSize={THEME.rem(0.65)}
                 onChangeText={this.onChangeSubCategory}
-                onSubmitEditing={() => bridge.resolve(null)}
+                onSubmitEditing={() => bridge.resolve({ category, subCategory })}
                 value={subCategory}
               />
             </View>
