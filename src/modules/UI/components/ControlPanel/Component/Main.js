@@ -7,7 +7,6 @@ import { sprintf } from 'sprintf-js'
 
 import { logoutRequest } from '../../../../../actions/LoginActions.js'
 import { selectWalletFromModal } from '../../../../../actions/WalletActions.js'
-import accounts from '../../../../../assets/images/sidenav/accounts.png'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
@@ -20,6 +19,7 @@ import settings from '../../../../../assets/images/sidenav/settings.png'
 import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
+import walletConnect from '../../../../../assets/images/sidenav/walletconnect-logo.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
 import { LOGIN_QR, SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
@@ -287,7 +287,7 @@ const WalletConnectButton = () => {
     <Button onPress={popToWalletConnect}>
       <Button.Row>
         <Button.Left>
-          <Image source={accounts} style={styles.iconImage} />
+          <Image source={walletConnect} style={[styles.iconImage, { resizeMode: 'contain' }]} />
         </Button.Left>
 
         <Button.Center>
