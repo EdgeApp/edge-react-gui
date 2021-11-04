@@ -116,7 +116,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Sei sicuro di voler archiviare il portafoglio ",
   "fragmet_wallets_delete_fio_extra_message_mobile": "L'archiviazione di questo portafoglio FIO rimuoverà l'accesso a tutti gli indirizzi FIO che hai collegato a questo portafoglio.",
   "fragmet_wallets_delete_eth_extra_message": "Archiviando questo portafoglio archivierai anche tutti i suoi token abilitati.",
-  "wallet_list_add_wallet": "Aggiungi Portafoglio",
+  "wallet_list_add_wallet": "Crea Portafoglio",
   "wallet_list_add_token": "Aggiungi un token",
   "wallet_list_add_token_modal_title": "Richiesto portafoglio Ethereum o RSK",
   "wallet_list_add_token_modal_message": "Crea prima un portafoglio Ethereum o RSK nel quale tenere i tuoi token",
