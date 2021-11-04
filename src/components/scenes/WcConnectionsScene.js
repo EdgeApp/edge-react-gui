@@ -9,6 +9,7 @@ import { useEffect, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type WcConnectionInfo, type wcGetConnection } from '../../types/types.js'
+import { unixToLocaleDateTime } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ScanModal } from '../modals/ScanModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -53,10 +54,12 @@ export const WcConnectionsScene = (props: Props) => {
   }, [props])
 
   const createWcConnectionInfo = (connectedWalletId: string, dApp: wcGetConnection): WcConnectionInfo => {
+    const { date, time } = unixToLocaleDateTime(dApp.timeConnected)
+    const timeConnected = `${date} at ${time}`
     return {
       dAppName: dApp.peerMeta.name,
       dAppUrl: dApp.peerMeta.url,
-      timeConnected: 'timeConnected',
+      timeConnected,
       walletName: currencyWallets[connectedWalletId].name ?? 'NA',
       walletId: connectedWalletId,
       uri: dApp.uri,

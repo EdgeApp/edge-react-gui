@@ -340,5 +340,6 @@ export type wcGetConnection = {
     url: string
   },
   token?: string,
-  uri: string
+  uri: string,
+  timeConnected: number
 }
