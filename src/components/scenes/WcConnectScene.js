@@ -122,7 +122,9 @@ export const WcConnectScene = (props: Props) => {
       <ScrollView style={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}
-          <EdgeText style={styles.subTitle}>{subTitleText}</EdgeText>
+          <EdgeText style={styles.subTitle} numberOfLines={2}>
+            {subTitleText}
+          </EdgeText>
         </View>
 
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
