@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings.js'
@@ -128,9 +129,7 @@ export const WcConnectionsScene = (props: Props) => {
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
-              <View style={styles.icon}>
-                <AntDesignIcon name="infocirlceo" size={theme.rem(2)} color={theme.icon} />
-              </View>
+              <FastImage style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
                 <EdgeText style={styles.infoMidTitle}>{dAppConnection.dAppUrl}</EdgeText>
@@ -151,9 +150,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5)
   },
-  icon: {
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+  currencyLogo: {
+    height: theme.rem(2),
+    width: theme.rem(2),
+    resizeMode: 'contain'
   },
   arrow: {
     display: 'flex',
