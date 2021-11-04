@@ -3,11 +3,11 @@ import { bns } from 'biggystring'
 import { type JsonObject } from 'edge-core-js/types'
 import { WcRpcPayload } from 'edge-currency-accountbased'
 import * as React from 'react'
-import { View } from 'react-native'
+import { Image, ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
+import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -145,7 +145,6 @@ export const WcSmartContractModal = (props: Props) => {
   }
 
   const walletImageUri = getCurrencyIcon(feeCurrencyCode, amountCurrencyCode).symbolImage
-  const modalHeight = isInsufficientBal ? styles.containerPartial : styles.containerFull
   const slider = isInsufficientBal ? null : (
     <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
   )
@@ -156,13 +155,13 @@ export const WcSmartContractModal = (props: Props) => {
       onCancel={() => {
         handleClose()
       }}
-      paddingRem={[0, 0]}
+      paddingRem={[1, 0]}
     >
-      <ModalTitle paddingRem={0.5}>
-        <AntDesignIcon name="infocirlceo" size={theme.rem(1.5)} color={theme.icon} />
-        {s.strings.wc_smartcontract_title}
-      </ModalTitle>
-      <View style={modalHeight}>
+      <View style={styles.title} paddingRem={[0, 0, 0, 1]}>
+        <Image style={styles.logo} source={WalletConnectLogo} />
+        <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>
+      </View>
+      <ScrollView>
         {renderWarning()}
         {!zeroString(displayAmount) && (
           <CryptoFiatAmountTile
@@ -197,9 +196,9 @@ export const WcSmartContractModal = (props: Props) => {
           />
         )}
         {slider}
-      </View>
+      </ScrollView>
+
       <ModalCloseArrow
-        paddingVertical={theme.rem(0)}
         onPress={() => {
           handleClose()
         }}
@@ -209,13 +208,16 @@ export const WcSmartContractModal = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  containerFull: {
-    width: '100%',
-    flexDirection: 'column'
+  title: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: theme.rem(1)
   },
-  containerPartial: {
-    width: '100%',
-    flexDirection: 'column'
+  logo: {
+    height: theme.rem(2),
+    width: theme.rem(2),
+    resizeMode: 'contain',
+    padding: theme.rem(0.5)
   },
   slider: {
     paddingVertical: theme.rem(1)
