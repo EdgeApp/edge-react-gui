@@ -51,7 +51,7 @@ export const WcSmartContractModal = (props: Props) => {
     feeMultiplier,
     feeCurrencyCode,
     feeCurrencyStr,
-    isInsufficientBal,
+    feeCurrencyBalance,
     isoFiatCurrencyCode,
     walletName,
     wallet
@@ -77,7 +77,7 @@ export const WcSmartContractModal = (props: Props) => {
     const feeMultiplier = getDisplayDenomination(state, feeCurrencyCode).multiplier
 
     const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
-    const isInsufficientBal = -1 * parseFloat(amountCrypto) + parseFloat(networkFeeCrypto) > parseFloat(guiWallet.primaryNativeBalance)
+    const feeCurrencyBalance = guiWallet.primaryNativeBalance
 
     return {
       amountNativeToExchangeRatio,
@@ -87,7 +87,7 @@ export const WcSmartContractModal = (props: Props) => {
       feeMultiplier,
       feeCurrencyCode,
       feeCurrencyStr,
-      isInsufficientBal,
+      feeCurrencyBalance,
       isoFiatCurrencyCode,
       walletName,
       wallet
@@ -111,6 +111,9 @@ export const WcSmartContractModal = (props: Props) => {
   const amountCryptoAsFeeCrypto = bns.mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
   const totalNativeCrypto = bns.mul(bns.add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
   const totalCrypto = bns.div(totalNativeCrypto, amountMultiplier, DECIMAL_PRECISION)
+
+  const isInsufficientBal =
+    amountCurrencyCode === feeCurrencyCode ? bns.gt(bns.abs(totalNativeCrypto), feeCurrencyBalance) : bns.gt(networkFeeCrypto, feeCurrencyBalance)
 
   const handleSubmit = async () => {
     try {
