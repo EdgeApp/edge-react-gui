@@ -1,5 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
+import { type JsonObject } from 'edge-core-js/types'
 import { WcRpcPayload } from 'edge-currency-accountbased'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -9,8 +10,9 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { hexToDecimal, isHex, removeHexPrefix } from '../../util/utils.js'
+import { DECIMAL_PRECISION, hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import Alert from '../themed/Alert'
@@ -27,7 +29,7 @@ type Props = {
   // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
   // eslint-disable-next-line react/no-unused-prop-types
-  dApp: Object,
+  dApp: JsonObject,
   uri: string,
   payload: WcRpcPayload
 }
@@ -36,42 +38,79 @@ export const WcSmartContractModal = (props: Props) => {
   const { bridge, walletId, dApp, payload, uri } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const dAppName: string = dApp.peerMeta.name ?? 'no name'
-
-  let amountCrypto
-  let networkFeeCrypto
+  const dAppName: string = dApp.peerMeta.name
+  const icon: string = dApp.peerMeta.icons[0]
   const params = payload.params[0]
-  if (typeof payload === 'object') {
-    if (isHex(removeHexPrefix(params?.value ?? ''))) {
-      amountCrypto = hexToDecimal(params.value)
-    }
-    if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
-      networkFeeCrypto = bns.mul(hexToDecimal(params.gas), hexToDecimal(params.gasPrice))
-    }
-  }
-  const totalCrypto = bns.mul(bns.add(amountCrypto ?? '0', networkFeeCrypto ?? '0'), '-1')
+  const toAddress: string | null = params.to
 
-  const { feeCurrencyStr, isInsufficientBal, isoFiatCurrencyCode, walletImageUri, currencyCode, walletName, wallet } = useSelector(state => {
+  const {
+    amountNativeToExchangeRatio,
+    amountMultiplier,
+    amountCurrencyCode,
+    feeNativeToExchangeRatio,
+    feeMultiplier,
+    feeCurrencyCode,
+    feeCurrencyStr,
+    isInsufficientBal,
+    isoFiatCurrencyCode,
+    walletName,
+    wallet
+  } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[walletId]
+    const walletName = wallet.name
+
+    let amountCurrencyCode = wallet.currencyInfo.currencyCode
+    if (toAddress != null) {
+      const metaTokens = wallet.currencyInfo.metaTokens
+      const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
+      if (token != null) amountCurrencyCode = token.currencyCode
+    }
+    const feeCurrencyCode = wallet.currencyInfo.currencyCode
+
     const guiWallet = state.ui.wallets.byId[walletId]
-    const currencyCode = guiWallet.currencyCode
     const { isoFiatCurrencyCode } = guiWallet
-    const walletName = guiWallet.name
-    const walletImageUri = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
+
+    const amountNativeToExchangeRatio = getExchangeDenomination(state, amountCurrencyCode).multiplier
+    const feeNativeToExchangeRatio = getExchangeDenomination(state, feeCurrencyCode).multiplier
+    const amountMultiplier = getDisplayDenomination(state, amountCurrencyCode).multiplier
+    const feeMultiplier = getDisplayDenomination(state, feeCurrencyCode).multiplier
+
+    const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
     const isInsufficientBal = -1 * parseFloat(amountCrypto) + parseFloat(networkFeeCrypto) > parseFloat(guiWallet.primaryNativeBalance)
-    const feeCurrencyStr = `${guiWallet.currencyNames[currencyCode]} (${currencyCode})`
 
     return {
-      currencyCode,
+      amountNativeToExchangeRatio,
+      amountMultiplier,
+      amountCurrencyCode,
+      feeNativeToExchangeRatio,
+      feeMultiplier,
+      feeCurrencyCode,
       feeCurrencyStr,
       isInsufficientBal,
       isoFiatCurrencyCode,
-      walletImageUri,
       walletName,
       wallet
     }
   })
+
+  let amountCrypto = '0'
+  let networkFeeCrypto = '0'
+  if (isHex(removeHexPrefix(params?.value ?? ''))) {
+    amountCrypto = hexToDecimal(params.value)
+  }
+  if (isHex(removeHexPrefix(params?.gas ?? ''))) {
+    networkFeeCrypto = bns.mul(hexToDecimal(params.gas), hexToDecimal(params.gasPrice ?? '0x3B9ACA00'))
+  }
+
+  const displayAmount = bns.div(amountCrypto, amountMultiplier, DECIMAL_PRECISION)
+  const displayFee = bns.div(networkFeeCrypto, feeMultiplier, DECIMAL_PRECISION)
+
+  // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
+  const amountCurrencyToFeeCurrencyExchangeRate = bns.div(amountNativeToExchangeRatio, feeNativeToExchangeRatio)
+  const amountCryptoAsFeeCrypto = bns.mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
+  const totalNativeCrypto = bns.mul(bns.add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
+  const totalCrypto = bns.div(totalNativeCrypto, amountMultiplier, DECIMAL_PRECISION)
 
   const handleSubmit = async () => {
     try {
@@ -105,11 +144,12 @@ export const WcSmartContractModal = (props: Props) => {
     )
   }
 
+  const walletImageUri = getCurrencyIcon(feeCurrencyCode, amountCurrencyCode).symbolImage
   const modalHeight = isInsufficientBal ? styles.containerPartial : styles.containerFull
   const slider = isInsufficientBal ? null : (
     <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
   )
-  const maxTotalAmount = -1 * parseFloat(amountCrypto) + parseFloat(networkFeeCrypto) /* normalize positive fee vs negative amount */
+
   return (
     <ThemedModal
       bridge={bridge}
@@ -124,33 +164,35 @@ export const WcSmartContractModal = (props: Props) => {
       </ModalTitle>
       <View style={modalHeight}>
         {renderWarning()}
-        {amountCrypto != null && (
+        {!zeroString(displayAmount) && (
           <CryptoFiatAmountTile
             title={s.strings.string_amount}
-            cryptoAmount={amountCrypto}
-            cryptoCurrencyCode={currencyCode}
+            cryptoAmount={displayAmount}
+            cryptoCurrencyCode={amountCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
         )}
-        <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={walletImageUri}>
-          <EdgeText>{walletName}</EdgeText>
-        </IconTile>
-        <IconTile title={s.strings.wc_smartcontract_dapp} iconUri={getCurrencyIcon('ETH', 'AAVE').symbolImage}>
+        {walletName != null && (
+          <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={walletImageUri}>
+            <EdgeText>{walletName}</EdgeText>
+          </IconTile>
+        )}
+        <IconTile title={s.strings.wc_smartcontract_dapp} iconUri={icon}>
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>
-        {networkFeeCrypto != null && (
+        {!zeroString(displayFee) && (
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
-            cryptoAmount={networkFeeCrypto}
-            cryptoCurrencyCode={currencyCode}
+            cryptoAmount={displayFee}
+            cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
         )}
-        {totalCrypto !== '0' && (
+        {!zeroString(totalCrypto) && (
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
-            cryptoAmount={maxTotalAmount}
-            cryptoCurrencyCode={currencyCode}
+            cryptoAmount={totalCrypto}
+            cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
         )}
