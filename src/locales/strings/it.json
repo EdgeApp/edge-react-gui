@@ -139,7 +139,7 @@
   "create_wallet_import_active_key_instructions": "Inserisci la tua chiave privata attiva per verificare e ripristinare il portafoglio associato:",
   "create_wallet_import_successful": "Importazione effettuata con successo!",
   "create_wallet_select_valid_crypto": "Seleziona un tipo di portafoglio valido",
-  "create_wallet_invalid_input": "Importo non valido",
+  "create_wallet_invalid_input": "Input non valido",
   "create_wallet_select_valid_fiat": "Seleziona una valuta fiat valida",
   "create_wallet_choose_crypto": "Seleziona un tipo di portafoglio",
   "create_wallet_invalid_name": "Nome del portafoglio non valido",
