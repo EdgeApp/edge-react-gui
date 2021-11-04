@@ -124,7 +124,6 @@
   "loading": "로딩중...",
   "mining_fee_high_label_choice": "높게",
   "mining_fee_low_label_choice": "낮게",
-  "mining_fee_standard_label_choice": "기본",
   "request_qr_your_receiving_wallet_address": "수령인 월렛 주소",
   "select_recv_wallet": "수령 월렛을 선택",
   "select_src_wallet": "소스 월렛 선택",

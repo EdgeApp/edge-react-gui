@@ -123,7 +123,6 @@
   "loading": "正在加载...",
   "mining_fee_high_label_choice": "高",
   "mining_fee_low_label_choice": "低",
-  "mining_fee_standard_label_choice": "标准",
   "request_qr_your_receiving_wallet_address": "您的接收钱包地址",
   "select_recv_wallet": "选择接收钱包",
   "select_src_wallet": "选择来源钱包",
