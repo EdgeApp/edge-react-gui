@@ -82,7 +82,6 @@
   "loading": "Carregando…",
   "mining_fee_high_label_choice": "Alta",
   "mining_fee_low_label_choice": "Baixa",
-  "mining_fee_standard_label_choice": "Padrão",
   "request_qr_your_receiving_wallet_address": "Seu endereço de Carteira para receber",
   "select_recv_wallet": "Selecione a carteira para receber",
   "select_src_wallet": "Selecione Fonte da Carteira",
