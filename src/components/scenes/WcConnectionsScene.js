@@ -171,7 +171,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   listRow: {
     marginTop: theme.rem(1),
     marginBottom: theme.rem(1.5),
-    marginHorizontal: theme.rem(1.5),
+    marginHorizontal: theme.rem(0.5),
     flexDirection: 'row',
     alignItems: 'center'
   },
