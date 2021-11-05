@@ -117,23 +117,14 @@ export const WcSmartContractModal = (props: Props) => {
     amountCurrencyCode === feeCurrencyCode ? bns.gt(bns.abs(totalNativeCrypto), feeCurrencyBalance) : bns.gt(networkFeeCrypto, feeCurrencyBalance)
 
   const handleSubmit = async () => {
-    try {
-      await wallet.otherMethods.wcRequestResponse(uri, true, payload)
-      Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />)
-    } catch (e) {
-      showError(e.message)
-    }
-
     props.bridge.resolve(null)
+    await wallet.otherMethods.wcRequestResponse(uri, true, payload)
+    Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />)
   }
 
   const handleClose = async () => {
-    try {
-      await wallet.otherMethods.wcRequestResponse(uri, false, payload)
-    } catch (e) {
-      showError(s.strings.wc_smartcontract_failed)
-    }
     props.bridge.resolve(null)
+    await wallet.otherMethods.wcRequestResponse(uri, false, payload)
   }
 
   const renderWarning = () => {
@@ -155,7 +146,13 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
+    <ThemedModal
+      bridge={bridge}
+      onCancel={() => {
+        handleClose().catch(showError)
+      }}
+      paddingRem={[1, 0]}
+    >
       <View style={styles.title} paddingRem={[0, 0, 0, 1]}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>
@@ -196,7 +193,11 @@ export const WcSmartContractModal = (props: Props) => {
         )}
         {slider}
       </ScrollView>
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalCloseArrow
+        onPress={() => {
+          handleClose().catch(showError)
+        }}
+      />
     </ThemedModal>
   )
 }
