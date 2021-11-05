@@ -876,7 +876,6 @@ const strings = {
   wc_smartcontract_network_fee: 'Network Fee',
   wc_smartcontract_max_total: 'Max Total',
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
-  wc_smartcontract_failed: 'Smart Contract Call failed',
 
   // Util
   util_truncate_delimeter: '...',
