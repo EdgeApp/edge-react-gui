@@ -8,12 +8,13 @@ import { type AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
+import { FlashNotification } from '../../components/navigation/FlashNotification.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { DECIMAL_PRECISION, hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
-import { showError } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import Alert from '../themed/Alert'
 import { CryptoFiatAmountTile } from '../themed/CryptoFiatAmountTile.js'
@@ -118,6 +119,7 @@ export const WcSmartContractModal = (props: Props) => {
   const handleSubmit = async () => {
     try {
       await wallet.otherMethods.wcRequestResponse(uri, true, payload)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />)
     } catch (e) {
       showError(e.message)
     }
@@ -129,7 +131,7 @@ export const WcSmartContractModal = (props: Props) => {
     try {
       await wallet.otherMethods.wcRequestResponse(uri, false, payload)
     } catch (e) {
-      showError(e.message)
+      showError(s.strings.wc_smartcontract_failed)
     }
     props.bridge.resolve(null)
   }
@@ -153,13 +155,7 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   return (
-    <ThemedModal
-      bridge={bridge}
-      onCancel={() => {
-        handleClose()
-      }}
-      paddingRem={[1, 0]}
-    >
+    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
       <View style={styles.title} paddingRem={[0, 0, 0, 1]}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>
@@ -200,12 +196,7 @@ export const WcSmartContractModal = (props: Props) => {
         )}
         {slider}
       </ScrollView>
-
-      <ModalCloseArrow
-        onPress={() => {
-          handleClose()
-        }}
-      />
+      <ModalCloseArrow onPress={handleClose} />
     </ThemedModal>
   )
 }
