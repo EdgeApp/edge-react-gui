@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import FastImage from 'react-native-fast-image'
 
 import s from '../../locales/strings.js'
 import { useSelector } from '../../types/reactRedux.js'
@@ -46,13 +46,11 @@ export const WcDisconnectScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader withTopMargin underline title={s.strings.wc_walletconnect_title} />
+      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
       <View style={styles.container}>
         <Card paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
-            <View style={styles.icon}>
-              <AntDesignIcon name="infocirlceo" size={theme.rem(2)} color={theme.icon} />
-            </View>
+            <FastImage style={styles.currencyLogo} source={{ uri: wcConnectionInfo.icon }} />
             <View style={styles.info}>
               <EdgeText style={styles.infoTitle}>{wcConnectionInfo.dAppName}</EdgeText>
               <EdgeText style={styles.infoBody}>{wcConnectionInfo.dAppUrl}</EdgeText>
@@ -71,9 +69,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5)
   },
-  icon: {
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+  currencyLogo: {
+    height: theme.rem(2),
+    width: theme.rem(2),
+    resizeMode: 'contain'
   },
   listRow: {
     marginTop: theme.rem(1),

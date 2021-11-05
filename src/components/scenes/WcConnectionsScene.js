@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings.js'
@@ -8,6 +9,7 @@ import { useEffect, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type WcConnectionInfo, type wcGetConnection } from '../../types/types.js'
+import { unixToLocaleDateTime } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ScanModal } from '../modals/ScanModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -52,10 +54,12 @@ export const WcConnectionsScene = (props: Props) => {
   }, [props])
 
   const createWcConnectionInfo = (connectedWalletId: string, dApp: wcGetConnection): WcConnectionInfo => {
+    const { date, time } = unixToLocaleDateTime(dApp.timeConnected)
+    const timeConnected = `${date} at ${time}`
     return {
       dAppName: dApp.peerMeta.name,
       dAppUrl: dApp.peerMeta.url,
-      timeConnected: 'timeConnected',
+      timeConnected,
       walletName: currencyWallets[connectedWalletId].name ?? 'NA',
       walletId: connectedWalletId,
       uri: dApp.uri,
@@ -128,9 +132,7 @@ export const WcConnectionsScene = (props: Props) => {
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
-              <View style={styles.icon}>
-                <AntDesignIcon name="infocirlceo" size={theme.rem(2)} color={theme.icon} />
-              </View>
+              <FastImage style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
                 <EdgeText style={styles.infoMidTitle}>{dAppConnection.dAppUrl}</EdgeText>
@@ -151,9 +153,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5)
   },
-  icon: {
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+  currencyLogo: {
+    height: theme.rem(2),
+    width: theme.rem(2),
+    resizeMode: 'contain'
   },
   arrow: {
     display: 'flex',
@@ -168,7 +171,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   listRow: {
     marginTop: theme.rem(1),
     marginBottom: theme.rem(1.5),
-    marginHorizontal: theme.rem(1.5),
+    marginHorizontal: theme.rem(0.5),
     flexDirection: 'row',
     alignItems: 'center'
   },

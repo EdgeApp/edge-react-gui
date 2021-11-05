@@ -70,9 +70,10 @@ export const WcConnectScene = (props: Props) => {
   const handleRequestDapp = async walletId => {
     try {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri: wcQRUri })
+      const dAppName = String(dApp.peerMeta.name).split(' ')[0]
       setDappDetails({
-        subTitleText: sprintf(s.strings.wc_confirm_subtitle, dApp.peerMeta.name),
-        bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dApp.peerMeta.name),
+        subTitleText: sprintf(s.strings.wc_confirm_subtitle, dAppName),
+        bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dAppName),
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e) {
@@ -117,11 +118,13 @@ export const WcConnectScene = (props: Props) => {
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader withTopMargin underline title={s.strings.wc_confirm_title} />
+      <SceneHeader underline title={s.strings.wc_confirm_title} />
       <ScrollView style={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}
-          <EdgeText style={styles.subTitle}>{subTitleText}</EdgeText>
+          <EdgeText style={styles.subTitle} numberOfLines={2}>
+            {subTitleText}
+          </EdgeText>
         </View>
 
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
@@ -129,14 +132,9 @@ export const WcConnectScene = (props: Props) => {
         <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
           {renderWalletSelect()}
         </Card>
-        <MainButton
-          label={s.strings.wc_confirm_connect_button}
-          type="secondary"
-          marginRem={[3.5, 0.5]}
-          onPress={handleConnect}
-          alignSelf="center"
-          disabled={selectedWallet.walletId === '' && selectedWallet.currencyCode === ''}
-        />
+        {subTitleText !== '' && (
+          <MainButton label={s.strings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
+        )}
       </ScrollView>
     </SceneWrapper>
   )
@@ -155,6 +153,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1),
     marginBottom: theme.rem(1.5),
     marginHorizontal: theme.rem(0.5),
+    marginRight: theme.rem(2),
     flexDirection: 'row',
     alignItems: 'flex-start'
   },

@@ -37,6 +37,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   tileContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    marginTop: theme.rem(0.5)
   }
 }))
