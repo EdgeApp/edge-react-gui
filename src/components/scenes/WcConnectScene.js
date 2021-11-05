@@ -132,14 +132,9 @@ export const WcConnectScene = (props: Props) => {
         <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
           {renderWalletSelect()}
         </Card>
-        <MainButton
-          label={s.strings.wc_confirm_connect_button}
-          type="secondary"
-          marginRem={[3.5, 0.5]}
-          onPress={handleConnect}
-          alignSelf="center"
-          disabled={selectedWallet.walletId === '' && selectedWallet.currencyCode === ''}
-        />
+        {subTitleText !== '' && (
+          <MainButton label={s.strings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
+        )}
       </ScrollView>
     </SceneWrapper>
   )
