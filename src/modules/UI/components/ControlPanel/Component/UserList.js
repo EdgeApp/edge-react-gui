@@ -77,22 +77,7 @@ class UserListComponent extends React.Component<Props, State> {
 
     const usernames = [...recentUsernames, ...this.sortUsernames(coreUsernames)]
 
-    return (
-      <ScrollView style={styles.userList.container}>
-        {usernames.map((username: string) => (
-          <View key={username} style={styles.userList.row}>
-            <TouchableHighlight style={styles.userList.textContainer} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
-              <T style={styles.userList.text}>{username}</T>
-            </TouchableHighlight>
-            <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
-              <View /* Hack, do not remove */>
-                <MaterialIcon size={20} name="close" />
-              </View>
-            </TouchableHighlight>
-          </View>
-        ))}
-      </ScrollView>
-    )
+    return <Alert title="test" message="test" />
   }
 
   handlePressUserSelect = (username: string) => () => {

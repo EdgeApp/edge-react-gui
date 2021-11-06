@@ -16,10 +16,14 @@ export function connect<StateProps, DispatchProps, OwnProps>(
   // $FlowFixMe
   return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
 }
+type ShallowEqual = (prevProps: any, nextProps: any) => boolean
 
 type UseDispatch = () => Dispatch
 
-type UseSelector = <T>((state: RootState) => T) => T
+type UseSelector = <T>((state: RootState) => T, shallowEqual?: ShallowEqual) => T
+
+// $FlowFixMe
+export const reduxShallowEqual: ShallowEqual = ReactRedux.shallowEqual
 
 // $FlowFixMe
 export const useDispatch: UseDispatch = ReactRedux.useDispatch
