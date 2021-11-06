@@ -18,6 +18,7 @@ const asThemeCache = asObject({
     })
   )
 })
+// pass in cleaner
 const wasThemeCache = uncleaner(asThemeCache)
 type ThemeCache = $Call<typeof asThemeCache>
 

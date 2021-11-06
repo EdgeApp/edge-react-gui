@@ -91,6 +91,7 @@ export const edgeDark: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkBlue,
   buySellCustomPluginModalIcon: palette.darkBlue,
+  mainMenuIcon: palette.edgeMint,
 
   // Background
   backgroundGradientLeft: palette.edgeNavy,
