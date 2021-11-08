@@ -111,7 +111,7 @@ export const WcConnectScene = (props: Props) => {
       const walletNameStr = walletName || ''
       const walletImage = <FastImage style={styles.currencyLogo} source={{ uri: walletImageUri }} />
       const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
-      return <SelectableRow onPress={showWalletListModal} icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
+      return <SelectableRow onPress={showWalletListModal} autoWidth icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
     }
   }
 
