@@ -100,8 +100,8 @@ export const WcSmartContractModal = (props: Props) => {
   if (isHex(removeHexPrefix(params?.value ?? ''))) {
     amountCrypto = hexToDecimal(params.value)
   }
-  if (isHex(removeHexPrefix(params?.gas ?? ''))) {
-    networkFeeCrypto = bns.mul(hexToDecimal(params.gas), hexToDecimal(params.gasPrice ?? '0x3B9ACA00'))
+  if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
+    networkFeeCrypto = hexToDecimal(removeHexPrefix(bns.mul(params.gas, params.gasPrice, 16)))
   }
 
   const displayAmount = bns.div(amountCrypto, amountMultiplier, DECIMAL_PRECISION)
