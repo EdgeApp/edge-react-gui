@@ -117,8 +117,12 @@ export const WcSmartContractModal = (props: Props) => {
     amountCurrencyCode === feeCurrencyCode ? bns.gt(bns.abs(totalNativeCrypto), feeCurrencyBalance) : bns.gt(networkFeeCrypto, feeCurrencyBalance)
 
   const handleSubmit = async () => {
-    await wallet.otherMethods.wcRequestResponse(uri, true, payload)
-    Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />)
+    try {
+      await wallet.otherMethods.wcRequestResponse(uri, true, payload)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />)
+    } catch (e) {
+      showError(e)
+    }
     props.bridge.resolve(null)
   }
 
