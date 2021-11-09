@@ -1,0 +1,10 @@
+diff --git a/usb.js b/usb.js
+index 1d3f735be43172e539f8520a3de98d47c3304186..f7b5ac5ba0bf6250b56121249f9bb9b7d804e5be 100644
+--- a/usb.js
++++ b/usb.js
+@@ -1,4 +1,4 @@
+-var usb = exports = module.exports = require('bindings')('usb_bindings');
++var usb = exports = module.exports = { INIT_ERROR: true };
+ var events = require('events')
+ var util = require('util')
+ 

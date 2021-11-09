@@ -4,6 +4,12 @@
 scratch.*
 temp/
 
+# Yarn v3:
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+
 # Build & deployment files
 /android/app/google-services.json
 /android/google-java-format-*.jar

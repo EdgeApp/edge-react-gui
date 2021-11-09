@@ -31,7 +31,7 @@
     "flow": "flow",
     "flow-coverage": "flow-coverage-report",
     "flow:0": "flow; exit 0",
-    "postinstall": "patch-package && sh ./postinstall.sh",
+    "postinstallDev": "patch-package && sh ./postinstall.sh && ./prepare-assets.sh",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
@@ -83,6 +83,7 @@
     "safe-buffer": "5.1.2",
     "scrypt.js": "0.3.0",
     "sha.js": "2.4.11",
+    "usb": "patch:usb@npm:1.6.0#.yarn/patches/usb-npm-1.6.0-c8ddfc9d92",
     "uuid": "3.3.2"
   },
   "dependencies": {
@@ -247,6 +248,7 @@
       "json"
     ]
   },
+  "packageManager": "yarn@3.1.0",
   "plugins": [
     "edge-plugin-simplex",
     "edge-plugin-wyre",
