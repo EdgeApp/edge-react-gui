@@ -8,9 +8,6 @@ import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { packEdges, unpackEdges } from '../../util/edges.js'
 import { useTheme } from '../services/ThemeContext.js'
 
-// Sneak the BlurView over to the login UI:
-global.ReactNativeBlurView = BlurView
-
 type Props<T> = {
   bridge: AirshipBridge<T>,
   children?: React.Node,
