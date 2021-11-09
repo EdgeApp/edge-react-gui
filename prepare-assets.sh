@@ -11,6 +11,10 @@ cd "$(dirname "$0")"
 node ./node_modules/.bin/rollup -c
 node ./scripts/stringifyBridge.js
 
+# Create zcash checkpoints
+
+node ./node_modules/edge-currency-accountbased/bin/zecCheckpoints.js
+
 # Copy pre-built buy/sell plugins:
 node ./copy-plugin.js
 

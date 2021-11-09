@@ -81,7 +81,7 @@ public class MainApplication extends Application implements ReactApplication {
     WebView.setWebContentsDebuggingEnabled(true);
 
     // Background task:
-    MessagesWorker.ensureScheduled(context);
+    // MessagesWorker.ensureScheduled(context);
     // MessagesWorker.testRun(context);
   }
 
