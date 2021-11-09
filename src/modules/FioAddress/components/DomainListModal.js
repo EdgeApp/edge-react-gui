@@ -9,7 +9,7 @@ import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
+import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
@@ -52,7 +52,6 @@ const newDomainItem = {
 }
 
 class DomainListModalComponent extends React.Component<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -81,19 +80,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
     userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
 
     return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
-  }
-
-  componentDidMount() {
-    if (this.textInput.current) {
-      this.textInput.current.focus()
-    }
-  }
-
-  clearText = () => {
-    this.setState({ input: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   getItems = () => {
@@ -172,20 +158,14 @@ class DomainListModalComponent extends React.Component<Props, State> {
         </ModalTitle>
         <View style={{ marginHorizontal: theme.rem(0.75) }}>
           <OutlinedTextInput
-            autoFocus
             autoCorrect={false}
             returnKeyType="search"
-            keyboardType="default"
             autoCapitalize="none"
             label={s.strings.fio_domain_label}
             onChangeText={this.onSearchFilterChange}
             onSubmitEditing={this.selectCustom}
             value={input}
-            onClear={this.clearText}
-            clearIcon
             marginRem={[0, 1]}
-            ref={this.textInput}
-            blurOnSubmit
             searchIcon
           />
         </View>

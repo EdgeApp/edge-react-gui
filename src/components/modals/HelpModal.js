@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, Linking, View } from 'react-native'
+import { Image, Keyboard, Linking, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
@@ -29,6 +29,7 @@ const HELP_URIS = {
 export function showHelpModal(): Promise<mixed> {
   return Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
+
 function showWebViewModal(uri: string, title: string): void {
   Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
 }
@@ -58,6 +59,10 @@ class HelpWebViewModal extends React.Component<Props & { uri: string, title: str
 
 class HelpModalComponent extends React.Component<Props & ThemeProps> {
   handleClose = () => this.props.bridge.resolve()
+
+  componentDidMount() {
+    Keyboard.dismiss()
+  }
 
   render() {
     const { bridge, theme } = this.props

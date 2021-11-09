@@ -105,24 +105,18 @@ export function CurrencySettingsComponent(props: Props) {
 
     return (
       <>
-        <SettingsHeaderRow text={s.strings.settings_custom_nodes_title} />
-        <SettingsSwitchRow text={s.strings.settings_enable_custom_nodes} value={disableFetchingServers} onPress={handleToggleNodes} />
+        <SettingsHeaderRow label={s.strings.settings_custom_nodes_title} />
+        <SettingsSwitchRow label={s.strings.settings_enable_custom_nodes} value={disableFetchingServers} onPress={handleToggleNodes} />
         {!disableFetchingServers ? null : (
           <>
             {electrumServers.map((server, i) => (
-              <SettingsTappableRow
-                key={`row${i}`}
-                action="delete"
-                icon={
-                  <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
-                    <Text style={styles.labelText}>{server}</Text>
-                  </TouchableOpacity>
-                }
-                text=""
-                onPress={() => handleDeleteNode(i)}
-              />
+              <SettingsTappableRow key={`row${i}`} action="delete" onPress={() => handleDeleteNode(i)}>
+                <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
+                  <Text style={styles.labelText}>{server}</Text>
+                </TouchableOpacity>
+              </SettingsTappableRow>
             ))}
-            <SettingsTappableRow action="add" text={s.strings.settings_add_custom_node} onPress={handleEditNode} />
+            <SettingsTappableRow action="add" label={s.strings.settings_add_custom_node} onPress={handleEditNode} />
           </>
         )}
       </>
@@ -132,17 +126,18 @@ export function CurrencySettingsComponent(props: Props) {
   return (
     <SceneWrapper background="theme" hasTabs={false}>
       <ScrollView>
-        <SettingsHeaderRow text={s.strings.settings_denominations_title} />
+        <SettingsHeaderRow label={s.strings.settings_denominations_title} />
         {denominations.map(denomination => {
           const key = denomination.multiplier
-          const left = (
-            <Text style={styles.labelText}>
-              <Text style={styles.symbolText}>{denomination.symbol}</Text>
-              {' - ' + denomination.name}
-            </Text>
-          )
           const isSelected = key === selectedDenominationKey
-          return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" value={isSelected} onPress={() => selectDenomination(currencyCode, key)} />
+          return (
+            <SettingsRadioRow key={denomination.multiplier} value={isSelected} onPress={() => selectDenomination(currencyCode, key)}>
+              <Text style={styles.labelText}>
+                <Text style={styles.symbolText}>{denomination.symbol}</Text>
+                {' - ' + denomination.name}
+              </Text>
+            </SettingsRadioRow>
+          )
         })}
         {defaults == null || settings == null ? null : renderCustomNodes(defaults, settings)}
       </ScrollView>
@@ -151,17 +146,20 @@ export function CurrencySettingsComponent(props: Props) {
 }
 
 const getStyles = cacheStyles(theme => ({
+  // We use a hack to make the text tappable separately from the switch.
   labelContainer: {
     flexGrow: 10,
     flexShrink: 1,
-    margin: -theme.rem(1),
-    padding: theme.rem(1)
+    // Stretch outward to cover the row:
+    margin: -theme.rem(0.5),
+    padding: theme.rem(0.5)
   },
   labelText: {
     color: theme.primaryText,
     flexShrink: 1,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     textAlign: 'left'
   },
   symbolText: {

@@ -23,7 +23,7 @@ type Props = {|
   // True to dim the button & prevent interactions:
   disabled?: boolean,
 
-  // If this is set, the component will insert a text node before the other children:
+  // If this is set, the component will insert a text node after its children:
   label?: string,
 
   // The gap around the button. Takes 0-4 numbers (top, right, bottom, left),
@@ -65,13 +65,13 @@ export function MainButton(props: Props) {
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={[touchableStyle, dynamicStyles]} onPress={handlePress}>
-      {label != null && !pending ? (
+      {pending ? null : children}
+      {pending || label == null ? null : (
         <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
           {label}
         </Text>
-      ) : null}
-      {!pending ? children : null}
-      {spinner || pending ? <ActivityIndicator color={spinnerColor} style={styles.spinner} /> : null}
+      )}
+      {!pending && !spinner ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
     </TouchableOpacity>
   )
 }

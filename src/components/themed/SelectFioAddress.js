@@ -15,7 +15,7 @@ import { Actions } from '../../types/routerTypes.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -129,14 +129,18 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 
   openMessageInput = () => {
     Airship.show(bridge => (
-      <TransactionDetailsNotesInput
+      <TextInputModal
         bridge={bridge}
+        initialValue={this.props.memo}
+        inputLabel={s.strings.fio_sender_memo_placeholder}
+        returnKeyType="done"
+        multiline
+        submitLabel={s.strings.string_save}
         title={s.strings.fio_sender_memo_label}
-        placeholder={s.strings.fio_sender_memo_placeholder}
-        notes={this.props.memo}
-        onChange={this.handleMemoChange}
       />
-    )).then(_ => {})
+    )).then(memo => {
+      if (memo != null) this.handleMemoChange(memo)
+    })
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {

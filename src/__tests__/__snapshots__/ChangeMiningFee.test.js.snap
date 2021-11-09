@@ -13,57 +13,77 @@ exports[`Change Mining Fees should render with custom props 1`] = `
   />
   <ScrollView>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer"
-          size={28}
-        />
-      }
+      label="High"
       onPress={[Function]}
-      text="High"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-medium"
-          size={28}
-        />
-      }
+      label="Optimal"
       onPress={[Function]}
-      text="Optimal"
       value={true}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-medium"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-slow"
-          size={28}
-        />
-      }
+      label="Low"
       onPress={[Function]}
-      text="Low"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-slow"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="gear"
-          size={28}
-        />
-      }
+      label="Custom"
       onPress={[Function]}
-      text="Custom"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="gear"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"
@@ -88,57 +108,77 @@ exports[`Change Mining Fees should render with high props 1`] = `
   />
   <ScrollView>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer"
-          size={28}
-        />
-      }
+      label="High"
       onPress={[Function]}
-      text="High"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-medium"
-          size={28}
-        />
-      }
+      label="Optimal"
       onPress={[Function]}
-      text="Optimal"
       value={true}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-medium"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-slow"
-          size={28}
-        />
-      }
+      label="Low"
       onPress={[Function]}
-      text="Low"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-slow"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="gear"
-          size={28}
-        />
-      }
+      label="Custom"
       onPress={[Function]}
-      text="Custom"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="gear"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"
@@ -163,57 +203,77 @@ exports[`Change Mining Fees should render with low props 1`] = `
   />
   <ScrollView>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer"
-          size={28}
-        />
-      }
+      label="High"
       onPress={[Function]}
-      text="High"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-medium"
-          size={28}
-        />
-      }
+      label="Optimal"
       onPress={[Function]}
-      text="Optimal"
       value={true}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-medium"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-slow"
-          size={28}
-        />
-      }
+      label="Low"
       onPress={[Function]}
-      text="Low"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-slow"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="gear"
-          size={28}
-        />
-      }
+      label="Custom"
       onPress={[Function]}
-      text="Custom"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="gear"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"
@@ -238,57 +298,77 @@ exports[`Change Mining Fees should render with standard props 1`] = `
   />
   <ScrollView>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer"
-          size={28}
-        />
-      }
+      label="High"
       onPress={[Function]}
-      text="High"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-medium"
-          size={28}
-        />
-      }
+      label="Optimal"
       onPress={[Function]}
-      text="Optimal"
       value={true}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-medium"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="speedometer-slow"
-          size={28}
-        />
-      }
+      label="Low"
       onPress={[Function]}
-      text="Low"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="speedometer-slow"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Icon
-          allowFontScaling={false}
-          color="#66EDA8"
-          name="gear"
-          size={28}
-        />
-      }
+      label="Custom"
       onPress={[Function]}
-      text="Custom"
       value={false}
-    />
+    >
+      <Icon
+        allowFontScaling={false}
+        name="gear"
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
+      />
+    </WithTheme(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"

@@ -67,12 +67,12 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
         <ModalTitle>{s.strings.wallet_list_sort_title}</ModalTitle>
         {options.map(option => {
           if (option.key === 'manual') {
-            return <SettingsTappableRow key={option.key} text={option.title} onPress={this.handleManualOption} />
+            return <SettingsTappableRow key={option.key} label={option.title} onPress={this.handleManualOption} />
           } else {
             return (
               <SettingsRadioRow
                 key={option.key}
-                text={option.title}
+                label={option.title}
                 value={this.state.option === option.key}
                 onPress={() => this.handleOptionKey(option.key)}
               />

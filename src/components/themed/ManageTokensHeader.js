@@ -7,7 +7,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import s from '../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
+import { OutlinedTextInput } from './OutlinedTextInput.js'
 import Title from './Title'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -16,14 +16,12 @@ type Props = {
   walletName: string,
   currencyCode: string,
   changeSearchValue: (value: string) => void,
-  onSearchClear: () => void,
   onSelectWallet: () => Promise<void>,
-  searchValue: string,
-  textInput: { current: OutlinedTextInputRef | null }
+  searchValue: string
 }
 
 function ManageTokensHeader(props: Props) {
-  const { currencyCode, walletName, walletId, changeSearchValue, onSearchClear, onSelectWallet, searchValue, textInput } = props
+  const { currencyCode, walletName, walletId, changeSearchValue, onSelectWallet, searchValue } = props
 
   const theme = useTheme()
 
@@ -46,10 +44,7 @@ function ManageTokensHeader(props: Props) {
             label={s.strings.search_tokens}
             onChangeText={changeSearchValue}
             value={searchValue}
-            ref={textInput}
-            onClear={onSearchClear}
             marginRem={0}
-            clearIcon
             searchIcon
           />
         </View>

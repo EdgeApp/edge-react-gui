@@ -1,5 +1,32 @@
 # edge-react-gui
 
+## 2.5.0 (2021-11-07)
+
+- Add WalletConnect
+- Fix ETH transaction fee calculation
+- Fix date and time display on 2FA scenes
+- Fix insufficient funds error showing after a swap
+- Refactor Create Account scenes to use common components and visuals
+- Fix spinner visuals in settings scene
+- Save changes to transaction metadata immediately
+- Remove cliff background gif
+- Banxa URL update
+- Various font and border weight consistency fixes
+- Remove lodash
+- Upgrade edge-core-js to v0.18.11
+  - added: Implement TypeScript utilities in Flow
+  - added: Wallet Connect types and onWcNewContractCall callback
+  - updated: Ethereum, Bitcoin, and Bitcoin xpub documentation
+  - fixed: Type-safety and null checks
+- Upgrade edge-currency-accountbased to v0.8.2
+  - Add Wallet Connect
+  - ETH: Fix error handling in checkUpdateNetworkFees
+- Upgrade edge-login-ui-rn to v0.9.22
+  - rn: Refactor Create Cccount scenes to use common components
+  - rn: Update Create Account scene headers
+  - rn: Dismiss keyboard when showing the QR modal
+  - rn: Standardize button text to regular with thinner borders
+
 ## 2.4.0 (2021-10-22)
 
 - New themed change mining fee scene

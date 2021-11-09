@@ -1,7 +1,6 @@
 // @flow
 
 import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
-import _ from 'lodash'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -370,7 +369,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
       const { tokenObj, code, setSettings, oldCurrencyCode } = action.data
       const customTokens = setSettings.customTokens
-      const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
+      const oldCurrencyCodeIndex = customTokens.findIndex(item => item.currencyCode === oldCurrencyCode)
       customTokens[oldCurrencyCodeIndex] = {
         ...state.customTokens[oldCurrencyCodeIndex],
         isVisible: false

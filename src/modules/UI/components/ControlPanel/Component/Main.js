@@ -19,6 +19,7 @@ import settings from '../../../../../assets/images/sidenav/settings.png'
 import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
+import walletConnect from '../../../../../assets/images/sidenav/walletconnect-logo.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
 import { LOGIN_QR, SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
@@ -72,6 +73,8 @@ class MainComponent extends React.Component<Props> {
               <SellButton />
               <Separator />
               <ExchangeButton />
+              <Separator />
+              <WalletConnectButton />
               <Separator />
               <FioAddressButton />
               <Separator />
@@ -271,6 +274,25 @@ const ExchangeButton = () => {
         <Button.Center>
           <Button.Text>
             <Text>{s.strings.drawer_exchange}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const popToWalletConnect = () => goToScene('wcConnections')
+const WalletConnectButton = () => {
+  return (
+    <Button onPress={popToWalletConnect}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={walletConnect} style={[styles.iconImage, { resizeMode: 'contain' }]} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{s.strings.wc_walletconnect_title}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

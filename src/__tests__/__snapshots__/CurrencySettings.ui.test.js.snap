@@ -7,95 +7,92 @@ exports[`CurrencySettings should render 1`] = `
 >
   <ScrollView>
     <WithTheme(SettingsHeaderRowComponent)
-      text="Denominations"
+      label="Denominations"
     />
     <WithTheme(SettingsRadioRowComponent)
-      icon={
-        <Text
-          style={
-            Object {
-              "color": "#FFFFFF",
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          <Text
-            style={
-              Object {
-                "fontFamily": "Quicksand-Regular",
-              }
-            }
-          >
-            ₿
-          </Text>
-           - BTG
-        </Text>
-      }
       onPress={[Function]}
-      text=""
       value={false}
-    />
-    <WithTheme(SettingsRadioRowComponent)
-      icon={
+    >
+      <Text
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "paddingHorizontal": 11,
+            "textAlign": "left",
+          }
+        }
+      >
         <Text
           style={
             Object {
-              "color": "#FFFFFF",
-              "flexShrink": 1,
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "textAlign": "left",
             }
           }
         >
-          <Text
-            style={
-              Object {
-                "fontFamily": "Quicksand-Regular",
-              }
-            }
-          >
-            m₿
-          </Text>
-           - mBTG
+          ₿
         </Text>
-      }
+         - BTG
+      </Text>
+    </WithTheme(SettingsRadioRowComponent)>
+    <WithTheme(SettingsRadioRowComponent)
       onPress={[Function]}
-      text=""
       value={false}
-    />
-    <WithTheme(SettingsRadioRowComponent)
-      icon={
+    >
+      <Text
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "paddingHorizontal": 11,
+            "textAlign": "left",
+          }
+        }
+      >
         <Text
           style={
             Object {
-              "color": "#FFFFFF",
-              "flexShrink": 1,
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "textAlign": "left",
             }
           }
         >
-          <Text
-            style={
-              Object {
-                "fontFamily": "Quicksand-Regular",
-              }
-            }
-          >
-            ƀ
-          </Text>
-           - bits
+          m₿
         </Text>
-      }
+         - mBTG
+      </Text>
+    </WithTheme(SettingsRadioRowComponent)>
+    <WithTheme(SettingsRadioRowComponent)
       onPress={[Function]}
-      text=""
       value={true}
-    />
+    >
+      <Text
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "paddingHorizontal": 11,
+            "textAlign": "left",
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "fontFamily": "Quicksand-Regular",
+            }
+          }
+        >
+          ƀ
+        </Text>
+         - bits
+      </Text>
+    </WithTheme(SettingsRadioRowComponent)>
   </ScrollView>
 </SceneWrapper>
 `;

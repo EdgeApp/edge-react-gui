@@ -179,7 +179,7 @@ exports[`TransactionDetails.ui should render 1`] = `
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <MainButton
-        label="Save"
+        label="Done"
         marginRem={
           Array [
             0,
@@ -373,7 +373,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <MainButton
-        label="Save"
+        label="Done"
         marginRem={
           Array [
             0,
@@ -567,7 +567,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <MainButton
-        label="Save"
+        label="Done"
         marginRem={
           Array [
             0,
@@ -761,7 +761,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <MainButton
-        label="Save"
+        label="Done"
         marginRem={
           Array [
             0,
