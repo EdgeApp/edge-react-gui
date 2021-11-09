@@ -1,28 +1,27 @@
 // @flow
 
-import { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { useIsEffectRender } from './useIsEffectRender'
-
-export type AnimationOptions = { noFadeIn: boolean, duration: number, fadeInOpacity: number, fadeOutOpacity: number }
+import { useEffect, useRef } from '../../types/reactHooks'
 
 // Animate the opacity based on the visibility toggle:
-export const useFadeAnimation = (visible: boolean, options: AnimationOptions) => {
-  const { noFadeIn, fadeInOpacity, fadeOutOpacity, duration } = options
+export const useFadeAnimation = (visible: boolean, options: { noFadeIn?: boolean, duration?: number }) => {
+  const { noFadeIn = false, duration = 500 } = options
 
-  const { isRender } = useIsEffectRender(visible, duration)
+  const firstRender = useRef<boolean>(true)
+  const opacity = useSharedValue(noFadeIn ? 1 : 0)
+  const style = useAnimatedStyle(() => ({
+    opacity: opacity.value
+  }))
 
-  const animatedStyle = useAnimatedStyle(() => {
-    const opacityValue = visible ? fadeInOpacity : fadeOutOpacity
-    const durationValue = noFadeIn && visible ? 0 : duration
-
-    return {
-      opacity: withTiming(opacityValue, {
-        duration: durationValue,
-        easing: Easing.linear
-      })
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
     }
-  }, [visible, noFadeIn, duration])
 
-  return { animatedStyle, isRender }
+    opacity.value = withTiming(visible ? 1 : 0, { duration })
+  }, [duration, opacity, visible])
+
+  return style
 }
