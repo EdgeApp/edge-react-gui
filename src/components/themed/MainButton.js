@@ -89,7 +89,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   const commonText = {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    marginHorizontal: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.25)
   }
 
   return {
