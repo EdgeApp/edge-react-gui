@@ -108,10 +108,10 @@ export const WcConnectScene = (props: Props) => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
       return <SelectableRow onPress={showWalletListModal} title={s.strings.wc_confirm_select_wallet} arrowTappable />
     } else {
-      const walletNameStr = walletName || ''
+      const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = <FastImage style={styles.currencyLogo} source={{ uri: walletImageUri }} />
       const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
-      return <SelectableRow onPress={showWalletListModal} autoWidth icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
+      return <SelectableRow onPress={showWalletListModal} icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
     }
   }
 
