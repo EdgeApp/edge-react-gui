@@ -437,6 +437,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderFees() {
     const { exchangeRates, settings, transaction, theme } = this.props
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+    const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
 
     if (recipientAddress) {
       const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
@@ -444,7 +445,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <Tile type="touchable" title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
+        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
           <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
         </Tile>
       )
