@@ -7,6 +7,9 @@
 set -e
 cd "$(dirname "$0")/.."
 
+## Fix broken packages:
+yarn patch-package
+
 # The `usb` and 'node-hid' modules doesn't properly install on some boxes:
 mkdir -p node_modules/usb
 touch node_modules/usb/index.js

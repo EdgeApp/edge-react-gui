@@ -35,7 +35,7 @@
     "lint": "eslint .",
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "precommit": "npm run localize && lint-staged && flow && npm test",
-    "prepare": "patch-package && ./scripts/prepare.sh",
+    "prepare": "./scripts/prepare.sh",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
     "prepare.dev": "EDGE_MODE=development ./scripts/prepare.sh",
     "server": "node ./loggingServer.js",
@@ -57,6 +57,7 @@
     "*.{js,jsx}": "eslint"
   },
   "resolutions": {
+    "@ledgerhq/hw-transport-node-hid": "file:./patches/fake-hw-transport-node-hid",
     "axios": "0.19.0",
     "babel-runtime": "6.26.0",
     "base-x": "3.0.4",

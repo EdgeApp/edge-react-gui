@@ -1,5 +1,6 @@
 [ignore]
 ; Edge additions
+.*/android/app/build/intermediates/.*
 .*/node_modules/edge-plugin-bity/.*
 .*/node_modules/metro/.*
 .*/node_modules/react-native-confetti-cannon/.*
