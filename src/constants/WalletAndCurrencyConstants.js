@@ -525,7 +525,8 @@ export const WALLET_LIST_MENU: Array<{
       'RVN',
       'RBTC',
       'TESTBTC',
-      'XMR'
+      'XMR',
+      'ZEC'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'
