@@ -5,6 +5,7 @@ before_install:
   - cp env.example.json env.json
 install:
   - yarn install --frozen-lockfile --ignore-optional --network-concurrency 1
+  - yarn prepare
 script:
   - yarn lint
   - yarn flow
