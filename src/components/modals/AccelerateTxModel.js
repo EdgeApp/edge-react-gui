@@ -66,25 +66,32 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
     const edgeTransactionSpendTargets = edgeTransaction.spendTargets
 
     if (edgeTransactionSpendTargets && edgeTransactionSpendTargets.length) {
+      // Currency code for the new tx is the same as the first spend target
+      const { currencyCode } = edgeTransactionSpendTargets[0]
+      // Map the EdgeTransaction.spendTargets type to EdgeSpendTargets
       const spendTargets = edgeTransactionSpendTargets.map(spendTarget => ({
         nativeAmount: spendTarget.nativeAmount,
         publicAddress: spendTarget.publicAddress,
         uniqueIdentifier: spendTarget.uniqueIdentifier
       }))
-      const rbfTxid = edgeTransaction.txid
-      const currencyCode = edgeTransactionSpendTargets[0].currencyCode
+      const {
+        // Use the txid from the replaced transaction as the rbfTxid
+        txid: rbfTxid,
+        // Copy replaced transaction's metadata and swapInfo to the RBF transaction
+        metadata,
+        swapData
+      } = edgeTransaction
 
       const edgeSpendInfo: EdgeSpendInfo = {
         currencyCode,
         spendTargets,
-        rbfTxid
+        rbfTxid,
+        metadata,
+        swapData
       }
 
       try {
-        let edgeUnsignedTransaction = await wallet.makeSpend(edgeSpendInfo)
-
-        // Copy the replaced transaction's metadata to the RBF transaction
-        edgeUnsignedTransaction = { ...edgeUnsignedTransaction, metadata: edgeTransaction.metadata }
+        const edgeUnsignedTransaction = await wallet.makeSpend(edgeSpendInfo)
 
         this.setState({
           edgeUnsignedTransaction
@@ -103,7 +110,7 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
   }
 
   signBroadcastAndSaveRbf = async () => {
-    const { edgeTransaction, wallet } = this.props
+    const { wallet } = this.props
     const { edgeUnsignedTransaction } = this.state
 
     if (edgeUnsignedTransaction) {
@@ -112,14 +119,9 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
       this.setState({ status: 'sending' })
 
       try {
-        // Sign and broadcast the RBF transaction
+        // Sign, broadcast, and save the RBF transaction
         edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
         edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
-
-        // Copy the replaced transaction's metadata to the RBF transaction
-        edgeSignedTransaction = { ...edgeSignedTransaction, metadata: edgeTransaction.metadata }
-
-        // Save the RBF transactoin
         await wallet.saveTx(edgeSignedTransaction)
 
         if (this.state.mounted) {
