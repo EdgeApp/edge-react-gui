@@ -99,3 +99,38 @@ index 0000000..1d15b8d
 +    return Bitmap.Config.ARGB_8888;
 +  }
 +}
+diff --git a/node_modules/@react-native-community/blur/src/BlurView.android.js b/node_modules/@react-native-community/blur/src/BlurView.android.js
+index a192476..3a9c5b3 100644
+--- a/node_modules/@react-native-community/blur/src/BlurView.android.js
++++ b/node_modules/@react-native-community/blur/src/BlurView.android.js
+@@ -5,6 +5,7 @@ import {
+   requireNativeComponent,
+   DeviceEventEmitter,
+   ViewPropTypes,
++  Platform,
+   StyleSheet,
+ } from 'react-native';
+ 
+@@ -65,6 +66,14 @@ class BlurView extends Component {
+   render() {
+     const { style } = this.props;
+ 
++    if (Platform.Version <= 27) {
++      return (
++        <View pointerEvents="none" style={StyleSheet.compose(styles.dim, style)}>
++          {this.props.children}
++        </View>
++      )
++    }
++
+     return (
+       <NativeBlurView
+         blurRadius={this.blurRadius()}
+@@ -81,6 +90,7 @@ class BlurView extends Component {
+ 
+ const styles = StyleSheet.create({
+   transparent: { backgroundColor: 'transparent' },
++  dim: { backgroundColor: 'rgba(0, 0, 0, 0.75)' }
+ });
+ 
+ BlurView.propTypes = {
