@@ -68,7 +68,7 @@ type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 type State = {
   publicAddress: string,
   legacyAddress: string,
-  encodedURI: string,
+  encodedURI: string | void,
   minimumPopupModalState: CurrencyMinimumPopupState,
   isFioMode: boolean,
   errorMessage?: string
@@ -91,7 +91,7 @@ export class RequestComponent extends React.Component<Props, State> {
     this.state = {
       publicAddress: props.publicAddress,
       legacyAddress: props.legacyAddress,
-      encodedURI: '',
+      encodedURI: undefined,
       minimumPopupModalState,
       isFioMode: false
     }
@@ -131,9 +131,9 @@ export class RequestComponent extends React.Component<Props, State> {
       publicAddress: useLegacyAddress ? legacyAddress : publicAddress,
       currencyCode
     }
-    let encodedURI = s.strings.loading
+    let encodedURI
     try {
-      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : undefined
       this.setState({
         encodedURI
       })
@@ -166,7 +166,7 @@ export class RequestComponent extends React.Component<Props, State> {
       let legacyAddress = guiWallet.receiveAddress.legacyAddress
 
       const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
-      let encodedURI = s.strings.loading
+      let encodedURI
       try {
         encodedURI = await edgeWallet.encodeUri(abcEncodeUri)
       } catch (err) {
@@ -356,9 +356,9 @@ export class RequestComponent extends React.Component<Props, State> {
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
-    let encodedURI = s.strings.loading
+    let encodedURI
     try {
-      encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : s.strings.loading
+      encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : undefined
     } catch (e) {
       console.log(e)
       setTimeout(() => {
@@ -399,7 +399,7 @@ export class RequestComponent extends React.Component<Props, State> {
     if (!currencyCode || !edgeWallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
     }
-    let sharedAddress = this.state.encodedURI
+    let sharedAddress = this.state.encodedURI ?? ''
     let edgePayUri = 'https://deep.edge.app/'
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
@@ -407,7 +407,7 @@ export class RequestComponent extends React.Component<Props, State> {
       sharedAddress = publicAddress
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
-      if (sharedAddress.indexOf('amount') === -1) {
+      if (sharedAddress != null && sharedAddress.indexOf('amount') === -1) {
         const edgeEncodeUri: EdgeEncodeUri =
           useLegacyAddress && legacyAddress
             ? { publicAddress, legacyAddress, currencyCode, nativeAmount: '0' }

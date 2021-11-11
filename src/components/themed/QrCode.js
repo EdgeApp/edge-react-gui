@@ -10,7 +10,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 
 type Props = {|
-  data: string,
+  data?: string, // Nothing will show if undefined
   cellsPadding?: number, // In QR cells
   marginRem?: number[] | number,
   onPress?: () => void
@@ -32,7 +32,7 @@ export function QrCode(props: Props) {
 
   // Generate an SVG path:
   const code = qrcodeGenerator(0, 'H')
-  code.addData(data)
+  code.addData(data ?? '')
   code.make()
   const svg = code.createSvgTag(1, cellsPadding)
   const path = svg.replace(/.*d="([^"]*)".*/, '$1')

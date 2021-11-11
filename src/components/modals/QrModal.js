@@ -11,7 +11,7 @@ import { QrCode } from '../themed/QrCode.js'
 
 type Props = {
   bridge: AirshipBridge<void>,
-  data: string
+  data?: string
 }
 
 export function QrModal(props: Props) {
