@@ -59,7 +59,7 @@ export const WcConnectScene = (props: Props) => {
 
   const handleConnect = async () => {
     try {
-      await wallet.otherMethods.wcConnect({ uri: wcQRUri })
+      await wallet.otherMethods.wcConnect(wcQRUri, walletAddress, wallet.id)
       Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections')
     } catch (error) {
