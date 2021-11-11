@@ -16,7 +16,8 @@ import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import { useEffect } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { QrPeephole } from '../common/QrPeephole.js'
-import { showError, showWarning } from '../services/AirshipInstance'
+import { TextInputModal } from '../modals/TextInputModal.js'
+import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { requestPermission } from '../services/PermissionsManager'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -28,7 +29,8 @@ type OwnProps = {
   bridge: AirshipBridge<string | void>,
   title: string,
   isFlash?: boolean,
-  isAlbum?: boolean
+  isAlbum?: boolean,
+  isTextInput?: boolean
 }
 
 type StateProps = {
@@ -56,7 +58,8 @@ const Component = (props: Props) => {
     torchEnabled,
     cameraPermission,
     isAlbum = true,
-    isFlash = true
+    isFlash = true,
+    isTextInput
   } = props
   const styles = getStyles(theme)
 
@@ -81,6 +84,16 @@ const Component = (props: Props) => {
 
   const handleFlash = () => {
     toggleEnableTorch()
+  }
+
+  const handleTextInput = async () => {
+    const uri = await Airship.show(bridge => (
+      <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
+    ))
+
+    if (uri != null) {
+      bridge.resolve(uri)
+    }
   }
 
   const handleAlbum = () => {
@@ -194,6 +207,12 @@ const Component = (props: Props) => {
                   <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
                     <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
                     <EdgeText>{s.strings.fragment_send_album}</EdgeText>
+                  </TouchableOpacity>
+                ) : null}
+                {isTextInput ? (
+                  <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
+                    <Ionicon style={styles.icon} name="pencil-outline" size={theme.rem(1.5)} />
+                    <EdgeText>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
                   </TouchableOpacity>
                 ) : null}
               </View>
