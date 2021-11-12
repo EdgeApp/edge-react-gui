@@ -91,7 +91,9 @@ export const WcConnectScene = (props: Props) => {
         if (walletId && currencyCode) {
           dispatch(selectWalletFromModal(walletId, currencyCode))
           setSelectedWallet({ walletId, currencyCode })
-          handleRequestDapp(walletId)
+          if (dappDetails.subTitleText === '') {
+            handleRequestDapp(walletId)
+          }
         }
       }
     )
