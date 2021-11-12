@@ -5083,10 +5083,10 @@ edge-core-js@^0.18.11:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.9.1.tgz#eb9967e5e75e95cd99b8ead11684d148b73d4532"
-  integrity sha512-YTYcuLF5SKwjPeaSIpKh/h9rvG2n5cSdge1Ip8SLVH47/8/upld9tc2W0DuM5yHriPxBF0mwc34JgHSd5wtSvg==
+edge-currency-accountbased@0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.8.4.tgz#73312d1394ae55016bd1b9b56e19b0e126689afd"
+  integrity sha512-I7KDVHH9mid9jlZy1OEj6OjAMrSxXKZwj/S2Af0JGpkxDfh1H5wBZPWqV7NYRWLJuC/AJq0JEMvtl05JPvCCuA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
@@ -10846,15 +10846,15 @@ react-native-mymonero-core@^0.1.0:
   resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.0.tgz#57d160b076ae50c037cffa94760e4f2f3ca2de88"
   integrity sha512-2NV+V1GFP/NaKp9enVDWrSrA9gMMDSmBXPnNW/K2eEXyGV9fC0DJqDo6ljlKr7ANak1X5ln/6yV2Z7jrl2Xgwg==
 
-react-native-patina@^0.1.4, react-native-patina@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.6.tgz#eb60194a4e4e427a51391b92a2acebb557f3f3ca"
-  integrity sha512-3mtDnDRbkTx3mtS9BsaYgFy5C+RuSTTHLu5VV+8g8lJtvaSdcsflpmf5dh3ZmCSJc2tDORfzU+nuRQ2keVY91Q==
-
 react-native-patina@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.4.tgz#9ff58e2b2b78dc126529e621f8992a1021659919"
   integrity sha512-6pV3wSC2+q5mbejKDrmSpJweuFCfFkzwSpB6mwlrZpuci0T/9mP80+P3YvtMtg/PFXdBCDu8o93SdxFWDS2u4A==
+
+react-native-patina@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.6.tgz#eb60194a4e4e427a51391b92a2acebb557f3f3ca"
+  integrity sha512-3mtDnDRbkTx3mtS9BsaYgFy5C+RuSTTHLu5VV+8g8lJtvaSdcsflpmf5dh3ZmCSJc2tDORfzU+nuRQ2keVY91Q==
 
 react-native-permissions@^3.0.0, react-native-permissions@^3.0.1:
   version "3.0.2"
