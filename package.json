@@ -35,7 +35,7 @@
     "lint": "eslint .",
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "precommit": "npm run localize && lint-staged && flow && npm test",
-    "prepare": "./scripts/prepare.sh",
+    "prepare": "husky install && ./scripts/prepare.sh",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
     "prepare.dev": "EDGE_MODE=development ./scripts/prepare.sh",
     "server": "node ./loggingServer.js",
@@ -47,11 +47,6 @@
     "test:e2e:build": "detox build",
     "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint"
@@ -191,7 +186,7 @@
     "eslint-plugin-simple-import-sort": "^6.0.1",
     "express": "^4.16.2",
     "flow-bin": "^0.84.0",
-    "husky": "^4.3.0",
+    "husky": "^7.0.0",
     "jest": "^26.6.3",
     "jest-junit": "^12.1.0",
     "jetifier": "^1.6.5",
