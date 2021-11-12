@@ -1,9 +1,8 @@
 // @flow
 
-import { type Disklet } from 'disklet'
-import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
+import { type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Pressable, ScrollView, TouchableHighlight, View } from 'react-native'
+import { Pressable, ScrollView, TouchableHighlight, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -13,113 +12,62 @@ import { deleteLocalAccount } from '../../actions/AccountActions.js'
 import { logoutRequest } from '../../actions/LoginActions.js'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings'
-import { useEffect, useRef, useState } from '../../types/reactHooks'
+import { useEffect, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { showError } from '../services/AirshipInstance.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 
 type Props = {
-  onToggle?: (value: boolean) => void
+  onPress: () => void,
+  isOpen: boolean
 }
 
-export function AccountList({ onToggle }: Props) {
-  const { activeUsername, context, disklet } = useSelector(state => {
-    const activeUsername = state.core.account.username
-    const context = state.core.context
-    const disklet = state.core.disklet
-    return { activeUsername, context, disklet }
-  })
+export function AccountList(props: Props) {
+  const { isOpen, onPress } = props
+  const activeUsername = useSelector(state => state.core.account.username)
+  const context = useSelector(state => state.core.context)
   const dispatch = useDispatch()
-  const duration = 300
+  const duration = 250
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [localUsers, setLocalUsers] = useState<EdgeUserInfo[]>([])
-  const [mostRecentUsernames, setMostRecentUsernames] = useState<string[]>([])
-  const [usersSubscription, setUsersSubscription] = useState<void | (() => mixed)>(() => {})
 
-  // Grab all usernames that aren't logged in:
-  const inactiveUsernames = localUsers.map(({ username }: EdgeUserInfo) => username).filter(name => name !== activeUsername)
+  // Maintain the list of usernames:
+  const [usernames, setUsernames] = useState(arrangeUsers(context.localUsers, activeUsername))
+  useEffect(() => context.watch('localUsers', localUsers => setUsernames(arrangeUsers(localUsers, activeUsername))), [activeUsername, context])
 
-  // Move recent usernames to their own list:
-  const recentUsernames = []
-  for (const username of mostRecentUsernames) {
-    const index = inactiveUsernames.indexOf(username)
-    if (index < 0) continue // Skip deleted & logged-in users
-    inactiveUsernames.splice(index, 1)
-    recentUsernames.push(username)
+  const handleDelete = (username: string) => {
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.delete_account_header}
+        message={sprintf(s.strings.delete_username_account, username)}
+        buttons={{
+          ok: {
+            label: s.strings.string_delete,
+            async onPress() {
+              await dispatch(deleteLocalAccount(username))
+              height.value -= styles.row.height
+              return true
+            }
+          },
+          cancel: { label: s.strings.string_cancel }
+        }}
+      />
+    ))
   }
 
-  useEffect(() => {
-    console.warn('UE Users changed: ', localUsers)
-    setLocalUsers(localUsers)
-  }, [localUsers])
-
-  const contextRef = useRef<EdgeContext>(context)
-  useEffect(() => {
-    const handleUserChange = localUsers => {
-      console.warn('Users changed: ', localUsers)
-      setLocalUsers(localUsers)
-    }
-
-    setUsersSubscription(contextRef.current?.watch('localUsers', handleUserChange))
-
-    getRecentLoginUsernames(disklet)
-      .then(mostRecentUsernames => setMostRecentUsernames(mostRecentUsernames))
-      .catch(showError)
-
-    setLocalUsers(contextRef.current?.localUsers)
-
-    return () => {
-      if (usersSubscription) usersSubscription()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const onSwitchAccount = (username: string) => {
+  const handleSwitchAccount = (username: string) => {
     dispatch(logoutRequest(username))
   }
 
-  const handlePressDeleteLocalAccount = (username: string) =>
-    Alert.alert(s.strings.delete_account_header, sprintf(s.strings.delete_username_account, username), [
-      { text: s.strings.no, style: 'cancel' },
-      { text: s.strings.yes, onPress: () => dispatch(deleteLocalAccount(username)) }
-    ])
-
-  const getRecentLoginUsernames = async (disklet: Disklet): Promise<string[]> => {
-    const lastUsers = await disklet
-      .getText('lastusers.json')
-      .then(text => JSON.parse(text))
-      .catch(_ => [])
-    return lastUsers.slice(0, 4)
-  }
-
-  const sortUsernames = (inactiveUsernames: string[]): string[] => {
-    return inactiveUsernames.sort((a: string, b: string) => {
-      const stringA = a.toUpperCase()
-      const stringB = b.toUpperCase()
-      if (stringA < stringB) {
-        return -1
-      }
-      if (stringA > stringB) {
-        return 1
-      }
-      return 0
-    })
-  }
-
-  const usernames = [...recentUsernames, ...sortUsernames(inactiveUsernames)]
-  const numItems = usernames.length
-  const listHeight = styles.row.height * numItems + theme.rem(1)
-  const height = useSharedValue(0)
-  const [isOpen, setIsOpen] = useState(false)
-  const onPress = () => {
-    // Notify caller of dropdown opening
-    if (onToggle) onToggle(isOpen)
-    height.value = !isOpen ? listHeight : 0
-    setIsOpen(!isOpen)
-  }
+  const listHeight = styles.row.height * usernames.length + theme.rem(1)
+  const height = useSharedValue(isOpen ? listHeight : 0)
+  useEffect(() => {
+    height.value = isOpen ? listHeight : 0
+  }, [height, isOpen, listHeight])
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -148,16 +96,11 @@ export function AccountList({ onToggle }: Props) {
         <ScrollView style={styles.container}>
           {usernames.map((username: string) => (
             <View key={username} style={styles.row}>
-              <TouchableHighlight
-                style={styles.textContainer}
-                onPress={() => {
-                  onSwitchAccount(username)
-                }}
-              >
+              <TouchableHighlight style={styles.textContainer} onPress={() => handleSwitchAccount(username)}>
                 <EdgeText style={styles.text}>{username}</EdgeText>
               </TouchableHighlight>
-              <TouchableHighlight onPress={() => handlePressDeleteLocalAccount(username)}>
-                <View /* Hack, do not remove */>
+              <TouchableHighlight onPress={() => handleDelete(username)}>
+                <View>
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.mainMenuIcon} />
                 </View>
               </TouchableHighlight>
@@ -169,12 +112,35 @@ export function AccountList({ onToggle }: Props) {
   )
 }
 
+/**
+ * Given a list of users from the core,
+ * remove the given user, then organize the 3 most recent users,
+ * followed by the rest in alphabetical order.
+ */
+function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): string[] {
+  // Sort the users according to their last login date:
+  const usernames = localUsers
+    .filter(info => info.username !== activeUsername)
+    .sort((a, b) => {
+      const { lastLogin: aDate = new Date(0) } = a
+      const { lastLogin: bDate = new Date(0) } = b
+      return aDate.valueOf() - bDate.valueOf()
+    })
+    .map(info => info.username)
+
+  // Sort everything after the last 3 entries alphabetically:
+  const oldUsernames = usernames.slice(3).sort((a: string, b: string) => {
+    const stringA = a.toUpperCase()
+    const stringB = b.toUpperCase()
+    if (stringA < stringB) return -1
+    if (stringA > stringB) return 1
+    return 0
+  })
+
+  return [...usernames.slice(0, 3), ...oldUsernames]
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
-  hide: {
-    opacity: 0,
-    position: 'absolute',
-    zIndex: -1
-  },
   root: {
     overflow: 'hidden'
   },

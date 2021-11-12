@@ -6,7 +6,7 @@ import { View } from 'react-native'
 import { logoutRequest } from '../../actions/LoginActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { type RootState } from '../../reducers/RootReducer.js'
-import { useState } from '../../types/reactHooks'
+import { useEffect, useState } from '../../types/reactHooks'
 import { reduxShallowEqual, useDispatch, useSelector } from '../../types/reactRedux'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
@@ -36,6 +36,10 @@ export default function ControlPanel({
 }: Props) {
   const [isViewUserList, setIsViewUserList] = useState(false)
 
+  useEffect(() => {
+    if (!isDrawerOpen) setIsViewUserList(false)
+  }, [isDrawerOpen])
+
   const dispatch = useDispatch()
 
   const theme = useTheme()
@@ -54,9 +58,9 @@ export default function ControlPanel({
         <View style={styles.header}>
           <PanelLogo />
           <PanelCurrency />
-          <AccountList onToggle={setIsViewUserList} />
+          <AccountList onPress={() => setIsViewUserList(!isViewUserList)} isOpen={isViewUserList} />
         </View>
-        <Fade visible={!isViewUserList} fadeInOpacity={0.8} style={styles.disable} noFadeIn />
+        <Fade visible={isViewUserList} fadeInOpacity={0.8} style={styles.disable} />
         <PanelList onSelectWallet={onSelectWallet} onLogout={onLogout} />
         <DividerLine marginRem={[1, -2, 2, 0]} />
       </View>
