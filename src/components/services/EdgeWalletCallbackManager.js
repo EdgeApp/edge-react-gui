@@ -101,8 +101,9 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
     })
 
     wallet.on('wcNewContractCall', obj => {
-      const { dApp, payload, uri } = obj
-      Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={this.props.id} dApp={dApp} payload={payload} uri={uri} />)
+      const { dApp, payload, uri, walletId } = obj
+      if (walletId == null) return
+      Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={walletId} dApp={dApp} payload={payload} uri={uri} />)
     })
   }
 }

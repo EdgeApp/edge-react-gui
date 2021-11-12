@@ -10,7 +10,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -34,6 +34,7 @@ type Props = {
 export const WcConnectScene = (props: Props) => {
   const { navigation } = props
   const [selectedWallet, setSelectedWallet] = useState({ walletId: '', currencyCode: '' })
+  const connected = useRef(false)
   const theme = useTheme()
   const styles = getStyles(theme)
   const { wcQRUri } = props.route.params
@@ -59,7 +60,8 @@ export const WcConnectScene = (props: Props) => {
 
   const handleConnect = async () => {
     try {
-      await wallet.otherMethods.wcConnect({ uri: wcQRUri })
+      await wallet.otherMethods.wcConnect(wcQRUri, walletAddress, wallet.id)
+      connected.current = true
       Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections')
     } catch (error) {
@@ -91,7 +93,9 @@ export const WcConnectScene = (props: Props) => {
         if (walletId && currencyCode) {
           dispatch(selectWalletFromModal(walletId, currencyCode))
           setSelectedWallet({ walletId, currencyCode })
-          handleRequestDapp(walletId)
+          if (dappDetails.subTitleText === '') {
+            handleRequestDapp(walletId)
+          }
         }
       }
     )
@@ -103,6 +107,13 @@ export const WcConnectScene = (props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWallet.walletId, selectedWallet.currencyCode])
+
+  useEffect(() => {
+    return () => {
+      if (!connected.current && wallet?.otherMethods?.wcDisconnect != null) wallet.otherMethods.wcDisconnect(wcQRUri)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
