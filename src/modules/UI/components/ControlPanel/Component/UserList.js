@@ -32,7 +32,7 @@ type State = {
 }
 
 class UserListComponent extends React.Component<Props, State> {
-  cleanups: Array<() => mixed> = []
+  unsubscibeUsers: void | (() => mixed)
 
   constructor(props: Props) {
     super(props)
@@ -44,7 +44,11 @@ class UserListComponent extends React.Component<Props, State> {
 
   componentDidMount() {
     const { context } = this.props
-    this.cleanups.push(context.watch('localUsers', localUsers => this.setState({ localUsers })))
+    const handleUserChange = localUsers => {
+      this.setState({ localUsers })
+    }
+
+    this.unsubscibeUsers = context.watch('localUsers', handleUserChange)
 
     this.getRecentLoginUsernames()
       .then(mostRecentUsernames =>
@@ -56,7 +60,7 @@ class UserListComponent extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.cleanups.forEach(cleanup => cleanup())
+    if (this.unsubscibeUsers) this.unsubscibeUsers()
   }
 
   render() {
@@ -77,7 +81,22 @@ class UserListComponent extends React.Component<Props, State> {
 
     const usernames = [...recentUsernames, ...this.sortUsernames(coreUsernames)]
 
-    return <Alert title="test" message="test" />
+    return (
+      <ScrollView style={styles.userList.container}>
+        {usernames.map((username: string) => (
+          <View key={username} style={styles.userList.row}>
+            <TouchableHighlight style={styles.userList.textContainer} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
+              <T style={styles.userList.text}>{username}</T>
+            </TouchableHighlight>
+            <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
+              <View /* Hack, do not remove */>
+                <MaterialIcon size={20} name="close" />
+              </View>
+            </TouchableHighlight>
+          </View>
+        ))}
+      </ScrollView>
+    )
   }
 
   handlePressUserSelect = (username: string) => () => {

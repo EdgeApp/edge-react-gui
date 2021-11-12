@@ -20,7 +20,7 @@ export type Props = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
-export default function PanelList(props: Props) {
+export function PanelList(props: Props) {
   const { onSelectWallet, onLogout } = props
 
   const onSweep = () => {

@@ -10,10 +10,12 @@ import { useState } from '../../types/reactHooks'
 import { reduxShallowEqual, useDispatch, useSelector } from '../../types/reactRedux'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
-import { PanelCurrency, PanelList, PanelLogo } from '../themed/ControlPanel'
+import { AccountList } from '../themed/AccountList'
+import { PanelCurrency } from '../themed/ControlPanel/PanelCurrency.js'
+import { PanelList } from '../themed/ControlPanel/PanelList.js'
+import { PanelLogo } from '../themed/ControlPanel/PanelLogo.js'
+import { DividerLine } from '../themed/DividerLine'
 import { Fade } from '../themed/Fade'
-import Separator from '../themed/Separator'
-import { AccountSwitcher } from './AccountSwitcher'
 
 export type StateProps = {
   selectedCurrencyCode: string,
@@ -52,11 +54,11 @@ export default function ControlPanel({
         <View style={styles.header}>
           <PanelLogo />
           <PanelCurrency />
-          <AccountSwitcher onSwitch={setIsViewUserList} forceClose={!isDrawerOpen} />
+          <AccountList onToggle={setIsViewUserList} />
         </View>
-        <Fade visible={isViewUserList} fadeInOpacity={0.8} />
+        <Fade visible={!isViewUserList} fadeInOpacity={0.8} style={styles.disable} noFadeIn />
         <PanelList onSelectWallet={onSelectWallet} onLogout={onLogout} />
-        <Separator style={styles.separator} />
+        <DividerLine marginRem={[1, -2, 2, 0]} />
       </View>
     </SceneWrapper>
   )
@@ -73,11 +75,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderBottomLeftRadius: theme.rem(2),
     borderTopLeftRadius: theme.rem(2)
   },
-  separator: {
-    marginBottom: theme.rem(2),
-    marginTop: theme.rem(1),
-    marginRight: theme.rem(-2)
-  },
   header: {
     borderBottomRightRadius: theme.rem(2),
     borderBottomLeftRadius: theme.rem(2),
@@ -93,7 +90,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   disable: {
     backgroundColor: theme.fadeDisable,
     position: 'absolute',
-    zIndex: 1,
     top: 0,
     left: 0,
     right: 0,

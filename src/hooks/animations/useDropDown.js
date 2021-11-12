@@ -6,7 +6,7 @@ import { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useState } from '../../types/reactHooks'
 import { useIsEffectRender } from './useIsEffectRender'
 
-export const useDropDown = (isOpen: boolean, durantionDown: number = 200, durantionOpacity: number = 200) => {
+export const useDropDown = (isOpen: boolean, durantionDown: number = 200) => {
   const [listHeight, setListHeight] = useState(-1)
   const [isShadowRender, setIsShadowRender] = useState(true)
 
@@ -26,15 +26,10 @@ export const useDropDown = (isOpen: boolean, durantionDown: number = 200, durant
 
   const animatedStyle = useAnimatedStyle(() => {
     const heightValue = isOpen ? listHeight : 0
-    const opacityValue = isOpen ? 1 : 0
 
     return {
       height: withTiming(heightValue, {
         duration: durantionDown,
-        easing: Easing.linear
-      }),
-      opacity: withTiming(opacityValue, {
-        duration: durantionOpacity,
         easing: Easing.linear
       })
     }
