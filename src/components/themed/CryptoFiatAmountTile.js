@@ -13,7 +13,7 @@ import { FiatText } from './FiatText'
 import { Tile } from './Tile.js'
 
 type Props = {
-  cryptoAmount: string,
+  nativeCryptoAmount: string,
   cryptoCurrencyCode: string,
   isoFiatCurrencyCode: string,
   maxCryptoChars?: number,
@@ -21,7 +21,7 @@ type Props = {
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { title, cryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, maxCryptoChars } = props
+  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, maxCryptoChars } = props
   const styles = getStyles(useTheme())
 
   const { cryptoName, cryptoMultiplier } = useSelector(state => {
@@ -29,13 +29,13 @@ export const CryptoFiatAmountTile = (props: Props) => {
     return { cryptoName: name, cryptoMultiplier: multiplier }
   })
   // Default to 10 displayed chars for crypto amount
-  const cryptoAmountDenom = bns.div(cryptoAmount, cryptoMultiplier, DECIMAL_PRECISION)
+  const cryptoAmountDenom = bns.div(nativeCryptoAmount, cryptoMultiplier, DECIMAL_PRECISION)
   const fmtCryptoAmount = formatNumber(cryptoAmountDenom, { toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars })
   const cryptoAmountText = `${fmtCryptoAmount} ${cryptoName} `
   // Fiat amount is always positive for this specific tile
-  const absCryptoAmount = bns.abs(cryptoAmount)
+  const absCryptoAmount = bns.abs(nativeCryptoAmount)
   const fiatAmount = (
-    <FiatText cryptoAmount={absCryptoAmount} cryptoCurrencyCode={cryptoCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} parenthesisEnclosed />
+    <FiatText nativeCryptoAmount={absCryptoAmount} cryptoCurrencyCode={cryptoCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} parenthesisEnclosed />
   )
 
   return (

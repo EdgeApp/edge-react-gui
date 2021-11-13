@@ -156,7 +156,7 @@ export const WcSmartContractModal = (props: Props) => {
         {!zeroString(amountCrypto) && (
           <CryptoFiatAmountTile
             title={s.strings.string_amount}
-            cryptoAmount={amountCrypto}
+            nativeCryptoAmount={amountCrypto}
             cryptoCurrencyCode={amountCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
@@ -172,7 +172,7 @@ export const WcSmartContractModal = (props: Props) => {
         {!zeroString(networkFeeCrypto) && (
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
-            cryptoAmount={networkFeeCrypto}
+            nativeCryptoAmount={networkFeeCrypto}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
@@ -180,7 +180,7 @@ export const WcSmartContractModal = (props: Props) => {
         {!zeroString(totalNativeCrypto) && (
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
-            cryptoAmount={totalNativeCrypto}
+            nativeCryptoAmount={totalNativeCrypto}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
