@@ -44,50 +44,27 @@ export const WcSmartContractModal = (props: Props) => {
   const params = payload.params[0]
   const toAddress: string | null = params.to
 
-  const {
-    amountNativeToExchangeRatio,
-    amountCurrencyCode,
-    feeNativeToExchangeRatio,
-    feeCurrencyCode,
-    feeCurrencyStr,
-    feeCurrencyBalance,
-    isoFiatCurrencyCode,
-    walletName,
-    wallet
-  } = useSelector(state => {
-    const { currencyWallets } = state.core.account
-    const wallet = currencyWallets[walletId]
-    const walletName = wallet.name
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
+  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
+  const amountNativeToExchangeRatio = useSelector(state => getExchangeDenomination(state, amountCurrencyCode).multiplier)
+  const feeNativeToExchangeRatio = useSelector(state => getExchangeDenomination(state, feeCurrencyCode).multiplier)
 
-    let amountCurrencyCode = wallet.currencyInfo.currencyCode
-    if (toAddress != null) {
-      const metaTokens = wallet.currencyInfo.metaTokens
-      const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
-      if (token != null) amountCurrencyCode = token.currencyCode
-    }
-    const feeCurrencyCode = wallet.currencyInfo.currencyCode
+  const wallet = currencyWallets[walletId]
+  if (wallet == null) return null
+  const walletName = wallet.name
 
-    const guiWallet = state.ui.wallets.byId[walletId]
-    const { isoFiatCurrencyCode } = guiWallet
+  let amountCurrencyCode = wallet.currencyInfo.currencyCode
+  if (toAddress != null) {
+    const metaTokens = wallet.currencyInfo.metaTokens
+    const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
+    if (token != null) amountCurrencyCode = token.currencyCode
+  }
+  const feeCurrencyCode = wallet.currencyInfo.currencyCode
 
-    const amountNativeToExchangeRatio = getExchangeDenomination(state, amountCurrencyCode).multiplier
-    const feeNativeToExchangeRatio = getExchangeDenomination(state, feeCurrencyCode).multiplier
+  const { isoFiatCurrencyCode } = guiWallet
 
-    const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
-    const feeCurrencyBalance = guiWallet.primaryNativeBalance
-
-    return {
-      amountNativeToExchangeRatio,
-      amountCurrencyCode,
-      feeNativeToExchangeRatio,
-      feeCurrencyCode,
-      feeCurrencyStr,
-      feeCurrencyBalance,
-      isoFiatCurrencyCode,
-      walletName,
-      wallet
-    }
-  })
+  const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
+  const feeCurrencyBalance = guiWallet.primaryNativeBalance
 
   let amountCrypto = '0'
   let networkFeeCrypto = '0'
