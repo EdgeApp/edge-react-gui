@@ -19,12 +19,12 @@ export const SwitcherHeader = (props: Props) => {
   return (
     <View style={styles.header}>
       <View style={styles.iconUser}>
-        <Fontello name="edge.logo" size={theme.rem(1.5)} color={theme.mainMenuIcon} />
+        <Fontello name="edge.logo" size={theme.rem(1.5)} color={theme.controlPanelIcon} />
       </View>
       <View style={styles.textContainer}>
         <EdgeText style={styles.text}>{props.username}</EdgeText>
       </View>
-      <Feather name="chevron-down" color={theme.mainMenuIcon} size={theme.rem(1.5)} />
+      <Feather name="chevron-down" color={theme.controlPanelIcon} size={theme.rem(1.5)} />
     </View>
   )
 }

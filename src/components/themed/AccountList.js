@@ -23,7 +23,7 @@ import { EdgeText } from '../themed/EdgeText'
 type Props = {
   onPress: () => void,
   isOpen: boolean,
-  duration: number
+  duration?: number
 }
 
 export function AccountList(props: Props) {
@@ -73,7 +73,7 @@ export function AccountList(props: Props) {
     return {
       height: withTiming(height.value, {
         duration: duration,
-        easing: Easing.out(Easing.exp)
+        easing: Easing.inOut(Easing.exp)
       })
     }
   })
@@ -82,9 +82,13 @@ export function AccountList(props: Props) {
     <View>
       <Pressable onPress={onPress}>
         <View style={styles.header}>
-          <Fontello name="edge.logo" style={styles.iconUser} size={theme.rem(1.5)} color={theme.mainMenuIcon} />
+          <Fontello name="edge.logo" style={styles.iconUser} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
           <EdgeText style={styles.text}>{activeUsername}</EdgeText>
-          <Feather name="chevron-down" color={theme.mainMenuIcon} size={theme.rem(1.5)} />
+          {isOpen ? (
+            <Feather name="chevron-up" color={theme.controlPanelIcon} size={theme.rem(1.5)} />
+          ) : (
+            <Feather name="chevron-down" color={theme.controlPanelIcon} size={theme.rem(1.5)} />
+          )}
         </View>
       </Pressable>
       <DividerLine marginRem={[1, -2, 0, 0]} />
@@ -97,7 +101,7 @@ export function AccountList(props: Props) {
               </TouchableHighlight>
               <TouchableHighlight onPress={() => handleDelete(username)}>
                 <View>
-                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.mainMenuIcon} />
+                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.controlPanelIcon} />
                 </View>
               </TouchableHighlight>
             </View>
@@ -137,6 +141,9 @@ function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): strin
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  root: {
+    overflow: 'scroll'
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',

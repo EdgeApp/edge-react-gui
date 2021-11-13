@@ -20,7 +20,7 @@ export type Theme = {
   iconLoadingOverlay: string,
   transactionListIconBackground: string,
   buySellCustomPluginModalIcon: string,
-  mainMenuIcon: string,
+  controlPanelIcon: string,
 
   // Background
   backgroundGradientLeft: string,

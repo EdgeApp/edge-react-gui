@@ -41,7 +41,7 @@ function PanelRow(props: Props) {
     <TouchableOpacity onPress={onPressHandler}>
       <View style={styles.row}>
         <View style={styles.iconContainer}>
-          <Fontello name={iconName} size={theme.rem(1.5)} color={theme.mainMenuIcon} />
+          <Fontello name={iconName} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
         </View>
         <View>
           <EdgeText style={styles.text}>{title}</EdgeText>
