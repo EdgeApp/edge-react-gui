@@ -22,15 +22,15 @@ import { EdgeText } from '../themed/EdgeText'
 
 type Props = {
   onPress: () => void,
-  isOpen: boolean
+  isOpen: boolean,
+  duration: number
 }
 
 export function AccountList(props: Props) {
-  const { isOpen, onPress } = props
+  const { isOpen, onPress, duration = 500 } = props
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const dispatch = useDispatch()
-  const duration = 250
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -73,7 +73,7 @@ export function AccountList(props: Props) {
     return {
       height: withTiming(height.value, {
         duration: duration,
-        easing: Easing.linear
+        easing: Easing.out(Easing.exp)
       })
     }
   })
@@ -82,21 +82,17 @@ export function AccountList(props: Props) {
     <View>
       <Pressable onPress={onPress}>
         <View style={styles.header}>
-          <View style={styles.iconUser}>
-            <Fontello name="edge.logo" size={theme.rem(1.5)} color={theme.mainMenuIcon} />
-          </View>
-          <View style={styles.textContainer}>
-            <EdgeText style={styles.text}>{activeUsername}</EdgeText>
-          </View>
+          <Fontello name="edge.logo" style={styles.iconUser} size={theme.rem(1.5)} color={theme.mainMenuIcon} />
+          <EdgeText style={styles.text}>{activeUsername}</EdgeText>
           <Feather name="chevron-down" color={theme.mainMenuIcon} size={theme.rem(1.5)} />
         </View>
       </Pressable>
       <DividerLine marginRem={[1, -2, 0, 0]} />
       <Animated.View style={[styles.root, animatedStyle]}>
-        <ScrollView style={styles.container}>
+        <ScrollView>
           {usernames.map((username: string) => (
             <View key={username} style={styles.row}>
-              <TouchableHighlight style={styles.textContainer} onPress={() => handleSwitchAccount(username)}>
+              <TouchableHighlight onPress={() => handleSwitchAccount(username)}>
                 <EdgeText style={styles.text}>{username}</EdgeText>
               </TouchableHighlight>
               <TouchableHighlight onPress={() => handleDelete(username)}>
@@ -141,35 +137,16 @@ function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): strin
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  root: {
-    overflow: 'hidden'
-  },
-  container: {
-    alignSelf: 'stretch'
-  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     height: theme.rem(2.5),
-    paddingLeft: theme.rem(2)
-  },
-  textContainer: {
-    marginRight: 'auto'
+    marginLeft: theme.rem(2)
   },
   text: {
+    marginRight: 'auto',
     fontFamily: theme.fontFaceBold
-  },
-  separator: {
-    marginBottom: theme.rem(1),
-    marginTop: theme.rem(1.2),
-    marginRight: theme.rem(-2)
-  },
-  list: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingBottom: theme.rem(1),
-    width: '100%'
   },
   header: {
     display: 'flex',
