@@ -1,5 +1,6 @@
 // @flow
 
+import { BlurView } from '@react-native-community/blur'
 import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
@@ -22,6 +23,9 @@ import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { getBackgroundImage } from './../../util/ThemeCache.js'
 import { LoadingScene } from './LoadingScene.js'
+
+// Sneak the BlurView over to the login UI:
+global.ReactNativeBlurView = BlurView
 
 type StateProps = {
   account: EdgeAccount,

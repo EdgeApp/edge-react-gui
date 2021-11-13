@@ -1,5 +1,23 @@
+diff --git a/node_modules/@react-native-community/blur/android/build.gradle b/node_modules/@react-native-community/blur/android/build.gradle
+index 8177235..45a9534 100644
+--- a/node_modules/@react-native-community/blur/android/build.gradle
++++ b/node_modules/@react-native-community/blur/android/build.gradle
+@@ -38,10 +38,12 @@ android {
+ repositories {
+     google()
+     jcenter()
++    maven { url 'https://jitpack.io' }
+ }
+ 
+ dependencies {
+     //noinspection GradleDynamicVersion
+     implementation 'com.facebook.react:react-native:+'
+-    implementation 'com.eightbitlab:blurview:1.6.3'
++    implementation 'com.eightbitlab:blurview:1.6.6'
++    implementation 'com.github.android:renderscript-intrinsics-replacement-toolkit:b6363490c3'
+ }
 diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
-index b583b02..c2e6106 100644
+index b583b02..fa319d1 100644
 --- a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
 +++ b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
 @@ -1,5 +1,6 @@
@@ -9,7 +27,15 @@ index b583b02..c2e6106 100644
  import android.graphics.drawable.Drawable;
  import android.view.View;
  import android.view.ViewGroup;
-@@ -32,14 +33,17 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
+@@ -14,7 +15,6 @@ import java.util.Objects;
+ import javax.annotation.Nonnull;
+ 
+ import eightbitlab.com.blurview.BlurView;
+-import eightbitlab.com.blurview.RenderScriptBlur;
+ 
+ 
+ @SuppressWarnings("unused")
+@@ -32,14 +32,17 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
      @Override
      public @Nonnull BlurView createViewInstance(@Nonnull ThemedReactContext ctx) {
          BlurView blurView = new BlurView(ctx);
@@ -28,10 +54,83 @@ index b583b02..c2e6106 100644
 +            Drawable windowBackground = decorView.getBackground();
 +            blurView.setupWith(rootView)
 +                .setFrameClearDrawable(windowBackground)
-+                .setBlurAlgorithm(new RenderScriptBlur(ctx))
++                .setBlurAlgorithm(new SimdBlur())
 +                .setBlurRadius(defaultRadius)
 +                .setHasFixedTransformationMatrix(false);
 +        }
          return blurView;
      }
  
+diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/SimdBlur.java b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/SimdBlur.java
+new file mode 100644
+index 0000000..1d15b8d
+--- /dev/null
++++ b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/SimdBlur.java
+@@ -0,0 +1,32 @@
++package com.cmcewen.blurview;
++
++import android.graphics.Bitmap;
++import androidx.annotation.NonNull;
++import com.google.android.renderscript.Toolkit;
++import eightbitlab.com.blurview.BlurAlgorithm;
++
++public final class SimdBlur implements BlurAlgorithm {
++  /**
++   * @param bitmap bitmap to blur
++   * @param blurRadius blur radius (1..25)
++   * @return blurred bitmap
++   */
++  @Override
++  public final Bitmap blur(Bitmap bitmap, float blurRadius) {
++    return Toolkit.INSTANCE.blur(bitmap, (int) blurRadius);
++  }
++
++  @Override
++  public boolean canModifyBitmap() {
++    return true;
++  }
++
++  @Override
++  public final void destroy() {}
++
++  @NonNull
++  @Override
++  public Bitmap.Config getSupportedBitmapConfig() {
++    return Bitmap.Config.ARGB_8888;
++  }
++}
+diff --git a/node_modules/@react-native-community/blur/src/BlurView.android.js b/node_modules/@react-native-community/blur/src/BlurView.android.js
+index a192476..3a9c5b3 100644
+--- a/node_modules/@react-native-community/blur/src/BlurView.android.js
++++ b/node_modules/@react-native-community/blur/src/BlurView.android.js
+@@ -5,6 +5,7 @@ import {
+   requireNativeComponent,
+   DeviceEventEmitter,
+   ViewPropTypes,
++  Platform,
+   StyleSheet,
+ } from 'react-native';
+ 
+@@ -65,6 +66,14 @@ class BlurView extends Component {
+   render() {
+     const { style } = this.props;
+ 
++    if (Platform.Version <= 27) {
++      return (
++        <View pointerEvents="none" style={StyleSheet.compose(styles.dim, style)}>
++          {this.props.children}
++        </View>
++      )
++    }
++
+     return (
+       <NativeBlurView
+         blurRadius={this.blurRadius()}
+@@ -81,6 +90,7 @@ class BlurView extends Component {
+ 
+ const styles = StyleSheet.create({
+   transparent: { backgroundColor: 'transparent' },
++  dim: { backgroundColor: 'rgba(0, 0, 0, 0.75)' }
+ });
+ 
+ BlurView.propTypes = {

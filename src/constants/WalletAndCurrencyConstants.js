@@ -8,7 +8,7 @@ export const MAX_TOKEN_CODE_CHARACTERS = 7
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
 export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 
-export const MAX_ADDRESS_CHARACTERS = 16 // for displaying a truncated wallet address
+export const MAX_ADDRESS_CHARACTERS = 17 // for displaying a truncated wallet address
 export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fractional characters
 export const FIAT_PRECISION = 2
 

@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 2.5.1 (2021-11-10)
+
+- Fix missing metadata on accelerated transactions
+- WalletConnect: Fix select wallet tile spacing
+- WalletConnect: Fix connection list showing unapproved connections
+- Android: Fix crashing on older devices
+
 ## 2.5.0 (2021-11-07)
 
 - Add WalletConnect
