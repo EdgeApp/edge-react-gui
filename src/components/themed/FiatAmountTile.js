@@ -7,7 +7,7 @@ import { FiatText } from './FiatText'
 import { Tile } from './Tile.js'
 
 type Props = {
-  cryptoAmount: string | number,
+  cryptoAmount: string,
   cryptoCurrencyCode: string,
   isoFiatCurrencyCode: string,
   title: string

@@ -1,11 +1,14 @@
 // @flow
+import { bns } from 'biggystring'
+
+import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { displayFiatAmount, getFiatSymbol } from '../../util/utils.js'
+import { DECIMAL_PRECISION, displayFiatAmount, getFiatSymbol } from '../../util/utils.js'
 
 type Props = {
   appendFiatCurrencyCode?: boolean,
-  cryptoAmount: string | number,
+  cryptoAmount: string,
   cryptoCurrencyCode: string,
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode: string,
@@ -16,7 +19,8 @@ export const FiatText = (props: Props) => {
   const { appendFiatCurrencyCode, fiatSymbolSpace, isoFiatCurrencyCode, parenthesisEnclosed } = props
   const fiatAmountStr = useSelector(state => {
     const { cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount } = props
-    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, String(cryptoAmount))
+    const cryptoMultiplier = getExchangeDenomination(state, cryptoCurrencyCode).multiplier
+    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, bns.div(cryptoAmount, cryptoMultiplier, DECIMAL_PRECISION))
   })
 
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
