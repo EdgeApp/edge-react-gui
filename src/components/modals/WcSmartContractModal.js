@@ -11,9 +11,9 @@ import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { DECIMAL_PRECISION, hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
+import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import Alert from '../themed/Alert'
@@ -44,56 +44,27 @@ export const WcSmartContractModal = (props: Props) => {
   const params = payload.params[0]
   const toAddress: string | null = params.to
 
-  const {
-    amountNativeToExchangeRatio,
-    amountMultiplier,
-    amountCurrencyCode,
-    feeNativeToExchangeRatio,
-    feeMultiplier,
-    feeCurrencyCode,
-    feeCurrencyStr,
-    feeCurrencyBalance,
-    isoFiatCurrencyCode,
-    walletName,
-    wallet
-  } = useSelector(state => {
-    const { currencyWallets } = state.core.account
-    const wallet = currencyWallets[walletId]
-    const walletName = wallet.name
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
+  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
+  const amountNativeToExchangeRatio = useSelector(state => getExchangeDenomination(state, amountCurrencyCode).multiplier)
+  const feeNativeToExchangeRatio = useSelector(state => getExchangeDenomination(state, feeCurrencyCode).multiplier)
 
-    let amountCurrencyCode = wallet.currencyInfo.currencyCode
-    if (toAddress != null) {
-      const metaTokens = wallet.currencyInfo.metaTokens
-      const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
-      if (token != null) amountCurrencyCode = token.currencyCode
-    }
-    const feeCurrencyCode = wallet.currencyInfo.currencyCode
+  const wallet = currencyWallets[walletId]
+  if (wallet == null) return null
+  const walletName = wallet.name
 
-    const guiWallet = state.ui.wallets.byId[walletId]
-    const { isoFiatCurrencyCode } = guiWallet
+  let amountCurrencyCode = wallet.currencyInfo.currencyCode
+  if (toAddress != null) {
+    const metaTokens = wallet.currencyInfo.metaTokens
+    const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
+    if (token != null) amountCurrencyCode = token.currencyCode
+  }
+  const feeCurrencyCode = wallet.currencyInfo.currencyCode
 
-    const amountNativeToExchangeRatio = getExchangeDenomination(state, amountCurrencyCode).multiplier
-    const feeNativeToExchangeRatio = getExchangeDenomination(state, feeCurrencyCode).multiplier
-    const amountMultiplier = getDisplayDenomination(state, amountCurrencyCode).multiplier
-    const feeMultiplier = getDisplayDenomination(state, feeCurrencyCode).multiplier
+  const { isoFiatCurrencyCode } = guiWallet
 
-    const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
-    const feeCurrencyBalance = guiWallet.primaryNativeBalance
-
-    return {
-      amountNativeToExchangeRatio,
-      amountMultiplier,
-      amountCurrencyCode,
-      feeNativeToExchangeRatio,
-      feeMultiplier,
-      feeCurrencyCode,
-      feeCurrencyStr,
-      feeCurrencyBalance,
-      isoFiatCurrencyCode,
-      walletName,
-      wallet
-    }
-  })
+  const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
+  const feeCurrencyBalance = guiWallet.primaryNativeBalance
 
   let amountCrypto = '0'
   let networkFeeCrypto = '0'
@@ -104,14 +75,10 @@ export const WcSmartContractModal = (props: Props) => {
     networkFeeCrypto = hexToDecimal(removeHexPrefix(bns.mul(params.gas, params.gasPrice, 16)))
   }
 
-  const displayAmount = bns.div(amountCrypto, amountMultiplier, DECIMAL_PRECISION)
-  const displayFee = bns.div(networkFeeCrypto, feeMultiplier, DECIMAL_PRECISION)
-
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
   const amountCurrencyToFeeCurrencyExchangeRate = bns.div(amountNativeToExchangeRatio, feeNativeToExchangeRatio)
   const amountCryptoAsFeeCrypto = bns.mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
   const totalNativeCrypto = bns.mul(bns.add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
-  const totalCrypto = bns.div(totalNativeCrypto, amountMultiplier, DECIMAL_PRECISION)
 
   const isInsufficientBal =
     amountCurrencyCode === feeCurrencyCode ? bns.gt(bns.abs(totalNativeCrypto), feeCurrencyBalance) : bns.gt(networkFeeCrypto, feeCurrencyBalance)
@@ -163,10 +130,10 @@ export const WcSmartContractModal = (props: Props) => {
       </View>
       <ScrollView>
         {renderWarning()}
-        {!zeroString(displayAmount) && (
+        {!zeroString(amountCrypto) && (
           <CryptoFiatAmountTile
             title={s.strings.string_amount}
-            cryptoAmount={displayAmount}
+            nativeCryptoAmount={amountCrypto}
             cryptoCurrencyCode={amountCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
@@ -179,18 +146,18 @@ export const WcSmartContractModal = (props: Props) => {
         <IconTile title={s.strings.wc_smartcontract_dapp} iconUri={icon}>
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>
-        {!zeroString(displayFee) && (
+        {!zeroString(networkFeeCrypto) && (
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
-            cryptoAmount={displayFee}
+            nativeCryptoAmount={networkFeeCrypto}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />
         )}
-        {!zeroString(totalCrypto) && (
+        {!zeroString(totalNativeCrypto) && (
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
-            cryptoAmount={totalCrypto}
+            nativeCryptoAmount={totalNativeCrypto}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
           />

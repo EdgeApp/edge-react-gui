@@ -7,17 +7,17 @@ import { FiatText } from './FiatText'
 import { Tile } from './Tile.js'
 
 type Props = {
-  cryptoAmount: string | number,
+  nativeCryptoAmount: string,
   cryptoCurrencyCode: string,
   isoFiatCurrencyCode: string,
   title: string
 }
 
 export const FiatAmountTile = (props: Props) => {
-  const { title, cryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode } = props
+  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const fiatAmount = <FiatText cryptoAmount={cryptoAmount} cryptoCurrencyCode={cryptoCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} />
+  const fiatAmount = <FiatText nativeCryptoAmount={nativeCryptoAmount} cryptoCurrencyCode={cryptoCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} />
 
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
