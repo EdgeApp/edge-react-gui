@@ -8,7 +8,7 @@ import { DECIMAL_PRECISION, displayFiatAmount, getFiatSymbol } from '../../util/
 
 type Props = {
   appendFiatCurrencyCode?: boolean,
-  cryptoAmount: string,
+  nativeCryptoAmount: string,
   cryptoCurrencyCode: string,
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode: string,
@@ -18,9 +18,9 @@ type Props = {
 export const FiatText = (props: Props) => {
   const { appendFiatCurrencyCode, fiatSymbolSpace, isoFiatCurrencyCode, parenthesisEnclosed } = props
   const fiatAmountStr = useSelector(state => {
-    const { cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount } = props
+    const { cryptoCurrencyCode, isoFiatCurrencyCode, nativeCryptoAmount } = props
     const cryptoMultiplier = getExchangeDenomination(state, cryptoCurrencyCode).multiplier
-    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, bns.div(cryptoAmount, cryptoMultiplier, DECIMAL_PRECISION))
+    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, bns.div(nativeCryptoAmount, cryptoMultiplier, DECIMAL_PRECISION))
   })
 
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
