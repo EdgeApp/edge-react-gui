@@ -24,7 +24,7 @@ node ./scripts/makeNativeHeaders.js
 
 # Create zcash checkpoints
 mkdir -p android/app/build/intermediates/merged_assets/debug/out/saplingtree/mainnet
-node ./node_modules/edge-currency-accountbased/bin/zecCheckpoints.js || true
+cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints android/app/build/intermediates/merged_assets/debug/out/saplingtree/mainnet 2>/dev/null || :
 
 # Build the EdgeProvider shim code:
 node ./node_modules/.bin/rollup -c
