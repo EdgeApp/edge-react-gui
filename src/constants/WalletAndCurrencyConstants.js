@@ -126,7 +126,7 @@ export const WALLET_TYPE_ORDER = [
 ]
 
 // Put these in reverse order of preference
-export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'AGLD', 'RIF']
+export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
