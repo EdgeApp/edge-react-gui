@@ -101,7 +101,6 @@ export type SettingsState = {
   DGB: CurrencySetting,
   WINGS: CurrencySetting,
   HERC: CurrencySetting,
-  AGLD: CurrencySetting,
 
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean, // Never read or updated, but on disk

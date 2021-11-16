@@ -203,9 +203,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BRZ: {
     denomination: '10000'
   },
-  AGLD: {
-    denomination: '1000000000'
-  },
   LINK: {
     denomination: '1000000000000000000'
   },
@@ -439,7 +436,6 @@ export const SYNCED_ACCOUNT_TYPES = {
   REP: 'object',
   REPV2: 'object',
   WINGS: 'object',
-  AGLD: 'object',
   IND: 'object',
   HUR: 'object',
   HERC: 'object',
