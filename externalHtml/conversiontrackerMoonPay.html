@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      const MOONPAY_API_KEY = 'pk_test_RjDe4ptdRrorG24k5P6sSVRRD6ynNn2';
+      const MOONPAY_SECRETE_DEV_API_KEY = 'sk_test_YLvdfcX7zSkr879Q1u6695Bl4teF11';
+      const timerIndex = setTimeout(()=>logStatusMsg('Failed to find EdgeProvider object.'), 10000);
+
+      function logStatusMsg(msg) {
+        document.getElementById("status").innerHTML += `<li>${msg}</li>`;
+        console.log(msg);
+      }
+
+      function isEdge() {
+        return window.navigator.userAgent.indexOf("app.edge") >= 0;
+      }
+
+      function restartPlugin(edgeProvider) {
+        if(edgeProvider.restartPlugin) {
+          edgeProvider.restartPlugin();
+        } else {
+          logStatusMsg(`ERROR: edgeProvider missing restartPlugin`)
+          console.error('ERROR: edgeProvider missing restartPlugin:', edgeProvider)
+        }
+      }
+
+      function getQueryParams() {
+        const regex = /(&amp;)/gi;
+        const searchStr = window.location.search.replace(regex, '&');
+        const urlParams = new URLSearchParams(searchStr);
+        if(urlParams.has('dont_track')) {
+          return {dontTrack: true};
+        } else {
+          let hasAllParams = true;
+          if(!urlParams.has('transactionId')) {
+            logStatusMsg(`ERROR: Missing required query param: transactionId`);
+            hasAllParams = false;
+          }
+          if(hasAllParams) {
+            let transactionId = urlParams.get('transactionId');
+            let dontTrack = urlParams.get('dontTrack');
+            return {transactionId, dontTrack};
+          }
+        }
+      }
+
+      async function getTransaction(transactionId) {
+        return fetch('https://api.moonpay.io/v1/transactions', {
+          cache: 'no-cache',
+          headers: {
+            'Authorization': `Api-Key ${MOONPAY_SECRETE_DEV_API_KEY}`,
+          }
+        }).then(response=>response.json())
+                .then(allTxs=>{
+                  return allTxs.find(_tx=>(_tx.id===transactionId));
+                });
+      }
+
+      async function getCurrencyCode(currencyId) {
+        return fetch(`https://api.moonpay.io/v3/currencies?apiKey=${MOONPAY_API_KEY}`)
+                .then(response=>response.json())
+                .then(allCurrencies=>{
+                  return allCurrencies.find(cur=>cur.id===currencyId);
+                });
+      }
+
+      function getEdgeProvider(callback) {
+        if (window.edgeProvider != null) {
+          callback(window.edgeProvider);
+        } else {
+          document.addEventListener("edgeProviderReady", function() {
+            callback(window.edgeProvider);
+          });
+        }
+      }
+
+      // if(isEdge()) {
+      //   getEdgeProvider(edgeProvider=>{
+      //     clearTimeout(timerIndex);
+      //     const {transactionId, dontTrack} = getQueryParams();
+      //     if(dontTrack) {
+      //       restartPlugin(edgeProvider);
+      //     } else {
+      //       // if(currencyCode && digitalAmount && orderId) {
+      //       //   edgeProvider.trackConversion({currencyCode: 'iso:'+currencyCode, exchangeAmount: digitalAmount, orderId});
+      //       //   logStatusMsg(`Successfully tracked conversion = currencyCode:${currencyCode} digitalAmount:${digitalAmount} orderId:${orderId}`)
+      //       //   restartPlugin(edgeProvider);
+      //       // }
+      //       const transaction = getTransaction(transactionId);
+      //       console.log(`transaction:`, transaction);
+      //     }
+      //   });
+      // }
+
+      clearTimeout(timerIndex);
+      const {transactionId, dontTrack} = getQueryParams();
+      getTransaction(transactionId).then(transaction=>{
+        console.log('transaction:', transaction);
+        if(transaction) {
+          getCurrencyCode(transaction.currencyId).then(currency=>{
+            console.log('currency:', currency);
+          });
+        } else {
+          logStatusMsg(`ERROR: Transaction not found:${transactionId}`);
+        }
+        console.log(`transaction:`, transaction);
+      });
+    </script>
+  </head>
+  <body style="background: #68DE99; color: white;">
+  <div style="display: flex; flex-direction: column; justify-content: center; align-content: flex-start; text-align: left;">
+    <h1>Edge App</h1>
+    <ul id="status">
+      <li>Waiting to load window.edgeProvider</li>
+    </ul>
+  </div>
+  </body>
+</html>
