@@ -38,8 +38,7 @@ export function ControlPanelRateComponent() {
         primaryExchangeDenomination: '',
         secondaryDisplayCurrencyCode: '',
         secondaryToPrimaryRatio: '0',
-        username: state.core.account.username,
-        usersView: state.ui.scenes.controlPanel.usersView
+        username: state.core.account.username
       }
     }
 
@@ -52,8 +51,7 @@ export function ControlPanelRateComponent() {
       primaryDisplayCurrencyCode: currencyCode,
       primaryDisplayDenomination: getDisplayDenominationFull(state, currencyCode),
       primaryExchangeDenomination: getPrimaryExchangeDenomination(state, currencyCode),
-      username: state.core.account.username,
-      usersView: state.ui.scenes.controlPanel.usersView
+      username: state.core.account.username
     }
   })
 

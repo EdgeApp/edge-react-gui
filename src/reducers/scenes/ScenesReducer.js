@@ -3,7 +3,7 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import { type FioAddressSceneState, fioAddress } from '../../modules/FioAddress/reducer.js'
-import { type ControlPanelState, controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
+import { controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
@@ -14,7 +14,6 @@ import { type TransactionDetailsState, transactionDetails } from './TransactionD
 import { type TransactionListState, transactionList } from './TransactionListReducer.js'
 
 export type ScenesState = {
-  +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
   +editToken: EditTokenState,
   +fioAddress: FioAddressSceneState,
