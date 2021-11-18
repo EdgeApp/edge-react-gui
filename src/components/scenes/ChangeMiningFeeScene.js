@@ -174,10 +174,11 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     const { theme } = this.props
     const styles = getStyles(theme)
     if (networkFeeOption !== 'custom' && networkFeeOption !== 'low') return null
+    const title = networkFeeOption === 'custom' ? s.strings.warning_custom_fee_selected : s.strings.warning_low_fee_selected
 
     return (
       <View style={styles.view}>
-        <Alert title={s.strings.warning_low_fee_selected} message={s.strings.warning_low_or_custom_fee} type="warning" marginRem={[1.5, 1]} />
+        <Alert title={title} message={s.strings.warning_low_or_custom_fee} type="warning" marginRem={[1.5, 1]} />
       </View>
     )
   }
