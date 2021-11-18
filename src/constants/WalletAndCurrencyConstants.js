@@ -13,6 +13,7 @@ export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fracti
 export const FIAT_PRECISION = 2
 
 export const IMAGE_SERVER_URL = 'https://content.edge.app'
+export const EDGE_URL = 'https://edge.app'
 
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: `${IMAGE_SERVER_URL}/bitcoincash-logo-solo-64.png`,
