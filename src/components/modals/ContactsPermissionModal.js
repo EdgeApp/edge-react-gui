@@ -38,7 +38,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
       <EdgeText numberOfLines={0} style={styles.message}>
         {s.strings.contacts_permission_modal_text_2}
       </EdgeText>
-      <EdgeText numberOfLines={0} style={styles.messageLast}>
+      <EdgeText numberOfLines={0} style={styles.message}>
         {s.strings.contacts_permission_modal_text_3}
       </EdgeText>
     </ButtonsModal>
@@ -47,7 +47,6 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   headerContainer: {
-    marginTop: theme.rem(1),
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -61,15 +60,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   header: {
-    marginVertical: theme.rem(1),
+    marginVertical: theme.rem(0.5),
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.25),
     includeFontPadding: false
   },
   message: {
     marginBottom: theme.rem(1)
-  },
-  messageLast: {
-    marginBottom: theme.rem(4)
   }
 }))
