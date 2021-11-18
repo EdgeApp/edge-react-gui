@@ -3,7 +3,6 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import { type FioAddressSceneState, fioAddress } from '../../modules/FioAddress/reducer.js'
-import { controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
@@ -25,7 +24,6 @@ export type ScenesState = {
 }
 
 export const scenes: Reducer<ScenesState, Action> = combineReducers({
-  controlPanel,
   createWallet,
   editToken,
   fioAddress,
