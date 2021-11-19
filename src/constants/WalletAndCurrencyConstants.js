@@ -94,11 +94,11 @@ export const CURRENCY_SETTINGS_KEYS = [
  * Use `sortCurrencyInfos` to actually do the sorting.
  */
 export const WALLET_TYPE_ORDER = [
-  'wallet:zcash',
   'wallet:bitcoin',
   'wallet:bitcoincash',
   'wallet:monero',
   'wallet:ethereum',
+  'wallet:zcash',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:bitcoinsv',
