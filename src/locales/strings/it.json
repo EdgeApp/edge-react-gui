@@ -577,6 +577,7 @@
   "estimated_exchange_rate_body": "Nessun cambio valuta è in grado di fornire una stima fissa del cambio richiesto. Ciò può significare che riceverai meno fondi di quanto stimato.",
   "estimated_exchange_message": "L'importo di cui sopra è una stima. Questo scambio può comportare meno fondi ricevuti rispetto a quelli quotati.",
   "buy_sell_crypto_select_country_button": "Seleziona la tua regione",
+  "search_region": "Cerca area geografica",
   "buy_sell_crypto_no_plugin_region": "Siamo spiacenti ma non ci sono plugin disponibili per la tua regione.",
   "user_closed_modal_no_wallet": "Finestra chiusa dall'utente. Nessun portafoglio è stato selezionato",
   "plugin_provider_disclaimer": "I seguenti servizi non sono forniti da Edge.\n\nPer problemi e feedback, si prega di contattare i rispettivi fornitori di servizi.",
