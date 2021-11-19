@@ -21,7 +21,7 @@ import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
-import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
+import { CountryListModal } from '../modals/CountryListModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -202,7 +202,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   async showCountrySelectionModal() {
     const { account, updateCountryCode, countryCode } = this.props
 
-    const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
+    const selectedCountryCode: string = await Airship.show(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
         const syncedSettings = await getSyncedSettings(account)

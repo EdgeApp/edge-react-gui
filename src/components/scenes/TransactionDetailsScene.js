@@ -33,11 +33,11 @@ import {
 } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
+import { ContactListModal } from '../modals/ContactListModal.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
-import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -66,7 +66,7 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
-  payeeName: string, // remove commenting once metaData in Redux
+  contactName: string, // remove commenting once metaData in Redux
   thumbnailPath?: string,
   notes: string,
   amountFiat: string,
@@ -121,13 +121,13 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       date: autoCorrectDate(edgeTx.date)
     }
     const { metadata } = edgeTransaction
-    const { name: payeeName = '', notes = '', amountFiat } = metadata ?? {}
+    const { name: contactName = '', notes = '', amountFiat } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
 
     this.state = {
       amountFiat: displayFiatAmount(amountFiat),
-      payeeName,
+      contactName,
       notes,
       category,
       subCategory,
@@ -162,7 +162,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show(bridge => (
-      <TransactionDetailsPersonInput bridge={bridge} personStatus={personLabel} payeeName={this.state.payeeName} contacts={this.props.contacts} />
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.contactName} contacts={this.props.contacts} />
     )).then(person => this.onSaveTxDetails(person))
   }
 
@@ -329,7 +329,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   onSaveTxDetails = (newDetails?: any) => {
     if (newDetails == null) return
     const { route } = this.props
-    const { payeeName: name, notes, bizId, category, subCategory, amountFiat } = { ...this.state, ...newDetails }
+    const { contactName, notes, bizId, category, subCategory, amountFiat } = { ...this.state, ...newDetails }
     const { edgeTransaction } = route.params
     let finalAmountFiat
     const fullCategory = category ? `${capitalize(category)}:${subCategory}` : undefined
@@ -342,7 +342,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
     edgeTransaction.metadata = {
-      name,
+      name: contactName,
       category: fullCategory,
       notes,
       amountFiat: finalAmountFiat,
@@ -425,7 +425,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   render() {
     const { guiWallet, theme, route } = this.props
     const { edgeTransaction } = route.params
-    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
+    const { direction, amountFiat, contactName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
 
@@ -434,7 +434,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const fiatValue = displayFiatAmount(parseFloat(amountFiat.replace(',', '.')))
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
-    const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
+    const personName = contactName && contactName !== '' ? contactName : personLabel
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
 
     // spendTargets recipient addresses format

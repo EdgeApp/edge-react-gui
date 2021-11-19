@@ -56,6 +56,7 @@ Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to th
 
 #### iOS
 
+- Run `yarn prepare.ios` to generate the CocoaPods files. You will need to do this after the first install, and any time Xcode produces a `The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.` error.
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
 - Choose a target device or simulator and tap the Play button on the top nav bar
 
