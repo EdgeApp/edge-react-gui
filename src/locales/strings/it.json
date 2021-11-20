@@ -700,7 +700,7 @@
   "fio_select_address": "Selezione indirizzo FIO",
   "fio_select_address_no_wallet_err": "Non è stato trovato nessun portafoglio FIO per l'indirizzo fio selezionato",
   "fio_sender_memo_label": "FIO Memo",
-  "fio_sender_memo_placeholder": "Il tuo messaggio.",
+  "fio_sender_memo_placeholder": "Il tuo messaggio",
   "fio_address_to_transfer": "Indirizzo da trasferire",
   "fio_domain_to_transfer": "Dominio da trasferire",
   "fio_domain_transferred": "Trasferimento riuscito",
