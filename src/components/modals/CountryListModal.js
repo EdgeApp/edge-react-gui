@@ -32,6 +32,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
         title={name}
         subTitle={alpha}
         arrowTappable
+        autoWidthContent
       />
     )
   }
