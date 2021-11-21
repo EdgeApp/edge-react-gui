@@ -11,9 +11,11 @@ import { EdgeText } from './EdgeText'
 type Props = {|
   onPress: () => void | (() => Promise<void>),
   title: string | React.Node,
+
   subTitle?: string,
   icon?: React.Node,
   autoWidth?: boolean,
+  autoWidthContent?: boolean,
   arrowTappable?: boolean,
   underline?: boolean,
 
@@ -23,15 +25,27 @@ type Props = {|
 
 class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { icon, title, subTitle, arrowTappable, underline, autoWidth, marginRem, paddingRem, onPress, theme } = this.props
+    const {
+      icon,
+      title,
+      subTitle,
+      arrowTappable,
+      underline,
+      autoWidth = false,
+      autoWidthContent = autoWidth,
+      marginRem,
+      paddingRem,
+      onPress,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     return (
       <ClickableRow onPress={onPress} underline={underline} marginRem={marginRem} paddingRem={paddingRem}>
         <View style={[styles.rowContainer, autoWidth ? styles.autoWidth : null]}>
-          <View style={autoWidth ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
+          <View style={autoWidthContent ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
             {icon}
-            <View style={[styles.title, autoWidth ? styles.titleAutoWidth : null]}>
+            <View style={[styles.title, autoWidthContent ? styles.titleAutoWidth : null]}>
               <EdgeText>{title}</EdgeText>
               {subTitle ? (
                 <EdgeText style={styles.subTitle} numberOfLines={2}>
