@@ -1,5 +1,24 @@
 # edge-react-gui
 
+## 2.6.0 (2021-11-21)
+
+- Add Zcash (Android only)
+- Moonpay: Enable recurring purchases
+- Create component ListModal to replace contacts and country list modals
+- Various visual fixes
+- Update translations
+- Remove AGLD token
+- Upgrade edge-currency-accountbased to v0.9.2
+  - Add Zcash
+  - ZEC: Commit Zcash checkpoints to repo
+  - ETH: Remove AGLD
+- Upgrade edge-exchange-plugins to v0.11.38
+  - Prevent ZEC purchases from partners who don't support sending to shielded addresses
+- Upgrade edge-login-ui-rn to v0.9.23
+  - Various visual fixes for account creation process
+  - Upgrade sha3 to v2.1.4
+  - Upgrade react-native-patina to v0.1.6
+
 ## 2.5.1 (2021-11-10)
 
 - Fix missing metadata on accelerated transactions
