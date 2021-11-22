@@ -462,7 +462,8 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   ZEC: {
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
-    noChangeMiningFee: true
+    noChangeMiningFee: true,
+    noMaxSpend: true
   }
 }
 
