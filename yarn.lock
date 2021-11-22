@@ -5076,10 +5076,10 @@ edge-exchange-plugins@^0.11.38:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.24:
-  version "0.9.24"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.24.tgz#ce7022367a3c36da59f879290cf6fa28d4fbb3c7"
-  integrity sha512-b0dmHu3repM+BDeiReZublCU0AvbXHtvC+PbGEsfF4bTpjURLYcb5ulfcJH8y6vj2STscs42i+QzECZ0M9Lhjw==
+edge-login-ui-rn@^0.9.26:
+  version "0.9.26"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.26.tgz#45a237d259d7ccb26893471477ef430b4042d6bf"
+  integrity sha512-mc23bTKqbYqPlVUbe6ncKLc3gIViRiydOWttdX7IIWG4b1PiYzUWCda/kZnof4wCTQfgCrk7DFA4eiQ7F1WDyw==
   dependencies:
     cleaners "^0.3.1"
     date-fns "^2.23.0"
