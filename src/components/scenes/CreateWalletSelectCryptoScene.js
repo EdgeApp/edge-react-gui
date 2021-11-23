@@ -83,7 +83,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { theme } = this.props
-    const { walletType, symbolImageDarkMono, currencyCode } = data.item
+    const { symbolImageDarkMono, currencyCode } = data.item
     const styles = getStyles(theme)
 
     // Ripple hack:
@@ -96,7 +96,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
         icon={symbolImageDarkMono ? <FastImage source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={currencyCode}
         subTitle={currencyName}
-        selected={walletType === this.state.selectedWalletType}
       />
     )
   }

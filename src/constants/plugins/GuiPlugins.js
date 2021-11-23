@@ -20,7 +20,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'moonpay',
     storeId: 'io.moonpay.buy',
     baseUri: 'https://buy.moonpay.io',
-    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy' },
+    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy', enableRecurringBuys: 'true' },
     queryPromoCode: 'apiKey',
     displayName: 'MoonPay',
     permissions: ['camera'],

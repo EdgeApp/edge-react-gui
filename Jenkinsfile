@@ -73,6 +73,7 @@ pipeline {
     stage ("Install dependencies") {
       steps {
         sh "yarn"
+        sh "yarn prepare"
       }
     }
 
@@ -100,6 +101,7 @@ pipeline {
         stage("ios") {
           when { equals expected: true, actual: params.IOS_BUILD }
           steps {
+            sh "npm run prepare.ios"
             sh "node ./deploy.js edge ios ${BRANCH_NAME}"
             sh "./scripts/uploadSourcemaps.js ios"
           }

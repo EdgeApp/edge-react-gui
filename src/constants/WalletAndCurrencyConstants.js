@@ -98,6 +98,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:bitcoincash',
   'wallet:monero',
   'wallet:ethereum',
+  'wallet:zcash',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:bitcoinsv',
@@ -125,7 +126,7 @@ export const WALLET_TYPE_ORDER = [
 ]
 
 // Put these in reverse order of preference
-export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'AGLD', 'RIF']
+export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
@@ -160,7 +161,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  FIRO: 'zcoin'
+  FIRO: 'zcoin',
+  ZEC: 'zcash'
 }
 
 type SpecialCurrencyInfo = {|
@@ -457,6 +459,11 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierName: s.strings.unique_identifier_memo,
       keyboardType: 'default'
     }
+  },
+  ZEC: {
+    dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
+    noChangeMiningFee: true,
+    noMaxSpend: true
   }
 }
 
@@ -514,7 +521,8 @@ export const WALLET_LIST_MENU: Array<{
       'RVN',
       'RBTC',
       'TESTBTC',
-      'XMR'
+      'XMR',
+      'ZEC'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'
