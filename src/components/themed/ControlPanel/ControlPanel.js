@@ -1,34 +1,45 @@
+/* eslint-disable react-native/no-raw-text */
 // @flow
 
 import { type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Image, Pressable, ScrollView, TouchableHighlight, View } from 'react-native'
+import { Image, Platform, Pressable, ScrollView, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { deleteLocalAccount } from '../../../actions/AccountActions.js'
 import { logoutRequest } from '../../../actions/LoginActions.js'
+import { selectWalletFromModal } from '../../../actions/WalletActions'
 import edgeLogo from '../../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../../assets/vector'
+import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SCAN, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE, WALLET_CONNECT } from '../../../constants/SceneKeys'
+import { EDGE_URL, getPrivateKeySweepableCurrencies } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
+import { getDisplayDenomination } from '../../../selectors/DenominationSelectors'
+import { getSelectedWallet } from '../../../selectors/WalletSelectors'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { type NavigationProp } from '../../../types/routerTypes.js'
+import { type NavigationProp, type ParamList, Actions } from '../../../types/routerTypes.js'
+import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { ButtonsModal } from '../../modals/ButtonsModal.js'
+import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal.js'
+import { SWEEP_PRIVATE_KEY } from '../../scenes/ScanScene'
 import { Airship } from '../../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 import { DividerLine } from '../DividerLine'
 import { EdgeText } from '../EdgeText'
-import { ControlPanelRateComponent } from './ControlPanelRate.js'
-import { ControlPanelRowsComponent } from './ControlPanelRows.js'
+import { FiatTextTemp } from '../FiatText.js'
 
-type Props = { navigation: NavigationProp<'controlPanel'>, isDrawerOpen: { state: { isDrawerOpen: boolean } } }
+type Props = { navigation: NavigationProp<'controlPanel'> }
 
 export function ControlPanel(props: Props) {
-  const { navigation, isDrawerOpen } = props
+  const { navigation } = props
+  const state: any = navigation.state
+  const { isDrawerOpen } = state
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -37,6 +48,12 @@ export function ControlPanel(props: Props) {
 
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
+  const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const guiWallet = useSelector(state => getSelectedWallet(state))
+  const currencyLogo = useSelector(state => (guiWallet != null ? getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage : null))
+  const currencyDenomName = useSelector(state => (guiWallet != null ? getDisplayDenomination(state, selectedCurrencyCode).name : ''))
+  const isoFiatCurrencyCode = guiWallet != null ? guiWallet.isoFiatCurrencyCode : null
 
   /// ---- Local State ----
 
@@ -79,10 +96,45 @@ export function ControlPanel(props: Props) {
     dispatch(logoutRequest(username))
   }
 
+  const handleSweep = () => {
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={getPrivateKeySweepableCurrencies()} showCreateWallet />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        dispatch(selectWalletFromModal(selectedCurrencyCode, selectedWalletId))
+        Actions.jump(SCAN, {
+          data: SWEEP_PRIVATE_KEY
+        })
+      }
+    })
+  }
+
+  const handleShareApp = () => {
+    const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n`
+
+    const shareOptions = {
+      message: Platform.OS === 'ios' ? message : message + EDGE_URL,
+      EDGE_URL: Platform.OS === 'ios' ? EDGE_URL : ''
+    }
+    Share.open(shareOptions).catch(e => console.log(e))
+  }
+
+  const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
+    const { currentScene, drawerClose } = Actions
+
+    if (currentScene !== scene) {
+      navigation.navigate(scene, sceneProps)
+    } else if (sceneProps) {
+      navigation.setParams(sceneProps)
+    }
+
+    drawerClose()
+  }
+
   /// ---- Animation ----
 
   // Track the destination height of the dropdown
-  const userListMaxHeight = styles.dropdownRow.height * usernames.length + theme.rem(1)
+  const userListMaxHeight = styles.rowContainer.height * usernames.length + theme.rem(1)
 
   // Height value above can change if users are added/removed
   const sMaxHeight = useSharedValue(userListMaxHeight)
@@ -112,48 +164,144 @@ export function ControlPanel(props: Props) {
     transform: [{ rotateZ: `${(isDropped ? -180 : 180) * sAnimationMult.value}deg` }]
   }))
 
+  /// ---- Row Data ----
+
+  const rowDatas: any[] = [
+    {
+      pressHandler: () => {
+        handleGoToScene(FIO_ADDRESS_LIST)
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.drawer_fio_names
+    },
+    {
+      pressHandler: () => {
+        handleGoToScene(FIO_REQUEST_LIST)
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.drawer_fio_requests
+    },
+    {
+      pressHandler: () => {
+        handleGoToScene(WALLET_CONNECT)
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.wc_walletconnect_title
+    },
+    {
+      pressHandler: () => {
+        handleGoToScene(SCAN)
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.drawer_scan_qr_send
+    },
+    { pressHandler: handleSweep, iconName: 'hamburgerButton', title: s.strings.drawer_sweep_private_key },
+    {
+      pressHandler: () => {
+        handleGoToScene(TERMS_OF_SERVICE)
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.title_terms_of_service
+    },
+    { pressHandler: handleShareApp, iconName: 'hamburgerButton', title: s.strings.string_share + ' ' + s.strings.app_name },
+    {
+      pressHandler: () => {
+        handleGoToScene(SETTINGS_OVERVIEW_TAB)
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.settings_title
+    },
+    {
+      pressHandler: () => {
+        dispatch(logoutRequest())
+      },
+      iconName: 'hamburgerButton',
+      title: s.strings.settings_button_logout
+    }
+  ]
+
+  const dividerLine = <DividerLine marginRem={[0.5, -2, 2, 1]} />
+  const fiatText =
+    isoFiatCurrencyCode === null ? (
+      ''
+    ) : (
+      <FiatTextTemp nativeCryptoAmount="1" cryptoCurrencyCode={selectedCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} autoPrecision />
+    )
+
+  const exchangeRateText =
+    isoFiatCurrencyCode === null ? (
+      <EdgeText style={styles.text}>{s.strings.exchange_rate_loading_singular}</EdgeText>
+    ) : (
+      <EdgeText style={styles.text}>
+        {`1 ${currencyDenomName} = `} {fiatText}
+      </EdgeText>
+    )
+
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
-      <View style={styles.panel}>
-        <View style={styles.header}>
-          <View style={styles.logo}>
-            <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
+      {/* ==== Top Panel Start ==== */}
+      <View style={styles.topPanel}>
+        <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
+        <View style={styles.rowContainer}>
+          <View style={styles.rowIconContainer}>{!!currencyLogo && <Image style={styles.icon} source={{ uri: currencyLogo }} />}</View>
+          <View style={styles.rowBodyContainer}>{exchangeRateText}</View>
+        </View>
+        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
+          <View style={styles.rowIconContainer}>
+            <Fontello name="hamburgerButton" style={styles.icon} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
           </View>
-          <ControlPanelRateComponent />
-          <View>
-            <Pressable onPress={handleToggleDropdown}>
-              <View style={styles.dropdownHeader}>
-                <Fontello name="account" style={styles.icon} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
-                <EdgeText style={styles.text}>{activeUsername}</EdgeText>
-                <Animated.View style={aRotate}>
-                  <Feather name="chevron-down" color={theme.controlPanelIcon} size={theme.rem(1.5)} />
-                </Animated.View>
-              </View>
-            </Pressable>
-            <DividerLine marginRem={[1, -2, 0, 0]} />
-            <Animated.View style={[styles.root, aDropdown]}>
-              <ScrollView>
-                {usernames.map((username: string) => (
-                  <View key={username} style={styles.dropdownRow}>
-                    <TouchableHighlight onPress={() => handleSwitchAccount(username)}>
-                      <EdgeText style={styles.text}>{username}</EdgeText>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={() => handleDeleteAccount(username)}>
-                      <View>
-                        <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.controlPanelIcon} />
-                      </View>
-                    </TouchableHighlight>
-                  </View>
-                ))}
-              </ScrollView>
+          <View style={styles.rowBodyContainer}>
+            <EdgeText style={styles.text}>{activeUsername}</EdgeText>
+          </View>
+          <View style={styles.rowIconContainer}>
+            <Animated.View style={aRotate}>
+              <Feather name="chevron-down" color={theme.controlPanelIcon} size={theme.rem(1.5)} />
             </Animated.View>
           </View>
-        </View>
-        <ControlPanelRowsComponent navigation={navigation} />
-        <DividerLine marginRem={[1, -2, 2, 1.25]} />
-        <Animated.View style={[styles.disable, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
+        </Pressable>
+        {dividerLine}
       </View>
+      {/* ==== Top Panel End ==== */}
+      {/* ==== Bottom Panel Start ==== */}
+      <View style={styles.middlePanel}>
+        {/* === Dropdown Start === */}
+        <Animated.View style={[styles.dropContainer, aDropdown]}>
+          <ScrollView>
+            {usernames.map((username: string) => (
+              <View key={username} style={styles.rowContainer}>
+                <View style={styles.rowIconContainer} />
+                <TouchableHighlight style={styles.rowBodyContainer} onPress={() => handleSwitchAccount(username)}>
+                  <EdgeText style={styles.text}>{username}</EdgeText>
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.rowIconContainer} onPress={() => handleDeleteAccount(username)}>
+                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.controlPanelIcon} />
+                </TouchableHighlight>
+              </View>
+            ))}
+          </ScrollView>
+        </Animated.View>
+        {/* === Dropdown End === */}
+        <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
+        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
+        {/* === Navigation Rows Start === */}
+        <View style={styles.rowsContainer}>
+          <ScrollView>
+            {rowDatas.map(rowData => (
+              <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+                <View style={styles.rowIconContainer}>
+                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
+                </View>
+                <View style={styles.rowBodyContainer}>
+                  <EdgeText style={styles.text}>{rowData.title}</EdgeText>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          {/* === Navigation Rows End === */}
+        </View>
+      </View>
+      {/* ==== Bottom Panel End ==== */}
+      <View style={styles.bottomPanel}>{dividerLine}</View>
     </SceneWrapper>
   )
 }
@@ -187,87 +335,83 @@ function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): strin
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  panel: {
+  // Containers/Panels
+  topPanel: {
+    backgroundColor: theme.modal,
+    borderTopLeftRadius: theme.rem(2),
+    height: theme.rem(10.5)
+  },
+  middlePanel: {
     flex: 1,
-    backgroundColor: theme.modal,
-    position: 'relative',
-    paddingRight: theme.rem(2),
-    paddingTop: theme.rem(13.25),
-    borderBottomLeftRadius: theme.rem(2),
-    borderTopLeftRadius: theme.rem(2)
+    flexGrow: 1,
+    backgroundColor: theme.modal
   },
-  header: {
-    borderBottomRightRadius: theme.rem(2),
-    borderBottomLeftRadius: theme.rem(2),
-    paddingLeft: theme.rem(1.2),
-    paddingRight: theme.rem(2),
-    borderTopLeftRadius: theme.rem(2),
-    position: 'absolute',
-    left: 0,
-    right: 0,
+  bottomPanel: {
     backgroundColor: theme.modal,
-    zIndex: 2
-  },
-  disable: {
-    backgroundColor: theme.fadeDisable,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderTopLeftRadius: theme.rem(2),
+    display: 'flex',
+    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    height: theme.rem(4),
     borderBottomLeftRadius: theme.rem(2)
   },
-  invisibleTapper: {
+  rowsContainer: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
+    display: 'flex',
+    alignItems: 'flex-start'
   },
-  logo: {
+  rowContainer: {
+    display: 'flex',
+    height: theme.rem(2.75),
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  rowIconContainer: {
     display: 'flex',
     justifyContent: 'center',
-    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: theme.rem(2),
-    marginLeft: theme.rem(0.8)
+    height: theme.rem(3),
+    width: theme.rem(3),
+    marginLeft: theme.rem(0.25)
   },
+  rowBodyContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexGrow: 1
+  },
+  // Animation
+  dropContainer: {
+    backgroundColor: theme.modal,
+    borderBottomLeftRadius: theme.rem(2),
+    zIndex: 2,
+    position: 'absolute',
+    width: '100%'
+  },
+  disable: {
+    backgroundColor: theme.fadeDisable
+  },
+  // Elements
   logoImage: {
-    height: theme.rem(2.5),
-    marginTop: theme.rem(0.5),
-    marginRight: theme.rem(0.25)
+    display: 'flex',
+    alignSelf: 'center',
+    height: theme.rem(2.25),
+    marginTop: theme.rem(2)
   },
-  root: {
-    overflow: 'scroll'
-  },
-  dropdownRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: theme.rem(2.5),
-    marginLeft: theme.rem(8.25)
+  icon: {
+    height: theme.rem(1.5),
+    width: theme.rem(1.5)
   },
   text: {
     fontFamily: theme.fontFaceMedium,
-    marginLeft: theme.rem(-5)
+    marginLeft: theme.rem(0.5)
   },
-  dropdownHeader: {
-    marginLeft: theme.rem(-0.25),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: theme.rem(2)
-  },
-  icon: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: theme.rem(0.5),
-    marginRight: theme.rem(0.5),
-    height: theme.rem(1.5),
-    width: theme.rem(2.5)
-  },
-  chevron: {
-    marginRight: theme.rem(-0.5)
+  invisibleTapper: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    borderBottomLeftRadius: theme.rem(2),
+    zIndex: 1
   }
 }))

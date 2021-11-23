@@ -14,7 +14,8 @@ type Props = {
   primaryInfo: GuiCurrencyInfo,
   primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: GuiCurrencyInfo,
-  secondaryDisplayAmount: string
+  secondaryDisplayAmount: string,
+  style: Object
 }
 
 class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
@@ -29,14 +30,14 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
   }
 
   render() {
-    const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
+    const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount, style } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
     const secondaryDisplaySymbol = secondaryInfo.displayDenomination.symbol ?? ''
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
       const primaryRatio = bns.div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       const secondaryRatio = bns.div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
-      return bns.mul(bns.div(primaryRatio, secondaryRatio, 4), secondaryDisplayAmount)
+      return bns.mul(bns.div(primaryRatio, secondaryRatio, DECIMAL_PRECISION), secondaryDisplayAmount)
     }
     let precision = secondaryInfo.displayDenomination.multiplier ? bns.log10(secondaryInfo.displayDenomination.multiplier) : 0
     let formattedSecondaryDisplayAmount: string = parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision)
@@ -58,11 +59,11 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     const formattedSecondaryAmount = formatNumber(formattedSecondaryDisplayAmount, { toFixed: precision })
 
     if (!isCompleteExchangeData(exchangeData)) {
-      return <EdgeText>{s.strings.drawer_exchange_rate_loading}</EdgeText>
+      return <EdgeText style={style}>{s.strings.drawer_exchange_rate_loading}</EdgeText>
     }
 
     const exchangeRate = `${formattedPrimaryAmount} ${primaryDisplayName} = ${secondaryDisplaySymbol} ${formattedSecondaryAmount} ${secondaryCurrencyCode}`
-    return <EdgeText>{exchangeRate}</EdgeText>
+    return <EdgeText style={style}>{exchangeRate}</EdgeText>
   }
 }
 
