@@ -29,6 +29,16 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BTC: {
     denomination: '100000000'
   },
+  ZADDR: {
+    denomination: '100000000',
+    denominations: [
+      {
+        multiplier: '100000000',
+        name: 'ZEC',
+        symbol: 'ZEC'
+      }
+    ]
+  },
   TESTBTC: {
     denomination: '100000000'
   },
@@ -412,6 +422,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   preferredSwapPluginId: 'string',
   countryCode: 'string',
   BTC: 'object',
+  ZADDR: 'object',
   BCH: 'object',
   EOS: 'object',
   TLOS: 'object',
