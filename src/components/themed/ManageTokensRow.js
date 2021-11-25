@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import * as UTILS from '../../util/utils.js'
+import { noOp } from '../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletListRow } from './WalletListRow'
 
@@ -41,7 +41,7 @@ export function ManageTokensRow(props: Props) {
   const isEditable = !Object.keys(SYNCED_ACCOUNT_DEFAULTS).includes(currencyCode)
 
   const onPress = () => {
-    isEditable ? goToEditTokenScene(currencyCode) : UTILS.noOp()
+    isEditable ? goToEditTokenScene(currencyCode) : noOp()
   }
 
   return (

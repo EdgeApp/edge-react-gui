@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
 import type { TransactionListTx } from '../../types/types.js'
-import * as UTILS from '../../util/utils'
+import { splitTransactionCategory } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText.js'
@@ -94,7 +94,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     let categoryText
     const transactionCategory = transaction.metadata ? transaction.metadata.category : null
     if (transactionCategory) {
-      const splittedFullCategory = UTILS.splitTransactionCategory(transactionCategory)
+      const splittedFullCategory = splitTransactionCategory(transactionCategory)
       const { category, subCategory } = splittedFullCategory
       if (subCategory) {
         const mainCategory = category.toLowerCase()

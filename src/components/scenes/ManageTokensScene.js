@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils'
+import { mergeTokensRemoveInvisible } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
@@ -91,7 +91,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       return token.walletType === guiWallet.type || token.walletType === undefined
     })
 
-    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
+    const combinedTokenInfo = mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
