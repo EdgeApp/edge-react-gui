@@ -92,7 +92,6 @@ export const swapPlugins = {
   // shapeshift: ENV.SHAPESHIFT_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
   switchain: ENV.SWITCHAIN_INIT,
-  totle: ENV.TOTLE_INIT,
   transfer: true
 }
 
