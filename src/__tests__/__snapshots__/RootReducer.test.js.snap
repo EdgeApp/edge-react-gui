@@ -568,6 +568,16 @@ Object {
       "YFI": Object {
         "denomination": "1000000000000000000",
       },
+      "ZADDR": Object {
+        "denomination": "100000000",
+        "denominations": Array [
+          Object {
+            "multiplier": "100000000",
+            "name": "ZEC",
+            "symbol": "ZEC",
+          },
+        ],
+      },
       "ZRX": Object {
         "denomination": "1000000000000000000",
       },
