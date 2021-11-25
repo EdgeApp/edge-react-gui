@@ -8,7 +8,7 @@ import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyCons
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'

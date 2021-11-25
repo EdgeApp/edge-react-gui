@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import styles from './styles.js'
+import { styles } from './styles.js'
 
 export type SeparatorProps = {
   style?: StyleSheet.style

@@ -16,10 +16,10 @@ import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
 import { getDenomFromIsoCode, getObjectDiff, zeroString } from '../../../../util/utils.js'
-import FormattedText from '../FormattedText/FormattedText.ui.js'
+import { FormattedText } from '../FormattedText/FormattedText.ui.js'
 import { Button } from './Component/Button/Button.ui'
 import { Main } from './Component/Main.js'
-import styles from './style'
+import { styles } from './style'
 
 type OwnProps = {
   navigation: NavigationProp<'edge'>

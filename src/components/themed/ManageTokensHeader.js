@@ -8,7 +8,7 @@ import s from '../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { OutlinedTextInput } from './OutlinedTextInput.js'
-import Title from './Title'
+import { Title } from './Title'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
   searchValue: string
 }
 
-function ManageTokensHeader(props: Props) {
+export function ManageTokensHeader(props: Props) {
   const { currencyCode, walletName, walletId, changeSearchValue, onSelectWallet, searchValue } = props
 
   const theme = useTheme()
@@ -72,5 +72,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(1)
   }
 }))
-
-export default ManageTokensHeader

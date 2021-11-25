@@ -5,7 +5,7 @@ import { unpackEdges } from '../util/edges'
 
 type Spacing = number[] | number
 
-export default function useSpacing(marginSpacing: Spacing = 1, paddingSpacing: Spacing = 1, theme: Theme) {
+export function useSpacing(marginSpacing: Spacing = 1, paddingSpacing: Spacing = 1, theme: Theme) {
   const marginRem = unpackEdges(marginSpacing)
   const paddingRem = unpackEdges(paddingSpacing)
 

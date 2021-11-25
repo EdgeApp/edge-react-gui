@@ -56,4 +56,4 @@ export const rawStyles = {
   }
 }
 
-export default StyleSheet.create(rawStyles)
+export const styles = StyleSheet.create(rawStyles)

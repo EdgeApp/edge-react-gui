@@ -21,7 +21,7 @@ export type Props = {
   symbolImage: string
 }
 
-function ManageTokensRow(props: Props) {
+export function ManageTokensRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -78,5 +78,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   }
 }))
-
-export default ManageTokensRow

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import useSpacing from '../../hooks/useSpacing'
+import { useSpacing } from '../../hooks/useSpacing'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { ClickableText } from '../themed/ThemedButtons'
@@ -51,7 +51,7 @@ export const useAlertTypeIcon = (type: AlerType, color: string, size: number, st
   }
 }
 
-export default function Alert({ type, title, message, numberOfLines = 2, marginRem, paddingRem, onPress, children }: Props) {
+export function Alert({ type, title, message, numberOfLines = 2, marginRem, paddingRem, onPress, children }: Props) {
   const theme = useTheme()
 
   const typeColor = useAlertTypeColor(type)

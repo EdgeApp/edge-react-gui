@@ -11,9 +11,9 @@ import { logoutRequest } from '../../../../../actions/LoginActions.js'
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import s from '../../../../../locales/strings'
 import { connect } from '../../../../../types/reactRedux.js'
-import T from '../../../components/FormattedText/FormattedText.ui.js'
+import { FormattedText as T } from '../../../components/FormattedText/FormattedText.ui.js'
 import { deleteLocalAccount } from '../action.js'
-import styles from '../style'
+import { styles } from '../style'
 
 type StateProps = {
   context: EdgeContext,

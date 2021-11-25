@@ -1,9 +1,9 @@
 // @flow
 
-import THEME from '../../../../theme/variables/airbitz'
+import { THEME } from '../../../../theme/variables/airbitz'
 import { scale } from '../../../../util/scaling.js'
 
-export default {
+export const styles = {
   header: {
     backgroundColor: THEME.COLORS.ACCENT_BLUE,
     height: scale(48),
