@@ -34,6 +34,7 @@ import {
   SCAN,
   SETTINGS_OVERVIEW_TAB,
   TERMS_OF_SERVICE,
+  WALLET_CONNECT,
   WALLET_LIST_SCENE
 } from '../../../../../constants/SceneKeys.js'
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
@@ -281,7 +282,7 @@ const ExchangeButton = () => {
   )
 }
 
-const popToWalletConnect = () => goToScene('wcConnections')
+const popToWalletConnect = () => goToScene(WALLET_CONNECT)
 const WalletConnectButton = () => {
   return (
     <Button onPress={popToWalletConnect}>
