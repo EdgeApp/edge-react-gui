@@ -7,8 +7,8 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
-import * as intl from '../locales/intl.js'
-import * as UTILS from '../util/utils'
+import { formatNumber } from '../locales/intl.js'
+import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, isSentTransaction, truncateDecimals } from '../util/utils'
 import { IMAGE_SERVER_URL } from './../constants/WalletAndCurrencyConstants.js'
 
 describe('Transaction List Row', () => {
@@ -60,17 +60,17 @@ describe('Transaction List Row', () => {
       symbol: '‎ɱ'
     }
     // CryptoAmount
-    const cryptoAmount = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
-    const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, 6), 6))
+    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
+    const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, 6), 6))
     // FiatAmount
     const fiatAmount = bns.abs(transaction.metadata.amountFiat.toFixed(2))
-    const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    const fiatAmountFormat = formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
     const props = {
       cryptoAmount: cryptoAmountFormat,
       denominationSymbol: displayDenomination.symbol,
       fiatAmount: fiatAmountFormat,
-      fiatSymbol: UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode),
-      isSentTransaction: UTILS.isSentTransaction(transaction),
+      fiatSymbol: getFiatSymbol(guiWallet.fiatCurrencyCode),
+      isSentTransaction: isSentTransaction(transaction),
       requiredConfirmations: 15,
       selectedCurrencyName: guiWallet.currencyNames[guiWallet.currencyCode],
       thumbnailPath: '',

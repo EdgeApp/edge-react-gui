@@ -30,4 +30,3 @@ class GradientComponent extends React.PureComponent<Props> {
 }
 
 export const Gradient = withTheme(GradientComponent)
-export default Gradient

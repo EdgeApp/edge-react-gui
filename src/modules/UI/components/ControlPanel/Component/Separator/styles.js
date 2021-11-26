@@ -12,4 +12,3 @@ export const rawStyles = {
   }
 }
 export const styles = StyleSheet.create(rawStyles)
-export default styles

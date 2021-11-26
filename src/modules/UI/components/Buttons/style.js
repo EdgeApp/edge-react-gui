@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../../../theme/variables/airbitz'
+import { THEME } from '../../../../theme/variables/airbitz'
 import { scale } from '../../../../util/scaling.js'
 
 export const rawStyles = {

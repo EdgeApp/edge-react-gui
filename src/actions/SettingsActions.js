@@ -8,7 +8,14 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { WALLET_LIST } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
+import {
+  setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
+  setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
+  setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
+  setDeveloperModeOn as setDeveloperModeOnAccountSettings,
+  setPreferredSwapPluginId as setPreferredSwapPluginIdAccountSettings,
+  setSpendingLimits as setSpendingLimitsAccountSettings
+} from '../modules/Core/Account/settings.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
@@ -32,7 +39,7 @@ export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getSta
 export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: number) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  ACCOUNT_SETTINGS.setAutoLogoutTimeInSecondsRequest(account, autoLogoutTimeInSeconds)
+  setAutoLogoutTimeInSecondsRequestAccountSettings(account, autoLogoutTimeInSeconds)
     .then(() =>
       dispatch({
         type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME',
@@ -55,7 +62,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
   Promise.resolve()
     .then(() => {
       // update default fiat in account settings
-      ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
+      setDefaultFiatRequestAccountSettings(account, defaultFiat)
     })
     .then(() => {
       // update default fiat in settings
@@ -77,7 +84,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       }
 
       // update spending limits in account settings
-      ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
+      setSpendingLimitsAccountSettings(account, nextSpendingLimits)
       // update spending limits in settings
       dispatch({
         type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
@@ -91,7 +98,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
 export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  ACCOUNT_SETTINGS.setPreferredSwapPluginId(account, pluginId)
+  setPreferredSwapPluginIdAccountSettings(account, pluginId)
     .then(() =>
       dispatch({
         type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
@@ -106,7 +113,7 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
   const state = getState()
   const { account } = state.core
 
-  return ACCOUNT_SETTINGS.setDenominationKeyRequest(account, currencyCode, denominationKey)
+  return setDenominationKeyRequestAccountSettings(account, currencyCode, denominationKey)
     .then(() =>
       dispatch({
         type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
@@ -220,7 +227,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
 export const setDeveloperModeOn = (developerModeOn: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  ACCOUNT_SETTINGS.setDeveloperModeOn(account, developerModeOn)
+  setDeveloperModeOnAccountSettings(account, developerModeOn)
     .then(() => {
       if (developerModeOn) {
         dispatch({ type: 'DEVELOPER_MODE_ON' })

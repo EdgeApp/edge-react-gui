@@ -8,7 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { REQUEST, SEND } from '../../constants/SceneKeys.js'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -283,13 +283,13 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     // Crypto Amount Formatting
     const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings, 'display')
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
-    const cryptoAmountFormat = intl.formatNumber(bns.add(cryptoAmount, '0'))
+    const cryptoAmountFormat = formatNumber(bns.add(cryptoAmount, '0'))
 
     // Fiat Balance Formatting
     const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
     const defaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(balance)
     const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
-    const fiatBalanceFormat = intl.formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
+    const fiatBalanceFormat = formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
     return {
       currencyCode: selectedCurrencyCode,

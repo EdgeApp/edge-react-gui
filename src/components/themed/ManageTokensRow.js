@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import * as UTILS from '../../util/utils.js'
+import { noOp } from '../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletListRow } from './WalletListRow'
 
@@ -21,7 +21,7 @@ export type Props = {
   symbolImage: string
 }
 
-function ManageTokensRow(props: Props) {
+export function ManageTokensRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -41,7 +41,7 @@ function ManageTokensRow(props: Props) {
   const isEditable = !Object.keys(SYNCED_ACCOUNT_DEFAULTS).includes(currencyCode)
 
   const onPress = () => {
-    isEditable ? goToEditTokenScene(currencyCode) : UTILS.noOp()
+    isEditable ? goToEditTokenScene(currencyCode) : noOp()
   }
 
   return (
@@ -78,5 +78,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   }
 }))
-
-export default ManageTokensRow

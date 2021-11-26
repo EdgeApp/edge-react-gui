@@ -6,7 +6,7 @@ import { showTransactionDropdown } from '../components/navigation/TransactionDro
 import { showError } from '../components/services/AirshipInstance.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type TransactionListTx } from '../types/types.js'
-import * as UTILS from '../util/utils'
+import { isReceivedTransaction, unixToLocaleDateTime } from '../util/utils'
 import { checkFioObtData } from './FioActions'
 
 export const updateBalance = () => ({
@@ -89,7 +89,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
 
     for (const tx of transactions) {
       // for each transaction, add some meta info
-      const { date, time } = UTILS.unixToLocaleDateTime(tx.date)
+      const { date, time } = unixToLocaleDateTime(tx.date)
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
         transactionIdMap[tx.txid] = key
@@ -153,7 +153,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   let isTransactionForSelectedWallet = false
   const receivedTxs = []
   for (const transaction of edgeTransactions) {
-    if (UTILS.isReceivedTransaction(transaction)) {
+    if (isReceivedTransaction(transaction)) {
       receivedTxs.push(transaction)
     }
     if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
@@ -171,7 +171,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   }
   if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
-  if (!UTILS.isReceivedTransaction(edgeTransaction)) return
+  if (!isReceivedTransaction(edgeTransaction)) return
   showTransactionDropdown(edgeTransaction, walletId)
 }
 

@@ -11,15 +11,15 @@ import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils'
+import { mergeTokensRemoveInvisible } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { MainButton } from '../themed/MainButton.js'
-import ManageTokensHeader from '../themed/ManageTokensHeader'
-import ManageTokensRow from '../themed/ManageTokensRow'
+import { ManageTokensHeader } from '../themed/ManageTokensHeader'
+import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
@@ -91,7 +91,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       return token.walletType === guiWallet.type || token.walletType === undefined
     })
 
-    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
+    const combinedTokenInfo = mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
