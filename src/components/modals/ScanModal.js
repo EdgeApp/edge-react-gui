@@ -16,7 +16,8 @@ import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import { useEffect } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { QrPeephole } from '../common/QrPeephole.js'
-import { showError, showWarning } from '../services/AirshipInstance.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
+import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { requestPermission } from '../services/PermissionsManager'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -26,7 +27,10 @@ import { SceneHeader } from '../themed/SceneHeader.js'
 
 type OwnProps = {
   bridge: AirshipBridge<string | void>,
-  title: string
+  title: string,
+  isFlash?: boolean,
+  isAlbum?: boolean,
+  isTextInput?: boolean
 }
 
 type StateProps = {
@@ -43,7 +47,20 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 const Component = (props: Props) => {
-  const { bridge, theme, title, enableScan, disableScan, scanEnabled, toggleEnableTorch, torchEnabled, cameraPermission } = props
+  const {
+    bridge,
+    theme,
+    title,
+    enableScan,
+    disableScan,
+    scanEnabled,
+    toggleEnableTorch,
+    torchEnabled,
+    cameraPermission,
+    isAlbum = true,
+    isFlash = true,
+    isTextInput
+  } = props
   const styles = getStyles(theme)
 
   const { width: windowWidth, height: windowHeight } = useWindowSize()
@@ -67,6 +84,16 @@ const Component = (props: Props) => {
 
   const handleFlash = () => {
     toggleEnableTorch()
+  }
+
+  const handleTextInput = async () => {
+    const uri = await Airship.show(bridge => (
+      <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
+    ))
+
+    if (uri) {
+      bridge.resolve(uri)
+    }
   }
 
   const handleAlbum = () => {
@@ -170,14 +197,24 @@ const Component = (props: Props) => {
             <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
               <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
-                <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                  <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
-                  <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
-                  <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
-                  <EdgeText>{s.strings.fragment_send_album}</EdgeText>
-                </TouchableOpacity>
+                {isFlash ? (
+                  <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
+                    <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
+                    <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
+                  </TouchableOpacity>
+                ) : null}
+                {isAlbum ? (
+                  <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
+                    <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
+                    <EdgeText>{s.strings.fragment_send_album}</EdgeText>
+                  </TouchableOpacity>
+                ) : null}
+                {isTextInput ? (
+                  <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
+                    <Ionicon style={styles.icon} name="pencil-outline" size={theme.rem(1.5)} />
+                    <EdgeText>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+                  </TouchableOpacity>
+                ) : null}
               </View>
             </View>
           </View>
