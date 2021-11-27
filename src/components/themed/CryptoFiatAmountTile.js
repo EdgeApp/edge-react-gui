@@ -31,6 +31,8 @@ export const CryptoFiatAmountTile = (props: Props) => {
   })
 
   // Convert wallet native denomination to exchange denomination
+  // Does NOT take into account display denomination settings here,
+  // i.e. sats, bits, etc.
   const cryptoAmountDenom = bns.div(nativeCryptoAmount, cryptoDenomMult, DECIMAL_PRECISION)
 
   // Default to 10 displayed chars for crypto amount

@@ -78,11 +78,11 @@ export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
-export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2) => {
-  if (fiatAmount == null || fiatAmount === 0) return formatNumber('0.00')
+export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
+  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const initialAmount = fiatAmount.toFixed(precision)
   const absoluteAmount = bns.abs(initialAmount)
-  return formatNumber(bns.toFixed(absoluteAmount, 2, precision), { noGrouping: true })
+  return formatNumber(bns.toFixed(absoluteAmount, 2, precision), { noGrouping })
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
@@ -822,10 +822,22 @@ export const convertTransactionFeeToDisplayFee = (
 }
 // End of convert Transaction Fee to Display Fee
 
+/**
+ * @param {
+ *   minPrecision?: Minimum number of decimal places to display.
+ *   appendCurrencyCode?: Append 3 character currency code to the right.
+ *   autoPrecision?: Automatically increase precision, with at least
+ *   'minPrecision' number of digits after leading zeros.
+ *   fiatSymbolSpace?: Add space between numeric value and left currency
+ *   symbol.
+ *   parenthesisEnclosed?: Enclose value in ( ).
+ * } props
+ * @returns Formatted fiat value.
+ */
 export function formatFiatString(props: {
   isoFiatCurrencyCode: string,
-  fiatAmount: string,
-  fiatDenomMult?: string,
+  fiatAmount: string | number,
+  minPrecision?: string | number,
   appendCurrencyCode?: boolean,
   autoPrecision?: boolean,
   fiatSymbolSpace?: boolean,
@@ -834,7 +846,7 @@ export function formatFiatString(props: {
   const {
     isoFiatCurrencyCode,
     fiatAmount,
-    fiatDenomMult = '1',
+    minPrecision = 2,
     appendCurrencyCode = false,
     autoPrecision = false,
     fiatSymbolSpace = false,
@@ -843,16 +855,21 @@ export function formatFiatString(props: {
 
   const fiatCurrencyCode = appendCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
-  const fiatSymbolFmt = fiatSymbolSpace ? ` ${fiatSymbol}` : fiatSymbol
+  const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
   const openParen = parenthesisEnclosed ? '(' : ''
   const closeParen = parenthesisEnclosed ? ')' : ''
-  const fiatAmtCleanedDelim = fiatAmount.replace(',', '.')
+  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
 
-  const precision = bns.log10(fiatDenomMult)
-  const fiatAmountFmtStr =
-    autoPrecision && parseFloat(fiatAmtCleanedDelim) <= 0.1
-      ? displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision + 3)
-      : displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision)
+  let precision: number = parseInt(minPrecision)
+  let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
+  if (autoPrecision) {
+    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
+      tempFiatAmount *= 10
+      precision++
+    }
+  }
+
+  const fiatAmountFmtStr = displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision)
 
   return `${openParen}${fiatSymbolFmt}${fiatAmountFmtStr}${fiatCurrencyCode}${closeParen}`
 }
