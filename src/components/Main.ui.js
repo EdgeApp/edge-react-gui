@@ -32,7 +32,6 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { ScanScene } from '../components/scenes/ScanScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -90,7 +89,6 @@ import {
   RECOVER_PASSWORD,
   REQUEST,
   ROOT,
-  SCAN,
   SECURITY_ALERTS_SCENE,
   SEND,
   SETTINGS_OVERVIEW,
@@ -334,19 +332,6 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 navTransparent
                 renderTitle={<HeaderTitle title=" " />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
-                key={SCAN}
-                component={withNavigation(ifLoggedIn(ScanScene))}
-                navTransparent
-                onEnter={props => {
-                  this.props.requestPermission('camera')
-                  this.props.dispatchEnableScan()
-                }}
-                onExit={this.props.dispatchDisableScan}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />
