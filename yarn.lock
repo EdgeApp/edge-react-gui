@@ -5064,10 +5064,10 @@ edge-currency-monero@^0.3.3:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.39:
-  version "0.11.39"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.39.tgz#5290db2a04b1baabfff8e3de414d328f6a054f86"
-  integrity sha512-fZE3z8hXxagvcwrmsgAES53e6NflDdpgvk74UJY/DaiUhT33KlsvSbwCmTk5q493bPnRkTFYaZ9BjOIpE2q7Rg==
+edge-exchange-plugins@^0.11.40:
+  version "0.11.40"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.40.tgz#f34ea2a8880df06c8a1caf2f0ab2f791716c73b8"
+  integrity sha512-EVs310x3BG9Qq83SIwap1ZhiDbsW76jy4/iKm1I6Nc7xRsQGn6m1vUhUbfmKv1P5eCCAABNRRzTUXC8wtOYUAA==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
@@ -5076,10 +5076,10 @@ edge-exchange-plugins@^0.11.39:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.26:
-  version "0.9.26"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.26.tgz#45a237d259d7ccb26893471477ef430b4042d6bf"
-  integrity sha512-mc23bTKqbYqPlVUbe6ncKLc3gIViRiydOWttdX7IIWG4b1PiYzUWCda/kZnof4wCTQfgCrk7DFA4eiQ7F1WDyw==
+edge-login-ui-rn@^0.9.27:
+  version "0.9.27"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.27.tgz#8fe7ed987b0cea727839023fecd8228d88df2efa"
+  integrity sha512-cNta6xaVxIKL+hgXY9Qvh0nzzieS0bAQuD8liF58+c0yFLgYFVbpt6Jfil+MQyQ273qPC+sOknyfeJ6QnNUcXQ==
   dependencies:
     cleaners "^0.3.1"
     date-fns "^2.23.0"
