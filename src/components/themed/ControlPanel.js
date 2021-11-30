@@ -51,8 +51,8 @@ export function ControlPanel(props: Props) {
   const context = useSelector(state => state.core.context)
   const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
   const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
-  const guiWallet = useSelector(state => getSelectedWallet(state))
-  const currencyLogo = useSelector(state => (guiWallet != null ? getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage : null))
+  const guiWallet = useSelector(getSelectedWallet)
+  const currencyLogo = guiWallet != null ? getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage : null
   const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
     guiWallet != null ? getDisplayDenomination(state, selectedCurrencyCode) : { name: '', multiplier: '1' }
   )
@@ -66,12 +66,13 @@ export function ControlPanel(props: Props) {
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = useState(false)
+  const isMultiUsers = usernames.length > 0
   const handleToggleDropdown = () => {
-    setIsDropped(!isDropped)
+    if (isMultiUsers) setIsDropped(!isDropped)
   }
   useEffect(() => {
-    if (!isDrawerOpen) setIsDropped(false)
-  }, [isDrawerOpen])
+    if (!isDrawerOpen || !isMultiUsers) setIsDropped(false)
+  }, [isDrawerOpen, isMultiUsers])
 
   /// ---- Callbacks ----
 
@@ -87,9 +88,10 @@ export function ControlPanel(props: Props) {
             async onPress() {
               await dispatch(deleteLocalAccount(username))
               return true
-            }
+            },
+            type: 'primary'
           },
-          cancel: { label: s.strings.string_cancel }
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
         }}
       />
     ))
@@ -111,9 +113,7 @@ export function ControlPanel(props: Props) {
               dispatch(qrCodeScanned(result))
             }
           })
-          .catch(error => {
-            showError(error)
-          })
+          .catch(showError)
       }
     })
   }
@@ -126,9 +126,7 @@ export function ControlPanel(props: Props) {
           dispatch(loginQrCodeScanned(result))
         }
       })
-      .catch(error => {
-        showError(error)
-      })
+      .catch(showError)
   }
 
   const handleShareApp = () => {
@@ -136,7 +134,7 @@ export function ControlPanel(props: Props) {
 
     const shareOptions = {
       message: Platform.OS === 'ios' ? message : message + EDGE_URL,
-      EDGE_URL: Platform.OS === 'ios' ? EDGE_URL : ''
+      url: Platform.OS === 'ios' ? EDGE_URL : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
   }
@@ -191,44 +189,43 @@ export function ControlPanel(props: Props) {
   const rowDatas: any[] = [
     {
       pressHandler: () => handleGoToScene(FIO_ADDRESS_LIST),
-      iconName: 'fio-names',
+      iconName: 'cp-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
       pressHandler: () => handleGoToScene(FIO_REQUEST_LIST),
-      iconName: 'FIO-geometric',
+      iconName: 'cp-fio',
       title: s.strings.drawer_fio_requests
     },
     {
       pressHandler: () => handleGoToScene(WALLET_CONNECT),
-      iconName: 'wallet-connect',
+      iconName: 'cp-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
     {
       pressHandler: () => handleLoginQr(),
-      iconName: 'scan-qr',
+      iconName: 'cp-scan-qr',
       title: s.strings.drawer_scan_qr_send
     },
-    { pressHandler: handleSweep, iconName: 'sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleSweep, iconName: 'cp-sweep', title: s.strings.drawer_sweep_private_key },
     {
       pressHandler: () => handleGoToScene(TERMS_OF_SERVICE),
-      iconName: 'tos',
+      iconName: 'cp-tos',
       title: s.strings.title_terms_of_service
     },
-    { pressHandler: handleShareApp, iconName: 'share', title: s.strings.string_share + ' ' + s.strings.app_name },
+    { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + s.strings.app_name },
     {
       pressHandler: () => handleGoToScene(SETTINGS_OVERVIEW_TAB),
-      iconName: 'settings',
+      iconName: 'cp-settings',
       title: s.strings.settings_title
     },
     {
       pressHandler: () => dispatch(logoutRequest()),
-      iconName: 'logout',
+      iconName: 'cp-logout',
       title: s.strings.settings_button_logout
     }
   ]
 
-  const dividerLine = <DividerLine marginRem={[0.5, -2, 2, 1]} />
   const fiatText =
     isoFiatCurrencyCode === null ? (
       ''
@@ -238,7 +235,7 @@ export function ControlPanel(props: Props) {
         cryptoCurrencyCode={selectedCurrencyCode}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         autoPrecision
-        fiatSymbolSpace
+        appendFiatCurrencyCode
       />
     )
 
@@ -263,33 +260,36 @@ export function ControlPanel(props: Props) {
         </View>
         <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
-            <Fontello name="account" style={styles.icon} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
+            <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
             <EdgeText style={styles.text}>{activeUsername}</EdgeText>
           </View>
-          <View style={styles.rowIconContainer}>
-            <Animated.View style={aRotate}>
-              <Feather name="chevron-down" color={theme.controlPanelIcon} size={theme.rem(1.5)} />
-            </Animated.View>
-          </View>
+          {isMultiUsers ? (
+            <View style={styles.rowIconContainer}>
+              <Animated.View style={aRotate}>
+                <Feather name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
+              </Animated.View>
+            </View>
+          ) : null}
         </Pressable>
-        {dividerLine}
+        <DividerLine marginRem={[0.5, -2, 2, 1]} />
       </View>
       {/* ==== Top Panel End ==== */}
-      {/* ==== Middle Panel Start ==== */}
-      <View style={styles.middlePanel}>
+      {/* ==== Bottom Panel Start ==== */}
+      <View style={styles.bottomPanel}>
         {/* === Dropdown Start === */}
         <Animated.View style={[styles.dropContainer, aDropdown]}>
           <ScrollView>
             {usernames.map((username: string) => (
               <View key={username} style={styles.rowContainer}>
+                {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
                 <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)}>
                   <EdgeText style={styles.text}>{username}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)}>
-                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.controlPanelIcon} />
+                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -304,7 +304,7 @@ export function ControlPanel(props: Props) {
             {rowDatas.map(rowData => (
               <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
-                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.controlPanelIcon} />
+                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
                 </View>
                 <View style={styles.rowBodyContainer}>
                   <EdgeText style={styles.text}>{rowData.title}</EdgeText>
@@ -315,8 +315,7 @@ export function ControlPanel(props: Props) {
           {/* === Navigation Rows End === */}
         </View>
       </View>
-      {/* ==== Middle Panel End ==== */}
-      <View style={styles.bottomPanel}>{dividerLine}</View>
+      {/* ==== Bottom Panel End ==== */}
     </SceneWrapper>
   )
 }
@@ -356,23 +355,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderTopLeftRadius: theme.rem(2),
     height: theme.rem(10.5)
   },
-  middlePanel: {
+  bottomPanel: {
     flex: 1,
     flexGrow: 1,
-    backgroundColor: theme.modal
-  },
-  bottomPanel: {
     backgroundColor: theme.modal,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    flexDirection: 'column',
-    height: theme.rem(4),
     borderBottomLeftRadius: theme.rem(2)
   },
   rowsContainer: {
-    position: 'absolute',
-    display: 'flex',
-    alignItems: 'flex-start'
+    flex: 1,
+    flexGrow: 1,
+    marginBottom: theme.rem(1.5)
   },
   rowContainer: {
     display: 'flex',
@@ -400,6 +392,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   dropContainer: {
     backgroundColor: theme.modal,
     borderBottomLeftRadius: theme.rem(2),
+    borderBottomRightRadius: theme.rem(2),
     zIndex: 2,
     position: 'absolute',
     width: '100%'

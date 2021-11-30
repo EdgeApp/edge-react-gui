@@ -49,20 +49,6 @@
       ]
     },
     {
-      "uid": "2b55160bc426587ce0c98cd65c0e851f",
-      "css": "FIO-geometric",
-      "code": 59403,
-      "src": "custom_icons",
-      "selected": true,
-      "svg": {
-        "path": "M365 398L59 520 531 704V459ZM31 480V235L337 357ZM399 324L59 194 531 31V276ZM31 846V561L309 663V969Z",
-        "width": 563
-      },
-      "search": [
-        "FIO-geometric"
-      ]
-    },
-    {
       "uid": "6b6275743d1b4b31d60ad255b45e44d5",
       "css": "buy",
       "code": 59393,
@@ -294,7 +280,7 @@
     },
     {
       "uid": "8f022c27f51cd7db8ef88a878de46c85",
-      "css": "account",
+      "css": "cp-account",
       "code": 59413,
       "src": "custom_icons",
       "selected": true,
@@ -303,12 +289,12 @@
         "width": 1000
       },
       "search": [
-        "account"
+        "cp-account"
       ]
     },
     {
       "uid": "078bf075ad50e41c3847a9908c813347",
-      "css": "logout",
+      "css": "cp-logout",
       "code": 59408,
       "src": "custom_icons",
       "selected": true,
@@ -317,12 +303,12 @@
         "width": 1000
       },
       "search": [
-        "logout"
+        "cp-logout"
       ]
     },
     {
       "uid": "94b028dc195654a277935165d1e95de7",
-      "css": "scan-qr",
+      "css": "cp-scan-qr",
       "code": 59409,
       "src": "custom_icons",
       "selected": true,
@@ -331,12 +317,12 @@
         "width": 1000
       },
       "search": [
-        "scan-qr"
+        "sp-scan-qr"
       ]
     },
     {
       "uid": "ef1f18df21331ce10492859addfa5178",
-      "css": "settings",
+      "css": "cp-settings",
       "code": 59410,
       "src": "custom_icons",
       "selected": true,
@@ -345,12 +331,12 @@
         "width": 1000
       },
       "search": [
-        "settings"
+        "cp-settings"
       ]
     },
     {
       "uid": "d2a9b631d93d0befc73effaab9947886",
-      "css": "share",
+      "css": "cp-share",
       "code": 59411,
       "src": "custom_icons",
       "selected": true,
@@ -359,12 +345,12 @@
         "width": 1000
       },
       "search": [
-        "share"
+        "cp-share"
       ]
     },
     {
       "uid": "fab665203eadf55e85d9dbd78ec5dbeb",
-      "css": "sweep",
+      "css": "cp-sweep",
       "code": 59412,
       "src": "custom_icons",
       "selected": true,
@@ -373,12 +359,12 @@
         "width": 1000
       },
       "search": [
-        "sweep"
+        "cp-sweep"
       ]
     },
     {
       "uid": "9a8863f228165d78204df2e46ac2749e",
-      "css": "tos",
+      "css": "cp-tos",
       "code": 59420,
       "src": "custom_icons",
       "selected": true,
@@ -387,7 +373,7 @@
         "width": 1000
       },
       "search": [
-        "tos"
+        "cp-tos"
       ]
     },
     {
@@ -406,7 +392,7 @@
     },
     {
       "uid": "3fc8e0aa838bb20075b9cd7eff0b5450",
-      "css": "fio-names",
+      "css": "cp-fio-names",
       "code": 59414,
       "src": "custom_icons",
       "selected": true,
@@ -415,12 +401,12 @@
         "width": 1000
       },
       "search": [
-        "fio-names"
+        "cp-fio-names"
       ]
     },
     {
       "uid": "df21dc29474db86e9cb28623454d1857",
-      "css": "wallet-connect",
+      "css": "cp-wallet-connect",
       "code": 59421,
       "src": "custom_icons",
       "selected": true,
@@ -429,7 +415,35 @@
         "width": 1000
       },
       "search": [
-        "wallet-connect"
+        "cp-wallet-connect"
+      ]
+    },
+    {
+      "uid": "a3510a28ddee25a6209bc9fce588740e",
+      "css": "cp-fio",
+      "code": 59422,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M583.3 391.3L277.8 521.7 750 717.4V456.5L583.3 391.3ZM250 478.3V217.4L555.6 347.8 250 478.3ZM617.6 312.5L277.8 173.9 750 0V260.9L617.6 312.5ZM250 869.6V565.2L527.8 673.9V1000L250 869.6Z",
+        "width": 1000
+      },
+      "search": [
+        "cp-fio"
+      ]
+    },
+    {
+      "uid": "2b55160bc426587ce0c98cd65c0e851f",
+      "css": "FIO-geometric",
+      "code": 59403,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M365 398L59 520 531 704V459ZM31 480V235L337 357ZM399 324L59 194 531 31V276ZM31 846V561L309 663V969Z",
+        "width": 563
+      },
+      "search": [
+        "FIO-geometric"
       ]
     }
   ]

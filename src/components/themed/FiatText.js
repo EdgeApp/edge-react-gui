@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { DECIMAL_PRECISION, formatFiatString } from '../../util/utils'
+import { DECIMAL_PRECISION, formatFiatString, getFiatSymbol } from '../../util/utils'
 
 type Props = {
   appendFiatCurrencyCode?: boolean,
@@ -13,11 +13,26 @@ type Props = {
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode: string,
   parenthesisEnclosed?: boolean,
-  autoPrecision?: boolean
+  autoPrecision?: boolean,
+  noGrouping?: boolean
 }
 
 export const FiatText = (props: Props) => {
-  const { appendFiatCurrencyCode, nativeCryptoAmount, fiatSymbolSpace, parenthesisEnclosed, cryptoCurrencyCode, isoFiatCurrencyCode, autoPrecision } = props
+  const {
+    appendFiatCurrencyCode,
+    nativeCryptoAmount,
+    fiatSymbolSpace,
+    parenthesisEnclosed,
+    cryptoCurrencyCode,
+    isoFiatCurrencyCode,
+    autoPrecision,
+    noGrouping = false
+  } = props
+  const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
+  const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
+  const openParen = parenthesisEnclosed ? '(' : ''
+  const closeParen = parenthesisEnclosed ? ')' : ''
 
   // Convert native to fiat amount.
   // Does NOT take into account display denomination settings here,
@@ -28,12 +43,9 @@ export const FiatText = (props: Props) => {
     return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
-  return formatFiatString({
-    isoFiatCurrencyCode,
+  return `${openParen}${fiatSymbolFmt} ${formatFiatString({
     fiatAmount,
-    appendFiatCurrencyCode,
     autoPrecision,
-    fiatSymbolSpace,
-    parenthesisEnclosed
-  })
+    noGrouping
+  })}${fiatCurrencyCode}${closeParen}`
 }
