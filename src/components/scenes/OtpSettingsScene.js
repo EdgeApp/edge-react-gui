@@ -106,7 +106,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
         {otpKey != null ? (
           <MainButton label={s.strings.otp_disable} marginRem={0.5} type="secondary" onPress={this.handleDisable} />
         ) : (
-          <MainButton label={s.strings.otp_enable} marginRem={0.5} onPress={this.handleEnable} />
+          <MainButton label={s.strings.otp_enable} marginRem={0.5} type="secondary" onPress={this.handleEnable} />
         )}
       </SceneWrapper>
     )
