@@ -213,7 +213,6 @@ export type Theme = {
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
-  settingsTotleLogo: string,
 
   paymentTypeLogoApplePay: string,
   paymentTypeLogoAuspost: string,
