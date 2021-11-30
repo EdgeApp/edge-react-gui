@@ -500,7 +500,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <MainButton onPress={Actions.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} />
+            <MainButton onPress={Actions.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
           </View>
         </ScrollView>
       </SceneWrapper>
