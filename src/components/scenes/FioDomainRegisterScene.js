@@ -200,13 +200,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.handleFioDomainFocus()
 
     const fioDomain = await Airship.show(bridge => (
-      <TextInputModal
-        bridge={bridge}
-        initialValue={this.state.fioDomain}
-        inputLabel={s.strings.fio_domain_label}
-        title={s.strings.fio_domain_choose_label}
-        buttonType="secondary"
-      />
+      <TextInputModal bridge={bridge} initialValue={this.state.fioDomain} inputLabel={s.strings.fio_domain_label} title={s.strings.fio_domain_choose_label} />
     ))
     if (fioDomain) this.handleFioDomainChange(fioDomain)
   }
