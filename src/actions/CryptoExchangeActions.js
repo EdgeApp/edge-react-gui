@@ -91,8 +91,8 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
           message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
           buttons={{
             buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-            exchange: { label: s.strings.buy_crypto_modal_exchange },
-            cancel: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+            exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
+            cancel: { label: s.strings.buy_crypto_decline }
           }}
         />
       ))

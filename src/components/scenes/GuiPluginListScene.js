@@ -112,13 +112,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         const newNumber = timesPluginWarningModalViewed + 1
         if (newNumber === 3) {
           await Airship.show(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              message={s.strings.plugin_provider_disclaimer}
-              buttons={{
-                ok: { label: s.strings.string_ok_cap }
-              }}
-            />
+            <ButtonsModal bridge={bridge} message={s.strings.plugin_provider_disclaimer} buttons={{ ok: { label: s.strings.string_ok_cap } }} />
           ))
         }
         const newText = JSON.stringify({
@@ -133,13 +127,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       const text = JSON.stringify(json)
       await account.disklet.setText(MODAL_DATA_FILE, text)
       await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          message={s.strings.plugin_provider_disclaimer}
-          buttons={{
-            ok: { label: s.strings.string_ok_cap }
-          }}
-        />
+        <ButtonsModal bridge={bridge} message={s.strings.plugin_provider_disclaimer} buttons={{ ok: { label: s.strings.string_ok_cap } }} />
       ))
     }
   }

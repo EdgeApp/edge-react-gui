@@ -83,13 +83,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     // todo: styles for message
     const transferredMessage = `${addressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
     await Airship.show(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={s.strings.fio_domain_transferred}
-        buttons={{
-          ok: { label: s.strings.string_ok_cap }
-        }}
-      >
+      <ButtonsModal bridge={bridge} title={s.strings.fio_domain_transferred} buttons={{ ok: { label: s.strings.string_ok_cap } }}>
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))

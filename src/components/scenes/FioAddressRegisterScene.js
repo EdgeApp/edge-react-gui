@@ -329,6 +329,7 @@ class FioAddressRegister extends React.Component<Props, State> {
             label={walletLoading ? '' : s.strings.string_next_capitalized}
             spinner={walletLoading}
             onPress={this.handleNextButton}
+            type="secondary"
           />
         </View>
       )

@@ -34,7 +34,9 @@ export function RawTextModal(props: Props) {
       <ScrollView>
         <ModalMessage>{body}</ModalMessage>
       </ScrollView>
-      {disableCopy ? null : <MainButton alignSelf="center" label={s.strings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} />}
+      {disableCopy ? null : (
+        <MainButton alignSelf="center" label={s.strings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} type="secondary" />
+      )}
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>
   )
