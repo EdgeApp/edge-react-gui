@@ -20,7 +20,7 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
       message={`${s.strings.fragment_wallets_resync_wallet_first_confirm_message_mobile} ${getWalletName(currencyWallets[walletId])}?`}
       buttons={{
         confirm: { label: s.strings.string_resync },
-        cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        cancel: { label: s.strings.string_cancel_cap }
       }}
     />
   ))

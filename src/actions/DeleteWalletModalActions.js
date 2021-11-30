@@ -21,7 +21,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
       title={s.strings.fragment_wallets_delete_wallet}
       buttons={{
         confirm: { label: s.strings.string_archive },
-        cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        cancel: { label: s.strings.string_cancel_cap }
       }}
     >
       <>

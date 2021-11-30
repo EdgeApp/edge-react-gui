@@ -25,7 +25,7 @@ const requestReview = async () => {
         message={s.strings.request_review_question_subtitle}
         buttons={{
           ok: { label: s.strings.request_review_answer_yes },
-          cancel: { label: s.strings.request_review_answer_no, type: 'secondary' }
+          cancel: { label: s.strings.request_review_answer_no }
         }}
       />
     ))

@@ -171,7 +171,7 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
       message={s.strings.otp_modal_reset_description}
       buttons={{
         confirm: { label: s.strings.otp_keep },
-        cancel: { label: s.strings.otp_disable, type: 'secondary' }
+        cancel: { label: s.strings.otp_disable }
       }}
     />
   ))
@@ -205,7 +205,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
       message={s.strings.restore_wallets_modal_description}
       buttons={{
         confirm: { label: s.strings.restore_wallets_modal_confirm },
-        cancel: { label: s.strings.restore_wallets_modal_cancel, type: 'secondary' }
+        cancel: { label: s.strings.restore_wallets_modal_cancel }
       }}
     />
   ))

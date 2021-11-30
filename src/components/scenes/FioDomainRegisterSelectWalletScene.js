@@ -164,9 +164,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   bridge={bridge}
                   title={`${s.strings.fio_domain_label} ${s.strings.fragment_wallet_unconfirmed}`}
                   message={sprintf(s.strings.fio_address_register_pending, s.strings.fio_domain_label)}
-                  buttons={{
-                    ok: { label: s.strings.string_ok_cap }
-                  }}
+                  buttons={{ ok: { label: s.strings.string_ok_cap } }}
                 />
               ))
               navigation.navigate('walletList')

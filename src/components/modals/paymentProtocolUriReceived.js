@@ -48,9 +48,7 @@ export const paymentProtocolUriReceived = async (
         bridge={bridge}
         title={s.strings.scan_invalid_address_error_title}
         message={s.strings.scan_invalid_address_error_description}
-        buttons={{
-          ok: { label: s.strings.string_ok }
-        }}
+        buttons={{ ok: { label: s.strings.string_ok } }}
       />
     ))
   }

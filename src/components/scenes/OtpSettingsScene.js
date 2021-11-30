@@ -63,7 +63,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
               return true
             }
           },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap }
         }}
       />
     )).catch(showError)

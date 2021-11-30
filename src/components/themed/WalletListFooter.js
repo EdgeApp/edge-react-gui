@@ -76,7 +76,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
         message={s.strings.wallet_list_add_token_modal_message}
         buttons={{
           confirm: { label: s.strings.title_create_wallet },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap }
         }}
       />
     ))
