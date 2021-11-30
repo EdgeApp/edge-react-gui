@@ -278,6 +278,7 @@ class FioAddressRegister extends React.Component<Props, State> {
         initialValue={this.state.fioAddress}
         inputLabel={s.strings.fio_address_register_form_field_label}
         title={s.strings.fio_address_choose_label}
+        buttonType="secondary"
       />
     )).then((response: string | void) => {
       if (response) {
