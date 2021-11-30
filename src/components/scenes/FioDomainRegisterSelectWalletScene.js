@@ -210,7 +210,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             onPress={this.onWalletPress}
             disabled={!activationCost || activationCost === 0}
           />
-          {!loading && paymentWallet && paymentWallet.id && <MainButton label={s.strings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} />}
+          {!loading && paymentWallet && paymentWallet.id && (
+            <MainButton label={s.strings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="secondary" />
+          )}
           {errorMessage && (
             <EdgeText style={styles.errorMessage} numberOfLines={3}>
               {errorMessage}

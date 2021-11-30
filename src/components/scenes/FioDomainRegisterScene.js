@@ -222,6 +222,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           disabled={!isAvailable || walletLoading}
           spinner={walletLoading}
           onPress={this.handleNextButton}
+          type="secondary"
         />
       )
     }
