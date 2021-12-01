@@ -276,7 +276,7 @@ export function ControlPanel(props: Props) {
             </View>
           ) : null}
         </Pressable>
-        <DividerLine marginRem={[0.5, -2, 2, 1]} />
+        <DividerLine marginRem={[0.25, -2, 2, 1]} />
       </View>
       {/* ==== Top Panel End ==== */}
       {/* ==== Bottom Panel Start ==== */}
@@ -408,7 +408,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     display: 'flex',
     alignSelf: 'center',
     height: theme.rem(2.25),
-    marginTop: theme.rem(2)
+    marginTop: theme.rem(2),
+    marginBottom: theme.rem(0.25)
   },
   icon: {
     height: theme.rem(1.5),
