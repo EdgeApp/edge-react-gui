@@ -248,7 +248,8 @@
       "BCH",
       "BSV",
       "ETH",
-      "LTC"
+      "LTC",
+      "USDT"
     ],
     "paymentTypeLogoKey": "credit"
   },

@@ -78,11 +78,11 @@ export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
-export const displayFiatAmount = (fiatAmount?: number) => {
-  if (fiatAmount == null || fiatAmount === 0) return formatNumber('0.00')
-  const initialAmount = fiatAmount.toFixed(2)
+export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
+  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+  const initialAmount = fiatAmount.toFixed(precision)
   const absoluteAmount = bns.abs(initialAmount)
-  return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
+  return formatNumber(bns.toFixed(absoluteAmount, 2, precision), { noGrouping })
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
@@ -822,20 +822,20 @@ export const convertTransactionFeeToDisplayFee = (
 }
 // End of convert Transaction Fee to Display Fee
 
-export function getFiatAmountString(
-  state: RootState,
-  cryptoAmount: string | number,
-  cryptoCurrencyCode: string,
-  isoFiatCurrencyCode: string,
-  isAppendFiatCurrencyCode?: boolean = false
-): string {
-  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
-  const cryptoAmountStr = String(cryptoAmount)
-  const fiatAmount = formatNumber(convertCurrencyFromExchangeRates(state.exchangeRates, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmountStr), {
-    toFixed: FIAT_PRECISION
-  })
-  const fiatCurrencyCode = isAppendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  return `${fiatSymbol}${fiatAmount}${fiatCurrencyCode}`
+export function formatFiatString(props: { fiatAmount: string | number, minPrecision?: string | number, autoPrecision?: boolean, noGrouping?: boolean }) {
+  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
+
+  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
+  let precision: number = parseInt(minPrecision)
+  let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
+  if (autoPrecision) {
+    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
+      tempFiatAmount *= 10
+      precision++
+    }
+  }
+
+  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
 }
 
 export function getCryptoAmount(

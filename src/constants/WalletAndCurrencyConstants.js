@@ -212,17 +212,6 @@ export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInf
   }
 }
 
-export const getPrivateKeySweepableCurrencies = (): string[] => {
-  const sweepableCurrencies = []
-  for (const currencyCode in SPECIAL_CURRENCY_INFO) {
-    const currencyInfo = SPECIAL_CURRENCY_INFO[currencyCode]
-    if (currencyInfo.isPrivateKeySweepable) {
-      sweepableCurrencies.push(currencyCode)
-    }
-  }
-  return sweepableCurrencies
-}
-
 export const SPECIAL_CURRENCY_INFO: {
   [currencyCode: string]: SpecialCurrencyInfo
 } = {
