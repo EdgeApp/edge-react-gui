@@ -43,6 +43,7 @@ export type ParamList = {
   |},
   changePassword: void,
   changePin: void,
+  controlPanel: void,
   createWalletAccountSelect: {|
     accountName: string,
     existingWalletId?: string,
