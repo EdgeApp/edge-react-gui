@@ -8,7 +8,6 @@ import foxExchangeLogo from './settingsExchangeFoxExchange.png'
 import godexLogo from './settingsExchangeGodex.png'
 import sideshiftLogo from './settingsExchangeSideShiftAI.png'
 import switchainLogo from './settingsExchangeSwitchain.png'
-import totleLogo from './settingsExchangeTotle.png'
 
 export function getSwapPluginIcon(pluginId: string, theme?: Theme) {
   if (theme) {
@@ -27,7 +26,6 @@ export const swapThemePluginIcons = (pluginId: string, theme: Theme) => {
     godex: theme.settingsGodexLogo,
     switchain: theme.settingsSwitchainLogo,
     sideshift: theme.settingsSideshiftLogo,
-    totle: theme.settingsTotleLogo,
     default: theme.settingsDefaultLogo
   }
   const icon = logos[pluginId]
@@ -41,6 +39,5 @@ export const swapPluginIcons = {
   foxExchange: foxExchangeLogo,
   godex: godexLogo,
   sideshift: sideshiftLogo,
-  switchain: switchainLogo,
-  totle: totleLogo
+  switchain: switchainLogo
 }

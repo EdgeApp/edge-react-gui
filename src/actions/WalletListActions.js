@@ -9,7 +9,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import type { SortOption } from '../components/modals/WalletListSortModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
+import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Account/settings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
@@ -29,7 +29,7 @@ export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getStat
   const state = getState()
   const { account } = state.core
   const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
-  ACCOUNT_SETTINGS.setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
+  setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
     .then(() => {
       dispatch({
         type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
@@ -47,7 +47,7 @@ export const updateWalletsSort = (walletsSort: SortOption) => (dispatch: Dispatc
     type: 'UI/SETTINGS/SET_WALLETS_SORT',
     data: { walletsSort }
   })
-  ACCOUNT_SETTINGS.setWalletsSort(account, walletsSort).catch(showError)
+  setWalletsSort(account, walletsSort).catch(showError)
 }
 
 export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -111,7 +111,7 @@ const createWalletCheckModal = async (currencyCode: string): Promise<boolean> =>
       message={sprintf(s.strings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
       buttons={{
         ok: { label: s.strings.yes },
-        cancel: { label: s.strings.no, type: 'secondary' }
+        cancel: { label: s.strings.no }
       }}
     />
   ))

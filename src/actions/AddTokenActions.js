@@ -9,8 +9,8 @@ import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
-import * as UTILS from '../util/utils.js'
-import * as WALLET_ACTIONS from './WalletActions.js'
+import { mergeTokens } from '../util/utils.js'
+import { assembleCustomToken, refreshWallet } from './WalletActions.js'
 
 export const addNewToken = (
   walletId: string,
@@ -36,7 +36,7 @@ export const addNewToken = (
             enabledTokens: enabledTokensOnWallet
           }
         })
-        dispatch(WALLET_ACTIONS.refreshWallet(walletId))
+        dispatch(refreshWallet(walletId))
         Actions.pop()
       })
       .catch(error => {
@@ -59,7 +59,7 @@ export const addTokenAsync = async (
 
   const uiWallet = state.ui.wallets.byId[walletId]
   // create modified object structure to match metaTokens
-  const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
+  const newTokenObj: CustomTokenInfo = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
 
   // Check for conflicting currency codes:
   for (const pluginId of Object.keys(currencyConfig)) {
@@ -82,7 +82,7 @@ export const addTokenAsync = async (
     newCustomTokens = [newTokenObj]
   } else {
     const newList: CustomTokenInfo[] = [newTokenObj]
-    newCustomTokens = UTILS.mergeTokens(newList, customTokens) // otherwise merge metaTokens and customTokens
+    newCustomTokens = mergeTokens(newList, customTokens) // otherwise merge metaTokens and customTokens
   }
   settingsOnFile.customTokens = newCustomTokens
   settingsOnFile[currencyCode] = newTokenObj

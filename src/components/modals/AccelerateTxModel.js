@@ -14,7 +14,7 @@ import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { type GuiExchangeRates } from '../../types/types.js'
-import * as UTILS from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
@@ -163,7 +163,7 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction, edgeDenomination: EdgeDenomination): string => {
     const { exchangeRates, guiWallet, settings, selectedCurrencyCode } = this.props
 
-    const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
+    const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
 
     const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
 

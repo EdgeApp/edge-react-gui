@@ -5,7 +5,7 @@ import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'

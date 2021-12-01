@@ -49,8 +49,9 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}
-      {Object.keys(buttons).map(key => {
-        const { type = 'primary', label, onPress } = buttons[key]
+      {Object.keys(buttons).map((key, i) => {
+        const defaultType = i === 0 && Object.keys(buttons).length > 1 ? 'primary' : 'secondary'
+        const { type = defaultType, label, onPress } = buttons[key]
 
         const handlePress = (): void | Promise<void> => {
           if (onPress == null) return bridge.resolve(key)

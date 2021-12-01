@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native'
 
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -21,7 +21,7 @@ type Props = {
   categories: string[]
 }
 
-class SubCategorySelect extends React.Component<Props, State> {
+export class SubCategorySelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -125,5 +125,3 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export default SubCategorySelect

@@ -1,0 +1,3 @@
+{
+  "rules": { "import/no-default-export": "error" }
+}

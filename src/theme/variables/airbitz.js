@@ -106,5 +106,3 @@ export const THEME = {
     WALLET_LIST_OPAQUE_BLUE: 'rgba(14, 75, 117, 0.5)' // Same as CRYPTO_EXCHANGE_WALLET_LIST_ROW_OPAQUE_BLUE
   }
 }
-
-export default THEME

@@ -1,20 +1,29 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import * as React from 'react'
-import { Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 
 import { scale } from '../../../../util/scaling.js'
 import { getObjectDiff } from '../../../../util/utils.js'
-import styles from './style'
+import { styles } from './style'
 
-export default class FormattedText extends React.Component {
-  shouldComponentUpdate(nextProps) {
+type Props = {
+  children: React.Node,
+  fontSize?: number,
+  isBold?: boolean,
+  style?: StyleSheet.Styles
+}
+
+export class FormattedText extends React.Component<Props> {
+  style: StyleSheet.Styles | typeof undefined
+  nativeForward: any
+
+  shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props)
     this.style = this.props.isBold ? [styles.boldStyle] : [styles.defaultStyle]
 
@@ -27,11 +36,11 @@ export default class FormattedText extends React.Component {
     }
   }
 
-  handleRef = element => {
+  handleRef = (element: any) => {
     this.nativeForward = element
   }
 
-  setNativeProps(props) {
+  setNativeProps(props: Props) {
     this.nativeForward.setNativeProps(props)
   }
 

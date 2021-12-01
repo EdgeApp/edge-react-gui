@@ -205,6 +205,9 @@ export type Theme = {
   inputAccessoryBackground: string,
   inputAccessoryText: string,
 
+  // Animation
+  fadeDisable: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,

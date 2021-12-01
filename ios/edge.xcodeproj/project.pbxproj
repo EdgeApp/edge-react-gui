@@ -24,7 +24,6 @@
 		6EBB19D0256ABE0A006E5A8F /* Quicksand-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19C8256ABDD4006E5A8F /* Quicksand-Light.ttf */; };
 		6EBB19D1256ABE0A006E5A8F /* Quicksand-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19C9256ABDD4006E5A8F /* Quicksand-SemiBold.ttf */; };
 		6ED8C12021BB685C00CC03C7 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ED8C11F21BB685C00CC03C7 /* splash.png */; };
-		6EFAA86824F72A1A007775E5 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EFAA86724F72A18007775E5 /* custom.ttf */; };
 		77105E1044684D61B6B0B1EA /* SourceSansPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6315893BA6CF465CB1E166CF /* SourceSansPro-Black.ttf */; };
 		8CBFB9E2496842FC8F06CE3C /* SourceSansPro-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5374C609A9164C53819F3FDD /* SourceSansPro-Semibold.ttf */; };
 		98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 98AF3B031F99F7D10083E087 /* audio_sent.mp3 */; };
@@ -35,6 +34,7 @@
 		D6181FED10025926C9F176BD /* libPods-edge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */; };
 		DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */; };
 		DAF7C41220C505CC005B7898 /* plugins in Resources */ = {isa = PBXBuildFile; fileRef = DAF7C41120C505CC005B7898 /* plugins */; };
+		E4FEE7B327505FF700FDF009 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4FEE7B227505FF700FDF009 /* custom.ttf */; };
 		F0D7D6C909584919867CD8B5 /* SourceSansPro-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3174EFC33129444580156447 /* SourceSansPro-BlackItalic.ttf */; };
 		F3343A739BF04CF1B73A6AA6 /* SourceSansPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8203ECA416CB4127BE7B00B3 /* SourceSansPro-Regular.ttf */; };
 		F4A41DF580AB4DA18363D332 /* SourceSansPro-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67EDE898A18B445AB08D1ED3 /* SourceSansPro-ExtraLight.ttf */; };
@@ -67,7 +67,6 @@
 		6EBB19CA256ABDD4006E5A8F /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Medium.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
 		6EBB19CC256ABDD4006E5A8F /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Regular.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
 		6ED8C11F21BB685C00CC03C7 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
-		6EFAA86724F72A18007775E5 /* custom.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = custom.ttf; path = ../android/app/src/main/assets/fonts/custom.ttf; sourceTree = "<group>"; };
 		7F94D33AFE62415995DED277 /* SourceSansPro-SemiboldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-SemiboldItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-SemiboldItalic.ttf"; sourceTree = "<group>"; };
 		8203ECA416CB4127BE7B00B3 /* SourceSansPro-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Regular.ttf"; path = "../src/assets/fonts/SourceSansPro-Regular.ttf"; sourceTree = "<group>"; };
 		8D378044B6F0404F992F36CD /* SourceSansPro-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Bold.ttf"; path = "../src/assets/fonts/SourceSansPro-Bold.ttf"; sourceTree = "<group>"; };
@@ -81,6 +80,7 @@
 		DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "edge/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DAF7C41120C505CC005B7898 /* plugins */ = {isa = PBXFileReference; lastKnownFileType = folder; path = plugins; sourceTree = "<group>"; };
 		DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4FEE7B227505FF700FDF009 /* custom.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = custom.ttf; path = ../android/app/src/main/assets/fonts/custom.ttf; sourceTree = "<group>"; };
 		E682D9AD200DF9A70042F9BA /* edge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = edge.entitlements; path = edge/edge.entitlements; sourceTree = "<group>"; };
 		FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,12 +124,12 @@
 		3BB21E930C5F437EB1EAE492 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E4FEE7B227505FF700FDF009 /* custom.ttf */,
 				6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */,
 				6EBB19C8256ABDD4006E5A8F /* Quicksand-Light.ttf */,
 				6EBB19CA256ABDD4006E5A8F /* Quicksand-Medium.ttf */,
 				6EBB19CC256ABDD4006E5A8F /* Quicksand-Regular.ttf */,
 				6EBB19C9256ABDD4006E5A8F /* Quicksand-SemiBold.ttf */,
-				6EFAA86724F72A18007775E5 /* custom.ttf */,
 				98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */,
 				98AF3B031F99F7D10083E087 /* audio_sent.mp3 */,
 				3D2A4BE222934B0000E1EC61 /* blank.html */,
@@ -295,6 +295,7 @@
 				3D1368BD21DD76BB00DC8CE4 /* edge-core in Resources */,
 				98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */,
 				77105E1044684D61B6B0B1EA /* SourceSansPro-Black.ttf in Resources */,
+				E4FEE7B327505FF700FDF009 /* custom.ttf in Resources */,
 				F0D7D6C909584919867CD8B5 /* SourceSansPro-BlackItalic.ttf in Resources */,
 				6E22C89C256B72B700080A59 /* Quicksand-Bold.ttf in Resources */,
 				224A82278CB1465E9E84DC30 /* SourceSansPro-Bold.ttf in Resources */,
@@ -309,7 +310,6 @@
 				8CBFB9E2496842FC8F06CE3C /* SourceSansPro-Semibold.ttf in Resources */,
 				6EBB19D0256ABE0A006E5A8F /* Quicksand-Light.ttf in Resources */,
 				BBF0CDD08FB044868A4B510C /* SourceSansPro-SemiboldItalic.ttf in Resources */,
-				6EFAA86824F72A1A007775E5 /* custom.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -51,5 +51,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText
   }
 }))
-
-export default Title

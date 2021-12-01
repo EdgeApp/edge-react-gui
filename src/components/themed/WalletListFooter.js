@@ -1,28 +1,35 @@
 // @flow
 
-import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { CREATE_WALLET_SELECT_CRYPTO, CREATE_WALLET_SELECT_FIAT, MANAGE_TOKENS } from '../../constants/SceneKeys.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { selectWalletFromModal } from '../../actions/WalletActions.js'
+import { CREATE_WALLET_SELECT_CRYPTO, MANAGE_TOKENS } from '../../constants/SceneKeys.js'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type GuiWallet } from '../../types/types.js'
-import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
-import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type StateProps = {
-  account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet }
 }
 
-class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps> {
+type DispatchProps = {
+  onSelectWallet: (walletId: string, currencyCode: string) => void
+}
+
+const TokenSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(currencyCode => {
+  const { isCustomTokensSupported = false, isAccountActivationRequired = false } = SPECIAL_CURRENCY_INFO[currencyCode]
+  return isCustomTokensSupported && !isAccountActivationRequired
+})
+
+class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps> {
   renderAddButton = (title: string, onPress: () => void) => {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -50,41 +57,14 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
   }
 
   addToken = () => {
-    const { account, wallets } = this.props
-
-    // check for existence of any token-enabled wallets
-    for (const key of Object.keys(wallets)) {
-      const wallet = wallets[key]
-      const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
-      if (specialCurrencyInfo.isCustomTokensSupported) {
-        return Actions.push(MANAGE_TOKENS, {
-          guiWallet: wallet
-        })
-      }
-    }
-
-    // if no token-enabled wallets then allow creation of token-enabled wallet
-    const { ethereum } = account.currencyConfig
-    if (ethereum == null) {
-      return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
-    }
-
+    const { onSelectWallet } = this.props
     Airship.show(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={s.strings.wallet_list_add_token_modal_title}
-        message={s.strings.wallet_list_add_token_modal_message}
-        buttons={{
-          confirm: { label: s.strings.title_create_wallet },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
-        }}
-      />
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={TokenSupportedCurrencyCodes} showCreateWallet />
     ))
-      .then(answer => {
-        if (answer === 'confirm') {
-          Actions.push(CREATE_WALLET_SELECT_FIAT, {
-            selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
-          })
+      .then(({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId != null && currencyCode != null) {
+          onSelectWallet(walletId, currencyCode)
+          Actions.push(MANAGE_TOKENS, { guiWallet: this.props.wallets[walletId] })
         }
       })
       .catch(error => {
@@ -143,10 +123,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListFooter = connect<StateProps, {}, {}>(
+export const WalletListFooter = connect<StateProps, DispatchProps, {}>(
   state => ({
-    account: state.core.account,
     wallets: state.ui.wallets.byId
   }),
-  dispatch => ({})
+  dispatch => ({
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
+  })
 )(withTheme(WalletListFooterComponent))

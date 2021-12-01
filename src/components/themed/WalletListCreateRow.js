@@ -52,19 +52,12 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
   }
 
   createAndSelectWallet = async () => {
-    const { createWalletType, onPress, wallets } = this.props
+    const { createWalletType, onPress } = this.props
     try {
       if (createWalletType == null) throw new Error('Invalid Create Wallet Type')
       const { currencyCode, walletType } = createWalletType
       const wallet = await this.createWallet(currencyCode, walletType)
-      const checkWalletsThenSelect = () => {
-        if (wallets[wallet.id]) {
-          onPress(wallet.id, wallet.currencyInfo.currencyCode)
-        } else {
-          setTimeout(checkWalletsThenSelect, 50)
-        }
-      }
-      checkWalletsThenSelect() // To avoid race condition of selecting a wallet that is not yet on the redux state
+      onPress(wallet.id, wallet.currencyInfo.currencyCode)
     } catch (error) {
       showError(error)
     }

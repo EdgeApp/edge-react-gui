@@ -1,7 +1,7 @@
 // @flow
 
-import THEME from '../../../../theme/variables/airbitz'
-export default {
+import { THEME } from '../../../../theme/variables/airbitz'
+export const styles = {
   defaultStyle: {
     fontFamily: THEME.FONTS.DEFAULT
   },

@@ -31,6 +31,7 @@ const strings = {
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
+  warning_custom_fee_selected: 'Custom Fee Selected',
   warning_low_or_custom_fee:
     'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',

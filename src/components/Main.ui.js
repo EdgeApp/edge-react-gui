@@ -32,11 +32,11 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { ScanScene } from '../components/scenes/ScanScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
+import { ControlPanel } from '../components/themed/ControlPanel'
 import {
   ADD_TOKEN,
   CHANGE_MINING_FEE,
@@ -90,7 +90,6 @@ import {
   RECOVER_PASSWORD,
   REQUEST,
   ROOT,
-  SCAN,
   SECURITY_ALERTS_SCENE,
   SEND,
   SETTINGS_OVERVIEW,
@@ -104,7 +103,6 @@ import {
   WALLET_LIST_SCENE
 } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
@@ -244,7 +242,16 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     return (
-      <Drawer key={EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton drawerPosition="right" drawerWidth={scale(280)}>
+      <Drawer
+        hideTabBar
+        drawerBackgroundColor="none"
+        key={EDGE}
+        hideNavBar
+        contentComponent={ControlPanel}
+        hideDrawerButton
+        drawerPosition="right"
+        drawerWidth={scale(270)}
+      >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
@@ -334,19 +341,6 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 navTransparent
                 renderTitle={<HeaderTitle title=" " />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
-                key={SCAN}
-                component={withNavigation(ifLoggedIn(ScanScene))}
-                navTransparent
-                onEnter={props => {
-                  this.props.requestPermission('camera')
-                  this.props.dispatchEnableScan()
-                }}
-                onExit={this.props.dispatchDisableScan}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />

@@ -25,7 +25,7 @@ import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelector
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode, getDenomination } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
@@ -313,7 +313,7 @@ class SendComponent extends React.PureComponent<Props, State> {
                 message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
                 buttons={{
                   ok: { label: s.strings.legacy_address_modal_continue },
-                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+                  cancel: { label: s.strings.string_cancel_cap }
                 }}
               />
             ))
@@ -385,15 +385,15 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (recipientAddress && !hiddenTilesMap.amount) {
       let cryptoAmountSyntax
       let fiatAmountSyntax
-      const cryptoDisplayDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, 'display')
-      const cryptoExchangeDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, 'exchange')
-      const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+      const cryptoDisplayDenomination = getDenomination(selectedCurrencyCode, settings, 'display')
+      const cryptoExchangeDenomination = getDenomination(selectedCurrencyCode, settings, 'exchange')
+      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount === '') {
         cryptoAmountSyntax = s.strings.string_amount
       } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
-        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DECIMAL_PRECISION)
-        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DECIMAL_PRECISION)
+        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, exchangeAmount)
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
@@ -440,7 +440,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
 
     if (recipientAddress) {
-      const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
+      const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
       const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
