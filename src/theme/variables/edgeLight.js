@@ -9,6 +9,7 @@ import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExc
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
+import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
@@ -265,6 +266,9 @@ export const edgeLight: Theme = {
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
 
+  // Animation
+  fadeDisable: palette.gray,
+
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
@@ -273,6 +277,7 @@ export const edgeLight: Theme = {
   settingsGodexLogo: godexLogo,
   settingsSideshiftLogo: sideshiftLogo,
   settingsSwitchainLogo: switchainLogo,
+  settingsTotleLogo: totleLogo,
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,

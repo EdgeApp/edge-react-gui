@@ -36,6 +36,7 @@ import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
+import { ControlPanel } from '../components/themed/ControlPanel'
 import {
   ADD_TOKEN,
   CHANGE_MINING_FEE,
@@ -102,7 +103,6 @@ import {
   WALLET_LIST_SCENE
 } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
@@ -242,7 +242,16 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     return (
-      <Drawer key={EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton drawerPosition="right" drawerWidth={scale(280)}>
+      <Drawer
+        hideTabBar
+        drawerBackgroundColor="none"
+        key={EDGE}
+        hideNavBar
+        contentComponent={ControlPanel}
+        hideDrawerButton
+        drawerPosition="right"
+        drawerWidth={scale(270)}
+      >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>

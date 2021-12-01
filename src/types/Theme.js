@@ -205,6 +205,9 @@ export type Theme = {
   inputAccessoryBackground: string,
   inputAccessoryText: string,
 
+  // Animation
+  fadeDisable: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
@@ -213,6 +216,7 @@ export type Theme = {
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
+  settingsTotleLogo: string,
 
   paymentTypeLogoApplePay: string,
   paymentTypeLogoAuspost: string,
