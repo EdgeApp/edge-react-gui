@@ -1,20 +1,5 @@
 [
   {
-    "id": "simplex",
-    "pluginId": "simplex",
-    "paymentTypes": [
-      "credit"
-    ],
-    "description": "Fee: 4% / Settlement: 10 - 30minutes\nLimit: €4400/day",
-    "title": "Credit and Debit Card",
-    "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
-    "forCountries": [],
-    "cryptoCodes": [
-      "BTC"
-    ],
-    "paymentTypeLogoKey": "credit"
-  },
-  {
     "id": "wyre",
     "pluginId": "wyre",
     "paymentTypes": [
