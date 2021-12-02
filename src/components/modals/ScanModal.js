@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { ActivityIndicator, Linking, TouchableOpacity, View } from 'react-native'
+import { Linking, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 // $FlowFixMe
@@ -157,16 +157,7 @@ const Component = (props: Props) => {
       return null
     }
 
-    if (cameraPermission === RNPermissions.RESULTS.BLOCKED) {
-      return (
-        <View style={styles.cameraPermissionContainer}>
-          <ModalMessage>{s.strings.scan_camera_permission_denied}</ModalMessage>
-          <MainButton onPress={handleSettings} label={s.strings.open_settings} marginRem={0.5} />
-        </View>
-      )
-    }
-
-    if (cameraPermission === RNPermissions.RESULTS.GRANTED) {
+    if (cameraPermission === RNPermissions.RESULTS.GRANTED || cameraPermission === RNPermissions.RESULTS.LIMITED) {
       const flashMode = torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
@@ -223,8 +214,9 @@ const Component = (props: Props) => {
     }
 
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator color={theme.primaryText} size="large" />
+      <View style={styles.cameraPermissionContainer}>
+        <ModalMessage>{s.strings.scan_camera_permission_denied}</ModalMessage>
+        <MainButton onPress={handleSettings} label={s.strings.open_settings} marginRem={0.5} />
       </View>
     )
   }
@@ -293,11 +285,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable,
     fontSize: theme.rem(2),
     height: theme.rem(2.5)
-  },
-  // Loading Fallback
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center'
   }
 }))
 
