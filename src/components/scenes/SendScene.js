@@ -289,50 +289,57 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  submitFio = async (isFioPendingRequest: boolean) => {
+    const { fioSender } = this.state
+    const { updateSpendPending, signBroadcastAndSave } = this.props
+    const { selectedWalletId, selectedCurrencyCode } = this.state
+
+    if (fioSender == null || fioSender.fioWallet == null || fioSender.fioAddress == null || isFioPendingRequest) {
+      return
+    }
+
+    updateSpendPending(true)
+    try {
+      await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+      signBroadcastAndSave(fioSender)
+    } catch (e) {
+      if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
+        const answer = await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.fio_no_bundled_err_msg}
+            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
+            buttons={{
+              ok: { label: s.strings.legacy_address_modal_continue },
+              cancel: { label: s.strings.string_cancel_cap }
+            }}
+          />
+        ))
+        if (answer === 'ok') {
+          fioSender.skipRecord = true
+          signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
+        }
+      } else {
+        showError(e)
+      }
+    }
+    updateSpendPending(false)
+  }
+
   submit = async () => {
-    const { updateSpendPending, isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
+    const { isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { selectedWalletId, selectedCurrencyCode } = this.state
 
     this.setState({ loading: true })
 
     const isFioPendingRequest = !!guiMakeSpendInfo?.fioPendingRequest
+
     if (isSendUsingFioAddress || isFioPendingRequest) {
-      const { fioSender } = this.state
-      if (fioSender.fioWallet != null && fioSender.fioAddress != null && !isFioPendingRequest) {
-        updateSpendPending(true)
-        try {
-          await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
-        } catch (e) {
-          updateSpendPending(false)
-          if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
-            const answer = await Airship.show(bridge => (
-              <ButtonsModal
-                bridge={bridge}
-                title={s.strings.fio_no_bundled_err_msg}
-                message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
-                buttons={{
-                  ok: { label: s.strings.legacy_address_modal_continue },
-                  cancel: { label: s.strings.string_cancel_cap }
-                }}
-              />
-            ))
-            if (answer === 'ok') {
-              fioSender.skipRecord = true
-              signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
-            }
-            return
-          }
-
-          showError(e)
-          return
-        }
-        updateSpendPending(false)
-      }
-
-      return signBroadcastAndSave(fioSender)
+      await this.submitFio(isFioPendingRequest)
+    } else {
+      signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode)
     }
-    signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode)
 
     this.setState({ loading: false })
   }
