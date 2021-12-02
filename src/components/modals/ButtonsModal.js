@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react'
+import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { showError } from '../services/AirshipInstance.js'
@@ -38,34 +39,53 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   children?: React.Node,
   buttons: Buttons,
   closeArrow?: boolean,
-  disableCancel?: boolean
+  disableCancel?: boolean,
+  fullScreen?: boolean
 |}) {
-  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false } = props
+  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
 
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
 
+  const styles = {
+    container: {
+      flex: fullScreen ? 1 : 0
+    },
+    text: {
+      justifyContent: 'flex-start'
+    },
+    buttons: {
+      justifyContent: 'flex-end'
+    }
+  }
+
   return (
     <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleCancel}>
-      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
-      {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-      {children}
-      {Object.keys(buttons).map((key, i) => {
-        const defaultType = i === 0 && Object.keys(buttons).length > 1 ? 'primary' : 'secondary'
-        const { type = defaultType, label, onPress } = buttons[key]
+      <View style={styles.container}>
+        <View style={styles.text}>
+          {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+          {message != null ? <ModalMessage>{message}</ModalMessage> : null}
+          {children}
+        </View>
+      </View>
+      <View style={styles.buttons}>
+        {Object.keys(buttons).map((key, i) => {
+          const defaultType = i === 0 && Object.keys(buttons).length > 1 ? 'primary' : 'secondary'
+          const { type = defaultType, label, onPress } = buttons[key]
 
-        const handlePress = (): void | Promise<void> => {
-          if (onPress == null) return bridge.resolve(key)
-          return onPress().then(
-            result => {
-              if (result) bridge.resolve(key)
-            },
-            error => showError(error)
-          )
-        }
+          const handlePress = (): void | Promise<void> => {
+            if (onPress == null) return bridge.resolve(key)
+            return onPress().then(
+              result => {
+                if (result) bridge.resolve(key)
+              },
+              error => showError(error)
+            )
+          }
 
-        return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
-      })}
-      {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
+        })}
+        {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+      </View>
     </ThemedModal>
   )
 }
