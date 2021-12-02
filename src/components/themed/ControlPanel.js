@@ -35,6 +35,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { FiatText } from './FiatText.js'
+import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
@@ -229,38 +230,34 @@ export function ControlPanel(props: Props) {
     }
   ]
 
-  const fiatText =
-    isoFiatCurrencyCode === null ? (
-      ''
-    ) : (
-      <FiatText
-        nativeCryptoAmount={currencyDenomMult}
-        cryptoCurrencyCode={selectedCurrencyCode}
-        isoFiatCurrencyCode={isoFiatCurrencyCode}
-        autoPrecision
-        appendFiatCurrencyCode
-      />
-    )
-
-  const exchangeRateText =
-    isoFiatCurrencyCode === null ? (
-      <EdgeText style={styles.text}>{s.strings.exchange_rate_loading_singular}</EdgeText>
-    ) : (
-      <EdgeText style={styles.text}>
-        {`1 ${currencyDenomName} = `}
-        {fiatText}
-      </EdgeText>
-    )
-
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
+        {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
-          <View style={styles.rowIconContainer}>{!!currencyLogo && <Image style={styles.icon} source={{ uri: currencyLogo }} />}</View>
-          <View style={styles.rowBodyContainer}>{exchangeRateText}</View>
+          {isoFiatCurrencyCode === null ? (
+            <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
+          ) : (
+            <>
+              <View style={styles.rowIconContainer}>{!!currencyLogo && <Image style={styles.icon} source={{ uri: currencyLogo }} />}</View>
+              <View style={styles.rowBodyContainer}>
+                <EdgeText style={styles.text}>
+                  {`1 ${currencyDenomName} = `}
+                  <FiatText
+                    nativeCryptoAmount={currencyDenomMult}
+                    cryptoCurrencyCode={selectedCurrencyCode}
+                    isoFiatCurrencyCode={isoFiatCurrencyCode}
+                    autoPrecision
+                    appendFiatCurrencyCode
+                  />
+                </EdgeText>
+              </View>
+            </>
+          )}
         </View>
+        {/* ==== Rate Display End ==== */}
         <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
@@ -389,7 +386,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    flexGrow: 1
+    flexGrow: 1,
+    marginRight: theme.rem(1)
   },
   // Animation
   dropContainer: {
