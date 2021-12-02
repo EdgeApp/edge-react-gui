@@ -25,6 +25,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
         allow: { label: s.strings.string_allow },
         deny: { label: s.strings.string_deny }
       }}
+      fullScreen
     >
       <View style={styles.headerContainer}>
         <View style={styles.iconCircle}>
@@ -38,7 +39,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
       <EdgeText numberOfLines={0} style={styles.message}>
         {s.strings.contacts_permission_modal_text_2}
       </EdgeText>
-      <EdgeText numberOfLines={0} style={styles.messageLast}>
+      <EdgeText numberOfLines={0} style={styles.message}>
         {s.strings.contacts_permission_modal_text_3}
       </EdgeText>
     </ButtonsModal>
@@ -68,8 +69,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   message: {
     marginBottom: theme.rem(1)
-  },
-  messageLast: {
-    marginBottom: theme.rem(4)
   }
 }))
