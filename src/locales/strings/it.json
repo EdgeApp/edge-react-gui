@@ -22,7 +22,7 @@
   "scan_qr_label": "Scansiona il codice QR",
   "error_token_exists": "Una valuta denominata %s esiste già",
   "warning_low_fee_selected": "Commissione bassa selezionata",
-  "warning_custom_fee_selected": "Hai selezionato Commissione Personalizzata",
+  "warning_custom_fee_selected": "Hai selezionato Personalizzata",
   "warning_low_or_custom_fee": "L'utilizzo di una commissione bassa può aumentare il tempo necessario per la conferma della transazione. In rari casi la transazione può fallire.",
   "warning_alphanumeric": "Sono consentite solo lettere e numeri",
   "alert_dropdown_alert": "Avviso! ",
