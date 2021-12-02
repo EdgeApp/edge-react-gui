@@ -42,6 +42,7 @@ const paymentTypeLogosById = {
   fasterPayments: 'paymentTypeLogoFasterPayments',
   giftcard: 'paymentTypeLogoGiftCard',
   ideal: 'paymentTypeLogoIdeal',
+  interac: 'paymentTypeLogoInterac',
   newsagent: 'paymentTypeLogoNewsagent',
   payid: 'paymentTypeLogoPayid',
   poli: 'paymentTypeLogoPoli',
