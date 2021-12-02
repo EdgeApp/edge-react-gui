@@ -25,8 +25,8 @@ type DispatchProps = {
 }
 
 const TokenSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(currencyCode => {
-  const { isCustomTokensSupported = false, isAccountActivationRequired = false } = SPECIAL_CURRENCY_INFO[currencyCode]
-  return isCustomTokensSupported && !isAccountActivationRequired
+  const { isCustomTokensSupported = false, isAccountActivationRequired = false, keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[currencyCode]
+  return isCustomTokensSupported && !isAccountActivationRequired && !keysOnlyMode
 })
 
 class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps> {
