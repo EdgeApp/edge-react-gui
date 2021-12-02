@@ -575,6 +575,7 @@
     "forCountries": [
       "GB",
       "AU",
+      "CA",
       "NL"
     ],
     "cryptoCodes": [
@@ -672,6 +673,7 @@
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "AU",
+      "CA",
       "HK"
     ],
     "cryptoCodes": [
@@ -932,6 +934,16 @@
     "paymentTypeLogoKey": "applepay",
     "title": "Apple Pay, Credit, and Debit Card"
   },
+  {
+    "id": "moonpay",
+    "forPlatform": "ios",
+    "forCountries": [
+      "CA"
+    ],
+    "paymentTypeLogoKey": "applepay",
+    "title": "Apple Pay",
+    "sortIndex": 2
+  },
   "----- Country Specifics -----",
   {
     "id": "safello",
@@ -980,6 +992,26 @@
     "sortIndex": 1
   },
   {
+    "id": "banxa.bank",
+    "forCountries": [
+      "CA"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "LTC",
+      "ETH",
+      "USDT"
+    ],
+    "deepQuery": {
+      "country": "CA",
+      "payment_id": "6046"
+    },
+    "title": "Interac e-Transfer",
+    "paymentTypeLogoKey": "interac",
+    "description": "Fee: 3% / Settlement: 1 - 2days\nDaily Limit: $10000\nMonthly Limit: $70000",
+    "sortIndex": 1
+  },
+  {
     "id": "bity",
     "forCountries": [
       "GB"
@@ -1008,6 +1040,18 @@
     "paymentTypeLogoKey": "ideal",
     "description": "Fee: 5.5% / Settlement: Instant\nLimit: €10000",
     "sortIndex": 1
+  },
+  {
+    "id": "banxa.credit",
+    "forCountries": [
+      "CA"
+    ],
+    "deepQuery": {
+      "country": "CA",
+      "payment_id": "6047"
+    },
+    "description": "Fee: 6% / Settlement: Instant\nDaily Limit: $10000\nMonthly Limit: $85000",
+    "sortIndex": 3
   },
   {
     "id": "banxa.credit",
