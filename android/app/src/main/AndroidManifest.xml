@@ -58,60 +58,17 @@
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:host="recovery.edgesecure.co" android:path="/recovery" android:scheme="https"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="airbitz"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="airbitz-ret"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="edge"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="edge-ret"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="bitcoin"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="bitcoincash"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="ethereum"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="dash"></data>
-      </intent-filter>
-      <intent-filter android:label="Edge">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="litecoin"></data>
+        <data android:scheme="bankid"></data>
+        <data android:scheme="swish"></data>
       </intent-filter>
       <intent-filter android:label="Edge" android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
