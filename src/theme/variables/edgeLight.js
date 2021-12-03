@@ -245,7 +245,7 @@ export const edgeLight: Theme = {
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
   fontFaceMedium: palette.QuicksandMedium,
-  fontFaceBold: palette.QuicksandBold,
+  fontFaceBold: palette.QuicksandMedium,
   fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
 
   // TouchableHighlights underlay
