@@ -8,7 +8,7 @@
   "drawer_exchange_rate_loading": "Tasso di cambio in fase di caricamento",
   "drawer_exchange": "Scambia criptovalute",
   "drawer_request": "Richiedi",
-  "drawer_scan_qr_send": "Scansiona il QR (Login Edge)",
+  "drawer_scan_qr_send": "Login Edge via QR",
   "drawer_sweep_private_key": "Scansiona la Private Key",
   "drawer_wallets": "Portafogli",
   "drawer_fio_names": "Nomi FIO",
