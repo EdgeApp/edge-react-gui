@@ -305,7 +305,7 @@ export function ControlPanel(props: Props) {
                 <View style={styles.rowIconContainer}>
                   <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
                 </View>
-                <View style={styles.rowBodyContainer}>
+                <View style={[styles.rowBodyContainer, styles.navBodyContainer]}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>
                 </View>
               </TouchableOpacity>
@@ -387,6 +387,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexGrow: 1,
     marginRight: theme.rem(1)
+  },
+  navBodyContainer: {
+    flexGrow: 0,
+    flexShrink: 1
   },
   // Animation
   dropContainer: {
