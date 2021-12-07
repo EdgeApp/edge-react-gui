@@ -33,7 +33,6 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
-import { EdgeText } from './EdgeText'
 import { FiatText } from './FiatText.js'
 import { TitleText } from './TitleText'
 
@@ -243,7 +242,7 @@ export function ControlPanel(props: Props) {
             <>
               <View style={styles.rowIconContainer}>{!!currencyLogo && <Image style={styles.icon} source={{ uri: currencyLogo }} />}</View>
               <View style={styles.rowBodyContainer}>
-                <EdgeText style={styles.text}>
+                <TitleText style={styles.text}>
                   {`1 ${currencyDenomName} = `}
                   <FiatText
                     nativeCryptoAmount={currencyDenomMult}
@@ -252,7 +251,7 @@ export function ControlPanel(props: Props) {
                     autoPrecision
                     appendFiatCurrencyCode
                   />
-                </EdgeText>
+                </TitleText>
               </View>
             </>
           )}
@@ -263,7 +262,7 @@ export function ControlPanel(props: Props) {
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
-            <EdgeText style={styles.text}>{activeUsername}</EdgeText>
+            <TitleText style={styles.text}>{activeUsername}</TitleText>
           </View>
           {isMultiUsers ? (
             <View style={styles.rowIconContainer}>
@@ -286,7 +285,7 @@ export function ControlPanel(props: Props) {
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
                 <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)}>
-                  <EdgeText style={styles.text}>{username}</EdgeText>
+                  <TitleText style={styles.text}>{username}</TitleText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)}>
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
@@ -306,8 +305,8 @@ export function ControlPanel(props: Props) {
                 <View style={styles.rowIconContainer}>
                   <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
                 </View>
-                <View style={styles.rowBodyContainer}>
-                  <EdgeText style={styles.text}>{rowData.title}</EdgeText>
+                <View style={[styles.rowBodyContainer, styles.navBodyContainer]}>
+                  <TitleText style={styles.text}>{rowData.title}</TitleText>
                 </View>
               </TouchableOpacity>
             ))}
@@ -388,6 +387,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexGrow: 1,
     marginRight: theme.rem(1)
+  },
+  navBodyContainer: {
+    flexGrow: 0,
+    flexShrink: 1
   },
   // Animation
   dropContainer: {
