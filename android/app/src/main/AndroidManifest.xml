@@ -26,6 +26,8 @@
     android:targetSdkVersion="28" />
 
   <queries>
+    <package android:name="com.bankid.bus" />
+    <package android:name="se.bankgirot.swish" />
     <intent>
       <action android:name="android.intent.action.VIEW" />
       <category android:name="android.intent.category.BROWSABLE" />
@@ -67,8 +69,6 @@
         <data android:scheme="ethereum"></data>
         <data android:scheme="dash"></data>
         <data android:scheme="litecoin"></data>
-        <data android:scheme="bankid"></data>
-        <data android:scheme="swish"></data>
       </intent-filter>
       <intent-filter android:label="Edge" android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
