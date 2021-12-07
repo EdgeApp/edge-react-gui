@@ -325,18 +325,21 @@ export function ControlPanel(props: Props) {
  * followed by the rest in alphabetical order.
  */
 function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): string[] {
-  // Sort the users according to their last login date:
-  const usernames = localUsers
+  // Sort the users according to their last login date (excluding active logged in user):
+  const inactiveUsers = localUsers
     .filter(info => info.username !== activeUsername)
     .sort((a, b) => {
       const { lastLogin: aDate = new Date(0) } = a
       const { lastLogin: bDate = new Date(0) } = b
-      return aDate.valueOf() - bDate.valueOf()
+      return bDate.valueOf() - aDate.valueOf()
     })
     .map(info => info.username)
 
+  // Get the most recent 3 users that were logged in
+  const recentUsers = inactiveUsers.slice(0, 3)
+
   // Sort everything after the last 3 entries alphabetically:
-  const oldUsernames = usernames.slice(3).sort((a: string, b: string) => {
+  const oldUsers = inactiveUsers.slice(3).sort((a: string, b: string) => {
     const stringA = a.toUpperCase()
     const stringB = b.toUpperCase()
     if (stringA < stringB) return -1
@@ -344,7 +347,7 @@ function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): strin
     return 0
   })
 
-  return [...usernames.slice(0, 3), ...oldUsernames]
+  return [...recentUsers, ...oldUsers]
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
