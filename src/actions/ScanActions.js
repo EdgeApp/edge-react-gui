@@ -246,6 +246,8 @@ export const loginQrCodeScanned = (data: string) => (dispatch: Dispatch, getStat
   if (deepLink.type === 'edgeLogin') {
     dispatch({ type: 'DISABLE_SCAN' })
     dispatch(launchDeepLink(deepLink))
+  } else {
+    showError(s.strings.scan_login_error)
   }
 }
 
