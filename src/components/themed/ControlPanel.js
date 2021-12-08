@@ -53,7 +53,6 @@ export function ControlPanel(props: Props) {
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
-  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
   const guiWallet = useSelector(getSelectedWallet)
   const currencyLogo = guiWallet != null ? getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage : null
   const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
@@ -109,7 +108,7 @@ export function ControlPanel(props: Props) {
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={SweepableCurrencyCodes} showCreateWallet />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(selectedWalletId, selectedCurrencyCode))
+        dispatch(selectWalletFromModal(walletId, currencyCode))
         Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
           .then((result: string | void) => {
             if (result) {
