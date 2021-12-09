@@ -423,7 +423,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
-          navigation.navigate('transactionDetails', { edgeTransaction })
+          navigation.replace('transactionDetails', { edgeTransaction })
         }
       }
     }
