@@ -706,6 +706,7 @@
   "fio_domain_to_transfer": "Dominio da trasferire",
   "fio_domain_transferred": "Trasferimento riuscito",
   "scan_address_modal_title": "Inserisci indirizzo FIO, ENS o indirizzo pubblico del destinatario",
+  "scan_login_error": "QR di login Edge non valido",
   "scan_private_key_modal_title": "Inserisci chiavi privata",
   "scan_private_key_modal_label": "Chiave privata",
   "scan_private_key_error_title": "Chiave privata non valida",
