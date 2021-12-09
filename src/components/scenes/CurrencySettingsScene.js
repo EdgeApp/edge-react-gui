@@ -32,13 +32,13 @@ type DispatchProps = {
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
-const asElectrumDefaults = asObject({
-  electrumServers: asArray(asString)
+const asServerSettingsDefaults = asObject({
+  blockBookServers: asArray(asString)
 })
 
-const asElectrumSettings = asObject({
+const asServerSettings = asObject({
   disableFetchingServers: asOptional(asBoolean),
-  electrumServers: asOptional(asArray(asString))
+  blockBookServers: asOptional(asArray(asString))
 })
 
 export function CurrencySettingsComponent(props: Props) {
@@ -53,40 +53,40 @@ export function CurrencySettingsComponent(props: Props) {
   useEffect(() => currencyConfig.watch('userSettings', setUserSettings), [currencyConfig])
 
   // Are the electrum servers enabled? What are they?
-  const defaults = asMaybe(asElectrumDefaults)(defaultSettings)
-  const settings = asMaybe(asElectrumSettings)(userSettings)
+  const defaults = asMaybe(asServerSettingsDefaults)(defaultSettings)
+  const settings = asMaybe(asServerSettings)(userSettings)
 
-  function renderCustomNodes(defaults: $Call<typeof asElectrumDefaults>, settings: $Call<typeof asElectrumSettings>) {
-    const { electrumServers: defaultServers } = defaults
-    const { disableFetchingServers = false, electrumServers = [] } = settings
+  function renderCustomNodes(defaults: $Call<typeof asServerSettingsDefaults>, settings: $Call<typeof asServerSettings>) {
+    const { blockBookServers: defaultServers } = defaults
+    const { disableFetchingServers = false, blockBookServers = [] } = settings
 
     async function handleToggleNodes(): Promise<void> {
       await currencyConfig.changeUserSettings({
         ...currencyConfig.userSettings,
         disableFetchingServers: !disableFetchingServers,
-        electrumServers: electrumServers.length > 0 ? electrumServers : defaultServers
+        blockBookServers: blockBookServers.length > 0 ? blockBookServers : defaultServers
       })
     }
 
     async function handleDeleteNode(i: number): Promise<void> {
-      const list = [...electrumServers]
+      const list = [...blockBookServers]
       list.splice(i, 1)
 
       await currencyConfig.changeUserSettings({
         ...currencyConfig.userSettings,
-        electrumServers: list
+        blockBookServers: list
       })
     }
 
     function handleEditNode(i?: number): void {
       async function handleSubmit(text: string) {
-        const list = [...electrumServers]
+        const list = [...blockBookServers]
         if (i == null) list.push(text)
         else list[i] = text
 
         await currencyConfig.changeUserSettings({
           ...currencyConfig.userSettings,
-          electrumServers: list
+          blockBookServers: list
         })
         return true
       }
@@ -95,7 +95,7 @@ export function CurrencySettingsComponent(props: Props) {
         <TextInputModal
           autoCorrect={false}
           bridge={bridge}
-          initialValue={i == null ? '' : electrumServers[i]}
+          initialValue={i == null ? '' : blockBookServers[i]}
           inputLabel={s.strings.settings_custom_node_url}
           title={s.strings.settings_edit_custom_node}
           onSubmit={handleSubmit}
@@ -109,7 +109,7 @@ export function CurrencySettingsComponent(props: Props) {
         <SettingsSwitchRow label={s.strings.settings_enable_custom_nodes} value={disableFetchingServers} onPress={handleToggleNodes} />
         {!disableFetchingServers ? null : (
           <>
-            {electrumServers.map((server, i) => (
+            {blockBookServers.map((server, i) => (
               <SettingsTappableRow key={`row${i}`} action="delete" onPress={() => handleDeleteNode(i)}>
                 <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
                   <Text style={styles.labelText}>{server}</Text>
