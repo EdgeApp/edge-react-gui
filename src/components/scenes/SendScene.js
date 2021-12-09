@@ -294,13 +294,12 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { updateSpendPending, signBroadcastAndSave } = this.props
     const { selectedWalletId, selectedCurrencyCode } = this.state
 
-    if (fioSender == null || fioSender.fioWallet == null || fioSender.fioAddress == null || isFioPendingRequest) {
-      return
-    }
 
     updateSpendPending(true)
     try {
-      await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+      if (fioSender?.fioWallet != null && fioSender?.fioAddress != null && !isFioPendingRequest) {
+        await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+      }
       signBroadcastAndSave(fioSender)
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
