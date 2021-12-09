@@ -1,10 +1,11 @@
 // @flow
 
-import { type EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import { refreshWallet } from '../../actions/WalletActions.js'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -31,32 +32,23 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  tokenCreated: (walletId: string, tokens: string[]) => void
+  tokenCreated: (walletId: string, tokens: string[]) => void,
+  createWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
-class WalletListCreateRowComponent extends React.PureComponent<Props> {
-  createWallet = (currencyCode: string, walletType: string) => {
-    const { account, defaultIsoFiat } = this.props
-    const [type, format] = walletType.split('-')
-
-    return showFullScreenSpinner(
-      s.strings.wallet_list_modal_creating_wallet,
-      account.createCurrencyWallet(type, {
-        name: DEFAULT_STARTER_WALLET_NAMES[currencyCode],
-        defaultIsoFiat,
-        keyOptions: format ? { format } : {}
-      })
-    )
-  }
-
+// For some reason Flow complains if DispatchProps isn't added here too
+class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchProps> {
   createAndSelectWallet = async () => {
-    const { createWalletType, onPress } = this.props
+    const { createWalletType, onPress, defaultIsoFiat } = this.props
     try {
       if (createWalletType == null) throw new Error('Invalid Create Wallet Type')
       const { currencyCode, walletType } = createWalletType
-      const wallet = await this.createWallet(currencyCode, walletType)
+      const wallet = await showFullScreenSpinner(
+        s.strings.wallet_list_modal_creating_wallet,
+        this.props.createWallet(DEFAULT_STARTER_WALLET_NAMES[currencyCode], walletType, defaultIsoFiat)
+      )
       onPress(wallet.id, wallet.currencyInfo.currencyCode)
     } catch (error) {
       showError(error)
@@ -64,7 +56,7 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
   }
 
   createAndSelectToken = async () => {
-    const { account, createTokenType, onPress, tokenCreated, wallets } = this.props
+    const { account, createTokenType, onPress, tokenCreated, wallets, defaultIsoFiat } = this.props
     const { currencyWallets } = account
 
     try {
@@ -84,7 +76,7 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
       if (!wallet) {
         const walletType = getCreateWalletType(account, parentCurrencyCode)
         if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await this.createWallet(walletType.currencyCode, walletType.walletType)
+        wallet = await this.props.createWallet(walletType.currencyCode, walletType.walletType, defaultIsoFiat)
       }
 
       const guiWalletEnabledTokens = wallets[wallet.id]?.enabledTokens ?? []
@@ -178,6 +170,9 @@ export const WalletListCreateRow = connect<StateProps, DispatchProps, OwnProps>(
         data: { walletId, tokens }
       })
       dispatch(refreshWallet(walletId))
+    },
+    async createWallet(walletName: string, walletType: string, fiatCurrencyCode: string) {
+      return dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, false, true))
     }
   })
 )(withTheme(WalletListCreateRowComponent))
