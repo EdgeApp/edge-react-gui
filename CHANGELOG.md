@@ -1,5 +1,29 @@
 # edge-react-gui
 
+## 2.7.0 (2021-12-10)
+
+- Banxa: Add credit card and Interac payment methods in Canada
+- Simplex: Add USDT support
+- New themed side menu
+- Replace legacy scan scenes with themed scan modal
+- Safello: Fix Bankid and Swish app deeplinks
+- Fix navigation after paying FIO request
+- Don't allow keysOnlyMode currencies to be created in wallet picker
+- Add error message when scanning invalid login QR code
+- Add fullscreen mode for buttons modal
+- Various text and visual improvements
+- Update translations
+- Upgrade edge-exchange-plugins to v0.12.0
+  - Remove Totle
+  - Changelly: Disable estimated swaps
+  - Use the correct "to" currency code for the Sideshift's tx metadata
+  - Add Exolix plugin (not yet enabled in the app)
+- Upgrade edge-login-ui-rn to v0.9.28
+  - Fix header spacing
+  - Various minor fixes for account creation process
+- Upgrade edge-currency-accountbased to v0.9.3
+  - Update ZEC checkpoints
+
 ## 2.6.1 (2021-11-24)
 
 - Force Android to create a compressed APK to reduce app size
