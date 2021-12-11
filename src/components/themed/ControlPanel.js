@@ -122,7 +122,7 @@ export function ControlPanel(props: Props) {
 
   const handleLoginQr = () => {
     Actions.drawerClose()
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} />)
       .then((result: string | void) => {
         if (result) {
           dispatch(loginQrCodeScanned(result))
