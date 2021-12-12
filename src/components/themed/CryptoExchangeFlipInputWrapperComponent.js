@@ -5,7 +5,7 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
@@ -233,7 +233,7 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
 
     if (balance != null) {
       const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
-      const cryptoAmount = intl.formatNumber(bns.add(cryptoAmountRaw, '0'))
+      const cryptoAmount = formatNumber(bns.add(cryptoAmountRaw, '0'))
 
       return { cryptoAmount }
     }

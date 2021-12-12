@@ -205,6 +205,9 @@ export type Theme = {
   inputAccessoryBackground: string,
   inputAccessoryText: string,
 
+  // Animation
+  fadeDisable: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
@@ -225,6 +228,7 @@ export type Theme = {
   paymentTypeLogoFasterPayments: string,
   paymentTypeLogoGiftCard: string,
   paymentTypeLogoIdeal: string,
+  paymentTypeLogoInterac: string,
   paymentTypeLogoNewsagent: string,
   paymentTypeLogoPayid: string,
   paymentTypeLogoPoli: string,

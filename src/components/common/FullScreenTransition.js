@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 

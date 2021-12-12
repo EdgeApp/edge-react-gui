@@ -9,9 +9,6 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
-    controlPanel: {
-      usersView: false
-    },
     createWallet: {
       isCreatingWallet: false,
       walletAccountActivationPaymentInfo: {

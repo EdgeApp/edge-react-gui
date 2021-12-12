@@ -11,7 +11,7 @@ type Props = {
   size?: 'large' | 'small'
 }
 
-class FullScreenLoader extends React.Component<Props> {
+export class FullScreenLoader extends React.Component<Props> {
   render() {
     const { size, indicatorStyles } = this.props
     return (
@@ -37,5 +37,3 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export default FullScreenLoader

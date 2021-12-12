@@ -8,13 +8,13 @@ import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyCons
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import type { CustomTokenInfo } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import * as UTILS from '../../util/utils'
+import { decimalPlacesToDenomination, denominationToDecimalPlaces, mergeTokensRemoveInvisible } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -59,7 +59,7 @@ class EditTokenComponent extends React.Component<Props, State> {
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
       const { currencyName, contractAddress, denomination } = tokenInfo
-      const decimalPlaces = UTILS.denominationToDecimalPlaces(denomination)
+      const decimalPlaces = denominationToDecimalPlaces(denomination)
       this.state = {
         currencyName,
         contractAddress,
@@ -159,7 +159,7 @@ class EditTokenComponent extends React.Component<Props, State> {
               return true
             }
           },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap }
         }}
       />
     ))
@@ -201,7 +201,7 @@ class EditTokenComponent extends React.Component<Props, State> {
           const { route } = this.props
           const { walletId, metaTokens } = route.params
 
-          const visibleTokens = UTILS.mergeTokensRemoveInvisible(metaTokens, this.props.customTokens)
+          const visibleTokens = mergeTokensRemoveInvisible(metaTokens, this.props.customTokens)
           const indexInVisibleTokens = visibleTokens.findIndex(token => token.currencyCode === currencyCode)
           if (currencyCode !== route.params.currencyCode) {
             // if the currencyCode will change
@@ -211,7 +211,7 @@ class EditTokenComponent extends React.Component<Props, State> {
             } else {
               // not in the array of visible tokens, CASE 3
               if (parseInt(decimalPlaces) !== 'NaN') {
-                const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
+                const denomination = decimalPlacesToDenomination(decimalPlaces)
                 this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, route.params.currencyCode)
               } else {
                 Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
@@ -219,7 +219,7 @@ class EditTokenComponent extends React.Component<Props, State> {
             }
           } else {
             if (parseInt(decimalPlaces) !== 'NaN') {
-              const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
+              const denomination = decimalPlacesToDenomination(decimalPlaces)
               this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, route.params.currencyCode)
             } else {
               Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)

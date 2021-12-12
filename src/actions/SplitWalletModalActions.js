@@ -29,7 +29,7 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
       message={`${bodyText} ${getWalletName(edgeWallet)}?`}
       buttons={{
         confirm: { label: s.strings.string_split },
-        cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        cancel: { label: s.strings.string_cancel_cap }
       }}
     />
   ))

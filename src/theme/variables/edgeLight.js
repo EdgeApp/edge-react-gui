@@ -23,6 +23,7 @@ import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
+import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
@@ -266,6 +267,9 @@ export const edgeLight: Theme = {
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
 
+  // Animation
+  fadeDisable: palette.gray,
+
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
@@ -286,6 +290,7 @@ export const edgeLight: Theme = {
   paymentTypeLogoFasterPayments: paymentTypeLogoFasterPayments,
   paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
   paymentTypeLogoIdeal: paymentTypeLogoIdeal,
+  paymentTypeLogoInterac: paymentTypeLogoInterac,
   paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
   paymentTypeLogoPayid: paymentTypeLogoPayid,
   paymentTypeLogoPoli: paymentTypeLogoPoli,

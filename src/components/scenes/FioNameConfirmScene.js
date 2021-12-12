@@ -73,9 +73,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                   bridge={bridge}
                   title={s.strings.fio_address_register_pay_title}
                   message={s.strings.fio_address_register_pay}
-                  buttons={{
-                    ok: { label: s.strings.string_ok_cap }
-                  }}
+                  buttons={{ ok: { label: s.strings.string_ok_cap } }}
                 />
               ))
               return navigation.navigate('fioAddressRegisterSelectWallet', {
@@ -100,9 +98,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             bridge={bridge}
             title={`${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`}
             message={s.strings.fio_address_register_pending_free}
-            buttons={{
-              ok: { label: s.strings.string_ok_cap }
-            }}
+            buttons={{ ok: { label: s.strings.string_ok_cap } }}
           />
         ))
         navigation.navigate('walletList')

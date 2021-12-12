@@ -31,6 +31,7 @@ const strings = {
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
+  warning_custom_fee_selected: 'Custom Fee Selected',
   warning_low_or_custom_fee:
     'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',
@@ -756,6 +757,7 @@ const strings = {
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
+  scan_login_error: 'Invalid Edge Login QR',
   scan_private_key_modal_title: 'Enter Private Key',
   scan_private_key_modal_label: 'Private Key',
   scan_private_key_error_title: 'Invalid Private Key',

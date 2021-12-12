@@ -25,7 +25,7 @@ import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelector
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode, getDenomination } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
@@ -68,8 +68,7 @@ type StateProps = {
 type DispatchProps = {
   reset: () => void,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void,
-  signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
-  updateSpendPending: boolean => void,
+  signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => Promise<void>,
   onChangePin: (pin: string) => void,
   selectWallet: (walletId: string, currencyCode: string) => void
 }
@@ -289,50 +288,53 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  submitFio = async (isFioPendingRequest: boolean) => {
+    const { fioSender } = this.state
+    const { signBroadcastAndSave } = this.props
+    const { selectedWalletId, selectedCurrencyCode } = this.state
+
+    try {
+      if (fioSender?.fioWallet != null && fioSender?.fioAddress != null && !isFioPendingRequest) {
+        await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+      }
+      await signBroadcastAndSave(fioSender)
+    } catch (e) {
+      if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
+        const answer = await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.fio_no_bundled_err_msg}
+            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
+            buttons={{
+              ok: { label: s.strings.legacy_address_modal_continue },
+              cancel: { label: s.strings.string_cancel_cap }
+            }}
+          />
+        ))
+        if (answer === 'ok') {
+          fioSender.skipRecord = true
+          await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
+        }
+      } else {
+        showError(e)
+      }
+    }
+  }
+
   submit = async () => {
-    const { updateSpendPending, isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
+    const { isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { selectedWalletId, selectedCurrencyCode } = this.state
 
     this.setState({ loading: true })
 
     const isFioPendingRequest = !!guiMakeSpendInfo?.fioPendingRequest
+
     if (isSendUsingFioAddress || isFioPendingRequest) {
-      const { fioSender } = this.state
-      if (fioSender.fioWallet != null && fioSender.fioAddress != null && !isFioPendingRequest) {
-        updateSpendPending(true)
-        try {
-          await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
-        } catch (e) {
-          updateSpendPending(false)
-          if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
-            const answer = await Airship.show(bridge => (
-              <ButtonsModal
-                bridge={bridge}
-                title={s.strings.fio_no_bundled_err_msg}
-                message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
-                buttons={{
-                  ok: { label: s.strings.legacy_address_modal_continue },
-                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
-                }}
-              />
-            ))
-            if (answer === 'ok') {
-              fioSender.skipRecord = true
-              signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
-            }
-            return
-          }
-
-          showError(e)
-          return
-        }
-        updateSpendPending(false)
-      }
-
-      return signBroadcastAndSave(fioSender)
+      await this.submitFio(isFioPendingRequest)
+    } else {
+      await signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode)
     }
-    signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode)
 
     this.setState({ loading: false })
   }
@@ -385,15 +387,15 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (recipientAddress && !hiddenTilesMap.amount) {
       let cryptoAmountSyntax
       let fiatAmountSyntax
-      const cryptoDisplayDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, 'display')
-      const cryptoExchangeDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, 'exchange')
-      const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+      const cryptoDisplayDenomination = getDenomination(selectedCurrencyCode, settings, 'display')
+      const cryptoExchangeDenomination = getDenomination(selectedCurrencyCode, settings, 'exchange')
+      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount === '') {
         cryptoAmountSyntax = s.strings.string_amount
       } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
-        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DECIMAL_PRECISION)
-        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DECIMAL_PRECISION)
+        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, exchangeAmount)
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
@@ -440,7 +442,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
 
     if (recipientAddress) {
-      const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
+      const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
       const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
@@ -648,14 +650,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
-    updateSpendPending(pending: boolean) {
-      dispatch({
-        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-        data: { pending }
-      })
-    },
-    signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
+    async signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      await dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
     },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })

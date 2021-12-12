@@ -5,7 +5,7 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
@@ -123,7 +123,7 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
       maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
     }
     const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
-    const cryptoAmountFormat = intl.formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
+    const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
     return {
       isSentTransaction: isSentTransaction(transaction),

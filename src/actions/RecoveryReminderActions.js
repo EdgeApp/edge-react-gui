@@ -52,7 +52,7 @@ async function showReminderModal(level: number, account: EdgeAccount) {
       message={s.strings.password_recovery_reminder_modal_message}
       buttons={{
         ok: { label: s.strings.password_recovery_reminder_modal_set_up },
-        cancel: { label: s.strings.password_check_check_later, type: 'secondary' }
+        cancel: { label: s.strings.password_check_check_later }
       }}
     />
   ))

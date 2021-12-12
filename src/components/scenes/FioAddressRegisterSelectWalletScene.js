@@ -209,7 +209,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
         )}
         <Tile type="static" title={s.strings.create_wallet_account_amount_due} body={costStr} />
         {!loading && ((paymentWallet && paymentWallet.id) || selectedDomain.walletId !== '') && (
-          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} />
+          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} type="secondary" />
         )}
         {loading && <ActivityIndicator color={theme.iconTappable} />}
       </>
