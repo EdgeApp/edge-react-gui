@@ -589,6 +589,7 @@ Object {
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",
       "developerModeOn": false,
+      "flipInputCryptoFocusValue": 0,
       "isAccountBalanceVisible": true,
       "isTouchEnabled": false,
       "isTouchSupported": false,

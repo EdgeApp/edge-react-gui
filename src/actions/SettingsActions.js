@@ -13,6 +13,7 @@ import {
   setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
   setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
   setDeveloperModeOn as setDeveloperModeOnAccountSettings,
+  setFlipInputCryptoFocusValue as setFlipInputCryptoFocusValueSettings,
   setPreferredSwapPluginId as setPreferredSwapPluginIdAccountSettings,
   setSpendingLimits as setSpendingLimitsAccountSettings
 } from '../modules/Core/Account/settings.js'
@@ -235,5 +236,39 @@ export const setDeveloperModeOn = (developerModeOn: boolean) => (dispatch: Dispa
       }
       dispatch({ type: 'DEVELOPER_MODE_OFF' })
     })
+    .catch(showError)
+}
+
+export type FlipInputCryptoFocusKey =
+  | 'deeplink'
+  | 'enterAddress'
+  | 'flipInputToFiat'
+  | 'flipInputToCrypto'
+  | 'fioRequest'
+  | 'fioRequestPay'
+  | 'fioRegisterAddress'
+
+const flipInputFocusMap = {
+  deeplink: 1,
+  enterAddress: 1,
+  flipInputToFiat: 0,
+  flipInputToCrypto: 1,
+  fioRequest: 1,
+  fioRequestPay: 1,
+  fioRegisterAddress: 1
+}
+
+export const setFlipInputCryptoFocusValue = (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { account } = state.core
+  const flipInputCryptoFocusValue = flipInputFocusMap[flipInputCryptoFocusKey]
+
+  setFlipInputCryptoFocusValueSettings(account, flipInputCryptoFocusValue)
+    .then(() =>
+      dispatch({
+        type: 'UI/SETTINGS/SET_FLIP_INPUT_CRYPTO_FOCUS_VALUE',
+        data: { flipInputCryptoFocusValue }
+      })
+    )
     .catch(showError)
 }

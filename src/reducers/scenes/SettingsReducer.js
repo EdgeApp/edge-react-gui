@@ -32,6 +32,7 @@ export type AccountInitPayload = {|
   defaultIsoFiat: string,
   denominationKeys: Array<{ currencyCode: string, denominationKey: string }>,
   developerModeOn: boolean,
+  flipInputCryptoFocusValue: number,
   isAccountBalanceVisible: boolean,
   mostRecentWallets: MostRecentWallet[],
   passwordRecoveryRemindersShown: PasswordReminderLevels,
@@ -66,6 +67,7 @@ export const initialState = {
     }
   },
   developerModeOn: false,
+  flipInputCryptoFocusValue: 0,
   // prettier-ignore
   passwordRecoveryRemindersShown: {
     '20': false,
@@ -110,6 +112,7 @@ export type SettingsState = {
   defaultIsoFiat: string,
   isTouchEnabled: boolean,
   countryCode: string,
+  flipInputCryptoFocusValue: number,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
   merchantMode: boolean, // Never read or updated, but on disk
@@ -227,7 +230,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
-        developerModeOn
+        developerModeOn,
+        flipInputCryptoFocusValue
       } = action.data
       let newState: SettingsState = {
         ...state,
@@ -245,7 +249,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
-        developerModeOn
+        developerModeOn,
+        flipInputCryptoFocusValue
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -456,6 +461,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         walletsSort: action.data.walletsSort
+      }
+    }
+
+    case 'UI/SETTINGS/SET_FLIP_INPUT_CRYPTO_FOCUS_VALUE': {
+      return {
+        ...state,
+        flipInputCryptoFocusValue: action.data.flipInputCryptoFocusValue
       }
     }
 

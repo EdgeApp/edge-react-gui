@@ -207,6 +207,7 @@ export type Action =
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: boolean }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT', data: { walletsSort: SortOption } }
+  | { type: 'UI/SETTINGS/SET_FLIP_INPUT_CRYPTO_FOCUS_VALUE', data: { flipInputCryptoFocusValue: number } }
   | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED', data: { pinLoginEnabled: boolean } }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS', data: { settings: SettingsState } }
   | {

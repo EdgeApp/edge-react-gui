@@ -414,6 +414,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
+  flipInputCryptoFocusValue: 0,
   walletsSort: 'default'
 }
 
@@ -553,7 +554,8 @@ export const SYNCED_ACCOUNT_TYPES = {
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object',
-  walletsSort: 'string'
+  walletsSort: 'string',
+  flipInputCryptoFocusValue: 'number'
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -641,6 +643,13 @@ export const setDeveloperModeOn = (account: EdgeAccount, developerModeOn: boolea
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { developerModeOn })
     return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export const setFlipInputCryptoFocusValue = (account: EdgeAccount, flipInputCryptoFocusValue: number) => {
+  return getSyncedSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { flipInputCryptoFocusValue })
+    return setSyncedSettings(account, updatedSettings)
   })
 }
 

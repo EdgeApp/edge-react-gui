@@ -81,6 +81,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     defaultIsoFiat: '',
     denominationKeys: [],
     developerModeOn: false,
+    flipInputCryptoFocusValue: 0,
     isAccountBalanceVisible: false,
     mostRecentWallets: [],
     passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
