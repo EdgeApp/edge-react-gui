@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { type SetNativeAmountInfo, exchangeMax, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
+import { type FlipInputCryptoFocusKey, setFlipInputCryptoFocusValue } from '../../actions/SettingsActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -61,6 +62,7 @@ type StateProps = {
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
   getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void,
   exchangeMax: () => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps
@@ -297,6 +299,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.getQuote}
             flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
+            setFlipInputCryptoFocusValue={this.props.setFlipInputCryptoFocusValue}
           >
             {this.props.hasMaxSpend && (
               <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
@@ -320,6 +323,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
             flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
+            setFlipInputCryptoFocusValue={this.props.setFlipInputCryptoFocusValue}
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderAlert()}
@@ -415,6 +419,9 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     onSelectWallet(walletId, currencyCode, direction) {
       dispatch(selectWalletForExchange(walletId, currencyCode, direction))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
+    },
+    setFlipInputCryptoFocusValue(flipInputCryptoFocusKey: FlipInputCryptoFocusKey) {
+      dispatch(setFlipInputCryptoFocusValue(flipInputCryptoFocusKey))
     },
     async exchangeMax() {
       await dispatch(exchangeMax())

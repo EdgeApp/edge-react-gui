@@ -8,6 +8,7 @@ import { type AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
+import { type FlipInputCryptoFocusKey, setFlipInputCryptoFocusValue } from '../../actions/SettingsActions.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -54,7 +55,8 @@ type StateProps = {
 
 type DispatchProps = {
   updateMaxSpend: (walletId: string, currencyCode: string) => void,
-  updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
+  updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 
 type State = {
@@ -138,7 +140,16 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputCryptoFocusValue, flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
+    const {
+      flipInputCryptoFocusValue,
+      flipInputHeaderText,
+      flipInputHeaderLogo,
+      primaryInfo,
+      secondaryInfo,
+      fiatPerCrypto,
+      setFlipInputCryptoFocusValue,
+      theme
+    } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     const styles = getStyles(theme)
     return (
@@ -157,6 +168,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             onNext={this.handleCloseModal}
             keyboardVisible={false}
             flipInputCryptoFocusValue={flipInputCryptoFocusValue}
+            setFlipInputCryptoFocusValue={setFlipInputCryptoFocusValue}
             isFocus
           />
         </Card>
@@ -323,6 +335,9 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     },
     updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
       dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
+    },
+    setFlipInputCryptoFocusValue(flipInputCryptoFocusKey: FlipInputCryptoFocusKey) {
+      dispatch(setFlipInputCryptoFocusValue(flipInputCryptoFocusKey))
     }
   })
 )(withTheme(FlipInputModalComponent))

@@ -11,6 +11,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
+import { type FlipInputCryptoFocusKey, setFlipInputCryptoFocusValue } from '../../actions/SettingsActions.js'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -59,7 +60,8 @@ type StateProps = {
 type DispatchProps = {
   refreshReceiveAddressRequest: (walletId: string) => void,
   refreshAllFioAddresses: () => void,
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (walletId: string, currencyCode: string) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
@@ -275,8 +277,16 @@ export class RequestComponent extends React.Component<Props, State> {
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   render() {
-    const { currencyIcon, exchangeSecondaryToPrimaryRatio, flipInputCryptoFocusValue, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } =
-      this.props
+    const {
+      currencyIcon,
+      exchangeSecondaryToPrimaryRatio,
+      flipInputCryptoFocusValue,
+      guiWallet,
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
+      setFlipInputCryptoFocusValue,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     if (guiWallet == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null) {
@@ -308,6 +318,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={false}
                 flipInputCryptoFocusValue={flipInputCryptoFocusValue}
+                setFlipInputCryptoFocusValue={setFlipInputCryptoFocusValue}
                 isFocus={false}
                 onNext={this.onNext}
                 topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
@@ -606,6 +617,9 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     },
     onSelectWallet(walletId: string, currencyCode: string) {
       dispatch(selectWalletFromModal(walletId, currencyCode))
+    },
+    setFlipInputCryptoFocusValue(flipInputCryptoFocusKey: FlipInputCryptoFocusKey) {
+      dispatch(setFlipInputCryptoFocusValue(flipInputCryptoFocusKey))
     }
   })
 )(withTheme(RequestComponent))

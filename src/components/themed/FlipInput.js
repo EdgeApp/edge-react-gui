@@ -8,6 +8,7 @@ import FastImage from 'react-native-fast-image'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
+import { type FlipInputCryptoFocusKey } from '../../actions/SettingsActions.js'
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -78,7 +79,8 @@ export type FlipInputOwnProps = {
   headerCallback?: () => void,
   keyboardVisible: boolean,
   flipInputRef: (FlipInput: any) => void,
-  onError?: (error: string | void) => void
+  onError?: (error: string | void) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 
 type Props = FlipInputOwnProps & ThemeProps
@@ -276,6 +278,18 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  textInputFocus = (position: 'textInputFront' | 'textInputBack') => {
+    // $FlowFixMe - Indexer Property Error, seems a problem with javascript class variables
+    const textInput = this[position]
+    if (textInput != null) textInput.focus()
+    Animated.spring(this.animatedValue, {
+      toValue: position === 'textInputFront' ? 0 : 1,
+      friction: 8,
+      tension: 10,
+      useNativeDriver: true
+    }).start()
+  }
+
   // Used on refs parent (Request Scene)
   textInputBottomFocus = () => {
     if (this.state.isToggled) {
@@ -304,30 +318,13 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   onToggleFlipInput = () => {
     this.clipboardMenu.close()
-    this.setState({
-      isToggled: !this.state.isToggled
-    })
+    this.setState({ isToggled: !this.state.isToggled })
     if (this.state.isToggled) {
-      if (this.textInputFront) {
-        this.textInputFront.focus()
-      }
-      Animated.spring(this.animatedValue, {
-        toValue: 0,
-        friction: 8,
-        tension: 10,
-        useNativeDriver: true
-      }).start()
-    }
-    if (!this.state.isToggled) {
-      if (this.textInputBack) {
-        this.textInputBack.focus()
-      }
-      Animated.spring(this.animatedValue, {
-        toValue: 1,
-        friction: 8,
-        tension: 10,
-        useNativeDriver: true
-      }).start()
+      this.props.setFlipInputCryptoFocusValue('flipInputToCrypto')
+      this.textInputFocus('textInputFront')
+    } else {
+      this.props.setFlipInputCryptoFocusValue('flipInputToFiat')
+      this.textInputFocus('textInputBack')
     }
   }
 

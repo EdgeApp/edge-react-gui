@@ -3,6 +3,7 @@
 import { bns } from 'biggystring'
 import * as React from 'react'
 
+import { type FlipInputCryptoFocusKey } from '../../actions/SettingsActions.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust } from '../../util/utils.js'
 import type { FlipInputFieldInfo } from './FlipInput.js'
@@ -41,7 +42,8 @@ export type ExchangedFlipInputOwnProps = {
   headerText: string,
   headerLogo: string | void,
   headerCallback?: () => void,
-  onError?: (error: string | void) => void
+  onError?: (error: string | void) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 
 type Props = ExchangedFlipInputOwnProps
@@ -176,6 +178,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         keyboardVisible={this.props.keyboardVisible}
         isEditable={this.props.isEditable}
         flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
+        setFlipInputCryptoFocusValue={this.props.setFlipInputCryptoFocusValue}
         isFocus={this.props.isFocus}
         onNext={this.props.onNext}
         onFocus={this.props.onFocus}

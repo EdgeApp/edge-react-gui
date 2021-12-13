@@ -5,6 +5,7 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { type FlipInputCryptoFocusKey } from '../../actions/SettingsActions.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
@@ -31,6 +32,7 @@ type OwnProps = {
   overridePrimaryExchangeAmount: string,
   isFocused: boolean,
   isThinking?: boolean,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void,
   focusMe: () => void,
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
@@ -155,6 +157,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
             onError={this.onError}
             keyboardVisible={false}
             flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
+            setFlipInputCryptoFocusValue={this.props.setFlipInputCryptoFocusValue}
             isFocus={false}
           />
           {children}
