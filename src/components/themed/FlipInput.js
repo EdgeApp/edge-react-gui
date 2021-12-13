@@ -17,6 +17,9 @@ import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '.
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
+const CRYPTO_FOCUS_MIN_VALUE = 0
+const checkIfCryptoFocus = (flipInputCryptoFocusValue: number) => flipInputCryptoFocusValue > CRYPTO_FOCUS_MIN_VALUE
+
 export type FlipInputFieldInfo = {
   currencyName: string,
   currencySymbol: string, // currency symbol of field
@@ -65,7 +68,7 @@ export type FlipInputOwnProps = {
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
   onAmountChanged(decimalAmount: string): void,
   isEditable: boolean,
-  isFiatOnTop: boolean,
+  flipInputCryptoFocusValue: number,
   isFocus: boolean,
 
   topReturnKeyType?: string,
@@ -194,6 +197,17 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     })
   }
 
+  updateFlipInputFocus() {
+    this.setState({
+      isToggled: !checkIfCryptoFocus(this.props.flipInputCryptoFocusValue)
+    })
+    Animated.timing(this.animatedValue, {
+      toValue: checkIfCryptoFocus(this.props.flipInputCryptoFocusValue) ? 0 : 1,
+      duration: 0,
+      useNativeDriver: true
+    }).start()
+  }
+
   componentDidMount() {
     this.props.flipInputRef(this)
     setTimeout(() => {
@@ -202,16 +216,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       }
     }, 400)
 
-    if (this.props.isFiatOnTop) {
-      this.setState({
-        isToggled: !this.state.isToggled
-      })
-      Animated.timing(this.animatedValue, {
-        toValue: 1,
-        duration: 0,
-        useNativeDriver: true
-      }).start()
-    }
+    this.updateFlipInputFocus()
 
     if (this.props.isFocus) {
       setTimeout(() => {
@@ -231,6 +236,12 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   componentWillUnmount() {
     this.props.flipInputRef(null)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.flipInputCryptoFocusValue !== prevProps.flipInputCryptoFocusValue) {
+      this.updateFlipInputFocus()
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {

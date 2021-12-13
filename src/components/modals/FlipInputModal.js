@@ -35,6 +35,7 @@ type StateProps = {
   balanceFiat: string,
 
   // FlipInput
+  flipInputCryptoFocusValue: number,
   flipInputHeaderText: string,
   flipInputHeaderLogo: string,
   primaryInfo: GuiCurrencyInfo,
@@ -137,7 +138,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
+    const { flipInputCryptoFocusValue, flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     const styles = getStyles(theme)
     return (
@@ -155,8 +156,8 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             onError={this.handleAmountChangeError}
             onNext={this.handleCloseModal}
             keyboardVisible={false}
+            flipInputCryptoFocusValue={flipInputCryptoFocusValue}
             isFocus
-            isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
           />
         </Card>
       </View>
@@ -299,6 +300,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${bns.toFixed(balanceFiat, 2, 2)}`,
 
       // FlipInput
+      flipInputCryptoFocusValue: state.ui.settings.flipInputCryptoFocusValue,
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
       flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
       primaryInfo,

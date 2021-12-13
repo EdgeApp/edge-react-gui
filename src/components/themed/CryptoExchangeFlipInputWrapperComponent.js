@@ -26,6 +26,7 @@ type OwnProps = {
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   fiatPerCrypto: string,
+  flipInputCryptoFocusValue: number,
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
   isFocused: boolean,
@@ -153,7 +154,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             onError={this.onError}
             keyboardVisible={false}
-            isFiatOnTop
+            flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
             isFocus={false}
           />
           {children}

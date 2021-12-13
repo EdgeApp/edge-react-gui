@@ -46,6 +46,7 @@ type StateProps = {
   edgeWallet?: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio?: string,
   fioAddressesExist?: boolean,
+  flipInputCryptoFocusValue: number,
   guiWallet?: GuiWallet,
   isConnected: boolean,
   legacyAddress: string,
@@ -274,7 +275,8 @@ export class RequestComponent extends React.Component<Props, State> {
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   render() {
-    const { currencyIcon, exchangeSecondaryToPrimaryRatio, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { currencyIcon, exchangeSecondaryToPrimaryRatio, flipInputCryptoFocusValue, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } =
+      this.props
     const styles = getStyles(theme)
 
     if (guiWallet == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null) {
@@ -305,7 +307,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 forceUpdateGuiCounter={0}
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={false}
-                isFiatOnTop
+                flipInputCryptoFocusValue={flipInputCryptoFocusValue}
                 isFocus={false}
                 onNext={this.onNext}
                 topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
@@ -545,6 +547,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       return {
         publicAddress: '',
         legacyAddress: '',
+        flipInputCryptoFocusValue: state.ui.settings.flipInputCryptoFocusValue,
         fioAddressesExist: false,
         isConnected: state.network.isConnected
       }
@@ -583,6 +586,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       currencyIcon,
       edgeWallet,
       exchangeSecondaryToPrimaryRatio,
+      flipInputCryptoFocusValue: state.ui.settings.flipInputCryptoFocusValue,
       guiWallet,
       publicAddress: guiWallet?.receiveAddress?.publicAddress ?? '',
       legacyAddress: guiWallet?.receiveAddress?.legacyAddress ?? '',

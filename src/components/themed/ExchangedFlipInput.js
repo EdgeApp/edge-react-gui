@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust, zeroString } from '../../util/utils.js'
+import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust } from '../../util/utils.js'
 import type { FlipInputFieldInfo } from './FlipInput.js'
 import { FlipInput } from './FlipInput.js'
 
@@ -33,7 +33,7 @@ export type ExchangedFlipInputOwnProps = {
   // amounts are ONLY for the primary field. Parent will not be given values for the secondary field.
   onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): mixed,
   isEditable: boolean,
-  isFiatOnTop: boolean,
+  flipInputCryptoFocusValue: number,
   isFocus: boolean,
 
   topReturnKeyType?: string,
@@ -154,13 +154,6 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
     this.props.onExchangeAmountChanged({ exchangeAmount, nativeAmount })
   }
 
-  isFiatOnTop = () => {
-    if (!this.props.isFiatOnTop) {
-      return false
-    }
-    return !zeroString(this.state.exchangeSecondaryToPrimaryRatio)
-  }
-
   toggleCryptoOnBottom = () => {
     if (this.flipInput != null) {
       this.flipInput.toggleCryptoOnBottom()
@@ -182,7 +175,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         onError={this.props.onError}
         keyboardVisible={this.props.keyboardVisible}
         isEditable={this.props.isEditable}
-        isFiatOnTop={this.isFiatOnTop()}
+        flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
         isFocus={this.props.isFocus}
         onNext={this.props.onNext}
         onFocus={this.props.onFocus}

@@ -38,6 +38,7 @@ type StateProps = {
   toWalletPrimaryInfo: GuiCurrencyInfo,
   toButtonText: string,
   toFiatToCrypto: string,
+  flipInputCryptoFocusValue: number,
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
@@ -295,6 +296,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
             onNext={this.getQuote}
+            flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
           >
             {this.props.hasMaxSpend && (
               <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
@@ -317,6 +319,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             isThinking={this.props.creatingWallet}
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
+            flipInputCryptoFocusValue={this.props.flipInputCryptoFocusValue}
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderAlert()}
@@ -401,7 +404,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       calculatingMax: cryptoExchange.calculatingMax,
       creatingWallet: cryptoExchange.creatingWallet,
       insufficient: state.cryptoExchange.insufficientError,
-      genericError: state.cryptoExchange.genericShapeShiftError
+      genericError: state.cryptoExchange.genericShapeShiftError,
+      flipInputCryptoFocusValue: state.ui.settings.flipInputCryptoFocusValue
     }
   },
   dispatch => ({

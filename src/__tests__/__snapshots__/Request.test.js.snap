@@ -35,7 +35,6 @@ exports[`Request should render with loaded props 1`] = `
         headerText="Receive to undefined"
         inputAccessoryViewID=""
         isEditable={true}
-        isFiatOnTop={true}
         isFocus={false}
         keyboardVisible={false}
         onError={[Function]}
