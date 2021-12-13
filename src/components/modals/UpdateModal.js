@@ -5,7 +5,8 @@ import { Image, Linking, Platform, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { getBundleId } from 'react-native-device-info'
 
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import logo from '../../assets/images/olingoLogo/Olingo_logo_Icon.png'
+
 import s from '../../locales/strings.js'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
@@ -36,7 +37,7 @@ export function UpdateModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
       <View style={styles.titleContainer}>
-        <Image style={styles.titleImage} source={edgeLogo} />
+        <Image style={styles.titleImage} source={logo} />
         <ModalTitle>{s.strings.update_header}</ModalTitle>
       </View>
       <ModalMessage>{s.strings.update_fresh}</ModalMessage>

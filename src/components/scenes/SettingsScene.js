@@ -22,6 +22,7 @@ import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
+import { womanTheme } from '../../theme/variables/womanTheme.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -186,7 +187,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleDarkThemeToggle = (): void => {
     this.setState({ darkTheme: !this.state.darkTheme }, () => {
-      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(edgeLight)
+      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(womanTheme)
     })
   }
 
@@ -242,6 +243,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsTappableRow label={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
           <SettingsLabelRow right={autoLogoutRightText} label={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
           <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
+          <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
 
           <SettingsSwitchRow key="pinRelogin" label={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
           {this.props.supportsTouchId && (
@@ -267,15 +269,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           })}
 
           <SettingsTappableRow label={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
-          <SettingsSwitchRow
-            key="developerMode"
-            label={s.strings.settings_developer_mode}
-            value={this.props.developerModeOn}
-            onPress={this.handleDeveloperToggle}
-          />
-          {this.props.developerModeOn && (
-            <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
-          )}
+
+
           <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
@@ -303,7 +298,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+export const SettingsScene = connect < StateProps, DispatchProps, OwnProps> (
   state => ({
     account: state.core.account,
     context: state.core.context,

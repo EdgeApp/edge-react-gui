@@ -4,6 +4,8 @@ import THEME from '../../../../theme/variables/airbitz'
 import { scale } from '../../../../util/scaling.js'
 
 export default {
+
+
   header: {
     backgroundColor: THEME.COLORS.ACCENT_BLUE,
     height: scale(48),
@@ -29,10 +31,7 @@ export default {
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-  iconImage: {
-    width: scale(22),
-    height: scale(22)
-  },
+
 
   /// ///////////////////////////////////////////////////
 

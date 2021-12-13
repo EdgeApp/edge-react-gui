@@ -219,7 +219,7 @@ export const womanTheme: Theme = {
   // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
-  settingsRowBackground: 'palette.white',
+  settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.lightGray,
   settingsRowSubHeader: palette.transparent,
@@ -297,7 +297,12 @@ export const womanTheme: Theme = {
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoBitaccess: guiPluginLogoBitaccess,
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+  iconImage: {
+    width: scale(22),
+    height: scale(22),
+    tintColor: '#F38FAC'
+  }
 }
 
 

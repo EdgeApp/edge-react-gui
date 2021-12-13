@@ -1,8 +1,8 @@
 // @flow
 
 const strings = {
-  app_name: 'Edge Wallet',
-  app_name_short: 'Edge',
+  app_name: 'Olingo Wallet',
+  app_name_short: 'Olingo',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
@@ -11,7 +11,7 @@ const strings = {
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_request: 'Request',
-  drawer_scan_qr_send: 'Scan QR (Edge Login)',
+  drawer_scan_qr_send: 'Scan QR (Olingo Login)',
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
   drawer_fio_names: 'FIO Names',
@@ -45,7 +45,7 @@ const strings = {
   azteco_btc_only: 'Please choose a BTC wallet and scan again.',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
+  edge_description: 'This application would like to create or access its wallet in your Olingo account.\n\n It will not have access to any other wallets.',
   edge_description_warning:
     'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
@@ -201,7 +201,7 @@ const strings = {
   submit: 'Submit',
   login: 'Login',
   help_build: 'Build',
-  help_modal_title: 'Thanks for using Edge!',
+  help_modal_title: 'Thanks for using Olingo!',
   help_version: 'Version',
   help_knowledge_base: 'Knowledge Base',
   help_knowledge_base_text: 'Commonly asked questions and FAQ',
@@ -209,8 +209,8 @@ const strings = {
   help_support_text: 'Troubleshooting and technical support',
   help_call: 'Call for Assistance',
   help_call_text: 'Get in touch by phone',
-  help_site: 'Visit the Edge App site',
-  help_site_text: 'More info on Edge and Developer API/SDK',
+  help_site: 'Visit the Olingo App site',
+  help_site_text: 'More info on Olingo and Developer API/SDK',
   loading: 'Loading…',
   validating: 'Validating…',
   mining_fee_custom_label_choice: 'Custom',
@@ -220,7 +220,7 @@ const strings = {
   request_deprecated_currency_code:
     'Support for %1$s has been deprecated. To continue using this wallet, extract the private keys and import into a %1$s supporting wallet.',
   request_qr_email_title: 'Pay with %1$s:',
-  request_qr_email_subject: 'Edge %s Request',
+  request_qr_email_subject: 'Olingo %s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',
@@ -239,9 +239,9 @@ const strings = {
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
-  send_scan_edge_login_or_sweep_private_key: 'Edge Login or Sweep Private Key',
-  send_scan_edge_login_success_title: 'Edge Login Successful',
-  send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
+  send_scan_edge_login_or_sweep_private_key: 'Olingo Login or Sweep Private Key',
+  send_scan_edge_login_success_title: 'Olingo Login Successful',
+  send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Olingo Login.',
   send_to_title: 'To: %s',
   send_confirmation_to: 'To: %s',
   send_confirmation_address: 'Address: %s',
@@ -384,7 +384,7 @@ const strings = {
   title_create_wallet: 'Create Wallet',
   title_export_transactions: 'Export Transactions',
   title_default_fiat: 'Default Fiat',
-  title_edge_login: 'Edge Login',
+  title_edge_login: 'Olingo Login',
   title_exchange: 'Exchange',
   title_fio_sent_request_details: 'Sent Request Details',
   title_fio_address_settings: 'Address Settings',
@@ -488,7 +488,7 @@ const strings = {
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
   otp_description: 'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
-  otp_description_2: 'If you download Edge on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
+  otp_description_2: 'If you download Olingo on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
   otp_enabled_message: 'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
   otp_disable: 'Disable 2FA',
   otp_enable: 'Enable 2FA',
@@ -538,7 +538,7 @@ const strings = {
   exchange_crypto_modal_message: 'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
   private_key_modal_sweep_from_private_address_message:
-    'This process needs an on-chain transaction from the original wallet to Edge. Mining fees are applied and depend on the network status.',
+    'This process needs an on-chain transaction from the original wallet to Olingo. Mining fees are applied and depend on the network status.',
   private_key_modal_import: 'Import',
   private_key_modal_cancel: 'Cancel',
   private_key_modal_success: 'Private key successfully swept',
@@ -561,7 +561,7 @@ const strings = {
   unique_identifier_modal_cancel: 'Cancel',
 
   cannot_delete_last_wallet_modal_title: 'Cannot Archive Wallet',
-  cannot_delete_last_wallet_modal_message_part_1: 'Edge requires at least one wallet in this account.',
+  cannot_delete_last_wallet_modal_message_part_1: 'Olingo requires at least one wallet in this account.',
   cannot_delete_last_wallet_modal_message_part_2: 'If you’d like to archive this wallet, you’ll need to add an additional wallet to this account.',
 
   enter_your_password: 'Enter your password',
@@ -612,7 +612,7 @@ const strings = {
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   edge_login_failed: 'Failed to Login',
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
-  edge_login_fetching: 'Fetching Edge Login info...',
+  edge_login_fetching: 'Fetching Olingo Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   modal_addressexplorer_null: 'This currency has no explorer site as of now',
   approximately: 'Estimated',
@@ -625,7 +625,7 @@ const strings = {
   buy_sell_crypto_select_country_button: 'Select your region',
   buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
-  plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
+  plugin_provider_disclaimer: 'The following services are not provided by Olingo. \n\nFor issues and feedback please contact the respective service providers.',
   plugin_powered_by: 'Powered by',
   no_exchange_rate: 'No Exchange Rate',
   send_from_wallet: 'Send from %s',
@@ -647,9 +647,9 @@ const strings = {
   fio_domain_label: 'FIO Domain',
   fio_domain_free: 'Free',
   fio_address_wallet_selection_text:
-    'FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',
+    'FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Olingo. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',
   fio_domain_wallet_selection_text:
-    'FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Select a wallet to pay from:',
+    'FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of Olingo. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Select a wallet to pay from:',
   fio_address_list: 'Fio Address List',
   fio_address_register_form_field_label: 'FIO Address',
   fio_address_register_placeholder: 'Your address name here',
@@ -774,13 +774,13 @@ const strings = {
   invalid_character_error: 'Invalid input characters',
 
   update_header: 'Update Available',
-  update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
+  update_fresh: 'A fresh new version of Olingo is now available. Please update to get our hot new features and fixes.',
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
   error_boundary_title: 'Oops!',
   error_boundary_message:
-    "We're sorry but something went wrong. Please kill and restart the app to continue using Edge.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
+    "We're sorry but something went wrong. Please kill and restart the app to continue using Olingo.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -811,9 +811,9 @@ const strings = {
 
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
-  contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
-  contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
-  contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
+  contacts_permission_modal_text_1: 'Olingo would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
+  contacts_permission_modal_text_2: 'No contact information is shared with Olingo or any other entities. All information is encrypted and only seen by YOU.',
+  contacts_permission_modal_text_3: 'If you deny access, Olingo can still function to buy, sell, trade, and transact cryptocurrency.',
   contacts_permission_modal_enable_settings: 'To use %1$s, please enable your %2$s permission.',
   contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
 
