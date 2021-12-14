@@ -6,6 +6,7 @@ import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { type FlipInputCryptoFocusKey, setFlipInputCryptoFocusValue } from '../../actions/SettingsActions.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
@@ -37,7 +38,8 @@ type OwnProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (walletId: string, currencyCode: string) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 
 type LocalState = {
@@ -133,7 +135,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
   }
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
-    const { isConnected, state, navigation, route } = this.props
+    const { isConnected, setFlipInputCryptoFocusValue, state, navigation, route } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
 
@@ -181,6 +183,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
           }
         }
 
+        setFlipInputCryptoFocusValue('fioRegisterAddress')
         navigation.navigate('send', {
           guiMakeSpendInfo,
           selectedWalletId: walletId,
@@ -288,6 +291,9 @@ export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchP
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { currencyCode, walletId }
       })
+    },
+    setFlipInputCryptoFocusValue(flipInputCryptoFocusKey: FlipInputCryptoFocusKey) {
+      dispatch(setFlipInputCryptoFocusValue(flipInputCryptoFocusKey))
     }
   })
 )(withTheme(FioAddressRegisterSelectWallet))
