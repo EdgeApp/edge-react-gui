@@ -291,11 +291,9 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   // Used on refs parent (Request Scene)
-  textInputBottomFocus = () => {
+  requestSceneFioModeOn = () => {
     if (this.state.isToggled) {
-      if (this.textInputBack) {
-        this.textInputBack.focus()
-      }
+      this.textInputFocus('textInputFront')
     } else {
       if (this.textInputFront) {
         this.textInputFront.focus()
@@ -304,7 +302,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   // Used on refs parent (Request Scene)
-  textInputBottomBlur = () => {
+  requestSceneFioModeOff = () => {
     if (this.state.isToggled) {
       if (this.textInputBack) {
         this.textInputBack.blur()

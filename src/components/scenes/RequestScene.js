@@ -461,6 +461,7 @@ export class RequestComponent extends React.Component<Props, State> {
     }
     if (!this.amounts || bns.lte(this.amounts.nativeAmount, '0')) {
       if (Platform.OS === 'android') {
+        this.props.setFlipInputCryptoFocusValue('fioRequest')
         showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
         return
       } else {
@@ -475,7 +476,8 @@ export class RequestComponent extends React.Component<Props, State> {
 
   fioMode = () => {
     if (this.flipInput && Platform.OS === 'ios') {
-      this.flipInput.textInputBottomFocus()
+      this.flipInput.requestSceneFioModeOn()
+      this.props.setFlipInputCryptoFocusValue('fioRequest')
       this.setState({ isFioMode: true })
     }
   }
@@ -483,7 +485,7 @@ export class RequestComponent extends React.Component<Props, State> {
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
       if (this.flipInput) {
-        this.flipInput.textInputBottomBlur()
+        this.flipInput.requestSceneFioModeOff()
       }
     })
   }
@@ -493,7 +495,7 @@ export class RequestComponent extends React.Component<Props, State> {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
-        this.flipInput.textInputBottomBlur()
+        this.flipInput.requestSceneFioModeOff()
       }
       this.onNext()
     }
