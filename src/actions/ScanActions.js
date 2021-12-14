@@ -22,6 +22,7 @@ import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
 import { denominationToDecimalPlaces, noOp, zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
+import { setFlipInputCryptoFocusValue } from './SettingsActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
@@ -126,6 +127,8 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
   try {
     const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
     dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
+
+    if (parsedUri?.nativeAmount != null && +parsedUri?.nativeAmount > 0) setFlipInputCryptoFocusValue('deeplink')
 
     if (parsedUri.token) {
       // TOKEN URI
