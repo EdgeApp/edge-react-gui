@@ -8,6 +8,7 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+import { type FlipInputCryptoFocusKey, setFlipInputCryptoFocusValue } from '../../actions/SettingsActions.js'
 import { FIO_REQUEST_APPROVED } from '../../constants/SceneKeys'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
@@ -59,7 +60,8 @@ type StateProps = {
 
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void,
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 
 type OwnProps = {
@@ -375,7 +377,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
-    const { fioWallets = [], currencyWallets, navigation, state } = this.props
+    const { fioWallets = [], currencyWallets, navigation, state, setFlipInputCryptoFocusValue } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())
@@ -426,6 +428,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       }
     }
 
+    setFlipInputCryptoFocusValue('fioRequestPay')
     navigation.navigate('send', {
       guiMakeSpendInfo,
       selectedWalletId: walletId,
@@ -664,6 +667,9 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
+    },
+    setFlipInputCryptoFocusValue(flipInputCryptoFocusKey: FlipInputCryptoFocusKey) {
+      dispatch(setFlipInputCryptoFocusValue(flipInputCryptoFocusKey))
     }
   })
 )(withTheme(FioRequestList))
