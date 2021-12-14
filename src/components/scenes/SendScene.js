@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
+import { type FlipInputCryptoFocusKey, setFlipInputCryptoFocusValue } from '../../actions/SettingsActions.js'
 import { selectWallet } from '../../actions/WalletActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -70,7 +71,8 @@ type DispatchProps = {
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void,
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => Promise<void>,
   onChangePin: (pin: string) => void,
-  selectWallet: (walletId: string, currencyCode: string) => void
+  selectWallet: (walletId: string, currencyCode: string) => void,
+  setFlipInputCryptoFocusValue: (flipInputCryptoFocusKey: FlipInputCryptoFocusKey) => void
 }
 
 type OwnProps = {
@@ -197,7 +199,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleChangeAddress = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
-    const { sendConfirmationUpdateTx, route } = this.props
+    const { sendConfirmationUpdateTx, setFlipInputCryptoFocusValue, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { spendTargets } = newGuiMakeSpendInfo
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
@@ -226,6 +228,7 @@ class SendComponent extends React.PureComponent<Props, State> {
         ...newGuiMakeSpendInfo
       }
     }
+    if (parsedUri?.nativeAmount != null && +parsedUri?.nativeAmount > 0) setFlipInputCryptoFocusValue('enterAddress')
     sendConfirmationUpdateTx(newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
     this.setState({ recipientAddress })
   }
@@ -659,6 +662,9 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     selectWallet(walletId: string, currencyCode: string) {
       dispatch(selectWallet(walletId, currencyCode))
+    },
+    setFlipInputCryptoFocusValue(flipInputCryptoFocusKey: FlipInputCryptoFocusKey) {
+      dispatch(setFlipInputCryptoFocusValue(flipInputCryptoFocusKey))
     }
   })
 )(withTheme(SendComponent))
