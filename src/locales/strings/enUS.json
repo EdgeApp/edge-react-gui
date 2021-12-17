@@ -330,6 +330,7 @@
   "string_first_doge_wallet_name": "My Doge",
   "string_first_fantom_wallet_name": "My Fantom",
   "string_first_hedera_wallet_name": "My Hedera",
+  "string_first_polygon_wallet_name": "My Polygon",
   "my_crypto_wallet_name": "My %s",
   "string_help": "Help",
   "string_exit": "Exit",
