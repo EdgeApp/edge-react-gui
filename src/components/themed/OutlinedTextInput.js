@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from '../../types/reactHooks.js'
@@ -81,6 +81,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     // TextInput:
     autoFocus = !searchIcon,
     blurOnClear = searchIcon,
+    maxLength,
     ...inputProps
   } = props
   const theme = useTheme()
@@ -113,6 +114,10 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   const [labelWidth, setLabelWidth] = useState(0)
   const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
 
+  // Captures the width of the counter label:
+  const [counterWidth, setCounterWidth] = useState(0)
+  const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
+
   // Animates between 0 and 1 based our error state:
   const errorAnimation = useSharedValue(0)
   useEffect(() => {
@@ -120,13 +125,24 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   }, [errorAnimation, hasError])
 
   // Animates between 0 and 1 based on focus:
+  const baseDuration = 300
   const focusAnimation = useSharedValue(0)
+
+  // A delayed focus animation for translating the label up is required to
+  // avoid overlapping into the opening animation of the top border.
+  // A delayed focus animation is required for closing the top border when
+  // animating everything back to their original positions.
+  const animationDelay = 0.4 * baseDuration
+  const focusAnimationAlt = useSharedValue(0)
+
   const handleBlur = () => {
-    focusAnimation.value = withTiming(0)
+    focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
+    focusAnimationAlt.value = withTiming(0, { duration: baseDuration })
     if (onBlur != null) onBlur()
   }
   const handleFocus = () => {
-    focusAnimation.value = withTiming(1)
+    focusAnimation.value = withTiming(1, { duration: baseDuration })
+    focusAnimationAlt.value = withDelay(animationDelay, withTiming(1, { duration: baseDuration }))
     if (onFocus != null) onFocus()
   }
 
@@ -134,12 +150,24 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   const labelLeft = theme.rem(1)
   const labelPadding = theme.rem(0.25) // Gap in the top line
   const labelShrink = 0.25 // How much to shrink the text
-  const translateX =
+  const labelTranslateX =
     (searchIcon ? theme.rem(-1.875) : 0) +
     labelPadding +
     // Compensate for the scaling origin being in the center:
     -0.5 * labelShrink * labelWidth
-  const translateY = theme.rem(-1.5)
+  const labelTranslateY = theme.rem(-1.5)
+
+  // Counter dimensions
+  const counterRight = theme.rem(1)
+  const counterPadding = theme.rem(0.25) // Gap in the bottom line
+  const counterTranslateX =
+    counterPadding +
+    // Compensate for the scaling origin being in the center:
+    0.5 * counterWidth
+
+  // Pad right side of the bottom line when no counter is present,
+  // to account for rounded corner.
+  const cornerPadding = theme.rem(0.5)
 
   // React-controlled styles:
   const containerPadding = {
@@ -163,16 +191,20 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
 
   // Animated styles:
   const getColor = useCallback(
-    (errorValue, focusValue) => {
+    (errorValue, focusValue, focusColor? = theme.iconTappable) => {
       'worklet'
-      const focusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, theme.iconTappable])
-      return interpolateColor(errorValue, [0, 1], [focusColor, theme.dangerText])
+      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, focusColor])
+      return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
     },
     [theme]
   )
-  const bottomStyle = useAnimatedStyle(() => ({
-    borderColor: getColor(errorAnimation.value, focusAnimation.value)
-  }))
+  const bottomStyle = useAnimatedStyle(() => {
+    const counterProgress = hasValue ? 1 : focusAnimation.value
+    return {
+      borderColor: getColor(errorAnimation.value, focusAnimation.value),
+      right: maxLength !== undefined ? counterRight + counterProgress * (2 * counterPadding + counterWidth) : cornerPadding
+    }
+  })
   const leftStyle = useAnimatedStyle(() => ({
     borderColor: getColor(errorAnimation.value, focusAnimation.value)
   }))
@@ -180,22 +212,37 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     borderColor: getColor(errorAnimation.value, focusAnimation.value)
   }))
   const topStyle = useAnimatedStyle(() => {
-    const labelProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
+    const counterProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
       borderColor: getColor(errorAnimation.value, focusAnimation.value),
-      left: labelLeft + labelProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
+      left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
     }
   })
   const labelStyle = useAnimatedStyle(() => {
-    const labelProgress = hasValue ? 1 : focusAnimation.value
+    const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
       color: getColor(errorAnimation.value, focusAnimation.value),
-      transform: [{ translateY: labelProgress * translateY }, { translateX: labelProgress * translateX }, { scale: 1 - labelProgress * labelShrink }]
+      transform: [
+        { translateX: labelProgressAlt * labelTranslateX },
+        { translateY: labelProgressAlt * labelTranslateY },
+        { scale: 1 - labelProgressAlt * labelShrink }
+      ]
+    }
+  })
+  const counterStyle = useAnimatedStyle(() => {
+    const counterProgress = hasValue ? 1 : focusAnimation.value
+    return {
+      color: getColor(errorAnimation.value, focusAnimation.value, theme.secondaryText),
+      opacity: counterProgress,
+      transform: [{ translateX: (1 - counterProgress) * counterTranslateX }, { scale: counterProgress }]
     }
   })
   const errorStyle = useAnimatedStyle(() => ({
     opacity: errorAnimation.value
   }))
+
+  // Character limit
+  const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
   return (
     <TouchableWithoutFeedback onPress={() => focus()}>
@@ -211,6 +258,9 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
         </View>
         <Animated.Text numberOfLines={1} style={[styles.errorText, errorStyle]}>
           {error}
+        </Animated.Text>
+        <Animated.Text numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout}>
+          {charLimitLabel}
         </Animated.Text>
         {!searchIcon ? null : <AntDesignIcon name="search1" style={styles.searchIcon} />}
         {!clearIcon || !hasValue ? null : (
@@ -231,6 +281,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
           onBlur={handleBlur}
           onChangeText={onChangeText}
           onFocus={handleFocus}
+          maxLength={maxLength}
         />
       </View>
     </TouchableWithoutFeedback>
@@ -254,6 +305,13 @@ const getStyles = cacheStyles(theme => {
     bottom: 0,
     top: 0,
     width: theme.rem(1)
+  }
+
+  // Common footer attributes, applies to the counter and the error text
+  const footerCommon = {
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.75),
+    position: 'absolute'
   }
 
   return {
@@ -339,12 +397,17 @@ const getStyles = cacheStyles(theme => {
 
     // The error text hangs out in the margin area below the main box:
     errorText: {
+      ...footerCommon,
       color: theme.dangerText,
-      fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(0.75),
-      position: 'absolute',
-      bottom: -theme.rem(0.875),
-      left: theme.rem(0.75)
+      left: theme.rem(0.75),
+      bottom: -theme.rem(0.875)
+    },
+
+    // The counter text splits the bottom right border line:
+    counterText: {
+      ...footerCommon,
+      right: theme.rem(1.25),
+      bottom: -theme.rem(0.45)
     }
   }
 })
