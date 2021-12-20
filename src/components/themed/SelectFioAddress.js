@@ -46,7 +46,6 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type LocalState = {
   loading: boolean,
-  expirationUpdated: boolean,
   prevFioAddresses: FioAddress[]
 }
 
@@ -55,27 +54,20 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     super(props)
     this.state = {
       loading: false,
-      expirationUpdated: false,
       prevFioAddresses: props.fioAddresses
     }
   }
 
   static getDerivedStateFromProps(props: Props, state: LocalState) {
-    const { fioAddresses, selected } = props
+    const { fioAddresses } = props
     const { prevFioAddresses } = state
     if (fioAddresses.length !== prevFioAddresses.length) {
       return {
         prevFioAddresses: fioAddresses
       }
     }
-    const fioAddress = fioAddresses.find(({ name }) => name === selected)
-    const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
-    if (fioAddress && prevFioAddress && fioAddress.expiration !== prevFioAddress.expiration) {
-      return {
-        expirationUpdated: true,
-        prevFioAddresses: fioAddresses
-      }
-    }
+
+    // todo: add logic fir bundles added instead of renewing
     return null
   }
 
@@ -91,12 +83,6 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 
   componentDidUpdate(prevProps: Props) {
     const { fioRequest, isSendUsingFioAddress } = this.props
-    const { expirationUpdated } = this.state
-    if (expirationUpdated) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ expirationUpdated: false })
-      this.setFioAddress(this.props.selected)
-    }
     if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
       this.setDefaultFioAddress()
     }

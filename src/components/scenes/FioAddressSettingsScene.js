@@ -4,13 +4,11 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getRenewalFee, getTransferFee, renewFioName } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -25,7 +23,6 @@ type LocalState = {
 }
 
 type StateProps = {
-  fioAddresses: FioAddress[],
   isConnected: boolean
 }
 
@@ -55,7 +52,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     }
   }
 
-  afterRenewSuccess = ({ expiration = '' }) => {
+  afterRenewSuccess = () => {
     const { refreshAllFioAddresses, navigation, route } = this.props
     const { fioWallet, fioAddressName, refreshAfterRenew } = route.params
 
@@ -68,8 +65,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       window.requestAnimationFrame(() => {
         navigation.setParams({
           fioWallet,
-          fioAddressName,
-          expiration
+          fioAddressName
         })
       })
     }
@@ -88,14 +84,6 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       </ButtonsModal>
     ))
     return navigation.navigate('fioAddressList')
-  }
-
-  getExpiration = (): string => {
-    const { fioAddresses, route } = this.props
-    const { fioAddressName } = route.params
-    const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
-    if (fioAddress) return fioAddress.expiration
-    return ''
   }
 
   onRenewPress = () => {
@@ -164,13 +152,12 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
   render() {
     const { route } = this.props
-    const { fioAddressName, fioWallet, expiration = this.getExpiration() } = route.params
+    const { fioAddressName, fioWallet } = route.params
     const { showRenew, showTransfer } = this.state
 
     return (
       <SceneWrapper background="header">
         <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
-        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
         {showRenew && (
           <FioActionSubmit
             title={s.strings.title_fio_renew_address}
@@ -198,7 +185,6 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
 export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
-    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     isConnected: state.network.isConnected
   }),
   dispatch => ({
