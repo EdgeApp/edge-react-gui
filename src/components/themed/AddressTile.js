@@ -9,7 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
-import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
+import { checkPubAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { AddressModal } from '../modals/AddressModal'
@@ -34,8 +34,7 @@ type OwnProps = {
   fioToAddress?: string
 }
 type StateProps = {
-  fioPlugin?: EdgeCurrencyConfig,
-  fioWallets: EdgeCurrencyWallet[]
+  fioPlugin?: EdgeCurrencyConfig
 }
 type State = {
   clipboard: string,
@@ -93,12 +92,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     this.props.resetSendTransaction()
   }
 
-  checkIfFioAddressExpired = async (address: string) => {
-    if (await checkExpiredFioAddress(this.props.fioWallets[0], address)) {
-      throw new Error(s.strings.fio_address_expired)
-    }
-  }
-
   onChangeAddress = async (address: string) => {
     if (!address) return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
@@ -107,7 +100,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     let fioAddress
     if (fioPlugin) {
       try {
-        await this.checkIfFioAddressExpired(address)
+        // todo: should we check for bundles here instead of expiration?
         const publicAddress = await checkPubAddress(fioPlugin, address.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         fioAddress = address.toLowerCase()
         address = publicAddress
@@ -268,8 +261,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
-    fioWallets: state.ui.wallets.fioWallets
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   }),
   dispatch => ({})
 )(withTheme(AddressTileComponent))

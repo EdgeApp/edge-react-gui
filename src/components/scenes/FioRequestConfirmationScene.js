@@ -8,7 +8,7 @@ import { View } from 'react-native'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
+import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
@@ -219,7 +219,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openFioAddressToModal = async () => {
-    const { fioWallets, fioPlugin, walletId, currencyCode } = this.props
+    const { fioPlugin, walletId, currencyCode } = this.props
 
     this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show(bridge => (
@@ -227,8 +227,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     ))
     if (fioAddressTo === null) {
       this.showError()
-    } else if (await checkExpiredFioAddress(fioWallets[0], fioAddressTo ?? '')) {
-      this.showError(s.strings.fio_address_expired)
+      // todo: should we check for bundles here instead of expiration?
     } else if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
       this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
     } else if (this.state.fioAddressFrom === fioAddressTo) {

@@ -22,7 +22,6 @@ const strings = {
   fio_address_choose_label: 'Choose a FIO Address',
   fio_domain_choose_label: 'Choose a FIO Domain',
   fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
-  fio_address_expired: 'The FIO address has expired',
 
   scan_qr_label: 'Scan QR Code',
 
@@ -677,8 +676,6 @@ const strings = {
   fio_address_details_screen_registered: 'Registered',
   fio_address_details_screen_expires: 'Expires',
   fio_address_details_screen_manage_account_settings: 'Address Settings',
-  fio_address_details_expired_soon: 'Your FIO address is about to expire.\nWould you like to renew it?',
-  fio_address_details_already_expired: 'Your FIO address is expired. Would you like to renew it?',
   fio_address_details_connect_to_wallets: 'Choose wallets to connect to your FIO address',
   fio_address_list_screen_button_register: 'Register New FIO Address',
   fio_address_list_domain_register: 'Register Custom FIO Domain',

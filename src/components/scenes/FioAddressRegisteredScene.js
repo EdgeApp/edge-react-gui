@@ -19,9 +19,26 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 class FioAddressRegistered extends React.Component<Props> {
+  renderExpDate() {
+    const { theme, route } = this.props
+    const { expiration } = route.params
+    if (expiration != null) {
+      const styles = getStyles(theme)
+
+      return (
+        <T style={styles.text}>
+          {`${s.strings.fio_address_details_screen_expires} `}
+          {formatDate(new Date(expiration))}
+        </T>
+      )
+    }
+
+    return null
+  }
+
   render() {
     const { theme, navigation, route } = this.props
-    const { fioName, expiration } = route.params
+    const { fioName } = route.params
     const styles = getStyles(theme)
 
     return (
@@ -33,10 +50,7 @@ class FioAddressRegistered extends React.Component<Props> {
             </View>
             <T style={styles.text}>{s.strings.fio_address_details_screen_registered}</T>
             <T style={styles.title}>{fioName}</T>
-            <T style={styles.text}>
-              {`${s.strings.fio_address_details_screen_expires} `}
-              {formatDate(new Date(expiration))}
-            </T>
+            {this.renderExpDate()}
           </View>
           <MainButton marginRem={2} onPress={() => navigation.navigate('fioAddressList')} label={s.strings.title_fio_names} />
         </View>
