@@ -119,9 +119,7 @@ export type ParamList = {
   |},
   fioAddressSettings: {|
     fioWallet: EdgeCurrencyWallet,
-    fioAddressName: string,
-    showRenew?: boolean,
-    refreshAfterRenew?: boolean
+    fioAddressName: string
   |},
   fioConnectToWalletsConfirm: {|
     fioWallet: EdgeCurrencyWallet,

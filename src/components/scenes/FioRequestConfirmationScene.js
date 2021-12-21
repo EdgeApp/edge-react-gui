@@ -123,24 +123,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           if (getFeeRes.fee) {
             this.setState({ loading: false })
             this.resetSlider()
-            const answer = await Airship.show(bridge => (
+            await Airship.show(bridge => (
               <ButtonsModal
                 bridge={bridge}
                 title={s.strings.fio_no_bundled_err_msg}
-                message={s.strings.fio_no_bundled_renew_err_msg}
                 buttons={{
-                  ok: { label: s.strings.title_fio_renew_address },
-                  cancel: { label: s.strings.string_cancel_cap }
+                  ok: { label: s.strings.string_ok }
                 }}
               />
             ))
-            if (answer === 'ok') {
-              navigation.navigate('fioAddressSettings', {
-                showRenew: true,
-                fioWallet,
-                fioAddressName: this.state.fioAddressFrom
-              })
-            }
+            // todo: redirect to 'add bundles' scene
             return
           }
         } catch (e) {

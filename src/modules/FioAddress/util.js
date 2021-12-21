@@ -464,7 +464,7 @@ export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, f
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   if (getFeeResult.fee !== 0) {
-    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+    throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   }
 }
 
@@ -709,11 +709,11 @@ const buyAddressRequest = async (
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
 
-export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain: boolean = false): Promise<number> => {
+export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
   if (fioWallet) {
     try {
       const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
-        endPoint: forDomain ? 'renew_fio_domain' : 'renew_fio_address',
+        endPoint: 'renew_fio_domain',
         fioAddress: ''
       })
 
@@ -725,22 +725,12 @@ export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDom
   throw new Error(s.strings.fio_get_fee_err_msg)
 }
 
-export const renewFioName = async (
-  fioWallet: EdgeCurrencyWallet | null,
-  fioName: string,
-  fee: number,
-  isDomain: boolean = false
-): Promise<{ expiration: string }> => {
-  const errorStr = sprintf(s.strings.fio_renew_err_msg, isDomain ? s.strings.fio_domain_label : s.strings.fio_address_register_form_field_label)
+export const renewFioDomain = async (fioWallet: EdgeCurrencyWallet | null, fioDomain: string, fee: number): Promise<{ expiration: string }> => {
+  const errorStr = sprintf(s.strings.fio_renew_err_msg, s.strings.fio_domain_label)
   if (fioWallet) {
     try {
-      let params = {}
-      if (isDomain) {
-        params = { fioDomain: fioName, maxFee: fee }
-      } else {
-        params = { fioAddress: fioName, maxFee: fee }
-      }
-      const { expiration } = await fioWallet.otherMethods.fioAction(isDomain ? 'renewFioDomain' : 'renewFioAddress', params)
+      const params = { fioDomain, maxFee: fee }
+      const { expiration } = await fioWallet.otherMethods.fioAction('renewFioDomain', params)
       return { expiration }
     } catch (e) {
       throw new Error(errorStr)
@@ -807,7 +797,7 @@ export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fio
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   if (getFeeResult.fee !== 0) {
-    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+    throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   }
   try {
     await fioWallet.otherMethods.fioAction('cancelFundsRequest', {

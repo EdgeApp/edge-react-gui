@@ -65,8 +65,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     if (fioWallet) {
       navigation.navigate('fioAddressSettings', {
         fioWallet,
-        fioAddressName,
-        refreshAfterRenew: true
+        fioAddressName
+        // todo: refreshAfterBundlesAdded
       })
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
