@@ -109,11 +109,10 @@ class FioNameConfirm extends React.PureComponent<Props> {
     } else {
       try {
         if (this.isFioAddress()) {
-          const { expiration } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
+          await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
-              fioName,
-              expiration
+              fioName
             })
           )
         } else {
