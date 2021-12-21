@@ -131,20 +131,22 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
     return ENV.USE_FAKE_CORE ? (
       <MakeFakeEdgeWorld
         crashReporter={crashReporter}
-        debug={ENV.DEBUG_CORE_BRIDGE}
+        debug={ENV.DEBUG_CORE}
+        nativeIo={nativeIo}
+        pluginUris={['edge-core/plugin-bundle.js']}
         users={[fakeUser]}
         onLoad={this.onFakeEdgeWorld}
         onError={this.onError}
-        nativeIo={nativeIo}
       />
     ) : (
       <MakeEdgeContext
+        {...contextOptions}
         crashReporter={crashReporter}
-        debug={ENV.DEBUG_CORE_BRIDGE}
+        debug={ENV.DEBUG_CORE}
+        nativeIo={nativeIo}
+        pluginUris={['edge-core/plugin-bundle.js']}
         onLoad={this.onContext}
         onError={this.onError}
-        nativeIo={nativeIo}
-        {...contextOptions}
       />
     )
   }
