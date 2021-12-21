@@ -257,7 +257,6 @@ class GuiPluginView extends React.Component<Props, State> {
           originWhitelist={originWhitelist}
           key={`webView${webViewKey}`}
           ref={this._callbacks.setRef}
-          setWebContentsDebuggingEnabled
           source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
