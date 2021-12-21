@@ -509,6 +509,7 @@ class SendComponent extends React.PureComponent<Props, State> {
             message={sprintf(s.strings.unique_identifier_modal_description, identifierName)}
             submitLabel={s.strings.unique_identifier_modal_confirm}
             title={identifierName}
+            maxLength={this.state.coreWallet?.currencyInfo?.memoMaxLength}
           />
         )).then(uniqueIdentifier => {
           if (uniqueIdentifier == null) return
