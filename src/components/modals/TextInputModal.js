@@ -34,7 +34,8 @@ type Props = {|
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
   secureTextEntry?: boolean,
-  multiline?: boolean
+  multiline?: boolean,
+  maxLength?: number
 |}
 
 export function TextInputModal(props: Props) {
@@ -51,7 +52,8 @@ export function TextInputModal(props: Props) {
     secureTextEntry,
     multiline = false,
     submitLabel = s.strings.submit,
-    title
+    title,
+    maxLength
   } = props
 
   const [errorMessage, setErrorMessage] = useState<string | void>()
@@ -101,6 +103,7 @@ export function TextInputModal(props: Props) {
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
         value={text}
+        maxLength={maxLength}
       />
       {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
