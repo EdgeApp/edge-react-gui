@@ -8,7 +8,7 @@ import { FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstant
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
+import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -93,7 +93,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     this.setState({ showRenew: false, showVisibility: false, showTransfer: false })
   }
 
-  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet, true)
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet)
 
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
 
@@ -116,7 +116,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       throw new Error(s.strings.fio_network_alert_text)
     }
 
-    await renewFioName(fioWallet, fioDomainName, renewalFee, true)
+    await renewFioDomain(fioWallet, fioDomainName, renewalFee)
   }
 
   goToTransfer = (params: { fee: number }) => {
