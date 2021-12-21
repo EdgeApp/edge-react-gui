@@ -38,6 +38,7 @@ export const currencyPlugins = {
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT || true,
+  polygon: ENV.POLYGON_INIT,
   ripple: true,
   rsk: true,
   stellar: true,
