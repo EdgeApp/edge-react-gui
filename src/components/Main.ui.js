@@ -74,6 +74,7 @@ import {
   FIO_DOMAIN_REGISTER_SELECT_WALLET,
   FIO_DOMAIN_SETTINGS,
   FIO_NAME_CONFIRM,
+  FIO_REQUEST_APPROVED,
   FIO_REQUEST_CONFIRMATION,
   FIO_REQUEST_LIST,
   FIO_SENT_REQUEST_DETAILS,
@@ -793,6 +794,16 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
+            />
+            <Scene
+              key={FIO_REQUEST_APPROVED}
+              component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+              navTransparent
+              onEnter={() => this.props.requestPermission('contacts')}
+              clone
+              renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
             />
           </Stack>
 

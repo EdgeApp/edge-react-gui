@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { sprintf } from 'sprintf-js'
 
+import { FIO_REQUEST_APPROVED } from '../../constants/SceneKeys'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -412,7 +413,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
-          navigation.replace('transactionDetails', { edgeTransaction })
+          navigation.navigate(FIO_REQUEST_APPROVED, { edgeTransaction })
         }
       }
     }
