@@ -808,6 +808,8 @@
   "wc_smartcontract_network_fee": "Network Fee",
   "wc_smartcontract_max_total": "Max Total",
   "wc_smartcontract_confirmed": "Smart Contract Call confirmed",
+  "confirm_continue_modal_body": "Please confirm your understanding below:",
+  "confirm_continue_modal_button_text": "I understand and agree to the terms",
   "util_truncate_delimeter": "...",
   "currency_label_AFN": "Afghani",
   "currency_label_ALL": "Lek",

@@ -880,6 +880,10 @@ const strings = {
   wc_smartcontract_max_total: 'Max Total',
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
 
+  // Generic TermsAgreement Modal
+  confirm_continue_modal_body: 'Please confirm your understanding below:',
+  confirm_continue_modal_button_text: 'I understand and agree to the terms',
+
   // Util
   util_truncate_delimeter: '...',
 
