@@ -1,10 +1,12 @@
 // @flow
 
+import type { Disklet } from 'disklet'
 import type { EdgeMetaToken } from 'edge-core-js'
 import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
 
+import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -32,6 +34,7 @@ type DispatchProps = {
 }
 
 type StateProps = {
+  disklet: Disklet,
   wallets: { [walletId: string]: GuiWallet },
   manageTokensPending: boolean,
   metaTokens: EdgeMetaToken[],
@@ -172,8 +175,10 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     this.setState({ searchValue: value })
   }
 
-  saveEnabledTokenList = () => {
-    const { navigation, route } = this.props
+  saveEnabledTokenList = async () => {
+    const { disklet, navigation, route } = this.props
+    if (this.state.enabledList.length > 0) await approveTokenTerms(disklet)
+
     const { guiWallet } = route.params
     const { id } = guiWallet
     const disabledList: string[] = []
@@ -293,6 +298,7 @@ export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
     const wallets = state.ui.wallets.byId
     const wallet = wallets[guiWallet.id]
     return {
+      disklet: state.core.disklet,
       manageTokensPending: state.ui.wallets.manageTokensPending,
       settingsCustomTokens: state.ui.settings.customTokens,
       metaTokens: wallet.metaTokens,

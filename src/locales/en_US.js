@@ -875,6 +875,15 @@ const strings = {
   wc_smartcontract_max_total: 'Max Total',
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
 
+  // New Token TermsAgreement Modal
+  token_agreement_modal_title: 'ETH Needed To Send Tokens',
+  token_agreement_modal_body:
+    'ETH is required to pay mining fees when sending tokens. The associated Ethereum wallet must contain a sufficient amount of ETH.\n\nIf you do not have ETH, you can acquire ETH within Edge using the Buy or Exchange function.',
+
+  // Generic TermsAgreement Modal
+  confirm_continue_modal_body: 'Please confirm your understanding below:',
+  confirm_continue_modal_button_text: 'I understand and agree to the terms',
+
   // Util
   util_truncate_delimeter: '...',
 
