@@ -155,6 +155,10 @@ export type ParamList = {
     amounts: ExchangedFlipInputAmounts
   |},
   fioRequestList: void,
+  fioRequestApproved: {|
+    edgeTransaction: EdgeTransaction,
+    thumbnailPath?: string
+  |},
   fioSentRequestDetails: {|
     selectedFioSentRequest: FioRequest
   |},
