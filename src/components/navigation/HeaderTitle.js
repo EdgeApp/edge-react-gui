@@ -68,7 +68,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: theme.rem(1.5)
+    paddingHorizontal: theme.rem(1.5),
+    paddingBottom: theme.rem(0.25)
   },
   boldText: {
     fontFamily: theme.fontFaceBold

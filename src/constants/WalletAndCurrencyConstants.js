@@ -39,27 +39,28 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   DOGE: s.strings.string_first_doge_wallet_name,
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
-  TLOS: s.strings.string_first_telos_wallet_name,
-  WAX: s.strings.string_first_wax_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FIO: s.strings.string_first_fio_wallet_name,
+  FIRO: s.strings.string_first_zcoin_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
+  FTM: s.strings.string_first_fantom_wallet_name,
   GRS: s.strings.string_first_groestlcoin_wallet_name,
-  HERC: s.strings.string_first_hercules_wallet_name,
   HBAR: s.strings.string_first_hedera_wallet_name,
+  HERC: s.strings.string_first_hercules_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
+  MATIC: s.strings.string_first_polygon_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
   RBTC: s.strings.string_first_rsk_wallet_name,
   RVN: s.strings.string_first_ravencoin_wallet_name,
   SMART: s.strings.string_first_smartcash_wallet_name,
+  TLOS: s.strings.string_first_telos_wallet_name,
   UFO: s.strings.string_first_ufo_wallet_name,
   VTC: s.strings.string_first_vertcoin_wallet_name,
+  WAX: s.strings.string_first_wax_wallet_name,
   XLM: s.strings.string_first_stellar_wallet_name,
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
-  XTZ: s.strings.string_first_tezos_wallet_name,
-  FIRO: s.strings.string_first_zcoin_wallet_name,
-  FTM: s.strings.string_first_fantom_wallet_name
+  XTZ: s.strings.string_first_tezos_wallet_name
 }
 
 /**
@@ -122,7 +123,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:telos',
   'wallet:wax',
   'wallet:fantom',
-  'wallet:hedera'
+  'wallet:hedera',
+  'wallet:polygon'
 ]
 
 // Put these in reverse order of preference
@@ -140,28 +142,29 @@ export const CURRENCY_PLUGIN_NAMES = {
   DOGE: 'dogecoin',
   EBST: 'eboost',
   EOS: 'eos',
-  ETH: 'ethereum',
   ETC: 'ethereumclassic',
+  ETH: 'ethereum',
   FIO: 'fio',
+  FIRO: 'zcoin',
   FTC: 'feathercoin',
   FTM: 'fantom',
   GRS: 'groestlcoin',
   HBAR: 'hedera',
   LTC: 'litecoin',
+  MATIC: 'polygon',
   QTUM: 'qtum',
   RBTC: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
   TESTBTC: 'bitcointestnet',
   TLOS: 'telos',
-  WAX: 'wax',
   UFO: 'ufo',
   VTC: 'vertcoin',
+  WAX: 'wax',
   XLM: 'stellar',
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  FIRO: 'zcoin',
   ZEC: 'zcash'
 }
 
@@ -453,6 +456,17 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     noMaxSpend: true
+  },
+  MATIC: {
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isRbfSupported: true
   }
 }
 
@@ -488,28 +502,29 @@ export const WALLET_LIST_MENU: Array<{
   },
   {
     currencyCodes: [
-      'BTC',
       'BCH',
-      'DASH',
-      'FTC',
-      'FIRO',
-      'LTC',
-      'UFO',
-      'QTUM',
-      'VTC',
-      'BTG',
-      'DGB',
-      'SMART',
-      'GRS',
       'BSV',
+      'BTC',
+      'BTG',
+      'DASH',
+      'DGB',
+      'DOGE',
       'EBST',
       'EOS',
-      'WAX',
-      'TLOS',
-      'DOGE',
-      'RVN',
+      'FIRO',
+      'FTC',
+      'GRS',
+      'LTC',
+      'MATIC',
+      'QTUM',
       'RBTC',
+      'RVN',
+      'SMART',
       'TESTBTC',
+      'TLOS',
+      'UFO',
+      'VTC',
+      'WAX',
       'XMR',
       'ZEC'
     ],

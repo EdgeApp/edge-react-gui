@@ -11,7 +11,7 @@ import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { CURRENCY_PLUGIN_NAMES, ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type FioAddresses, checkExpiredFioAddress, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
+import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { connect } from '../../types/reactRedux.js'
 import { ResolutionError, ResolutionErrorCode } from '../../types/ResolutionError.js'
@@ -38,8 +38,7 @@ type StateProps = {
   userFioAddresses: FioAddress[],
   userFioAddressesLoading: boolean,
   coreWallet: EdgeCurrencyWallet,
-  fioPlugin?: EdgeCurrencyConfig,
-  fioWallets: EdgeCurrencyWallet[]
+  fioPlugin?: EdgeCurrencyConfig
 }
 
 type DispatchProps = {
@@ -216,11 +215,9 @@ class AddressModalComponent extends React.Component<Props, State> {
       }
       this.fioCheckQueue = 0
       try {
-        const { fioPlugin, fioWallets } = this.props
+        const { fioPlugin } = this.props
         if (!fioPlugin) return
-        if (await checkExpiredFioAddress(fioWallets[0], fioAddress)) {
-          return this.setState({ fieldError: s.strings.fio_address_expired })
-        }
+        // todo: should we check for bundles here?
         const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
         this.setStatusLabel(s.strings.fragment_send_address)
         if (!doesAccountExist) {
@@ -373,8 +370,7 @@ export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],
     userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
-    fioWallets: state.ui.wallets.fioWallets
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   }),
   dispatch => ({
     refreshAllFioAddresses() {

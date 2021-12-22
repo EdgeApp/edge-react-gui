@@ -38,6 +38,7 @@ export const currencyPlugins = {
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT || true,
+  polygon: ENV.POLYGON_INIT,
   ripple: true,
   rsk: true,
   stellar: true,
@@ -87,6 +88,7 @@ export const ratePlugins = {
 export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
+  exolix: ENV.EXOLIX_INIT,
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,

@@ -5,13 +5,11 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -46,7 +44,6 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type LocalState = {
   loading: boolean,
-  expirationUpdated: boolean,
   prevFioAddresses: FioAddress[]
 }
 
@@ -55,27 +52,20 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     super(props)
     this.state = {
       loading: false,
-      expirationUpdated: false,
       prevFioAddresses: props.fioAddresses
     }
   }
 
   static getDerivedStateFromProps(props: Props, state: LocalState) {
-    const { fioAddresses, selected } = props
+    const { fioAddresses } = props
     const { prevFioAddresses } = state
     if (fioAddresses.length !== prevFioAddresses.length) {
       return {
         prevFioAddresses: fioAddresses
       }
     }
-    const fioAddress = fioAddresses.find(({ name }) => name === selected)
-    const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
-    if (fioAddress && prevFioAddress && fioAddress.expiration !== prevFioAddress.expiration) {
-      return {
-        expirationUpdated: true,
-        prevFioAddresses: fioAddresses
-      }
-    }
+
+    // todo: add logic fir bundles added instead of renewing
     return null
   }
 
@@ -91,12 +81,6 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 
   componentDidUpdate(prevProps: Props) {
     const { fioRequest, isSendUsingFioAddress } = this.props
-    const { expirationUpdated } = this.state
-    if (expirationUpdated) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ expirationUpdated: false })
-      this.setFioAddress(this.props.selected)
-    }
     if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
       this.setDefaultFioAddress()
     }
@@ -171,24 +155,16 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
         this.props.onSelect(fioAddress, fioWallet, e.message)
-        const answer = await Airship.show(bridge => (
+        await Airship.show(bridge => (
           <ButtonsModal
             bridge={bridge}
             title={s.strings.fio_no_bundled_err_msg}
-            message={s.strings.fio_no_bundled_renew_err_msg}
             buttons={{
-              ok: { label: s.strings.title_fio_renew_address },
-              cancel: { label: s.strings.string_cancel_cap }
+              ok: { label: s.strings.string_ok }
             }}
           />
         ))
-        if (answer === 'ok') {
-          return Actions.push(FIO_ADDRESS_SETTINGS, {
-            showRenew: true,
-            fioWallet,
-            fioAddressName: fioAddress
-          })
-        }
+        // todo: redirect to 'add bundles' scene
         error = e.message
       } else {
         showError(e)

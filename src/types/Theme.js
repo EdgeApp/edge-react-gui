@@ -212,6 +212,7 @@ export type Theme = {
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
   settingsDefaultLogo: string,
+  settingsExolixLogo: string,
   settingsFoxExchangeLogo: string,
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
