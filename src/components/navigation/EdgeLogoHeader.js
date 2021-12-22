@@ -24,6 +24,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   icon: {
     width: theme.rem(1.25),
-    height: theme.rem(1.25)
+    height: theme.rem(1.25),
+    marginBottom: theme.rem(0.1875)
   }
 }))

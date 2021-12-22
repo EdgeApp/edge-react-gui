@@ -26,7 +26,6 @@ import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type StateProps = {
   activeWalletIds: string[],
-  userId: string,
   wallets: { [walletId: string]: GuiWallet },
   disklet: Disklet,
   needsPasswordCheck: boolean
@@ -57,9 +56,9 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   showTutorial = async () => {
-    const { disklet, userId } = this.props
+    const { disklet } = this.props
     try {
-      const userTutorialList = await getWalletListSlideTutorial(userId, disklet)
+      const userTutorialList = await getWalletListSlideTutorial(disklet)
       const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
       if (tutorialCount < 2) {
@@ -202,7 +201,6 @@ export const WalletListScene = connect<StateProps, DispatchProps, {}>(
 
     return {
       activeWalletIds,
-      userId: state.core.account.id,
       wallets: state.ui.wallets.byId,
       disklet: state.core.disklet,
       needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck

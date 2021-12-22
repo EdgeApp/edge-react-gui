@@ -172,27 +172,16 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return nextFioRequests
   }
 
-  showRenewAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
-    const { navigation } = this.props
-    const answer = await Airship.show(bridge => (
+  showNoBundlesAlert = () =>
+    Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fio_no_bundled_err_msg}
-        message={s.strings.fio_no_bundled_renew_err_msg}
         buttons={{
-          ok: { label: s.strings.title_fio_renew_address },
-          cancel: { label: s.strings.string_cancel_cap }
+          ok: { label: s.strings.string_ok }
         }}
       />
     ))
-    if (answer === 'ok') {
-      return navigation.navigate('fioAddressSettings', {
-        showRenew: true,
-        fioWallet,
-        fioAddressName
-      })
-    }
-  }
 
   removeFioPendingRequest = (requestId: string): void => {
     const { fioRequestsPending } = this.state
@@ -224,7 +213,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         const { fee } = await fioWallet.otherMethods.fioAction('getFeeForRejectFundsRequest', { payerFioAddress })
         if (fee) {
           this.setState({ fullScreenLoader: false })
-          this.showRenewAlert(fioWallet, payerFioAddress)
+          this.showNoBundlesAlert()
         } else {
           await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
           this.removeFioPendingRequest(request.fio_request_id)
@@ -258,7 +247,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       } catch (e) {
         this.setState({ fullScreenLoader: false })
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
-          this.showRenewAlert(fioWallet, payeeFioAddress)
+          this.showNoBundlesAlert()
         } else {
           showError(e)
         }

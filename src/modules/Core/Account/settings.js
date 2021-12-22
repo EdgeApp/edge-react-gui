@@ -408,6 +408,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   FUSDT: {
     denomination: '1000000'
   },
+  MATIC: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -546,6 +549,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   FTM: 'object',
   FUSDT: 'object',
   HBAR: 'object',
+  MATIC: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object',

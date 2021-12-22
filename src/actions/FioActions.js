@@ -5,12 +5,12 @@ import React from 'react'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
-import { FIO_ADDRESS_SETTINGS, FIO_DOMAIN_SETTINGS } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
+import { FIO_DOMAIN_SETTINGS } from '../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings'
 import {
   addToFioAddressCache,
-  getExpiredSoonFioNames,
+  getExpiredSoonFioDomains,
   getFioExpiredCheckFromDisklet,
   getFioObtData,
   needToCheckExpired,
@@ -20,7 +20,7 @@ import {
 } from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import type { FioAddress, FioDomain, FioObtRecord } from '../types/types'
+import type { FioDomain, FioObtRecord } from '../types/types'
 
 const EXPIRE_CHECK_TIMEOUT = 30000
 const INIT_EXPIRE_CHECK_TIMEOUT = 5000
@@ -131,32 +131,31 @@ export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getSt
     }
   }
 
-  const namesToCheck: Array<FioAddress | FioDomain> = []
-  const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(walletsToCheck)
-  const fioNames = [...fioAddresses, ...fioDomains]
-  for (const fioName of fioNames) {
-    if (needToCheckExpired(expiredLastChecks, fioName.name)) {
-      namesToCheck.push(fioName)
+  const namesToCheck: FioDomain[] = []
+  const { fioDomains, fioWalletsById } = await refreshFioNames(walletsToCheck)
+  for (const fioDomain of fioDomains) {
+    if (needToCheckExpired(expiredLastChecks, fioDomain.name)) {
+      namesToCheck.push(fioDomain)
     }
   }
 
   if (namesToCheck.length !== 0) {
     dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
-    dispatch(checkExpiredFioNames(namesToCheck, fioWalletsById))
+    dispatch(checkExpiredFioDomains(namesToCheck, fioWalletsById))
   }
 
   return setTimeout(() => dispatch(refreshNamesToCheckExpired()), EXPIRE_CHECK_TIMEOUT)
 }
 
-export const checkExpiredFioNames =
-  (fioNames: Array<FioAddress | FioDomain>, fioWalletsById: { string: EdgeCurrencyWallet }) => async (dispatch: Dispatch, getState: GetState) => {
+export const checkExpiredFioDomains =
+  (fioDomains: FioDomain[], fioWalletsById: { string: EdgeCurrencyWallet }) => async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     if (!account) return
 
-    const expired: Array<FioAddress | FioDomain> = getExpiredSoonFioNames(fioNames)
+    const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
     if (expired.length > 0) {
-      const first: FioAddress | FioDomain = expired[0]
+      const first: FioDomain = expired[0]
       const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
       await showFioExpiredModal(fioWallet, first)
 
@@ -176,29 +175,18 @@ export const checkExpiredFioNames =
     dispatch({ type: 'FIO/CHECKING_EXPIRED', data: false })
   }
 
-const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAddress | FioDomain) => {
-  const isAddress = fioName.name.indexOf(FIO_ADDRESS_DELIMITER) > 0
-  const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioName.name} isAddress={isAddress} />)
+const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
+  const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {
-    if (isAddress) {
-      Actions.push(FIO_ADDRESS_SETTINGS, {
-        showRenew: true,
-        fioWallet,
-        fioAddressName: fioName.name,
-        expiration: fioName.expiration
-      })
-      return
-    }
-
     // $FlowFixMe
-    const { isPublic = false } = fioName
+    const { isPublic = false } = fioDomain
     Actions.push(FIO_DOMAIN_SETTINGS, {
       showRenew: true,
       fioWallet,
-      fioDomainName: fioName.name,
+      fioDomainName: fioDomain.name,
       isPublic,
-      expiration: fioName.expiration
+      expiration: fioDomain.expiration
     })
   }
 }

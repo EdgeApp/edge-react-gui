@@ -92,10 +92,9 @@ class FioAddressList extends React.Component<Props, LocalState> {
 
   onAddressPress = (fioAddress: FioAddress) => {
     const { navigation } = this.props
-    const { name, expiration } = fioAddress
+    const { name } = fioAddress
     navigation.navigate('fioAddressDetails', {
-      fioAddressName: name,
-      expiration
+      fioAddressName: name
     })
   }
 
@@ -130,7 +129,6 @@ class FioAddressList extends React.Component<Props, LocalState> {
                 <FioNameRow
                   key={`${address.name}`}
                   name={address.name}
-                  expiration={address.expiration}
                   icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
                   theme={theme}
                   onPress={() => this.onAddressPress(address)}

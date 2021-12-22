@@ -50,6 +50,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   backIconStyle: {
     marginLeft: theme.rem(-0.25),
+    marginBottom: theme.rem(0.25),
     paddingRight: theme.rem(0.75)
   },
   backIconAndroid: {

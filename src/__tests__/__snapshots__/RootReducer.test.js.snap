@@ -412,6 +412,9 @@ Object {
       "MANA": Object {
         "denomination": "1000000000000000000",
       },
+      "MATIC": Object {
+        "denomination": "1000000000000000000",
+      },
       "MET": Object {
         "denomination": "1000000000000000000",
       },

@@ -1,13 +1,13 @@
 // @flow
 import type { Disklet } from 'disklet'
 
-const TUTORIAL = 'tutorial.json'
+import { TUTORIAL } from '../constants/constantSettings.js'
 
 type UserTutorialList = {
   walletListSlideTutorialCount: number
 }
 
-export const getWalletListSlideTutorial = async (userId: string, disklet: Disklet): Promise<UserTutorialList> => {
+export const getWalletListSlideTutorial = async (disklet: Disklet): Promise<UserTutorialList> => {
   try {
     const userTutorialList = JSON.parse(await disklet.getText(TUTORIAL))
     return userTutorialList

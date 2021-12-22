@@ -47,11 +47,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   left: {
     paddingLeft: theme.rem(1),
-    paddingRight: theme.rem(2.5)
+    paddingRight: theme.rem(2.5),
+    paddingBottom: theme.rem(0.25)
   },
   right: {
     paddingLeft: theme.rem(2.5),
-    paddingRight: theme.rem(1)
+    paddingRight: theme.rem(1),
+    paddingBottom: theme.rem(0.25)
   }
 }))
 
