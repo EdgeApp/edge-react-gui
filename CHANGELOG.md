@@ -16,9 +16,10 @@
   - deprecated: EdgeSpendTarget.uniqueIdentifier. Use EdgeSpendTarget.memo instead.
   - fixed: Gracefully handle errors while reading the exchange-rate hint cache.
   - fixed: Correctly match server-returned children with their on-disk stash entries. This produces more accurate errors if the server loses a child.
-- Upgrade edge-currency-accountbased to v0.10.1
+- Upgrade edge-currency-accountbased to v0.10.2
   - Add Polygon
   - Add memoMaxLength parameter to currencyInfos
+  - Add support for multiple polygonscan api keys
   - Remove FIO name expiration
   - ZEC: Update checkpoints
 - Upgrade edge-exchange-plugins to v0.12.1
