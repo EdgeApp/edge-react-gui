@@ -13,17 +13,23 @@ import s from '../../../locales/strings.js'
 type FioNameProps = {
   name: string,
   expiration?: string,
+  bundles?: string,
   icon: React.Node,
   onPress: () => void
 }
 
 const FioName = (props: FioNameProps & ThemeProps) => {
-  const { name, expiration, onPress, icon, theme } = props
+  const { name, expiration, bundles, onPress, icon, theme } = props
   const styles = getStyles(theme)
 
   const renderSubTitle = () => {
     if (expiration != null) {
       const subTitle = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
+      return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
+    }
+
+    if (bundles != null) {
+      const subTitle = `${s.strings.fio_address_details_screen_bundles}: ${bundles}`
       return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
     }
 

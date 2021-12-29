@@ -103,7 +103,8 @@ export type ParamList = {
   exchangeSettings: void,
   exchangeSuccess: void,
   fioAddressDetails: {|
-    fioAddressName: string
+    fioAddressName: string,
+    bundles: number
   |},
   fioAddressList: void,
   fioAddressRegister: void,
@@ -119,7 +120,10 @@ export type ParamList = {
   |},
   fioAddressSettings: {|
     fioWallet: EdgeCurrencyWallet,
-    fioAddressName: string
+    fioAddressName: string,
+    bundles?: number,
+    showAddBundles?: boolean,
+    refreshAfterAddBundles?: boolean
   |},
   fioConnectToWalletsConfirm: {|
     fioWallet: EdgeCurrencyWallet,

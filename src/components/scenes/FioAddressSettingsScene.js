@@ -6,20 +6,20 @@ import * as React from 'react'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { getTransferFee } from '../../modules/FioAddress/util'
+import { addBundles, getAddBundlesFee, getTransferFee } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile'
 
 type LocalState = {
+  showAddBundles: boolean,
   showTransfer: boolean
-  // todo: showAddBundles
 }
 
 type StateProps = {
@@ -39,11 +39,37 @@ type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   state: LocalState = {
+    showAddBundles: false,
     showTransfer: false
   }
 
   componentDidMount(): * {
-    this.props.refreshAllFioAddresses()
+    const { refreshAllFioAddresses, route } = this.props
+    const { showAddBundles } = route.params
+    refreshAllFioAddresses()
+    if (showAddBundles) {
+      this.setState({ showAddBundles: true })
+    }
+  }
+
+  afterAddBundlesSuccess = (result: { bundles: number } | any) => {
+    const { refreshAllFioAddresses, navigation, route } = this.props
+    const { fioWallet, fioAddressName, refreshAfterAddBundles } = route.params
+
+    refreshAllFioAddresses()
+
+    this.setState({ showAddBundles: false })
+    showToast(s.strings.fio_request_add_bundles_ok_text)
+    navigation.goBack()
+    if (result.bundles != null && refreshAfterAddBundles) {
+      window.requestAnimationFrame(() => {
+        navigation.setParams({
+          fioWallet,
+          fioAddressName,
+          bundles: result.bundles
+        })
+      })
+    }
   }
 
   afterTransferSuccess = async () => {
@@ -65,11 +91,26 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     this.setState({ showTransfer: true })
   }
 
+  onAddBundlesPress = () => {
+    this.setState({ showAddBundles: true })
+  }
+
   cancelOperation = () => {
-    this.setState({ showTransfer: false })
+    this.setState({ showTransfer: false, showAddBundles: false })
   }
 
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
+
+  onAddBundlesSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
+    const { isConnected, route } = this.props
+    const { fioAddressName } = route.params
+
+    if (!isConnected) {
+      showError(s.strings.fio_network_alert_text)
+      return
+    }
+    return addBundles(fioWallet, fioAddressName, fee)
+  }
 
   goToTransfer = (params: { fee: number }) => {
     const { isConnected, navigation, route } = this.props
@@ -115,14 +156,33 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
   render() {
     const { route } = this.props
-    const { fioAddressName, fioWallet } = route.params
-    const { showTransfer } = this.state
+    const { fioAddressName, fioWallet, bundles } = route.params
+    const { showTransfer, showAddBundles } = this.state
 
     return (
       <SceneWrapper background="header">
         <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
+        {bundles != null ? <Tile type="static" title={s.strings.fio_address_details_screen_bundles} body={`${bundles}`} /> : null}
+        {showAddBundles && (
+          <FioActionSubmit
+            title={s.strings.title_fio_add_bundles}
+            onSubmit={this.onAddBundlesSubmit}
+            onSuccess={this.afterAddBundlesSuccess}
+            getOperationFee={getAddBundlesFee}
+            successMessage={s.strings.fio_request_add_bundles_ok_text}
+            cancelOperation={this.cancelOperation}
+            fioWallet={fioWallet}
+            addressTitles
+            showPaymentWalletPicker
+          />
+        )}
         {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} addressTitles />}
-        {!showTransfer && <MainButton label={s.strings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />}
+        {!showAddBundles && !showTransfer && (
+          <>
+            <MainButton label={s.strings.title_fio_add_bundles} onPress={this.onAddBundlesPress} marginRem={[1.5, 1, 0.25]} />
+            <MainButton label={s.strings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
+          </>
+        )}
       </SceneWrapper>
     )
   }

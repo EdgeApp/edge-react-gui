@@ -7,12 +7,13 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
-import { findWalletByFioAddress } from '../../modules/FioAddress/util'
+import { BUNDLES_AMOUNT_ALERT, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
@@ -60,13 +61,14 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
 
   _onPressAccountSettings = (): void => {
     const { navigation, route } = this.props
-    const { fioAddressName } = route.params
+    const { fioAddressName, bundles } = route.params
     const { fioWallet } = this.state
     if (fioWallet) {
       navigation.navigate('fioAddressSettings', {
         fioWallet,
-        fioAddressName
-        // todo: refreshAfterBundlesAdded
+        fioAddressName,
+        bundles,
+        refreshAfterAddBundles: true
       })
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
@@ -74,8 +76,24 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   renderAccountSettings = () => {
-    const { theme } = this.props
+    const {
+      theme,
+      route: {
+        params: { bundles }
+      }
+    } = this.props
     const styles = getStyles(theme)
+
+    if (bundles < BUNDLES_AMOUNT_ALERT) {
+      return (
+        <SettingsTappableRow onPress={this._onPressAccountSettings}>
+          <IonIcon name="ios-warning" color={theme.warningIcon} style={styles.settingsIcon} />
+          <EdgeText style={styles.settingsWarning} numberOfLines={4}>
+            {!bundles ? s.strings.fio_address_details_no_bundles : s.strings.fio_address_details_bundles_out_soon}
+          </EdgeText>
+        </SettingsTappableRow>
+      )
+    }
 
     return (
       <SettingsTappableRow label={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
@@ -86,10 +104,13 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
 
   render() {
     const { theme, route } = this.props
-    const { fioAddressName } = route.params
+    const { fioAddressName, bundles } = route.params
+    const styles = getStyles(theme)
+    const bundlesLabel = `${s.strings.fio_address_details_screen_bundles}: ${bundles}`
 
     return (
       <SceneWrapper background="header">
+        <EdgeText style={styles.bundles}>{bundlesLabel}</EdgeText>
         {this.renderAccountSettings()}
         <SettingsHeaderRow
           icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
@@ -106,14 +127,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },
+  bundles: {
+    fontSize: theme.rem(0.75),
+    color: theme.primaryText,
+    textAlign: 'center',
+    marginTop: theme.rem(-0.5),
+    paddingBottom: theme.rem(0.75)
+  },
   settingsIcon: {
     fontSize: theme.rem(1.5),
     paddingHorizontal: theme.rem(0.5)
   },
   settingsWarning: {
-    fontSize: theme.rem(1),
+    fontSize: theme.rem(0.75),
     color: theme.warningText,
-    paddingHorizontal: theme.rem(0.5)
+    paddingLeft: theme.rem(0.5),
+    width: '75%'
   }
 }))
 

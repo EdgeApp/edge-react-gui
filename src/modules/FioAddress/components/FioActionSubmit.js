@@ -20,11 +20,19 @@ import { connect } from '../../../types/reactRedux.js'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
 
+type ActionResult =
+  | {
+      expiration: string
+    }
+  | {
+      bundles: number
+    }
+  | any
 type OwnProps = {
   title?: string,
   successMessage?: string,
   onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>,
-  onSuccess?: ({ expiration?: string }) => void,
+  onSuccess?: (attrs: ActionResult) => void,
   cancelOperation?: () => void,
   goTo?: (params: any) => void,
   getOperationFee: EdgeCurrencyWallet => Promise<number>,
@@ -94,7 +102,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     try {
       this.setState({ loading: true })
-      let result: { expiration?: string } = {}
+      let result: ActionResult = {}
       if (onSubmit) {
         result = await onSubmit(paymentWallet, fee)
       }
