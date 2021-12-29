@@ -496,7 +496,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getSeed'
   },
   {
-    currencyCodes: ['ETH', 'RBTC', 'FTM', 'EOS', 'TLOS', 'WAX'],
+    currencyCodes: Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code]?.isCustomTokensSupported),
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },
