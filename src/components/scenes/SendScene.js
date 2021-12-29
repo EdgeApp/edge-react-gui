@@ -304,7 +304,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           <ButtonsModal
             bridge={bridge}
             title={s.strings.fio_no_bundled_err_msg}
-            message={s.strings.fio_no_bundled_non_fio_err_msg}
+            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`}
             buttons={{
               ok: { label: s.strings.legacy_address_modal_continue },
               cancel: { label: s.strings.string_cancel_cap }

@@ -217,7 +217,6 @@ class AddressModalComponent extends React.Component<Props, State> {
       try {
         const { fioPlugin } = this.props
         if (!fioPlugin) return
-        // todo: should we check for bundles here?
         const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
         this.setStatusLabel(s.strings.fragment_send_address)
         if (!doesAccountExist) {
