@@ -147,16 +147,11 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   checkExceedsAmount(): boolean {
-    const { fromWallet, fromWalletPrimaryInfo, toWallet, toWalletPrimaryInfo } = this.props
-    const { fromAmountNative, toAmountNative, whichWalletFocus } = this.state
+    const { fromWallet, fromWalletPrimaryInfo } = this.props
+    const { fromAmountNative, whichWalletFocus } = this.state
     const fromNativeBalance = fromWallet.nativeBalances[fromWalletPrimaryInfo.exchangeDenomination.name] ?? '0'
-    const toNativeBalance = toWallet.nativeBalances[toWalletPrimaryInfo.exchangeDenomination.name] ?? '0'
 
-    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0')
-      ? bns.gt(fromAmountNative, fromNativeBalance)
-      : whichWalletFocus === 'to' && bns.gte(toNativeBalance, '0')
-      ? bns.gt(toAmountNative, toNativeBalance)
-      : false
+    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0') && bns.gt(fromAmountNative, fromNativeBalance)
   }
 
   launchFromWalletSelector = () => {
