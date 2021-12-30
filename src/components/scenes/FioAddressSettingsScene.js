@@ -60,7 +60,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
     this.setState({ showAddBundles: false })
     showToast(s.strings.fio_request_add_bundles_ok_text)
-    navigation.goBack()
+    navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
     if (result.bundles != null && refreshAfterAddBundles) {
       window.requestAnimationFrame(() => {
         navigation.setParams({
