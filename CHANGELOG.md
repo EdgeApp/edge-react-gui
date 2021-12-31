@@ -22,7 +22,7 @@
   - Add support for multiple polygonscan api keys
   - Remove FIO name expiration
   - ZEC: Update checkpoints
-- Upgrade edge-exchange-plugins to v0.12.3
+- Upgrade edge-exchange-plugins to v0.12.4
   - Add ability to restrict all token codes per mainchain
   - Prevent MATIC ERC20 trading
 
