@@ -177,9 +177,10 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
   saveEnabledTokenList = async () => {
     const { disklet, navigation, route } = this.props
-    if (this.state.enabledList.length > 0) await approveTokenTerms(disklet)
 
     const { guiWallet } = route.params
+    if (this.state.enabledList.length > 0) await approveTokenTerms(disklet, guiWallet.currencyCode)
+
     const { id } = guiWallet
     const disabledList: string[] = []
     // get disabled list
