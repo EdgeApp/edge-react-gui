@@ -1,5 +1,31 @@
 # edge-react-gui
 
+## 2.8.0 (2021-12-21)
+
+- Add Polygon (MATIC)
+- FIO: Remove name expiration details
+- Enforce memo field length limits from currency plugins
+- Add terms agreement modal
+- Add prompt to enable camera permission on scan modal
+- Various visual fixes
+- Update translations
+- Upgrade edge-core-js to v0.18.13
+  - added: EdgeSpendTarget.memo, which is a renamed version of EdgeSpendTarget.uniqueIdentifier.
+  - added: EdgeCurrencyInfo.memoType, EdgeCurrencyInfo.memoMaxLength, EdgeCurrencyInfo.memoMaxValue. Use these to learn which currencies support memos.
+  - added: EdgeCurrencyTools.validateMemo & EdgeCurrencyWallet.validateMemo. Use these to check memos for validity before sending.
+  - deprecated: EdgeSpendTarget.uniqueIdentifier. Use EdgeSpendTarget.memo instead.
+  - fixed: Gracefully handle errors while reading the exchange-rate hint cache.
+  - fixed: Correctly match server-returned children with their on-disk stash entries. This produces more accurate errors if the server loses a child.
+- Upgrade edge-currency-accountbased to v0.10.4
+  - Add Polygon
+  - Add memoMaxLength parameter to currencyInfos
+  - Add support for multiple polygonscan api keys
+  - Remove FIO name expiration
+  - ZEC: Update checkpoints
+- Upgrade edge-exchange-plugins to v0.12.4
+  - Add ability to restrict all token codes per mainchain
+  - Prevent MATIC ERC20 trading
+
 ## 2.7.0 (2021-12-10)
 
 - Banxa: Add credit card and Interac payment methods in Canada

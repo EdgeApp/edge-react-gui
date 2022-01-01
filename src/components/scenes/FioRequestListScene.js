@@ -7,6 +7,8 @@ import { ActivityIndicator, View } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { sprintf } from 'sprintf-js'
 
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+import { FIO_REQUEST_APPROVED } from '../../constants/SceneKeys'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -18,7 +20,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors.j
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import type { FioRequest, GuiWallet } from '../../types/types'
+import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { FullScreenLoader } from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -49,13 +51,15 @@ type StateProps = {
   state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
+  fioAddresses: FioAddress[],
   currencyWallets: { [walletId: string]: EdgeCurrencyWallet },
   fioWallets: EdgeCurrencyWallet[],
   isConnected: boolean
 }
 
 type DispatchProps = {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (walletId: string, currencyCode: string) => void,
+  refreshAllFioAddresses: () => void
 }
 
 type OwnProps = {
@@ -89,6 +93,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
       this.getFioRequestsPending()
       this.getFioRequestsSent()
+      this.props.refreshAllFioAddresses()
     })
   }
 
@@ -116,7 +121,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsPending = async () => {
-    const { fioWallets = [], account } = this.props
+    const { fioWallets = [], account, fioAddresses } = this.props
     const { pendingRequestPaging, fioRequestsPending } = this.state
     const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
@@ -127,8 +132,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(e.message)
     }
 
+    const fioAddressNames = fioAddresses.map(({ name }) => name)
     this.setState({
-      fioRequestsPending: [...fioRequestsPending, ...newRequests],
+      fioRequestsPending: [
+        ...fioRequestsPending,
+        ...newRequests.filter(({ payer_fio_address: payerFioAddress }: FioRequest) => fioAddressNames.indexOf(payerFioAddress) > -1)
+      ],
       loadingPending: false,
       pendingRequestPaging
     })
@@ -172,27 +181,16 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return nextFioRequests
   }
 
-  showRenewAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
-    const { navigation } = this.props
-    const answer = await Airship.show(bridge => (
+  showNoBundlesAlert = () =>
+    Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fio_no_bundled_err_msg}
-        message={s.strings.fio_no_bundled_renew_err_msg}
         buttons={{
-          ok: { label: s.strings.title_fio_renew_address },
-          cancel: { label: s.strings.string_cancel_cap }
+          ok: { label: s.strings.string_ok }
         }}
       />
     ))
-    if (answer === 'ok') {
-      return navigation.navigate('fioAddressSettings', {
-        showRenew: true,
-        fioWallet,
-        fioAddressName
-      })
-    }
-  }
 
   removeFioPendingRequest = (requestId: string): void => {
     const { fioRequestsPending } = this.state
@@ -224,7 +222,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         const { fee } = await fioWallet.otherMethods.fioAction('getFeeForRejectFundsRequest', { payerFioAddress })
         if (fee) {
           this.setState({ fullScreenLoader: false })
-          this.showRenewAlert(fioWallet, payerFioAddress)
+          this.showNoBundlesAlert()
         } else {
           await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
           this.removeFioPendingRequest(request.fio_request_id)
@@ -258,7 +256,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       } catch (e) {
         this.setState({ fullScreenLoader: false })
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
-          this.showRenewAlert(fioWallet, payeeFioAddress)
+          this.showNoBundlesAlert()
         } else {
           showError(e)
         }
@@ -423,7 +421,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
-          navigation.replace('transactionDetails', { edgeTransaction })
+          navigation.navigate(FIO_REQUEST_APPROVED, { edgeTransaction })
         }
       }
     }
@@ -653,6 +651,7 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
     account: state.core.account,
     wallets: state.ui.wallets.byId,
     fioWallets: state.ui.wallets.fioWallets,
+    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     currencyWallets: state.core.account.currencyWallets,
     isConnected: state.network.isConnected
   }),
@@ -662,6 +661,9 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { currencyCode, walletId }
       })
+    },
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(FioRequestList))

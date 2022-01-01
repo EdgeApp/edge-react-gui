@@ -6,6 +6,7 @@ import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
 import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
 import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
+import exolixLogo from '../../assets/images/exchange/settingsExchangeExolix.png'
 import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
@@ -281,6 +282,7 @@ export const edgeDark: Theme = {
   settingsSideshiftLogo: sideshiftLogo,
   settingsSwitchainLogo: switchainLogo,
   settingsTotleLogo: totleLogo,
+  settingsExolixLogo: exolixLogo,
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,

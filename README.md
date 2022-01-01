@@ -39,6 +39,7 @@ Do not use NPM to install dependencies, since that will not work.
 
     cd edge-react-gui
     yarn
+    yarn prepare
 
 ### Run the bundler
 

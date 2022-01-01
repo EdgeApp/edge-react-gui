@@ -464,7 +464,7 @@ export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, f
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   if (getFeeResult.fee !== 0) {
-    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+    throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   }
 }
 
@@ -709,11 +709,11 @@ const buyAddressRequest = async (
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
 
-export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain: boolean = false): Promise<number> => {
+export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
   if (fioWallet) {
     try {
       const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
-        endPoint: forDomain ? 'renew_fio_domain' : 'renew_fio_address',
+        endPoint: 'renew_fio_domain',
         fioAddress: ''
       })
 
@@ -725,22 +725,12 @@ export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDom
   throw new Error(s.strings.fio_get_fee_err_msg)
 }
 
-export const renewFioName = async (
-  fioWallet: EdgeCurrencyWallet | null,
-  fioName: string,
-  fee: number,
-  isDomain: boolean = false
-): Promise<{ expiration: string }> => {
-  const errorStr = sprintf(s.strings.fio_renew_err_msg, isDomain ? s.strings.fio_domain_label : s.strings.fio_address_register_form_field_label)
+export const renewFioDomain = async (fioWallet: EdgeCurrencyWallet | null, fioDomain: string, fee: number): Promise<{ expiration: string }> => {
+  const errorStr = sprintf(s.strings.fio_renew_err_msg, s.strings.fio_domain_label)
   if (fioWallet) {
     try {
-      let params = {}
-      if (isDomain) {
-        params = { fioDomain: fioName, maxFee: fee }
-      } else {
-        params = { fioAddress: fioName, maxFee: fee }
-      }
-      const { expiration } = await fioWallet.otherMethods.fioAction(isDomain ? 'renewFioDomain' : 'renewFioAddress', params)
+      const params = { fioDomain, maxFee: fee }
+      const { expiration } = await fioWallet.otherMethods.fioAction('renewFioDomain', params)
       return { expiration }
     } catch (e) {
       throw new Error(errorStr)
@@ -807,7 +797,7 @@ export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fio
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   if (getFeeResult.fee !== 0) {
-    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+    throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   }
   try {
     await fioWallet.otherMethods.fioAction('cancelFundsRequest', {
@@ -819,33 +809,8 @@ export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fio
   }
 }
 
-export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, address?: string): Promise<boolean> => {
-  if (fioWallet == null) return false
-
-  try {
-    const { fioAction } = fioWallet.otherMethods
-    // eslint-disable-next-line camelcase
-    const { public_address } = await fioAction('getPublicAddress', { fioAddress: address, chainCode: 'FIO', tokenCode: 'FIO' })
-    // eslint-disable-next-line camelcase
-    const { fio_addresses } = await fioAction('getFioNames', { fioPublicKey: public_address })
-    const fioAddress = fio_addresses.find(fioAddress => fioAddress.fio_address === address)
-    if (fioAddress != null) {
-      return new Date(fioAddress.expiration).getTime() < new Date().getTime()
-    } else {
-      return false
-    }
-  } catch (error) {
-    console.log('FioAddressExpiredError', error)
-    return false
-  }
-}
-
 export const expiredSoon = (expDate: string): boolean => {
   return new Date(expDate).getTime() - new Date().getTime() < MONTH
-}
-
-export const alreadyExpired = (expDate: string): boolean => {
-  return new Date(expDate).getTime() < new Date().getTime()
 }
 
 export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioName: string): boolean => {
@@ -862,15 +827,16 @@ export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioN
   }
   return false
 }
-export const getExpiredSoonFioNames = (fioNames: Array<FioAddress | FioDomain>): Array<FioAddress | FioDomain> => {
-  const expiredFioNames: Array<FioAddress | FioDomain> = []
-  for (const fioName of fioNames) {
-    if (expiredSoon(fioName.expiration)) {
-      expiredFioNames.push(fioName)
+
+export const getExpiredSoonFioDomains = (fioDomains: FioDomain[]): FioDomain[] => {
+  const expiredFioDomains: FioDomain[] = []
+  for (const fioDomain of fioDomains) {
+    if (expiredSoon(fioDomain.expiration)) {
+      expiredFioDomains.push(fioDomain)
     }
   }
 
-  return expiredFioNames
+  return expiredFioDomains
 }
 
 export const refreshFioNames = async (
@@ -884,7 +850,7 @@ export const refreshFioNames = async (
     for (const wallet of fioWallets) {
       const walletId = wallet.id
       const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
-      fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, expiration }) => ({ name, expiration, walletId }))]
+      fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name }) => ({ name, walletId }))]
       const walletFioDomains = await wallet.otherMethods.getFioDomains()
       fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
       fioWalletsById[walletId] = wallet
