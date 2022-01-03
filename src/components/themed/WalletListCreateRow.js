@@ -62,12 +62,11 @@ class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchP
     const { account, createTokenType, defaultIsoFiat, disklet, onPress, tokenCreated, wallets } = this.props
     const { currencyWallets } = account
 
-    await approveTokenTerms(disklet)
-
     try {
       if (createTokenType == null) throw new Error('Invalid Create Token Type')
       const { currencyCode, parentCurrencyCode } = createTokenType
-
+      // Show the user the token terms modal only once
+      await approveTokenTerms(disklet, parentCurrencyCode)
       // Find existing EdgeCurrencyWallet
       let wallet
       for (const walletId of Object.keys(currencyWallets)) {
