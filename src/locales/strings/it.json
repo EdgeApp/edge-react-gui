@@ -803,8 +803,6 @@
   "wc_smartcontract_network_fee": "Commissione di rete",
   "wc_smartcontract_max_total": "Totale Massimo",
   "wc_smartcontract_confirmed": "Chiamata Smart Contract confermata",
-  "token_agreement_modal_title": "Sono richiesti degli ETH per inviare token",
-  "token_agreement_modal_body": "Sono richiesti degli ether (ETH) per pagare le commissioni di mining quando si inviano dei token. Il portafoglio Ethereum associato deve contenere una quantità sufficiente di ETH. Se non hai ether, puoi acquistarli all'interno di Edge, usando le funzionalità Compra o Scambia.",
   "confirm_continue_modal_body": "Conferma che comprendi quello che è scritto qui:",
   "confirm_continue_modal_button_text": "Capisco e accetto i termini",
   "util_truncate_delimeter": "...",
