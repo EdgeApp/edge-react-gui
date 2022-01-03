@@ -243,7 +243,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
   render() {
     const { accountPlugins, accountReferral, countryCode, developerModeOn, theme, route } = this.props
-    const { direction } = route.params
+    const { direction } = route.params ?? { direction: 'buy' }
     const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
