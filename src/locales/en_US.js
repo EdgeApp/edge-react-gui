@@ -86,8 +86,8 @@ const strings = {
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
-    'Ripple (XRP) wallets require a 20 XRP minimum balance. You must deposit at least 20 XRP to this address before this wallet will show a balance or transactions. 20 XRP will be unspendable for the lifetime of this wallet address.',
-  request_xrp_minimum_notification_alert_body: 'This wallet will always require a 20 XRP minimum',
+    'Ripple (XRP) wallets require a 10 XRP minimum balance. You must deposit at least 10 XRP to this address before this wallet will show a balance or transactions. 10 XRP will be unspendable for the lifetime of this wallet address.',
+  request_xrp_minimum_notification_alert_body: 'This wallet will always require a 10 XRP minimum',
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
