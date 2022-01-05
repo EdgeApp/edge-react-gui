@@ -508,7 +508,7 @@ const strings = {
 
   word_to_in_convert_from_to_string: 'to',
 
-  legacy_address_modal_title: 'Warning! Legacy Address Detected',
+  legacy_address_modal_title: 'Legacy Address Detected',
   legacy_address_modal_warning:
     'You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nSending to this address MAY result in a LOSS of funds!\n\nDo you want to continue?',
   legacy_address_modal_continue: 'Continue',
@@ -892,6 +892,11 @@ const strings = {
   // Generic TermsAgreement Modal
   confirm_continue_modal_body: 'Please confirm your understanding below:',
   confirm_continue_modal_button_text: 'I understand and agree to the terms',
+
+  // Gateway Warning Modal
+  gateway_agreement_modal_title: '%s Gatway Address Detected',
+  gateway_agreement_modal_body:
+    'This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.',
 
   // Util
   util_truncate_delimeter: '...',
