@@ -6,7 +6,7 @@ import * as React from 'react'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { addBundles, getAddBundlesFee, getTransferFee } from '../../modules/FioAddress/util'
+import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -18,7 +18,7 @@ import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile'
 
 type LocalState = {
-  showAddBundles: boolean,
+  showAddBundledTxs: boolean,
   showTransfer: boolean
 }
 
@@ -39,34 +39,34 @@ type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   state: LocalState = {
-    showAddBundles: false,
+    showAddBundledTxs: false,
     showTransfer: false
   }
 
   componentDidMount(): * {
     const { refreshAllFioAddresses, route } = this.props
-    const { showAddBundles } = route.params
+    const { showAddBundledTxs } = route.params
     refreshAllFioAddresses()
-    if (showAddBundles) {
-      this.setState({ showAddBundles: true })
+    if (showAddBundledTxs) {
+      this.setState({ showAddBundledTxs: true })
     }
   }
 
-  afterAddBundlesSuccess = (result: { bundles: number } | any) => {
+  afterAddBundledTxsSuccess = (result: { bundledTxs: number } | any) => {
     const { refreshAllFioAddresses, navigation, route } = this.props
-    const { fioWallet, fioAddressName, refreshAfterAddBundles } = route.params
+    const { fioWallet, fioAddressName, refreshAfterAddBundledTxs } = route.params
 
     refreshAllFioAddresses()
 
-    this.setState({ showAddBundles: false })
-    showToast(s.strings.fio_request_add_bundles_ok_text)
+    this.setState({ showAddBundledTxs: false })
+    showToast(s.strings.fio_request_add_bundled_txs_ok_text)
     navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
-    if (result.bundles != null && refreshAfterAddBundles) {
+    if (result.bundledTxs != null && refreshAfterAddBundledTxs) {
       window.requestAnimationFrame(() => {
         navigation.setParams({
           fioWallet,
           fioAddressName,
-          bundles: result.bundles
+          bundledTxs: result.bundledTxs
         })
       })
     }
@@ -91,17 +91,17 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     this.setState({ showTransfer: true })
   }
 
-  onAddBundlesPress = () => {
-    this.setState({ showAddBundles: true })
+  onAddBundledTxsPress = () => {
+    this.setState({ showAddBundledTxs: true })
   }
 
   cancelOperation = () => {
-    this.setState({ showTransfer: false, showAddBundles: false })
+    this.setState({ showTransfer: false, showAddBundledTxs: false })
   }
 
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
 
-  onAddBundlesSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
+  onAddBundledTxsSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
     const { isConnected, route } = this.props
     const { fioAddressName } = route.params
 
@@ -109,7 +109,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    return addBundles(fioWallet, fioAddressName, fee)
+    return addBundledTxs(fioWallet, fioAddressName, fee)
   }
 
   goToTransfer = (params: { fee: number }) => {
@@ -156,20 +156,20 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
   render() {
     const { route } = this.props
-    const { fioAddressName, fioWallet, bundles } = route.params
-    const { showTransfer, showAddBundles } = this.state
+    const { fioAddressName, fioWallet, bundledTxs } = route.params
+    const { showTransfer, showAddBundledTxs } = this.state
 
     return (
       <SceneWrapper background="header">
         <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
-        {bundles != null ? <Tile type="static" title={s.strings.fio_address_details_screen_bundles} body={`${bundles}`} /> : null}
-        {showAddBundles && (
+        {bundledTxs != null ? <Tile type="static" title={s.strings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+        {showAddBundledTxs && (
           <FioActionSubmit
-            title={s.strings.title_fio_add_bundles}
-            onSubmit={this.onAddBundlesSubmit}
-            onSuccess={this.afterAddBundlesSuccess}
-            getOperationFee={getAddBundlesFee}
-            successMessage={s.strings.fio_request_add_bundles_ok_text}
+            title={s.strings.title_fio_add_bundled_txs}
+            onSubmit={this.onAddBundledTxsSubmit}
+            onSuccess={this.afterAddBundledTxsSuccess}
+            getOperationFee={getAddBundledTxsFee}
+            successMessage={s.strings.fio_request_add_bundled_txs_ok_text}
             cancelOperation={this.cancelOperation}
             fioWallet={fioWallet}
             addressTitles
@@ -177,9 +177,9 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
           />
         )}
         {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} addressTitles />}
-        {!showAddBundles && !showTransfer && (
+        {!showAddBundledTxs && !showTransfer && (
           <>
-            <MainButton label={s.strings.title_fio_add_bundles} onPress={this.onAddBundlesPress} marginRem={[1.5, 1, 0.25]} />
+            <MainButton label={s.strings.title_fio_add_bundled_txs} onPress={this.onAddBundledTxsPress} marginRem={[1.5, 1, 0.25]} />
             <MainButton label={s.strings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
           </>
         )}

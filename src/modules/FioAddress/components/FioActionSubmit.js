@@ -25,7 +25,7 @@ type ActionResult =
       expiration: string
     }
   | {
-      bundles: number
+      bundledTxs: number
     }
   | any
 type OwnProps = {

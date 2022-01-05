@@ -129,14 +129,14 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
                 title={s.strings.fio_no_bundled_err_msg}
                 message={s.strings.fio_no_bundled_add_err_msg}
                 buttons={{
-                  ok: { label: s.strings.title_fio_add_bundles }
+                  ok: { label: s.strings.title_fio_add_bundled_txs }
                 }}
                 closeArrow
               />
             ))
             if (answer === 'ok') {
               navigation.navigate('fioAddressSettings', {
-                showAddBundles: true,
+                showAddBundledTxs: true,
                 fioWallet,
                 fioAddressName: this.state.fioAddressFrom
               })

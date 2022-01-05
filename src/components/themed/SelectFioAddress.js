@@ -46,7 +46,7 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type LocalState = {
   loading: boolean,
-  bundlesUpdated: boolean,
+  bundledTxsUpdated: boolean,
   prevFioAddresses: FioAddress[]
 }
 
@@ -55,7 +55,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     super(props)
     this.state = {
       loading: false,
-      bundlesUpdated: false,
+      bundledTxsUpdated: false,
       prevFioAddresses: props.fioAddresses
     }
   }
@@ -70,9 +70,9 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     }
     const fioAddress = fioAddresses.find(({ name }) => name === selected)
     const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
-    if (fioAddress && prevFioAddress && fioAddress.bundles !== prevFioAddress.bundles) {
+    if (fioAddress && prevFioAddress && fioAddress.bundledTxs !== prevFioAddress.bundledTxs) {
       return {
-        bundlesUpdated: true,
+        bundledTxsUpdated: true,
         prevFioAddresses: fioAddresses
       }
     }
@@ -91,10 +91,10 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 
   componentDidUpdate(prevProps: Props) {
     const { fioRequest, isSendUsingFioAddress } = this.props
-    const { bundlesUpdated } = this.state
-    if (bundlesUpdated) {
+    const { bundledTxsUpdated } = this.state
+    if (bundledTxsUpdated) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ bundlesUpdated: false })
+      this.setState({ bundledTxsUpdated: false })
       this.setFioAddress(this.props.selected)
     }
     if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
@@ -177,14 +177,14 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
             title={s.strings.fio_no_bundled_err_msg}
             message={s.strings.fio_no_bundled_add_err_msg}
             buttons={{
-              ok: { label: s.strings.title_fio_add_bundles },
+              ok: { label: s.strings.title_fio_add_bundled_txs },
               cancel: { label: s.strings.string_cancel_cap }
             }}
           />
         ))
         if (answer === 'ok') {
           return Actions.push(FIO_ADDRESS_SETTINGS, {
-            showAddBundles: true,
+            showAddBundledTxs: true,
             fioWallet,
             fioAddressName: fioAddress
           })

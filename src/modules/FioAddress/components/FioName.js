@@ -13,13 +13,13 @@ import s from '../../../locales/strings.js'
 type FioNameProps = {
   name: string,
   expiration?: string,
-  bundles?: string,
+  bundledTxs?: string,
   icon: React.Node,
   onPress: () => void
 }
 
 const FioName = (props: FioNameProps & ThemeProps) => {
-  const { name, expiration, bundles, onPress, icon, theme } = props
+  const { name, expiration, bundledTxs, onPress, icon, theme } = props
   const styles = getStyles(theme)
 
   const renderSubTitle = () => {
@@ -28,8 +28,8 @@ const FioName = (props: FioNameProps & ThemeProps) => {
       return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
     }
 
-    if (bundles != null) {
-      const subTitle = `${s.strings.fio_address_details_screen_bundles}: ${bundles}`
+    if (bundledTxs != null) {
+      const subTitle = `${s.strings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
       return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
     }
 

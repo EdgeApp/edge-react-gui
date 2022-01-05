@@ -18,7 +18,7 @@ const FIO_EXPIRED_CHECK = 'FioExpiredCheck.json'
 const MONTH = 1000 * 60 * 60 * 24 * 30
 const DEFAULT_BUNDLE_SET_VALUE = 1
 
-export const BUNDLES_AMOUNT_ALERT = 5
+export const BUNDLED_TXS_AMOUNT_ALERT = 5
 
 type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
@@ -712,7 +712,7 @@ const buyAddressRequest = async (
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
 
-export const getAddBundlesFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
+export const getAddBundledTxsFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
   if (fioWallet) {
     try {
       const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
@@ -728,16 +728,16 @@ export const getAddBundlesFee = async (fioWallet: EdgeCurrencyWallet | null): Pr
   throw new Error(s.strings.fio_get_fee_err_msg)
 }
 
-export const addBundles = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string, fee: number): Promise<{ expiration: string }> => {
+export const addBundledTxs = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string, fee: number): Promise<{ expiration: string }> => {
   if (fioWallet) {
     try {
       const params = { fioAddress, bundleSets: DEFAULT_BUNDLE_SET_VALUE, maxFee: fee }
       return await fioWallet.otherMethods.fioAction('addBundledTransactions', params)
     } catch (e) {
-      throw new Error(s.strings.fio_add_bundles_err_msg)
+      throw new Error(s.strings.fio_add_bundled_txs_err_msg)
     }
   }
-  throw new Error(s.strings.fio_add_bundles_err_msg)
+  throw new Error(s.strings.fio_add_bundled_txs_err_msg)
 }
 
 export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
@@ -881,7 +881,7 @@ export const refreshFioNames = async (
     for (const wallet of fioWallets) {
       const walletId = wallet.id
       const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
-      fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, bundles }) => ({ name, bundles, walletId }))]
+      fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, bundledTxs }) => ({ name, bundledTxs, walletId }))]
       const walletFioDomains = await wallet.otherMethods.getFioDomains()
       fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
       fioWalletsById[walletId] = wallet
