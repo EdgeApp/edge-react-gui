@@ -7,8 +7,9 @@ import { Linking } from 'react-native'
 import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions.js'
 import { type WalletsState } from '../../reducers/scenes/WalletsReducer.js'
-import { type DeepLink, parseDeepLink } from '../../types/DeepLink.js'
+import { type DeepLink } from '../../types/DeepLinkTypes.js'
 import { connect } from '../../types/reactRedux.js'
+import { parseDeepLink } from '../../util/DeepLinkParser.js'
 import { showError } from './AirshipInstance.js'
 
 type StateProps = {

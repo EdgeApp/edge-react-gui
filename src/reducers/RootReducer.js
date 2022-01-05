@@ -3,7 +3,7 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import { type UiState, ui } from '../modules/UI/reducer.js'
-import { type DeepLink } from '../types/DeepLink.js'
+import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Action } from '../types/reduxTypes.js'
 import { type DeviceReferral } from '../types/ReferralTypes.js'
 import { type GuiContact, type GuiExchangeRates } from '../types/types.js'

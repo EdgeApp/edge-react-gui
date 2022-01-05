@@ -15,10 +15,11 @@ import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneK
 import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
+import { type ReturnAddressLink } from '../types/DeepLinkTypes.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
+import { parseDeepLink } from '../util/DeepLinkParser.js'
 import { denominationToDecimalPlaces, noOp, zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
