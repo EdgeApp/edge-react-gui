@@ -78,11 +78,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     if (appState === 'active') this._setClipboard(this.props)
   }
 
-  reset() {
-    this._setClipboard(this.props)
-    this.props.resetSendTransaction()
-  }
-
   onChangeAddress = async (address: string) => {
     if (!address) return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
@@ -188,7 +183,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
-      this.reset()
+      this._setClipboard(this.props)
+      this.props.resetSendTransaction()
     }
   }
 
