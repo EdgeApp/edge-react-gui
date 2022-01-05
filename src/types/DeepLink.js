@@ -39,6 +39,12 @@ import ENV from '../../env.json'
  * Besides the edge:// protocol, there are also various coin-specific URI
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
+
+export type AztecoLink = {
+  type: 'azteco',
+  uri: string
+}
+
 export type EdgeLoginLink = {
   type: 'edgeLogin',
   lobbyId: string
@@ -68,24 +74,19 @@ export type ReturnAddressLink = {
   successUri?: string
 }
 
-export type Azteco = {
-  type: 'azteco',
-  uri: string
-}
-
 export type SwapLink = {
   type: 'swap'
   // We may eventually add query parameters to pre-populate currencies.
 }
 
 export type DeepLink =
+  | AztecoLink
   | EdgeLoginLink
   | PasswordRecoveryLink
   | PluginLink
   | PromotionLink
   | ReturnAddressLink
   | SwapLink
-  | Azteco
   | {
       type: 'other',
       protocol: string, // Without the ':'
@@ -96,7 +97,9 @@ export type DeepLink =
  * Parse a link into the app, identifying special
  * features that Edge knows how to handle.
  */
-export function parseDeepLink(uri: string): DeepLink {
+export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {}): DeepLink {
+  const { aztecoApiKey = ENV.AZTECO_API_KEY } = opts
+
   // Normalize some legacy cases:
   for (const prefix of prefixes) {
     const [from, to] = prefix
@@ -123,14 +126,12 @@ export function parseDeepLink(uri: string): DeepLink {
   }
 
   // Handle Azte.co URLs
-  if (url.hostname === 'azte.co') {
-    if (ENV.AZTECO_API_KEY == null) throw new Error('Azteco partner ID not provided')
+  if (url.hostname === 'azte.co' && aztecoApiKey != null) {
     const queryMap = { c1: 'CODE_1', c2: 'CODE_2', c3: 'CODE_3', c4: 'CODE_4' }
-    const partnerId = ENV.AZTECO_API_KEY
     const query = Object.keys(url.query)
       .map(key => `${encodeURIComponent(queryMap[key] ? queryMap[key] : key)}=${encodeURIComponent(url.query[key])}`)
       .join('&')
-    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${partnerId}?${query}&ADDRESS=`
+    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}?${query}&ADDRESS=`
     return {
       type: 'azteco',
       uri: aztecoLink
