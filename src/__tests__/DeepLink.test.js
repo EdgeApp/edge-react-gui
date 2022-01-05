@@ -16,6 +16,13 @@ function makeLinkTests(tests: { [uri: string]: DeepLink }): void {
 }
 
 describe('parseDeepLink', function () {
+  describe('azteco', () => {
+    expect(parseDeepLink('https://azte.co?c1=a&c2=b', { aztecoApiKey: 'someKey' })).toEqual({
+      type: 'azteco',
+      uri: 'https://azte.co/partners/someKey?CODE_1=a&CODE_2=b&ADDRESS='
+    })
+  })
+
   describe('edgeLogin', () => {
     makeLinkTests({
       'edge://edge/1234567890a': {
