@@ -74,6 +74,12 @@ export type SwapLink = {
   // We may eventually add query parameters to pre-populate currencies.
 }
 
+export type WalletConnectLink = {
+  type: 'walletConnect',
+  isSigning: boolean,
+  uri: string
+}
+
 export type DeepLink =
   | AztecoLink
   | EdgeLoginLink
@@ -81,6 +87,7 @@ export type DeepLink =
   | PluginLink
   | PromotionLink
   | ReturnAddressLink
+  | WalletConnectLink
   | SwapLink
   | {
       type: 'other',
