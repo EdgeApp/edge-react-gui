@@ -4,6 +4,7 @@ import URL from 'url-parse'
 
 import ENV from '../../env.json'
 import { type DeepLink, type PromotionLink } from '../types/DeepLinkTypes.js'
+import { stringifyQuery } from './GuiPluginTools.js'
 
 /**
  * Parse a link into the app, identifying special
@@ -39,11 +40,13 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 
   // Handle Azte.co URLs
   if (url.hostname === 'azte.co' && aztecoApiKey != null) {
-    const queryMap = { c1: 'CODE_1', c2: 'CODE_2', c3: 'CODE_3', c4: 'CODE_4' }
-    const query = Object.keys(url.query)
-      .map(key => `${encodeURIComponent(queryMap[key] ? queryMap[key] : key)}=${encodeURIComponent(url.query[key])}`)
-      .join('&')
-    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}?${query}&ADDRESS=`
+    const { query } = url
+    const cleanQuery: typeof query = {}
+    for (const key of Object.keys(query)) {
+      const cleanKey = /^c[0-9]$/.test(key) ? key.replace('c', 'CODE_') : key
+      cleanQuery[cleanKey] = query[key]
+    }
+    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}?${stringifyQuery(cleanQuery)}&ADDRESS=`
     return {
       type: 'azteco',
       uri: aztecoLink
@@ -70,11 +73,9 @@ function parseEdgeProtocol(url: URL): DeepLink {
     case 'pay': {
       const [protocol = '', ...deepPath] = pathParts
       const path = deepPath.join('/')
-      const queryString = Object.keys(url.query)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(url.query[key])}`)
-        .join('&')
 
       let uri = `${protocol}:${path}`
+      const queryString = stringifyQuery(url.query)
       if (queryString.length > 0) uri += `?${queryString}`
       return { type: 'other', uri, protocol }
     }
