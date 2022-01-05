@@ -8,6 +8,7 @@ import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.js'
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { shouldContinueLegacy } from '../components/modals/shouldContinueLegacy.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
@@ -71,6 +72,32 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
         })
     }, 1000)
   }
+}
+
+export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
+  let approve = true
+  // Warn the user if the URI is a Gateway/Bridge URI
+  if (parsedUri?.metadata?.gateway === true) {
+    approve =
+      approve &&
+      (await Airship.show(bridge => (
+        <ConfirmContinueModal
+          bridge={bridge}
+          title={sprintf(s.strings.gateway_agreement_modal_title, currencyCode)}
+          body={s.strings.gateway_agreement_modal_body}
+          isSkippable
+        />
+      )))
+  }
+  // Warn the user if the Address is a legacy type
+  if (parsedUri.legacyAddress != null) {
+    approve =
+      approve &&
+      (await Airship.show(bridge => (
+        <ConfirmContinueModal bridge={bridge} title={s.strings.legacy_address_modal_title} body={s.strings.legacy_address_modal_warning} isSkippable />
+      )))
+  }
+  return approve
 }
 
 export const parseScannedUri = (data: string, customErrorTitle?: string, customErrorDescription?: string) => async (dispatch: Dispatch, getState: GetState) => {
