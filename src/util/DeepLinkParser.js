@@ -31,6 +31,13 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     return parseEdgeProtocol(url)
   }
 
+  // Handle the wallet connect:
+  if (url.protocol === 'wc:') {
+    const { key } = parseQuery(url.query)
+    const isSigning = key == null
+    return { type: 'walletConnect', isSigning, uri }
+  }
+
   // Handle address requests:
   if (/^[a-z]+-ret:$/.test(url.protocol)) {
     // Extract the coin name from the protocol:
@@ -98,6 +105,13 @@ function parseEdgeProtocol(url: URL): DeepLink {
 
     case 'swap': {
       return { type: 'swap' }
+    }
+
+    case 'wc': {
+      const uri = url.query.replace(/.*uri=/, '')
+      const { key } = parseQuery(new URL(uri).query)
+      const isSigning = key == null
+      return { type: 'walletConnect', isSigning, uri }
     }
 
     case 'x-callback-url': {

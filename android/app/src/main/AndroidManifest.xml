@@ -69,6 +69,7 @@
         <data android:scheme="ethereum"></data>
         <data android:scheme="dash"></data>
         <data android:scheme="litecoin"></data>
+        <data android:scheme="wc"></data>
       </intent-filter>
       <intent-filter android:label="Edge" android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />

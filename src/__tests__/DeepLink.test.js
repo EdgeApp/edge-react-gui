@@ -242,4 +242,35 @@ describe('parseDeepLink', function () {
       }
     })
   })
+
+  describe('walletConnect', () => {
+    const fullExample =
+      'wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae'
+    const shortExample = 'wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1'
+
+    makeLinkTests({
+      [fullExample]: {
+        type: 'walletConnect',
+        isSigning: false,
+        uri: fullExample
+      },
+      [shortExample]: {
+        type: 'walletConnect',
+        isSigning: true,
+        uri: shortExample
+      },
+      'edge://wc?uri=wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae':
+        {
+          type: 'walletConnect',
+          isSigning: false,
+          uri: fullExample
+        },
+      'https://deep.edge.app/wc?uri=wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae':
+        {
+          type: 'walletConnect',
+          isSigning: false,
+          uri: fullExample
+        }
+    })
+  })
 })

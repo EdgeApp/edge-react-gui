@@ -118,6 +118,15 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       return true
     }
 
+    case 'walletConnect': {
+      if (!hasCurrentWallet) return false
+      const { uri, isSigning } = link
+      Actions.push('wcConnections')
+      // Hack around our router's horrible bugs:
+      if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
+      return true
+    }
+
     case 'other': {
       if (!hasCurrentWallet) return false
       const currencyName = link.protocol
