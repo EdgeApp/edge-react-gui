@@ -73,18 +73,20 @@ export function makePluginUri(
     query[queryPromoCode] = promoCode
   }
 
-  // Assemble the query part:
-  const queryString = Object.keys(query)
+  // Assemble the URI:
+  let uri = baseUri
+  if (!lockUriPath) uri += deepPath
+  const queryString = stringifyQuery(query)
+  if (queryString.length > 0) uri += `?${queryString}`
+  return uri
+}
+
+export function stringifyQuery(query: GuiPluginQuery): string {
+  return Object.keys(query)
     .map(key => {
       let out = encodeURIComponent(key)
       if (query[key] != null) out += `=${encodeURIComponent(query[key])}`
       return out
     })
     .join('&')
-
-  // Assemble the URI:
-  let uri = baseUri
-  if (!lockUriPath) uri += deepPath
-  if (queryString.length > 0) uri += `?${queryString}`
-  return uri
 }
