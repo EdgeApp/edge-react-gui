@@ -17,7 +17,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../assets/vector'
 import { EDGE_URL } from '../../constants/constantSettings.js'
-import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE, WALLET_CONNECT } from '../../constants/SceneKeys'
+import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
@@ -200,7 +200,7 @@ export function ControlPanel(props: Props) {
       title: s.strings.drawer_fio_requests
     },
     {
-      pressHandler: () => handleGoToScene(WALLET_CONNECT),
+      pressHandler: () => handleGoToScene('wcConnections'),
       iconName: 'cp-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
