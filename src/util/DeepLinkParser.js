@@ -4,7 +4,7 @@ import URL from 'url-parse'
 
 import ENV from '../../env.json'
 import { type DeepLink, type PromotionLink } from '../types/DeepLinkTypes.js'
-import { stringifyQuery } from './GuiPluginTools.js'
+import { parseQuery, stringifyQuery } from './GuiPluginTools'
 
 /**
  * Parse a link into the app, identifying special
@@ -19,7 +19,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     if (uri.indexOf(from) === 0) uri = uri.replace(from, to)
   }
 
-  const url = new URL(uri, true)
+  const url = new URL(uri)
 
   // Handle dl.edge.app links:
   if ((url.protocol === 'https:' || url.protocol === 'http:') && url.host === 'dl.edge.app') {
@@ -40,7 +40,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 
   // Handle Azte.co URLs
   if (url.hostname === 'azte.co' && aztecoApiKey != null) {
-    const { query } = url
+    const query = parseQuery(url.query)
     const cleanQuery: typeof query = {}
     for (const key of Object.keys(query)) {
       const cleanKey = /^c[0-9]$/.test(key) ? key.replace('c', 'CODE_') : key
@@ -74,16 +74,15 @@ function parseEdgeProtocol(url: URL): DeepLink {
       const [protocol = '', ...deepPath] = pathParts
       const path = deepPath.join('/')
 
-      let uri = `${protocol}:${path}`
-      const queryString = stringifyQuery(url.query)
-      if (queryString.length > 0) uri += `?${queryString}`
+      const uri = `${protocol}:${path}${url.query}`
       return { type: 'other', uri, protocol }
     }
 
     case 'plugin': {
       const [pluginId = '', ...deepPath] = pathParts
       const path = deepPath.length !== 0 ? '/' + deepPath.join('/') : ''
-      return { type: 'plugin', pluginId, path, query: url.query }
+      const query = parseQuery(url.query)
+      return { type: 'plugin', pluginId, path, query }
     }
 
     case 'promotion': {
@@ -92,7 +91,8 @@ function parseEdgeProtocol(url: URL): DeepLink {
     }
 
     case 'recovery': {
-      const { token = '' } = url.query
+      const { token } = parseQuery(url.query)
+      if (token == null) throw new SyntaxError('No recovery token')
       return { type: 'passwordRecovery', passwordRecoveryKey: token }
     }
 
@@ -113,8 +113,9 @@ function parseEdgeProtocol(url: URL): DeepLink {
 }
 
 function parseDownloadLink(url: URL): PromotionLink {
-  if (url.query.af != null) {
-    return { type: 'promotion', installerId: url.query.af }
+  const { af } = parseQuery(url.query)
+  if (af != null) {
+    return { type: 'promotion', installerId: af }
   }
   const [, installerId = ''] = url.pathname.split('/')
   return { type: 'promotion', installerId }
@@ -126,8 +127,9 @@ function parseDownloadLink(url: URL): PromotionLink {
  * `litecoin-ret://x-callback-url/request-address`
  */
 function parseReturnAddress(url: URL, currencyName: string): DeepLink {
-  const sourceName = url.query['x-source']
-  const successUri = url.query['x-success']
+  const query = parseQuery(url.query)
+  const sourceName = query['x-source'] ?? undefined
+  const successUri = query['x-success'] ?? undefined
   return { type: 'returnAddress', currencyName, sourceName, successUri }
 }
 
