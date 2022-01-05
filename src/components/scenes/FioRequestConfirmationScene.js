@@ -10,6 +10,7 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
+import type { CcWalletMap } from '../../reducers/FioReducer'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -36,7 +37,10 @@ type StateProps = {
   isConnected: boolean,
   fioPlugin?: EdgeCurrencyConfig,
   walletId: string,
-  currencyCode: string
+  currencyCode: string,
+  connectedWalletsByFioAddress: {
+    [fioAddress: string]: CcWalletMap
+  }
 }
 
 type OwnProps = {
@@ -77,13 +81,22 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   setAddressesState = async () => {
     if (this.props.fioWallets) {
+      const { chainCode, currencyCode, connectedWalletsByFioAddress } = this.props
       const walletAddresses = []
+      let defaultFioAddressFrom = null
       for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
         try {
           const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
+              if (
+                defaultFioAddressFrom == null &&
+                connectedWalletsByFioAddress[fioAddress] != null &&
+                connectedWalletsByFioAddress[fioAddress][`${chainCode}:${currencyCode}`] != null
+              ) {
+                defaultFioAddressFrom = fioAddress
+              }
             }
           }
         } catch (e) {
@@ -93,7 +106,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
       this.setState({
         walletAddresses,
-        fioAddressFrom: walletAddresses[0].fioAddress
+        fioAddressFrom: defaultFioAddressFrom != null ? defaultFioAddressFrom : walletAddresses[0].fioAddress
       })
     }
   }
@@ -315,7 +328,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
         isConnected,
         walletId: '',
         currencyCode: '',
-        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+        connectedWalletsByFioAddress: {}
       }
     }
 
@@ -352,7 +366,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       isConnected,
       walletId: state.ui.wallets.selectedWalletId,
       currencyCode: state.ui.wallets.selectedCurrencyCode,
-      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+      connectedWalletsByFioAddress: state.ui.fio.connectedWalletsByFioAddress
     }
   },
   dispatch => ({})
