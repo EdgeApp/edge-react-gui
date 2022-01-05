@@ -90,3 +90,25 @@ export function stringifyQuery(query: GuiPluginQuery): string {
     })
     .join('&')
 }
+
+export function parseQuery(query?: string): GuiPluginQuery {
+  if (query == null || query === '') return {}
+
+  // The literal '&' divides query arguments:
+  const parts = query.slice(1).split('&')
+
+  const out: GuiPluginQuery = {}
+  for (const part of parts) {
+    // The literal '=' divides the key from the value:
+    const key = part.replace(/=.*/, '')
+    const value = part.slice(key.length)
+
+    // Avoid dangerous keys:
+    const safeKey = decodeURIComponent(key)
+    if (safeKey === '__proto__') continue
+
+    // A key without an '=' gets a null value:
+    out[safeKey] = value === '' ? null : decodeURIComponent(value.slice(1))
+  }
+  return out
+}
