@@ -222,7 +222,9 @@ export type ParamList = {
   walletListScene: void,
   wcConnections: void,
   wcDisconnect: {| wcConnectionInfo: WcConnectionInfo |},
-  wcConnect: {| dAppName: string, wcQRUri: string |}
+  wcConnect: {|
+    uri: string
+  |}
 }
 
 /**
