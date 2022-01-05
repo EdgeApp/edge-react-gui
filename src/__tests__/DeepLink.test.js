@@ -1,7 +1,8 @@
 // @flow
 /* globals describe it expect */
 
-import { type DeepLink, parseDeepLink } from '../types/DeepLink.js'
+import { type DeepLink } from '../types/DeepLinkTypes.js'
+import { parseDeepLink } from '../util/DeepLinkParser.js'
 
 /**
  * Generates deep link unit tests using a simple table format.
