@@ -129,16 +129,24 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       } catch (e) {
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.setState({ connectWalletsLoading: false })
-          await Airship.show(bridge => (
+          const answer = await Airship.show(bridge => (
             <ButtonsModal
               bridge={bridge}
               title={s.strings.fio_no_bundled_err_msg}
+              message={s.strings.fio_no_bundled_add_err_msg}
               buttons={{
-                ok: { label: s.strings.string_ok }
+                ok: { label: s.strings.title_fio_add_bundled_txs }
               }}
+              closeArrow
             />
           ))
-          // todo: redirect to 'add bundles' scene
+          if (answer === 'ok') {
+            navigation.navigate('fioAddressSettings', {
+              showAddBundledTxs: true,
+              fioWallet,
+              fioAddressName: fioAddressName
+            })
+          }
           return
         }
         this.resetSlider()

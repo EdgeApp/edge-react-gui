@@ -100,7 +100,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     let fioAddress
     if (fioPlugin) {
       try {
-        // todo: should we check for bundles here instead of expiration?
         const publicAddress = await checkPubAddress(fioPlugin, address.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         fioAddress = address.toLowerCase()
         address = publicAddress
