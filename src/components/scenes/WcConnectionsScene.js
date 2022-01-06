@@ -90,7 +90,7 @@ export const WcConnectionsScene = (props: Props) => {
         const parsedScan = await tempWallet.parseUri(qrResult, tempWallet.currencyInfo.currencyCode)
         const uriStr = parsedScan.walletConnect?.uri
         if (uriStr === undefined) throw new Error('Undefined uri in parsed scan')
-        navigation.navigate('wcConnect', { dAppName: 'dAppName', wcQRUri: uriStr })
+        navigation.navigate('wcConnect', { uri: uriStr })
       } catch (error) {
         showError(error)
       }

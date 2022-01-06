@@ -55,38 +55,55 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-      <intent-filter android:label="Edge">
+      <intent-filter android:label="Edge Deep Links" android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:host="recovery.edgesecure.co" android:path="/recovery" android:scheme="https"></data>
-        <data android:scheme="airbitz"></data>
-        <data android:scheme="airbitz-ret"></data>
-        <data android:scheme="edge"></data>
-        <data android:scheme="edge-ret"></data>
-        <data android:scheme="bitcoin"></data>
-        <data android:scheme="bitcoincash"></data>
-        <data android:scheme="ethereum"></data>
-        <data android:scheme="dash"></data>
-        <data android:scheme="litecoin"></data>
+        <data android:scheme="https" />
+        <data android:host="deep.edge.app" />
+        <data android:host="dl.edge.app" />
       </intent-filter>
-      <intent-filter android:label="Edge" android:autoVerify="true">
+      <intent-filter android:label="Edge Login" android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="https" android:host="www.edge.app" android:pathPrefix="/edgelogin"></data>
+        <data android:scheme="https" android:host="www.edge.app" android:pathPrefix="/edgelogin" />
       </intent-filter>
-      <intent-filter android:label="Edge" android:autoVerify="true">
+      <intent-filter android:label="Edge Recovery">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="https" android:host="dl.edge.app" android:pathPrefix="/"></data>
+        <data android:scheme="https" android:host="recovery.edgesecure.co" android:path="/recovery" />
       </intent-filter>
-      <intent-filter android:label="Edge" android:autoVerify="true">
+      <intent-filter android:label="Edge Deep Links">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="https" android:host="deep.edge.app" android:pathPrefix="/"></data>
+        <data android:scheme="edge" />
+        <data android:scheme="airbitz" />
+      </intent-filter>
+      <intent-filter android:label="Address Requests">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="edge-ret" />
+        <data android:scheme="airbitz-ret" />
+      </intent-filter>
+      <intent-filter android:label="Payment Links">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="bitcoin" />
+        <data android:scheme="bitcoincash" />
+        <data android:scheme="ethereum" />
+        <data android:scheme="dash" />
+        <data android:scheme="litecoin" />
+      </intent-filter>
+      <intent-filter android:label="Wallet Connect">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="wc" />
       </intent-filter>
     </activity>
   </application>

@@ -7,7 +7,7 @@ import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
 import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import { type DeepLink } from '../types/DeepLink.js'
+import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
@@ -115,6 +115,15 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         return false
       }
       launchAzteco(edgeWallet, link.uri).catch(showError)
+      return true
+    }
+
+    case 'walletConnect': {
+      if (!hasCurrentWallet) return false
+      const { uri, isSigning } = link
+      Actions.push('wcConnections')
+      // Hack around our router's horrible bugs:
+      if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
       return true
     }
 

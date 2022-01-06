@@ -2,7 +2,8 @@
 /* globals describe it expect */
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { type GuiPlugin, type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson, makePluginUri } from '../types/GuiPluginTypes.js'
+import { type GuiPlugin, type GuiPluginRow, asGuiPluginJson } from '../types/GuiPluginTypes.js'
+import { filterGuiPluginJson, makePluginUri } from '../util/GuiPluginTools.js'
 
 const buyPluginJson = asGuiPluginJson(require('../constants/plugins/buyPluginList.json'))
 const sellPluginJson = asGuiPluginJson(require('../constants/plugins/sellPluginList.json'))
