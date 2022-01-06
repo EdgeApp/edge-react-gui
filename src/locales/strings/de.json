@@ -475,7 +475,6 @@
   "otp_modal_reset_description": "Ein Versuch, sich auf Ihr Konto einzuloggen, wurde von einem anderen Gerät erstellt und ein 2FA-Reset wurde angefordert. \n\nWenn Sie die Anfrage nicht gemacht haben, klicken Sie auf \"2FA behalten\". Dann gehen Sie zu den \"Einstellungen\" und ändern Sie Ihr Passwort und Ihre PIN. \n\nWenn Sie das Zurücksetzen beantragt haben, \nklicken Sie auf \" 2FA deaktivieren\".",
   "otp_keep": "2FA beibehalten",
   "word_to_in_convert_from_to_string": "zu",
-  "legacy_address_modal_title": "Warnung! Legacy-Adresse erkannt",
   "legacy_address_modal_warning": "Sie haben ein Legacy-Format gescannt, das möglicherweise nicht für die beabsichtigte Währung gilt, da es nicht von anderen Währungsadressen unterscheidbar ist.\n\nAn diese Adresse zu senden, kann zu einem VERLUST des Assets führen!\n\nMöchten Sie fortfahren?",
   "legacy_address_modal_continue": "Weiter",
   "legacy_address_modal_cancel": "Abbrechen",
