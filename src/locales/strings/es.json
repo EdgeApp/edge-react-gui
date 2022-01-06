@@ -475,7 +475,6 @@
   "otp_modal_reset_description": "Se ha producido un intento de acceder a tu cuenta desde otro dispositivo y se ha solicitado un reseteo de 2FA. \n\nSi tú no has hecho esta solicitud, pulsa \"Mantener 2FA\", después ve a \"Configuración\" y cambia tu contraseña y PIN.",
   "otp_keep": "Mantener 2FA",
   "word_to_in_convert_from_to_string": "hacia",
-  "legacy_address_modal_title": "¡Aviso! Dirección antigua detectada (Legacy address)",
   "legacy_address_modal_warning": "Has escaneado un formato de dirección antiguo (legacy address) que pudiera no corresponder a la moneda deseada ya que no es distinguible de direcciones de otras monedas.\n\n¡Enviar a esta dirección PUEDE resultar en la PÉRDIDA de fondos!\n\n¿Estás seguro de que quieres continuar?",
   "legacy_address_modal_continue": "Continuar",
   "legacy_address_modal_cancel": "Cancelar",
