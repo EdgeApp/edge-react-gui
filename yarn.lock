@@ -4997,10 +4997,10 @@ edge-core-js@^0.18.13:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.10.4.tgz#a4be83e99a4e6d48d12c7aabb19112a138cdf566"
-  integrity sha512-GEqQs5pNbrXttAwo9y0n4Vm+NRhAnpBqxsjAQswlny7wnFXP4tK8xMayv2vvRDhgvqMyFEDH2Y/EX8P5vHhQYA==
+edge-currency-accountbased@0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.10.5.tgz#5afb83163ccc1718954efed30687393a66adb6ea"
+  integrity sha512-QsPAZU73MvPdynIN3NqjCDJ2WurS0NAaU74d3yIfMt5UdKB1ofCCXjpZZTrsPCWtluPxb6aRt5It46bxxldMHA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
@@ -5031,10 +5031,10 @@ edge-currency-accountbased@0.10.4:
     url-parse "^1.4.1"
     yaob "^0.3.6"
 
-edge-currency-bitcoin@^4.9.18:
-  version "4.9.18"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.18.tgz#5dcda5a98bd73931f9fbd66a6a8feace391cd1b9"
-  integrity sha512-z7hPq+Dvg0MEzToSbZCZgXYTf8MX3wsR6Hq8qxMo33IJjrWsw1WhnfiVnQH1RUcKK33eQ40+JS1EtL+QPHUCdw==
+edge-currency-bitcoin@^4.9.19:
+  version "4.9.19"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.19.tgz#f7c5996a083176dc03e18ced6a808dd7a224baed"
+  integrity sha512-3x9ZnTVLfHvTQGOwwfRmPqz0zPjHwvXYez4waZOd3pFcghhf0sX3hBXJx9c98Wo6OhI9m5UDH1hztzNSeFU0Xw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
