@@ -478,7 +478,6 @@
   "otp_modal_reset_description": "È stato effettuato un tentativo di accesso al tuo account da un altro dispositivo ed è stato richiesto il reset del 2FA.\n\nSe non sei stato tu a richiedere il reset clicca \"mantieni 2FA\".\nPoi vai in \"Impostazioni\" e cambia password e PIN.\n\nSe hai richiesto il reset, clicca su \"Disabilita 2FA\".",
   "otp_keep": "Mantieni 2FA",
   "word_to_in_convert_from_to_string": "a",
-  "legacy_address_modal_title": "Attenzione! Rilevato indirizzo Legacy",
   "legacy_address_modal_warning": "Hai scansionato un indirizzo di formato legacy che potrebbe non essere per la valuta desiderata in quanto è indistinguibile dagli altri indirizzi di valuta.\n\nL'invio a questo indirizzo POTREBBE comportare una PERDITA di fondi!\n\nVuoi continuare?",
   "legacy_address_modal_continue": "Continua",
   "legacy_address_modal_cancel": "Annulla",
