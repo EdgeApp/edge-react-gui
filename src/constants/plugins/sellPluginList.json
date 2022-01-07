@@ -14,6 +14,7 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
+      "MATIC",
       "DAI",
       "USDC"
     ],

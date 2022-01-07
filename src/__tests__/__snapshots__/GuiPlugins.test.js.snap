@@ -171,6 +171,7 @@ Array [
     "cryptoCodes": Array [
       "BTC",
       "ETH",
+      "MATIC",
       "DAI",
       "USDC",
     ],
@@ -269,6 +270,7 @@ Array [
     "cryptoCodes": Array [
       "BTC",
       "ETH",
+      "MATIC",
       "DAI",
       "USDC",
     ],
