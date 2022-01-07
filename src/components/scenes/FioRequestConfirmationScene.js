@@ -90,11 +90,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
-              if (
-                defaultFioAddressFrom == null &&
-                connectedWalletsByFioAddress[fioAddress] != null &&
-                connectedWalletsByFioAddress[fioAddress][`${chainCode}:${currencyCode}`] != null
-              ) {
+              if (defaultFioAddressFrom == null && connectedWalletsByFioAddress[fioAddress]?.[`${chainCode}:${currencyCode}`] === this.props.walletId) {
                 defaultFioAddressFrom = fioAddress
               }
             }
