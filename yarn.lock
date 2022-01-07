@@ -1219,9 +1219,9 @@
     text-encoding "0.7.0"
 
 "@fioprotocol/fiosdk@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.2.1.tgz#02cd7e664c57663f68fa1d721415fbf25b5f033d"
-  integrity sha512-2AzdcKwUNwbz29xAkYFmQhsj/pj7WK7dZ0MWdVmU9IZiILF2kM6LuuDmGUkDcqSUkLa09kbZJCEV7iLi4jTpxw==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.4.0.tgz#c98c79ce2c8db9a8edff64d5485e0dc88fa5984b"
+  integrity sha512-/41cTJb2pRD1E8mXp8gtek60c6tyv0RzbKclUctfHJ8FHBcWwbqt8+kJtASg6pLvgMj80HyhebWPL2HfM+PqVw==
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -5012,7 +5012,7 @@ edge-currency-accountbased@0.11.2:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
-    "@fioprotocol/fiosdk" "^1.2.1"
+    "@fioprotocol/fiosdk" "^1.4.0"
     "@hashgraph/sdk" "^1.1.9"
     "@walletconnect/client" "1.6.6"
     base-x "^1.0.4"
