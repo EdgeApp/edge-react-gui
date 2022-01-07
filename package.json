@@ -111,7 +111,7 @@
     "edge-login-ui-rn": "^0.9.28",
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#f04ee29c23bf5621f87dedb6d2fb1c83a18781bc",
     "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#4842daad5fd560cd462f4668ab17c521a16a6cd9",
-    "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#5aa2379dbd4045b8a514427b442bd59ca57c21b0",
+    "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#b56b4ca151b6b43f143606f0ae398088457a3fea",
     "qrcode-generator": "^1.4.4",
     "react": "17.0.1",
     "react-native": "^0.64.2",
