@@ -5004,10 +5004,10 @@ edge-core-js@^0.18.14:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.11.3:
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.11.3.tgz#7b0f7823f2435c62c135a2e28bd786486442e261"
-  integrity sha512-1Q4UDPjM9zBH8+KaeTfQIHCfrcGcYmGOBSYPrLRZAgGswDjOsecye2Pp61R6mGTLaSXE8sTEzXkqg6X7SNRkzg==
+edge-currency-accountbased@^0.11.4:
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.11.4.tgz#69546fef7c3e3d487bf1058666f495761ea42686"
+  integrity sha512-nXoG33EnXT70PHJjfMRSJlWX/R53nc9AVPUv6yRsvPmL4tCUILWJlck6pucb/LJbj0GxoCeXhyVgUk5O6oXpjQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
