@@ -237,6 +237,7 @@ export type MostRecentWallet = {
 
 export type FioAddress = {
   name: string,
+  bundledTxs: number,
   walletId: string
 }
 

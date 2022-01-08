@@ -7,6 +7,7 @@ import { AppState, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
+import { addressWarnings } from '../../actions/ScanActions.js'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
@@ -15,7 +16,6 @@ import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { AddressModal } from '../modals/AddressModal'
 import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
-import { shouldContinueLegacy } from '../modals/shouldContinueLegacy.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
@@ -41,15 +41,6 @@ type State = {
   loading: boolean
 }
 type Props = OwnProps & StateProps & ThemeProps
-
-const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.legacyAddress
-}
-
-const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
-  // $FlowFixMe should be paymentProtocolUrl (lowercased)?
-  return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
 
 class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -87,11 +78,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     if (appState === 'active') this._setClipboard(this.props)
   }
 
-  reset() {
-    this._setClipboard(this.props)
-    this.props.resetSendTransaction()
-  }
-
   onChangeAddress = async (address: string) => {
     if (!address) return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
@@ -100,7 +86,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     let fioAddress
     if (fioPlugin) {
       try {
-        // todo: should we check for bundles here instead of expiration?
         const publicAddress = await checkPubAddress(fioPlugin, address.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         fioAddress = address.toLowerCase()
         address = publicAddress
@@ -116,13 +101,14 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
       this.setState({ loading: false })
 
-      if (isLegacyAddressUri(parsedUri)) {
-        if (!(await shouldContinueLegacy())) return
-      }
+      // Check if the URI requires a warning to the user
+      const approved = await addressWarnings(parsedUri, currencyCode)
+      if (!approved) return
 
       // Missing isPrivateKeyUri Modal
 
-      if (isPaymentProtocolUri(parsedUri)) {
+      // Check is PaymentProtocolUri
+      if (!!parsedUri.paymentProtocolURL && !parsedUri.publicAddress) {
         const guiMakeSpendInfo: ?GuiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
         if (guiMakeSpendInfo) {
@@ -197,7 +183,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
-      this.reset()
+      this._setClipboard(this.props)
+      this.props.resetSendTransaction()
     }
   }
 

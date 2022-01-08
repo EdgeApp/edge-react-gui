@@ -1,5 +1,25 @@
 # edge-react-gui
 
+## 2.8.1 (2022-01-07)
+
+- MATIC: Fix syncing issue
+- Add a WalletConnect deep link type
+- Various Wallet Connect Fixes
+- Fix Android deep link handling
+- Add support for Ren Bridge Gateway URI
+- FIO: Add option to add Bundled Transactions
+- Upgrade edge-currency-accountbased to v0.11.2
+  - Fixed WalletConnect Rarible bug
+  - MATIC: Add 5 more RPC servers
+  - ETH: Add eth_signTypedData_v4 support
+  - FIO: Replace additional network call with bundle constant
+  - Add Avalanche (AVAX)
+  - FIO: Add addBundledTransactions action
+  - Support Wallet Connect across all ETH-like currencies
+  - Add support for RenBridge Gateway address URI
+- Upgrade edge-currency-bitcoin to v4.9.19
+  - Add support for RenBridge Gateway address URI
+
 ## 2.8.0 (2021-12-21)
 
 - Add Polygon (MATIC)

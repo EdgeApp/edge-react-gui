@@ -171,27 +171,21 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   handleWalletPress = () => {
     const { selectWallet, route } = this.props
-    const oldSelectedCurrencyCode = this.state.selectedCurrencyCode
+    const prevCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          selectWallet(walletId, currencyCode)
-          this.setState(
-            {
-              ...this.state,
-              ...this.setWallets(this.props, walletId, currencyCode)
-            },
-            () => {
-              if (!this.addressTile) return
-              if (currencyCode !== oldSelectedCurrencyCode) {
-                this.addressTile.reset()
-              } else if (currencyCode === oldSelectedCurrencyCode && this.state.recipientAddress !== '') {
-                this.addressTile.onChangeAddress(this.state.recipientAddress)
-              }
-            }
-          )
-        }
+        if (walletId == null || currencyCode == null) return
+        selectWallet(walletId, currencyCode)
+        this.setState({
+          ...this.state,
+          ...this.setWallets(this.props, walletId, currencyCode),
+          recipientAddress: ''
+        })
+
+        if (this.addressTile == null) return
+        if (currencyCode !== prevCurrencyCode) return this.resetSendTransaction()
+        this.addressTile.onChangeAddress(this.state.recipientAddress)
       })
       .catch(error => console.log(error))
   }
@@ -304,7 +298,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           <ButtonsModal
             bridge={bridge}
             title={s.strings.fio_no_bundled_err_msg}
-            message={s.strings.fio_no_bundled_non_fio_err_msg}
+            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`}
             buttons={{
               ok: { label: s.strings.legacy_address_modal_continue },
               cancel: { label: s.strings.string_cancel_cap }

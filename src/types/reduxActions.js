@@ -18,7 +18,7 @@ import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
-import { type DeepLink } from './DeepLink.js'
+import { type DeepLink } from './DeepLinkTypes.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
 import {
   type CustomTokenInfo,
