@@ -268,7 +268,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "MATIC",
       "DAI",
       "USDC"
     ],
@@ -844,7 +843,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "MATIC",
       "USDC",
       "DAI"
     ],
