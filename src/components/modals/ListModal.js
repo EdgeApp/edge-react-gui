@@ -70,7 +70,6 @@ export function ListModal<T>({
           searchIcon
           blurOnClear
           autoCorrect={false}
-          autoFocus={false}
           autoCapitalize="words"
           returnKeyType="done"
           marginRem={[1, 0.5]}
