@@ -213,7 +213,6 @@
   "send_confirmation_fee_line": "Commissione: + %s (%s)",
   "send_confirmation_max_button_title": "Invia il massimo",
   "send_confirmation_slide_to_confirm": "Scorri per confermare",
-  "send_confirmation_balance": "Bilancio:",
   "send_confirmation_eos_error_cpu": "La CPU disponibile non è sufficiente per inviare transazioni EOS. Attendi 1-3 giorni per la ricarica della CPU.",
   "send_confirmation_eos_error_net": "NET disponibile insufficiente per inviare transazioni EOS. Attendere 1-3 giorni per la ricarica del NET.",
   "send_confirmation_eos_error_ram": "La RAM disponibile non è sufficiente per inviare transazioni EOS. Vai su edge.app/eos per dettagli su come risolvere il problema.",
