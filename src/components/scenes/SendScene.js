@@ -225,9 +225,14 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFlipInputModal = () => {
-    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />).catch(
-      error => console.log(error)
-    )
+    Airship.show(bridge => (
+      <FlipInputModal
+        bridge={bridge}
+        onFeesChange={this.handleFeesChange}
+        walletId={this.state.selectedWalletId}
+        currencyCode={this.state.selectedCurrencyCode}
+      />
+    )).catch(error => console.log(error))
   }
 
   handleFeesChange = () => {

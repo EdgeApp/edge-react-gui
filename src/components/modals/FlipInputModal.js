@@ -3,15 +3,18 @@
 import { bns } from 'biggystring'
 import { asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { MINIMUM_DEVICE_HEIGHT } from '../../constants/constantSettings.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../selectors/WalletSelectors.js'
+import { getExchangeRate } from '../../selectors/WalletSelectors.js'
+import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
@@ -20,19 +23,20 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput'
-import { ModalTitle } from '../themed/ModalParts.js'
+import { FiatText } from '../themed/FiatText.js'
+import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
   bridge: AirshipBridge<void>,
   walletId: string,
-  currencyCode: string
+  currencyCode: string,
+  onFeesChange: () => void
 }
 
 type StateProps = {
   // Balance
   balanceCrypto: string,
-  balanceFiat: string,
 
   // FlipInput
   flipInputHeaderText: string,
@@ -44,8 +48,9 @@ type StateProps = {
   forceUpdateGuiCounter: number,
 
   // Fees
-  feeSyntax: string,
-  feeSyntaxStyle?: string,
+  feeNativeAmount: string,
+  feeAmount: string,
+  feeStyle?: string,
 
   // Error
   errorMessage?: string
@@ -75,6 +80,11 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   handleCloseModal = () => this.props.bridge.resolve()
 
+  handleFeesChange = () => {
+    this.handleCloseModal()
+    this.props.onFeesChange()
+  }
+
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     const { walletId, currencyCode, updateTransactionAmount } = this.props
     updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
@@ -94,103 +104,131 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   handleSendMaxAmount = () => this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
 
-  renderTitle = () => {
-    const styles = getStyles(this.props.theme)
+  renderErrorMessge = () => {
+    const { errorMessage = this.state.errorMessage, theme } = this.props
+    const styles = getStyles(theme)
+    const opacity = errorMessage == null ? 0 : 1
     return (
-      <View style={styles.headerContainer}>
-        <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
-        {getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
-          <TouchableOpacity onPress={this.handleSendMaxAmount}>
-            <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
-          </TouchableOpacity>
-        ) : null}
-      </View>
+      <EdgeText numberOfLines={1} style={[styles.exchangeRateErrorText, { opacity }]}>
+        {errorMessage == null ? ' ' : errorMessage.split('\n')[0]}
+      </EdgeText>
     )
   }
 
   renderExchangeRates = () => {
-    const { primaryInfo, secondaryInfo, errorMessage = this.state.errorMessage, fiatPerCrypto, theme } = this.props
+    const { primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
     const styles = getStyles(theme)
+
     return (
-      <View style={styles.exchangeRateContainer}>
-        {errorMessage != null ? (
-          <EdgeText numberOfLines={1} style={styles.exchangeRateErrorText}>
-            {errorMessage.split('\n')[0]}
-          </EdgeText>
-        ) : (
-          <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} />
-        )}
+      <View style={styles.rateBalanceContainer}>
+        <EdgeText style={styles.secondaryTitle}>{s.strings.string_rate}</EdgeText>
+        <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} style={styles.rateBalanceText} />
       </View>
     )
   }
 
   renderBalance = () => {
-    const { balanceCrypto, balanceFiat, theme } = this.props
+    const { balanceCrypto, primaryInfo, secondaryInfo, theme } = this.props
     const styles = getStyles(theme)
-    const balance = `${balanceCrypto} (${balanceFiat})`
+    const { multiplier, name } = primaryInfo.displayDenomination
+    const balance = `${formatNumber(bns.div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
     return (
-      <View style={styles.balanceContainer}>
-        <EdgeText style={styles.balanceString}>{s.strings.send_confirmation_balance}</EdgeText>
-        <EdgeText style={styles.balanceValue}>{balance}</EdgeText>
+      <View style={styles.rateBalanceContainer}>
+        <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
+        <EdgeText style={styles.rateBalanceText}>
+          {balance}
+          <FiatText
+            nativeCryptoAmount={balanceCrypto}
+            cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
+            isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            parenthesisEnclosed
+          />
+        </EdgeText>
       </View>
     )
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
+    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto } = this.props
     const { overridePrimaryExchangeAmount } = this.state
-    const styles = getStyles(theme)
     return (
-      <View style={styles.flipInputContainer}>
-        <Card marginRem={[0, 0.75]}>
-          <ExchangedFlipInput
-            headerText={flipInputHeaderText}
-            headerLogo={flipInputHeaderLogo}
-            primaryCurrencyInfo={{ ...primaryInfo }}
-            secondaryCurrencyInfo={{ ...secondaryInfo }}
-            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
-            overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-            forceUpdateGuiCounter={0}
-            onExchangeAmountChanged={this.handleExchangeAmountChange}
-            onError={this.handleAmountChangeError}
-            onNext={this.handleCloseModal}
-            keyboardVisible={false}
-            isFocus
-            isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
-          />
-        </Card>
-      </View>
+      <Card marginRem={0}>
+        <ExchangedFlipInput
+          headerText={flipInputHeaderText}
+          headerLogo={flipInputHeaderLogo}
+          primaryCurrencyInfo={{ ...primaryInfo }}
+          secondaryCurrencyInfo={{ ...secondaryInfo }}
+          exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+          overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+          forceUpdateGuiCounter={0}
+          onExchangeAmountChanged={this.handleExchangeAmountChange}
+          onError={this.handleAmountChangeError}
+          onNext={this.handleCloseModal}
+          keyboardVisible={false}
+          isFocus
+          isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
+        />
+        <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+      </Card>
     )
   }
 
   renderFees = () => {
-    const { feeSyntax, feeSyntaxStyle, theme } = this.props
+    const { feeAmount, feeNativeAmount, feeStyle, primaryInfo, secondaryInfo, theme } = this.props
+    const feeCryptoText = `${feeAmount} ${primaryInfo.displayDenomination.name} `
     const styles = getStyles(theme)
-    const feeText = `+ ${s.strings.string_fee}`
-    const feeStyle =
-      feeSyntaxStyle === 'dangerText' ? styles.feesSyntaxDanger : feeSyntaxStyle === 'warningText' ? styles.feesSyntaxWarning : styles.feesSyntaxDefault
+    const feeTextStyle = feeStyle === 'dangerText' ? styles.feeTextDanger : feeStyle === 'warningText' ? styles.feeTextWarning : styles.feeTextDefault
     return (
-      <View style={styles.feesContainer}>
-        <EdgeText style={styles.feesContainerText}>{feeText}</EdgeText>
-        <EdgeText style={feeStyle}>{feeSyntax}</EdgeText>
+      <View style={styles.feeContainer}>
+        <View style={styles.feeTitleContainer}>
+          <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
+          <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} />
+        </View>
+        <EdgeText style={feeTextStyle}>
+          {feeCryptoText}
+          <FiatText
+            nativeCryptoAmount={feeNativeAmount}
+            cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
+            isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            parenthesisEnclosed
+          />
+        </EdgeText>
       </View>
     )
   }
 
   render() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     return (
       <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
-        {this.renderTitle()}
-        {this.renderExchangeRates()}
-        {this.renderBalance()}
-        {this.renderFlipInput()}
-        {this.renderFees()}
+        {/* Extra view needed here to fullscreen the modal on small devices */}
+        <View style={styles.hackContainer}>
+          <View style={styles.flipInput}>{this.renderFlipInput()}</View>
+          <TouchableWithoutFeedback onPress={this.handleFeesChange} style={styles.content}>
+            <View>
+              {this.renderFees()}
+              {this.renderExchangeRates()}
+              {this.renderBalance()}
+              {this.renderErrorMessge()}
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </ThemedModal>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  hackContainer: {
+    flex: deviceHeight <= MINIMUM_DEVICE_HEIGHT ? 1 : 0
+  },
+  flipInput: {
+    justifyContent: 'flex-start'
+  },
+  content: {
+    justifyContent: 'flex-end'
+  },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -199,43 +237,46 @@ const getStyles = cacheStyles((theme: Theme) => ({
   headerMaxAmountText: {
     color: theme.textLink
   },
-  balanceContainer: {
-    flexDirection: 'row',
-    marginHorizontal: theme.rem(0.5)
+  primaryTitle: {
+    color: theme.secondaryText
   },
-  exchangeRateContainer: {
-    margin: theme.rem(0.5)
+  secondaryTitle: {
+    flex: 1,
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  rateBalanceContainer: {
+    flexDirection: 'row'
   },
   exchangeRateErrorText: {
+    fontSize: theme.rem(0.75),
     color: theme.dangerText
   },
-  balanceValue: {
-    textAlign: 'right'
+  rateBalanceText: {
+    fontSize: theme.rem(0.75)
   },
-  balanceString: {
-    flex: 1
-  },
-  flipInputContainer: {
-    marginVertical: theme.rem(1)
-  },
-  feesContainer: {
+  feeContainer: {
     flexDirection: 'row',
-    marginHorizontal: theme.rem(1)
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(1)
   },
-  feesContainerText: {
-    flex: 1
+  feeTitleContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  feesSyntaxDefault: {
+  feeTextDefault: {
     color: theme.primaryText
   },
-  feesSyntaxWarning: {
+  feeTextWarning: {
     color: theme.warningText
   },
-  feesSyntaxDanger: {
+  feeTextDanger: {
     color: theme.dangerText
   },
-  spacer: {
-    flex: 1
+  feeIcon: {
+    color: theme.iconTappable,
+    marginLeft: theme.rem(0.5)
   }
 }))
 
@@ -249,11 +290,6 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const cryptoDenomination = getDisplayDenomination(state, currencyCode)
     const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
     const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
-
-    // Balances
-    const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
-    const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
-    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, balanceCrypto)
 
     // FlipInput
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -283,8 +319,6 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       state.ui.scenes.sendConfirmation.transaction,
       state.ui.settings
     )
-    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
-    const feeSyntaxStyle = transactionFee.fiatStyle
 
     // Error
     const error = state.ui.scenes.sendConfirmation.error
@@ -295,8 +329,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       // Balances
-      balanceCrypto: `${balanceCrypto} ${currencyCode}`,
-      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${bns.toFixed(balanceFiat, 2, 2)}`,
+      balanceCrypto: guiWallet.nativeBalances[currencyCode],
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
@@ -308,8 +341,9 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       forceUpdateGuiCounter,
 
       // Fees
-      feeSyntax,
-      feeSyntaxStyle,
+      feeNativeAmount: transactionFee.nativeCryptoAmount,
+      feeAmount: transactionFee.cryptoAmount,
+      feeStyle: transactionFee.fiatStyle,
 
       // Error
       errorMessage
