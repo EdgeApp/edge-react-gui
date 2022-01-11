@@ -38,7 +38,6 @@
   "fragment_request_subtitle": "Запрос",
   "fragment_request_address_copied": "Адрес для получения успешно скопирован в буфер обмена",
   "request_minimum_notification_title": "Необходим минимальный баланс",
-  "request_xrp_minimum_notification_body": "Для создания адреса кошелёк Ripple (XRP) требует, чтобы на счету было минимум 20 XRP. Баланс не отобразится, пока не будет достигнут необходимый минимум. 20 XRP невозможно будет потратить в период жизни адреса.",
   "request_xlm_minimum_notification_body": "Для создания адреса кошелёк Stellar (XLM) требует, чтобы на счету было минимум 1 XLM. Баланс не отобразится, пока не будет достигнут необходимый минимум. 1 XLM невозможно будет потратить в период жизни адреса.",
   "fragment_send_address": "Адрес",
   "fragment_send_flash": "Вспышка",
