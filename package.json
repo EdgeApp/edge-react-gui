@@ -153,7 +153,7 @@
     "react-native-tcp": "git://github.com/EdgeApp/react-native-tcp.git#rn62",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.2.3",
-    "react-native-zcash": "^0.1.0",
+    "react-native-zcash": "^0.2.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "redux-flipper": "^1.4.2",
