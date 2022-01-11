@@ -41,7 +41,6 @@
   "fragment_request_subtitle": "Yêu cầu",
   "fragment_request_address_copied": "Yêu cầu địa chỉ thành công sao chép vào bảng",
   "request_minimum_notification_title": "Yêu cầu tỷ số tối thiểu",
-  "request_xrp_minimum_notification_body": "Ví Coin Ripple (XRP) đòi hỏi một giá trị tối thiểu là XRP 20. Bạn phải đặt cọc ít nhất 20 XRP đến địa chỉ này trước khi chi tiêu này hiển thị khoản giao dịch. 20 XRP sẽ chưa được trả khi đó cho địa chỉ ví.",
   "request_xlm_minimum_notification_body": "Ví Stellar (XLM) đòi hỏi một giá trị tối thiểu 1 XLM Bạn phải đặt cọc ít nhất 1 XLM đến địa chỉ này trước khi chi trả hiện giá trị cho giao dịch. 1 XLM sẽ chưa được chi trả trong thời gian đó.",
   "fragment_send_address": "Địa chỉ",
   "fragment_send_flash": "Tiền mã hoá",
