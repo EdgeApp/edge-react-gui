@@ -87,7 +87,6 @@
   "send_confirmation_fee_line": "Taxa: + %s (%s)",
   "send_confirmation_max_button_title": "Enviar Quantidade Máxima",
   "send_confirmation_slide_to_confirm": "Deslize para Confirmar",
-  "send_confirmation_balance": "Saldo:",
   "send_to_title": "Para: %s",
   "send_confirmation_to": "Para: %s",
   "send_confirmation_address": "Endereço: %s",
