@@ -86,8 +86,8 @@ const strings = {
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
-    'Ripple (XRP) wallets require a 20 XRP minimum balance. You must deposit at least 20 XRP to this address before this wallet will show a balance or transactions. 20 XRP will be unspendable for the lifetime of this wallet address.',
-  request_xrp_minimum_notification_alert_body: 'This wallet will always require a 20 XRP minimum',
+    'Ripple (XRP) wallets require a 10 XRP minimum balance. You must deposit at least 10 XRP to this address before this wallet will show a balance or transactions. 10 XRP will be unspendable for the lifetime of this wallet address.',
+  request_xrp_minimum_notification_alert_body: 'This wallet will always require a 10 XRP minimum',
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
@@ -236,7 +236,7 @@ const strings = {
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
-  send_confirmation_balance: 'Balance:',
+  send_confirmation_balance: 'Balance',
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
@@ -353,6 +353,7 @@ const strings = {
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',
   string_first_polygon_wallet_name: 'My Polygon',
+  string_first_avalanche_wallet_name: 'My Avalanche',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -370,6 +371,8 @@ const strings = {
   string_to_capitalize: 'To',
   string_show_balance: 'Show Balance',
   string_amount: 'Amount',
+  string_tap_to_edit: 'Tap to edit',
+  string_rate: 'Rate',
   exchange_rates_loading: 'Exchange Rates Loading...',
   exchange_rate_loading_singular: 'Exchange Rate Loading...',
   string_master_private_key: 'Master Private Key',
@@ -885,9 +888,9 @@ const strings = {
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
 
   // New Token TermsAgreement Modal
-  token_agreement_modal_title: 'ETH Needed To Send Tokens',
+  token_agreement_modal_title: '%s Needed To Send Tokens',
   token_agreement_modal_body:
-    'ETH is required to pay mining fees when sending tokens. The associated Ethereum wallet must contain a sufficient amount of ETH.\n\nIf you do not have ETH, you can acquire ETH within Edge using the Buy or Exchange function.',
+    '%s is required to pay the mining fees when sending tokens. The associated %s wallet must contain a sufficient amount of funds.\n\nIf you do not have %s, you can acquire it within Edge using the Buy or Exchange function.',
 
   // Generic TermsAgreement Modal
   confirm_continue_modal_body: 'Please confirm your understanding below:',

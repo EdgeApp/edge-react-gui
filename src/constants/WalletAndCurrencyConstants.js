@@ -49,6 +49,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   HERC: s.strings.string_first_hercules_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
   MATIC: s.strings.string_first_polygon_wallet_name,
+  AVAX: s.strings.string_first_avalanche_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
   RBTC: s.strings.string_first_rsk_wallet_name,
   RVN: s.strings.string_first_ravencoin_wallet_name,
@@ -124,7 +125,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:wax',
   'wallet:fantom',
   'wallet:hedera',
-  'wallet:polygon'
+  'wallet:polygon',
+  'wallet:avalanche'
 ]
 
 // Put these in reverse order of preference
@@ -152,6 +154,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   HBAR: 'hedera',
   LTC: 'litecoin',
   MATIC: 'polygon',
+  AVAX: 'avalanche',
   QTUM: 'qtum',
   RBTC: 'rsk',
   RVN: 'ravencoin',
@@ -275,7 +278,7 @@ export const SPECIAL_CURRENCY_INFO: {
       keyboardType: 'numeric'
     },
     minimumPopupModals: {
-      minimumNativeBalance: '20000000',
+      minimumNativeBalance: '10000000',
       modalMessage: s.strings.request_xrp_minimum_notification_body,
       alertMessage: s.strings.request_xrp_minimum_notification_alert_body
     },
@@ -467,6 +470,16 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isCustomTokensSupported: true,
     isRbfSupported: true
+  },
+  AVAX: {
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isRbfSupported: true
   }
 }
 
@@ -516,6 +529,7 @@ export const WALLET_LIST_MENU: Array<{
       'GRS',
       'LTC',
       'MATIC',
+      'AVAX',
       'QTUM',
       'RBTC',
       'RVN',

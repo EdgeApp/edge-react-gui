@@ -244,6 +244,9 @@ Object {
       "AUSDT": Object {
         "denomination": "1000000",
       },
+      "AVAX": Object {
+        "denomination": "1000000000000000000",
+      },
       "AWBTC": Object {
         "denomination": "100000000",
       },

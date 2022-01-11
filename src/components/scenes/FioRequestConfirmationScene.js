@@ -8,8 +8,9 @@ import { View } from 'react-native'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
+import { addToFioAddressCache, checkPubAddress, getRemainingBundles } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
+import type { CcWalletMap } from '../../reducers/FioReducer'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -36,7 +37,10 @@ type StateProps = {
   isConnected: boolean,
   fioPlugin?: EdgeCurrencyConfig,
   walletId: string,
-  currencyCode: string
+  currencyCode: string,
+  connectedWalletsByFioAddress: {
+    [fioAddress: string]: CcWalletMap
+  }
 }
 
 type OwnProps = {
@@ -77,13 +81,18 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   setAddressesState = async () => {
     if (this.props.fioWallets) {
+      const { chainCode, currencyCode, connectedWalletsByFioAddress } = this.props
       const walletAddresses = []
+      let defaultFioAddressFrom = null
       for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
         try {
           const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
+              if (defaultFioAddressFrom == null && connectedWalletsByFioAddress[fioAddress]?.[`${chainCode}:${currencyCode}`] === this.props.walletId) {
+                defaultFioAddressFrom = fioAddress
+              }
             }
           }
         } catch (e) {
@@ -93,7 +102,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
       this.setState({
         walletAddresses,
-        fioAddressFrom: walletAddresses[0].fioAddress
+        fioAddressFrom: defaultFioAddressFrom != null ? defaultFioAddressFrom : walletAddresses[0].fioAddress
       })
     }
   }
@@ -120,7 +129,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: true })
         try {
           const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.fioAddressFrom })
-          if (getFeeRes.fee) {
+          const bundledTxs = await getRemainingBundles(fioWallet, this.state.fioAddressFrom)
+          // The API only returns a fee if there are 0 bundled transactions remaining. New requests can cost up to two transactions
+          // so we need to check the corner case where a user might have one remaining transaction.
+          if (getFeeRes.fee || bundledTxs < 2) {
             this.setState({ loading: false })
             this.resetSlider()
             const answer = await Airship.show(bridge => (
@@ -322,7 +334,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
         isConnected,
         walletId: '',
         currencyCode: '',
-        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+        connectedWalletsByFioAddress: {}
       }
     }
 
@@ -359,7 +372,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       isConnected,
       walletId: state.ui.wallets.selectedWalletId,
       currencyCode: state.ui.wallets.selectedCurrencyCode,
-      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+      connectedWalletsByFioAddress: state.ui.fio.connectedWalletsByFioAddress
     }
   },
   dispatch => ({})
