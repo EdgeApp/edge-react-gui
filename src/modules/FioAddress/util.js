@@ -466,7 +466,9 @@ export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, f
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
-  if (getFeeResult.fee !== 0) {
+  const bundles = await getRemainingBundles(fioWallet, fioAddress)
+  // record_obt_data requires 2 bundled transactions
+  if (getFeeResult.fee !== 0 || bundles < 2) {
     throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
   }
 }
@@ -710,6 +712,19 @@ const buyAddressRequest = async (
     }
   }
   throw new Error(s.strings.fio_get_reg_info_err_msg)
+}
+
+export const getRemainingBundles = async (fioWallet: EdgeCurrencyWallet, fioName: string): Promise<number> => {
+  let numBundles = Infinity
+  try {
+    const fioAddresses: FioAddress[] = await fioWallet.otherMethods.getFioAddresses()
+    const fioAddress = fioAddresses.find(fioAddress => fioAddress.name === fioName)
+    if (fioAddress != null) numBundles = fioAddress.bundledTxs
+  } catch (e) {
+    // If getFioAddresses fails, it's best to assume a lot of bundles remain so that the user can still attempt to complete whatever action follows
+    console.log('getRemainingBundles error - ', e?.message)
+  }
+  return numBundles
 }
 
 export const getAddBundledTxsFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
