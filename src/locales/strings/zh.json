@@ -41,7 +41,6 @@
   "fragment_request_subtitle": "索求",
   "fragment_request_address_copied": "请求地址成功复制到剪贴板",
   "request_minimum_notification_title": "必须最小余额",
-  "request_xrp_minimum_notification_body": "瑞波幣 （XRP）钱包需要20 XRP的最低余额。 在此钱包显示余额或交易之前，您必须至少向此地址存入20 XRP。 在此钱包地址的生命周期内这二十个XRP将无法花费。",
   "request_xlm_minimum_notification_body": "瑞波幣 （XLM）钱包需要1XLM的最低余额。 在此钱包显示余额或交易之前，您必须至少向此地址存入1个 XLM。 在此钱包地址的生命周期内这一个XLM将无法花费。",
   "fragment_send_address": "地址",
   "fragment_send_flash": "闪存",
