@@ -41,7 +41,6 @@
   "fragment_request_subtitle": "Faire une demande",
   "fragment_request_address_copied": "Une demande d'adress a été copiée dans le press-paier",
   "request_minimum_notification_title": "Il est demandé d'avoir une balance minimum  ",
-  "request_xrp_minimum_notification_body": "Wallets de Ripple (XRP) vous exgiez un solde minimum de 20XPR. Vous devez déposer au moins 20 XRP à cet adresse avant que ce Wallet afichira un solde ou transactions. 20 XRP serait impossible de dépenser pour ce adresse de Wallet pour toujours. ",
   "request_xlm_minimum_notification_body": "Wallets de Ripple (XRP) vous exgiez un solde minimum de 1XPR. Vous devez déposer au moins 1 XRP à cet adresse avant que ce Wallet afichira un solde ou transactions. 1 XRP serait impossible de dépenser pour ce adresse de Wallet pour toujours. ",
   "fragment_send_address": "Adresse",
   "fragment_send_flash": "Flash",
