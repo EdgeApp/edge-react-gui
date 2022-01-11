@@ -128,7 +128,6 @@
   "send_confirmation_fee_line": "费用: +%s (%s)",
   "send_confirmation_max_button_title": "发送最大金额",
   "send_confirmation_slide_to_confirm": "滑动以确认",
-  "send_confirmation_balance": "余额:",
   "send_confirmation_eos_error_cpu": "可用于发送 EOS 交易的CPU不足。请等待1-3天让CPU充值。",
   "send_confirmation_eos_error_net": "可用于发送 EOS 交易的NET不足。请等待1-3天让NET充值。",
   "send_confirmation_eos_error_ram": "可用于发送 EOS 交易的 RAM 不足。有关如何解决的详细信息, 请参阅 edge.app/eos。",
