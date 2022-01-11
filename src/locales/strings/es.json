@@ -70,8 +70,6 @@
   "fragment_request_address_copied": "Dirección de recepción copiada al portapapeles",
   "fragment_copied": "¡Copiado correctamente en el portapapeles",
   "request_minimum_notification_title": "Saldo mínimo requerido",
-  "request_xrp_minimum_notification_body": "Las carteras de Ripple requieren un saldo mínimo de 20 XRP. Debes depositar al menos 20 XRP a esta dirección antes de que esta cartera muestre saldo o transacciones. 20 XRP de esta cartera no podrán ser gastados de por vida.",
-  "request_xrp_minimum_notification_alert_body": "Esta cartera siempre requerirá un mínimo de 20 XRP",
   "request_xlm_minimum_notification_body": "Las carteras de Stellar requieren un saldo mínimo de 1 XLM. Debes depositar al menos 1 XLM a esta dirección antes de que esta cartera muestre saldo o transacciones. 1 XLM de esta cartera no podrán ser gastados de por vida.",
   "request_xlm_minimum_notification_alert_body": "Esta cartera siempre requerirá un mínimo de 1 XRP",
   "fragment_send_address": "Dirección",
