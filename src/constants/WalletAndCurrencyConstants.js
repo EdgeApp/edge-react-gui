@@ -278,7 +278,7 @@ export const SPECIAL_CURRENCY_INFO: {
       keyboardType: 'numeric'
     },
     minimumPopupModals: {
-      minimumNativeBalance: '20000000',
+      minimumNativeBalance: '10000000',
       modalMessage: s.strings.request_xrp_minimum_notification_body,
       alertMessage: s.strings.request_xrp_minimum_notification_alert_body
     },
