@@ -75,7 +75,6 @@ export type ExchangeData = {
   primaryDisplayAmount: string,
   primaryDisplayName: string,
   secondaryDisplayAmount: string,
-  secondaryDisplaySymbol: string,
   secondaryCurrencyCode: string
 }
 

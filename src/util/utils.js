@@ -300,11 +300,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!exchangeData.primaryDisplayAmount &&
-  !!exchangeData.primaryDisplayName &&
-  !!exchangeData.secondaryDisplayAmount &&
-  !!exchangeData.secondaryDisplaySymbol &&
-  !!exchangeData.secondaryCurrencyCode
+  !!exchangeData.primaryDisplayAmount && !!exchangeData.primaryDisplayName && !!exchangeData.secondaryDisplayAmount && !!exchangeData.secondaryCurrencyCode
 
 export const unspacedLowercase = (input: string) => {
   const newInput = input.replace(' ', '').toLowerCase()
