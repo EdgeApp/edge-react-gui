@@ -38,7 +38,6 @@
   "fragment_request_subtitle": "Pedir",
   "fragment_request_address_copied": "Solicitação de endereço copiado com êxito para área de transferência",
   "request_minimum_notification_title": "Saldo Mínimo Requerido",
-  "request_xrp_minimum_notification_body": "Carteiras de Ripple (XRP) requerem um saldo mínimo de 20 XRP. Você deve depositar pelo menos 20 XRP para esse endereço antes que essa carteira mostre saldo ou transações. Esses 20 XRP não poderão ser gastos pela vida toda deste endereço de carteira.",
   "request_xlm_minimum_notification_body": "Carteiras de Stellar (XLM) requerem um saldo mínimo de 1 XLM. Você deve depositar pelo menos 1 XRP para esse endereço antes que essa carteira mostre saldo ou transações. Esse 1 XRP não poderá ser gasto pela vida toda deste endereço de carteira.",
   "fragment_send_address": "Endereço",
   "fragment_send_flash": "Flash",
