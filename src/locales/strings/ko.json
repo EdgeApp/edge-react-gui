@@ -42,7 +42,6 @@
   "fragment_request_subtitle": "요청",
   "fragment_request_address_copied": "요청 주소가 클립보드에 성공적으로 복사되었습니다.",
   "request_minimum_notification_title": "최소 잔액 필요",
-  "request_xrp_minimum_notification_body": "리플 (XRP) 월렛은 최소 잔액 20 XRP가 필요합니다. 이 월렛에 잔액이나 거래내역이 표시 되려면 먼저 20 XRP 이상을 이 주소로 입금해야합니다. 이 20 XRP은 이 월렛주소에서 영원히 출금할 수 없습니다.",
   "request_xlm_minimum_notification_body": "스텔라 (XLM) 월렛은 최소 잔액 1 XLM이 필요합니다. 이 월렛에 잔액이나 거래내역이 표시 되려면 먼저 1 XLM 이상을 이 주소로 입금해야합니다. 이 1 XLM은 이 월렛주소에서 영원히 출금할 수 없습니다.",
   "fragment_send_address": "주소",
   "fragment_send_flash": "플래시",
