@@ -128,7 +128,6 @@
   "send_confirmation_fee_line": "手数料：+%s (%s)",
   "send_confirmation_max_button_title": "上限額を送金",
   "send_confirmation_slide_to_confirm": "スライドして確認",
-  "send_confirmation_balance": "残高：",
   "send_confirmation_eos_error_cpu": "EOSトランザクションを送信するための十分なCPUがありません。 CPUが充電されるまで1〜3日お待ちください。",
   "send_confirmation_eos_error_net": "EOSトランザクションを送信するためのNETが不足しています。 NETが再充電されるまで1〜3日お待ちください。",
   "send_confirmation_eos_error_ram": "EOSトランザクションを送信するために使用可能なRAMが不足しています。 解決方法の詳細については edge.app/eos を参照してください。",
