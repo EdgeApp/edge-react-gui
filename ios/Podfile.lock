@@ -18,6 +18,8 @@ PODS:
   - disklet (0.4.5):
     - React
   - DoubleConversion (1.1.6)
+  - edge-core-js (0.19.0):
+    - React
   - edge-login-ui-rn (0.9.28):
     - React
   - FBLazyVector (0.64.2)
@@ -422,8 +424,6 @@ PODS:
     - React
   - react-native-netinfo (5.9.10):
     - React-Core
-  - react-native-randombytes (3.5.3):
-    - React
   - react-native-safari-view (1.0.0):
     - React
   - react-native-smart-splash-screen (2.3.5):
@@ -668,6 +668,7 @@ DEPENDENCIES:
   - CNIOWindows
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -722,7 +723,6 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
-  - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -830,6 +830,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/disklet"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  edge-core-js:
+    :path: "../node_modules/edge-core-js"
   edge-login-ui-rn:
     :path: "../node_modules/edge-login-ui-rn"
   FBLazyVector:
@@ -890,8 +892,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
-  react-native-randombytes:
-    :path: "../node_modules/react-native-randombytes"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
@@ -987,6 +987,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
+  edge-core-js: a18a8061a55b3e02f2049955db5cbe02f3b27635
   edge-login-ui-rn: f4c734841ae22b88179691234899473d2dea5d07
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 86d9e030dbb7af0ba0eb4e1b6d52e4af26c7f1f3
@@ -1042,7 +1043,6 @@ SPEC CHECKSUMS:
   react-native-mail: 88305252f4c3fb0157015ff8a7ac9c41b321a0dd
   react-native-mymonero-core: c5e0e039b4977be65ed936a1d5301da3448edff7
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
-  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-webview: 0bacc79175bc44869e4c1a015b9bc21df8cf4feb

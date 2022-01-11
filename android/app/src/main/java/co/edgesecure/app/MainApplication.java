@@ -78,8 +78,6 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
 
-    WebView.setWebContentsDebuggingEnabled(true);
-
     // Background task:
     MessagesWorker.ensureScheduled(context);
     // MessagesWorker.testRun(context);
