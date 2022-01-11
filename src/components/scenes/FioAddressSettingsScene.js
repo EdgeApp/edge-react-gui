@@ -165,7 +165,6 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         {bundledTxs != null ? <Tile type="static" title={s.strings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
         {showAddBundledTxs && (
           <FioActionSubmit
-            title={s.strings.title_fio_add_bundled_txs}
             onSubmit={this.onAddBundledTxsSubmit}
             onSuccess={this.afterAddBundledTxsSuccess}
             getOperationFee={getAddBundledTxsFee}
