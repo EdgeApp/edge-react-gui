@@ -128,7 +128,6 @@
   "send_confirmation_fee_line": "phí: + %s (%s) ",
   "send_confirmation_max_button_title": "Gửi số tiền tối đa",
   "send_confirmation_slide_to_confirm": "lướt để xác nhận",
-  "send_confirmation_balance": "Cân bằng:",
   "send_confirmation_eos_error_cpu": "Không đủ CPU có sẵn để gửi giao dịch EOS. Xin vui lòng chờ 1-3 ngày cho CPU được nạp.",
   "send_confirmation_eos_error_net": "Không đủ NET có sẵn để gửi giao dịch EOS. Xin vui lòng chờ 1-3 ngày cho NET được nạp.",
   "send_confirmation_eos_error_ram": "Không đủ bộ nhớ RAM có sẵn để gửi giao dịch EOS. Hãy xem edge.app/eos để biết chi tiết về cách giải quyết.",
