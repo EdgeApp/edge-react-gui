@@ -461,7 +461,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const onFocus = isFront ? this.textInputFrontFocusTrue : this.textInputBackFocusTrue
     const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
-    const displayAmountCheck = decimalAmount.match(/^0*$/) && !showCursor
+    const displayAmountCheck = (decimalAmount.match(/^0*$/) && !showCursor) || displayAmount === ''
     const displayAmountString = displayAmountCheck ? s.strings.string_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
     const currencyNameStyle = displayAmountCheck ? styles.bottomCurrencyMuted : styles.bottomCurrency
@@ -469,10 +469,17 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.bottomContainer} key="bottom">
-          <View style={styles.valueContainer}>
-            <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
-            {showCursor && <BlinkingCursor fontSize={1.5} color={theme.deactivatedText} />}
-          </View>
+          {displayAmount === '' ? (
+            <View style={styles.valueContainer}>
+              <BlinkingCursor showCursor={showCursor} />
+              <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+            </View>
+          ) : (
+            <View style={styles.valueContainer}>
+              <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+              <BlinkingCursor showCursor={showCursor} />
+            </View>
+          )}
           <EdgeText style={currencyNameStyle}>{currencyName}</EdgeText>
           <TextInput
             style={styles.hiddenTextInput}
@@ -554,11 +561,11 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 }
 
-const BlinkingCursor = () => {
+const BlinkingCursor = ({ showCursor }: { showCursor: boolean }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: withRepeat(withSequence(withDelay(500, withTiming(1, { duration: 1 })), withDelay(500, withTiming(0, { duration: 1 }))), -1)
+    opacity: showCursor ? withRepeat(withSequence(withDelay(500, withTiming(1, { duration: 1 })), withDelay(500, withTiming(0, { duration: 1 }))), -1) : 0
   }))
 
   return (

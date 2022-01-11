@@ -225,9 +225,14 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFlipInputModal = () => {
-    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />).catch(
-      error => console.log(error)
-    )
+    Airship.show(bridge => (
+      <FlipInputModal
+        bridge={bridge}
+        onFeesChange={this.handleFeesChange}
+        walletId={this.state.selectedWalletId}
+        currencyCode={this.state.selectedCurrencyCode}
+      />
+    )).catch(error => console.log(error))
   }
 
   handleFeesChange = () => {
@@ -377,16 +382,19 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { exchangeRates, lockInputs, nativeAmount, settings, theme, route } = this.props
     const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+    const styles = getStyles(theme)
 
     if (recipientAddress && !hiddenTilesMap.amount) {
       let cryptoAmountSyntax
+      let cryptoAmountStyle
       let fiatAmountSyntax
       const cryptoDisplayDenomination = getDenomination(selectedCurrencyCode, settings, 'display')
       const cryptoExchangeDenomination = getDenomination(selectedCurrencyCode, settings, 'exchange')
       const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount === '') {
-        cryptoAmountSyntax = s.strings.string_amount
+        cryptoAmountSyntax = s.strings.string_tap_to_edit
+        cryptoAmountStyle = styles.amountTextMuted
       } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
         const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
         const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
@@ -405,7 +413,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           title={s.strings.fio_request_amount}
           onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipInputModal}
         >
-          <EdgeText style={{ fontSize: theme.rem(2) }}>{cryptoAmountSyntax}</EdgeText>
+          <EdgeText style={[styles.amountText, cryptoAmountStyle]}>{cryptoAmountSyntax}</EdgeText>
           {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
         </Tile>
       )
@@ -607,6 +615,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   errorMessage: {
     color: theme.dangerText
+  },
+  amountText: {
+    fontSize: theme.rem(2)
+  },
+  amountTextMuted: {
+    color: theme.deactivatedText
   }
 }))
 
