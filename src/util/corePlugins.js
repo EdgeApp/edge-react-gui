@@ -39,6 +39,7 @@ export const currencyPlugins = {
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT || true,
   polygon: ENV.POLYGON_INIT,
+  avalanche: true,
   ripple: true,
   rsk: true,
   stellar: true,
