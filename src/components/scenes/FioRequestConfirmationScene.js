@@ -8,7 +8,7 @@ import { View } from 'react-native'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
+import { addToFioAddressCache, checkPubAddress, getRemainingBundles } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -129,7 +129,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: true })
         try {
           const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.fioAddressFrom })
-          if (getFeeRes.fee) {
+          const bundledTxs = await getRemainingBundles(fioWallet, this.state.fioAddressFrom)
+          // The API only returns a fee if there are 0 bundled transactions remaining. New requests can cost up to two transactions
+          // so we need to check the corner case where a user might have one remaining transaction.
+          if (getFeeRes.fee || bundledTxs < 2) {
             this.setState({ loading: false })
             this.resetSlider()
             const answer = await Airship.show(bridge => (
