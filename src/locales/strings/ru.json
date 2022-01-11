@@ -90,7 +90,6 @@
   "send_confirmation_fee_line": "Комиссия: + %s (%s)",
   "send_confirmation_max_button_title": "Отправить максимальную сумму",
   "send_confirmation_slide_to_confirm": "Сдвиньте для подтверждения",
-  "send_confirmation_balance": "Баланс:",
   "send_to_title": "Кому: %s",
   "send_confirmation_to": "Кому: %s",
   "send_confirmation_address": "Адрес: %s",
