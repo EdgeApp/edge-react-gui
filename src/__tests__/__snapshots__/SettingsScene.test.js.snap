@@ -1224,8 +1224,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </View>
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
           accessible={true}
+          collapsable={false}
           focusable={true}
+          nativeID="animatedComponent"
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -2503,8 +2510,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </View>
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
           accessible={true}
+          collapsable={false}
           focusable={true}
+          nativeID="animatedComponent"
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}

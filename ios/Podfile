@@ -1,6 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
+# Edge change: React Native itself only requires 11.0:
 platform :ios, '12.0'
 
 target 'edge' do
@@ -31,6 +32,7 @@ target 'edge' do
 
   post_install do |installer|
     react_native_post_install(installer)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 
   # Edge additions
