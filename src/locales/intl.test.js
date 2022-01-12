@@ -148,9 +148,9 @@ describe('Intl numbers', function () {
     })
 
     describe('en-US should fail', function () {
-      beforeEach(() => {
-        setIntlLocale(EN_US_LOCALE)
-      })
+      // beforeEach(() => {
+      //   setIntlLocale(EN_US_LOCALE)
+      // })
       // test(',', function () {
       //   expect(isValidInput(',')).toBe(false)
       // })
