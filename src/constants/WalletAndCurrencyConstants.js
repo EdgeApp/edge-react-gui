@@ -458,7 +458,12 @@ export const SPECIAL_CURRENCY_INFO: {
   ZEC: {
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
-    noMaxSpend: true
+    noMaxSpend: true,
+    uniqueIdentifierInfo: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      keyboardType: 'default'
+    }
   },
   MATIC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
