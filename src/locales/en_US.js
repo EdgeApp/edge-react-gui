@@ -890,7 +890,7 @@ const strings = {
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed To Send Tokens',
   token_agreement_modal_body:
-    '%s is required to pay the mining fees when sending tokens. The associated %s wallet must contain a sufficient amount of funds.\n\nIf you do not have %s, you can acquire it within Edge using the Buy or Exchange function.',
+    '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within Edge using the Buy or Exchange function.',
 
   // Generic TermsAgreement Modal
   confirm_continue_modal_body: 'Please confirm your understanding below:',
