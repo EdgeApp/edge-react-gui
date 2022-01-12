@@ -5010,10 +5010,10 @@ edge-core-js@^0.19.0:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.11.5.tgz#363e0637a16972148efd5e2a8bc4446b6cd2ac4d"
-  integrity sha512-YWgNS+zwNuPiLljsQrBKWQ11Uy0/0h2w2CT4cx13THjJ9kcH35DqUy7st7gQ9gr0dUg1V89e9355DUpl4met7g==
+edge-currency-accountbased@^0.11.6:
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.11.6.tgz#e3c3ea6ac86e06fc97c1b0b1e2c22575b8c01426"
+  integrity sha512-cyh3airLXA8N7rCMzKGUgu//kKP6ZojTLX+fM3pIYit0BnoCy7W0PTLSIjLf9wO0Ht1JSOXWi95oqZNWqEUjAQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
@@ -5025,14 +5025,14 @@ edge-currency-accountbased@^0.11.5:
     bip39 "^3.0.2"
     cleaners "^0.3.12"
     eosjs "^21.0.3"
-    eosjs-api "^7.0.4"
+    eosjs-api "https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
     eosjs-ecc "^4.0.7"
     esm "^3.2.4"
     eth-sig-util "^3.0.1"
     ethereumjs-abi "^0.6.8"
     ethereumjs-util "^5.2.0"
-    ethereumjs-wallet "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
-    eztz.js "git://github.com/EdgeApp/eztz.git#edge-fixes"
+    ethereumjs-wallet "https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
+    eztz.js "https://github.com/EdgeApp/eztz.git#edge-fixes"
     jsonschema "^1.1.1"
     rfc4648 "^1.5.0"
     stellar-sdk "^0.11.0"
@@ -5064,21 +5064,21 @@ edge-currency-bitcoin@^4.9.19:
     uri-js "^4.4.1"
     url-parse "^1.5.1"
 
-edge-currency-monero@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.3.tgz#31539d53393c268c6871e60ae5c8201beb4be552"
-  integrity sha512-QeRBhxPH/pAyWI9Ax/2hTmnNyxo7xwmD4iv/BCuF17atda7EL60+8RcigleA9h6wanbENBdJqLt9DDmOBk3/qA==
+edge-currency-monero@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.4.tgz#54c6755e1099e9468e4f87afeb7d6a06465bc785"
+  integrity sha512-dUJWMhBJ/gmIJ3tgqixs9uFbjo0Yo9riTT4cdd8arHnQcZag0qxtbywIZhNliue9Oz5QC+vsvKWtpEnjKy45eQ==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
+    mymonero-core-js "https://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.12.6:
-  version "0.12.6"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.12.6.tgz#1d6dd926bbf8f2c061d5ffb8d806dbfb77022984"
-  integrity sha512-/9DpaTRreFsjG61B8rz9cMz6IPbbmLg6XDpQcYNNgTHuey+TIWTpWzLVgxErkN2ny05EmzXUxhbab258fzI3ag==
+edge-exchange-plugins@^0.12.7:
+  version "0.12.7"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.12.7.tgz#dab4ec08754c08f6540be4fb27bf8afc589f4b7f"
+  integrity sha512-nk9ts2NeOQoMUumKewBRmJY87ldS7XjCUh+ioFKSK8Riw2q4Mf312MZKd6DJ3jhIKynNsP1jke/HhxH5oSyhOg==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
@@ -5087,10 +5087,10 @@ edge-exchange-plugins@^0.12.6:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.28:
-  version "0.9.28"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.28.tgz#5e197835e0cf7396efa2f281a2e1c1150e70c5c1"
-  integrity sha512-6ijbIkoOsOaBTxkz278e+Nd0YHCpiBsnxnKa9h1KS5eyPDe0gk/77M+AC8w1cMxUptSp4tvC+bPS/zYRLZlOWg==
+edge-login-ui-rn@^0.9.29:
+  version "0.9.29"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.29.tgz#f6dd52f50cec3c2076702bb16a4a465071807a34"
+  integrity sha512-b9t55b49FNg7o9RClKU1/WHG8DVaBITjLno1SRESuCA4Sp8asqjISzdVTHdzczBB7GB3mNr4fvMaJdKMIsWHJw==
   dependencies:
     cleaners "^0.3.1"
     date-fns "^2.23.0"
@@ -5101,7 +5101,7 @@ edge-login-ui-rn@^0.9.28:
     react-native-linear-gradient "^2.0.0"
     react-native-localize "^2.0.2"
     react-native-mail "^6.1.0"
-    react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
+    react-native-material-textfield "https://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-patina "^0.1.6"
     react-native-permissions "^3.0.1"
     react-native-reanimated "^2.0.0"
@@ -5113,9 +5113,9 @@ edge-login-ui-rn@^0.9.28:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#f04ee29c23bf5621f87dedb6d2fb1c83a18781bc":
+"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#2bcedc778201f67e425ab17dd19bce7af05e1cff":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#f04ee29c23bf5621f87dedb6d2fb1c83a18781bc"
+  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#2bcedc778201f67e425ab17dd19bce7af05e1cff"
   dependencies:
     cleaners "^0.3.1"
 
@@ -5238,9 +5238,9 @@ envinfo@^7.7.2:
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.8.1.tgz#06377e3e5f4d379fea7ac592d5ad8927e0c4d475"
   integrity sha512-/o+BXHmB7ocbHEAs6F2EnG0ogybVVUdkRunTT2glZU9XAaGmhqskrvKwqXuDfNjEO0LZKWdejEEpnq8aM0tOaw==
 
-eosjs-api@^7.0.4, "eosjs-api@git://github.com/EdgeApp/eosjs-api.git#prepare-script":
+"eosjs-api@git+https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb", "eosjs-api@https://github.com/EdgeApp/eosjs-api.git#prepare-script":
   version "7.0.4"
-  resolved "git://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
+  resolved "https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
   dependencies:
     camel-case "^3.0.0"
     isomorphic-fetch "^2.2.1"
@@ -5768,9 +5768,9 @@ ethereumjs-util@^7.1.0:
     ethjs-util "0.1.6"
     rlp "^2.2.4"
 
-"ethereumjs-wallet@git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
+"ethereumjs-wallet@git+https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
   version "0.6.0"
-  resolved "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
+  resolved "git+https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
   dependencies:
     aes-js "^0.2.3"
     bs58check "^1.0.8"
@@ -6003,9 +6003,9 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-"eztz.js@git://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git://github.com/EdgeApp/eztz.git#6937ce236912dae8da8409838518023a88eacf6c"
+  resolved "git+https://github.com/EdgeApp/eztz.git#6937ce236912dae8da8409838518023a88eacf6c"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
@@ -9226,9 +9226,9 @@ mv@~2:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
-"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey":
+"mymonero-core-js@https://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey":
   version "1.1.0"
-  resolved "git://github.com/EdgeApp/mymonero-core-js.git#c63ab750d169725a980e63c53ea7dab2c4161aa1"
+  resolved "https://github.com/EdgeApp/mymonero-core-js.git#c63ab750d169725a980e63c53ea7dab2c4161aa1"
   dependencies:
     node-fetch "^2.2.0"
 
@@ -10474,9 +10474,9 @@ react-native-airship@^0.2.7:
   dependencies:
     yavent "^0.1.1"
 
-"react-native-camera@git://github.com/EdgeApp/react-native-camera.git#edge-fixes":
+"react-native-camera@https://github.com/EdgeApp/react-native-camera.git#edge-fixes":
   version "1.13.1"
-  resolved "git://github.com/EdgeApp/react-native-camera.git#2ff75ebbacc0062b5fccbcc951f41db5c6c38c11"
+  resolved "https://github.com/EdgeApp/react-native-camera.git#2ff75ebbacc0062b5fccbcc951f41db5c6c38c11"
   dependencies:
     prop-types "^15.6.2"
 
@@ -10558,9 +10558,9 @@ react-native-flipper@^0.87.0:
   resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.87.0.tgz#7442994a5dd3fadd64b78293835af36bcf7fa891"
   integrity sha512-WCi0j/4gRxYbEizVHN9kNWKx7m/sBajxXXhhTQBmhNLywSData+za62e5XtTGTnHoS8bDC5ev65PKAA7ncM9Lg==
 
-"react-native-fs@git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding":
+"react-native-fs@https://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding":
   version "2.13.3"
-  resolved "git://github.com/EdgeApp/react-native-fs.git#575a0376ac7287f2048ee470e2af5ad3aeb65764"
+  resolved "https://github.com/EdgeApp/react-native-fs.git#575a0376ac7287f2048ee470e2af5ad3aeb65764"
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
@@ -10614,7 +10614,7 @@ react-native-mail@^6.1.0:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
@@ -10689,13 +10689,13 @@ react-native-share@^7.1.2:
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
   integrity sha512-kmwp11XYL1TBvKQ1s3Y4HTxu5QNZM6W1SopItAovoC+UD+9g4lVFIPL64bww16Oz15xQTTDtvDHCG8zDWKOVPA==
 
-"react-native-smart-splash-screen@git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
+"react-native-smart-splash-screen@https://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
   version "2.3.5"
-  resolved "git://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
+  resolved "https://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
 
-"react-native-sortable-listview@git://github.com/EdgeApp/react-native-sortable-listview.git":
+"react-native-sortable-listview@https://github.com/EdgeApp/react-native-sortable-listview.git":
   version "0.2.8"
-  resolved "git://github.com/EdgeApp/react-native-sortable-listview.git#209f808af19f719566e50475cc883ffc7c19d0e5"
+  resolved "https://github.com/EdgeApp/react-native-sortable-listview.git#209f808af19f719566e50475cc883ffc7c19d0e5"
   dependencies:
     deprecated-react-native-listview "^0.0.5"
 
@@ -10736,9 +10736,9 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-"react-native-tcp@git://github.com/EdgeApp/react-native-tcp.git#rn62":
+"react-native-tcp@https://github.com/EdgeApp/react-native-tcp.git#rn62":
   version "4.0.0"
-  resolved "git://github.com/EdgeApp/react-native-tcp.git#7a116aeaea1ebb5541d70d6b0babb380886adcbd"
+  resolved "https://github.com/EdgeApp/react-native-tcp.git#7a116aeaea1ebb5541d70d6b0babb380886adcbd"
   dependencies:
     base64-js "1.3.1"
     buffer "^5.4.3"
