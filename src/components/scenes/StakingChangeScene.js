@@ -26,7 +26,14 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 export const StakingChangeSceneComponent = (props: Props) => {
-  const { theme, change, currencyCode, walletId } = props
+  const {
+    theme,
+    route: {
+      params: { change }
+    },
+    currencyCode,
+    walletId
+  } = props
   const styles = getStyles(theme)
 
   const [amount, setAmount] = useState(0)
