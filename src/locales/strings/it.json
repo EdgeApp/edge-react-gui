@@ -815,6 +815,7 @@
   "wc_smartcontract_max_total": "Totale Massimo",
   "wc_smartcontract_confirmed": "Chiamata Smart Contract confermata",
   "token_agreement_modal_title": "%s necessari per inviare i token",
+  "token_agreement_modal_body": "Sono richiesti degli %1$s per pagare le commissioni di mining quando si inviano dei token. Il portafoglio %1$s associato deve contenere una quantità sufficiente di fondi. \n\nSe non hai %1$s, puoi acquistarli all'interno di Edge, usando le funzionalità Compra o Scambia.",
   "confirm_continue_modal_body": "Conferma che comprendi quello che è scritto qui:",
   "confirm_continue_modal_button_text": "Capisco e accetto i termini",
   "gateway_agreement_modal_title": "Indirizzo Gatway %s rilevato",
