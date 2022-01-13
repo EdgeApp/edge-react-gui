@@ -367,19 +367,6 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={SCAN}
-                navTransparent
-                onEnter={props => {
-                  this.props.requestPermission('camera')
-                  this.props.dispatchEnableScan()
-                }}
-                onExit={this.props.dispatchDisableScan}
-                component={ifLoggedIn(ScanScene)}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
                 key={REQUEST}
                 navTransparent
                 component={ifLoggedIn(Request)}
