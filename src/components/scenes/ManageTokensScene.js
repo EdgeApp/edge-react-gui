@@ -37,7 +37,6 @@ type StateProps = {
   disklet: Disklet,
   wallets: { [walletId: string]: GuiWallet },
   manageTokensPending: boolean,
-  metaTokens: EdgeMetaToken[],
   settingsCustomTokens: CustomTokenInfo[]
 }
 
@@ -292,18 +291,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => {
-    const { walletId } = params
-    const wallets = state.ui.wallets.byId
-    const wallet = wallets[walletId]
-    return {
-      disklet: state.core.disklet,
-      manageTokensPending: state.ui.wallets.manageTokensPending,
-      settingsCustomTokens: state.ui.settings.customTokens,
-      metaTokens: wallet.metaTokens,
-      wallets
-    }
-  },
+  state => ({
+    disklet: state.core.disklet,
+    manageTokensPending: state.ui.wallets.manageTokensPending,
+    settingsCustomTokens: state.ui.settings.customTokens,
+    wallets: state.ui.wallets.byId
+  }),
   dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
       dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
