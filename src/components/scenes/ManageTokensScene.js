@@ -228,6 +228,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     const { route, manageTokensPending, theme, wallets } = this.props
     const { searchValue, enabledList } = this.state
     const { walletId } = route.params
+    if (wallets[walletId] == null) return null
     const { name, currencyCode, metaTokens } = wallets[walletId]
     const styles = getStyles(theme)
 
