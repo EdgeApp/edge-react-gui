@@ -187,11 +187,13 @@ export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
     account: state.core.account,
     fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon ?? '',
     fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-    fromWalletCurrencyName: state.cryptoExchange.fromWallet?.currencyNames[params.swapInfo.request.fromCurrencyCode] ?? '',
+    fromWalletCurrencyName:
+      state.cryptoExchange.fromWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.fromWalletId].currencyInfo.displayName : '',
     pending: state.cryptoExchange.shiftPendingTransaction,
     toCurrencyIcon: state.cryptoExchange.toCurrencyIcon ?? '',
     toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-    toWalletCurrencyName: state.cryptoExchange.toWallet?.currencyNames[params.swapInfo.request.toCurrencyCode] ?? ''
+    toWalletCurrencyName:
+      state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
   }),
   dispatch => ({
     shift(swapInfo, onApprove) {
