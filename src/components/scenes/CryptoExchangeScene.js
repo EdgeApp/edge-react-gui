@@ -34,14 +34,12 @@ type StateProps = {
   fromWalletName: string,
   fromExchangeAmount: string,
   fromWalletPrimaryInfo: GuiCurrencyInfo,
-  fromButtonText: string,
   fromFiatToCrypto: string,
   toWalletId: string,
   toFiatCurrencyCode: string,
   toWalletName: string,
   toExchangeAmount: string,
   toWalletPrimaryInfo: GuiCurrencyInfo,
-  toButtonText: string,
   toFiatToCrypto: string,
 
   // The following props are used to populate the confirmation modal
@@ -86,7 +84,6 @@ const defaultFromWalletInfo = {
   fromFiatCurrencyCode: '',
   fromWalletName: '',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
-  fromButtonText: s.strings.select_src_wallet,
   fromExchangeAmount: '',
   fromFiatToCrypto: '1',
   fromWalletId: '',
@@ -98,7 +95,6 @@ const defaultToWalletInfo = {
   toFiatCurrencyCode: '',
   toWalletName: '',
   toWalletPrimaryInfo: emptyCurrencyInfo,
-  toButtonText: s.strings.select_recv_wallet,
   toExchangeAmount: '',
   toWalletId: '',
   toFiatToCrypto: '1'
@@ -289,7 +285,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.fromWalletId}
-            buttonText={this.props.fromButtonText}
+            buttonText={s.strings.select_src_wallet}
             currencyLogo={this.props.fromCurrencyIcon}
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
@@ -310,7 +306,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.toWalletId}
-            buttonText={this.props.toButtonText}
+            buttonText={s.strings.select_recv_wallet}
             currencyLogo={this.props.toCurrencyIcon}
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
@@ -384,7 +380,6 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         fromFiatCurrencyCode,
         fromCurrencyCode,
         fromWalletPrimaryInfo,
-        fromButtonText: fromWalletName + ':' + fromCurrencyCode,
         fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
         fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromFiatCurrencyCode.replace('iso:', '')),
         hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
@@ -408,7 +403,6 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         toCurrencyCode,
         toFiatCurrencyCode,
         toWalletPrimaryInfo,
-        toButtonText: toWalletName + ':' + toCurrencyCode,
         toExchangeAmount: bns.div(toNativeAmount, multiplier, DECIMAL_PRECISION),
         toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toFiatCurrencyCode.replace('iso:', ''))
       })
