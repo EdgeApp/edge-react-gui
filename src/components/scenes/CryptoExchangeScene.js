@@ -357,7 +357,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     }
     const { fromWalletId, toWalletId } = cryptoExchange
     // Get the values of the 'From' Wallet
-    if (fromWalletId != null) {
+    if (fromWalletId != null && currencyWallets[fromWalletId] != null) {
       const { fromNativeAmount, fromWalletPrimaryInfo } = cryptoExchange
       const {
         displayDenomination: { name: fromCurrencyCode },
@@ -387,7 +387,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     }
 
     // Get the values of the 'To' Wallet
-    if (toWalletId != null) {
+    if (toWalletId != null && currencyWallets[toWalletId] != null) {
       const { toNativeAmount, toWalletPrimaryInfo } = cryptoExchange
       const {
         displayDenomination: { name: toCurrencyCode },
