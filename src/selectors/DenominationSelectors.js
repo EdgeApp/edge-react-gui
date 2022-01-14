@@ -4,7 +4,7 @@ import { type EdgeDenomination } from 'edge-core-js'
 
 import { type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type RootState } from '../types/reduxTypes.js'
-import { type GuiDenomination, type GuiWallet } from '../types/types.js'
+import { type GuiDenomination } from '../types/types.js'
 import { getCurrencyInfo } from '../util/utils.js'
 
 const isoFiatDenominations = {
@@ -102,21 +102,23 @@ export const getDefaultDenomination = (state: RootState, currencyCode: string): 
   return denomination
 }
 
-export const getPrimaryExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
+export const getPrimaryExchangeDenomination = (state: RootState, currencyCode: string, walletId?: string): GuiDenomination => {
   const { customTokens } = state.ui.settings
-  const walletId = specificWallet ? specificWallet.id : state.ui.wallets.selectedWalletId
-  const wallet = state.ui.wallets.byId[walletId]
-  if (wallet.allDenominations[currencyCode]) {
-    for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
-      const denomination = wallet.allDenominations[currencyCode][key]
-      if (denomination.name === currencyCode) return denomination
-    }
-  } else {
-    const customToken = customTokens.find(item => item.currencyCode === currencyCode)
-    if (customToken && customToken.denomination && customToken.denomination[0]) {
-      const denomination = customToken.denominations[0]
-      return denomination
-    }
+  const { currencyWallets } = state.core.account
+  const wallet = currencyWallets[walletId ?? state.ui.wallets.selectedWalletId]
+  const mainDenom = wallet.currencyInfo.denominations.find(denom => denom.name === currencyCode)
+  if (mainDenom != null) return mainDenom
+
+  const metaToken = wallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)
+  const metaTokenDenoms = metaToken?.denominations ?? []
+  const metaTokenDenom = metaTokenDenoms.find(denom => denom.name === currencyCode)
+  if (metaTokenDenom != null) return metaTokenDenom
+
+  const customToken = customTokens.find(item => item.currencyCode === currencyCode)
+  if (customToken && customToken.denomination && customToken.denomination[0]) {
+    const denomination = customToken.denominations[0]
+    return denomination
   }
+
   throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }

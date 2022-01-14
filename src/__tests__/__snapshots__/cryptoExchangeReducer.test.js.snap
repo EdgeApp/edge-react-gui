@@ -11,7 +11,7 @@ Object {
   "fromCurrencyIconDark": null,
   "fromDisplayAmount": "0",
   "fromNativeAmount": "0",
-  "fromWallet": null,
+  "fromWalletId": null,
   "fromWalletPrimaryInfo": Object {
     "displayCurrencyCode": "",
     "displayDenomination": Object {
@@ -33,7 +33,7 @@ Object {
   "toCurrencyIconDark": null,
   "toDisplayAmount": "0",
   "toNativeAmount": "0",
-  "toWallet": null,
+  "toWalletId": null,
   "toWalletPrimaryInfo": Object {
     "displayCurrencyCode": "",
     "displayDenomination": Object {
