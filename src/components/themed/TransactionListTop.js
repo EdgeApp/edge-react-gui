@@ -336,6 +336,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   stakingStatusText: {
     color: theme.secondaryText,
+    maxWidth: '70%',
     fontSize: theme.rem(1)
   },
   stakingButton: {
