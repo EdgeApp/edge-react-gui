@@ -210,7 +210,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
     const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
-    if (minimumPopupModals && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
+    if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
       return <Alert marginRem={[1.5, 1]} title={s.strings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
     }
 
@@ -244,7 +244,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
         excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
+      if (walletId != null && currencyCode != null) {
         return this.props.onSelectWallet(walletId, currencyCode, whichWallet)
       }
     })
