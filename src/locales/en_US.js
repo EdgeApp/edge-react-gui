@@ -708,6 +708,7 @@ const strings = {
   fio_no_bundled_err_msg: 'Your FIO Address ran out of bundled transactions.',
   fio_no_bundled_non_fio_err_msg: 'If you continue, metadata for this transaction will not be recorded.',
   fio_no_bundled_add_err_msg: 'Please add bundled transactions to your FIO Address to continue.',
+  fio_fee_exceeds_supplied_maximum_record_obt_data: 'Failed to record OBT data.',
   fio_no_requests_label: 'No requests',
   fio_reject_request_title: 'FIO Request',
   fio_reject_request_message: 'Reject Request?',
