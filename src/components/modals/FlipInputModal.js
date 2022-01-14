@@ -10,6 +10,7 @@ import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
 import { MINIMUM_DEVICE_HEIGHT } from '../../constants/constantSettings.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -168,7 +169,9 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFocus
           isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
         />
-        <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+        {getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
+          <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+        ) : null}
       </Card>
     )
   }
