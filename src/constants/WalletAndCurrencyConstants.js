@@ -205,7 +205,8 @@ type SpecialCurrencyInfo = {|
   noChangeMiningFee?: boolean,
   noMaxSpend?: boolean,
   keysOnlyMode?: boolean,
-  isPrivateKeySweepable?: boolean
+  isPrivateKeySweepable?: boolean,
+  isStakingSupported?: boolean
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -399,7 +400,8 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
-    }
+    },
+    isStakingSupported: true
   },
   DASH: {
     isPrivateKeySweepable: true
@@ -723,6 +725,13 @@ export const FIAT_CODES_SYMBOLS = {
   YER: '﷼',
   ZAR: 'R',
   ZMW: 'ZK'
+}
+
+export const STAKING_BALANCES = {
+  available: ':AVAILABLE',
+  staked: ':STAKED',
+  locked: ':LOCKED',
+  accrued: ':ACCRUED'
 }
 
 export const FIO_WALLET_TYPE = 'wallet:fio'

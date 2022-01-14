@@ -326,6 +326,7 @@ const strings = {
   staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
   staking_status: '%1s locked (%2s)',
+  staking_available_status: '%1s available (%2s)',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',

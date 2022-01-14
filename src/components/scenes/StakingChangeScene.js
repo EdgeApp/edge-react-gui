@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import s from '../../locales/strings.js'
 import { useState } from '../../types/reactHooks'
+import type { RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { FlipInputModal } from '../modals/FlipInputModal'
 import { Airship } from '../services/AirshipInstance'
@@ -19,9 +20,7 @@ import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
-  change: 'add' | 'remove',
-  currencyCode: string,
-  walletId: string
+  route: RouteProp<'stakingChange'>
 }
 type Props = OwnProps & ThemeProps
 
@@ -29,10 +28,8 @@ export const StakingChangeSceneComponent = (props: Props) => {
   const {
     theme,
     route: {
-      params: { change }
-    },
-    currencyCode,
-    walletId
+      params: { change, currencyCode, walletId }
+    }
   } = props
   const styles = getStyles(theme)
 
