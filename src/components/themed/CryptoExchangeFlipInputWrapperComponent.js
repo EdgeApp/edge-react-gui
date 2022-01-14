@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
+import type { GuiCurrencyInfo } from '../../types/types.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from './Card'
@@ -19,7 +19,7 @@ import { MainButton } from './MainButton.js'
 import { SelectableRow } from './SelectableRow'
 
 type OwnProps = {
-  guiWallet: GuiWallet,
+  walletId: string,
   buttonText: string,
   currencyLogo: string,
   headerText: string,
@@ -40,6 +40,7 @@ type OwnProps = {
 }
 
 type StateProps = {
+  name?: string,
   cryptoAmount?: string
 }
 
@@ -93,9 +94,18 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, children, theme } =
+    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, name, overridePrimaryExchangeAmount, children, theme } =
       this.props
     const styles = getStyles(theme)
+    console.log(
+      'primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, name, overridePrimaryExchangeAmount, ',
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
+      fiatPerCrypto,
+      forceUpdateGuiCounter,
+      name,
+      overridePrimaryExchangeAmount
+    )
 
     if (this.props.isThinking) {
       return (
@@ -107,10 +117,10 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
       )
     }
 
-    if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
+    if (this.props.walletId === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} />
     }
-    const guiWalletName = this.props.guiWallet.name
+    const guiWalletName = name ?? ''
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
 
     if (!this.props.isFocused) {
@@ -228,17 +238,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
+    const { currencyWallets } = state.core.account
+    const wallet = currencyWallets[ownProps.walletId]
+    if (wallet == null) return {}
+
+    const { balances, name } = wallet
+
     const { displayCurrencyCode, displayDenomination } = ownProps.primaryCurrencyInfo
-    const balance = ownProps.guiWallet.nativeBalances[displayCurrencyCode]
+    const balance = balances?.[displayCurrencyCode] ?? '0'
+    const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
+    const cryptoAmount = formatNumber(bns.add(cryptoAmountRaw, '0'))
 
-    if (balance != null) {
-      const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
-      const cryptoAmount = formatNumber(bns.add(cryptoAmountRaw, '0'))
-
-      return { cryptoAmount }
-    }
-
-    return {}
+    return { name: name ?? '', cryptoAmount: cryptoAmount }
   },
   dispatch => ({})
 )(withTheme(CryptoExchangeFlipInputWrapperComponent))

@@ -29,6 +29,7 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
   if (walletId === currentWalletId) {
     const wallet = currencyWallets[walletId]
     wallet.getReceiveAddress().then(receiveAddress => {
+      console.log('32. receiveAddress', receiveAddress)
       dispatch({
         type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
         data: { walletId, receiveAddress }
@@ -40,6 +41,7 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets } = state.core.account
+  console.log('43. currencyWallets', JSON.stringify(currencyWallets))
 
   // Manually un-pause the wallet, if necessary:
   const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
