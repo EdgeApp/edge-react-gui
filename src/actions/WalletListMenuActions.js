@@ -27,10 +27,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
   switch (option) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
-        const state = getState()
-        const wallet = state.ui.wallets.byId[walletId]
         Actions.push(MANAGE_TOKENS, {
-          guiWallet: wallet
+          walletId
         })
       }
     }
