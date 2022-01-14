@@ -30,7 +30,6 @@ import {
   type GuiExchangeRates,
   type GuiMakeSpendInfo,
   type GuiSwapInfo,
-  type GuiWallet,
   type MostRecentWallet,
   type SpendAuthType,
   type SpendingLimits,
@@ -150,7 +149,7 @@ export type Action =
         balanceMessage: string,
         currencyCode: string,
         primaryInfo: GuiCurrencyInfo,
-        wallet: GuiWallet,
+        walletId: string,
         symbolImage: string,
         symbolImageDarkMono: string
       }
