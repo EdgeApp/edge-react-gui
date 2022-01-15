@@ -657,6 +657,7 @@
   "fio_no_bundled_err_msg": "Il tuo indirizzo FIO ha esaurito le transazioni in bundle.",
   "fio_no_bundled_non_fio_err_msg": "Se si continua, i metadati per questa transazione non verranno registrati.",
   "fio_no_bundled_add_err_msg": "Aggiungi transazioni in bundle al tuo indirizzo FIO per continuare.",
+  "fio_fee_exceeds_supplied_maximum_record_obt_data": "Impossibile registrare i dati OBT.",
   "fio_no_requests_label": "Nessuna richiesta",
   "fio_reject_request_title": "Richiesta FIO",
   "fio_reject_request_message": "Rifiutare richiesta?",
