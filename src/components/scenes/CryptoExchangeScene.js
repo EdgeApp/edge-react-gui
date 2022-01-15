@@ -381,7 +381,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         fromCurrencyCode,
         fromWalletPrimaryInfo,
         fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
-        fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromFiatCurrencyCode.replace('iso:', '')),
+        fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromFiatCurrencyCode),
         hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
       })
     }
@@ -404,7 +404,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         toFiatCurrencyCode,
         toWalletPrimaryInfo,
         toExchangeAmount: bns.div(toNativeAmount, multiplier, DECIMAL_PRECISION),
-        toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toFiatCurrencyCode.replace('iso:', ''))
+        toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toFiatCurrencyCode)
       })
     }
 
