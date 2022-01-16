@@ -1,5 +1,53 @@
 # edge-react-gui
 
+## 2.9.0 (2022-01-14)
+
+- Add Avalanche (AVAX) C-Chain support
+- iOS: Add Zcash support
+- iOS: Require iOS 12 or newer
+- Redesign flip input modal
+- XRP: Update reserve balance requirement to 10 XRP
+- FIO: Requests from connected wallets now default from associated FIO name
+- Fix FIO bundle purchase modal logic
+- Remove receiving wallet balance check in Exchange scene
+- Android: Replace jcenter with mavenCentral
+- Various visual fixes and improvements
+- Update translations
+- Fix git URLs for dependencies
+- Upgrade react-native-mail to v6.1.1
+- Upgrade edge-core-js to v0.19.1
+  - changed: Simplify the React Native integration to "just work".
+    - Stop depending on external libraries such as react-native-fast-crypto, react-native-randombytes, or react-native-webview.
+    - Use React Native auto-linking to integrate all native code, HTML, and Javascript needed to run the core.
+    - Accept core plugins via a pluginUris prop to MakeEdgeContext or MakeFakeEdgeWorld.
+    - Allow core debugging by running yarn start in this repo to start a dev server, and then setting the debug prop to true.
+    - Accept an allowDebugging prop on Android to enable WebView debugging in general (useful for debugging plugins).
+  - changed: Require EdgeCurrencyEngine methods to return promises.
+  - changed: Mark methods as readonly in the TypeScript definitions, to match what Flow was already doing.
+  - changed: Write files atomically on Android, so out-of-disk and other errors do not lead to data corruption.
+  - fixed: Upgrade edge-sync-client, so info server errors are no longer fatal.
+  - fixed: Do not destroy the core WebView when opening Safari links on iOS.
+  - fixed: Allow logins with an appId to approve or reject vouchers.
+  - added: Allow maximum swaps by passing "max" to EdgeSwapRequest.quoteFor.
+  - added: Add an EdgeCurrencyEngine.getMaxSpendable method for native max-spend calculations.
+- Upgrade edge-currency-accountbased to v0.11.7
+  - ZEC: Upgrade to react-native-zcash v0.2.0
+  - XRP: Migrate from ripple-lib to xrpl
+  - ZEC: Prevent spending until engine is fully synced
+  - Fix git URLs for dependencies
+- Upgrade edge-currency-bitcoin to v4.9.20
+  - Support mixed case Bridge Address prefix
+- Upgrade edge-currency-monero to v0.3.4
+  - Update dependencies to use 'https://' instead of 'git://'
+- Upgrade edge-exchange-plugins to v0.12.7
+  - ChangeNow: Upgrade to v2 API
+  - Godex: Restrict AVAX trading to the AVAXC network
+  - Godex: Re-enable FTM trading
+  - Prevent AVAX token trading on partners without mainnet identification
+  - Coingecko: Add AVAX
+- Upgrade edge-login-ui-rn to v0.9.29
+  - Update dependencies to use 'https://' instead of 'git://'
+
 ## 2.8.1 (2022-01-07)
 
 - MATIC: Fix syncing issue
