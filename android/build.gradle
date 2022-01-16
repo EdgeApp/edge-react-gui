@@ -11,7 +11,7 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.0")
@@ -36,7 +36,16 @@ allprojects {
         }
 
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() {
+            content {
+                includeGroup("com.facebook.fbjni")
+                includeGroup("com.facebook.flipper")
+                includeGroup("com.facebook.fresco")
+                includeGroup("com.facebook.yoga")
+                includeGroup("com.eightbitlab")
+            }
+    }
         maven { url 'https://www.jitpack.io' }
     }
 }

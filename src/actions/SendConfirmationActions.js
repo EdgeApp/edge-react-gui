@@ -12,7 +12,7 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EXCHANGE_SCENE, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/SceneKeys.js'
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
+import { addToFioAddressCache, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, recordSend } from '../modules/FioAddress/util'
 import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
@@ -306,9 +306,9 @@ export const signBroadcastAndSave =
 
       // fio
       if (fioSender != null) {
-        const { fioAddress, fioWallet, memo, skipRecord } = fioSender
-        if (payeeFioAddress && fioAddress && fioWallet) {
-          if (guiMakeSpendInfo.fioPendingRequest) {
+        const { fioAddress, fioWallet, memo, skipRecord = false } = fioSender
+        if (payeeFioAddress != null && fioAddress != null && fioWallet != null) {
+          if (guiMakeSpendInfo.fioPendingRequest != null) {
             const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
             try {
               await recordSend(fioWallet, fioAddress, {
@@ -323,20 +323,19 @@ export const signBroadcastAndSave =
                 memo
               })
             } catch (e) {
-              showError(e)
+              const message = e?.message ?? ''
+              message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(s.strings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
             }
-          } else if ((guiMakeSpendInfo.publicAddress || publicAddress) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
+          } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
             const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
-            const amount = guiMakeSpendInfo.nativeAmount || '0'
-            let chainCode
-            if (edgeSignedTransaction.wallet && edgeSignedTransaction.wallet.currencyInfo) {
-              chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
-            }
+            const amount = guiMakeSpendInfo.nativeAmount ?? '0'
+            const chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
+
             try {
               recordSend(fioWallet, fioAddress, {
                 payeeFioAddress,
                 payerPublicAddress,
-                payeePublicAddress: guiMakeSpendInfo.publicAddress || publicAddress || '',
+                payeePublicAddress: guiMakeSpendInfo.publicAddress ?? publicAddress ?? '',
                 amount: amount && bns.div(amount, exchangeDenomination.multiplier, DECIMAL_PRECISION),
                 currencyCode: edgeSignedTransaction.currencyCode,
                 chainCode: chainCode || guiWallet.currencyCode,

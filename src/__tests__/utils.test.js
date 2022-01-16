@@ -282,7 +282,6 @@ describe('isCompleteExchangeData', function () {
       const incompleteExchangeData = {
         primaryDisplayAmount: undefined,
         primaryDisplayName: 'BTC',
-        secondaryDisplaySymbol: '$',
         secondaryDisplayAmount: '4000',
         secondaryCurrencyCode: 'USD'
       }
@@ -298,23 +297,6 @@ describe('isCompleteExchangeData', function () {
       const incompleteExchangeData = {
         primaryDisplayAmount: '1',
         primaryDisplayName: undefined,
-        secondaryDisplaySymbol: '$',
-        secondaryDisplayAmount: '4000',
-        secondaryCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowExpectedError
-      const actual = isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('secondaryDisplaySymbol: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        primaryDisplayAmount: '1',
-        primaryDisplayName: 'BTC',
-        secondaryDisplaySymbol: undefined,
         secondaryDisplayAmount: '4000',
         secondaryCurrencyCode: 'USD'
       }
@@ -330,7 +312,6 @@ describe('isCompleteExchangeData', function () {
       const incompleteExchangeData = {
         primaryDisplayAmount: '1',
         primaryDisplayName: 'BTC',
-        secondaryDisplaySymbol: '$',
         secondaryDisplayAmount: undefined,
         secondaryCurrencyCode: 'USD'
       }
@@ -346,7 +327,6 @@ describe('isCompleteExchangeData', function () {
       const incompleteExchangeData = {
         primaryDisplayAmount: '1',
         primaryDisplayName: 'BTC',
-        secondaryDisplaySymbol: '$',
         secondaryDisplayAmount: '4000',
         secondaryCurrencyCode: undefined
       }
@@ -361,7 +341,6 @@ describe('isCompleteExchangeData', function () {
     const completeExchangeData = {
       primaryDisplayAmount: '1',
       primaryDisplayName: 'BTC',
-      secondaryDisplaySymbol: '$',
       secondaryDisplayAmount: '4000',
       secondaryCurrencyCode: 'USD'
     }

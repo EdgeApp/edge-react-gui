@@ -181,7 +181,6 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         )}
         {showRenew && (
           <FioActionSubmit
-            title={s.strings.title_fio_renew_domain}
             onSubmit={this.renewDomain}
             onSuccess={this.afterSuccess}
             cancelOperation={this.cancelOperation}

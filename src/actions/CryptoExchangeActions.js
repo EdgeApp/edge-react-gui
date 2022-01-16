@@ -33,7 +33,7 @@ import {
 } from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
@@ -49,9 +49,9 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
   Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   const state = getState()
-  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
+  const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
   try {
-    if (fromWallet == null || toWallet == null) {
+    if (fromWalletId == null || toWalletId == null) {
       throw new Error('No wallet selected') // Should never happen
     }
     if (fromCurrencyCode == null || toCurrencyCode == null) {
@@ -59,8 +59,8 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
     }
 
     const { currencyWallets } = state.core.account
-    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
-    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWallet.id]
+    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
+    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
     const request: EdgeSwapRequest = {
       fromCurrencyCode,
       fromWallet: fromCoreWallet,
@@ -102,8 +102,8 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })
-          if (fromWallet != null) {
-            dispatch(selectWalletForExchange(fromWallet.id, currencyCode, 'to'))
+          if (fromWalletId != null) {
+            dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
           }
           break
       }
@@ -131,12 +131,12 @@ export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => voi
 
 export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const fromWallet = state.cryptoExchange.fromWallet
-  if (!fromWallet) {
+  const { fromWalletId } = state.cryptoExchange
+  if (fromWalletId == null) {
     return
   }
   const { currencyWallets } = state.core.account
-  const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
+  const wallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   if (getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
@@ -380,11 +380,11 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction: 'from' | 'to') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const wallet = state.ui.wallets.byId[walletId]
-  const cc = currencyCode || wallet.currencyCode
-
+  const chainCc = state.core.account.currencyWallets[walletId].currencyInfo.currencyCode
+  const cc = currencyCode || chainCc
+  const balanceMessage = await getBalanceMessage(state, walletId, cc)
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, cc)
-  const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, cc, wallet)
+  const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, cc, walletId)
   const primaryInfo: GuiCurrencyInfo = {
     displayCurrencyCode: cc,
     exchangeCurrencyCode: cc,
@@ -393,11 +393,11 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
   }
 
   const data = {
-    wallet,
-    balanceMessage: await getBalanceMessage(state, wallet, cc),
+    walletId,
+    balanceMessage,
     currencyCode: cc,
     primaryInfo,
-    ...getCurrencyIcon(wallet.currencyCode, cc)
+    ...getCurrencyIcon(chainCc, cc)
   }
 
   if (direction === 'from') {
@@ -424,11 +424,13 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   }
 }
 
-async function getBalanceMessage(state: RootState, wallet: GuiWallet, currencyCode: string) {
+async function getBalanceMessage(state: RootState, walletId: string, currencyCode: string) {
   const { account } = state.core
-  const currencyConverter = account.rateCache
-  const balanceInCrypto = wallet.nativeBalances[currencyCode]
-  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const { currencyWallets, rateCache } = account
+  const currencyConverter = rateCache
+  const wallet = currencyWallets[walletId]
+  const balanceInCrypto = wallet.balances[currencyCode] ?? '0'
+  const isoFiatCurrencyCode = wallet.fiatCurrencyCode
   const exchangeDenomination = getExchangeDenomination(state, currencyCode)
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = await currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, Number(balanceInCryptoDisplay))
@@ -439,7 +441,7 @@ async function getBalanceMessage(state: RootState, wallet: GuiWallet, currencyCo
   const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
   const balanceInFiatString = formatNumber(balanceInFiat || 0, { toFixed: 2 })
 
-  const fiatCurrencyCode = getDenomFromIsoCode(wallet.fiatCurrencyCode)
+  const fiatCurrencyCode = getDenomFromIsoCode(isoFiatCurrencyCode)
   const fiatDisplayCode = fiatCurrencyCode.symbol
 
   if (fiatDisplayCode == null) return ''

@@ -52,6 +52,7 @@
 		1FA75A7FCCEA4AACBBC97934 /* font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = font.ttf; path = ../src/assets/fonts/font.ttf; sourceTree = "<group>"; };
 		27D9F41192F8419DA0531DFF /* SourceSansPro-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-BoldItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-BoldItalic.ttf"; sourceTree = "<group>"; };
 		3174EFC33129444580156447 /* SourceSansPro-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-BlackItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-BlackItalic.ttf"; sourceTree = "<group>"; };
+		3421F142274728BC0025D121 /* libZcashLightClientKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libZcashLightClientKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-ExtraLightItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		3D1368BC21DD76BB00DC8CE4 /* edge-core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "edge-core"; path = "../android/app/src/main/assets/edge-core"; sourceTree = "<group>"; };
 		3D2A4BE222934B0000E1EC61 /* blank.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = blank.html; path = ../android/app/src/main/assets/blank.html; sourceTree = "<group>"; };
@@ -157,7 +158,7 @@
 		82DAC2543B5A97898904086F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3D3A45132710DEF40036CF4B /* LinkPresentation.framework */,
+				3421F142274728BC0025D121 /* libZcashLightClientKit.a */,
 				DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */,
 			);
 			name = Frameworks;
@@ -364,6 +365,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/edge-core-js/edge-core-js.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -384,6 +386,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/edge-core-js.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -468,7 +471,7 @@
 					"${PODS_ROOT}/Headers/Private",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
@@ -509,7 +512,7 @@
 					"${PODS_ROOT}/Headers/Private",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (

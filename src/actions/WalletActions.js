@@ -74,12 +74,18 @@ export const selectWallet = (walletId: string, currencyCode: string, alwaysActiv
 }
 
 // check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const guiWallet = state.ui.wallets.byId[walletId]
-  const { publicAddress } = guiWallet.receiveAddress
+  const wallet = state.core.account.currencyWallets[walletId]
+  const {
+    fiatCurrencyCode,
+    name,
+    currencyInfo: { currencyCode }
+  } = wallet
+  const walletName = name ?? ''
+  const { publicAddress } = await wallet.getReceiveAddress()
 
-  if (publicAddress) {
+  if (publicAddress !== '') {
     // already activated
     dispatch({
       type: 'UI/WALLETS/SELECT_WALLET',
@@ -92,7 +98,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: D
     // not activated yet
     // find fiat and crypto (EOSIO) types and populate scene props
     const supportedFiats = getSupportedFiats()
-    const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
+    const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === fiatCurrencyCode.replace('iso:', ''))
     const selectedFiat = supportedFiats[fiatTypeIndex]
     const currencyInfos = getCurrencyInfos(state.core.account)
     const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
@@ -103,12 +109,12 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: D
       Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
         selectedFiat: selectedFiat,
         selectedWalletType,
-        accountName: guiWallet.name,
+        accountName: walletName,
         existingWalletId: walletId
       })
     } else {
       const createWalletAccountSetupSceneProps = {
-        accountHandle: guiWallet.name,
+        accountHandle: '',
         selectedWalletType,
         selectedFiat,
         isReactivation: true,
@@ -121,7 +127,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: D
       <ButtonsModal
         bridge={bridge}
         title={s.strings.create_wallet_account_unfinished_activation_title}
-        message={sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode)}
+        message={sprintf(s.strings.create_wallet_account_unfinished_activation_message, currencyCode)}
         buttons={{ ok: { label: s.strings.string_ok } }}
       />
     ))

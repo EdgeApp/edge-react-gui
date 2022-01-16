@@ -300,11 +300,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!exchangeData.primaryDisplayAmount &&
-  !!exchangeData.primaryDisplayName &&
-  !!exchangeData.secondaryDisplayAmount &&
-  !!exchangeData.secondaryDisplaySymbol &&
-  !!exchangeData.secondaryCurrencyCode
+  !!exchangeData.primaryDisplayAmount && !!exchangeData.primaryDisplayName && !!exchangeData.secondaryDisplayAmount && !!exchangeData.secondaryCurrencyCode
 
 export const unspacedLowercase = (input: string) => {
   const newInput = input.replace(' ', '').toLowerCase()
@@ -769,20 +765,14 @@ export const convertTransactionFeeToDisplayFee = (
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   settings: any
-): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string } => {
+): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string, nativeCryptoAmount: string } => {
   const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
   const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
   const networkFee = transaction ? transaction.networkFee : undefined
   const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : undefined
 
-  if (!networkFee && !parentNetworkFee) {
-    // if no fee
-    return {
-      fiatAmount: '0',
-      cryptoAmount: '0'
-    }
-  } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
+  if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
     const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
     const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
@@ -796,9 +786,12 @@ export const convertTransactionFeeToDisplayFee = (
       fiatAmount: fiatAmount.amount,
       fiatStyle: fiatAmount.style,
       cryptoSymbol: cryptoFeeSymbol,
-      cryptoAmount: cryptoAmount
+      cryptoAmount: cryptoAmount,
+      nativeCryptoAmount: parentNetworkFee
     }
-  } else if (networkFee && bns.gt(networkFee, '0')) {
+  }
+
+  if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
     const primaryDisplayDenomination = getDenomination(currencyCode, settings, 'display')
     const primaryExchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
@@ -812,12 +805,15 @@ export const convertTransactionFeeToDisplayFee = (
       fiatAmount: fiatAmount.amount,
       fiatStyle: fiatAmount.style,
       cryptoSymbol: cryptoFeeSymbol,
-      cryptoAmount: cryptoAmount
+      cryptoAmount: cryptoAmount,
+      nativeCryptoAmount: networkFee
     }
   }
+
   return {
     fiatAmount: '0',
-    cryptoAmount: '0'
+    cryptoAmount: '0',
+    nativeCryptoAmount: '0'
   }
 }
 // End of convert Transaction Fee to Display Fee

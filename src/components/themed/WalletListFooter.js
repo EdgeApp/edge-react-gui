@@ -64,7 +64,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId != null && currencyCode != null) {
           onSelectWallet(walletId, currencyCode)
-          Actions.push(MANAGE_TOKENS, { guiWallet: this.props.wallets[walletId] })
+          Actions.push(MANAGE_TOKENS, { walletId })
         }
       })
       .catch(error => {

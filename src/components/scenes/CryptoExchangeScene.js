@@ -12,7 +12,7 @@ import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/W
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
+import { type GuiCurrencyInfo, emptyCurrencyInfo } from '../../types/types.js'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
@@ -28,15 +28,18 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 type StateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
-  fromWallet: GuiWallet,
+  fromWalletId: string,
+  fromWalletBalances: { [code: string]: string },
+  fromFiatCurrencyCode: string,
+  fromWalletName: string,
   fromExchangeAmount: string,
   fromWalletPrimaryInfo: GuiCurrencyInfo,
-  fromButtonText: string,
   fromFiatToCrypto: string,
-  toWallet: GuiWallet,
+  toWalletId: string,
+  toFiatCurrencyCode: string,
+  toWalletName: string,
   toExchangeAmount: string,
   toWalletPrimaryInfo: GuiCurrencyInfo,
-  toButtonText: string,
   toFiatToCrypto: string,
 
   // The following props are used to populate the confirmation modal
@@ -58,7 +61,7 @@ type StateProps = {
   genericError: string | null
 }
 type DispatchProps = {
-  onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
+  onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>,
   getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void,
   exchangeMax: () => Promise<void>
 }
@@ -77,20 +80,23 @@ const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => 
 
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
+  fromWalletBalances: {},
+  fromFiatCurrencyCode: '',
+  fromWalletName: '',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
-  fromButtonText: s.strings.select_src_wallet,
   fromExchangeAmount: '',
   fromFiatToCrypto: '1',
-  fromWallet: emptyGuiWallet,
+  fromWalletId: '',
   hasMaxSpend: false
 }
 
 const defaultToWalletInfo = {
   toCurrencyCode: '',
+  toFiatCurrencyCode: '',
+  toWalletName: '',
   toWalletPrimaryInfo: emptyCurrencyInfo,
-  toButtonText: s.strings.select_recv_wallet,
   toExchangeAmount: '',
-  toWallet: emptyGuiWallet,
+  toWalletId: '',
   toFiatToCrypto: '1'
 }
 
@@ -147,16 +153,11 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   checkExceedsAmount(): boolean {
-    const { fromWallet, fromWalletPrimaryInfo, toWallet, toWalletPrimaryInfo } = this.props
-    const { fromAmountNative, toAmountNative, whichWalletFocus } = this.state
-    const fromNativeBalance = fromWallet.nativeBalances[fromWalletPrimaryInfo.exchangeDenomination.name] ?? '0'
-    const toNativeBalance = toWallet.nativeBalances[toWalletPrimaryInfo.exchangeDenomination.name] ?? '0'
+    const { fromCurrencyCode, fromWalletBalances } = this.props
+    const { fromAmountNative, whichWalletFocus } = this.state
+    const fromNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
-    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0')
-      ? bns.gt(fromAmountNative, fromNativeBalance)
-      : whichWalletFocus === 'to' && bns.gte(toNativeBalance, '0')
-      ? bns.gt(toAmountNative, toNativeBalance)
-      : false
+    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0') && bns.gt(fromAmountNative, fromNativeBalance)
   }
 
   launchFromWalletSelector = () => {
@@ -200,16 +201,12 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   renderAlert = () => {
-    const {
-      fromWallet: { primaryNativeBalance },
-      fromCurrencyCode,
-      insufficient,
-      genericError
-    } = this.props
+    const { fromWalletBalances, fromCurrencyCode, insufficient, genericError } = this.props
 
     const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
+    const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
-    if (minimumPopupModals && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
+    if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
       return <Alert marginRem={[1.5, 1]} title={s.strings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
     }
 
@@ -243,42 +240,43 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
         excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode, whichWallet)
+      if (walletId != null && currencyCode != null) {
+        return this.props.onSelectWallet(walletId, currencyCode, whichWallet)
       }
     })
     return null
   }
 
   render() {
-    const styles = getStyles(this.props.theme)
+    const { fromFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toWalletName, theme } = this.props
+    const styles = getStyles(theme)
     let fromSecondaryInfo: GuiCurrencyInfo
-    if (this.props.fromWallet) {
+    if (fromFiatCurrencyCode !== '') {
       fromSecondaryInfo = {
-        displayCurrencyCode: this.props.fromWallet.fiatCurrencyCode,
-        exchangeCurrencyCode: this.props.fromWallet.isoFiatCurrencyCode,
-        displayDenomination: getDenomFromIsoCode(this.props.fromWallet.fiatCurrencyCode),
-        exchangeDenomination: getDenomFromIsoCode(this.props.fromWallet.fiatCurrencyCode)
+        displayCurrencyCode: fromFiatCurrencyCode.replace('iso:', ''),
+        exchangeCurrencyCode: fromFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(fromFiatCurrencyCode.replace('iso:', '')),
+        exchangeDenomination: getDenomFromIsoCode(fromFiatCurrencyCode.replace('iso:', ''))
       }
     } else {
       fromSecondaryInfo = emptyCurrencyInfo
     }
 
     let toSecondaryInfo: GuiCurrencyInfo
-    if (this.props.toWallet) {
+    if (toFiatCurrencyCode !== '') {
       toSecondaryInfo = {
-        displayCurrencyCode: this.props.toWallet.fiatCurrencyCode,
-        exchangeCurrencyCode: this.props.toWallet.isoFiatCurrencyCode,
-        displayDenomination: getDenomFromIsoCode(this.props.toWallet.fiatCurrencyCode),
-        exchangeDenomination: getDenomFromIsoCode(this.props.toWallet.fiatCurrencyCode)
+        displayCurrencyCode: toFiatCurrencyCode.replace('iso:', ''),
+        exchangeCurrencyCode: toFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(toFiatCurrencyCode.replace('iso:', '')),
+        exchangeDenomination: getDenomFromIsoCode(toFiatCurrencyCode.replace('iso:', ''))
       }
     } else {
       toSecondaryInfo = emptyCurrencyInfo
     }
     const isFromFocused = this.state.whichWalletFocus === 'from'
     const isToFocused = this.state.whichWalletFocus === 'to'
-    const fromHeaderText = sprintf(s.strings.exchange_from_wallet, this.props.fromWallet.name)
-    const toHeaderText = sprintf(s.strings.exchange_to_wallet, this.props.toWallet.name)
+    const fromHeaderText = sprintf(s.strings.exchange_from_wallet, fromWalletName)
+    const toHeaderText = sprintf(s.strings.exchange_to_wallet, toWalletName)
 
     return (
       <SceneWrapper background="theme">
@@ -286,8 +284,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
-            guiWallet={this.props.fromWallet}
-            buttonText={this.props.fromButtonText}
+            walletId={this.props.fromWalletId}
+            buttonText={s.strings.select_src_wallet}
             currencyLogo={this.props.fromCurrencyIcon}
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
@@ -307,8 +305,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
           </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
-            guiWallet={this.props.toWallet}
-            buttonText={this.props.toButtonText}
+            walletId={this.props.toWalletId}
+            buttonText={s.strings.select_recv_wallet}
             currencyLogo={this.props.toCurrencyIcon}
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
@@ -350,51 +348,63 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
   state => {
+    const { currencyWallets } = state.core.account
     const { cryptoExchange } = state
     // Clone the default Info
     const result = {
       ...defaultFromWalletInfo,
       ...defaultToWalletInfo
     }
-    const { fromWallet, toWallet } = cryptoExchange
+    const { fromWalletId, toWalletId } = cryptoExchange
     // Get the values of the 'From' Wallet
-    if (fromWallet) {
+    if (fromWalletId != null && currencyWallets[fromWalletId] != null) {
       const { fromNativeAmount, fromWalletPrimaryInfo } = cryptoExchange
       const {
         displayDenomination: { name: fromCurrencyCode },
         exchangeDenomination: { multiplier },
         exchangeCurrencyCode
       } = fromWalletPrimaryInfo
-      const { name: fromWalletName, isoFiatCurrencyCode, currencyCode } = fromWallet
+
+      const {
+        name: fromName,
+        fiatCurrencyCode: fromFiatCurrencyCode,
+        currencyInfo: { currencyCode },
+        balances: fromWalletBalances
+      } = currencyWallets[fromWalletId]
+      const fromWalletName = fromName ?? ''
 
       Object.assign(result, {
-        fromWallet,
+        fromWalletId,
+        fromWalletName,
+        fromWalletBalances,
+        fromFiatCurrencyCode,
         fromCurrencyCode,
         fromWalletPrimaryInfo,
-        fromButtonText: fromWalletName + ':' + fromCurrencyCode,
         fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
-        fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, isoFiatCurrencyCode),
+        fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromFiatCurrencyCode),
         hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
       })
     }
 
     // Get the values of the 'To' Wallet
-    if (toWallet) {
+    if (toWalletId != null && currencyWallets[toWalletId] != null) {
       const { toNativeAmount, toWalletPrimaryInfo } = cryptoExchange
       const {
         displayDenomination: { name: toCurrencyCode },
         exchangeDenomination: { multiplier },
         exchangeCurrencyCode
       } = toWalletPrimaryInfo
-      const { name: toWalletName, isoFiatCurrencyCode } = toWallet
+      const { name: toName, fiatCurrencyCode: toFiatCurrencyCode } = currencyWallets[toWalletId]
+      const toWalletName = toName ?? ''
 
       Object.assign(result, {
-        toWallet,
+        toWalletId,
+        toWalletName,
         toCurrencyCode,
+        toFiatCurrencyCode,
         toWalletPrimaryInfo,
-        toButtonText: toWalletName + ':' + toCurrencyCode,
         toExchangeAmount: bns.div(toNativeAmount, multiplier, DECIMAL_PRECISION),
-        toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, isoFiatCurrencyCode)
+        toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toFiatCurrencyCode)
       })
     }
 
@@ -413,8 +423,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     getQuoteForTransaction(fromWalletNativeAmount, onApprove) {
       dispatch(getQuoteForTransaction(fromWalletNativeAmount, onApprove))
     },
-    onSelectWallet(walletId, currencyCode, direction) {
-      dispatch(selectWalletForExchange(walletId, currencyCode, direction))
+    async onSelectWallet(walletId, currencyCode, direction) {
+      await dispatch(selectWalletForExchange(walletId, currencyCode, direction))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
     },
     async exchangeMax() {

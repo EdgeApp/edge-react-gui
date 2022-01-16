@@ -15,7 +15,6 @@ import {
   type GuiFiatType,
   type GuiMakeSpendInfo,
   type GuiSwapInfo,
-  type GuiWallet,
   type WcConnectionInfo
 } from './types.js'
 /**
@@ -167,7 +166,7 @@ export type ParamList = {
     selectedFioSentRequest: FioRequest
   |},
   manageTokens: {|
-    guiWallet: GuiWallet
+    walletId: string
   |},
   notificationSettings: void,
   otpRepair: {|

@@ -1,14 +1,26 @@
 PODS:
+  - _NIODataStructures (2.32.3)
   - boost-for-react-native (1.63.0)
   - BugsnagReactNative (7.3.5):
     - React
   - BVLinearGradient (2.5.6):
     - React
+  - CGRPCZlib (1.0.0)
+  - CNIOAtomics (2.32.3)
+  - CNIOBoringSSL (2.15.1)
+  - CNIOBoringSSLShims (2.15.1):
+    - CNIOBoringSSL (= 2.15.1)
+  - CNIODarwin (2.32.3)
+  - CNIOHTTPParser (2.32.3)
+  - CNIOLinux (2.32.3)
+  - CNIOWindows (2.32.3)
   - CocoaAsyncSocket (7.6.5)
   - disklet (0.4.5):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.9.28):
+  - edge-core-js (0.19.1):
+    - React
+  - edge-login-ui-rn (0.9.29):
     - React
   - FBLazyVector (0.64.2)
   - FBReactNativeSpec (0.64.2):
@@ -139,6 +151,15 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.3.1):
     - GoogleUtilities/Logger
+  - gRPC-Swift (1.0.0):
+    - CGRPCZlib (= 1.0.0)
+    - Logging (< 2.0.0, >= 1.4.0)
+    - SwiftNIO (< 3.0.0, >= 2.22.0)
+    - SwiftNIOExtras (< 2.0.0, >= 1.4.0)
+    - SwiftNIOHTTP2 (< 2.0.0, >= 1.16.1)
+    - SwiftNIOSSL (< 3.0.0, >= 2.8.0)
+    - SwiftNIOTransportServices (< 2.0.0, >= 1.6.0)
+    - SwiftProtobuf (< 2.0.0, >= 1.9.0)
   - hermes-engine (0.7.2)
   - libevent (2.1.12)
   - libwebp (1.2.0):
@@ -150,6 +171,7 @@ PODS:
   - libwebp/mux (1.2.0):
     - libwebp/demux
   - libwebp/webp (1.2.0)
+  - Logging (1.4.0)
   - nanopb (2.30907.0):
     - nanopb/decode (= 2.30907.0)
     - nanopb/encode (= 2.30907.0)
@@ -396,22 +418,21 @@ PODS:
     - React-Core
   - react-native-image-picker (4.0.6):
     - React-Core
-  - react-native-mail (6.0.0):
+  - react-native-mail (6.1.1):
     - React-Core
   - react-native-mymonero-core (0.1.0):
     - React
   - react-native-netinfo (5.9.10):
     - React-Core
-  - react-native-randombytes (3.5.3):
-    - React
   - react-native-safari-view (1.0.0):
     - React
   - react-native-smart-splash-screen (2.3.5):
     - React
   - react-native-webview (10.2.3):
     - React
-  - react-native-zcash (0.1.0):
+  - react-native-zcash (0.2.0):
     - React
+    - ZcashLightClientKit (= 0.12.0-beta.5)
   - React-perflogger (0.64.2)
   - React-RCTActionSheet (0.64.2):
     - React-Core/RCTActionSheetHeaders (= 0.64.2)
@@ -564,18 +585,90 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
+  - SQLite.swift (0.12.2):
+    - SQLite.swift/standard (= 0.12.2)
+  - SQLite.swift/standard (0.12.2)
+  - SwiftNIO (2.32.3):
+    - SwiftNIOCore (= 2.32.3)
+    - SwiftNIOEmbedded (= 2.32.3)
+    - SwiftNIOPosix (= 2.32.3)
+  - SwiftNIOConcurrencyHelpers (2.32.3):
+    - CNIOAtomics (= 2.32.3)
+  - SwiftNIOCore (2.32.3):
+    - CNIOLinux (= 2.32.3)
+    - SwiftNIOConcurrencyHelpers (= 2.32.3)
+  - SwiftNIOEmbedded (2.32.3):
+    - _NIODataStructures (= 2.32.3)
+    - SwiftNIOCore (= 2.32.3)
+  - SwiftNIOExtras (1.10.2):
+    - SwiftNIO (< 3, >= 2.32.0)
+  - SwiftNIOFoundationCompat (2.32.3):
+    - SwiftNIO (= 2.32.3)
+    - SwiftNIOCore (= 2.32.3)
+  - SwiftNIOHPACK (1.18.3):
+    - SwiftNIO (< 3, >= 2.32.0)
+    - SwiftNIOConcurrencyHelpers (< 3, >= 2.32.0)
+    - SwiftNIOCore (< 3, >= 2.32.0)
+    - SwiftNIOHTTP1 (< 3, >= 2.32.0)
+  - SwiftNIOHTTP1 (2.32.3):
+    - CNIOHTTPParser (= 2.32.3)
+    - SwiftNIO (= 2.32.3)
+    - SwiftNIOConcurrencyHelpers (= 2.32.3)
+    - SwiftNIOCore (= 2.32.3)
+  - SwiftNIOHTTP2 (1.18.3):
+    - SwiftNIO (< 3, >= 2.32.0)
+    - SwiftNIOConcurrencyHelpers (< 3, >= 2.32.0)
+    - SwiftNIOCore (< 3, >= 2.32.0)
+    - SwiftNIOHPACK (= 1.18.3)
+    - SwiftNIOHTTP1 (< 3, >= 2.32.0)
+    - SwiftNIOTLS (< 3, >= 2.32.0)
+  - SwiftNIOPosix (2.32.3):
+    - _NIODataStructures (= 2.32.3)
+    - CNIODarwin (= 2.32.3)
+    - CNIOLinux (= 2.32.3)
+    - CNIOWindows (= 2.32.3)
+    - SwiftNIOConcurrencyHelpers (= 2.32.3)
+    - SwiftNIOCore (= 2.32.3)
+  - SwiftNIOSSL (2.15.1):
+    - CNIOBoringSSL (= 2.15.1)
+    - CNIOBoringSSLShims (= 2.15.1)
+    - SwiftNIO (< 3, >= 2.32.0)
+    - SwiftNIOConcurrencyHelpers (< 3, >= 2.32.0)
+    - SwiftNIOCore (< 3, >= 2.32.0)
+    - SwiftNIOTLS (< 3, >= 2.32.0)
+  - SwiftNIOTLS (2.32.3):
+    - SwiftNIO (= 2.32.3)
+    - SwiftNIOCore (= 2.32.3)
+  - SwiftNIOTransportServices (1.11.3):
+    - SwiftNIO (< 3, >= 2.32.0)
+    - SwiftNIOConcurrencyHelpers (< 3, >= 2.32.0)
+    - SwiftNIOFoundationCompat (< 3, >= 2.32.0)
+    - SwiftNIOTLS (< 3, >= 2.32.0)
+  - SwiftProtobuf (1.18.0)
   - TcpSockets (4.0.0):
     - CocoaAsyncSocket
     - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
+  - ZcashLightClientKit (0.12.0-beta.5):
+    - gRPC-Swift (= 1.0.0)
+    - SQLite.swift (~> 0.12.2)
 
 DEPENDENCIES:
   - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
+  - CGRPCZlib
+  - CNIOAtomics
+  - CNIOBoringSSL
+  - CNIOBoringSSLShims
+  - CNIODarwin
+  - CNIOHTTPParser
+  - CNIOLinux
+  - CNIOWindows
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -630,7 +723,6 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
-  - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -673,7 +765,16 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - _NIODataStructures
     - boost-for-react-native
+    - CGRPCZlib
+    - CNIOAtomics
+    - CNIOBoringSSL
+    - CNIOBoringSSLShims
+    - CNIODarwin
+    - CNIOHTTPParser
+    - CNIOLinux
+    - CNIOWindows
     - CocoaAsyncSocket
     - Firebase
     - FirebaseAnalytics
@@ -692,15 +793,33 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - gRPC-Swift
     - hermes-engine
     - libevent
     - libwebp
+    - Logging
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
+    - SQLite.swift
+    - SwiftNIO
+    - SwiftNIOConcurrencyHelpers
+    - SwiftNIOCore
+    - SwiftNIOEmbedded
+    - SwiftNIOExtras
+    - SwiftNIOFoundationCompat
+    - SwiftNIOHPACK
+    - SwiftNIOHTTP1
+    - SwiftNIOHTTP2
+    - SwiftNIOPosix
+    - SwiftNIOSSL
+    - SwiftNIOTLS
+    - SwiftNIOTransportServices
+    - SwiftProtobuf
     - YogaKit
+    - ZcashLightClientKit
 
 EXTERNAL SOURCES:
   BugsnagReactNative:
@@ -711,6 +830,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/disklet"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  edge-core-js:
+    :path: "../node_modules/edge-core-js"
   edge-login-ui-rn:
     :path: "../node_modules/edge-login-ui-rn"
   FBLazyVector:
@@ -771,8 +892,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
-  react-native-randombytes:
-    :path: "../node_modules/react-native-randombytes"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
@@ -853,13 +972,23 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BugsnagReactNative: fc7d6fb2127e53a8bfc79130b58263da363bb94b
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
+  CGRPCZlib: b0c9d704a12fa667f1824ffff20688f191945989
+  CNIOAtomics: 4dde57e1838a29a9b23ef91617505f34751cdbe5
+  CNIOBoringSSL: c99129423da079a9eb74bcfc7cfec41a6775cf94
+  CNIOBoringSSLShims: 902ae35fea0b6be5eefb4fdce906751886cfa46f
+  CNIODarwin: 0489511f8486443af71ff986ccd5abbc680ae713
+  CNIOHTTPParser: f7a6816f7ddbe7dfa57a74cd36dc2db2c53b56e8
+  CNIOLinux: 5921dfefbc4bbe017380b34c510855622147ea41
+  CNIOWindows: f5aa9dfb401b440a7b4c9cd911e53e981a787193
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  edge-login-ui-rn: f4c734841ae22b88179691234899473d2dea5d07
+  edge-core-js: a54c710cd8de8bc82dd19c021388fbda2286f838
+  edge-login-ui-rn: bb229d0087d664f76a03949df7627ed49fed4144
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 86d9e030dbb7af0ba0eb4e1b6d52e4af26c7f1f3
   Firebase: e1e089d9aac215a52442583f818ab61de3c4581b
@@ -880,9 +1009,11 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: c542a2feaac9ab98fd074e8f1a02c3585bbfbd47
   GoogleDataTransport: 8b0e733ea77c9218778e5a9e34ba9508b8328939
   GoogleUtilities: e1d9ed4e544fc32a93e00e721400cbc3f377200d
+  gRPC-Swift: 77154009a019e97f8c4bd8f2bb75fe9726801157
   hermes-engine: 7d97ba46a1e29bacf3e3c61ecb2804a5ddd02d4f
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
+  Logging: beeb016c9c80cf77042d62e83495816847ef108b
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: 7aa2f6b584f8b1396ae6abaf13093fb9b5212499
@@ -909,14 +1040,13 @@ SPEC CHECKSUMS:
   react-native-fast-crypto: b6dea8324fb1b095dd4f29a80356b43acb3ee2e9
   react-native-flipper: a5770950f79017f17f50b316cb74b66d14192c79
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
-  react-native-mail: 88305252f4c3fb0157015ff8a7ac9c41b321a0dd
+  react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: c5e0e039b4977be65ed936a1d5301da3448edff7
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
-  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-webview: 0bacc79175bc44869e4c1a015b9bc21df8cf4feb
-  react-native-zcash: 80ada1d26241385faa5479b9c63213e5aef245a8
+  react-native-zcash: dc5a57c6e5445a0f4dc29dc955e674e5c22537df
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa
@@ -952,10 +1082,26 @@ SPEC CHECKSUMS:
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
+  SwiftNIO: bb336ceef32850e9671d3fa0e0cc2b9add3b5948
+  SwiftNIOConcurrencyHelpers: ca2594e10749655f42baf5468212be83d2f94fe3
+  SwiftNIOCore: 9deed6620f80c7c82e8e2c2ffb9864495416d892
+  SwiftNIOEmbedded: b7ccf12b402dff35a5d4356990a6253621e4337d
+  SwiftNIOExtras: 70f09aa8eca3ab6baeaf1993da9c855b6e95e97f
+  SwiftNIOFoundationCompat: d3b888766e7c67354a4e4e145d38edf9586efa0c
+  SwiftNIOHPACK: e2fc784ce453bec4c058b21071e89fb7e542ac30
+  SwiftNIOHTTP1: 349a16aae363250cd49f430a9fdb93cff518adfa
+  SwiftNIOHTTP2: a0322f3dcecd949e03df65f4dac106411df0f12c
+  SwiftNIOPosix: e4988a8dcfd5a6319bde219d7a3d0acc5fbe7a89
+  SwiftNIOSSL: 7c2ddcbcbb2a8188468b7fe9c2bc6124df4b3772
+  SwiftNIOTLS: 1b8290ec775238ccc714ed842d929494df95a2c2
+  SwiftNIOTransportServices: 1fbbdb58510af3c53a838a1dbea98f18132dc952
+  SwiftProtobuf: c3c12645230d9b09c72267e0de89468c5543bd86
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
+  ZcashLightClientKit: 36355e1a185106eb3474a989a45c96d623643e2f
 
-PODFILE CHECKSUM: 99afeb1d9ab89efc9196aae342f9809649de3fe1
+PODFILE CHECKSUM: b1f238e1f64acf324f1dbcd5fc6ea1379e8a44a5
 
 COCOAPODS: 1.11.2
