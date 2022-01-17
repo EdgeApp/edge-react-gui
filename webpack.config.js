@@ -4,20 +4,31 @@ const path = require('path')
 
 const webpack = require('webpack')
 
-// Use "yarn prepare.dev" to make a debug-friendly build:
-const production = process.env.EDGE_MODE !== 'development'
+// Run `yarn start.dev` to enable debug mode.
+// This mode will serve the plugin bundle via a local dev-server.
+const debug = process.env.WEBPACK_SERVE
 
 module.exports = {
-  devtool: 'cheap-source-map',
+  devtool: debug ? 'source-map' : undefined,
+  devServer: {
+    allowedHosts: 'all',
+    hot: false,
+    static: false,
+    port: 8101
+  },
   entry: './src/util/corePluginBundle.js',
-  mode: production ? 'production' : 'development',
+  mode: debug ? 'development' : 'production',
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /(@babel\/runtime|babel-runtime)/,
-        use: production
+        use: debug
           ? {
+              loader: '@sucrase/webpack-loader',
+              options: { transforms: [] }
+            }
+          : {
               loader: 'babel-loader',
               options: {
                 babelrc: false,
@@ -30,7 +41,6 @@ module.exports = {
                 cacheDirectory: true
               }
             }
-          : { loader: '@sucrase/webpack-loader', options: { transforms: [] } }
       }
     ]
   },

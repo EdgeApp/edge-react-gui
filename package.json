@@ -37,9 +37,9 @@
     "precommit": "npm run localize && lint-staged && flow && npm test",
     "prepare": "husky install && ./scripts/prepare.sh",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
-    "prepare.dev": "EDGE_MODE=development ./scripts/prepare.sh",
     "server": "node ./loggingServer.js",
     "start": "react-native start",
+    "start.dev": "webpack serve",
     "test": "jest --config jest.config.js",
     "test-android": "detox build --configuration android.emu.debug && detox test --configuration android.emu.debug -l verbose",
     "test-ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
@@ -198,8 +198,9 @@
     "rollup-plugin-node-resolve": "4.0.0",
     "sucrase": "^3.20.0",
     "updot": "^1.1.7",
-    "webpack": "^4.29.3",
-    "webpack-cli": "^3.2.3"
+    "webpack": "^4.46.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
   },
   "detox": {
     "test-runner": "jest",

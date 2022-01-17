@@ -128,12 +128,14 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
   }
 
   renderCore() {
+    const pluginUris = ENV.DEBUG_PLUGINS ? ['http://localhost:8101/plugin-bundle.js'] : ['edge-core/plugin-bundle.js']
+
     return ENV.USE_FAKE_CORE ? (
       <MakeFakeEdgeWorld
         crashReporter={crashReporter}
         debug={ENV.DEBUG_CORE}
         nativeIo={nativeIo}
-        pluginUris={['edge-core/plugin-bundle.js']}
+        pluginUris={pluginUris}
         users={[fakeUser]}
         onLoad={this.onFakeEdgeWorld}
         onError={this.onError}
@@ -144,7 +146,7 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
         crashReporter={crashReporter}
         debug={ENV.DEBUG_CORE}
         nativeIo={nativeIo}
-        pluginUris={['edge-core/plugin-bundle.js']}
+        pluginUris={pluginUris}
         onLoad={this.onContext}
         onError={this.onError}
       />
