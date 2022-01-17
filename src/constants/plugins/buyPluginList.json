@@ -796,7 +796,9 @@
     "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
     "title": "United Payments Interface",
     "partnerIconPath": "https://content.edge.app/transak_logo.png",
-    "forCountries": [],
+    "forCountries": [
+      "IN"
+    ],
     "cryptoCodes": [
       "BTC",
       "ETH",
@@ -818,7 +820,9 @@
     "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
     "title": "NEFT Transfer",
     "partnerIconPath": "https://content.edge.app/transak_logo.png",
-    "forCountries": [],
+    "forCountries": [
+      "IN"
+    ],
     "cryptoCodes": [
       "BTC",
       "ETH",
