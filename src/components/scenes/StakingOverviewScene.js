@@ -1,12 +1,21 @@
 // @flow
 
+import { bns } from 'biggystring'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import fioLogo from '../../assets/images/fio/fio_logo.png'
+import { STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { formatDate, formatNumber } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { convertCurrency } from '../../selectors/WalletSelectors'
+import { useEffect, useState } from '../../types/reactHooks.js'
+import { connect } from '../../types/reactRedux'
+import type { RouteProp } from '../../types/routerTypes'
 import { Actions } from '../../types/routerTypes.js'
+import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableText } from '../themed/ClickableText.js'
@@ -15,33 +24,71 @@ import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader.js'
 import { Tile } from '../themed/Tile.js'
 
+const LOCK_PERIOD = 1000 * 60 * 60 * 24 * 7
+
 type OwnProps = {
-  currencyCode: string,
-  walletId: string
+  route: RouteProp<'stakingOverview'>
 }
-type Props = OwnProps & ThemeProps
+type StateProps = {
+  currencyWallet: EdgeCurrencyWallet,
+  stakingCryptoAmountFormat: string,
+  stakingFiatBalanceFormat: string,
+  currencyDenomination: EdgeDenomination,
+  fiatCurrencyCode: string,
+  fiatSymbol: string
+}
+type Lock = {
+  id: string,
+  day: number,
+  title: string,
+  amount: string
+}
+type Props = StateProps & OwnProps & ThemeProps
 
 export const StakingOverviewSceneComponent = (props: Props) => {
-  const { theme, currencyCode, walletId } = props
+  const {
+    theme,
+    route: {
+      params: { currencyCode, walletId }
+    },
+    currencyWallet,
+    stakingCryptoAmountFormat,
+    stakingFiatBalanceFormat,
+    currencyDenomination,
+    fiatCurrencyCode,
+    fiatSymbol
+  } = props
   const styles = getStyles(theme)
+  const [locks, setLocks] = useState<Lock[]>([])
 
-  const items = [
-    {
-      key: 'a',
-      title: 'Unstaked and locked until Aug 7, 2021',
-      amount: '150 Fio'
-    },
-    {
-      key: 'a',
-      title: 'Unstaked and locked until Aug 23, 2021',
-      amount: '75 Fio'
-    },
-    {
-      key: 'a',
-      title: 'Unstaked and locked until Sep 31, 2021',
-      amount: '450 Fio'
+  const fetchLockPeriods = async () => {
+    const startDate = new Date(new Date().getTime() - LOCK_PERIOD)
+    const txs: EdgeTransaction[] = await currencyWallet.getTransactions({ startDate, currencyCode: `${currencyCode}${STAKING_BALANCES.locked}` })
+    if (txs.length) {
+      setLocks(
+        txs.reduce((acc, { txid: id, nativeAmount, date, otherParams, metadata }) => {
+          const untilDate = new Date(date * 1000 + LOCK_PERIOD)
+          const amount = bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0')
+          const existingLock = acc.find(({ day }) => day === untilDate.getDay())
+          if (existingLock != null) {
+            existingLock.amount = formatNumber(bns.add(existingLock.amount, amount))
+            return acc
+          }
+
+          acc.push({
+            id,
+            day: untilDate.getDay(),
+            title: `Unstaked and locked until ${formatDate(untilDate, true)}`,
+            amount: formatNumber(amount)
+          })
+          return acc
+        }, [])
+      )
     }
-  ]
+  }
+  useEffect(() => {
+    fetchLockPeriods()
+  }, [])
 
   const handlePressStake = () => {
     Actions.jump('stakingChange', { change: 'add', currencyCode, walletId })
@@ -51,13 +98,17 @@ export const StakingOverviewSceneComponent = (props: Props) => {
   }
 
   const renderItems = () =>
-    items.map(item => {
+    locks.map(item => {
+      const amount = `${item.amount} ${currencyCode}`
       return (
-        <Tile key={item.key} type="static" title={item.title}>
-          <EdgeText>{item.amount}</EdgeText>
+        <Tile key={item.id} type="static" title={item.title}>
+          <EdgeText>{amount}</EdgeText>
         </Tile>
       )
     })
+
+  const staked = `${stakingCryptoAmountFormat} ${currencyCode}`
+  const fiatStaked = `(${fiatSymbol}${stakingFiatBalanceFormat} ${fiatCurrencyCode})`
 
   return (
     <SceneWrapper background="header" hasTabs={false}>
@@ -68,7 +119,8 @@ export const StakingOverviewSceneComponent = (props: Props) => {
         <EdgeText style={styles.explainerText}>{s.strings.staking_overview_explainer}</EdgeText>
         <Tile type="static" title="Currently Staked">
           <EdgeText>
-            <Text>300 Fio</Text>
+            {staked}
+            <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
           </EdgeText>
         </Tile>
         {renderItems()}
@@ -104,7 +156,42 @@ const getStyles = cacheStyles(theme => ({
   buttonContainer: {
     alignItems: 'center',
     marginVertical: theme.rem(0.5)
+  },
+  fiatAmount: {
+    color: theme.secondaryText
   }
 }))
 
-export const StakingOverviewScene = withTheme(StakingOverviewSceneComponent)
+export const StakingOverviewScene = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
+    const {
+      route: {
+        params: { walletId, currencyCode }
+      }
+    } = ownProps
+    const currencyWallet = state.core.account.currencyWallets[walletId]
+    const guiWallet = state.ui.wallets.byId[walletId]
+
+    const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES.staked}`
+
+    const currencyDenomination = getDenomination(currencyCode, state.ui.settings, 'display')
+    const stakingCryptoAmountFormat = formatNumber(
+      bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0'), '0')
+    )
+
+    const defaultDenomination = getDefaultDenomination(currencyCode, state.ui.settings)
+    const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0')
+    const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
+    const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && bns.gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+
+    return {
+      currencyWallet,
+      stakingCryptoAmountFormat,
+      stakingFiatBalanceFormat,
+      currencyDenomination,
+      fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+      fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode)
+    }
+  },
+  dispatch => ({})
+)(withTheme(StakingOverviewSceneComponent))
