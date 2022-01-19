@@ -585,7 +585,6 @@ Object {
         "denomination": "1000000000000000000",
       },
       "autoLogoutTimeInSeconds": 3600,
-      "bluetoothMode": false,
       "changesLocked": true,
       "countryCode": "",
       "customTokens": Array [],
@@ -596,7 +595,6 @@ Object {
       "isTouchEnabled": false,
       "isTouchSupported": false,
       "loginStatus": null,
-      "merchantMode": false,
       "mostRecentWallets": Array [],
       "passwordRecoveryRemindersShown": Object {
         "20": false,
