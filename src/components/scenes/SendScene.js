@@ -448,7 +448,8 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (recipientAddress) {
       const transactionFee = convertTransactionFeeToDisplayFee(wallet, selectedCurrencyCode, exchangeRates, transaction, settings)
-      const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+      const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
+      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
