@@ -206,7 +206,9 @@ type SpecialCurrencyInfo = {|
   noMaxSpend?: boolean,
   keysOnlyMode?: boolean,
   isPrivateKeySweepable?: boolean,
-  isStakingSupported?: boolean
+  isStakingSupported?: boolean,
+  stakeActions?: { [stakeActionKey: string]: string },
+  stakeLockPeriod?: number
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -401,7 +403,12 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
-    isStakingSupported: true
+    isStakingSupported: true,
+    stakeActions: {
+      add: 'stakeFioTokens',
+      remove: 'unStakeFioTokens'
+    },
+    stakeLockPeriod: 1000 * 60 * 60 * 24 * 7
   },
   DASH: {
     isPrivateKeySweepable: true
