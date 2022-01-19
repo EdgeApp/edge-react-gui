@@ -881,7 +881,7 @@
   },
   {
     "id": "banxa.bank",
-    "sortIndex": 1
+    "sortIndex": 4.5
   },
   {
     "id": "banxa.sofort",
@@ -901,7 +901,7 @@
   },
   {
     "id": "banxa.credit",
-    "sortIndex": 4.5
+    "sortIndex": 1
   },
   {
     "id": "libertyx",
