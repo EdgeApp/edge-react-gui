@@ -103,7 +103,6 @@ export type SettingsState = {
   HERC: CurrencySetting,
 
   autoLogoutTimeInSeconds: number,
-  bluetoothMode: boolean, // Never read or updated, but on disk
   changesLocked: any,
   customTokens: CustomTokenInfo[],
   defaultFiat: string,
@@ -112,7 +111,6 @@ export type SettingsState = {
   countryCode: string,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
-  merchantMode: boolean, // Never read or updated, but on disk
   preferredSwapPluginId: string | void,
   pinLoginEnabled: boolean,
   plugins: {

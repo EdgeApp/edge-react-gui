@@ -23,7 +23,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   defaultIsoFiat: 'iso:USD',
-  merchantMode: false,
   preferredSwapPluginId: '',
   countryCode: '',
   BTC: {
@@ -424,7 +423,6 @@ export const SYNCED_ACCOUNT_TYPES = {
   autoLogoutTimeInSeconds: 'number',
   defaultFiat: 'string',
   defaultIsoFiat: 'string',
-  merchantMode: 'boolean',
   preferredSwapPluginId: 'string',
   countryCode: 'string',
   BTC: 'object',
@@ -561,7 +559,6 @@ export const SYNCED_ACCOUNT_TYPES = {
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
-  bluetoothMode: false,
   developerModeOn: false,
   passwordReminder: {
     needsPasswordCheck: false,
@@ -581,7 +578,6 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
 }
 
 export const LOCAL_ACCOUNT_TYPES = {
-  bluetoothMode: 'boolean',
   developerModeOn: 'boolean',
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
