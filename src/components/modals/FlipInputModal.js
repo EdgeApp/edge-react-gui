@@ -18,6 +18,8 @@ import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -286,8 +288,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
-    const guiWallet = state.ui.wallets.byId[walletId]
-    const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
+    const wallet = state.core.account.currencyWallets[walletId]
+    const name = getWalletName(wallet)
+    const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
+    const { symbolImageDarkMono } = getCurrencyIcon(wallet.currencyInfo.currencyCode, currencyCode)
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, currencyCode)
@@ -316,7 +320,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     // Fees
     const transactionFee = convertTransactionFeeToDisplayFee(
-      guiWallet,
+      wallet,
       currencyCode,
       state.exchangeRates,
       state.ui.scenes.sendConfirmation.transaction,
@@ -332,11 +336,11 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       // Balances
-      balanceCrypto: guiWallet.nativeBalances[currencyCode],
+      balanceCrypto: wallet.balances[currencyCode],
 
       // FlipInput
-      flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
-      flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
+      flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
+      flipInputHeaderLogo: symbolImageDarkMono,
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto: fiatPerCrypto ?? '0',
