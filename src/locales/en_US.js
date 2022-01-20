@@ -330,6 +330,7 @@ const strings = {
   staking_success: 'Successfully staked',
   staking_unstake_success: 'Successfully unstaked',
   staking_estimated_rewards: 'Estimated Rewards',
+  staking_estimated_return: 'Estimated Return: %1s APY',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
