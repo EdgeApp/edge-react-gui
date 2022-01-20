@@ -3979,6 +3979,14 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
+cavy@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/cavy/-/cavy-4.0.2.tgz#1f23d1b343e6b8d50a84be946e85767abb703c1a"
+  integrity sha512-EFyDqegu5HW4Qs48VD8w3pRSMYtqEa2qht7xlYClb/jZm+ODuc3W1x8xWYCBL+JUAKmIihQymTFM4M2lw/j3YQ==
+  dependencies:
+    hoist-non-react-statics "^3.3.0"
+    prop-types "^15.5.10"
+
 chai@^4.3.4:
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.4.tgz#b55e655b31e1eac7099be4c08c21964fce2e6c49"

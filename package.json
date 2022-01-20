@@ -171,6 +171,7 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.0.5",
     "body-parser": "^1.18.2",
+    "cavy": "^4.0.2",
     "eslint": "^7.14.0",
     "eslint-config-standard-kit": "0.15.1",
     "eslint-plugin-detox": "^1.0.0",
