@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import * as ReactRedux from 'react-redux'
 
@@ -14,7 +15,7 @@ export function connect<StateProps, DispatchProps, OwnProps>(
   mapDispatchToProps: (dispatch: Dispatch, ownProps: OwnProps) => DispatchProps
 ): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => React.StatelessFunctionalComponent<$Exact<OwnProps>> {
   // $FlowFixMe
-  return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
+  return component => ReactRedux.connect(mapStateToProps, mapDispatchToProps)(hook(component))
 }
 
 type UseDispatch = () => Dispatch
