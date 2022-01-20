@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
-import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { CURRENCY_PLUGIN_NAMES, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
@@ -43,6 +43,7 @@ type StateProps = {
     }
   },
   currencyWallet: EdgeCurrencyWallet,
+  currencyPlugin: EdgeCurrencyConfig,
   currencyDenomination: EdgeDenomination,
   fioAddresses: FioAddress[]
 }
@@ -75,6 +76,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
       params: { change, currencyCode, walletId }
     },
     currencyWallet,
+    currencyPlugin,
     currencyDenomination,
     stakingBalances,
     navigation,
@@ -83,9 +85,11 @@ export const StakingChangeSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const [amount, setAmount] = useState(0)
+  const [apy, setApy] = useState(0)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [tx, setTx] = useState(null)
+  const [selectedFioAddress, setSelectedFioAddress] = useState(null)
 
   const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
     setAmount(exchangeAmount)
@@ -94,7 +98,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
     currencyWallet
       .makeSpend(
         makeSpendInfo(nativeAmount, actionName, {
-          fioAddress: fioAddresses.length > 0 ? fioAddresses[0].name : ''
+          fioAddress: selectedFioAddress
         })
       )
       .then(tx => {
@@ -182,9 +186,28 @@ export const StakingChangeSceneComponent = (props: Props) => {
     props.refreshAllFioAddresses()
   }, [])
 
+  useEffect(() => {
+    if (currencyPlugin != null && amount != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
+      currencyPlugin.otherMethods
+        .getStakeEstReturn(amount)
+        .then(apy => setApy(apy))
+        .catch(() => {
+          //
+        })
+    }
+  }, [amount, currencyPlugin])
+
+  useEffect(() => {
+    if (!selectedFioAddress) {
+      const walletFioAddresses = fioAddresses.filter(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
+      setSelectedFioAddress(walletFioAddresses.length > 0 ? walletFioAddresses[0].name : '')
+    }
+  }, [fioAddresses])
+
   const sliderDisabled = tx == null || amount == null || amount === '0' || error != null
 
   const renderAdd = () => {
+    const apyValue = sprintf(s.strings.staking_estimated_return, `${apy}%`)
     return (
       <>
         <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
@@ -197,6 +220,11 @@ export const StakingChangeSceneComponent = (props: Props) => {
         <Tile type="editable" title={s.strings.staking_change_add_amount_title} onPress={handleAmount}>
           <EdgeText style={styles.amountText}>{amount}</EdgeText>
         </Tile>
+        {apy != null && apy !== 0 && (
+          <View style={styles.estReturn}>
+            <EdgeText>{apyValue}</EdgeText>
+          </View>
+        )}
       </>
     )
   }
@@ -285,6 +313,16 @@ const getStyles = cacheStyles(theme => ({
   },
   errorMessage: {
     color: theme.dangerText
+  },
+  estReturn: {
+    padding: theme.rem(0.75),
+    marginTop: theme.rem(1),
+    marginHorizontal: theme.rem(2.5),
+    borderWidth: theme.thinLineWidth,
+    borderColor: theme.cardBorderColor,
+    borderRadius: theme.rem(0.5),
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }))
 
@@ -296,6 +334,7 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
       }
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
+    const currencyPlugin = state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES[currencyCode]]
     const guiWallet = state.ui.wallets.byId[walletId]
     const stakingBalances = {}
 
@@ -325,6 +364,7 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
       stakingBalances,
       currencyWallet,
       currencyDenomination,
+      currencyPlugin,
       fioAddresses: state.ui.scenes.fioAddress.fioAddresses
     }
   },
