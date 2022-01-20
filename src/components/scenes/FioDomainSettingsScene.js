@@ -131,8 +131,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       nativeAmount: '',
       currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
-        fioAction: 'transferFioDomain',
-        fioParams: { fioDomain: fioDomainName, newOwnerKey: '', maxFee: transferFee }
+        action: {
+          name: 'transferFioDomain',
+          params: { fioDomain: fioDomainName, maxFee: transferFee }
+        }
       },
       onDone: (err, edgeTransaction) => {
         if (!err) {
@@ -157,7 +159,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme, route } = this.props
+    const { route } = this.props
     const { fioWallet, fioDomainName, expiration, isPublic } = route.params
 
     const { showRenew, showVisibility, showTransfer } = this.state
