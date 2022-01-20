@@ -129,8 +129,10 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       nativeAmount: '',
       currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
-        fioAction: 'transferFioAddress',
-        fioParams: { fioAddress: fioAddressName, newOnwerKey: '', maxFee: transferFee }
+        action: {
+          name: 'transferFioAddress',
+          params: { fioAddress: fioAddressName, maxFee: transferFee }
+        }
       },
       onDone: (err, edgeTransaction) => {
         if (!err) {

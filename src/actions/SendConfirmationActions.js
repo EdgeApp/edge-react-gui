@@ -387,8 +387,8 @@ export const signBroadcastAndSave =
       } else if (
         edgeSignedTransaction &&
         edgeSignedTransaction.otherParams &&
-        edgeSignedTransaction.otherParams.transactionJson &&
-        edgeSignedTransaction.otherParams.transactionJson.fioAction === 'transferFioAddress' &&
+        edgeSignedTransaction.otherParams.action &&
+        edgeSignedTransaction.otherParams.action.name === 'transferFioAddress' &&
         e.json &&
         e.json.code === 500 &&
         e.json.error.code === 3050003
