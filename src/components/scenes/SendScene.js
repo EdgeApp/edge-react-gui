@@ -301,7 +301,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       if (fioSender?.fioWallet != null && fioSender?.fioAddress != null && !isFioPendingRequest) {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
-      await signBroadcastAndSave(fioSender)
+      await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
         const answer = await Airship.show(bridge => (
