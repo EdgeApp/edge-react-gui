@@ -7,7 +7,7 @@
 ![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
 
 Edge Wallet is:
-
+- meta
 - simple
 - secure
 - private
