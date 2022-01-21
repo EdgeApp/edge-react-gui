@@ -11,7 +11,7 @@ import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -45,11 +45,9 @@ export const WcSmartContractModal = (props: Props) => {
   const toAddress: string | null = params.to
 
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
-  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
-  const amountNativeToExchangeRatio = useSelector(state => getExchangeDenomination(state, amountCurrencyCode).multiplier)
-  const feeNativeToExchangeRatio = useSelector(state => getExchangeDenomination(state, feeCurrencyCode).multiplier)
-
   const wallet = currencyWallets[walletId]
+  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
+
   if (wallet == null) return null
   const walletName = wallet.name
 
@@ -75,8 +73,11 @@ export const WcSmartContractModal = (props: Props) => {
     networkFeeCrypto = hexToDecimal(removeHexPrefix(bns.mul(params.gas, params.gasPrice, 16)))
   }
 
+  const amountDenom = getDefaultDenomination(wallet.currencyInfo, amountCurrencyCode)
+  const feeDenom = getDefaultDenomination(wallet.currencyInfo, feeCurrencyCode)
+
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
-  const amountCurrencyToFeeCurrencyExchangeRate = bns.div(amountNativeToExchangeRatio, feeNativeToExchangeRatio)
+  const amountCurrencyToFeeCurrencyExchangeRate = bns.div(amountDenom.multiplier, feeDenom.multiplier)
   const amountCryptoAsFeeCrypto = bns.mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
   const totalNativeCrypto = bns.mul(bns.add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
 
@@ -136,6 +137,7 @@ export const WcSmartContractModal = (props: Props) => {
             nativeCryptoAmount={amountCrypto}
             cryptoCurrencyCode={amountCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
+            denomination={amountDenom}
           />
         )}
         {walletName != null && (
@@ -152,6 +154,7 @@ export const WcSmartContractModal = (props: Props) => {
             nativeCryptoAmount={networkFeeCrypto}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
+            denomination={feeDenom}
           />
         )}
         {!zeroString(totalNativeCrypto) && (
@@ -160,6 +163,7 @@ export const WcSmartContractModal = (props: Props) => {
             nativeCryptoAmount={totalNativeCrypto}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={isoFiatCurrencyCode}
+            cryptoExchangeMultiplier={feeDenom.multiplier}
           />
         )}
         {slider}

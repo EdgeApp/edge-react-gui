@@ -551,7 +551,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state.ui.settings, edgeWallet.currencyInfo, currencyCode)
     const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination

@@ -12,7 +12,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
-import { getSelectedWallet } from '../../../selectors/WalletSelectors.js'
+import { getSelectedCurrencyWallet, getSelectedWallet } from '../../../selectors/WalletSelectors.js'
 import { connect } from '../../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
@@ -174,9 +174,10 @@ export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
         fiatAmount: ''
       }
     }
+    const currencyWallet = getSelectedCurrencyWallet(state)
     const tokenCode = fioRequest.content.token_code.toUpperCase()
     try {
-      displayDenomination = getDisplayDenomination(state, tokenCode)
+      displayDenomination = getDisplayDenomination(state.ui.settings, currencyWallet.currencyInfo, tokenCode)
     } catch (e) {
       console.log('No denomination for this Token Code -', tokenCode)
     }

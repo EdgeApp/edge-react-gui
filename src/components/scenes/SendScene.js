@@ -21,11 +21,13 @@ import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurren
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
+import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
+import { getDefaultDenomination, getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode, getDenomination } from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
@@ -54,7 +56,7 @@ type StateProps = {
   pending: boolean,
   pin: string,
   resetSlider: boolean,
-  settings: any,
+  settings: SettingsState,
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
   transactionMetadata: EdgeMetadata | null,
@@ -62,7 +64,8 @@ type StateProps = {
   wallets: { [walletId: string]: GuiWallet },
   isSendUsingFioAddress?: boolean,
   guiMakeSpendInfo: GuiMakeSpendInfo,
-  maxSpendSet: boolean
+  maxSpendSet: boolean,
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
 }
 
 type DispatchProps = {
@@ -379,7 +382,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, nativeAmount, settings, theme, route } = this.props
+    const { exchangeRates, lockInputs, nativeAmount, settings, theme, route, currencyWallets } = this.props
     const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
     const styles = getStyles(theme)
@@ -388,8 +391,8 @@ class SendComponent extends React.PureComponent<Props, State> {
       let cryptoAmountSyntax
       let cryptoAmountStyle
       let fiatAmountSyntax
-      const cryptoDisplayDenomination = getDenomination(selectedCurrencyCode, settings, 'display')
-      const cryptoExchangeDenomination = getDenomination(selectedCurrencyCode, settings, 'exchange')
+      const cryptoDisplayDenomination = getDisplayDenomination(settings, currencyWallets[this.state.selectedWalletId].currencyInfo, selectedCurrencyCode)
+      const cryptoExchangeDenomination = getDefaultDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo, selectedCurrencyCode)
       const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount === '') {
@@ -439,12 +442,18 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees() {
-    const { exchangeRates, settings, transaction, theme } = this.props
-    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+    const { exchangeRates, settings, transaction, theme, currencyWallets } = this.props
+    const { selectedCurrencyCode, recipientAddress } = this.state
     const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
 
     if (recipientAddress) {
-      const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
+      const transactionFee = convertTransactionFeeToDisplayFee(
+        currencyWallets[this.state.selectedWalletId],
+        selectedCurrencyCode,
+        exchangeRates,
+        transaction,
+        settings
+      )
       const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
@@ -649,7 +658,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       wallets: state.ui.wallets.byId,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
-      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
+      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet,
+      currencyWallets: state.core.account.currencyWallets
     }
   },
   dispatch => ({

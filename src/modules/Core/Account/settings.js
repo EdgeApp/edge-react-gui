@@ -321,9 +321,9 @@ export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, le
 }
 
 // Currency Settings
-export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
+export const setDenominationKeyRequest = (account: EdgeAccount, pluginId: string, currencyCode: string, denomination: EdgeDenomination) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
+    const updatedSettings = updateCurrencySettings(settings, pluginId, currencyCode, denomination)
     return setSyncedSettings(account, updatedSettings)
   })
 
@@ -400,16 +400,13 @@ export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
-export const updateCurrencySettings = (currentSettings: Object, currencyCode: string, newSettings: Object) => {
-  const currencySettings = currentSettings[currencyCode]
+export const updateCurrencySettings = (currentSettings: Object, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {
   // update with new settings
   const updatedSettings = {
-    ...currentSettings,
-    [currencyCode]: {
-      ...currencySettings,
-      ...newSettings
-    }
+    ...currentSettings
   }
+  if (updatedSettings.denominationSettings[pluginId] == null) updatedSettings.denominationSettings[pluginId] = {}
+  updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
 }
 

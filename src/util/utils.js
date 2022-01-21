@@ -8,11 +8,12 @@ import SafariView from 'react-native-safari-view'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
-import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
+import { emptyEdgeDenomination, getDefaultDenomination, getDisplayDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
+import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
 export const DECIMAL_PRECISION = 18
 
@@ -48,29 +49,6 @@ export const findDenominationSymbol = (denoms: EdgeDenomination[], value: string
       return v.symbol
     }
   }
-}
-
-export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Object, denominations: Object) => {
-  const setCurrencyDenomination = settings[currencyCode].denomination
-  const denominationsInfo = denominations[setCurrencyDenomination]
-  const multiplier = denominationsInfo.multiplier
-  return multiplier
-}
-
-// tokens can only have one denomination / multiplier from what I understand
-export const getSettingsTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
-  let multiplier
-  if (denomination) {
-    multiplier = denomination[settings[currencyCode].denomination].multiplier
-  } else {
-    const customDenom = settings.customTokens.find(item => item.currencyCode === currencyCode)
-    if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
-      multiplier = customDenom.denominations[0].multiplier
-    } else {
-      return '1'
-    }
-  }
-  return multiplier
 }
 
 export const getFiatSymbol = (code: string) => {
@@ -472,7 +450,6 @@ export function snooze(ms: number): Promise<void> {
 export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
   const temporaryTotalCrypto: { [string]: number } = {}
   const wallets = state.ui.wallets.byId
-  const settings = state.ui.settings
 
   // loop through each of the walletId's
   for (const parentProp of Object.keys(wallets)) {
@@ -491,20 +468,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
       if (isDisabledToken) continue
       // if it is a non-zero amount then we will process it
       if (!zeroString(nativeBalance)) {
-        let denominations
-        // check to see if it's a currency first
-        if (settings[currencyCode]) {
-          // and if so then grab the default denomiation (setting)
-          denominations = settings[currencyCode].denominations
-        } else {
-          // otherwise find the token whose currencyCode matches the one that we are working with
-          const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
-          // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
-          if (!tokenInfo) continue
-          denominations = tokenInfo.denominations
-        }
-        // now go through that array of denominations and find the one whose name matches the currency
-        const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+        const exchangeDenomination = getDefaultDenomination(state.core.account.currencyWallets[wallet.id].currencyInfo, currencyCode)
         if (!exchangeDenomination) continue
         // grab the multiplier, which is the ratio that we can multiply and divide by
         const nativeToExchangeRatio: string = exchangeDenomination.multiplier
@@ -658,26 +622,6 @@ export function getCustomTokenDenomination(currencyCode: string, settings: Objec
   return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
 }
 
-export function getDenomination(currencyCode: string, settings: Object, type: 'display' | 'exchange') {
-  const currencyInfo = settings[currencyCode]
-  if (currencyInfo) {
-    const denomination = currencyInfo.denominations.find(denomination => {
-      if (type === 'display') {
-        return denomination.multiplier === currencyInfo.denomination
-      } else if (type === 'exchange') {
-        return denomination.name === currencyInfo.currencyCode
-      }
-      return false
-    })
-    return denomination ?? emptyEdgeDenomination
-  }
-  return getCustomTokenDenomination(currencyCode, settings)
-}
-
-export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {
-  return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
-}
-
 export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
   const [parent, token] = fullCurrencyCode.split('-')
   const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
@@ -760,13 +704,13 @@ export const convertToFiatFee = (
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  guiWallet: GuiWallet,
+  wallet: EdgeCurrencyWallet,
   currencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   settings: any
 ): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string, nativeCryptoAmount: string } => {
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
+  const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
   const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
   const networkFee = transaction ? transaction.networkFee : undefined
@@ -774,8 +718,8 @@ export const convertTransactionFeeToDisplayFee = (
 
   if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
-    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
+    const parentDisplayDenomination = getDisplayDenomination(settings, wallet.currencyInfo)
+    const parentExchangeDenomination = getDefaultDenomination(wallet.currencyInfo, wallet.currencyInfo.currencyCode)
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
@@ -793,8 +737,8 @@ export const convertTransactionFeeToDisplayFee = (
 
   if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
-    const primaryDisplayDenomination = getDenomination(currencyCode, settings, 'display')
-    const primaryExchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
+    const primaryDisplayDenomination = getDisplayDenomination(settings, wallet.currencyInfo, currencyCode)
+    const primaryExchangeDenomination = getDefaultDenomination(wallet.currencyInfo, currencyCode)
     const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
     const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
     const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''

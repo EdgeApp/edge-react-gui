@@ -11,7 +11,7 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { SEND, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
+import { getDefaultDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
@@ -144,7 +144,7 @@ export const createAccountTransaction =
     const currencyPlugin = account.currencyConfig[currencyPluginName]
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-    const paymentDenom = getExchangeDenomination(state, currencyCode)
+    const paymentDenom = getDefaultDenomination(paymentWallet.currencyInfo, currencyCode)
     let nativeAmount = bns.mul(amount, paymentDenom.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {

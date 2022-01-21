@@ -1,15 +1,22 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { formatNumber } from '../locales/intl.js'
+import { type SettingsState } from '../reducers/scenes/SettingsReducer.js'
+import { getDefaultDenomination } from '../selectors/DenominationSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import { type GuiWallet } from '../types/types.js'
+import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 import { convertNativeToExchange, zeroString } from '../util/utils.js'
 
 export function getSelectedWallet(state: RootState): GuiWallet {
   return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
+}
+
+export function getSelectedCurrencyWallet(state: RootState): EdgeCurrencyWallet {
+  return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
 }
 
 export const getActiveWalletCurrencyCodes = (state: RootState) => {
@@ -73,44 +80,36 @@ export const convertCurrencyFromExchangeRates = (
   return convertedAmount
 }
 
-export const calculateWalletFiatBalanceWithoutState = (
-  wallet: GuiWallet,
-  currencyCode: string,
-  settings: Object,
-  exchangeRates: { [string]: string }
-): string => {
+export const calculateWalletFiatBalanceWithoutState = (wallet: EdgeCurrencyWallet, currencyCode: string, exchangeRates: { [string]: string }): string => {
   let fiatValue = '0' // default to zero if not calculable
-  const nativeBalance = wallet.nativeBalances[currencyCode]
+  const nativeBalance = wallet.balances[currencyCode] ?? '0'
   if (zeroString(nativeBalance)) return '0'
-  const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  const exchangeDenomination = getDefaultDenomination(wallet.currencyInfo, currencyCode)
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+  const { isoFiatCurrencyCode } = getWalletFiat(wallet)
+  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
   return formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
 export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
-  wallet: GuiWallet,
+  wallet: EdgeCurrencyWallet,
   currencyCode: string,
-  settings: Object,
+  settings: SettingsState,
   exchangeRates: { [string]: string }
 ): string => {
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!settings[currencyCode]) return '0'
-  const denominations = settings[currencyCode].denominations
-  if (zeroString(nativeBalance) || denominations == null) return '0'
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  const nativeBalance = wallet.balances[currencyCode]
+  if (zeroString(nativeBalance)) return '0'
+  const exchangeDenomination = getDefaultDenomination(wallet.currencyInfo, currencyCode)
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
   return convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
 }
 
-export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {
-  const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+export const convertNativeToExchangeRateDenomination = (currencyInfo: EdgeCurrencyInfo, currencyCode: string, nativeAmount: string): string => {
+  const exchangeDenomination = getDefaultDenomination(currencyInfo, currencyCode)
   if (!exchangeDenomination || zeroString(nativeAmount)) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)

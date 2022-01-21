@@ -13,7 +13,7 @@ import { MINIMUM_DEVICE_HEIGHT } from '../../constants/constantSettings.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDefaultDenomination, getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
@@ -142,6 +142,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             nativeCryptoAmount={balanceCrypto}
             cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -193,6 +194,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             nativeCryptoAmount={feeNativeAmount}
             cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -286,12 +288,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
+    const wallet = state.core.account.currencyWallets[walletId]
     const guiWallet = state.ui.wallets.byId[walletId]
     const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
 
     // Denominations
-    const cryptoDenomination = getDisplayDenomination(state, currencyCode)
-    const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
+    const cryptoDenomination = getDisplayDenomination(state.ui.settings, wallet.currencyInfo, currencyCode)
+    const cryptoExchangeDenomination = getDefaultDenomination(wallet.currencyInfo, currencyCode)
     const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
     // FlipInput
@@ -316,7 +319,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     // Fees
     const transactionFee = convertTransactionFeeToDisplayFee(
-      guiWallet,
+      wallet,
       currencyCode,
       state.exchangeRates,
       state.ui.scenes.sendConfirmation.transaction,

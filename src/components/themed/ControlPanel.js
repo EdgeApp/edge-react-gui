@@ -20,12 +20,13 @@ import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { getDefaultDenomination, getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { useEffect, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
+import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
@@ -53,12 +54,15 @@ export function ControlPanel(props: Props) {
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const selectedWallet = useSelector(state => state.core.account.currencyWallets[state.ui.wallets.selectedWalletId])
   const guiWallet = useSelector(getSelectedWallet)
   const currencyLogo = guiWallet != null ? getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage : null
   const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
-    guiWallet != null ? getDisplayDenomination(state, selectedCurrencyCode) : { name: '', multiplier: '1' }
+    guiWallet != null ? getDisplayDenomination(state.ui.settings, selectedWallet.currencyInfo, selectedCurrencyCode) : { name: '', multiplier: '1' }
   )
-  const isoFiatCurrencyCode = guiWallet != null ? guiWallet.isoFiatCurrencyCode : null
+  const isoFiatCurrencyCode = selectedWallet != null ? getWalletFiat(selectedWallet).isoFiatCurrencyCode : null
+  const selectedCurrencyCodeExchangeMultiplier =
+    selectedWallet != null ? getDefaultDenomination(selectedWallet.currencyInfo, selectedCurrencyCode).multiplier : '1'
 
   /// ---- Local State ----
 
@@ -249,6 +253,7 @@ export function ControlPanel(props: Props) {
                     isoFiatCurrencyCode={isoFiatCurrencyCode}
                     autoPrecision
                     appendFiatCurrencyCode
+                    cryptoExchangeMultiplier={selectedCurrencyCodeExchangeMultiplier}
                   />
                 </TitleText>
               </View>

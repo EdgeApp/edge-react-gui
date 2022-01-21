@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDefaultDenomination, getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
@@ -139,7 +139,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
       } else {
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const exchangeDenomination = getExchangeDenomination(state, paymentCurrencyCode)
+        const wallet = state.core.account.currencyWallets[walletId]
+        const exchangeDenomination = getDefaultDenomination(wallet.currencyInfo, paymentCurrencyCode)
         let nativeAmount = bns.mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = bns.toFixed(nativeAmount, 0, 0)
 
@@ -251,11 +252,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
+  (state, { route: { params } }) => ({
     state,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
-    fioDisplayDenomination: getDisplayDenomination(state, FIO_STR),
+    fioDisplayDenomination: getDisplayDenomination(state.ui.settings, params.selectedWallet.currencyInfo, FIO_STR),
     wallets: state.ui.wallets.byId,
     isConnected: state.network.isConnected
   }),

@@ -16,9 +16,8 @@ import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from 
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { FullScreenLoader } from '../common/FullScreenLoader'
@@ -48,7 +47,6 @@ type LocalState = {
 }
 
 type StateProps = {
-  state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
   fioAddresses: FioAddress[],
@@ -386,10 +384,10 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
-    const { fioWallets = [], currencyWallets, navigation, state } = this.props
+    const { fioWallets = [], currencyWallets, navigation } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
-    const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())
+    const exchangeDenomination = getDefaultDenomination(fioWalletByAddress.currencyInfo, pendingRequest.content.token_code.toUpperCase())
     let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
     const currencyCode = pendingRequest.content.token_code.toUpperCase()
@@ -658,7 +656,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
-    state,
     account: state.core.account,
     wallets: state.ui.wallets.byId,
     fioWallets: state.ui.wallets.fioWallets,

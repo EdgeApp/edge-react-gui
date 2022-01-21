@@ -13,7 +13,7 @@ import { sprintf } from 'sprintf-js'
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDefaultDenomination, getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp, Actions } from '../../types/routerTypes.js'
@@ -23,8 +23,6 @@ import {
   capitalize,
   convertNativeToDisplay,
   displayFiatAmount,
-  getCurrencyInfo,
-  getDenomination,
   getFiatSymbol,
   isCryptoParentCurrency,
   isNotEmptyNumber,
@@ -217,12 +215,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { guiWallet, route } = this.props
+    const { route } = this.props
     const { edgeTransaction } = route.params
     const { wallet } = edgeTransaction
 
     if (wallet) {
-      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} guiWallet={guiWallet} />)
+      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }
@@ -567,18 +565,17 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
     const { edgeTransaction } = params
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
     const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
+    const { currencyInfo } = state.core.account.currencyWallets[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
     const { settings } = state.ui
     const currencyCode = edgeTransaction.currencyCode
-    const { allCurrencyInfos } = state.ui.settings.plugins
-    const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
     const walletDefaultDenomProps: EdgeDenomination = isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
-      ? getDenomination(wallet.currencyCode, settings, 'exchange')
-      : getDenomination(edgeTransaction.currencyCode, settings, 'exchange')
+      ? getDefaultDenomination(currencyInfo, currencyCode)
+      : getDisplayDenomination(settings, currencyInfo, currencyCode)
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
-    const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
+    const cryptoAmount = convertNativeToExchangeRateDenomination(currencyInfo, currencyCode, nativeAmount)
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
 
     const { swapData } = edgeTransaction
@@ -586,7 +583,8 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
       swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
     }
 
-    const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
+    const currencyWallet = state.core.account.currencyWallets[walletId || state.ui.wallets.selectedWalletId]
+    const destinationDenomination = swapData ? getDisplayDenomination(state.ui.settings, currencyWallet.currencyInfo, swapData.payoutCurrencyCode) : undefined
     const destinationWallet = swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined
 
     return {

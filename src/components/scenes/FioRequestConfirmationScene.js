@@ -339,7 +339,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       }
     }
 
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state.ui.settings, fioWallets[0].currencyInfo, currencyCode)
     const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination

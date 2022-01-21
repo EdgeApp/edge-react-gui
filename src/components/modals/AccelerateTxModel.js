@@ -12,7 +12,6 @@ import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import type { GuiWallet } from '../../types/types.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
@@ -26,8 +25,7 @@ type Status = 'confirming' | 'sending' | 'sent'
 type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
-  wallet: EdgeCurrencyWallet,
-  guiWallet: GuiWallet
+  wallet: EdgeCurrencyWallet
 }
 type StateProps = {
   edgeDenomination: EdgeDenomination,
@@ -161,9 +159,9 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction, edgeDenomination: EdgeDenomination): string => {
-    const { exchangeRates, guiWallet, settings, selectedCurrencyCode } = this.props
+    const { exchangeRates, wallet, settings, selectedCurrencyCode } = this.props
 
-    const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
+    const transactionFee = convertTransactionFeeToDisplayFee(wallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
 
     const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
 
@@ -241,7 +239,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const AccelerateTxModel = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
-    edgeDenomination: getDisplayDenomination(state, ownProps.wallet.currencyInfo.currencyCode),
+    edgeDenomination: getDisplayDenomination(state.ui.settings, ownProps.wallet.currencyInfo),
     selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
     exchangeRates: state.exchangeRates,
     settings: state.ui.settings

@@ -7,6 +7,7 @@ import * as React from 'react'
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
+import { getDefaultDenomination, getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
@@ -15,7 +16,6 @@ import {
   decimalOrZero,
   displayFiatAmount,
   getDenomFromIsoCode,
-  getDenomination,
   getFiatSymbol,
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
@@ -87,14 +87,14 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     const guiWallet = state.ui.wallets.byId[walletId]
     const { fiatCurrencyCode } = guiWallet
     const { settings } = state.ui
-    const displayDenomination = getDenomination(currencyCode, settings, 'display')
-    const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
-    const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-
-    // Required Confirmations
     const { currencyWallets } = state.core.account
     const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
+    const displayDenomination = getDisplayDenomination(settings, currencyInfo, currencyCode)
+    const exchangeDenomination = getDefaultDenomination(currencyInfo, currencyCode)
+    const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+
+    // Required Confirmations
     const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
     // Thumbnail

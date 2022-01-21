@@ -1,11 +1,10 @@
 // @flow
 import { bns } from 'biggystring'
+import { type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
@@ -17,18 +16,15 @@ type Props = {
   cryptoCurrencyCode: string,
   isoFiatCurrencyCode: string,
   maxCryptoChars?: number,
-  title: string
+  title: string,
+  denomination: EdgeDenomination
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, maxCryptoChars } = props
+  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, maxCryptoChars, denomination } = props
   const styles = getStyles(useTheme())
 
-  const { cryptoName, cryptoDenomMult } = useSelector(state => {
-    const { name, multiplier } = getExchangeDenomination(state, cryptoCurrencyCode)
-
-    return { cryptoName: name, cryptoDenomMult: multiplier }
-  })
+  const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
 
   // Convert wallet native denomination to exchange denomination
   // Does NOT take into account display denomination settings here,
@@ -43,7 +39,13 @@ export const CryptoFiatAmountTile = (props: Props) => {
   // Fiat amount is always positive for this specific tile
   const absCryptoAmount = bns.abs(nativeCryptoAmount)
   const fiatAmount = (
-    <FiatText nativeCryptoAmount={absCryptoAmount} cryptoCurrencyCode={cryptoCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} parenthesisEnclosed />
+    <FiatText
+      nativeCryptoAmount={absCryptoAmount}
+      cryptoCurrencyCode={cryptoCurrencyCode}
+      isoFiatCurrencyCode={isoFiatCurrencyCode}
+      cryptoExchangeMultiplier={cryptoDenomMult}
+      parenthesisEnclosed
+    />
   )
 
   return (

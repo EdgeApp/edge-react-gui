@@ -410,7 +410,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     const { currencyCode, amount } = walletAccountActivationPaymentInfo
     const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
     const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
-    const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
+    const paymentDenomination = currencyCode != null && existingCoreWallet != null ? getDefaultDenomination(existingCoreWallet.currencyInfo, currencyCode) : {}
 
     let paymentDenominationSymbol
     if (paymentDenomination) {
