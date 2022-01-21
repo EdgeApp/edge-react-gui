@@ -5,6 +5,7 @@ import {
   type EdgeAccount,
   type EdgeContext,
   type EdgeCurrencyWallet,
+  type EdgeDenomination,
   type EdgeLobby,
   type EdgeParsedUri,
   type EdgeReceiveAddress,
@@ -201,7 +202,7 @@ export type Action =
   | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY', data: { isAccountBalanceVisible: boolean } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
   | { type: 'UI/SETTINGS/SET_DEFAULT_FIAT', data: { defaultFiat: string } }
-  | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY', data: { currencyCode: string, denominationKey: string } }
+  | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY', data: { pluginId: string, currencyCode: string, denomination: EdgeDenomination } }
   | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS', data: { mostRecentWallets: MostRecentWallet[] } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: boolean }
