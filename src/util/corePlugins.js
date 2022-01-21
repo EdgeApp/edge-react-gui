@@ -1,5 +1,7 @@
 // @flow
 
+import { Platform } from 'react-native'
+
 import ENV from '../../env.json'
 
 // Shim old-format env.json files:
@@ -62,7 +64,8 @@ export const currencyPlugins = {
   vertcoin: true,
   zcoin: true,
   // edge-currency-monero:
-  monero: ENV.MONERO_INIT
+  monero: ENV.MONERO_INIT,
+  zcash: Platform.OS === 'android'
 }
 
 export const ratePlugins = {

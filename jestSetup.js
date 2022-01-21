@@ -3,7 +3,6 @@
 
 jest.useFakeTimers()
 
-jest.mock('usb', () => {})
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler() {}
 }))

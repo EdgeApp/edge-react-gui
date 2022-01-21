@@ -11,7 +11,9 @@ import { checkVersion } from 'react-native-check-version'
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions.js'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import logo from '../../assets/images/olingoLogo/Olingo_logo_Icon.png'
+import background from '../../assets/images/background.png'
+
 import { type ThemeProps, withTheme } from '../../components/services/ThemeContext.js'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz.js'
@@ -124,7 +126,6 @@ class LoginSceneComponent extends React.Component<Props, State> {
   render() {
     const { context, handleSendLogs, theme, username } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
-
     return this.props.account.username == null ? (
       <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
@@ -137,7 +138,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
           key={String(counter)}
           appName={s.strings.app_name_short}
           backgroundImage={backgroundImage}
-          primaryLogo={edgeLogo}
+          primaryLogo={logo}
           primaryLogoCallback={handleSendLogs}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
           skipSecurityAlerts

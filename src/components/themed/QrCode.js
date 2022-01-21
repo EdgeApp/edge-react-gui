@@ -3,14 +3,15 @@
 import { Shape, Surface, Transform } from '@react-native-community/art'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
+import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 
 import { useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 
 type Props = {|
-  data: string,
+  data?: string, // Nothing will show if undefined
   cellsPadding?: number, // In QR cells
   marginRem?: number[] | number,
   onPress?: () => void
@@ -32,10 +33,16 @@ export function QrCode(props: Props) {
 
   // Generate an SVG path:
   const code = qrcodeGenerator(0, 'H')
-  code.addData(data)
+  code.addData(data ?? '')
   code.make()
   const svg = code.createSvgTag(1, cellsPadding)
   const path = svg.replace(/.*d="([^"]*)".*/, '$1')
+
+  // Handle animation:
+  const derivedData = useDerivedValue(() => data)
+  const fadeStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(derivedData.value != null ? 1 : 0)
+  }))
 
   // Create a drawing transform to scale QR cells to device pixels:
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
@@ -44,11 +51,14 @@ export function QrCode(props: Props) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.container, margin]} onLayout={handleLayout}>
-        {size <= 0 ? null : (
-          <Surface height={size} width={size} style={styles.surface}>
-            <Shape d={path} fill={theme.qrForegroundColor} transform={transform} />
-          </Surface>
-        )}
+        <ActivityIndicator color={theme.iconTappable} />
+        <Animated.View style={[styles.whiteBox, fadeStyle]}>
+          {size <= 0 ? null : (
+            <Surface height={size} width={size} style={styles.surface}>
+              <Shape d={path} fill={theme.qrForegroundColor} transform={transform} />
+            </Surface>
+          )}
+        </Animated.View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -56,12 +66,21 @@ export function QrCode(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
+    alignItems: 'center',
     alignSelf: 'center',
     aspectRatio: 1,
+    flex: 1,
+    justifyContent: 'center'
+  },
+  whiteBox: {
     backgroundColor: theme.qrBackgroundColor,
     borderRadius: theme.rem(0.5),
-    flex: 1,
-    padding: theme.rem(0.5)
+    bottom: 0,
+    left: 0,
+    padding: theme.rem(0.5),
+    position: 'absolute',
+    right: 0,
+    top: 0
   },
   surface: {
     backgroundColor: theme.qrBackgroundColor

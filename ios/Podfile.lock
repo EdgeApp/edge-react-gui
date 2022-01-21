@@ -410,6 +410,8 @@ PODS:
     - React
   - react-native-webview (10.2.3):
     - React
+  - react-native-zcash (0.1.0):
+    - React
   - React-perflogger (0.64.2)
   - React-RCTActionSheet (0.64.2):
     - React-Core/RCTActionSheetHeaders (= 0.64.2)
@@ -632,6 +634,7 @@ DEPENDENCIES:
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
+  - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -776,6 +779,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-smart-splash-screen"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  react-native-zcash:
+    :path: "../node_modules/react-native-zcash"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -856,7 +861,7 @@ SPEC CHECKSUMS:
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   edge-login-ui-rn: 21044336f6c39a7990d96b2b52f06ce87bfbc66e
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 86d9e030dbb7af0ba0eb4e1b6d52e4af26c7f1f3
+  FBReactNativeSpec: 4da3d06dae111fbe2c74f0e10eaedce538d51e43
   Firebase: e1e089d9aac215a52442583f818ab61de3c4581b
   FirebaseAnalytics: 9f8f4feab1f3fddf4e4515f8f022fe6aa9e51043
   FirebaseCore: 0a43b7f1c5b36f3358cd703011ca4c7e0df55870
@@ -911,6 +916,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-webview: 0bacc79175bc44869e4c1a015b9bc21df8cf4feb
+  react-native-zcash: 80ada1d26241385faa5479b9c63213e5aef245a8
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa

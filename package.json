@@ -31,13 +31,13 @@
     "flow": "flow",
     "flow-coverage": "flow-coverage-report",
     "flow:0": "flow; exit 0",
-    "postinstall": "patch-package && sh ./postinstall.sh",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "precommit": "npm run localize && lint-staged && flow && npm test",
-    "prepare": "./prepare-assets.sh",
-    "prepare.dev": "EDGE_MODE=development ./prepare-assets.sh",
+    "prepare": "husky install && ./scripts/prepare.sh",
+    "prepare.ios": "(cd ios; pod repo update; pod install)",
+    "prepare.dev": "EDGE_MODE=development ./scripts/prepare.sh",
     "server": "node ./loggingServer.js",
     "start": "react-native start",
     "test": "jest --config jest.config.js",
@@ -48,15 +48,11 @@
     "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
-  },
   "lint-staged": {
     "*.{js,jsx}": "eslint"
   },
   "resolutions": {
+    "@ledgerhq/hw-transport-node-hid": "file:./patches/fake-hw-transport-node-hid",
     "axios": "0.19.0",
     "babel-runtime": "6.26.0",
     "base-x": "3.0.4",
@@ -108,7 +104,7 @@
     "detox": "^18.10.0",
     "disklet": "^0.4.5",
     "edge-core-js": "^0.18.11",
-    "edge-currency-accountbased": "0.8.4",
+    "edge-currency-accountbased": "0.9.1",
     "edge-currency-bitcoin": "^4.9.18",
     "edge-currency-monero": "^0.3.3",
     "edge-exchange-plugins": "^0.11.37",
@@ -157,6 +153,7 @@
     "react-native-tcp": "git://github.com/EdgeApp/react-native-tcp.git#rn62",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.2.3",
+    "react-native-zcash": "^0.1.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "redux-flipper": "^1.4.2",
@@ -189,7 +186,7 @@
     "eslint-plugin-simple-import-sort": "^6.0.1",
     "express": "^4.16.2",
     "flow-bin": "^0.84.0",
-    "husky": "^4.3.0",
+    "husky": "^7.0.0",
     "jest": "^26.6.3",
     "jest-junit": "^12.1.0",
     "jetifier": "^1.6.5",
