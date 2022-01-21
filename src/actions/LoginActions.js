@@ -10,15 +10,13 @@ import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import {
+  asSyncedAccountSettings,
   getLocalSettings,
   getSyncedSettings,
   LOCAL_ACCOUNT_DEFAULTS,
   LOCAL_ACCOUNT_TYPES,
   PASSWORD_RECOVERY_REMINDERS_SHOWN,
-  setLocalSettings,
-  setSyncedSettings,
-  SYNCED_ACCOUNT_DEFAULTS,
-  SYNCED_ACCOUNT_TYPES
+  setLocalSettings
 } from '../modules/Core/Account/settings.js'
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer.js'
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
@@ -76,10 +74,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     countryCode: '',
     currencyCode: '',
     customTokens: [],
-    customTokensSettings: [],
     defaultFiat: '',
     defaultIsoFiat: '',
-    denominationKeys: [],
+    denominationSettings: {},
     developerModeOn: false,
     isAccountBalanceVisible: false,
     mostRecentWallets: [],
@@ -119,30 +116,19 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     accountInitObject.archivedWalletIds = archivedWalletIds
 
     const loadedSyncedSettings = await getSyncedSettings(account)
-    const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
-    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES, account)
-    if (mergedSyncedSettings.isOverwriteNeeded) {
-      setSyncedSettings(account, { ...mergedSyncedSettings.finalSettings })
+    let syncedSettings = {}
+    try {
+      syncedSettings = asSyncedAccountSettings(loadedSyncedSettings)
+    } catch (e) {
+      // OK to throw if empty file
     }
-    accountInitObject = { ...accountInitObject, ...mergedSyncedSettings.finalSettings }
+    accountInitObject = { ...accountInitObject, ...syncedSettings }
 
-    if (accountInitObject.customTokens) {
-      accountInitObject.customTokens.forEach(token => {
-        accountInitObject.customTokensSettings.push(token)
-        // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
-        accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
-      })
-    }
-    for (const key of Object.keys(accountInitObject)) {
-      const row: any = accountInitObject[key]
-      if (row == null || typeof row.denomination !== 'string') continue
-      accountInitObject.denominationKeys.push({ currencyCode: key, denominationKey: row.denomination })
-    }
     const loadedLocalSettings = await getLocalSettings(account)
     const localSettings = { ...loadedLocalSettings }
     const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
-    if (mergedLocalSettings.isOverwriteNeeded) {
-      setLocalSettings(account, { ...mergedSyncedSettings.finalSettings })
+    if (mergedLocalSettings.isOverwriteNeeded && syncedSettings != null) {
+      setLocalSettings(account, syncedSettings)
     }
     accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
 
@@ -152,6 +138,31 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       accountInitObject.defaultFiat = defaultFiat
       accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
     }
+
+    const defaultDenominationSettings = state.ui.settings.denominationSettings
+    const syncedDenominationSettings = syncedSettings?.denominationSettings ?? {}
+    const mergedDenominationSettings = {}
+
+    for (const plugin of Object.keys(defaultDenominationSettings)) {
+      mergedDenominationSettings[plugin] = {}
+      for (const code of Object.keys(defaultDenominationSettings[plugin])) {
+        mergedDenominationSettings[plugin][code] = {
+          ...defaultDenominationSettings[plugin][code],
+          ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
+        }
+      }
+    }
+    accountInitObject.denominationSettings = { ...mergedDenominationSettings }
+
+    accountInitObject.customTokens.forEach(token => {
+      if (token.walletType != null) {
+        const pluginId = token.walletType.replace('wallet:', '')
+        const denom = token.denominations.find(denom => denom.name === token.currencyCode)
+        if (denom != null) {
+          accountInitObject.denominationSettings[pluginId][token.currencyCode] = denom
+        }
+      }
+    })
 
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
