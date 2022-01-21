@@ -10,7 +10,6 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
-  getDenomination,
   getNewArrayWithItem,
   getNewArrayWithoutItem,
   getObjectDiff,
@@ -665,27 +664,27 @@ describe('precisionAdjust', function () {
   }
 })
 
-describe('getDisplayDenomination', function () {
-  const tests = fixtures.getDisplayDenomination
-  const { title, input, output } = tests
+// describe('getDisplayDenomination', function () {
+//   const tests = fixtures.getDisplayDenomination
+//   const { title, input, output } = tests
 
-  input.forEach((currency, index) => {
-    test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, 'display')).toMatchObject(output[index])
-    })
-  })
-})
+//   input.forEach((currency, index) => {
+//     test(`${title} ${currency}`, function () {
+//       expect(getDenomination(currency, fixtures.settings, 'display')).toMatchObject(output[index])
+//     })
+//   })
+// })
 
-describe('getExchangeDenomination', function () {
-  const tests = fixtures.getExchangeDenomination
-  const { title, input, output } = tests
+// describe('getDefaultDenomination', function () {
+//   const tests = fixtures.getDefaultDenomination
+//   const { title, input, output } = tests
 
-  input.forEach((currency, index) => {
-    test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
-    })
-  })
-})
+//   input.forEach((currency, index) => {
+//     test(`${title} ${currency}`, function () {
+//       expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
+//     })
+//   })
+// })
 
 describe('zerosAfterDecimal', function () {
   const tests = fixtures.zerosAfterDecimal

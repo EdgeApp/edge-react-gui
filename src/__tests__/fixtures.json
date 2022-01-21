@@ -1,5 +1,5 @@
 {
-  "getExchangeDenomination": {
+  "getDefaultDenomination": {
     "title": "Exchange Denomination of",
     "input": ["BTC", "ETH", "TKN"],
     "output": [{

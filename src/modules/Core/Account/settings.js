@@ -239,8 +239,8 @@ export const LOCAL_ACCOUNT_TYPES = {
   spendingLimits: 'object'
 }
 
-const SYNCED_SETTINGS_FILENAME = 'Settings.json'
-const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+const SYNCED_SETTINGS_FILENAME = 'SettingsTest.json'
+const LOCAL_SETTINGS_FILENAME = 'SettingsTest.json'
 const CATEGORIES_FILENAME = 'Categories.json'
 
 //  Settings
