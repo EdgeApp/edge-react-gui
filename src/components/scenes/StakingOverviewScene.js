@@ -1,13 +1,13 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import fioLogo from '../../assets/images/fio/fio_logo.png'
-import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../selectors/WalletSelectors'
@@ -33,12 +33,10 @@ type StateProps = {
   stakingFiatBalanceFormat: string,
   currencyDenomination: EdgeDenomination,
   fiatCurrencyCode: string,
-  fiatSymbol: string,
-  numTransactions: number
+  fiatSymbol: string
 }
 type Lock = {
   id: string,
-  day: number,
   title: string,
   amount: string
 }
@@ -55,44 +53,25 @@ export const StakingOverviewSceneComponent = (props: Props) => {
     stakingFiatBalanceFormat,
     currencyDenomination,
     fiatCurrencyCode,
-    fiatSymbol,
-    numTransactions
+    fiatSymbol
   } = props
   const styles = getStyles(theme)
+  const stakingStatus = currencyWallet.stakingStatus
   const [locks, setLocks] = useState<Lock[]>([])
 
-  const fetchLockPeriods = async () => {
-    const lockPeriod = SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod != null ? SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod : 0
-    const startDate = new Date(new Date().getTime() - lockPeriod)
-    const txs: EdgeTransaction[] = await currencyWallet.getTransactions({ startDate, currencyCode: `${currencyCode}${STAKING_BALANCES.locked}` })
-    if (txs.length) {
-      setLocks(
-        txs.reduce((acc, { txid: id, nativeAmount, date, otherParams, metadata }) => {
-          const untilDate = new Date(date * 1000 + lockPeriod)
-          const amount = bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0')
-          const existingLock = acc.find(({ day }) => day === untilDate.getDay())
-          if (existingLock != null) {
-            existingLock.amount = formatNumber(bns.add(existingLock.amount, amount))
-            return acc
-          }
-
-          acc.push({
-            id,
-            day: untilDate.getDay(),
-            title: `Unstaked and locked until ${formatDate(untilDate, true)}`,
-            amount: formatNumber(amount)
-          })
-          return acc
-        }, [])
-      )
-    }
-  }
   useEffect(() => {
-    fetchLockPeriods()
-  }, [])
-  useEffect(() => {
-    fetchLockPeriods()
-  }, [numTransactions])
+    setLocks(
+      stakingStatus.stakedAmounts
+        .filter(({ unlockDate }) => unlockDate != null && new Date(unlockDate).getTime() >= new Date().getTime())
+        .map(({ nativeAmount, unlockDate }) => ({
+          // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
+          id: new Date(unlockDate).toDateString(),
+          // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
+          title: sprintf(s.strings.staking_overview_header, formatDate(new Date(unlockDate), true)),
+          amount: formatNumber(bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
+        }))
+    )
+  }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
     Actions.jump('stakingChange', { change: 'add', currencyCode, walletId })
@@ -193,7 +172,6 @@ export const StakingOverviewScene = connect<StateProps, {}, OwnProps>(
       stakingCryptoAmountFormat,
       stakingFiatBalanceFormat,
       currencyDenomination,
-      numTransactions: state.ui.scenes.transactionList.numTransactions,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,
       fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode)
     }

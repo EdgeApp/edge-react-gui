@@ -301,6 +301,7 @@
   "staking_change_unlock_explainer2": "These continue to be locked and unusable for 7 days after you unstake the funds.",
   "staking_overview_header": "Stake %s",
   "staking_overview_explainer": "You have the following funds staked:",
+  "staking_locked_title": "Unstaked and locked until %1s",
   "staking_stake_funds_button": "Stake More Funds",
   "staking_unstake_funds_button": "Unstake",
   "staking_status": "%1s locked (%2s)",
