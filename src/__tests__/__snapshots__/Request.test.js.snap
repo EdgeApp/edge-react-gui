@@ -102,7 +102,6 @@ exports[`Request should render with loaded props 1`] = `
       </View>
     </InputAccessoryView>
     <QrCode
-      data=""
       onPress={[Function]}
     />
     <ForwardRef

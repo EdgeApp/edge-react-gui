@@ -21,6 +21,8 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletConnect from '../../../../../assets/images/sidenav/walletconnect-logo.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
+import { useTheme } from '../../../../../components/services/ThemeContext'
+
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
 import { LOGIN_QR, SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
@@ -124,17 +126,18 @@ const goToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
 
 const popToPluginBuyScene = () => goToScene(PLUGIN_BUY)
 const BuyButton = () => {
+  const theme = useTheme();
   return (
     <Button onPress={popToPluginBuyScene}>
       <Button.Row>
         <Button.Row>
           <Button.Left>
-            <Image source={buysellIcon} style={styles.iconImage} />
+            <Image source={buysellIcon} style={theme.iconImage} />
           </Button.Left>
 
           <Button.Center>
             <Button.Text>
-              <Text>{s.strings.title_plugin_buy}</Text>
+              <Text style={{ color: theme.primaryText, fontSize: scale(21) }} >{s.strings.title_plugin_buy}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -145,17 +148,19 @@ const BuyButton = () => {
 
 const popToPluginSellScene = () => goToScene(PLUGIN_SELL)
 const SellButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToPluginSellScene}>
       <Button.Row>
         <Button.Row>
           <Button.Left>
-            <Image source={sellIcon} style={styles.iconImage} />
+            <Image source={sellIcon} style={theme.iconImage} />
           </Button.Left>
 
           <Button.Center>
             <Button.Text>
-              <Text>{s.strings.title_plugin_sell}</Text>
+              <Text style={{ color: theme.primaryText, fontSize: scale(21) }}  >{s.strings.title_plugin_sell}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -166,17 +171,19 @@ const SellButton = () => {
 
 const popToWalletListScene = () => goToScene(WALLET_LIST_SCENE)
 const WalletsButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToWalletListScene}>
       <Button.Row>
         <Button.Row>
           <Button.Left>
-            <Image source={walletIcon} style={styles.iconImage} />
+            <Image source={walletIcon} style={theme.iconImage} />
           </Button.Left>
 
           <Button.Center>
             <Button.Text>
-              <Text>{s.strings.drawer_wallets}</Text>
+              <Text style={{ color: theme.primaryText, fontSize: scale(21) }}  >{s.strings.drawer_wallets}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -190,16 +197,18 @@ const popToSendScan = () =>
     data: LOGIN_QR
   })
 const ScanButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToSendScan}>
       <Button.Row>
         <Button.Left>
-          <Image source={scanIcon} style={styles.iconImage} />
+          <Image source={scanIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_scan_qr_send}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21) }}   >{s.strings.drawer_scan_qr_send}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -212,6 +221,8 @@ type SweepPrivateKeyButtonProps = {
 }
 
 const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
+  const theme = useTheme();
+
   const { onSelectWallet } = props
   const handlePress = () => {
     Airship.show(bridge => (
@@ -230,12 +241,12 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
     <Button onPress={handlePress}>
       <Button.Row>
         <Button.Left>
-          <Image source={sweepIcon} style={styles.iconImage} />
+          <Image source={sweepIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_sweep_private_key}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21) }}  >{s.strings.drawer_sweep_private_key}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -245,16 +256,17 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
 
 const popToRequestScene = () => goToScene(REQUEST)
 const RequestButton = () => {
+  const theme = useTheme();
   return (
     <Button onPress={popToRequestScene}>
       <Button.Row>
         <Button.Left>
-          <Image source={receiveIcon} style={styles.iconImage} />
+          <Image source={receiveIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_request}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21)  }}  >{s.strings.drawer_request}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -264,16 +276,18 @@ const RequestButton = () => {
 
 const popToExchangeScene = () => goToScene(EXCHANGE_SCENE)
 const ExchangeButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToExchangeScene}>
       <Button.Row>
         <Button.Left>
-          <Image source={exchangeIcon} style={styles.iconImage} />
+          <Image source={exchangeIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_exchange}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21)  }}  >{s.strings.drawer_exchange}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -283,16 +297,18 @@ const ExchangeButton = () => {
 
 const popToWalletConnect = () => goToScene('wcConnections')
 const WalletConnectButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToWalletConnect}>
       <Button.Row>
         <Button.Left>
-          <Image source={walletConnect} style={[styles.iconImage, { resizeMode: 'contain' }]} />
+          <Image source={walletConnect} style={[theme.iconImage, { resizeMode: 'contain' }]} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.wc_walletconnect_title}</Text>
+            <Text style={{ color: theme.primaryText , fontSize: scale(21) }}  >{s.strings.wc_walletconnect_title}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -302,16 +318,18 @@ const WalletConnectButton = () => {
 
 const popToTermsOfServiceScene = () => goToScene(TERMS_OF_SERVICE)
 const TermsOfServiceButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToTermsOfServiceScene}>
       <Button.Row>
         <Button.Left>
-          <Image source={termsIcon} style={styles.iconImage} />
+          <Image source={termsIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.title_terms_of_service}</Text>
+            <Text style={{ color: theme.primaryText , fontSize: scale(21) }}  >{s.strings.title_terms_of_service}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -320,6 +338,8 @@ const TermsOfServiceButton = () => {
 }
 
 const shareApp = () => {
+  const theme = useTheme();
+
   const url = THEME.websiteUrl
   const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n`
   const shareOptions = {
@@ -329,16 +349,18 @@ const shareApp = () => {
   Share.open(shareOptions).catch(e => console.log(e))
 }
 const ShareButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={shareApp}>
       <Button.Row>
         <Button.Left>
-          <Image source={shareIcon} style={styles.iconImage} />
+          <Image source={shareIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.string_share + ' ' + s.strings.app_name}</Text>
+            <Text style={{ color: theme.primaryText , fontSize: scale(21) }}  >{s.strings.string_share + ' ' + s.strings.app_name}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -348,16 +370,18 @@ const ShareButton = () => {
 
 const popToSettingsScene = () => goToScene(SETTINGS_OVERVIEW_TAB)
 const SettingsButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={popToSettingsScene}>
       <Button.Row>
         <Button.Left>
-          <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={settings} />
+          <Image style={[theme.iconImage, { height: scale(20), width: scale(20) }]} source={settings} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.settings_title}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21)  }}  >{s.strings.settings_title}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -370,17 +394,19 @@ type LogoutButtonProps = {
 }
 
 const LogoutButton = (props: LogoutButtonProps) => {
+  const theme = useTheme();
+
   const { onPress } = props
   return (
     <Button onPress={onPress}>
       <Button.Row>
         <Button.Left>
-          <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={logoutImage} />
+          <Image style={[theme.iconImage, { height: scale(20), width: scale(20) }]} source={logoutImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.settings_button_logout}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21)  }}  >{s.strings.settings_button_logout}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -390,18 +416,20 @@ const LogoutButton = (props: LogoutButtonProps) => {
 
 const goToFioNamesScene = () => goToScene(FIO_ADDRESS_LIST)
 const FioAddressButton = () => {
+  const theme = useTheme();
+
   // FIO disable changes below
   if (global.isFioDisabled) return null
   return (
     <Button onPress={goToFioNamesScene}>
       <Button.Row>
         <Button.Left>
-          <Image source={fioAddressIcon} style={styles.iconImage} />
+          <Image source={fioAddressIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_fio_names}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21)  }}  >{s.strings.drawer_fio_names}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -411,16 +439,18 @@ const FioAddressButton = () => {
 
 const goToFioRequestsScene = () => goToScene(FIO_REQUEST_LIST)
 const FioRequestsButton = () => {
+  const theme = useTheme();
+
   return (
     <Button onPress={goToFioRequestsScene}>
       <Button.Row>
         <Button.Left>
-          <Image source={fioRequestsIcon} style={styles.iconImage} />
+          <Image source={fioRequestsIcon} style={theme.iconImage} />
         </Button.Left>
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_fio_requests}</Text>
+            <Text style={{ color: theme.primaryText, fontSize: scale(21)  }}   >{s.strings.drawer_fio_requests}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -428,7 +458,7 @@ const FioRequestsButton = () => {
   )
 }
 
-export const Main = connect<StateProps, DispatchProps, {}>(
+export const Main = connect < StateProps, DispatchProps, { }> (
   state => ({
     usersView: state.ui.scenes.controlPanel.usersView
   }),

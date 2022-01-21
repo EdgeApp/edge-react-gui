@@ -2,7 +2,7 @@
 
 import { cacheStyles, makeThemeContext } from 'react-native-patina'
 
-import { edgeDark } from '../../theme/variables/edgeDark.js'
+import { womanTheme } from '../../theme/variables/womanTheme'
 import { type Theme } from '../../types/Theme.js'
 
 export type { Theme }
@@ -16,5 +16,5 @@ export type ThemeProps = {
 }
 
 // Provide the theme context methods:
-const themeContext = makeThemeContext(edgeDark)
+const themeContext = makeThemeContext(womanTheme)
 export const { ThemeProvider, useTheme, withTheme, changeTheme, getTheme, watchTheme } = themeContext

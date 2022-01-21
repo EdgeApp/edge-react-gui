@@ -6,7 +6,8 @@ import { type AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
 
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import logo from '../../assets/images/olingoLogo/Olingo_logo_Icon.png'
+
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -75,7 +76,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
         <View style={styles.titleContainer}>
-          <Image source={edgeLogo} style={styles.logo} resizeMode="contain" />
+          <Image source={logo} style={styles.logo} resizeMode="contain" />
           <ModalTitle center paddingRem={[0, 1, 1]}>
             {s.strings.help_modal_title}
           </ModalTitle>
