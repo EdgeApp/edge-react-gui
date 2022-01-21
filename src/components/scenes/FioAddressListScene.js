@@ -210,6 +210,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center',
     padding: theme.rem(1)
   },
+  buttonText: {
+    marginLeft: theme.rem(0.5),
+    color: theme.textLink,
+    textAlign: 'center'
+  },
   iconImg: {
     height: theme.rem(2.25),
     marginRight: theme.rem(1.5)
@@ -218,6 +223,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5),
     marginRight: theme.rem(1),
     textAlign: 'center'
+  },
+  actionButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  actionIcon: {
+    marginTop: theme.rem(0.25)
   }
 }))
 
