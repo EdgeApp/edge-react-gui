@@ -14,6 +14,7 @@
 		31BE19EEE2CA4692A7873F5F /* SourceSansPro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D9F41192F8419DA0531DFF /* SourceSansPro-BoldItalic.ttf */; };
 		3D1368BD21DD76BB00DC8CE4 /* edge-core in Resources */ = {isa = PBXBuildFile; fileRef = 3D1368BC21DD76BB00DC8CE4 /* edge-core */; };
 		3D2A4BE322934B0000E1EC61 /* blank.html in Resources */ = {isa = PBXBuildFile; fileRef = 3D2A4BE222934B0000E1EC61 /* blank.html */; };
+		3D3A45142710DEF40036CF4B /* LinkPresentation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D3A45132710DEF40036CF4B /* LinkPresentation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		3DC7E8532525AB490061CF16 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7E8522525AB490061CF16 /* Dummy.swift */; };
 		50FDCD65EBE045E282509085 /* SourceSansPro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */; };
 		5872448FDFE840DEBB46A6BA /* SourceSansPro-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */; };
@@ -54,6 +55,7 @@
 		38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-ExtraLightItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		3D1368BC21DD76BB00DC8CE4 /* edge-core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "edge-core"; path = "../android/app/src/main/assets/edge-core"; sourceTree = "<group>"; };
 		3D2A4BE222934B0000E1EC61 /* blank.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = blank.html; path = ../android/app/src/main/assets/blank.html; sourceTree = "<group>"; };
+		3D3A45132710DEF40036CF4B /* LinkPresentation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinkPresentation.framework; path = System/Library/Frameworks/LinkPresentation.framework; sourceTree = SDKROOT; };
 		3DC7E8522525AB490061CF16 /* Dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 		5374C609A9164C53819F3FDD /* SourceSansPro-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Semibold.ttf"; path = "../src/assets/fonts/SourceSansPro-Semibold.ttf"; sourceTree = "<group>"; };
 		550016E295D7C4722CD35EF9 /* Pods-edge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.debug.xcconfig"; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D3A45142710DEF40036CF4B /* LinkPresentation.framework in Frameworks */,
 				D6181FED10025926C9F176BD /* libPods-edge.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,6 +157,7 @@
 		82DAC2543B5A97898904086F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D3A45132710DEF40036CF4B /* LinkPresentation.framework */,
 				DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */,
 			);
 			name = Frameworks;

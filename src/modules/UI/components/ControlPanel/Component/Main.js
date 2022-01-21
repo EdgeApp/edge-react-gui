@@ -304,6 +304,7 @@ const WalletConnectButton = () => {
       <Button.Row>
         <Button.Left>
           <Image source={walletConnect} style={[theme.iconImage, { resizeMode: 'contain' }]} />
+
         </Button.Left>
 
         <Button.Center>
