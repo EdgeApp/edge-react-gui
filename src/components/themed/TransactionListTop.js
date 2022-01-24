@@ -10,10 +10,11 @@ import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.
 import { REQUEST, SEND } from '../../constants/SceneKeys.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
+import { convertNativeToDenomination, getFiatSymbol } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -276,17 +277,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
+    const { currencyInfo } = state.core.account.currencyWallets[selectedWalletId]
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
 
     // Crypto Amount Formatting
-    const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings, 'display')
+    const currencyDenomination = getDisplayDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
     const cryptoAmountFormat = formatNumber(bns.add(cryptoAmount, '0'))
 
     // Fiat Balance Formatting
-    const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
+    const defaultDenomination = getExchangeDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
     const defaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(balance)
     const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
     const fiatBalanceFormat = formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })

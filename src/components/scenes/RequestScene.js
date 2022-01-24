@@ -14,7 +14,7 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -551,8 +551,8 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name

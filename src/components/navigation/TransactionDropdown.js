@@ -70,13 +70,18 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
       return { message: '' }
     }
 
-    const { nativeAmount, currencyCode } = tx
-    const displayDenomination = getDisplayDenomination(state, currencyCode)
-    const { symbol, name, multiplier } = displayDenomination
-    const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
-
-    return {
-      message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+    const { nativeAmount, currencyCode, wallet } = tx
+    if (wallet != null) {
+      const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+      const { symbol, name, multiplier } = displayDenomination
+      const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
+      return {
+        message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+      }
+    } else {
+      return {
+        message: sprintf(s.strings.bitcoin_received, '')
+      }
     }
   },
   dispatch => ({

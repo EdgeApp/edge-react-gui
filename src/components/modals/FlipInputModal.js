@@ -146,6 +146,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             nativeCryptoAmount={balanceCrypto}
             cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -181,7 +182,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees = () => {
-    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, secondaryInfo, theme } = this.props
+    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, primaryInfo, secondaryInfo, theme } = this.props
     const truncatedFeeAmount = truncateDecimals(feeAmount, 6, false)
     const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
@@ -198,6 +199,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             nativeCryptoAmount={feeNativeAmount}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -297,8 +299,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const { symbolImageDarkMono } = getCurrencyIcon(wallet.currencyInfo.currencyCode, currencyCode)
 
     // Denominations
-    const cryptoDenomination = getDisplayDenomination(state, currencyCode)
-    const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
+    const cryptoDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const cryptoExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
     // FlipInput
@@ -322,14 +324,14 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
-    const feeCurrencyCode = wallet.currencyInfo.currencyCode
-    const feeDisplayDenomination = getDisplayDenomination(state, feeCurrencyCode)
+    const feeDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeDefaultDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
     const transactionFee = convertTransactionFeeToDisplayFee(
       wallet,
-      currencyCode,
       state.exchangeRates,
       state.ui.scenes.sendConfirmation.transaction,
-      state.ui.settings
+      feeDisplayDenomination,
+      feeDefaultDenomination
     )
 
     // Error
