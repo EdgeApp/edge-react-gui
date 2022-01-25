@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { deleteLocalAccount } from '../../actions/AccountActions.js'
 import { logoutRequest } from '../../actions/LoginActions.js'
-import { loginQrCodeScanned, qrCodeScanned } from '../../actions/ScanActions.js'
+import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../assets/vector'
@@ -125,7 +125,7 @@ export function ControlPanel(props: Props) {
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} />)
       .then((result: string | void) => {
         if (result) {
-          dispatch(loginQrCodeScanned(result))
+          dispatch(parseScannedUri(result))
         }
       })
       .catch(showError)
