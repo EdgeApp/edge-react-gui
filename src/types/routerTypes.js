@@ -27,7 +27,6 @@ export type ParamList = {
   edge: void,
   // Logged-in scenes:
   addToken: {|
-    onAddToken: (currencyCode: string) => void,
     contractAddress?: string,
     currencyCode?: string,
     currencyName?: string,
@@ -89,7 +88,6 @@ export type ParamList = {
   editToken: {|
     currencyCode: string,
     metaTokens: EdgeMetaToken[],
-    onDeleteToken(currencyCode: string): void,
     walletId: string
   |},
   exchange: void,

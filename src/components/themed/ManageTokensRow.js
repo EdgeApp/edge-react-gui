@@ -11,7 +11,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletListRow } from './WalletListRow'
 
 export type Props = {
-  toggleToken: string => void,
+  toggleToken: (string, boolean) => void,
   metaToken: EdgeMetaToken & {
     item: any
   },
@@ -48,7 +48,7 @@ export function ManageTokensRow(props: Props) {
     <WalletListRow onPress={onPress} gradient icon={<Icon />} editIcon={<EditIcon />} currencyCode={currencyCode} walletName={currencyName}>
       <View style={styles.touchableCheckboxInterior}>
         <Switch
-          onChange={() => toggleToken(currencyCode)}
+          onChange={event => toggleToken(currencyCode, event.nativeEvent.value)}
           value={enabled}
           ios_backgroundColor={theme.toggleButtonOff}
           trackColor={{

@@ -144,7 +144,7 @@ class EditTokenComponent extends React.Component<Props, State> {
 
   deleteToken = () => {
     const { deleteCustomToken, route } = this.props
-    const { walletId, currencyCode, onDeleteToken } = route.params
+    const { walletId, currencyCode } = route.params
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -155,7 +155,6 @@ class EditTokenComponent extends React.Component<Props, State> {
             label: s.strings.string_delete,
             async onPress() {
               await deleteCustomToken(walletId, currencyCode)
-              onDeleteToken(currencyCode)
               return true
             }
           },
