@@ -121,7 +121,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
     const styles = getStyles(theme)
 
-    if (!SPECIAL_CURRENCY_INFO[currencyCode].isStakingSupported) return null
+    if (!SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) return null
 
     const availableBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.available}`]
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
@@ -372,7 +372,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
     const fiatBalanceFormat = formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
-    if (SPECIAL_CURRENCY_INFO[selectedCurrencyCode] != null && SPECIAL_CURRENCY_INFO[selectedCurrencyCode].isStakingSupported) {
+    if (SPECIAL_CURRENCY_INFO[selectedCurrencyCode]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
         const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
 
