@@ -16,6 +16,7 @@ import { Tile } from '../../../components/themed/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
+import { getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors.js'
 import { connect } from '../../../types/reactRedux.js'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
@@ -271,7 +272,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
   state => ({
-    denominationMultiplier: getDisplayDenomination(state, FIO_STR).multiplier,
+    denominationMultiplier: getDisplayDenomination(state, getSelectedCurrencyWallet(state).currencyInfo.pluginId, FIO_STR).multiplier,
     currencyWallets: state.core.account.currencyWallets,
     fioWallets: state.ui.wallets.fioWallets
   }),

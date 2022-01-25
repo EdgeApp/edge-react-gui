@@ -153,7 +153,7 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
   }
 }
 
-export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): SpendAuthType => {
+export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo, walletId: string): SpendAuthType => {
   const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
   if (!isEnabled) return 'none'
 
@@ -164,7 +164,8 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
 
   const { spendingLimits } = state.ui.settings
   const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
-  const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
+  const wallet = state.core.account.currencyWallets[walletId]
+  const nativeToExchangeRatio = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
   const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, exchangeAmount)
   const exceedsLimit = bns.gte(fiatAmount, spendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
