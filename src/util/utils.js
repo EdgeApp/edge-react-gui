@@ -13,6 +13,7 @@ import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
+import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
 export const DECIMAL_PRECISION = 18
 
@@ -760,13 +761,13 @@ export const convertToFiatFee = (
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  guiWallet: GuiWallet,
+  wallet: EdgeCurrencyWallet,
   currencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   settings: any
 ): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string, nativeCryptoAmount: string } => {
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
+  const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
   const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
   const networkFee = transaction ? transaction.networkFee : undefined
@@ -774,8 +775,8 @@ export const convertTransactionFeeToDisplayFee = (
 
   if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
-    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
+    const parentDisplayDenomination = getDenomination(wallet.currencyInfo.currencyCode, settings, 'display')
+    const parentExchangeDenomination = getDenomination(wallet.currencyInfo.currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
