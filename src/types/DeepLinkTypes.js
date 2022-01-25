@@ -40,6 +40,11 @@ export type AztecoLink = {
   uri: string
 }
 
+export type BitPayLink = {
+  type: 'bitPay',
+  uri: string
+}
+
 export type EdgeLoginLink = {
   type: 'edgeLogin',
   lobbyId: string
@@ -82,6 +87,7 @@ export type WalletConnectLink = {
 
 export type DeepLink =
   | AztecoLink
+  | BitPayLink
   | EdgeLoginLink
   | PasswordRecoveryLink
   | PluginLink
