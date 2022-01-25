@@ -5315,7 +5315,7 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-"edge-core-js@https://github.com/EdgeApp/edge-core-js.git#william/staking-status":
+"edge-core-js@https://github.com/EdgeApp/edge-core-js.git#0c0bce897b4cf39950d96874264d0281fd5c2f77":
   version "0.19.3"
   resolved "https://github.com/EdgeApp/edge-core-js.git#0c0bce897b4cf39950d96874264d0281fd5c2f77"
   dependencies:
@@ -5341,7 +5341,7 @@ ed25519@0.0.4:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased.git#andrey/fio-staking":
+"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased.git#4d5b97fdb0c128e976c2d448bc0d2c0857dfe8c9":
   version "0.11.8"
   resolved "https://github.com/EdgeApp/edge-currency-accountbased.git#4d5b97fdb0c128e976c2d448bc0d2c0857dfe8c9"
   dependencies:
