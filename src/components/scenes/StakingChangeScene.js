@@ -345,7 +345,7 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
     const currencyDenomination = getDenomination(currencyCode, state.ui.settings, 'display')
     const defaultDenomination = getDefaultDenomination(currencyCode, state.ui.settings)
 
-    if (SPECIAL_CURRENCY_INFO[currencyCode].isStakingSupported) {
+    if (SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
         const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
 
