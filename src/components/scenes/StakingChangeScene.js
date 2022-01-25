@@ -199,10 +199,14 @@ export const StakingChangeSceneComponent = (props: Props) => {
 
   useEffect(() => {
     if (!selectedFioAddress) {
-      const walletFioAddresses = fioAddresses.filter(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
-      setSelectedFioAddress(walletFioAddresses.length > 0 ? walletFioAddresses[0].name : '')
+      const fioAddress = fioAddresses.find(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
+      if (fioAddress == null) {
+        setError(new Error('You have no FIO addresses'))
+        return
+      }
+      setSelectedFioAddress(fioAddress.name)
     }
-  }, [fioAddresses])
+  }, [...fioAddresses])
 
   const sliderDisabled = tx == null || amount == null || amount === '0' || error != null
 
