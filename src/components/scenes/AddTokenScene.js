@@ -147,7 +147,7 @@ class AddToken extends React.Component<Props, State> {
       () => {
         const { route, currentCustomTokens, wallet, addNewToken } = this.props
         const { currencyName, decimalPlaces, contractAddress } = this.state
-        const { walletId, onAddToken } = route.params
+        const { walletId } = route.params
 
         const currentCustomTokenIndex = currentCustomTokens.findIndex(item => item.currencyCode === currencyCode)
         const metaTokensIndex = wallet.metaTokens.findIndex(item => item.currencyCode === currencyCode)
@@ -160,7 +160,6 @@ class AddToken extends React.Component<Props, State> {
           if (currencyName && currencyCode && decimalPlaces && contractAddress) {
             const denomination = decimalPlacesToDenomination(decimalPlaces)
             addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type)
-            onAddToken(currencyCode)
           } else {
             Alert.alert(s.strings.addtoken_invalid_information)
           }
