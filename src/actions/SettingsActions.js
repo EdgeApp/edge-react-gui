@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 
@@ -109,19 +109,20 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
 }
 
 // Denominations
-export const setDenominationKeyRequest = (currencyCode: string, denominationKey: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
+export const setDenominationKeyRequest =
+  (pluginId: string, currencyCode: string, denomination: EdgeDenomination) => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
 
-  return setDenominationKeyRequestAccountSettings(account, currencyCode, denominationKey)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
-        data: { currencyCode, denominationKey }
-      })
-    )
-    .catch(showError)
-}
+    return setDenominationKeyRequestAccountSettings(account, pluginId, currencyCode, denomination)
+      .then(() =>
+        dispatch({
+          type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
+          data: { pluginId, currencyCode, denomination }
+        })
+      )
+      .catch(showError)
+  }
 
 // touch id interaction
 export const updateTouchIdEnabled = (isTouchEnabled: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {

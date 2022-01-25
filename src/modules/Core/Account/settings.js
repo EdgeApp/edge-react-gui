@@ -1,11 +1,14 @@
 /* eslint-disable quote-props */
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
+import type { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
+import { asSortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
-import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
+import { type MostRecentWallet, type PasswordReminder, asCustomTokenInfo, asMostRecentWallet } from '../../../types/types.js'
+import { currencyPlugins } from '../../../util/corePlugins.js'
 import { categories } from './subcategories.js'
 
 // prettier-ignore
@@ -17,7 +20,45 @@ export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '200000': false
 }
 
-// TODO:  Remove hardcoded currency defaults
+export const asCurrencyCodeDenom = asObject({
+  name: asString,
+  multiplier: asString,
+  symbol: asOptional(asString)
+})
+
+const asDenominationSettings = asObject(
+  Object.keys(currencyPlugins).reduce((currencyPluginSettingsMap, pluginId) => {
+    currencyPluginSettingsMap[pluginId] = asOptional(asObject(asMaybe(asCurrencyCodeDenom)), {})
+    return currencyPluginSettingsMap
+  }, {})
+)
+
+export type DenominationSettings = $Call<typeof asDenominationSettings>
+
+export const asSyncedAccountSettings = asOptional(
+  asObject({
+    autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
+    defaultFiat: asOptional(asString, 'USD'),
+    defaultIsoFiat: asOptional(asString, 'iso:USD'),
+    preferredSwapPluginId: asOptional(asString, ''),
+    countryCode: asOptional(asString, ''),
+    customTokens: asOptional(asArray(asCustomTokenInfo), []),
+    mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
+    passwordRecoveryRemindersShown: asOptional(
+      asObject({
+        '20': asBoolean,
+        '200': asBoolean,
+        '2000': asBoolean,
+        '20000': asBoolean,
+        '200000': asBoolean
+      }),
+      PASSWORD_RECOVERY_REMINDERS_SHOWN
+    ),
+    walletsSort: asOptional(asSortOption, 'default'),
+    denominationSettings: asOptional(asDenominationSettings, {})
+  })
+)
+
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
@@ -25,394 +66,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultIsoFiat: 'iso:USD',
   preferredSwapPluginId: '',
   countryCode: '',
-  BTC: {
-    denomination: '100000000'
-  },
-  ZADDR: {
-    denomination: '100000000',
-    denominations: [
-      {
-        multiplier: '100000000',
-        name: 'ZEC',
-        symbol: 'ZEC'
-      }
-    ]
-  },
-  TESTBTC: {
-    denomination: '100000000'
-  },
-  BCH: {
-    denomination: '100000000'
-  },
-  EOS: {
-    denomination: '10000'
-  },
-  TLOS: {
-    denomination: '10000'
-  },
-  WAX: {
-    denomination: '100000000'
-  },
-  XRP: {
-    denomination: '1000000'
-  },
-  XLM: {
-    denomination: '10000000'
-  },
-  BNB: {
-    denomination: '100000000'
-  },
-  DASH: {
-    denomination: '100000000'
-  },
-  DOGE: {
-    denomination: '100000000'
-  },
-  DGB: {
-    denomination: '100000000'
-  },
-  LTC: {
-    denomination: '100000000'
-  },
-  FTC: {
-    denomination: '100000000'
-  },
-  VTC: {
-    denomination: '100000000'
-  },
-  RVN: {
-    denomination: '100000000'
-  },
-  FIRO: {
-    denomination: '100000000'
-  },
-  QTUM: {
-    denomination: '100000000'
-  },
-  XMR: {
-    denomination: '1000000000000'
-  },
-  XTZ: {
-    denomination: '1000000'
-  },
-  ETH: {
-    denomination: '1000000000000000000'
-  },
-  ETC: {
-    denomination: '1000000000000000000'
-  },
-  UFO: {
-    denomination: '100000000'
-  },
-  REP: {
-    denomination: '1000000000000000000'
-  },
-  REPV2: {
-    denomination: '1000000000000000000'
-  },
-  WINGS: {
-    denomination: '1000000000000000000'
-  },
-  IND: {
-    denomination: '1000000000000000000'
-  },
-  HUR: {
-    denomination: '1000000000000000000'
-  },
-  SMART: {
-    denomination: '100000000'
-  },
-  HERC: {
-    denomination: '1000000000000000000'
-  },
-  ANTV1: {
-    denomination: '1000000000000000000'
-  },
-  HBAR: {
-    denomination: '100000000'
-  },
-  ANT: {
-    denomination: '1000000000000000000'
-  },
-  BAT: {
-    denomination: '1000000000000000000'
-  },
-  BNT: {
-    denomination: '1000000000000000000'
-  },
-  GNT: {
-    denomination: '1000000000000000000'
-  },
-  GLM: {
-    denomination: '1000000000000000000'
-  },
-  KNC: {
-    denomination: '1000000000000000000'
-  },
-  POLY: {
-    denomination: '1000000000000000000'
-  },
-  STORJ: {
-    denomination: '100000000'
-  },
-  USDC: {
-    denomination: '1000000'
-  },
-  USDS: {
-    denomination: '1000000'
-  },
-  TUSD: {
-    denomination: '1000000000000000000'
-  },
-  ZRX: {
-    denomination: '1000000000000000000'
-  },
-  GNO: {
-    denomination: '1000000000000000000'
-  },
-  OMG: {
-    denomination: '1000000000000000000'
-  },
-  NMR: {
-    denomination: '1000000000000000000'
-  },
-  MKR: {
-    denomination: '1000000000000000000'
-  },
-  GUSD: {
-    denomination: '100'
-  },
-  PAX: {
-    denomination: '1000000000000000000'
-  },
-  SALT: {
-    denomination: '100000000'
-  },
-  MANA: {
-    denomination: '1000000000000000000'
-  },
-  NEXO: {
-    denomination: '1000000000000000000'
-  },
-  FUN: {
-    denomination: '100000000'
-  },
-  KIN: {
-    denomination: '1000000000000000000'
-  },
-  USDT: {
-    denomination: '1000000'
-  },
-  DAI: {
-    denomination: '1000000000000000000'
-  },
-  SAI: {
-    denomination: '1000000000000000000'
-  },
-  BRZ: {
-    denomination: '10000'
-  },
-  LINK: {
-    denomination: '1000000000000000000'
-  },
-  RBTC: {
-    denomination: '1000000000000000000'
-  },
-  RIF: {
-    denomination: '1000000000000000000'
-  },
-  CREP: {
-    denomination: '100000000'
-  },
-  CUSDC: {
-    denomination: '100000000'
-  },
-  CBAT: {
-    denomination: '100000000'
-  },
-  CZRX: {
-    denomination: '100000000'
-  },
-  CWBTC: {
-    denomination: '100000000'
-  },
-  CDAI: {
-    denomination: '100000000'
-  },
-  CSAI: {
-    denomination: '100000000'
-  },
-  CETH: {
-    denomination: '100000000'
-  },
-  ETHBNT: {
-    denomination: '1000000000000000000'
-  },
-  MET: {
-    denomination: '1000000000000000000'
-  },
-  OXT: {
-    denomination: '1000000000000000000'
-  },
-  SNX: {
-    denomination: '1000000000000000000'
-  },
-  SBTC: {
-    denomination: '1000000000000000000'
-  },
-  SUSD: {
-    denomination: '1000000000000000000'
-  },
-  COMP: {
-    denomination: '1000000000000000000'
-  },
-  AAVE: {
-    denomination: '1000000000000000000'
-  },
-  AYFI: {
-    denomination: '1000000000000000000'
-  },
-  ALINK: {
-    denomination: '1000000000000000000'
-  },
-  ADAI: {
-    denomination: '1000000000000000000'
-  },
-  ABAT: {
-    denomination: '1000000000000000000'
-  },
-  AWETH: {
-    denomination: '1000000000000000000'
-  },
-  AWBTC: {
-    denomination: '100000000'
-  },
-  ASNX: {
-    denomination: '1000000000000000000'
-  },
-  AREN: {
-    denomination: '1000000000000000000'
-  },
-  AUSDT: {
-    denomination: '1000000'
-  },
-  AMKR: {
-    denomination: '1000000000000000000'
-  },
-  AMANA: {
-    denomination: '1000000000000000000'
-  },
-  AZRX: {
-    denomination: '1000000000000000000'
-  },
-  AKNC: {
-    denomination: '1000000000000000000'
-  },
-  AUSDC: {
-    denomination: '1000000'
-  },
-  ASUSD: {
-    denomination: '1000000000000000000'
-  },
-  AUNI: {
-    denomination: '1000000000000000000'
-  },
-  WBTC: {
-    denomination: '100000000'
-  },
-  YFI: {
-    denomination: '1000000000000000000'
-  },
-  CRV: {
-    denomination: '1000000000000000000'
-  },
-  BAL: {
-    denomination: '1000000000000000000'
-  },
-  SUSHI: {
-    denomination: '1000000000000000000'
-  },
-  UMA: {
-    denomination: '1000000000000000000'
-  },
-  BADGER: {
-    denomination: '1000000000000000000'
-  },
-  IDLE: {
-    denomination: '1000000000000000000'
-  },
-  NXM: {
-    denomination: '1000000000000000000'
-  },
-  CREAM: {
-    denomination: '1000000000000000000'
-  },
-  PICKLE: {
-    denomination: '1000000000000000000'
-  },
-  CVP: {
-    denomination: '1000000000000000000'
-  },
-  ROOK: {
-    denomination: '1000000000000000000'
-  },
-  DOUGH: {
-    denomination: '1000000000000000000'
-  },
-  COMBO: {
-    denomination: '1000000000000000000'
-  },
-  INDEX: {
-    denomination: '1000000000000000000'
-  },
-  WETH: {
-    denomination: '1000000000000000000'
-  },
-  RENBTC: {
-    denomination: '100000000'
-  },
-  RENBCH: {
-    denomination: '100000000'
-  },
-  RENZEC: {
-    denomination: '100000000'
-  },
-  TBTC: {
-    denomination: '1000000000000000000'
-  },
-  DPI: {
-    denomination: '1000000000000000000'
-  },
-  YETI: {
-    denomination: '1000000000000000000'
-  },
-  BAND: {
-    denomination: '1000000000000000000'
-  },
-  REN: {
-    denomination: '1000000000000000000'
-  },
-  AMPL: {
-    denomination: '1000000000'
-  },
-  OCEAN: {
-    denomination: '1000000000000000000'
-  },
-  UNI: {
-    denomination: '1000000000000000000'
-  },
-  FTM: {
-    denomination: '1000000000000000000'
-  },
-  FUSDT: {
-    denomination: '1000000'
-  },
-  MATIC: {
-    denomination: '1000000000000000000'
-  },
-  AVAX: {
-    denomination: '1000000000000000000'
-  },
+  denominationSettings: {},
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -666,9 +320,9 @@ export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, le
 }
 
 // Currency Settings
-export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
+export const setDenominationKeyRequest = (account: EdgeAccount, pluginId: string, currencyCode: string, denomination: EdgeDenomination) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
+    const updatedSettings = updateCurrencySettings(settings, pluginId, currencyCode, denomination)
     return setSyncedSettings(account, updatedSettings)
   })
 
@@ -745,16 +399,13 @@ export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
-export const updateCurrencySettings = (currentSettings: Object, currencyCode: string, newSettings: Object) => {
-  const currencySettings = currentSettings[currencyCode]
+export const updateCurrencySettings = (currentSettings: Object, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {
   // update with new settings
   const updatedSettings = {
-    ...currentSettings,
-    [currencyCode]: {
-      ...currencySettings,
-      ...newSettings
-    }
+    ...currentSettings
   }
+  if (updatedSettings.denominationSettings[pluginId] == null) updatedSettings.denominationSettings[pluginId] = {}
+  updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
 }
 

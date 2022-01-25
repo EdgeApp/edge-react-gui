@@ -1,5 +1,6 @@
 // @flow
 
+import { asValue } from 'cleaners'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -20,7 +21,8 @@ const options = [
   { key: 'lowest', title: s.strings.wallet_list_sort_lowest }
 ]
 
-export type SortOption = 'default' | 'name' | 'currencyCode' | 'currencyName' | 'highest' | 'lowest'
+export const asSortOption = asValue('default', 'name', 'currencyCode', 'currencyName', 'highest', 'lowest')
+export type SortOption = $Call<typeof asSortOption>
 
 type OwnProps = {
   bridge: AirshipBridge<'manual' | void>

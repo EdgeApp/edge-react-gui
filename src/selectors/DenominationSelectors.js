@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 
 import { type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type RootState } from '../types/reduxTypes.js'
@@ -88,6 +88,18 @@ export const getExchangeDenomination = (state: RootState, currencyCode: string) 
     }
   }
   return exchangeDenomination
+}
+
+export const getDenominationFromCurrencyInfo = (currencyInfo: EdgeCurrencyInfo, currencyCode: string): EdgeDenomination => {
+  if (currencyCode === currencyInfo.currencyCode) {
+    return currencyInfo.denominations.find(denom => denom.name === currencyCode) ?? emptyEdgeDenomination
+  } else if (currencyInfo.metaTokens.some(token => token.currencyCode === currencyCode)) {
+    const metaToken = currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)
+    if (metaToken != null) {
+      return metaToken.denominations.find(denom => denom.name === currencyCode) ?? emptyEdgeDenomination
+    }
+  }
+  return emptyEdgeDenomination
 }
 
 export const getDefaultDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {

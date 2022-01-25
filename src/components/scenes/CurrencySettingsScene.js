@@ -1,7 +1,7 @@
 // @flow
 
 import { asArray, asBoolean, asMaybe, asObject, asOptional, asString } from 'cleaners'
-import { type EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
@@ -28,7 +28,7 @@ type StateProps = {
   selectedDenominationKey: string
 }
 type DispatchProps = {
-  selectDenomination: (currencyCode: string, denominationKey: string) => Promise<void>
+  selectDenomination: (pluginId: string, currencyCode: string, denomination: EdgeDenomination) => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -131,7 +131,7 @@ export function CurrencySettingsComponent(props: Props) {
           const key = denomination.multiplier
           const isSelected = key === selectedDenominationKey
           return (
-            <SettingsRadioRow key={denomination.multiplier} value={isSelected} onPress={() => selectDenomination(currencyCode, key)}>
+            <SettingsRadioRow key={denomination.multiplier} value={isSelected} onPress={() => selectDenomination(pluginId, currencyCode, denomination)}>
               <Text style={styles.labelText}>
                 <Text style={styles.symbolText}>{denomination.symbol}</Text>
                 {' - ' + denomination.name}
@@ -173,8 +173,8 @@ export const CurrencySettingsScene = connect<StateProps, DispatchProps, OwnProps
     selectedDenominationKey: getDisplayDenominationKey(state, state.core.account.currencyConfig[params.currencyInfo.pluginId].currencyInfo.currencyCode)
   }),
   dispatch => ({
-    async selectDenomination(currencyCode, denominationKey) {
-      await dispatch(setDenominationKeyRequest(currencyCode, denominationKey))
+    async selectDenomination(pluginId, currencyCode, denomination) {
+      await dispatch(setDenominationKeyRequest(pluginId, currencyCode, denomination))
     }
   })
 )(withTheme(CurrencySettingsComponent))
