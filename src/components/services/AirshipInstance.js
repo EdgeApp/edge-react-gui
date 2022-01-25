@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { makeAirship } from 'react-native-airship'
 
+import ENV from '../../../env.json'
 import { AirshipToast } from '../common/AirshipToast.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 
@@ -14,6 +15,10 @@ export const Airship = makeAirship()
  */
 export function showError(error: mixed): void {
   console.error('Showing error drop-down alert:', error)
+
+  if ((ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS) && error instanceof Error) {
+    console.error(error.stack)
+  }
 
   // TODO: Run the errors through our translation infrastructure:
   const message = error instanceof Error ? error.message : String(error)
