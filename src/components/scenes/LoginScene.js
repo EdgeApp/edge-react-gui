@@ -1,6 +1,7 @@
 // @flow
 
 import { BlurView } from '@react-native-community/blur'
+import { wrap } from 'cavy'
 import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
@@ -27,6 +28,10 @@ import { LoadingScene } from './LoadingScene.js'
 // Sneak the BlurView over to the login UI:
 global.ReactNativeBlurView = BlurView
 
+type OwnProps = {
+  generateTestHook: (id: string, ref: any) => void
+}
+
 type StateProps = {
   account: EdgeAccount,
   context: EdgeContext,
@@ -40,7 +45,7 @@ type DispatchProps = {
   initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
   logout: () => void
 }
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
   counter: number,
@@ -122,13 +127,15 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { context, handleSendLogs, theme, username } = this.props
+    const { context, handleSendLogs, theme, username, generateTestHook } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
+    const TestableLoginScreen = wrap(LoginScreen)
 
     return this.props.account.username == null ? (
       <View style={styles.container} testID="edge: login-scene">
-        <LoginScreen
+        <TestableLoginScreen
           username={username}
+          ref={generateTestHook('Login.Login')}
           accountOptions={{ pauseWallets: true }}
           context={context}
           recoveryLogin={passwordRecoveryKey}
@@ -164,7 +171,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const LoginScene = connect<StateProps, DispatchProps, {}>(
+export const LoginScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,
