@@ -84,7 +84,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
   } = props
   const styles = getStyles(theme)
 
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState('0')
   const [apy, setApy] = useState(0)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -168,6 +168,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
         currencyCode={currencyCode}
         onFeesChange={onFeesChange}
         onAmountChanged={onAmountChanged}
+        overrideExchangeAmount={amount}
         onMaxSet={onMaxSet}
       />
     )).catch(error => setError(error))
