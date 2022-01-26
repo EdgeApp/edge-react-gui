@@ -89,10 +89,16 @@ export const StakingChangeSceneComponent = (props: Props) => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [tx, setTx] = useState(null)
-  const [selectedFioAddress, setSelectedFioAddress] = useState(null)
+  const [selectedFioAddress, setSelectedFioAddress] = useState()
 
   const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
     setAmount(exchangeAmount)
+
+    // If the selectedFioAddress is not defined, then we will not be able to complete the transaction.
+    if (selectedFioAddress == null) {
+      setError(new Error('Unable to stake without a FIO addresses'))
+      return
+    }
 
     const actionName = SPECIAL_CURRENCY_INFO[currencyCode].stakeActions != null ? SPECIAL_CURRENCY_INFO[currencyCode].stakeActions[change] : ''
     currencyWallet
@@ -200,10 +206,10 @@ export const StakingChangeSceneComponent = (props: Props) => {
   useEffect(() => {
     if (!selectedFioAddress) {
       const fioAddress = fioAddresses.find(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
-      if (fioAddress == null) {
-        setError(new Error('You have no FIO addresses'))
-        return
-      }
+
+      // If no address is found, we do not define the selectedFioAddress
+      if (fioAddress == null) return
+
       setSelectedFioAddress(fioAddress.name)
     }
   }, [...fioAddresses])
