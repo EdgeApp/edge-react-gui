@@ -13,7 +13,7 @@ import { sprintf } from 'sprintf-js'
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp, Actions } from '../../types/routerTypes.js'
@@ -23,8 +23,6 @@ import {
   capitalize,
   convertNativeToDisplay,
   displayFiatAmount,
-  getCurrencyInfo,
-  getDenomination,
   getFiatSymbol,
   isCryptoParentCurrency,
   isNotEmptyNumber,
@@ -383,7 +381,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       const convertedFee = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
       const amountMinusFee = sub(convertedAmount, convertedFee)
 
-      const feeAbsolute = abs(truncateDecimals(convertedFee, 6))
+      const feeAbsolute = abs(truncateDecimals(convertedFee))
       const feeString = symbolString
         ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, feeAbsolute)
         : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeAbsolute, walletDefaultDenomProps.name)
@@ -567,18 +565,16 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
     const { edgeTransaction } = params
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
     const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
+    const { currencyInfo } = state.core.account.currencyWallets[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
-    const { settings } = state.ui
     const currencyCode = edgeTransaction.currencyCode
-    const { allCurrencyInfos } = state.ui.settings.plugins
-    const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
     const walletDefaultDenomProps: EdgeDenomination = isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
-      ? getDenomination(wallet.currencyCode, settings, 'exchange')
-      : getDenomination(edgeTransaction.currencyCode, settings, 'exchange')
+      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+      : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
-    const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
+    const cryptoAmount = convertNativeToExchangeRateDenomination(currencyInfo, currencyCode, nativeAmount)
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
 
     const { swapData } = edgeTransaction
@@ -586,7 +582,8 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
       swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
     }
 
-    const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
+    const currencyWallet = state.core.account.currencyWallets[walletId || state.ui.wallets.selectedWalletId]
+    const destinationDenomination = swapData ? getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, swapData.payoutCurrencyCode) : undefined
     const destinationWallet = swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined
 
     return {

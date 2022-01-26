@@ -1,22 +1,22 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
-import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
+import { type DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
+import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type PasswordReminderState } from '../PasswordReminderReducer.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
 
 // prettier-ignore
 export type PasswordReminderLevels = {
-  '20': false,
-  '200': false,
-  '2000': false,
-  '20000': false,
-  '200000': false
+  '20': boolean,
+  '200': boolean,
+  '2000': boolean,
+  '20000': boolean,
+  '200000': boolean
 }
 
 export type AccountInitPayload = {|
@@ -27,10 +27,9 @@ export type AccountInitPayload = {|
   countryCode: string,
   currencyCode: string,
   customTokens: CustomTokenInfo[],
-  customTokensSettings: Array<{ currencyCode: string }>,
   defaultFiat: string,
   defaultIsoFiat: string,
-  denominationKeys: Array<{ currencyCode: string, denominationKey: string }>,
+  denominationSettings: DenominationSettings,
   developerModeOn: boolean,
   isAccountBalanceVisible: boolean,
   mostRecentWallets: MostRecentWallet[],
@@ -76,34 +75,9 @@ export const initialState = {
   }
 }
 
-export type CurrencySetting = {
-  denomination: string,
-  denominations?: EdgeDenomination[]
-}
-
 export type SettingsState = {
-  BCH: CurrencySetting,
-  BTC: CurrencySetting,
-  DASH: CurrencySetting,
-  FTC: CurrencySetting,
-  RVN: CurrencySetting,
-  ETH: CurrencySetting,
-  ETC: CurrencySetting,
-  LTC: CurrencySetting,
-  VTC: CurrencySetting,
-  FIRO: CurrencySetting,
-  QTUM: CurrencySetting,
-  UFO: CurrencySetting,
-  XMR: CurrencySetting,
-  XRP: CurrencySetting,
-  REP: CurrencySetting,
-  DOGE: CurrencySetting,
-  DGB: CurrencySetting,
-  WINGS: CurrencySetting,
-  HERC: CurrencySetting,
-
+  denominationSettings: DenominationSettings,
   autoLogoutTimeInSeconds: number,
-  bluetoothMode: boolean, // Never read or updated, but on disk
   changesLocked: any,
   customTokens: CustomTokenInfo[],
   defaultFiat: string,
@@ -112,7 +86,6 @@ export type SettingsState = {
   countryCode: string,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
-  merchantMode: boolean, // Never read or updated, but on disk
   preferredSwapPluginId: string | void,
   pinLoginEnabled: boolean,
   plugins: {
@@ -133,46 +106,13 @@ export type SettingsState = {
   passwordRecoveryRemindersShown: PasswordReminderLevels
 }
 
-function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
+function currencyPluginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
-  const { pluginId, walletType, displayName, currencyCode, denominations } = currencyInfo
-
-  // Build up object with all the information for the parent currency, accesible by the currencyCode
-  const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
-  const parentCurrencyInfo = {
-    [currencyInfo.currencyCode]: {
-      ...defaultParentCurrencyInfo,
-      displayName,
-      currencyCode,
-      denominations,
-      ...getCurrencyIcon(currencyCode)
-    }
-  }
-
-  // Build up object with all the information for each metatoken, accessible by the token currencyCode
-  const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
-    const { currencyCode } = metatoken
-    const defaultMetatokenInfo = state[currencyCode]
-    return {
-      ...acc,
-      [metatoken.currencyCode]: {
-        ...defaultMetatokenInfo,
-        ...metatoken,
-        ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode)
-      }
-    }
-  }, {})
-
-  // Build up object with all the currency information for each currency supported by the plugin, accessible by the currencyCode
-  const currencyInfos = {
-    ...parentCurrencyInfo,
-    ...metatokenCurrencyInfos
-  }
+  const { pluginId, walletType } = currencyInfo
 
   return {
     ...state,
-    ...currencyInfos,
     plugins: {
       ...plugins,
       [pluginId]: currencyInfo,
@@ -192,19 +132,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       for (const pluginId of Object.keys(account.currencyConfig)) {
         const { currencyInfo } = account.currencyConfig[pluginId]
         const { currencyCode } = currencyInfo
-        if (!newState[currencyCode]) newState[currencyCode] = {}
-        if (!newState[currencyCode].denomination) {
-          newState[currencyCode].denomination = currencyInfo.denominations[0].multiplier
-        }
-        if (!newState[currencyCode].denominations) {
-          newState[currencyCode].denominations = currencyInfo.denominations
+        if (newState.denominationSettings[pluginId] == null) state.denominationSettings[pluginId] = {}
+        if (newState.denominationSettings[pluginId][currencyCode] == null) {
+          newState.denominationSettings[pluginId][currencyCode] = getDenominationFromCurrencyInfo(currencyInfo, currencyCode)
         }
         for (const token of currencyInfo.metaTokens) {
           const tokenCode = token.currencyCode
-          newState[tokenCode] = {
-            denomination: token.denominations[0].multiplier,
-            denominations: token.denominations
-          }
+          newState.denominationSettings[pluginId][tokenCode] = getDenominationFromCurrencyInfo(currencyInfo, tokenCode)
         }
       }
       return newState
@@ -221,8 +155,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         countryCode,
         customTokens,
         pinLoginEnabled,
-        denominationKeys,
-        customTokensSettings,
+        denominationSettings,
         isAccountBalanceVisible,
         walletsSort,
         mostRecentWallets,
@@ -241,35 +174,16 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         customTokens,
         countryCode,
         pinLoginEnabled,
+        denominationSettings,
         isAccountBalanceVisible,
         walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         developerModeOn
       }
-      denominationKeys.forEach(key => {
-        const currencyCode = key.currencyCode
-        const denomination = key.denominationKey
-        const currencyState = newState[currencyCode]
-        newState = {
-          ...newState,
-          [currencyCode]: {
-            ...currencyState,
-            denomination
-          }
-        }
-      })
       for (const pluginId of Object.keys(account.currencyConfig)) {
-        newState = currencyPLuginUtil(newState, account.currencyConfig[pluginId].currencyInfo)
+        newState = currencyPluginUtil(newState, account.currencyConfig[pluginId].currencyInfo)
       }
-      customTokensSettings.forEach(key => {
-        const { currencyCode } = key
-        newState = {
-          ...newState,
-          [currencyCode]: key,
-          defaultIsoFiat: `iso:${defaultFiat}`
-        }
-      })
       return newState
     }
     case 'DEVELOPER_MODE_ON': {
@@ -385,15 +299,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
-      const currencyCode = action.data.currencyCode
-      const denomination = action.data.denominationKey
-      const currencyState = state[currencyCode]
+      const { pluginId, currencyCode, denomination } = action.data
+      const newDenominationSettings = { ...state.denominationSettings }
+      newDenominationSettings[pluginId][currencyCode] = denomination
+
       return {
         ...state,
-        [currencyCode]: {
-          ...currencyState,
-          denomination
-        }
+        ...newDenominationSettings
       }
     }
 

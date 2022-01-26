@@ -20,7 +20,7 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
-import { denominationToDecimalPlaces, noOp, zeroString } from '../util/utils.js'
+import { denominationToDecimalPlaces, zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
@@ -176,8 +176,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         currencyCode,
         currencyName,
         decimalPlaces,
-        walletId: selectedWalletId,
-        onAddToken: noOp
+        walletId: selectedWalletId
       }
 
       return Actions.push(ADD_TOKEN, parameters)

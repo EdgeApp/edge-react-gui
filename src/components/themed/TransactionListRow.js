@@ -7,15 +7,16 @@ import * as React from 'react'
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
+  DEFAULT_TRUNCATE_PRECISION,
   displayFiatAmount,
   getDenomFromIsoCode,
-  getDenomination,
   getFiatSymbol,
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
@@ -86,15 +87,14 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     const { name, amountFiat } = metadata ?? {}
     const guiWallet = state.ui.wallets.byId[walletId]
     const { fiatCurrencyCode } = guiWallet
-    const { settings } = state.ui
-    const displayDenomination = getDenomination(currencyCode, settings, 'display')
-    const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
-    const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-
-    // Required Confirmations
     const { currencyWallets } = state.core.account
     const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
+    const displayDenomination = getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+    const exchangeDenomination = getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+    const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+
+    // Required Confirmations
     const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
     // Thumbnail
@@ -113,7 +113,7 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     // CryptoAmount
     const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
     const exchangeRate = state.exchangeRates[rateKey] ? state.exchangeRates[rateKey] : undefined
-    let maxConversionDecimals = 6
+    let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
     if (exchangeRate) {
       const precisionAdjustValue = precisionAdjust({
         primaryExchangeMultiplier: exchangeDenomination.multiplier,
