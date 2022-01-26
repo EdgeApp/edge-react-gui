@@ -125,14 +125,14 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
 
-    if (lockedBalance == null || lockedBalance === '0') return null
-
     return (
       <View>
         <View style={styles.stakingBoxContainer}>
-          <EdgeText style={styles.stakingStatusText}>
-            {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
-          </EdgeText>
+          {lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
+            <EdgeText style={styles.stakingStatusText}>
+              {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
+            </EdgeText>
+          ) : null}
 
           <TouchableOpacity onPress={this.handleStakePress} style={styles.stakingButton}>
             <EdgeText style={styles.stakingButtonText}>{s.strings.fragment_stake_label}</EdgeText>
