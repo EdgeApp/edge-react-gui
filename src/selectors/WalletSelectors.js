@@ -61,13 +61,6 @@ export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCu
   return convertedAmount
 }
 
-const convertCurrencyWithoutState = (exchangeRates: { [string]: string }, fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): string => {
-  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  const exchangeRate = exchangeRates[rateKey] != null ? exchangeRates[rateKey] : '0'
-  const convertedAmount = bns.mul(amount, exchangeRate)
-  return convertedAmount
-}
-
 export const convertCurrencyFromExchangeRates = (
   exchangeRates: { [string]: string },
   fromCurrencyCode: string,
@@ -75,8 +68,7 @@ export const convertCurrencyFromExchangeRates = (
   amount: string
 ): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  if (exchangeRates == null || exchangeRates[rateKey] == null) return '0' // handle case of exchange rates not ready yet
-  const rate = exchangeRates[rateKey]
+  const rate = exchangeRates[rateKey] ?? '0'
   const convertedAmount = bns.mul(amount, rate)
   return convertedAmount
 }
@@ -90,7 +82,7 @@ export const calculateWalletFiatBalanceWithoutState = (wallet: EdgeCurrencyWalle
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
   const { isoFiatCurrencyCode } = getWalletFiat(wallet)
-  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
+  fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
   return formatNumber(fiatValue, { toFixed: FIAT_PRECISION }) || '0'
 }
 
@@ -106,7 +98,7 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  return convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
+  return convertCurrencyFromExchangeRates(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
 }
 
 export const convertNativeToExchangeRateDenomination = (currencyInfo: EdgeCurrencyInfo, currencyCode: string, nativeAmount: string): string => {
