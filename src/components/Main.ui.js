@@ -367,38 +367,6 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={SCAN}
-                navTransparent
-                onEnter={props => {
-                  this.props.requestPermission('camera')
-                  this.props.dispatchEnableScan()
-                }}
-                onExit={this.props.dispatchDisableScan}
-                component={ifLoggedIn(ScanScene)}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
-                key={REQUEST}
-                navTransparent
-                component={ifLoggedIn(Request)}
-                renderTitle={<EdgeLogoHeader />}
-                renderRightButton={<SideMenuButton />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                hideTabBar
-              />
-
-              <Scene
-                key={FIO_REQUEST_CONFIRMATION}
-                navTransparent
-                component={ifLoggedIn(FioRequestConfirmationScene)}
-                renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
                 key={MANAGE_TOKENS}
                 component={withNavigation(ifLoggedIn(ManageTokensScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
