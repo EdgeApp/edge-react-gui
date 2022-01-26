@@ -76,7 +76,7 @@ export const StakingOverviewSceneComponent = (props: Props) => {
           // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
           id: new Date(unlockDate).toDateString(),
           // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
-          title: sprintf(s.strings.staking_overview_header, formatDate(new Date(unlockDate), true)),
+          title: sprintf(s.strings.staking_locked_title, formatDate(new Date(unlockDate), true)),
           amount: formatNumber(bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
         }))
     )
@@ -100,7 +100,7 @@ export const StakingOverviewSceneComponent = (props: Props) => {
     })
 
   const staked = `${stakingCryptoAmountFormat} ${currencyCode}`
-  const fiatStaked = `(${fiatSymbol}${stakingFiatBalanceFormat} ${fiatCurrencyCode})`
+  const fiatStaked = ` (${fiatSymbol}${stakingFiatBalanceFormat} ${fiatCurrencyCode})`
 
   return (
     <SceneWrapper background="header" hasTabs={false}>
