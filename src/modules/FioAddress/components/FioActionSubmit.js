@@ -172,7 +172,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   formatFio(val: string): number {
-    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DECIMAL_PRECISION), 6))
+    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DECIMAL_PRECISION)))
   }
 
   renderFeeAndBalance() {

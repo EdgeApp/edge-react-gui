@@ -591,7 +591,7 @@ export const getRegInfo = async (
 
   try {
     feeValue = await selectedWallet.otherMethods.getFee('registerFioAddress')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION), 6))
+    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
@@ -643,7 +643,7 @@ export const getDomainRegInfo = async (
 
   try {
     feeValue = await selectedWallet.otherMethods.getFee('registerFioDomain')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION), 6))
+    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }

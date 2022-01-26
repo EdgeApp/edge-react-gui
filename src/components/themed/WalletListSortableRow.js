@@ -61,7 +61,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const { symbolImageDarkMono } = getCurrencyIcon(currencyCode)
 
     const balance = wallet.balances[currencyCode] ?? '0'
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, multiplier, DECIMAL_PRECISION), 6)
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, multiplier, DECIMAL_PRECISION))
     const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
     const fiatBalance = calculateWalletFiatBalanceWithoutState(wallet, currencyCode, exchangeRates)

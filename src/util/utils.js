@@ -16,6 +16,7 @@ import { type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
 export const DECIMAL_PRECISION = 18
+export const DEFAULT_TRUNCATE_PRECISION = 6
 
 export function capitalize(string: string): string {
   if (!string) return ''
@@ -107,7 +108,7 @@ export const isNotEmptyNumber = (input: string | void): boolean => input != null
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
-export const truncateDecimals = (input: string, precision: number, allowBlank: boolean = false): string => {
+export const truncateDecimals = (input: string, precision: number = DEFAULT_TRUNCATE_PRECISION, allowBlank: boolean = false): string => {
   if (input === '') {
     if (allowBlank) {
       input = ''
@@ -765,7 +766,7 @@ export function getCryptoAmount(
   exchangeRate?: string,
   guiWallet: GuiWallet
 ): string {
-  let maxConversionDecimals = 6
+  let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate) {
     const precisionAdjustValue = precisionAdjust({
       primaryExchangeMultiplier: exchangeDenomination.multiplier,

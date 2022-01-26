@@ -381,7 +381,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       const convertedFee = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
       const amountMinusFee = sub(convertedAmount, convertedFee)
 
-      const feeAbsolute = abs(truncateDecimals(convertedFee, 6))
+      const feeAbsolute = abs(truncateDecimals(convertedFee))
       const feeString = symbolString
         ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, feeAbsolute)
         : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeAbsolute, walletDefaultDenomProps.name)

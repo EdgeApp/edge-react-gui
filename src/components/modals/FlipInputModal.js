@@ -20,7 +20,7 @@ import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
@@ -183,7 +183,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   renderFees = () => {
     const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, primaryInfo, secondaryInfo, theme } = this.props
-    const truncatedFeeAmount = truncateDecimals(feeAmount, 6, false)
+    const truncatedFeeAmount = truncateDecimals(feeAmount, DEFAULT_TRUNCATE_PRECISION, false)
     const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
     const feeTextStyle = feeStyle === 'dangerText' ? styles.feeTextDanger : feeStyle === 'warningText' ? styles.feeTextWarning : styles.feeTextDefault

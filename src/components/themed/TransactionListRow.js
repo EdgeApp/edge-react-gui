@@ -14,6 +14,7 @@ import type { TransactionListTx } from '../../types/types.js'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
+  DEFAULT_TRUNCATE_PRECISION,
   displayFiatAmount,
   getDenomFromIsoCode,
   getFiatSymbol,
@@ -112,7 +113,7 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     // CryptoAmount
     const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
     const exchangeRate = state.exchangeRates[rateKey] ? state.exchangeRates[rateKey] : undefined
-    let maxConversionDecimals = 6
+    let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
     if (exchangeRate) {
       const precisionAdjustValue = precisionAdjust({
         primaryExchangeMultiplier: exchangeDenomination.multiplier,
