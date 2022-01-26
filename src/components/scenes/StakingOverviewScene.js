@@ -6,6 +6,7 @@ import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber } from '../../locales/intl'
@@ -35,12 +36,15 @@ type StateProps = {
   fiatCurrencyCode: string,
   fiatSymbol: string
 }
+type DispatchProps = {
+  refreshAllFioAddresses: () => void
+}
 type Lock = {
   id: string,
   title: string,
   amount: string
 }
-type Props = StateProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 export const StakingOverviewSceneComponent = (props: Props) => {
   const {
@@ -52,12 +56,17 @@ export const StakingOverviewSceneComponent = (props: Props) => {
     stakingCryptoAmountFormat,
     stakingFiatBalanceFormat,
     currencyDenomination,
+    refreshAllFioAddresses,
     fiatCurrencyCode,
     fiatSymbol
   } = props
   const styles = getStyles(theme)
   const stakingStatus = currencyWallet.stakingStatus
   const [locks, setLocks] = useState<Lock[]>([])
+
+  useEffect(() => {
+    refreshAllFioAddresses()
+  }, [refreshAllFioAddresses])
 
   useEffect(() => {
     setLocks(
@@ -145,7 +154,7 @@ const getStyles = cacheStyles(theme => ({
   }
 }))
 
-export const StakingOverviewScene = connect<StateProps, {}, OwnProps>(
+export const StakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const {
       route: {
@@ -176,5 +185,9 @@ export const StakingOverviewScene = connect<StateProps, {}, OwnProps>(
       fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode)
     }
   },
-  dispatch => ({})
+  dispatch => ({
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    }
+  })
 )(withTheme(StakingOverviewSceneComponent))
