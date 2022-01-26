@@ -3,6 +3,7 @@
 const strings = {
   app_name: 'Edge Wallet',
   app_name_short: 'Edge',
+  bitpay_metadata_name: 'BitPay Invoice ID: %s',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
@@ -11,7 +12,7 @@ const strings = {
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_request: 'Request',
-  drawer_scan_qr_send: 'Scan QR (Edge Login)',
+  drawer_scan_qr_send: 'Scan QR',
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
   drawer_fio_names: 'FIO Names',
@@ -28,6 +29,13 @@ const strings = {
 
   // Error messages:
   error_token_exists: 'A currency named %s already exists',
+
+  error_bitpay_empty_output_invoice: 'Received no output in payment request',
+  error_bitpay_empty_verification_hex_req: 'Generated empty transaction hex(es)',
+  error_bitpay_fetch: 'BitPay %s error (%s): %s',
+  error_bitpay_multi_output_invoice: 'Multiple outputs found in payment request',
+  error_bitpay_multi_tx_invoice: 'Multiple transactions found in payment request',
+  error_bitpay_tx_verification_failed: 'BitPay transaction verification mismatch',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',

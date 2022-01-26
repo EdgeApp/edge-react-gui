@@ -141,6 +141,8 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
           console.log(e)
         }
         break
+      case 'edgeLogin':
+      case 'bitPay':
       default:
         dispatch(launchDeepLink(deepLink))
         return
@@ -149,6 +151,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     return showError(error)
   }
 
+  // Coin operations
   try {
     const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
     dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
@@ -259,22 +262,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         ),
       500
     )
-  }
-}
-
-export const loginQrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const isScanEnabled = state.ui.scenes.scan.scanEnabled
-
-  if (!isScanEnabled || !data) return
-
-  const deepLink = parseDeepLink(data)
-
-  if (deepLink.type === 'edgeLogin') {
-    dispatch({ type: 'DISABLE_SCAN' })
-    dispatch(launchDeepLink(deepLink))
-  } else {
-    showError(s.strings.scan_login_error)
   }
 }
 

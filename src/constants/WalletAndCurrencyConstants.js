@@ -205,7 +205,8 @@ type SpecialCurrencyInfo = {|
   noChangeMiningFee?: boolean,
   noMaxSpend?: boolean,
   keysOnlyMode?: boolean,
-  isPrivateKeySweepable?: boolean
+  isPrivateKeySweepable?: boolean,
+  isBitPayProtocolSupported?: boolean
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -224,24 +225,35 @@ export const SPECIAL_CURRENCY_INFO: {
   BTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
+  },
+  TESTBTC: {
+    displayBuyCrypto: true,
+    isImportKeySupported: false,
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   BCH: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   BSV: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   DGB: {
     displayBuyCrypto: true,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
@@ -351,7 +363,8 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isRbfSupported: true
+    isRbfSupported: true,
+    isBitPayProtocolSupported: true
   },
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -402,34 +415,44 @@ export const SPECIAL_CURRENCY_INFO: {
     }
   },
   DASH: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   RVN: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   DOGE: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   FIRO: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   SMART: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   VTC: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   BTG: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   FTC: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   GRS: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   QTUM: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   FTM: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
