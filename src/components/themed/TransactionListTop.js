@@ -126,6 +126,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     const availableBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.available}`]
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
 
+    if (lockedBalance == null || lockedBalance === '0') return null
+
     return (
       <View>
         <View style={styles.stakingBoxContainer}>
