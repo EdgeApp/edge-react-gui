@@ -19,7 +19,7 @@ import {
   type BpTransaction,
   type BpVerificationPayment,
   type BpVerificationResponse
-} from '../types/BitpayTypes.js'
+} from '../types/BitPayTypes.js'
 import { type Dispatch } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 /**
