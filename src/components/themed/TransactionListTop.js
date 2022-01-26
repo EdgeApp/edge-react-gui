@@ -128,11 +128,11 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     return (
       <View>
         <View style={styles.stakingBoxContainer}>
-          {lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
-            <EdgeText style={styles.stakingStatusText}>
-              {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
-            </EdgeText>
-          ) : null}
+          <EdgeText style={styles.stakingStatusText}>
+            {lockedBalance.crypto != null && lockedBalance.crypto !== '0'
+              ? sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)
+              : null}
+          </EdgeText>
 
           <TouchableOpacity onPress={this.handleStakePress} style={styles.stakingButton}>
             <EdgeText style={styles.stakingButtonText}>{s.strings.fragment_stake_label}</EdgeText>
