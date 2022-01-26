@@ -36,7 +36,8 @@ type OwnProps = {
   currencyCode: string,
   onFeesChange: () => void,
   onMaxSet?: () => void,
-  onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void
+  onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
+  overrideExchangeAmount?: string
 }
 
 type StateProps = {
@@ -80,7 +81,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      overridePrimaryExchangeAmount: props.overridePrimaryExchangeAmount,
+      overridePrimaryExchangeAmount: props.overrideExchangeAmount ?? props.overridePrimaryExchangeAmount,
       forceUpdateGuiCounter: 0
     }
   }
