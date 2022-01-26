@@ -123,7 +123,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
     if (!SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) return null
 
-    const availableBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.available}`]
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
 
     if (lockedBalance == null || lockedBalance === '0') return null
@@ -132,11 +131,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
       <View>
         <View style={styles.stakingBoxContainer}>
           <EdgeText style={styles.stakingStatusText}>
-            {sprintf(
-              s.strings.staking_available_status,
-              availableBalance.crypto + ' ' + currencyCode,
-              fiatSymbol + availableBalance.fiat + ' ' + fiatCurrencyCode
-            )}
+            {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
           </EdgeText>
 
           <TouchableOpacity onPress={this.handleStakePress} style={styles.stakingButton}>
@@ -144,10 +139,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
             <MaterialCommunityIcons name="chart-line" size={theme.rem(1)} color={theme.iconTappable} />
           </TouchableOpacity>
         </View>
-
-        <EdgeText style={styles.stakingStatusText}>
-          {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
-        </EdgeText>
       </View>
     )
   }
