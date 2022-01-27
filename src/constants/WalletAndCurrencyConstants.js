@@ -209,7 +209,8 @@ type SpecialCurrencyInfo = {|
   isBitPayProtocolSupported?: boolean,
   isStakingSupported?: boolean,
   stakeActions?: { [stakeActionKey: string]: string },
-  stakeLockPeriod?: number
+  stakeLockPeriod?: number,
+  stakeMaxApy?: number
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -421,7 +422,8 @@ export const SPECIAL_CURRENCY_INFO: {
       add: 'stakeFioTokens',
       remove: 'unStakeFioTokens'
     },
-    stakeLockPeriod: 1000 * 60 * 60 * 24 * 7
+    stakeLockPeriod: 1000 * 60 * 60 * 24 * 7,
+    stakeMaxApy: 450
   },
   DASH: {
     isPrivateKeySweepable: true,
