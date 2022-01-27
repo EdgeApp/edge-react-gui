@@ -331,6 +331,8 @@ const strings = {
   staking_unstake_success: 'Successfully unstaked',
   staking_estimated_rewards: 'Estimated Rewards',
   staking_estimated_return: 'Estimated Return: %1s APY',
+  staking_no_fio_address_error: 'Unable to stake without a FIO addresses',
+  staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',

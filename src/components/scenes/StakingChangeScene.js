@@ -96,7 +96,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
 
     // If the selectedFioAddress is not defined, then we will not be able to complete the transaction.
     if (selectedFioAddress == null) {
-      setError(new Error('Unable to stake without a FIO addresses'))
+      setError(new Error(s.strings.staking_no_fio_address_error))
       return
     }
 
@@ -205,15 +205,19 @@ export const StakingChangeSceneComponent = (props: Props) => {
   }, [amount, currencyPlugin])
 
   useEffect(() => {
-    if (!selectedFioAddress) {
-      const fioAddress = fioAddresses.find(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
+    if (!selectedFioAddress && fioAddresses?.length > 0) {
+      const fioAddress = fioAddresses
+        .filter(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
+        .sort(({ bundledTxs }, { bundledTxs: bundledTxs2 }) => (bundledTxs <= bundledTxs2 ? 1 : -1))[0]
 
       // If no address is found, we do not define the selectedFioAddress
       if (fioAddress == null) return
+      // Restrict staking to addresses with only 2 or more bundled transactions to avoid user needing to pay fee
+      if (fioAddress.bundledTxs < 2) return setError(new Error(sprintf(s.strings.staking_no_bundled_txs_error, fioAddress.name)))
 
       setSelectedFioAddress(fioAddress.name)
     }
-  }, [...fioAddresses])
+  }, [...fioAddresses, selectedFioAddress])
 
   const sliderDisabled = tx == null || amount == null || amount === '0' || error != null
 
