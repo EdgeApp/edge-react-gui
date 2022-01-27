@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeStakingStatus } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -64,11 +64,7 @@ export const StakingOverviewSceneComponent = (props: Props) => {
   const stakingStatus = currencyWallet.stakingStatus
   const [locks, setLocks] = useState<Lock[]>([])
 
-  useEffect(() => {
-    refreshAllFioAddresses()
-  }, [refreshAllFioAddresses])
-
-  useEffect(() => {
+  const formatLocks = (stakingStatus: EdgeStakingStatus) => {
     setLocks(
       stakingStatus.stakedAmounts
         .filter(({ unlockDate }) => unlockDate != null && new Date(unlockDate).getTime() >= new Date().getTime())
@@ -80,6 +76,18 @@ export const StakingOverviewSceneComponent = (props: Props) => {
           amount: formatNumber(bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
         }))
     )
+  }
+
+  currencyWallet.watch('stakingStatus', (stakingStatus: EdgeStakingStatus) => {
+    formatLocks(stakingStatus)
+  })
+
+  useEffect(() => {
+    refreshAllFioAddresses()
+  }, [refreshAllFioAddresses])
+
+  useEffect(() => {
+    formatLocks(stakingStatus)
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
