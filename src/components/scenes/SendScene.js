@@ -456,7 +456,8 @@ class SendComponent extends React.PureComponent<Props, State> {
       const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, transaction, feeDisplayDenomination, feeDefaultDenomination)
 
-      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
+      const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
+      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
