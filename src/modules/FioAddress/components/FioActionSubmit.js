@@ -13,7 +13,7 @@ import { cacheStyles, withTheme } from '../../../components/services/ThemeContex
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
 import { Tile } from '../../../components/themed/Tile'
-import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
+import { FIO_STR, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors.js'
@@ -164,7 +164,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { addressTitles } = this.props
     const { paymentWallet } = this.state
     if (paymentWallet) {
-      const balance = paymentWallet.balances[paymentWallet.currencyInfo.currencyCode] ?? '0'
+      const { currencyCode } = paymentWallet.currencyInfo
+      let balance = paymentWallet.balances[currencyCode] ?? '0'
+      if (SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) {
+        const lockedBalance = paymentWallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+        balance = bns.sub(balance, lockedBalance)
+      }
       this.setState({ balance: this.formatFio(balance) })
     } else {
       showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
