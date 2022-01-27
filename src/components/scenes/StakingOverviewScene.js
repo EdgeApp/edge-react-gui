@@ -61,10 +61,20 @@ export const StakingOverviewSceneComponent = (props: Props) => {
     fiatSymbol
   } = props
   const styles = getStyles(theme)
-  const stakingStatus = currencyWallet.stakingStatus
+  const [stakingStatus, setStakingStatus] = useState<EdgeStakingStatus>(currencyWallet.stakingStatus)
   const [locks, setLocks] = useState<Lock[]>([])
 
-  const formatLocks = (stakingStatus: EdgeStakingStatus) => {
+  useEffect(() => {
+    currencyWallet.watch('stakingStatus', (stakingStatus: EdgeStakingStatus) => {
+      setStakingStatus(stakingStatus)
+    })
+  }, [currencyWallet])
+
+  useEffect(() => {
+    refreshAllFioAddresses()
+  }, [refreshAllFioAddresses])
+
+  useEffect(() => {
     setLocks(
       stakingStatus.stakedAmounts
         .filter(({ unlockDate }) => unlockDate != null && new Date(unlockDate).getTime() >= new Date().getTime())
@@ -76,18 +86,6 @@ export const StakingOverviewSceneComponent = (props: Props) => {
           amount: formatNumber(bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
         }))
     )
-  }
-
-  currencyWallet.watch('stakingStatus', (stakingStatus: EdgeStakingStatus) => {
-    formatLocks(stakingStatus)
-  })
-
-  useEffect(() => {
-    refreshAllFioAddresses()
-  }, [refreshAllFioAddresses])
-
-  useEffect(() => {
-    formatLocks(stakingStatus)
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
