@@ -84,6 +84,8 @@ export const StakingChangeSceneComponent = (props: Props) => {
   } = props
   const styles = getStyles(theme)
 
+  const maxApy = SPECIAL_CURRENCY_INFO[currencyCode]?.stakeMaxApy
+
   const [amount, setAmount] = useState('0')
   const [apy, setApy] = useState(0)
   const [error, setError] = useState(null)
@@ -222,7 +224,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
   const sliderDisabled = tx == null || amount == null || amount === '0' || error != null
 
   const renderAdd = () => {
-    const apyValue = sprintf(s.strings.staking_estimated_return, `${apy}%`)
+    const apyValue = sprintf(apy === maxApy ? s.strings.staking_estimated_return_up_to : s.strings.staking_estimated_return, `${apy}%`)
     return (
       <>
         <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
