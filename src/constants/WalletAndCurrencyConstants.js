@@ -735,10 +735,8 @@ export const FIAT_CODES_SYMBOLS = {
 }
 
 export const STAKING_BALANCES = {
-  available: ':AVAILABLE',
   staked: ':STAKED',
-  locked: ':LOCKED',
-  accrued: ':ACCRUED'
+  locked: ':LOCKED'
 }
 
 export const FIO_WALLET_TYPE = 'wallet:fio'
