@@ -5341,9 +5341,9 @@ ed25519@0.0.4:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased.git#unreleased/fio-staking/1":
+"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased.git#unreleased/fio-staking/2":
   version "0.11.8"
-  resolved "https://github.com/EdgeApp/edge-currency-accountbased.git#88e94c30ddac093a0598c80fa0391500b2527772"
+  resolved "https://github.com/EdgeApp/edge-currency-accountbased.git#4d2f862046587efeec4518672da3c770c45549b4"
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
