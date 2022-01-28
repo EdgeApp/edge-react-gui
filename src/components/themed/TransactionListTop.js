@@ -10,6 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { REQUEST, SEND, STAKING_OVERVIEW } from '../../constants/SceneKeys.js'
+import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -41,7 +42,13 @@ type StateProps = {
   fiatBalance: string,
   fiatSymbol: string,
   walletName: string,
-  isAccountBalanceVisible: boolean
+  isAccountBalanceVisible: boolean,
+  stakingBalances: {
+    [cCode: string]: {
+      crypto: string,
+      fiat: string
+    }
+  }
 }
 
 type DispatchProps = {
@@ -112,17 +119,27 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderStakingBox() {
-    const { theme } = this.props
+    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
     const styles = getStyles(theme)
 
-    return (
-      <View style={styles.stakingBoxContainer}>
-        <EdgeText style={styles.stakingStatusText}>{sprintf(s.strings.staking_status, '450 FIO', '$150 USD')}</EdgeText>
+    if (!SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) return null
 
-        <TouchableOpacity onPress={this.handleStakePress} style={styles.stakingButton}>
-          <EdgeText style={styles.stakingButtonText}>{s.strings.fragment_stake_label}</EdgeText>
-          <MaterialCommunityIcons name="chart-line" size={theme.rem(1)} color={theme.iconTappable} />
-        </TouchableOpacity>
+    const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
+
+    return (
+      <View>
+        <View style={styles.stakingBoxContainer}>
+          <EdgeText style={styles.stakingStatusText}>
+            {lockedBalance.crypto != null && lockedBalance.crypto !== '0'
+              ? sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)
+              : null}
+          </EdgeText>
+
+          <TouchableOpacity onPress={this.handleStakePress} style={styles.stakingButton}>
+            <EdgeText style={styles.stakingButtonText}>{s.strings.fragment_stake_label}</EdgeText>
+            <MaterialCommunityIcons name="chart-line" size={theme.rem(1)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -337,6 +354,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
+    const stakingBalances = {}
 
     // Crypto Amount Formatting
     const currencyDenomination = getDisplayDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
@@ -349,6 +367,25 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
     const fiatBalanceFormat = formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
+    if (SPECIAL_CURRENCY_INFO[selectedCurrencyCode]?.isStakingSupported) {
+      for (const cCodeKey in STAKING_BALANCES) {
+        const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
+
+        const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
+        const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
+        const stakingCryptoAmountFormat = formatNumber(bns.add(stakingCryptoAmount, '0'))
+
+        const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
+        const stakingFiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
+        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && bns.gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+
+        stakingBalances[stakingCurrencyCode] = {
+          crypto: stakingCryptoAmountFormat,
+          fiat: stakingFiatBalanceFormat
+        }
+      }
+    }
+
     return {
       currencyCode: selectedCurrencyCode,
       cryptoAmount: cryptoAmountFormat,
@@ -357,7 +394,8 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
       fiatBalance: fiatBalanceFormat,
       fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode),
       walletName: guiWallet.name,
-      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible
+      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible,
+      stakingBalances
     }
   },
   dispatch => ({
