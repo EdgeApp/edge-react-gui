@@ -717,7 +717,7 @@ export const convertTransactionFeeToDisplayFee = (
   let feeNativeAmount
   if (transaction?.parentNetworkFee != null) {
     feeNativeAmount = transaction?.parentNetworkFee
-  } else if (transaction?.networkFee != null) feeNativeAmount = transaction?.parentNetworkFee
+  } else if (transaction?.networkFee != null) feeNativeAmount = transaction?.networkFee
 
   if (feeNativeAmount != null && bns.gt(feeNativeAmount, '0')) {
     const cryptoFeeSymbol = feeDisplayDenomination && feeDisplayDenomination.symbol ? feeDisplayDenomination.symbol : ''
