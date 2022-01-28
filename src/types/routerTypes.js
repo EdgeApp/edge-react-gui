@@ -209,6 +209,11 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
+  stakingChange: {
+    change: 'add' | 'remove',
+    currencyCode: string,
+    walletId: string
+  },
   stakingOverview: {
     currencyCode: string,
     walletId: string
