@@ -7,7 +7,6 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
-import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -179,10 +178,6 @@ class WalletListComponent extends React.PureComponent<Props> {
           const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
           // if token is not supposed to be visible, not point in enabling it
           if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-          if (SYNCED_ACCOUNT_DEFAULTS[token] && enabledTokens.includes(token)) {
-            // if hardcoded token
-            isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
-          }
           return isVisible
         })
 
