@@ -34,43 +34,30 @@ const asDenominationSettings = asObject(
 
 export type DenominationSettings = $Call<typeof asDenominationSettings>
 
-export const asSyncedAccountSettings = asOptional(
-  asObject({
-    autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
-    defaultFiat: asOptional(asString, 'USD'),
-    defaultIsoFiat: asOptional(asString, 'iso:USD'),
-    preferredSwapPluginId: asOptional(asString, ''),
-    countryCode: asOptional(asString, ''),
-    customTokens: asOptional(asArray(asCustomTokenInfo), []),
-    mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
-    passwordRecoveryRemindersShown: asOptional(
-      asObject({
-        '20': asBoolean,
-        '200': asBoolean,
-        '2000': asBoolean,
-        '20000': asBoolean,
-        '200000': asBoolean
-      }),
-      PASSWORD_RECOVERY_REMINDERS_SHOWN
-    ),
-    walletsSort: asOptional(asSortOption, 'default'),
-    denominationSettings: asOptional(asDenominationSettings, {})
-  })
-)
+export const asSyncedAccountSettings = asObject({
+  autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
+  defaultFiat: asOptional(asString, 'USD'),
+  defaultIsoFiat: asOptional(asString, 'iso:USD'),
+  preferredSwapPluginId: asOptional(asString, ''),
+  countryCode: asOptional(asString, ''),
+  customTokens: asOptional(asArray(asCustomTokenInfo), []),
+  mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
+  passwordRecoveryRemindersShown: asOptional(
+    asObject({
+      '20': asBoolean,
+      '200': asBoolean,
+      '2000': asBoolean,
+      '20000': asBoolean,
+      '200000': asBoolean
+    }),
+    PASSWORD_RECOVERY_REMINDERS_SHOWN
+  ),
+  walletsSort: asOptional(asSortOption, 'default'),
+  denominationSettings: asOptional(asDenominationSettings, {})
+})
 
 // Default Account Settings
-export const SYNCED_ACCOUNT_DEFAULTS = {
-  autoLogoutTimeInSeconds: 3600,
-  defaultFiat: 'USD',
-  defaultIsoFiat: 'iso:USD',
-  preferredSwapPluginId: '',
-  countryCode: '',
-  denominationSettings: {},
-  customTokens: [],
-  mostRecentWallets: [],
-  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
-  walletsSort: 'default'
-}
+export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
   developerModeOn: false,
