@@ -175,7 +175,7 @@ export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
-    return settingsFromFile
+    return asSyncedAccountSettings(settingsFromFile)
   } catch (e) {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
