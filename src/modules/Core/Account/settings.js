@@ -11,7 +11,6 @@ import { type MostRecentWallet, type PasswordReminder, asCustomTokenInfo, asMost
 import { currencyPlugins } from '../../../util/corePlugins.js'
 import { categories } from './subcategories.js'
 
-// prettier-ignore
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
   '200': false,
@@ -35,182 +34,30 @@ const asDenominationSettings = asObject(
 
 export type DenominationSettings = $Call<typeof asDenominationSettings>
 
-export const asSyncedAccountSettings = asOptional(
-  asObject({
-    autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
-    defaultFiat: asOptional(asString, 'USD'),
-    defaultIsoFiat: asOptional(asString, 'iso:USD'),
-    preferredSwapPluginId: asOptional(asString, ''),
-    countryCode: asOptional(asString, ''),
-    customTokens: asOptional(asArray(asCustomTokenInfo), []),
-    mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
-    passwordRecoveryRemindersShown: asOptional(
-      asObject({
-        '20': asBoolean,
-        '200': asBoolean,
-        '2000': asBoolean,
-        '20000': asBoolean,
-        '200000': asBoolean
-      }),
-      PASSWORD_RECOVERY_REMINDERS_SHOWN
-    ),
-    walletsSort: asOptional(asSortOption, 'default'),
-    denominationSettings: asOptional(asDenominationSettings, {})
-  })
-)
+export const asSyncedAccountSettings = asObject({
+  autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
+  defaultFiat: asOptional(asString, 'USD'),
+  defaultIsoFiat: asOptional(asString, 'iso:USD'),
+  preferredSwapPluginId: asOptional(asString, ''),
+  countryCode: asOptional(asString, ''),
+  customTokens: asOptional(asArray(asCustomTokenInfo), []),
+  mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
+  passwordRecoveryRemindersShown: asOptional(
+    asObject({
+      '20': asBoolean,
+      '200': asBoolean,
+      '2000': asBoolean,
+      '20000': asBoolean,
+      '200000': asBoolean
+    }),
+    PASSWORD_RECOVERY_REMINDERS_SHOWN
+  ),
+  walletsSort: asOptional(asSortOption, 'default'),
+  denominationSettings: asOptional(asDenominationSettings, {})
+})
 
 // Default Account Settings
-export const SYNCED_ACCOUNT_DEFAULTS = {
-  autoLogoutTimeInSeconds: 3600,
-  defaultFiat: 'USD',
-  defaultIsoFiat: 'iso:USD',
-  preferredSwapPluginId: '',
-  countryCode: '',
-  denominationSettings: {},
-  customTokens: [],
-  mostRecentWallets: [],
-  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
-  walletsSort: 'default'
-}
-
-export const SYNCED_ACCOUNT_TYPES = {
-  autoLogoutTimeInSeconds: 'number',
-  defaultFiat: 'string',
-  defaultIsoFiat: 'string',
-  preferredSwapPluginId: 'string',
-  countryCode: 'string',
-  BTC: 'object',
-  ZADDR: 'object',
-  BCH: 'object',
-  EOS: 'object',
-  TLOS: 'object',
-  WAX: 'object',
-  XRP: 'object',
-  XLM: 'object',
-  DASH: 'object',
-  DOGE: 'object',
-  DGB: 'object',
-  LTC: 'object',
-  BNB: 'object',
-  FTC: 'object',
-  VTC: 'object',
-  XTZ: 'object',
-  RVN: 'object',
-  FIRO: 'object',
-  QTUM: 'object',
-  XMR: 'object',
-  ETH: 'object',
-  ETC: 'object',
-  UFO: 'object',
-  REP: 'object',
-  REPV2: 'object',
-  WINGS: 'object',
-  IND: 'object',
-  HUR: 'object',
-  HERC: 'object',
-  SMART: 'object',
-  ANTV1: 'object',
-  ANT: 'object',
-  BAT: 'object',
-  BNT: 'object',
-  GNT: 'object',
-  GLM: 'object',
-  KNC: 'object',
-  POLY: 'object',
-  STORJ: 'object',
-  USDC: 'object',
-  BRZ: 'object',
-  LINK: 'object',
-  USDS: 'object',
-  TUSD: 'object',
-  ZRX: 'object',
-  GNO: 'object',
-  OMG: 'object',
-  NMR: 'object',
-  MKR: 'object',
-  GUSD: 'object',
-  PAX: 'object',
-  SALT: 'object',
-  MANA: 'object',
-  NEXO: 'object',
-  FUN: 'object',
-  KIN: 'object',
-  USDT: 'object',
-  DAI: 'object',
-  SAI: 'object',
-  RBTC: 'object',
-  RIF: 'object',
-  CREP: 'object',
-  CUSDC: 'object',
-  CBAT: 'object',
-  CZRX: 'object',
-  CWBTC: 'object',
-  CSAI: 'object',
-  CDAI: 'object',
-  CETH: 'object',
-  ETHBNT: 'object',
-  MET: 'object',
-  COMP: 'object',
-  OXT: 'object',
-  SNX: 'object',
-  SUSD: 'object',
-  SBTC: 'object',
-  AAVE: 'object',
-  AYFI: 'object',
-  ALINK: 'object',
-  ADAI: 'object',
-  ABAT: 'object',
-  AWETH: 'object',
-  AWBTC: 'object',
-  ASNX: 'object',
-  AREN: 'object',
-  AUSDT: 'object',
-  AMKR: 'object',
-  AMANA: 'object',
-  AZRX: 'object',
-  AKNC: 'object',
-  AUSDC: 'object',
-  ASUSD: 'object',
-  AUNI: 'object',
-  WBTC: 'object',
-  TESTBTC: 'object',
-  YFI: 'object',
-  CRV: 'object',
-  BAL: 'object',
-  SUSHI: 'object',
-  UMA: 'object',
-  BADGER: 'object',
-  IDLE: 'object',
-  NXM: 'object',
-  CREAM: 'object',
-  PICKLE: 'object',
-  CVP: 'object',
-  ROOK: 'object',
-  DOUGH: 'object',
-  COMBO: 'object',
-  INDEX: 'object',
-  WETH: 'object',
-  RENBTC: 'object',
-  RENBCH: 'object',
-  RENZEC: 'object',
-  TBTC: 'object',
-  DPI: 'object',
-  YETI: 'object',
-  BAND: 'object',
-  REN: 'object',
-  AMPL: 'object',
-  OCEAN: 'object',
-  UNI: 'object',
-  FTM: 'object',
-  FUSDT: 'object',
-  HBAR: 'object',
-  MATIC: 'object',
-  AVAX: 'object',
-  customTokens: 'object', // arrays return 'object' to typeof
-  mostRecentWallets: 'object',
-  passwordRecoveryRemindersShown: 'object',
-  walletsSort: 'string'
-}
+export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
   developerModeOn: false,
@@ -241,9 +88,6 @@ export const LOCAL_ACCOUNT_TYPES = {
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 const CATEGORIES_FILENAME = 'Categories.json'
-
-//  Settings
-// Core Settings
 
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
@@ -331,7 +175,7 @@ export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
-    return settingsFromFile
+    return asSyncedAccountSettings(settingsFromFile)
   } catch (e) {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it

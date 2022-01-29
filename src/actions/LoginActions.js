@@ -10,7 +10,6 @@ import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import {
-  asSyncedAccountSettings,
   getLocalSettings,
   getSyncedSettings,
   LOCAL_ACCOUNT_DEFAULTS,
@@ -115,13 +114,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     accountInitObject.activeWalletIds = activeWalletIds
     accountInitObject.archivedWalletIds = archivedWalletIds
 
-    const loadedSyncedSettings = await getSyncedSettings(account)
-    let syncedSettings = {}
-    try {
-      syncedSettings = asSyncedAccountSettings(loadedSyncedSettings)
-    } catch (e) {
-      // OK to throw if empty file
-    }
+    const syncedSettings = await getSyncedSettings(account)
     accountInitObject = { ...accountInitObject, ...syncedSettings }
 
     const loadedLocalSettings = await getLocalSettings(account)
