@@ -6,7 +6,7 @@ v1.9.0
 
 v1.8.7
 * FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
-* Import XRP and XLM private keys
+* Importação de chaves privadas XRP e XLM
 * WebSockets- Improved connectivity and syncing even when using VPN
 
 v1.8.5
@@ -16,7 +16,7 @@ v1.8.5
 
 v1.8.4
 * Simplex Sell - Sell crypto and pay off credit cards
-* Ravencoin added
+* Adicionada Ravencoin
 
 v1.8.1
 
@@ -25,31 +25,31 @@ v1.8.1
 v1.8.0
 
 * React native upgrade + visual fixes
-* Prefer fixed-rate quotes over estimates
+* Preferência de cotações de taxa fixa em vez de estimativas
 
 v1.7.4
 
 * Beta Simplex sell
-* Warn users about high fees
+* Aviso de taxas elevadas
 
 v1.7.3
 
-* Patch to avoid BTC fee problems
+* Correção para evitar problemas com taxa de BTC
 
 v1.7.2
 
-* Fix performance issues on login
+* Corrigidos problemas de desempenho ao iniciar sessão
 * Fix Split BCH/BSV Error
-* Various visual and text updates
+* Várias atualizações visuais e de texto
 * Add tap address to launch explorer at request or send confirmation screens
 * Fix segwit fees to be 15% lower than non-segwit
 * Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
 
 v1.7.0
 
-* Bech32 address support
-* Move Edge Core to independent process to boost performance and GUI responsiveness
-* Sell crypto to credit card using Simplex
+* suporte a endereço Bech32
+* Movera Core da Edge para processo independente a fim de impulsionar o desempenho e a capacidade de resposta do GUI
+* Vender cripto para cartão de crédito com Simplex
 * Add LibertyX to support buying Bitcoin from physical merchants in US
 
 v1.6.2
@@ -58,52 +58,52 @@ v1.6.2
 * Fix EOS Crash issues
 * Fix various UI display bugs
 * Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
+* Melhorias na sincronização de XRP e ETH
 * Use multiple services to broadcast XRP and ETH transactions
 * Add Faa.st instant exchange provider
 
 v1.6.1
 
-* Improved BTC fee calculations
+* Melhoria no cálculo de taxas BTC
 * Add buy crypto button at Wallets List screen
 * Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* Correção de vários erros na interface do utilizador
+* Melhoria no funcionamento de plugins
 
 v1.6.0
 
-* EOS support
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Suporta a EOS
+* Implementando a linkagem profunda das URLs de bitcoin, ethereum, bitcoincash, dash e edge
+* Adicionado plugin Wyre para suportar compra/venda de bitcoins de uma conta bancária no Reino Unido
 * Add Bitrefill plugin to support buying gift cards and mobile top ups
 * Add Chinese, Korean, French, and Vietnamese translations
 * Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
-* Add Changenow as an exchange provider
+* Adicionar Changenow como um provedor de troca
 * Use new colored currency icons
 * Allow signin/singout of ShapeShift via Settings screen
 
-v1.4.4
+v 1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Adicionar a capacidade de dividir as carteiras BCH em carteiras BSV
+* Adicionar proteção contra reexecução para carteiras BCH/BSV
+- Melhora a performance de login
+* Correção de bug que causou XRP e XLM a consultar novamente todas as transações em cada login
+* Melhorar a conectividade para nós de bitcoin relacionados com moedas (BTC, BCH, LTC, DASH, etc)
 
-v1.4.3
+v 1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Grande aumento de desempenho quando efetuando login e sincronizando carteiras
+* Adicionar suporte para bulletproofs de Monero que corrigem os gastos de Monero
+Permitir a usuários habilitar/desabilitar provedores de troca
+* Corrigir erro ocasional "Token não é suportado" na tela da Exchange
+* Permitir a visualização de xpub para mais moedas
+* Consertar acidente em grandes contas, quando batem a tecla de menu superior direita imediatamente após o login
+* Consertar o jeito de carregar quando usando Simplex de alguns dispositivos Android
 
-v1.4.2
+v 1.4.2
 
 * Suporte para Stellar
 * Adicionar habilidade de selecionar nós para Bitcoin e moedas similares
