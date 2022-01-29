@@ -129,7 +129,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     }
 
     case 'bitPay': {
-      launchBitPay(dispatch, link.uri, currencyWallets).catch(showError)
+      launchBitPay(link.uri, { currencyWallets }).catch(showError)
       return true
     }
 

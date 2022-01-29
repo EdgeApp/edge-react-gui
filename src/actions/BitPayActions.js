@@ -20,8 +20,8 @@ import {
   type BpVerificationPayment,
   type BpVerificationResponse
 } from '../types/BitPayTypes.js'
-import { type Dispatch } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
+
 /**
  * Performs the fetch commands to BitPay.
  * Throws errors when response is not OK.
@@ -29,7 +29,6 @@ import { Actions } from '../types/routerTypes.js'
 async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Response> {
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
-    const text = await fetchResponse.text()
     const statusCode = fetchResponse.status.toString()
     const headers = (init.headers: any)
     const body = init.body ? JSON.stringify(init.body) : ''
@@ -39,10 +38,15 @@ async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Respo
     let header = ''
     if (headers.Accept) header = headers.Accept
     else if (headers['Content-Type']) header = headers['Content-Type']
-    const trimText = 'application/'
-    if (header.includes(trimText)) header = header.split(trimText)[1]
+    const trimmedHeader = 'application/'
+    if (header.includes(trimmedHeader)) header = header.split(trimmedHeader)[1]
 
-    throw new BitPayError(BitPayErrorCode.FetchFailed, { header, statusCode, text, errorData: { uri, body, method } })
+    // Content-type always gives text/html, regardless of if it's a useful
+    // message or a webpage.
+    // Only show the text in the error response if not a web page.
+    const rawText = await fetchResponse.text()
+    const text = !rawText.includes('doctype html') ? `: ${rawText}` : ''
+    throw new BitPayError(BitPayErrorCode.FetchFailed, { header, statusCode, text, errorData: { uri, method, body, rawText } })
   }
 
   return await fetchResponse.json()
@@ -51,11 +55,18 @@ async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Respo
 /**
  * Handles the BitPay scanned or deeplink URI.
  * 1. Get payment options
- * 2. Prompt user to select supported payment option wallet
+ * 2. Prompt user to select supported payment option wallet OR
+ *    validate calling core wallet is an accepted payment option
  * 3. Make preliminary transaction hexes to pass onto BitPay for verification
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
-export async function launchBitPay(dispatch: Dispatch, uri: string, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }): Promise<void> {
+export async function launchBitPay(
+  uri: string,
+  params: {
+    wallet?: EdgeCurrencyWallet,
+    currencyWallets?: { [walletId: string]: EdgeCurrencyWallet }
+  }
+): Promise<void> {
   // Fetch payment options
   let responseJson = await fetchBitPayJsonResponse(uri, {
     method: 'GET',
@@ -77,17 +88,36 @@ export async function launchBitPay(dispatch: Dispatch, uri: string, currencyWall
     paymentCurrencies.push('TESTBTC')
   }
 
-  // Select payment wallet
-  const walletListResult = await Airship.show(bridge => (
-    <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
-  ))
-  const { walletId, currencyCode } = walletListResult
-  if (!walletId || !currencyCode) {
-    // No wallet selected
-    return
+  // Select payment wallet, if this wasn't called directly from a wallet's
+  // send scene
+  let selectedWallet, currencyCode
+  if (params.wallet) {
+    // Ensure the core wallet is accepted by this invoice as a payment option
+    currencyCode = params.wallet.currencyInfo.currencyCode
+    if (!paymentCurrencies.includes(currencyCode)) {
+      throw new BitPayError(BitPayErrorCode.InvalidPaymentOption, { text: paymentCurrencies.join(', ') })
+    }
+    selectedWallet = params.wallet
+  } else {
+    // Check if user owns any wallets that are accepted by the invoice
+    if (paymentCurrencies.length === 0) {
+      throw new BitPayError(BitPayErrorCode.NoPaymentOption, { text: paymentCurrencies.join(', ') })
+    } else {
+      const walletListResult = await Airship.show(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
+      ))
+      const { walletId, currencyCode } = walletListResult
+      if (!walletId || !currencyCode || !params.currencyWallets) {
+        // No wallet selected
+        return
+      } else {
+        selectedWallet = params.currencyWallets[walletId]
+      }
+    }
   }
+  if (selectedWallet == null) return
 
-  // Normalize our test BTC currency code with BitPay's expectation
+  // Normalize our test BTC currency code with BitPay Testnet's expectation
   const requestCurrencyCode = isTestBp && currencyCode === 'TESTBTC' ? 'BTC' : currencyCode
 
   // Fetch the invoice (payment-request) instructions
@@ -117,30 +147,37 @@ export async function launchBitPay(dispatch: Dispatch, uri: string, currencyWall
   const instructionOutput = invoiceInstruction.outputs[0]
 
   // Make the spend to generate the tx hexes
+  const requiredFeeRate = invoiceInstruction.requiredFeeRate
   const spendInfo: EdgeSpendInfo = {
     currencyCode,
-    customNetworkFee: { satsPerByte: invoiceInstruction.requiredFeeRate },
     spendTargets: [
       {
         nativeAmount: instructionOutput.amount.toString(),
         publicAddress: instructionOutput.address
       }
-    ]
+    ],
+    otherParams: {
+      paymentProtocolInfo: {
+        merchant: {
+          requiredFeeRate
+        }
+      }
+    }
   }
-  const wallet = currencyWallets[walletId]
-  const unsignedTx = await wallet.makeSpend(spendInfo)
+
+  const unsignedTx = await selectedWallet.makeSpend(spendInfo)
   const unsignedHex = unsignedTx.otherParams?.txJson?.hex ?? ''
-  const signedTx = await wallet.signTx(unsignedTx)
+  const signedTx = await selectedWallet.signTx(unsignedTx)
   const signedHex = signedTx.signedTx ?? ''
 
-  errorData = { ...errorData, spendInfo, walletId, unsignedTx, signedTx }
+  errorData = { ...errorData, spendInfo, walletId: selectedWallet.id, unsignedTx, signedTx }
   if (unsignedHex === '' || signedHex === '') throw new BitPayError(BitPayErrorCode.EmptyVerificationHexReq, errorData)
 
-  // Send the unsigned TX and signed weightedSize to BitPay for validation
+  // Send the unsigned TX and signed weightedSize to BitPay for verification
   const verificationPaymentRequest = {
     chain: requestCurrencyCode,
     currency: requestCurrencyCode,
-    transactions: [{ tx: unsignedHex, weightedSize: signedHex.length }]
+    transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
   }
   responseJson = await fetchBitPayJsonResponse(uri, {
     method: 'POST',
@@ -159,16 +196,21 @@ export async function launchBitPay(dispatch: Dispatch, uri: string, currencyWall
     throw new BitPayError(BitPayErrorCode.TxVerificationMismatch, errorData)
   }
 
-  // Pass spend info to the send scene for user to confirm tx
+  // Pass spend info to the send scene for user to confirm tx.
+  // TODO: using otherparams.protocolInfo.merchant.requiredFeeRate triggers a
+  // CORS error during the spend confirmation.
+  // Temp fix copies the calculation from the bitcoin plugin for paymentProtocol
+  // fees into customNetworkFee.
   const spendTarget = spendInfo.spendTargets[0]
   const guiMakeSpendInfo = {
     currencyCode,
     nativeAmount: spendTarget.nativeAmount,
     publicAddress: spendTarget.publicAddress,
-    networkFeeOption: 'standard',
+    networkFeeOption: 'custom',
+    customNetworkFee: { satPerByte: Math.ceil(parseFloat(requiredFeeRate) * 1.5) },
     metadata: {
       name: sprintf(s.strings.bitpay_metadata_name, paymentId),
-      notes: paymentId
+      notes: sprintf(s.strings.bitpay_metadata_name, paymentId)
     },
     dismissAlert: true,
     lockInputs: true,
@@ -177,9 +219,11 @@ export async function launchBitPay(dispatch: Dispatch, uri: string, currencyWall
       Actions.pop()
     }
   }
+
+  // Send confirmation scene
   Actions.push('send', {
     guiMakeSpendInfo,
-    selectedWalletId: walletId,
+    selectedWalletId: selectedWallet.id,
     selectedCurrencyCode: currencyCode
   })
 }
