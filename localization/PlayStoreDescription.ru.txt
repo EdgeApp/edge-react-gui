@@ -6,7 +6,7 @@
 
 Управление вашими криптоактивами никогда не была проще. Edge кошелек обеспечивает максимальную безопасность при сохранении простоты, позволяя всем типам пользователей легко управлять, переводить и обменивать криптоактивы.
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). Хотите увидеть другие криптовалюты в вашем кошелек? Отправьте нам запрос!
+<b>Кошелек Edge в настоящее время поддерживает:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE) и Feathercoin (FTC). Хотите увидеть другие криптовалюты в вашем кошелек? Отправьте нам запрос!
 
 Edge мощный и простой в использовании криптовалютный кошелек, позволяющий пользователям контролировать собственные приватные ключи с простотой, как в мобильном банке. 
 
