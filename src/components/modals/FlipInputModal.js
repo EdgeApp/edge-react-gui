@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { asMaybeNoAmountSpecifiedError } from 'edge-core-js'
+import { type EdgeDenomination, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -18,7 +18,9 @@ import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
@@ -32,7 +34,10 @@ type OwnProps = {
   bridge: AirshipBridge<void>,
   walletId: string,
   currencyCode: string,
-  onFeesChange: () => void
+  onFeesChange: () => void,
+  onMaxSet?: () => void,
+  onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
+  overrideExchangeAmount?: string
 }
 
 type StateProps = {
@@ -49,6 +54,8 @@ type StateProps = {
   forceUpdateGuiCounter: number,
 
   // Fees
+  feeCurrencyCode: string,
+  feeDisplayDenomination: EdgeDenomination,
   feeNativeAmount: string,
   feeAmount: string,
   feeStyle?: string,
@@ -74,7 +81,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      overridePrimaryExchangeAmount: props.overridePrimaryExchangeAmount,
+      overridePrimaryExchangeAmount: props.overrideExchangeAmount ?? props.overridePrimaryExchangeAmount,
       forceUpdateGuiCounter: 0
     }
   }
@@ -87,7 +94,8 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { walletId, currencyCode, updateTransactionAmount } = this.props
+    const { walletId, currencyCode, updateTransactionAmount, onAmountChanged } = this.props
+    if (onAmountChanged != null) return onAmountChanged(nativeAmount, exchangeAmount)
     updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
   }
 
@@ -103,7 +111,13 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  handleSendMaxAmount = () => this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
+  handleSendMaxAmount = () => {
+    if (this.props.onMaxSet != null) {
+      this.props.onMaxSet()
+      return this.handleCloseModal()
+    }
+    return this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
+  }
 
   renderErrorMessge = () => {
     const { errorMessage = this.state.errorMessage, theme } = this.props
@@ -142,6 +156,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             nativeCryptoAmount={balanceCrypto}
             cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -177,8 +192,9 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees = () => {
-    const { feeAmount, feeNativeAmount, feeStyle, primaryInfo, secondaryInfo, theme } = this.props
-    const feeCryptoText = `${feeAmount} ${primaryInfo.displayDenomination.name} `
+    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, primaryInfo, secondaryInfo, theme } = this.props
+    const truncatedFeeAmount = truncateDecimals(feeAmount, DEFAULT_TRUNCATE_PRECISION, false)
+    const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
     const feeTextStyle = feeStyle === 'dangerText' ? styles.feeTextDanger : feeStyle === 'warningText' ? styles.feeTextWarning : styles.feeTextDefault
     return (
@@ -191,8 +207,9 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
           {feeCryptoText}
           <FiatText
             nativeCryptoAmount={feeNativeAmount}
-            cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
+            cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
+            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -286,12 +303,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
-    const guiWallet = state.ui.wallets.byId[walletId]
-    const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
+    const wallet = state.core.account.currencyWallets[walletId]
+    const name = getWalletName(wallet)
+    const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
+    const { symbolImageDarkMono } = getCurrencyIcon(wallet.currencyInfo.currencyCode, currencyCode)
 
     // Denominations
-    const cryptoDenomination = getDisplayDenomination(state, currencyCode)
-    const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
+    const cryptoDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const cryptoExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
     // FlipInput
@@ -315,12 +334,14 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
+    const feeDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeDefaultDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
     const transactionFee = convertTransactionFeeToDisplayFee(
-      guiWallet,
-      currencyCode,
+      wallet,
       state.exchangeRates,
       state.ui.scenes.sendConfirmation.transaction,
-      state.ui.settings
+      feeDisplayDenomination,
+      feeDefaultDenomination
     )
 
     // Error
@@ -332,11 +353,11 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       // Balances
-      balanceCrypto: guiWallet.nativeBalances[currencyCode],
+      balanceCrypto: wallet.balances[currencyCode],
 
       // FlipInput
-      flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
-      flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
+      flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
+      flipInputHeaderLogo: symbolImageDarkMono,
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto: fiatPerCrypto ?? '0',
@@ -344,6 +365,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       forceUpdateGuiCounter,
 
       // Fees
+      feeCurrencyCode: wallet.currencyInfo.currencyCode,
+      feeDisplayDenomination,
       feeNativeAmount: transactionFee.nativeCryptoAmount,
       feeAmount: transactionFee.cryptoAmount,
       feeStyle: transactionFee.fiatStyle,

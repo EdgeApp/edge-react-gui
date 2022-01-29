@@ -12,3 +12,8 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
   if (name == null) return s.strings.string_no_name
   return name
 }
+
+export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: string, isoFiatCurrencyCode: string } {
+  const { fiatCurrencyCode } = wallet
+  return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
+}

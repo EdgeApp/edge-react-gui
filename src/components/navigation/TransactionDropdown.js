@@ -64,19 +64,27 @@ export function TransactionDropdown(props: Props) {
 
 const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
-    const { tx } = ownProps
+    const { tx, walletId } = ownProps
 
     if (!state.ui.settings.loginStatus) {
       return { message: '' }
     }
 
     const { nativeAmount, currencyCode } = tx
-    const displayDenomination = getDisplayDenomination(state, currencyCode)
-    const { symbol, name, multiplier } = displayDenomination
-    const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
-
-    return {
-      message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+    const wallet = tx.wallet ?? (walletId != null ? state.core.account.currencyWallets[walletId] : undefined)
+    // wallet and walletId are both optional and if neither are present we can't show an amount with a denomination.
+    // In that case we can still show a message with the currency code
+    if (wallet != null) {
+      const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+      const { symbol, name, multiplier } = displayDenomination
+      const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
+      return {
+        message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+      }
+    } else {
+      return {
+        message: sprintf(s.strings.bitcoin_received, currencyCode)
+      }
     }
   },
   dispatch => ({

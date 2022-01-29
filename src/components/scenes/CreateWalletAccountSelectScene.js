@@ -18,7 +18,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
+import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
@@ -410,7 +410,8 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     const { currencyCode, amount } = walletAccountActivationPaymentInfo
     const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
     const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
-    const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
+    const paymentDenomination =
+      currencyCode != null && existingCoreWallet != null ? getExchangeDenomination(state, existingCoreWallet.currencyInfo.pluginId, currencyCode) : {}
 
     let paymentDenominationSymbol
     if (paymentDenomination) {

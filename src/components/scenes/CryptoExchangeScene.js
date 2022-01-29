@@ -13,6 +13,7 @@ import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiCurrencyInfo, emptyCurrencyInfo } from '../../types/types.js'
+import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
@@ -31,12 +32,14 @@ type StateProps = {
   fromWalletId: string,
   fromWalletBalances: { [code: string]: string },
   fromFiatCurrencyCode: string,
+  fromIsoFiatCurrencyCode: string,
   fromWalletName: string,
   fromExchangeAmount: string,
   fromWalletPrimaryInfo: GuiCurrencyInfo,
   fromFiatToCrypto: string,
   toWalletId: string,
   toFiatCurrencyCode: string,
+  toIsoFiatCurrencyCode: string,
   toWalletName: string,
   toExchangeAmount: string,
   toWalletPrimaryInfo: GuiCurrencyInfo,
@@ -82,6 +85,7 @@ const defaultFromWalletInfo = {
   fromCurrencyCode: '',
   fromWalletBalances: {},
   fromFiatCurrencyCode: '',
+  fromIsoFiatCurrencyCode: '',
   fromWalletName: '',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromExchangeAmount: '',
@@ -93,6 +97,7 @@ const defaultFromWalletInfo = {
 const defaultToWalletInfo = {
   toCurrencyCode: '',
   toFiatCurrencyCode: '',
+  toIsoFiatCurrencyCode: '',
   toWalletName: '',
   toWalletPrimaryInfo: emptyCurrencyInfo,
   toExchangeAmount: '',
@@ -248,15 +253,15 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toWalletName, theme } = this.props
+    const { fromFiatCurrencyCode, fromIsoFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toIsoFiatCurrencyCode, toWalletName, theme } = this.props
     const styles = getStyles(theme)
     let fromSecondaryInfo: GuiCurrencyInfo
     if (fromFiatCurrencyCode !== '') {
       fromSecondaryInfo = {
-        displayCurrencyCode: fromFiatCurrencyCode.replace('iso:', ''),
-        exchangeCurrencyCode: fromFiatCurrencyCode,
-        displayDenomination: getDenomFromIsoCode(fromFiatCurrencyCode.replace('iso:', '')),
-        exchangeDenomination: getDenomFromIsoCode(fromFiatCurrencyCode.replace('iso:', ''))
+        displayCurrencyCode: fromFiatCurrencyCode,
+        exchangeCurrencyCode: fromIsoFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(fromFiatCurrencyCode),
+        exchangeDenomination: getDenomFromIsoCode(fromFiatCurrencyCode)
       }
     } else {
       fromSecondaryInfo = emptyCurrencyInfo
@@ -265,10 +270,10 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     let toSecondaryInfo: GuiCurrencyInfo
     if (toFiatCurrencyCode !== '') {
       toSecondaryInfo = {
-        displayCurrencyCode: toFiatCurrencyCode.replace('iso:', ''),
-        exchangeCurrencyCode: toFiatCurrencyCode,
-        displayDenomination: getDenomFromIsoCode(toFiatCurrencyCode.replace('iso:', '')),
-        exchangeDenomination: getDenomFromIsoCode(toFiatCurrencyCode.replace('iso:', ''))
+        displayCurrencyCode: toFiatCurrencyCode,
+        exchangeCurrencyCode: toIsoFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(toFiatCurrencyCode),
+        exchangeDenomination: getDenomFromIsoCode(toFiatCurrencyCode)
       }
     } else {
       toSecondaryInfo = emptyCurrencyInfo
@@ -365,23 +370,23 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         exchangeCurrencyCode
       } = fromWalletPrimaryInfo
 
+      const fromWalletName = getWalletName(currencyWallets[fromWalletId])
+      const { fiatCurrencyCode: fromFiatCurrencyCode, isoFiatCurrencyCode: fromIsoFiatCurrencyCode } = getWalletFiat(currencyWallets[fromWalletId])
       const {
-        name: fromName,
-        fiatCurrencyCode: fromFiatCurrencyCode,
         currencyInfo: { currencyCode },
         balances: fromWalletBalances
       } = currencyWallets[fromWalletId]
-      const fromWalletName = fromName ?? ''
 
       Object.assign(result, {
         fromWalletId,
         fromWalletName,
         fromWalletBalances,
         fromFiatCurrencyCode,
+        fromIsoFiatCurrencyCode,
         fromCurrencyCode,
         fromWalletPrimaryInfo,
         fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
-        fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromFiatCurrencyCode),
+        fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromIsoFiatCurrencyCode),
         hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
       })
     }
@@ -394,17 +399,18 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         exchangeDenomination: { multiplier },
         exchangeCurrencyCode
       } = toWalletPrimaryInfo
-      const { name: toName, fiatCurrencyCode: toFiatCurrencyCode } = currencyWallets[toWalletId]
-      const toWalletName = toName ?? ''
+      const toWalletName = getWalletName(currencyWallets[toWalletId])
+      const { fiatCurrencyCode: toFiatCurrencyCode, isoFiatCurrencyCode: toIsoFiatCurrencyCode } = getWalletFiat(currencyWallets[toWalletId])
 
       Object.assign(result, {
         toWalletId,
         toWalletName,
         toCurrencyCode,
         toFiatCurrencyCode,
+        toIsoFiatCurrencyCode,
         toWalletPrimaryInfo,
         toExchangeAmount: bns.div(toNativeAmount, multiplier, DECIMAL_PRECISION),
-        toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toFiatCurrencyCode)
+        toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toIsoFiatCurrencyCode)
       })
     }
 

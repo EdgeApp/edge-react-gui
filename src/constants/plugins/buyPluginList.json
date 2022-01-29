@@ -5,7 +5,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 7% / Settlement: 10 - 30min\nDaily Limit: $18000\nMonthly Limit: $47000",
+    "description": "Fee: 7% / Settlement: 10 - 30 minutes\nDaily Limit: $18000\nMonthly Limit: $47000",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
     "forCountries": [
@@ -259,7 +259,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1% / Settlement: 1 - 5days\nWeekly Limit: $25000\nMonthly Limit: $50000",
+    "description": "Fee: 1% / Settlement: 1 - 5 days\nWeekly Limit: $25000\nMonthly Limit: $50000",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
     "forCountries": [
@@ -313,7 +313,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €900/day with no KYC",
+    "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://content.edge.app/logoBity.png",
     "paymentTypeLogoKey": "bank"
@@ -531,7 +531,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 4% / Settlement: 1 - 2days\nLimit: €2500/day",
+    "description": "Fee: 4% / Settlement: 1 - 2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
     "partnerIconPath": "https://content.edge.app/Safello-Logo-Green-background.png",
     "forCountries": [
@@ -569,7 +569,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
+    "description": "Fee: 5.5% / Settlement: 5 min - 24 hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -596,7 +596,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nMonthly Limit: $2000",
+    "description": "Fee: 5.5% / Settlement: 5 min - 24 hours\nMonthly Limit: $2000",
     "title": "Cash with Newsagent",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -694,7 +694,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 5.5% / Settlement: Instant - 3days\nDaily Limit: €14000\nMonthly Limit: €150000",
+    "description": "Fee: 5.5% / Settlement: Instant - 3 days\nDaily Limit: €14000\nMonthly Limit: €150000",
     "title": "Sofort - Klarna",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -723,7 +723,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 3% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "description": "Fee: 3% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
     "forCountries": [
@@ -796,7 +796,9 @@
     "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
     "title": "United Payments Interface",
     "partnerIconPath": "https://content.edge.app/transak_logo.png",
-    "forCountries": [],
+    "forCountries": [
+      "IN"
+    ],
     "cryptoCodes": [
       "BTC",
       "ETH",
@@ -815,10 +817,12 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
+    "description": "Fee: 0.75% / Settlement: 2 min - 4 hours\nLimit: ₹1,000,000/day",
     "title": "NEFT Transfer",
     "partnerIconPath": "https://content.edge.app/transak_logo.png",
-    "forCountries": [],
+    "forCountries": [
+      "IN"
+    ],
     "cryptoCodes": [
       "BTC",
       "ETH",
@@ -877,7 +881,7 @@
   },
   {
     "id": "banxa.bank",
-    "sortIndex": 1
+    "sortIndex": 4.5
   },
   {
     "id": "banxa.sofort",
@@ -897,7 +901,7 @@
   },
   {
     "id": "banxa.credit",
-    "sortIndex": 4.5
+    "sortIndex": 1
   },
   {
     "id": "libertyx",
@@ -988,7 +992,7 @@
     },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: 5.5% / Settlement: Instant - 1hour\nLimit: £6000",
+    "description": "Fee: 5.5% / Settlement: Instant - 1 hour\nLimit: £6000",
     "sortIndex": 1
   },
   {
@@ -1008,7 +1012,7 @@
     },
     "title": "Interac e-Transfer",
     "paymentTypeLogoKey": "interac",
-    "description": "Fee: 3% / Settlement: 1 - 2days\nDaily Limit: $10000\nMonthly Limit: $70000",
+    "description": "Fee: 3% / Settlement: 1 - 2 days\nDaily Limit: $10000\nMonthly Limit: $70000",
     "sortIndex": 1
   },
   {
@@ -1025,7 +1029,7 @@
     ],
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",
-    "description": "Fee: 5.95% / Settlement: 1 - 48hours\nLevel 1 Limit:  €10000/day\nLevel 2 Limit: Unlimited"
+    "description": "Fee: 5.95% / Settlement: 1 - 48 hours\nLevel 1 Limit:  €10000/day\nLevel 2 Limit: Unlimited"
   },
   {
     "id": "banxa.bank",

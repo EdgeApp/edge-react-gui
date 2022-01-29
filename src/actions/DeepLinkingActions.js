@@ -11,6 +11,7 @@ import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
+import { launchBitPay } from './BitPayActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { doRequestAddress, parseScannedUri } from './ScanActions.js'
 import { selectWallet } from './WalletActions.js'
@@ -124,6 +125,11 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       Actions.push('wcConnections')
       // Hack around our router's horrible bugs:
       if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
+      return true
+    }
+
+    case 'bitPay': {
+      launchBitPay(link.uri, { currencyWallets }).catch(showError)
       return true
     }
 

@@ -7,7 +7,7 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
-import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
+import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
@@ -64,7 +64,7 @@ type StateProps = {
   customTokens: CustomTokenInfo[],
   exchangeRates: { [string]: string },
   mostRecentWallets: MostRecentWallet[],
-  settings: Object,
+  settings: SettingsState,
   walletsSort: SortOption,
   wallets: { [walletId: string]: GuiWallet }
 }
@@ -78,9 +78,10 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 class WalletListComponent extends React.PureComponent<Props> {
   sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
-      const { settings, exchangeRates } = this.props
+      const { account, settings, exchangeRates } = this.props
+      const currencyWallet = account.currencyWallets[wallet.id]
       const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
-      const fiatBalanceString = calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
+      const fiatBalanceString = calculateWalletFiatBalanceUsingDefaultIsoFiat(currencyWallet, currencyCode, settings, exchangeRates)
       return parseFloat(fiatBalanceString)
     }
 
@@ -177,10 +178,6 @@ class WalletListComponent extends React.PureComponent<Props> {
           const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
           // if token is not supposed to be visible, not point in enabling it
           if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-          if (SYNCED_ACCOUNT_DEFAULTS[token] && enabledTokens.includes(token)) {
-            // if hardcoded token
-            isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
-          }
           return isVisible
         })
 

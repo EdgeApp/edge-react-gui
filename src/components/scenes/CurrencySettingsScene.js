@@ -1,13 +1,13 @@
 // @flow
 
 import { asArray, asBoolean, asMaybe, asObject, asOptional, asString } from 'cleaners'
-import { type EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
 import { setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
@@ -25,10 +25,10 @@ type OwnProps = {
 }
 type StateProps = {
   account: EdgeAccount,
-  selectedDenominationKey: string
+  selectedDenominationMultiplier: string
 }
 type DispatchProps = {
-  selectDenomination: (currencyCode: string, denominationKey: string) => Promise<void>
+  selectDenomination: (pluginId: string, currencyCode: string, denomination: EdgeDenomination) => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -42,7 +42,7 @@ const asElectrumSettings = asObject({
 })
 
 export function CurrencySettingsComponent(props: Props) {
-  const { account, selectDenomination, selectedDenominationKey, theme, route } = props
+  const { account, selectDenomination, selectedDenominationMultiplier, theme, route } = props
   const { currencyInfo } = route.params
   const { currencyCode, defaultSettings, denominations, pluginId } = currencyInfo
   const currencyConfig = account.currencyConfig[pluginId]
@@ -129,9 +129,9 @@ export function CurrencySettingsComponent(props: Props) {
         <SettingsHeaderRow label={s.strings.settings_denominations_title} />
         {denominations.map(denomination => {
           const key = denomination.multiplier
-          const isSelected = key === selectedDenominationKey
+          const isSelected = key === selectedDenominationMultiplier
           return (
-            <SettingsRadioRow key={denomination.multiplier} value={isSelected} onPress={() => selectDenomination(currencyCode, key)}>
+            <SettingsRadioRow key={denomination.multiplier} value={isSelected} onPress={() => selectDenomination(pluginId, currencyCode, denomination)}>
               <Text style={styles.labelText}>
                 <Text style={styles.symbolText}>{denomination.symbol}</Text>
                 {' - ' + denomination.name}
@@ -170,11 +170,11 @@ const getStyles = cacheStyles(theme => ({
 export const CurrencySettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
     account: state.core.account,
-    selectedDenominationKey: getDisplayDenominationKey(state, state.core.account.currencyConfig[params.currencyInfo.pluginId].currencyInfo.currencyCode)
+    selectedDenominationMultiplier: getDisplayDenomination(state, params.currencyInfo.pluginId, params.currencyInfo.currencyCode).multiplier
   }),
   dispatch => ({
-    async selectDenomination(currencyCode, denominationKey) {
-      await dispatch(setDenominationKeyRequest(currencyCode, denominationKey))
+    async selectDenomination(pluginId, currencyCode, denomination) {
+      await dispatch(setDenominationKeyRequest(pluginId, currencyCode, denomination))
     }
   })
 )(withTheme(CurrencySettingsComponent))

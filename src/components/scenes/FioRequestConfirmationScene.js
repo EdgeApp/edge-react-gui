@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkPubAddress, getRemainingBundles } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
@@ -339,8 +339,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       }
     }
 
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, fioWallets[0].currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, fioWallets[0].currencyInfo.pluginId, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name

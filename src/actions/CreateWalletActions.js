@@ -144,7 +144,7 @@ export const createAccountTransaction =
     const currencyPlugin = account.currencyConfig[currencyPluginName]
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-    const paymentDenom = getExchangeDenomination(state, currencyCode)
+    const paymentDenom = getExchangeDenomination(state, currencyPluginName, currencyCode)
     let nativeAmount = bns.mul(amount, paymentDenom.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {

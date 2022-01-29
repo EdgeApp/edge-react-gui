@@ -5,7 +5,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1% / Settlement: 1 - 5days\nMonthly Limit: $150000",
+    "description": "Fee: 1% / Settlement: 1 - 5 days\nMonthly Limit: $150000",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
     "forCountries": [
@@ -25,7 +25,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 3% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "description": "Fee: 3% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
     "forCountries": [
@@ -401,7 +401,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €900/day with no KYC",
+    "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://content.edge.app/logoBity.png",
     "paymentTypeLogoKey": "bank",
@@ -415,7 +415,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 3% / Settlement: 1 - 2days\nLimit: €2500/day",
+    "description": "Fee: 3% / Settlement: 1 - 2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
     "partnerIconPath": "https://content.edge.app/Safello-Logo-Green-background.png",
     "forCountries": [
@@ -439,7 +439,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: Varies / Settlement: 10 - 20min\nLimit: Varies",
+    "description": "Fee: Varies / Settlement: 10 - 20 minutes\nLimit: Varies",
     "title": "Cash",
     "partnerIconPath": "https://content.edge.app/mktg/bitaccess.png",
     "forCountries": [
@@ -471,7 +471,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.5% / Settlement: 5min - 24hours\nDaily Limit: $30000\nMonthly Limit: $500000",
+    "description": "Fee: 1.5% / Settlement: 5 min - 24 hours\nDaily Limit: $30000\nMonthly Limit: $500000",
     "title": "Bank Transfer",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -529,7 +529,7 @@
     ],
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",
-    "description": "Fee: 6.95% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
+    "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
   },
   {
     "id": "safello.bank",

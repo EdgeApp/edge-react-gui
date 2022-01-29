@@ -4,7 +4,6 @@ import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import { getDeviceName } from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
 
 import s from '../../locales/strings.js'
@@ -32,27 +31,9 @@ type OwnProps = {
   url?: string
 }
 
-type State = {
-  deviceName: string
-}
-
 type Props = OwnProps & ThemeProps
 
-class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props)
-
-    this.state = {
-      deviceName: ''
-    }
-  }
-
-  componentDidMount() {
-    getDeviceName().then(deviceName => {
-      this.setState({ deviceName })
-    })
-  }
-
+class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
 
   openUrl = () => {
@@ -123,7 +104,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
 
   render() {
     const { bridge, theme, url } = this.props
-    const { feeRateUsed, networkFeeOption, signedTx, txid, txSecret } = this.props.transaction
+    const { feeRateUsed, networkFeeOption, signedTx, txid, txSecret, deviceDescription } = this.props.transaction
     const recipientAddress = this.getRecipientAddress()
     const styles = getStyles(theme)
 
@@ -162,7 +143,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
               <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} />
             ) : null}
 
-            <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={this.state.deviceName} />
+            {deviceDescription != null && <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={deviceDescription} />}
           </ScrollView>
         </View>
         <ModalCloseArrow onPress={this.handleCancel} />

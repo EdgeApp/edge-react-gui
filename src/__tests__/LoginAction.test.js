@@ -2,15 +2,12 @@
 /* globals test expect */
 
 import { mergeSettings } from '../actions/LoginActions.js'
-import { LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES } from '../modules/Core/Account/settings.js'
+import { asSyncedAccountSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS } from '../modules/Core/Account/settings.js'
 
 test('synced settings missing properties are replaced', () => {
   const loadedSyncedSettings = {}
-  const mergedSettings = mergeSettings(loadedSyncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
-  const finalSettings = mergedSettings.finalSettings
-  expect(finalSettings).toEqual(SYNCED_ACCOUNT_DEFAULTS)
-  expect(mergedSettings.isOverwriteNeeded).toEqual(true)
-  expect(mergedSettings.isDefaultTypeIncorrect).toEqual(false)
+  const mergedSettings = asSyncedAccountSettings(loadedSyncedSettings)
+  expect(mergedSettings).toEqual(SYNCED_ACCOUNT_DEFAULTS)
 })
 
 test('synced settings missing default causes console.error', () => {

@@ -4,6 +4,7 @@ import { bns } from 'biggystring'
 import {
   type EdgeAccount,
   type EdgeCurrencyWallet,
+  type EdgeDenomination,
   type EdgeMetadata,
   type EdgeParsedUri,
   type EdgeSpendTarget,
@@ -21,11 +22,13 @@ import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurren
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
+import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode, getDenomination } from '../../util/utils.js'
+import { type GuiExchangeRates, type GuiMakeSpendInfo } from '../../types/types.js'
+import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
@@ -54,15 +57,15 @@ type StateProps = {
   pending: boolean,
   pin: string,
   resetSlider: boolean,
-  settings: any,
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
   transactionMetadata: EdgeMetadata | null,
   uniqueIdentifier?: string,
-  wallets: { [walletId: string]: GuiWallet },
+  wallets: { [walletId: string]: EdgeCurrencyWallet },
   isSendUsingFioAddress?: boolean,
   guiMakeSpendInfo: GuiMakeSpendInfo,
-  maxSpendSet: boolean
+  maxSpendSet: boolean,
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
 }
 
 type DispatchProps = {
@@ -70,7 +73,9 @@ type DispatchProps = {
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void,
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => Promise<void>,
   onChangePin: (pin: string) => void,
-  selectWallet: (walletId: string, currencyCode: string) => void
+  selectWallet: (walletId: string, currencyCode: string) => void,
+  getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination,
+  getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
 type OwnProps = {
@@ -82,7 +87,7 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 type WalletStates = {
   selectedWalletId: string,
   selectedCurrencyCode: string,
-  guiWallet: GuiWallet,
+  wallet: EdgeCurrencyWallet,
   coreWallet?: EdgeCurrencyWallet
 }
 
@@ -124,7 +129,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     return {
       selectedWalletId: walletId,
       selectedCurrencyCode: currencyCode,
-      guiWallet: wallets[walletId],
+      wallet: wallets[walletId],
       coreWallet: account && account.currencyWallets ? account.currencyWallets[walletId] : undefined
     }
   }
@@ -296,7 +301,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       if (fioSender?.fioWallet != null && fioSender?.fioAddress != null && !isFioPendingRequest) {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
-      await signBroadcastAndSave(fioSender)
+      await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
         const answer = await Airship.show(bridge => (
@@ -342,14 +347,15 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { lockInputs, route } = this.props
     const { lockTilesMap = {} } = route.params
 
-    const { guiWallet, selectedCurrencyCode } = this.state
+    const { wallet, selectedCurrencyCode } = this.state
+    const name = getWalletName(wallet)
 
     return (
       <Tile
         type={lockInputs || lockTilesMap.wallet ? 'static' : 'editable'}
         title={s.strings.send_scene_send_from_wallet}
         onPress={lockInputs || lockTilesMap.wallet ? undefined : this.handleWalletPress}
-        body={`${guiWallet.name} (${selectedCurrencyCode})`}
+        body={`${name} (${selectedCurrencyCode})`}
       />
     )
   }
@@ -379,18 +385,19 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, nativeAmount, settings, theme, route } = this.props
+    const { exchangeRates, lockInputs, nativeAmount, theme, route, currencyWallets, getExchangeDenomination, getDisplayDenomination } = this.props
     const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
-    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+    const { wallet, selectedCurrencyCode, recipientAddress } = this.state
+    const { isoFiatCurrencyCode } = getWalletFiat(wallet)
     const styles = getStyles(theme)
 
     if (recipientAddress && !hiddenTilesMap.amount) {
       let cryptoAmountSyntax
       let cryptoAmountStyle
       let fiatAmountSyntax
-      const cryptoDisplayDenomination = getDenomination(selectedCurrencyCode, settings, 'display')
-      const cryptoExchangeDenomination = getDenomination(selectedCurrencyCode, settings, 'exchange')
-      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+      const cryptoDisplayDenomination = getDisplayDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
+      const cryptoExchangeDenomination = getExchangeDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
+      const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount === '') {
         cryptoAmountSyntax = s.strings.string_tap_to_edit
@@ -398,7 +405,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
         const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
         const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
-        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, exchangeAmount)
+        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, isoFiatCurrencyCode, exchangeAmount)
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
           fiatAmountSyntax = `${fiatSymbol} ${bns.toFixed(fiatAmount, 2, 2) ?? '0'}`
@@ -439,13 +446,18 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees() {
-    const { exchangeRates, settings, transaction, theme } = this.props
-    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+    const { exchangeRates, transaction, theme, currencyWallets, getDisplayDenomination, getExchangeDenomination } = this.props
+    const { selectedCurrencyCode, selectedWalletId, recipientAddress } = this.state
     const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
 
     if (recipientAddress) {
-      const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
-      const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+      const wallet = currencyWallets[selectedWalletId]
+      const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+      const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+      const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, transaction, feeDisplayDenomination, feeDefaultDenomination)
+
+      const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
+      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
@@ -641,15 +653,15 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       pending,
       pin: state.ui.scenes.sendConfirmation.pin,
       resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
-      settings: state.ui.settings,
       sliderDisabled: !transaction || !!error || !!pending,
       transaction,
       transactionMetadata,
       uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
-      wallets: state.ui.wallets.byId,
+      wallets: state.core.account.currencyWallets,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
-      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
+      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet,
+      currencyWallets: state.core.account.currencyWallets
     }
   },
   dispatch => ({
@@ -667,6 +679,12 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     selectWallet(walletId: string, currencyCode: string) {
       dispatch(selectWallet(walletId, currencyCode))
+    },
+    getExchangeDenomination(pluginId: string, currencyCode: string) {
+      return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
+    },
+    getDisplayDenomination(pluginId: string, currencyCode: string) {
+      return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
     }
   })
 )(withTheme(SendComponent))

@@ -1,25 +1,8 @@
 // @flow
 
-import { type EdgeDenomination } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
 
-import { type SettingsState } from '../reducers/scenes/SettingsReducer.js'
-import { type RootState } from '../types/reduxTypes.js'
-import { type GuiDenomination } from '../types/types.js'
-import { getCurrencyInfo } from '../util/utils.js'
-
-const isoFiatDenominations = {
-  'iso:USD': {
-    multiplier: '100',
-    denominations: [
-      {
-        name: 'USD',
-        symbol: '$',
-        multiplier: '100',
-        precision: 2
-      }
-    ]
-  }
-}
+import type { Dispatch, GetState, RootState } from '../types/reduxTypes.js'
 
 export const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
@@ -27,98 +10,37 @@ export const emptyEdgeDenomination: EdgeDenomination = {
   symbol: ''
 }
 
-const getDenominations = (state: RootState, currencyCode: string): EdgeDenomination[] => {
-  const currencySettings = state.ui.settings[currencyCode] || isoFiatDenominations[currencyCode]
-  if (currencySettings == null || currencySettings.denominations == null) {
-    return [emptyEdgeDenomination]
+export const getDisplayDenominationFromState =
+  (pluginId: string, currencyCode: string) =>
+  (dispatch: Dispatch, getState: GetState): EdgeDenomination => {
+    const state = getState()
+    return getDisplayDenomination(state, pluginId, currencyCode)
   }
-  return currencySettings.denominations
+
+export const getDisplayDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
+  return state.ui.settings.denominationSettings[pluginId][currencyCode] ?? getExchangeDenomination(state, pluginId, currencyCode)
 }
 
-export const getDisplayDenominationKey = (state: RootState, currencyCode: string) => {
-  const currencySettings = state.ui.settings[currencyCode]
-  return currencySettings ? currencySettings.denomination : '1'
+export const getExchangeDenominationFromState = (pluginId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  return getExchangeDenomination(state, pluginId, currencyCode)
 }
 
-export const getDisplayDenominationFromSettings = (settings: SettingsState, currencyCode: string): EdgeDenomination => {
-  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
-  const selectedDenominationKey = currencySettings.denomination
-  const denominations = currencySettings.denominations
-  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
-  for (const d of denominations) {
-    if (d.multiplier === selectedDenominationKey) {
-      selectedDenomination = d
-    }
-  }
-  return selectedDenomination
-}
-
-export const getDisplayDenominationFull = (state: RootState, currencyCode: string): EdgeDenomination => {
-  const settings = state.ui.settings
-  const currencySettings = settings[currencyCode]
-  const selectedDenominationKey = currencySettings.denomination
-  const denominations = currencySettings.denominations
-  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
-  for (const d of denominations) {
-    if (d.multiplier === selectedDenominationKey) {
-      selectedDenomination = d
-    }
-  }
-  return selectedDenomination
-}
-
-export const getDisplayDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
-  const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
-  const denominations = getDenominations(state, currencyCode)
-  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
-  for (const d of denominations) {
-    if (d.multiplier === selectedDenominationKey) {
-      selectedDenomination = d
-    }
-  }
-  return selectedDenomination
-}
-
-export const getExchangeDenomination = (state: RootState, currencyCode: string) => {
-  const denominations = getDenominations(state, currencyCode)
-  let exchangeDenomination: EdgeDenomination = emptyEdgeDenomination
-  for (const d of denominations) {
-    if (d.name === currencyCode) {
-      exchangeDenomination = d
-    }
-  }
-  return exchangeDenomination
-}
-
-export const getDefaultDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
-  const { allCurrencyInfos } = state.ui.settings.plugins
-  const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
-  if (currencyInfo) return currencyInfo[0]
-  const settings = state.ui.settings
-  const currencySettings = settings[currencyCode]
-  const defaultMultiplier = currencySettings.denomination
-  const denomination = currencySettings.denominations.find(denom => denom.multiplier === defaultMultiplier)
-  if (!denomination) throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
-  return denomination
-}
-
-export const getPrimaryExchangeDenomination = (state: RootState, currencyCode: string, walletId?: string): GuiDenomination => {
+export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
   const { customTokens } = state.ui.settings
-  const { currencyWallets } = state.core.account
-  const wallet = currencyWallets[walletId ?? state.ui.wallets.selectedWalletId]
-  const mainDenom = wallet.currencyInfo.denominations.find(denom => denom.name === currencyCode)
+  const customToken = customTokens.find(item => item.currencyCode === currencyCode)
+  const { currencyInfo } = state.core.account.currencyConfig[pluginId]
+  const denom = getDenominationFromCurrencyInfo(currencyInfo, currencyCode)
+  return customToken?.denominations?.[0] ?? denom
+}
+
+export const getDenominationFromCurrencyInfo = (currencyInfo: EdgeCurrencyInfo, currencyCode: string): EdgeDenomination => {
+  const mainDenom = currencyInfo.denominations.find(denom => denom.name === currencyCode)
   if (mainDenom != null) return mainDenom
 
-  const metaToken = wallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)
+  const metaToken = currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)
   const metaTokenDenoms = metaToken?.denominations ?? []
   const metaTokenDenom = metaTokenDenoms.find(denom => denom.name === currencyCode)
   if (metaTokenDenom != null) return metaTokenDenom
-
-  const customToken = customTokens.find(item => item.currencyCode === currencyCode)
-  if (customToken && customToken.denomination && customToken.denomination[0]) {
-    const denomination = customToken.denominations[0]
-    return denomination
-  }
-
-  throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
+  return emptyEdgeDenomination
 }

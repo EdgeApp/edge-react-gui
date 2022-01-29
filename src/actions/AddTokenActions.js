@@ -55,19 +55,14 @@ export const addTokenAsync = async (
   state: RootState
 ) => {
   const { account } = state.core
-  const { currencyConfig, currencyWallets } = account
+  const { currencyWallets } = account
 
   const uiWallet = state.ui.wallets.byId[walletId]
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
 
   // Check for conflicting currency codes:
-  for (const pluginId of Object.keys(currencyConfig)) {
-    const { currencyInfo } = currencyConfig[pluginId]
-    if (currencyCode === currencyInfo.currencyCode) {
-      throw new Error(sprintf(s.strings.error_token_exists, currencyCode))
-    }
-  }
+  if (currencyCode === currencyWallets[walletId].currencyInfo.currencyCode) throw new Error(sprintf(s.strings.error_token_exists, currencyCode))
 
   const coreWallet = currencyWallets[walletId]
   await coreWallet.addCustomToken(newTokenObj)
@@ -85,7 +80,10 @@ export const addTokenAsync = async (
     newCustomTokens = mergeTokens(newList, customTokens) // otherwise merge metaTokens and customTokens
   }
   settingsOnFile.customTokens = newCustomTokens
-  settingsOnFile[currencyCode] = newTokenObj
+  if (settingsOnFile.denominationSettings?.[coreWallet.currencyInfo.pluginId] != null) {
+    settingsOnFile.denominationSettings[coreWallet.currencyInfo.pluginId][currencyCode] = newTokenObj
+  }
+
   await setSyncedSettings(account, settingsOnFile)
   const newEnabledTokens = uiWallet.enabledTokens
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {

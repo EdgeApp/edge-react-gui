@@ -96,7 +96,7 @@ Array [
       "order_id": "null",
       "page": "0",
     },
-    "description": "Fee: 5.95% / Settlement: 1 - 48hours
+    "description": "Fee: 5.95% / Settlement: 1 - 48 hours
 Level 1 Limit:  €10000/day
 Level 2 Limit: Unlimited",
     "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
@@ -118,7 +118,7 @@ Level 2 Limit: Unlimited",
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10 - 30min
+    "description": "Fee: 7% / Settlement: 10 - 30 minutes
 Daily Limit: $18000
 Monthly Limit: $47000",
     "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
@@ -176,7 +176,7 @@ Array [
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 1% / Settlement: 1 - 5days
+    "description": "Fee: 1% / Settlement: 1 - 5 days
 Weekly Limit: $25000
 Monthly Limit: $50000",
     "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
@@ -198,7 +198,7 @@ Monthly Limit: $50000",
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10 - 30min
+    "description": "Fee: 7% / Settlement: 10 - 30 minutes
 Daily Limit: $18000
 Monthly Limit: $47000",
     "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
@@ -274,7 +274,7 @@ Array [
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 1% / Settlement: 1 - 5days
+    "description": "Fee: 1% / Settlement: 1 - 5 days
 Monthly Limit: $150000",
     "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
@@ -296,7 +296,7 @@ Monthly Limit: $150000",
     "deepQuery": Object {
       "country": "US",
     },
-    "description": "Fee: Varies / Settlement: 10 - 20min
+    "description": "Fee: Varies / Settlement: 10 - 20 minutes
 Limit: Varies",
     "partnerIconPath": "https://content.edge.app/mktg/bitaccess.png",
     "paymentTypeLogoKey": "cash",
