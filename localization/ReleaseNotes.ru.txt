@@ -1,89 +1,89 @@
 v1.9.0
-* Improved stability when coming in and out of background
-* Integrate Safello for buying and selling in Europe
-* Integrate Bits of Gold for selling to Israeli and European bank account
-* Integrate CoinSwitch as an exchange provider
+* Улучшена стабильность при выходе из фона и вне фона
+* Интеграция Safello для покупки и продажи в Европе
+* Интеграция Bits of Gold для продажи на израильский и европейский банковский счет
+* Интеграция CoinSwitch в качестве поставщика обмена
 
 v1.8.7
-* FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
-* Import XRP and XLM private keys
-* WebSockets- Improved connectivity and syncing even when using VPN
+* FoxExchange и Godex, 2 новых обменника, которые позволяют конвертировать свои монеты в другие монеты!
+* Импорт ключей XRP и XLM
+* WebSockets- Улучшение соединения и синхронизации даже при использовании VPN
 
 v1.8.5
-* Wyre Sell - Sell crypo with your bank account
-* New and improved visuals at login screen
-* Prevent FaceID from automatically lauching on login
+* Wyre Sell - Продайте крипту с помощью вашего банковского счета
+* Новый и улучшенный внешний вид на экране входа
+* Убрали автоматический запуск FaceID при входе
 
 v1.8.4
-* Simplex Sell - Sell crypto and pay off credit cards
-* Ravencoin added
+* Simplex Sell - Продать крипто и оплачивать кредитные карты
+* Добавлено Ravencoin
 
 v1.8.1
 
-* Fix the minimum Android SDK version to 23+ (Android 6)
+* Исправлена минимальная версия Android SDK до 23+ (Android 6)
 
 v1.8.0
 
-* React native upgrade + visual fixes
-* Prefer fixed-rate quotes over estimates
+* React обновление + визуальные исправления
+* Предпочтение котировкам с фиксированной ставкой, вместо оценочных
 
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* Бета-Simplex продается
+* Предупреждение пользователей о высоких сборах
 
 v1.7.3
 
-* Patch to avoid BTC fee problems
+* Патч для избежания проблем с комиссией BTC
 
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* Исправлены проблемы с производительностью при входе
+* Исправлена ошибка Split BCH/BSV
+* Различные визуальные и текстовые обновления
+* Добавлена возможность кликнуть на адрес для запуска проводника по запросу или отправки экрана подтверждения
+* Комиссия segwit, на 15% ниже, чем не segwit
+* Валюты на основе учетных записей, такие как XRP, EOS и т. д. покажет транзакции как отвергнутые, если не найдено в сети
 
 v1.7.0
 
 поддержка адресов * Bech32
 *  Перенесено Edge Core в независимый процесс для повышения производительности и отзывчивости GUI
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+* Вывести криптовалюту на кредитную карту, используя Simplex
+* Добавьте LibertyX для покупки Bitcoin у физического лица из США
 
 v1.6.2
 
-* Fix fiat denomination of wallets from Airbitz to Edge
-* Fix EOS Crash issues
-* Fix various UI display bugs
-* Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
-* Use multiple services to broadcast XRP and ETH transactions
-* Add Faa.st instant exchange provider
+* Исправлено фиат-обозначение кошельков от Airbitz до Edge
+* Исправлены проблемы с EOS
+* Исправлены различные ошибки UI
+* Изменение метаданных транзакций сразу после сохранения
+* Улучшена синхронизация XRP и ETH
+* Использовать несколько сервисов для трансляции транзакций XRP и ETH
+* Добавлен поставщик Faa.st для мгновенного обмена
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
-* Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* Улучшенный расчёт коммисий BTC
+* Добавлена кнопка купить на экран списоков кошельков
+* Добавлена новая кнопка, чтобы купить и обменять криптовалюту для пустых кошельков
+* Исправление нескольких ошибок отображения пользовательского интерфейса
+* Улучшенная функциональность плагинов
 
 v1.6.0
 
 * Поддержка EOS
 * Внедрение глубоких связей bitcoin, ethereum, bitcoincash, dash и edge URIs
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Добавьте Wyre плагин для поддержки покупки/продажи Bitcoin с банковского счета в США
+* Добавить плагин Bitrefill для поддержки покупок подарочных карт и мобильных приложений
+* Добавьте китайский, корейский, французский и вьетнамский перевод
+* Добавьте поддержку для IMP и IRR валют
 
 v1.5.0
 
 * Добавить Changenow в качестве обменника
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+* Использование новых цветные значков валюты
+* Разрешить вход/выход из ShapeShift через экран настроек
 
 v1.4.4
 
