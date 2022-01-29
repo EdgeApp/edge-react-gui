@@ -174,5 +174,5 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo, wall
 }
 
 export const getAmountRequired = (guiMakeSpendInfo: EdgeSpendInfo): boolean => {
-  return guiMakeSpendInfo.otherParams == null || guiMakeSpendInfo.otherParams.fioAction == null
+  return guiMakeSpendInfo.otherParams == null || guiMakeSpendInfo.otherParams.action == null || guiMakeSpendInfo.otherParams.action.name == null
 }

@@ -2,15 +2,15 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { ClickableText } from '../../../components/themed/ClickableText'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
-import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
@@ -124,22 +124,24 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
     if (createNew) {
       return (
-        <ClickableText onPress={this.registerNewDomain} paddingRem={0}>
-          <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
-            <Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />
-            <EdgeText style={styles.domainRegisterText}>{s.strings.fio_address_list_domain_register}</EdgeText>
-          </View>
-        </ClickableText>
+        <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
+          <ClickableText
+            icon={<Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />}
+            label={s.strings.fio_address_list_domain_register}
+            onPress={this.registerNewDomain}
+            paddingRem={0}
+          />
+        </View>
       )
     }
     if (value) {
       return (
-        <ClickableText onPress={() => this.selectItem(value)} paddingRem={0}>
+        <TouchableOpacity onPress={() => this.selectItem(value)}>
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <EdgeText style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</EdgeText>
           </View>
-        </ClickableText>
+        </TouchableOpacity>
       )
     }
     return null
@@ -200,13 +202,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: 0,
     marginLeft: theme.rem(1),
     marginTop: theme.rem(0.25),
-    paddingTop: theme.rem(1.25),
+    paddingTop: theme.rem(1),
     borderTopWidth: theme.rem(0.05),
     borderTopColor: theme.lineDivider
-  },
-  domainRegisterText: {
-    marginLeft: theme.rem(0.5),
-    color: theme.textLink
   },
   domainRegisterIcon: {
     marginTop: theme.rem(0.25)
