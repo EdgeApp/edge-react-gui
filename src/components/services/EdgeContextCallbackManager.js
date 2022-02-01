@@ -5,8 +5,9 @@ import * as React from 'react'
 
 import { handleOtpError } from '../../actions/AccountActions.js'
 import { connect } from '../../types/reactRedux.js'
+import { makeErrorLog, translateError } from '../../util/translateError.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
-import { Airship } from './AirshipInstance.js'
+import { Airship, yellowText } from './AirshipInstance.js'
 
 type StateProps = {
   context: EdgeContext
@@ -53,12 +54,8 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
    * but asynchronous so we don't spam multiple pop-ups.
    */
   showError(error: mixed): Promise<void> {
-    console.error('Showing core drop-down alert:', error)
-
-    // TODO: Run the errors through our translation infrastructure:
-    const message = error instanceof Error ? error.message : String(error)
-
-    return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
+    console.log(yellowText('Showing core drop-down alert: ' + makeErrorLog(error)))
+    return Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} warning />)
   }
 
   render() {

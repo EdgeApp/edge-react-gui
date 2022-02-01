@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { makeAirship } from 'react-native-airship'
 
-import ENV from '../../../env.json'
+import { makeErrorLog, translateError } from '../../util/translateError'
 import { AirshipToast } from '../common/AirshipToast.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 export const Airship = makeAirship()
@@ -13,7 +13,8 @@ export const Airship = makeAirship()
  * Used when some user-requested operation fails.
  */
 export function showError(error: mixed): void {
-  showAlert(error, false)
+  console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} />)
 }
 
 /**
@@ -21,24 +22,8 @@ export function showError(error: mixed): void {
  * Used when some user-requested operation succeeds but with a warning.
  */
 export function showWarning(error: mixed): void {
-  showAlert(error, true)
-}
-
-/**
- * Shows an error or warning to the user.
- * Used when some user-requested operation succeeds but with a warning.
- */
-function showAlert(error: mixed, isWarning: boolean): void {
-  // WIP: Run the errors through our translation infrastructure:
-  if (ENV.DEBUG_VERBOSE_ERRORS) {
-    // Show extended warning data
-    const logColoredText = isWarning ? '\x1b[34m\x1b[43mWarning:' : '\x1b[37m\x1b[41mError:'
-    console.log(logColoredText + `\n${JSON.stringify(error, null, 2)}` + '\x1b[0m')
-  }
-
-  // Short short warning data in the GUI
-  const message = error instanceof Error ? error.message : String(error)
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning={isWarning} />)
+  console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} warning />)
 }
 
 /**
@@ -47,4 +32,20 @@ function showAlert(error: mixed, isWarning: boolean): void {
  */
 export function showToast(message: string): void {
   Airship.show(bridge => <AirshipToast bridge={bridge} message={message} />)
+}
+
+/**
+ * Makes text red in dev mode.
+ */
+export function redText(message: string): string {
+  if (!global.__DEV__) return message
+  return `\x1b[31m${message}\x1b[39m`
+}
+
+/**
+ * Makes text yellow in dev mode.
+ */
+export function yellowText(message: string): string {
+  if (!global.__DEV__) return message
+  return `\x1b[33m${message}\x1b[39m`
 }
