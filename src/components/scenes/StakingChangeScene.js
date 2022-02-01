@@ -167,7 +167,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
     if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
       currencyPlugin.otherMethods
         .getStakeEstReturn(exchangeAmount)
-        .then(apy => setApy(apy))
+        .then(apy => setApy(parseFloat(apy.toFixed(2))))
         .catch(() => {
           //
         })
