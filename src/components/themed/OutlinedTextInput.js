@@ -191,7 +191,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
 
   // Animated styles:
   const getColor = useCallback(
-    (errorValue, focusValue, focusColor? = theme.iconTappable) => {
+    (errorValue, focusValue, focusColor = theme.iconTappable) => {
       'worklet'
       const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, focusColor])
       return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
