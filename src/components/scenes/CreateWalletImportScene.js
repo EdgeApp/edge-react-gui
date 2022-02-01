@@ -57,7 +57,7 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
 
     this.setState({ isProcessing: true })
     currencyPlugin
-      .importKey(input, { format })
+      .importKey(input, { keyOptions: { format } })
       .then(() => {
         navigation.navigate('createWalletSelectFiat', {
           selectedWalletType,
