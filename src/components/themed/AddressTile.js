@@ -12,7 +12,7 @@ import { addressWarnings } from '../../actions/ScanActions.js'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
-import { BitPayError, BitPayErrorCode } from '../../types/BitPayError.js'
+import { BitPayError } from '../../types/BitPayError.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
@@ -126,7 +126,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
       if (ercTokenStandard === 'ERC20' && parseDeepLink(address).type === 'bitPay')
-        showError(new BitPayError(BitPayErrorCode.CurrencyNotSupported, { text: currencyInfo.currencyCode }))
+        showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
       else showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ loading: false })
     }

@@ -9,7 +9,7 @@ import { WalletListModal } from '../components/modals/WalletListModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { BitPayError, BitPayErrorCode } from '../types/BitPayError.js'
+import { BitPayError } from '../types/BitPayError.js'
 import {
   type BpInstructionOutput,
   type BpInvoiceInstruction,
@@ -46,7 +46,7 @@ async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Respo
     // Only show the text in the error response if not a web page.
     const rawText = await fetchResponse.text()
     const text = !rawText.includes('doctype html') ? `: ${rawText}` : ''
-    throw new BitPayError(BitPayErrorCode.FetchFailed, { header, statusCode, text, errorData: { uri, method, body, rawText } })
+    throw new BitPayError('FetchFailed', { header, statusCode, text, errorData: { uri, method, body, rawText } })
   }
 
   return await fetchResponse.json()
@@ -95,7 +95,7 @@ export async function launchBitPay(
     // Ensure the core wallet is accepted by this invoice as a payment option
     selectedCurrencyCode = params.wallet.currencyInfo.currencyCode
     if (!paymentCurrencies.includes(selectedCurrencyCode)) {
-      throw new BitPayError(BitPayErrorCode.InvalidPaymentOption, { text: paymentCurrencies.join(', ') })
+      throw new BitPayError('InvalidPaymentOption', { text: paymentCurrencies.join(', ') })
     }
     selectedWallet = params.wallet
   } else {
@@ -103,7 +103,7 @@ export async function launchBitPay(
     const { currencyWallets = {} } = params
     const matchingWallets: string[] = Object.keys(currencyWallets).filter(key => paymentCurrencies.includes(currencyWallets[key].currencyInfo.currencyCode))
     if (matchingWallets.length === 0) {
-      throw new BitPayError(BitPayErrorCode.NoPaymentOption, { text: paymentCurrencies.join(', ') })
+      throw new BitPayError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     } else {
       const walletListResult = await Airship.show(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
@@ -138,15 +138,15 @@ export async function launchBitPay(
   const invoiceResponse = asBpInvoiceResponse(responseJson)
   let errorData = { uri, initOpts, responseJson, invoiceResponse }
   if (invoiceResponse.instructions.length > 1) {
-    throw new BitPayError(BitPayErrorCode.MultiInstructionInvoice, { errorData })
+    throw new BitPayError('MultiInstructionInvoice', { errorData })
   }
   const invoiceInstruction = invoiceResponse.instructions[0]
   errorData = { ...errorData, invoiceInstruction }
   if (invoiceInstruction.outputs) {
     if (invoiceInstruction.outputs.length > 1) {
-      throw new BitPayError(BitPayErrorCode.MultiOutputInvoice, { errorData })
+      throw new BitPayError('MultiOutputInvoice', { errorData })
     }
-  } else throw new BitPayError(BitPayErrorCode.EmptyOutputInvoice, { errorData })
+  } else throw new BitPayError('EmptyOutputInvoice', { errorData })
   const instructionOutput = invoiceInstruction.outputs[0]
 
   // Make the spend to generate the tx hexes
@@ -174,7 +174,7 @@ export async function launchBitPay(
   const signedHex = signedTx.signedTx ?? ''
 
   errorData = { ...errorData, spendInfo, walletId: selectedWallet.id, unsignedTx, signedTx }
-  if (unsignedHex === '' || signedHex === '') throw new BitPayError(BitPayErrorCode.EmptyVerificationHexReq, errorData)
+  if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
 
   // Send the unsigned TX and signed weightedSize to BitPay for verification
   const verificationPaymentRequest = {
@@ -196,7 +196,7 @@ export async function launchBitPay(
   if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
     errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
     errorData.responseJson = responseJson
-    throw new BitPayError(BitPayErrorCode.TxVerificationMismatch, errorData)
+    throw new BitPayError('TxVerificationMismatch', { errorData })
   }
 
   // Pass spend info to the send scene for user to confirm tx.

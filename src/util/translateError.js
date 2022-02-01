@@ -1,6 +1,7 @@
 // @flow
 
 import ENV from '../../env.json'
+import { BitPayError, translateBitPayError } from '../types/BitPayError'
 
 /**
  * Something got thrown, so turn that into a dev-friendly string.
@@ -22,5 +23,8 @@ export function makeErrorLog(error: mixed): string {
  * @returns A translated, human-friendly string (in many cases).
  */
 export function translateError(error: mixed): string {
+  // GUI Error types:
+  if (error instanceof BitPayError) return translateBitPayError(error)
+
   return error instanceof Error ? error.message : String(error)
 }
