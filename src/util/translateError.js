@@ -2,6 +2,7 @@
 
 import ENV from '../../env.json'
 import { BitPayError, translateBitPayError } from '../types/BitPayError'
+import { ResolutionError, translateResolutionError } from '../types/ResolutionError'
 
 /**
  * Something got thrown, so turn that into a dev-friendly string.
@@ -25,6 +26,7 @@ export function makeErrorLog(error: mixed): string {
 export function translateError(error: mixed): string {
   // GUI Error types:
   if (error instanceof BitPayError) return translateBitPayError(error)
+  if (error instanceof ResolutionError) return translateResolutionError(error)
 
   return error instanceof Error ? error.message : String(error)
 }
