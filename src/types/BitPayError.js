@@ -16,6 +16,7 @@ type BitPayErrorOptions = {
 type BitPayErrorHandler = (error: BitPayErrorOptions) => string
 
 export const BitPayErrorCode = {
+  CurrencyNotSupported: 'CurrencyNotSupported',
   EmptyOutputInvoice: 'EmptyOutputInvoice',
   EmptyVerificationHexReq: 'EmptyVerificationHexReq',
   FetchFailed: 'FetchFailed',
@@ -31,6 +32,7 @@ export const BitPayErrorCode = {
  * Internal Mapping object from BitPayErrorCode to a BitPayErrorHandler
  */
 const HandlersByCode = {
+  [BitPayErrorCode.CurrencyNotSupported]: (params: { text: string }) => sprintf(s.strings.error_bitpay_currency_not_supported, params.text),
   [BitPayErrorCode.EmptyOutputInvoice]: () => s.strings.error_bitpay_empty_output_invoice,
   [BitPayErrorCode.EmptyVerificationHexReq]: () => s.strings.error_bitpay_empty_verification_hex_req,
   [BitPayErrorCode.FetchFailed]: (params: { header: string, statusCode: string, text?: string }) =>
@@ -45,6 +47,7 @@ const HandlersByCode = {
 /**
  * BitPay Error class is designed to control every error being thrown by BitPay
  * @param code - Error Code
+ * - CurrencyNotSupported - The invoice only wants coins the app doesn't support.
  * - EmptyOutputInvoice - Invoice response contained no target output
  * - EmptyVerificationHexReq - No hex strings generated for verification request
  * - FetchFailed - Fetch returned status other than 200
