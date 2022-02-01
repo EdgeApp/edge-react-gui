@@ -43,7 +43,6 @@ allprojects {
                 includeGroup("com.facebook.flipper")
                 includeGroup("com.facebook.fresco")
                 includeGroup("com.facebook.yoga")
-                includeGroup("com.eightbitlab")
             }
     }
         maven { url 'https://www.jitpack.io' }
