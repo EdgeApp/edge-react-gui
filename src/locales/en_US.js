@@ -707,7 +707,7 @@ const strings = {
   fio_address_confirm_screen_registration_label: 'Registration Fee',
   fio_address_confirm_screen_free_label: 'Free',
   fio_address_confirm_screen_fio_label: 'FIO',
-  fio_address_confirm_screen_balance_label: 'Remaining FIO Balance',
+  fio_address_confirm_screen_balance_label: 'Available FIO Balance',
   fio_address_confirm_screen_disabled_slider_label: 'Not enough FIO',
   fio_address_details_screen_alert_title: 'FIO Address Created',
   fio_address_details_screen_alert_message: 'Your FIO Address is now registered and ready for use.',
