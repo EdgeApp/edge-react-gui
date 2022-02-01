@@ -656,7 +656,7 @@
   "fio_address_confirm_screen_registration_label": "Регистрационный взнос",
   "fio_address_confirm_screen_free_label": "Бесплатно",
   "fio_address_confirm_screen_fio_label": "FIO",
-  "fio_address_confirm_screen_balance_label": "Оставшийся баланс FIO",
+  "fio_address_confirm_screen_balance_label": "Available FIO Balance",
   "fio_address_confirm_screen_disabled_slider_label": "Недостаточно FIO",
   "fio_address_details_screen_alert_title": "Адрес FIO создан",
   "fio_address_details_screen_alert_message": "Ваш адрес FIO зарегистрирован и готов к использованию.",
