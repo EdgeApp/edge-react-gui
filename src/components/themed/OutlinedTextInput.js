@@ -190,10 +190,10 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   }
 
   // Animated styles:
-  const getColor = useCallback(
-    (errorValue, focusValue, focusColor = theme.iconTappable) => {
+  const getBorderColor = useCallback<(errorValue: number, focusValue: number) => string>(
+    (errorValue, focusValue) => {
       'worklet'
-      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, focusColor])
+      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, theme.iconTappable])
       return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
     },
     [theme]
@@ -201,27 +201,27 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
-      borderColor: getColor(errorAnimation.value, focusAnimation.value),
+      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
       right: maxLength !== undefined ? counterRight + counterProgress * (2 * counterPadding + counterWidth) : cornerPadding
     }
   })
   const leftStyle = useAnimatedStyle(() => ({
-    borderColor: getColor(errorAnimation.value, focusAnimation.value)
+    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
   }))
   const rightStyle = useAnimatedStyle(() => ({
-    borderColor: getColor(errorAnimation.value, focusAnimation.value)
+    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
   }))
   const topStyle = useAnimatedStyle(() => {
     const counterProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
-      borderColor: getColor(errorAnimation.value, focusAnimation.value),
+      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
       left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
     }
   })
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
-      color: getColor(errorAnimation.value, focusAnimation.value),
+      color: getBorderColor(errorAnimation.value, focusAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
         { translateY: labelProgressAlt * labelTranslateY },
@@ -232,7 +232,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   const counterStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
-      color: getColor(errorAnimation.value, focusAnimation.value, theme.secondaryText),
+      color: interpolateColor(errorAnimation.value, [0, 1], [theme.secondaryText, theme.dangerText]),
       opacity: counterProgress,
       transform: [{ translateX: (1 - counterProgress) * counterTranslateX }, { scale: counterProgress }]
     }
