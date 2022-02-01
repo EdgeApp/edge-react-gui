@@ -656,7 +656,7 @@
   "fio_address_confirm_screen_registration_label": "Registrierungsgebühr",
   "fio_address_confirm_screen_free_label": "Kostenlos",
   "fio_address_confirm_screen_fio_label": "FIO",
-  "fio_address_confirm_screen_balance_label": "Verbleibende FIO-Bilanz",
+  "fio_address_confirm_screen_balance_label": "Available FIO Balance",
   "fio_address_confirm_screen_disabled_slider_label": "Nicht genug FIO",
   "fio_address_details_screen_alert_title": "FIO-Adresse erstellt",
   "fio_address_details_screen_alert_message": "Ihre FIO-Adresse ist jetzt registriert und einsatzbereit.",
