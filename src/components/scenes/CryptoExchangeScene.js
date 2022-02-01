@@ -365,7 +365,6 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     if (fromWalletId != null && currencyWallets[fromWalletId] != null) {
       const { fromNativeAmount, fromWalletPrimaryInfo } = cryptoExchange
       const {
-        displayDenomination: { name: fromCurrencyCode },
         exchangeDenomination: { multiplier },
         exchangeCurrencyCode
       } = fromWalletPrimaryInfo
@@ -383,7 +382,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         fromWalletBalances,
         fromFiatCurrencyCode,
         fromIsoFiatCurrencyCode,
-        fromCurrencyCode,
+        fromCurrencyCode: exchangeCurrencyCode,
         fromWalletPrimaryInfo,
         fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
         fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromIsoFiatCurrencyCode),
@@ -395,7 +394,6 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     if (toWalletId != null && currencyWallets[toWalletId] != null) {
       const { toNativeAmount, toWalletPrimaryInfo } = cryptoExchange
       const {
-        displayDenomination: { name: toCurrencyCode },
         exchangeDenomination: { multiplier },
         exchangeCurrencyCode
       } = toWalletPrimaryInfo
@@ -405,7 +403,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       Object.assign(result, {
         toWalletId,
         toWalletName,
-        toCurrencyCode,
+        toCurrencyCode: exchangeCurrencyCode,
         toFiatCurrencyCode,
         toIsoFiatCurrencyCode,
         toWalletPrimaryInfo,
