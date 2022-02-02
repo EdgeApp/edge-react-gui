@@ -12,7 +12,7 @@ import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/Wallet
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiWallet, asSafeDefaultGuiWallet } from '../../types/types.js'
 import { mergeTokensRemoveInvisible } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
@@ -266,7 +266,7 @@ export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
     manageTokensPending: state.ui.wallets.manageTokensPending,
     settingsCustomTokens: state.ui.settings.customTokens,
     wallets: state.ui.wallets.byId,
-    enabledTokens: state.ui.wallets.byId[params.walletId].enabledTokens
+    enabledTokens: asSafeDefaultGuiWallet(state.ui.wallets.byId[params.walletId]).enabledTokens
   }),
   dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
