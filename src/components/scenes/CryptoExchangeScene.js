@@ -54,7 +54,6 @@ type StateProps = {
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
   calculatingMax: boolean,
-  creatingWallet: boolean,
 
   // Determines if a coin can have Exchange Max option
   hasMaxSpend: boolean,
@@ -324,7 +323,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             launchWalletSelector={this.launchToWalletSelector}
             onCryptoExchangeAmountChanged={this.toAmountChanged}
             isFocused={isToFocused}
-            isThinking={this.props.creatingWallet}
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
           />
@@ -420,7 +418,6 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       toCurrencyIcon: cryptoExchange.toCurrencyIcon ?? '',
       forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: cryptoExchange.calculatingMax,
-      creatingWallet: cryptoExchange.creatingWallet,
       insufficient: state.cryptoExchange.insufficientError,
       genericError: state.cryptoExchange.genericShapeShiftError
     }
