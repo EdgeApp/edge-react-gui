@@ -353,7 +353,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       // Balances
-      balanceCrypto: wallet.balances[currencyCode],
+      balanceCrypto: wallet.balances[currencyCode] ?? '0',
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
