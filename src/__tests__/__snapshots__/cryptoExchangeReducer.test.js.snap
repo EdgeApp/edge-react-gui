@@ -3,7 +3,6 @@
 exports[`initialState 1`] = `
 Object {
   "calculatingMax": false,
-  "creatingWallet": false,
   "forceUpdateGuiCounter": 0,
   "fromBalanceMessage": "",
   "fromCurrencyCode": null,

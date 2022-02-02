@@ -32,7 +32,6 @@ Object {
   },
   "cryptoExchange": Object {
     "calculatingMax": false,
-    "creatingWallet": false,
     "forceUpdateGuiCounter": 0,
     "fromBalanceMessage": "",
     "fromCurrencyCode": null,
@@ -116,7 +115,6 @@ Object {
         },
         "handleAvailableStatus": "",
         "isCheckingHandleAvailability": false,
-        "isCreatingWallet": false,
         "walletAccountActivationPaymentInfo": Object {
           "amount": "",
           "currencyCode": "",

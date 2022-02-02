@@ -8,7 +8,6 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
-    isCreatingWallet: false,
     walletAccountActivationPaymentInfo: {
       paymentAddress: '',
       amount: '',
