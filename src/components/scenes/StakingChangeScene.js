@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { CURRENCY_PLUGIN_NAMES, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
-import { formatDate, formatNumber } from '../../locales/intl'
+import { formatDateTime, formatNumber } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -261,7 +261,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
     if (SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod != null) {
       const DAY_INTERVAL = 1000 * 60 * 60 * 24
       const beginingOfGmtDay = Math.floor(Date.now() / DAY_INTERVAL) * DAY_INTERVAL
-      unlockDate = formatDate(new Date(beginingOfGmtDay + SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod), true)
+      unlockDate = formatDateTime(new Date(beginingOfGmtDay + SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod), true)
     }
     let estReward = '0'
     if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {

@@ -183,7 +183,7 @@ export function formatToNativeNumber(value: string, options?: IntlNumberFormatOp
 }
 
 /**
- * Returns date string depending on locale
+ * Returns date string in the current locale
  */
 export function formatDate(date: Date, monthShort: boolean = false): string {
   try {
@@ -195,7 +195,7 @@ export function formatDate(date: Date, monthShort: boolean = false): string {
 }
 
 /**
- * Returns time string depending on locale
+ * Returns time string in the current locale
  */
 export function formatTime(date: Date): string {
   try {
@@ -204,6 +204,18 @@ export function formatTime(date: Date): string {
     //
   }
   return format(date, 'h:mm bb')
+}
+
+/**
+ * Returns date and time string in the current locale
+ */
+export function formatDateTime(date: Date): string {
+  try {
+    return format(date, 'PP p', { locale: locales[locale.localeIdentifier.replace('_', '-')] })
+  } catch (e) {
+    //
+  }
+  return format(date, 'MMM d, yyyy h:mm bb')
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {

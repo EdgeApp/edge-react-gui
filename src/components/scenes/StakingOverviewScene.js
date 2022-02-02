@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
-import { formatDate, formatNumber } from '../../locales/intl'
+import { formatDateTime, formatNumber } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
@@ -83,7 +83,7 @@ export const StakingOverviewSceneComponent = (props: Props) => {
           // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
           id: new Date(unlockDate).toDateString(),
           // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
-          title: sprintf(s.strings.staking_locked_title, formatDate(new Date(unlockDate), true)),
+          title: sprintf(s.strings.staking_locked_title, formatDateTime(new Date(unlockDate), true)),
           amount: formatNumber(bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
         }))
     )
