@@ -109,7 +109,7 @@
     "edge-currency-monero": "^0.3.4",
     "edge-exchange-plugins": "^0.12.8",
     "edge-login-ui-rn": "^0.9.29",
-    "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#2bcedc778201f67e425ab17dd19bce7af05e1cff",
+    "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#c2e4d320b1863ebad5fb994f5bd03ccd6a0cb9c8",
     "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#4842daad5fd560cd462f4668ab17c521a16a6cd9",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#6412ad28462278b84313537f21a53d307633c5d0",
     "qrcode-generator": "^1.4.4",
