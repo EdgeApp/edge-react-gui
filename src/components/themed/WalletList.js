@@ -11,6 +11,7 @@ import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
+import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type FilterDetailsType, alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -158,17 +159,16 @@ class WalletListComponent extends React.PureComponent<Props> {
             : () => {}
         })
       } else if (wallet != null) {
-        const { enabledTokens } = wallet
+        const { enabledTokens, name, currencyCode, currencyNames } = asSafeDefaultGuiWallet(wallet)
         const { customTokens } = this.props
 
         // Initialize wallets
-        if (this.checkFilterWallet({ name: wallet.name, currencyCode: wallet.currencyCode, currencyName: wallet.currencyNames[wallet.currencyCode] })) {
+        if (this.checkFilterWallet({ name, currencyCode, currencyName: currencyNames[currencyCode] })) {
           walletList.push({
             id: walletId,
-            fullCurrencyCode: wallet.currencyCode,
-            key: `${walletId}-${wallet.currencyCode}`,
-            onPress: () =>
-              this.props.onPress != null ? this.props.onPress(walletId, wallet.currencyCode) : this.props.selectWallet(walletId, wallet.currencyCode)
+            fullCurrencyCode: currencyCode,
+            key: `${walletId}-${currencyCode}`,
+            onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, currencyCode) : this.props.selectWallet(walletId, currencyCode))
           })
         }
 
@@ -182,18 +182,16 @@ class WalletListComponent extends React.PureComponent<Props> {
         })
 
         // Initialize tokens
-        for (const currencyCode of enabledNotHiddenTokens) {
-          const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
-          const customTokenInfo = wallet.currencyNames[currencyCode] ? undefined : customTokens.find(token => token.currencyCode === currencyCode)
+        for (const tokenCode of enabledNotHiddenTokens) {
+          const fullCurrencyCode = `${currencyCode}-${tokenCode}`
+          const customTokenInfo = currencyNames[tokenCode] ? undefined : customTokens.find(token => token.currencyCode === tokenCode)
 
-          if (
-            this.checkFilterWallet({ name: wallet.name, currencyCode, currencyName: customTokenInfo?.currencyName ?? wallet.currencyNames[currencyCode] ?? '' })
-          ) {
+          if (this.checkFilterWallet({ name, currencyCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' })) {
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,
               key: `${walletId}-${fullCurrencyCode}`,
-              onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, currencyCode) : this.props.selectWallet(walletId, currencyCode))
+              onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, tokenCode) : this.props.selectWallet(walletId, tokenCode))
             })
           }
         }

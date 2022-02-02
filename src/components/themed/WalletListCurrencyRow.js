@@ -8,7 +8,7 @@ import { formatNumber } from '../../locales/intl.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type GuiExchangeRates } from '../../types/types.js'
+import { type GuiExchangeRates, asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getFiatSymbol, getYesterdayDateRoundDownHour, zeroString } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { CardContent } from './CardContent'
@@ -171,7 +171,7 @@ export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { currencyCode, walletName, walletId } = ownProps
     const wallet = state.core.account.currencyWallets[walletId]
-    const guiWallet = state.ui.wallets.byId[walletId]
+    const guiWallet = asSafeDefaultGuiWallet(state.ui.wallets.byId[walletId])
 
     const exchangeRates = state.exchangeRates
     const showBalance = state.ui.settings.isAccountBalanceVisible
