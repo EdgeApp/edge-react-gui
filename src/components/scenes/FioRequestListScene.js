@@ -388,12 +388,13 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { fioWallets = [], currencyWallets, navigation, getExchangeDenomination } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
-    const exchangeDenomination = getExchangeDenomination(fioWalletByAddress.currencyInfo.pluginId, pendingRequest.content.token_code.toUpperCase())
+    const currencyWallet = currencyWallets[walletId]
+    const exchangeDenomination = getExchangeDenomination(currencyWallet.currencyInfo.pluginId, pendingRequest.content.token_code.toUpperCase())
     let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
     const currencyCode = pendingRequest.content.token_code.toUpperCase()
 
-    const parsedUri = await currencyWallets[walletId].parseUri(pendingRequest.content.payee_public_address, currencyCode)
+    const parsedUri = await currencyWallet.parseUri(pendingRequest.content.payee_public_address, currencyCode)
     const guiMakeSpendInfo = {
       fioPendingRequest: pendingRequest,
       fioAddress: pendingRequest.payee_fio_address,
