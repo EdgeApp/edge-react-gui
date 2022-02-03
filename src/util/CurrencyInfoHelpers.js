@@ -2,7 +2,7 @@
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
-import { IMAGE_SERVER_URL, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
+import { IMAGE_SERVER_URL, SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
 
 /**
@@ -13,6 +13,8 @@ type CurrencyIcons = {
   symbolImage: string,
   symbolImageDarkMono: string
 }
+
+const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code].isAccountActivationRequired ?? false)
 
 export function getCurrencyIcon(chainCode: string, currencyCode: string = chainCode): CurrencyIcons {
   const url = `${IMAGE_SERVER_URL}/${chainCode}/${currencyCode}`
@@ -69,13 +71,16 @@ export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWall
 /**
  * Grab a list of wallet types for the wallet creation scenes.
  */
-export function getCreateWalletTypes(account: EdgeAccount): CreateWalletType[] {
+export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boolean = false): CreateWalletType[] {
   const infos = sortCurrencyInfos(getCurrencyInfos(account))
 
   const out: CreateWalletType[] = []
   for (const currencyInfo of infos) {
     const { currencyCode } = currencyInfo
-    if (currencyInfo.pluginId === 'fio' && global.isFioDisabled) continue // FIO disable changes
+    // Prevent currencies that needs activation from being created from a modal
+    if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
+    // FIO disable changes
+    if (currencyInfo.pluginId === 'fio' && global.isFioDisabled) continue
     if (currencyInfo.pluginId === 'bitcoin') {
       out.push({
         currencyName: 'Bitcoin (Segwit)',

@@ -55,6 +55,7 @@ type OwnProps = {
   excludeCurrencyCodes?: string[],
   activateSearch?: () => void,
   showSlidingTutorial?: boolean,
+  filterActivation?: boolean,
   isModal?: boolean,
   onPress?: (walletId: string, currencyCode: string) => void
 }
@@ -140,7 +141,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   getWalletList(): WalletListItem[] {
-    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets } = this.props
+    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets, filterActivation } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
@@ -203,7 +204,7 @@ class WalletListComponent extends React.PureComponent<Props> {
 
     if (showCreateWallet) {
       // Initialize Create Wallets
-      const createWalletCurrencies = getCreateWalletTypes(account)
+      const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
       for (const createWalletCurrency of createWalletCurrencies) {
         const { currencyCode, currencyName } = createWalletCurrency
 
@@ -222,7 +223,10 @@ class WalletListComponent extends React.PureComponent<Props> {
       for (const currencyInfo of currencyInfos) {
         for (const metaToken of currencyInfo.metaTokens) {
           const { currencyCode, currencyName } = metaToken
+          // Fix for when the token code and chain code are the same (like EOS/TLOS)
+          if (currencyCode === currencyInfo.currencyCode) continue
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
+
           if (this.checkFilterWallet({ name: '', currencyCode: fullCurrencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
             sortedWalletlist.push({
               id: null,
