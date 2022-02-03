@@ -11248,10 +11248,10 @@ react-native-fast-image@^8.3.7:
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.3.7.tgz#c4877de17903101f6d94b6736a4f7e5d7b019224"
   integrity sha512-J++Ad04PTUe4YgjyGv63gfgV8Fz1gZKAgQHpblf8Z87D9dxfc8UfXHTPv9VLGdTJU4IzdTnQqzoFgDtWdsvBsQ==
 
-react-native-flipper@^0.87.0:
-  version "0.87.0"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.87.0.tgz#7442994a5dd3fadd64b78293835af36bcf7fa891"
-  integrity sha512-WCi0j/4gRxYbEizVHN9kNWKx7m/sBajxXXhhTQBmhNLywSData+za62e5XtTGTnHoS8bDC5ev65PKAA7ncM9Lg==
+react-native-flipper@^0.131.1:
+  version "0.131.1"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.131.1.tgz#b1a43e40a442187fa78c5ed6d478471ff4a2686c"
+  integrity sha512-X65VbZgwVRVYAc3OBdHi0h8dJR/Mgxdg8WoQLGgaYyhHcaqsF06GjOzBJLwNjN3TK5Gih228IFqLqI9Rwl2dEA==
 
 "react-native-fs@https://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding":
   version "2.13.3"
@@ -11707,10 +11707,10 @@ rechoir@^0.7.0:
   dependencies:
     resolve "^1.9.0"
 
-redux-flipper@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/redux-flipper/-/redux-flipper-1.4.2.tgz#da765a675136e9893a002730703ec58d2f0e359b"
-  integrity sha512-VfSdmWATaZD2BHAiMOEzxk+KSiSTAv/N5AyY64+dU+qif/KfinSHWW3+YVMCO+5rxne1Fr92YwsYJl8l9injDA==
+redux-flipper@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/redux-flipper/-/redux-flipper-2.0.1.tgz#a43603a13e6f06a48c627ae7c144579bd4f1fa54"
+  integrity sha512-JqgnL+fUp3h2fPQRszItLkarTbIf5gjU4Sn0IY/ZxUo6oUUmMh4Lx2J7BBy78cE8KEW9prRRpvJ6NH2uc/QktA==
   dependencies:
     cycle "^1.0.3"
     dayjs "^1.8.29"
