@@ -244,7 +244,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
-    const { isModal, onPress, selectWallet, showSlidingTutorial, wallets } = this.props
+    const { isModal, onPress, selectWallet, showSlidingTutorial, wallets, account } = this.props
 
     // Create Wallet/Token
     if (data.item.id == null) {
@@ -255,7 +255,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     const walletId = data.item.id.replace(/:.*/, '')
     const guiWallet = wallets[walletId]
 
-    if (guiWallet == null) {
+    if (guiWallet == null || account.currencyWallets[walletId] == null) {
       const { key, onLongPress } = data.item
       return <WalletListEmptyRow gradient={!isModal} onLongPress={onLongPress} walletId={walletId} swipeRow={rowMap[key]} />
     } else {
