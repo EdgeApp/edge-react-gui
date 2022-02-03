@@ -75,7 +75,7 @@ export async function launchBitPay(
   const optionsResponse = asBpOptionsResponse(responseJson)
   const paymentId = optionsResponse.paymentId
   const options = optionsResponse.paymentOptions
-  const isTestBp = uri.includes('test.bitpay.com')
+  const isTestBp = uri.toLowerCase().includes('test.bitpay.com')
   const paymentCurrencies: string[] = options
     .map<any>(po => po.currency)
     .filter(currency => {
@@ -90,23 +90,26 @@ export async function launchBitPay(
 
   // Select payment wallet, if this wasn't called directly from a wallet's
   // send scene
-  let selectedWallet, currencyCode
+  let selectedWallet, selectedCurrencyCode
   if (params.wallet) {
     // Ensure the core wallet is accepted by this invoice as a payment option
-    currencyCode = params.wallet.currencyInfo.currencyCode
-    if (!paymentCurrencies.includes(currencyCode)) {
+    selectedCurrencyCode = params.wallet.currencyInfo.currencyCode
+    if (!paymentCurrencies.includes(selectedCurrencyCode)) {
       throw new BitPayError(BitPayErrorCode.InvalidPaymentOption, { text: paymentCurrencies.join(', ') })
     }
     selectedWallet = params.wallet
   } else {
     // Check if user owns any wallets that are accepted by the invoice
-    if (paymentCurrencies.length === 0) {
+    const { currencyWallets = {} } = params
+    const matchingWallets: string[] = Object.keys(currencyWallets).filter(key => paymentCurrencies.includes(currencyWallets[key].currencyInfo.currencyCode))
+    if (matchingWallets.length === 0) {
       throw new BitPayError(BitPayErrorCode.NoPaymentOption, { text: paymentCurrencies.join(', ') })
     } else {
       const walletListResult = await Airship.show(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
       ))
       const { walletId, currencyCode } = walletListResult
+      selectedCurrencyCode = currencyCode
       if (!walletId || !currencyCode || !params.currencyWallets) {
         // No wallet selected
         return
@@ -118,7 +121,7 @@ export async function launchBitPay(
   if (selectedWallet == null) return
 
   // Normalize our test BTC currency code with BitPay Testnet's expectation
-  const requestCurrencyCode = isTestBp && currencyCode === 'TESTBTC' ? 'BTC' : currencyCode
+  const requestCurrencyCode = isTestBp && selectedCurrencyCode === 'TESTBTC' ? 'BTC' : selectedCurrencyCode
 
   // Fetch the invoice (payment-request) instructions
   const initOpts = {
@@ -149,7 +152,7 @@ export async function launchBitPay(
   // Make the spend to generate the tx hexes
   const requiredFeeRate = invoiceInstruction.requiredFeeRate
   const spendInfo: EdgeSpendInfo = {
-    currencyCode,
+    selectedCurrencyCode,
     spendTargets: [
       {
         nativeAmount: instructionOutput.amount.toString(),
@@ -203,7 +206,7 @@ export async function launchBitPay(
   // fees into customNetworkFee.
   const spendTarget = spendInfo.spendTargets[0]
   const guiMakeSpendInfo = {
-    currencyCode,
+    selectedCurrencyCode,
     nativeAmount: spendTarget.nativeAmount,
     publicAddress: spendTarget.publicAddress,
     networkFeeOption: 'custom',
@@ -224,7 +227,7 @@ export async function launchBitPay(
   Actions.push('send', {
     guiMakeSpendInfo,
     selectedWalletId: selectedWallet.id,
-    selectedCurrencyCode: currencyCode
+    selectedCurrencyCode
   })
 }
 
