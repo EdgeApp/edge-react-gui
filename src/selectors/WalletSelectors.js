@@ -1,11 +1,10 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyInfo, type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 
 import { FIAT_PRECISION } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
-import { type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { getDenominationFromCurrencyInfo } from '../selectors/DenominationSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import { type GuiWallet } from '../types/types.js'
@@ -73,32 +72,15 @@ export const convertCurrencyFromExchangeRates = (
   return convertedAmount
 }
 
-export const calculateWalletFiatBalanceWithoutState = (wallet: EdgeCurrencyWallet, currencyCode: string, exchangeRates: { [string]: string }): string => {
-  let fiatValue = '0' // default to zero if not calculable
+export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [string]: string }): string => {
+  const currencyCode = exchangeDenomination.name
   const nativeBalance = wallet.balances[currencyCode] ?? '0'
   if (zeroString(nativeBalance)) return '0'
-  const exchangeDenomination = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
-  if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
   const { isoFiatCurrencyCode } = getWalletFiat(wallet)
-  fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
+  const fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
   return formatNumber(fiatValue, { toFixed: FIAT_PRECISION }) || '0'
-}
-
-export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
-  wallet: EdgeCurrencyWallet,
-  currencyCode: string,
-  settings: SettingsState,
-  exchangeRates: { [string]: string }
-): string => {
-  const nativeBalance = wallet.balances[currencyCode]
-  if (zeroString(nativeBalance)) return '0'
-  const exchangeDenomination = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  return convertCurrencyFromExchangeRates(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
 }
 
 export const convertNativeToExchangeRateDenomination = (currencyInfo: EdgeCurrencyInfo, currencyCode: string, nativeAmount: string): string => {
