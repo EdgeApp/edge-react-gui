@@ -53,15 +53,25 @@ export const findDenominationSymbol = (denoms: EdgeDenomination[], value: string
 }
 
 export const getFiatSymbol = (code: string) => {
-  code = code.replace('iso:', '')
-  return getSymbolFromCurrency(code)
+  try {
+    code = code.replace('iso:', '')
+    return getSymbolFromCurrency(code)
+  } catch (e) {
+    // TODO: Add to error handler
+    return null
+  }
 }
 
 export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
-  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
-  const initialAmount = fiatAmount.toFixed(precision)
-  const absoluteAmount = bns.abs(initialAmount)
-  return formatNumber(bns.toFixed(absoluteAmount, 2, precision), { noGrouping })
+  try {
+    if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+    const initialAmount = fiatAmount.toFixed(precision)
+    const absoluteAmount = bns.abs(initialAmount)
+    return formatNumber(bns.toFixed(absoluteAmount, 2, precision), { noGrouping })
+  } catch (e) {
+    // TODO: Add to error handler
+    return null
+  }
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
@@ -743,19 +753,24 @@ export const convertTransactionFeeToDisplayFee = (
 }
 
 export function formatFiatString(props: { fiatAmount: string | number, minPrecision?: string | number, autoPrecision?: boolean, noGrouping?: boolean }) {
-  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
+  try {
+    const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
 
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
-  let precision: number = parseInt(minPrecision)
-  let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
-  if (autoPrecision) {
-    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
-      tempFiatAmount *= 10
-      precision++
+    const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
+    let precision: number = parseInt(minPrecision)
+    let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
+    if (autoPrecision) {
+      while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
+        tempFiatAmount *= 10
+        precision++
+      }
     }
-  }
 
-  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
+    return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
+  } catch (e) {
+    // TODO: Add to error handler
+    return null
+  }
 }
 
 export function getCryptoAmount(
@@ -780,11 +795,8 @@ export function getCryptoAmount(
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
-    if (error.message === 'Cannot operate on base16 float values') {
-      const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
-      throw new Error(errorMessage)
-    }
-    throw new Error(error)
+    // TODO: Add to error handler
+    return null
   }
 }
 

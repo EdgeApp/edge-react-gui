@@ -20,14 +20,14 @@ type Props = {
 export const FiatText = (props: Props) => {
   const {
     appendFiatCurrencyCode,
-    nativeCryptoAmount,
+    nativeCryptoAmount = '',
     fiatSymbolSpace,
     parenthesisEnclosed,
-    cryptoCurrencyCode,
-    isoFiatCurrencyCode,
+    cryptoCurrencyCode = '',
+    isoFiatCurrencyCode = '',
     autoPrecision,
     noGrouping = false,
-    cryptoExchangeMultiplier
+    cryptoExchangeMultiplier = ''
   } = props
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
@@ -39,8 +39,13 @@ export const FiatText = (props: Props) => {
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
   const fiatAmount = useSelector(state => {
-    const cryptoAmount = bns.div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    try {
+      const cryptoAmount = bns.div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
+      return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    } catch (e) {
+      // TODO: Add to error handler
+      return null
+    }
   })
 
   return `${openParen}${fiatSymbolFmt} ${formatFiatString({
