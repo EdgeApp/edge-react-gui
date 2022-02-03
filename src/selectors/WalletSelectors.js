@@ -20,6 +20,27 @@ export function getSelectedCurrencyWallet(state: RootState): EdgeCurrencyWallet 
   return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
 }
 
+/**
+ * Get wallets that support the chain and token codes.
+ * @param {RootState} state
+ * @param {string} chainCode - Not case sensitive. Refers to the alphanumeric
+ *        chain name, not the numeric chain ID.
+ * @param {string?} tokenCode - Not case sensitive. Searches all saved metatokens.
+ * @returns Array of EdgeCurrencyWallets that satisfy the query.
+ */
+export function getCurrencyWallets(state: RootState, chainCode: string, tokenCode?: string): EdgeCurrencyWallet[] {
+  const { currencyWallets } = state.core.account
+  const matchingIds = Object.keys(currencyWallets).filter(walletId => {
+    const currencyInfo = currencyWallets[walletId].currencyInfo
+    return (
+      currencyInfo.currencyCode.toUpperCase() === chainCode.toUpperCase() &&
+      (tokenCode === undefined || currencyInfo.metaTokens.map(mt => mt.currencyCode.toUpper()).includes(tokenCode.toUpper()))
+    )
+  })
+
+  return matchingIds.map(id => currencyWallets[id])
+}
+
 export const getActiveWalletCurrencyCodes = (state: RootState) => {
   const { account } = state.core
   const { activeWalletIds, currencyWallets } = account
@@ -56,9 +77,13 @@ export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCu
 }
 
 export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): string => {
-  const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
-  const convertedAmount = bns.mul(amount, exchangeRate)
-  return convertedAmount
+  try {
+    const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
+    const convertedAmount = bns.mul(amount, exchangeRate)
+    return convertedAmount
+  } catch (e) {
+    // TODO: Add to error handler
+  }
 }
 
 export const convertCurrencyFromExchangeRates = (
