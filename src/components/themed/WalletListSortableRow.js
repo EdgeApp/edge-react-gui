@@ -8,8 +8,8 @@ import FastImage from 'react-native-fast-image'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { formatNumberInput } from '../../locales/intl.js'
-import { getDisplayDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
+import { getDisplayDenominationFromState, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -25,7 +25,8 @@ type OwnProps = {
 type StateProps = {
   exchangeRates: GuiExchangeRates,
   showBalance: boolean,
-  walletFiatSymbol: string | null
+  walletFiatSymbol: string | null,
+  exchangeDenomination: EdgeDenomination | null
 }
 
 type DispatchProps = {
@@ -36,12 +37,12 @@ type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 class WalletListSortableRowComponent extends React.PureComponent<Props> {
   render() {
-    const { wallet, walletFiatSymbol, exchangeRates, showBalance, theme, getDisplayDenomination } = this.props
+    const { wallet, walletFiatSymbol, exchangeRates, showBalance, theme, getDisplayDenomination, exchangeDenomination } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:
     const { sortHandlers } = this.props
     const styles = getStyles(theme)
 
-    if (wallet == null) {
+    if (wallet == null || exchangeDenomination == null) {
       return (
         <View style={styles.container}>
           <TouchableOpacity activeOpacity={0.95} underlayColor={theme.underlayColor} {...sortHandlers}>
@@ -53,18 +54,18 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
       )
     }
 
-    const displayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const { currencyCode, pluginId } = wallet.currencyInfo
+    const displayDenomination = getDisplayDenomination(pluginId, currencyCode)
     const multiplier = displayDenomination.multiplier
     const name = getWalletName(wallet)
     const symbol = displayDenomination.symbol
-    const currencyCode = wallet.currencyInfo.currencyCode
     const { symbolImageDarkMono } = getCurrencyIcon(currencyCode)
 
     const balance = wallet.balances[currencyCode] ?? '0'
     const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, multiplier, DECIMAL_PRECISION))
     const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(wallet, currencyCode, exchangeRates)
+    const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance ? fiatBalanceFormat : ''
@@ -168,7 +169,10 @@ export const WalletListSortableRow = connect<StateProps, DispatchProps, OwnProps
   (state, ownProps) => ({
     showBalance: state.ui.settings.isAccountBalanceVisible,
     exchangeRates: state.exchangeRates,
-    walletFiatSymbol: ownProps.wallet ? getFiatSymbol(ownProps.wallet.fiatCurrencyCode) : null
+    walletFiatSymbol: ownProps.wallet ? getFiatSymbol(ownProps.wallet.fiatCurrencyCode) : null,
+    exchangeDenomination: ownProps.wallet
+      ? getExchangeDenomination(state, ownProps.wallet.currencyInfo.pluginId, ownProps.wallet.currencyInfo.currencyCode)
+      : null
   }),
   dispatch => ({
     getDisplayDenomination(pluginId: string, currencyCode: string) {
