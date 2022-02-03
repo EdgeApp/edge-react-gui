@@ -79,7 +79,8 @@ type State = {
   toAmountNative: string
 }
 
-const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].keysOnlyMode)
+// Prevent currencies that are "watch only" from being allowed to exchange
+const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code].keysOnlyMode ?? false)
 
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
@@ -243,6 +244,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
+        filterActivation
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId != null && currencyCode != null) {
