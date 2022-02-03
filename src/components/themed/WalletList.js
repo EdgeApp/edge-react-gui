@@ -187,7 +187,7 @@ class WalletListComponent extends React.PureComponent<Props> {
           const fullCurrencyCode = `${currencyCode}-${tokenCode}`
           const customTokenInfo = currencyNames[tokenCode] ? undefined : customTokens.find(token => token.currencyCode === tokenCode)
 
-          if (this.checkFilterWallet({ name, currencyCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' })) {
+          if (this.checkFilterWallet({ name, currencyCode: fullCurrencyCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' })) {
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,
@@ -222,9 +222,8 @@ class WalletListComponent extends React.PureComponent<Props> {
       for (const currencyInfo of currencyInfos) {
         for (const metaToken of currencyInfo.metaTokens) {
           const { currencyCode, currencyName } = metaToken
-
-          if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
-            const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
+          const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
+          if (this.checkFilterWallet({ name: '', currencyCode: fullCurrencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
             sortedWalletlist.push({
               id: null,
               fullCurrencyCode,
