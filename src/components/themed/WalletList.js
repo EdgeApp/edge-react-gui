@@ -1,14 +1,14 @@
 // @flow
 
-import { type EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
-import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
-import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'
+import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
+import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
@@ -65,12 +65,12 @@ type StateProps = {
   customTokens: CustomTokenInfo[],
   exchangeRates: { [string]: string },
   mostRecentWallets: MostRecentWallet[],
-  settings: SettingsState,
   walletsSort: SortOption,
   wallets: { [walletId: string]: GuiWallet }
 }
 
 type DispatchProps = {
+  getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination,
   selectWallet: (walletId: string, currencyCode: string) => void
 }
 
@@ -79,10 +79,11 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 class WalletListComponent extends React.PureComponent<Props> {
   sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
-      const { account, settings, exchangeRates } = this.props
+      const { account, exchangeRates, getExchangeDenomination } = this.props
       const currencyWallet = account.currencyWallets[wallet.id]
       const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
-      const fiatBalanceString = calculateWalletFiatBalanceUsingDefaultIsoFiat(currencyWallet, currencyCode, settings, exchangeRates)
+      const exchangeDenomination = getExchangeDenomination(currencyWallet.currencyInfo.pluginId, currencyCode)
+      const fiatBalanceString = calculateFiatBalance(currencyWallet, exchangeDenomination, exchangeRates)
       return parseFloat(fiatBalanceString)
     }
 
@@ -379,11 +380,13 @@ export const WalletList = connect<StateProps, DispatchProps, OwnProps>(
       exchangeRates: state.exchangeRates,
       mostRecentWallets: state.ui.settings.mostRecentWallets,
       walletsSort: state.ui.settings.walletsSort,
-      settings: state.ui.settings,
       wallets: state.ui.wallets.byId
     }
   },
   dispatch => ({
+    getExchangeDenomination(pluginId: string, currencyCode: string) {
+      return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
+    },
     selectWallet(walletId: string, currencyCode) {
       dispatch(selectWallet(walletId, currencyCode, true))
     }

@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import { formatNumber } from '../../locales/intl.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
+import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates, asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getFiatSymbol, getYesterdayDateRoundDownHour, zeroString } from '../../util/utils'
@@ -192,7 +192,7 @@ export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
 
     // Fiat Balance
     const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(wallet, currencyCode, exchangeRates)
+    const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : '0'
     const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
