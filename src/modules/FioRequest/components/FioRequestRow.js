@@ -9,13 +9,14 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { ClickableRow } from '../../../components/themed/ClickableRow'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { formatNumber, formatTime } from '../../../locales/intl.js'
+import { FiatText } from '../../../components/themed/FiatText'
+import { formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
-import { getSelectedCurrencyWallet, getSelectedWallet } from '../../../selectors/WalletSelectors.js'
+import { getCurrencyWallets } from '../../../selectors/WalletSelectors.js'
 import { connect } from '../../../types/reactRedux.js'
-import { type FioRequest, type GuiWallet } from '../../../types/types'
-import { getFiatSymbol } from '../../../util/utils'
+import { type FioRequest } from '../../../types/types'
+import { getWalletFiat } from '../../../util/CurrencyWalletHelpers'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
 type OwnProps = {
@@ -25,9 +26,8 @@ type OwnProps = {
 }
 
 type StateProps = {
-  fiatSymbol: string,
-  fiatAmount: string,
-  displayDenomination: EdgeDenomination
+  displayDenomination: EdgeDenomination,
+  isoFiatCurrencyCode: string
 }
 
 type Props = OwnProps & StateProps & ThemeProps
@@ -83,13 +83,13 @@ class FioRequestRow extends React.PureComponent<Props> {
   }
 
   render() {
-    const { fioRequest, isSent, displayDenomination, theme } = this.props
+    const { fioRequest, isSent, displayDenomination, theme, isoFiatCurrencyCode } = this.props
     const styles = getStyles(theme)
-    if (!displayDenomination) return null
+    if (!displayDenomination || !isoFiatCurrencyCode) return null
 
-    const fiatValue = `${this.props.fiatSymbol} ${this.props.fiatAmount}`
     const currencyValue = `${this.props.displayDenomination.symbol || ''} ${fioRequest.content.amount}`
     const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
+    const nativeCryptoAmount = bns.mul(fioRequest.content.amount, displayDenomination.multiplier)
     return (
       <ClickableRow onPress={this.onSelect} highlight gradient>
         <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
@@ -103,7 +103,15 @@ class FioRequestRow extends React.PureComponent<Props> {
             <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
               {dateValue}
             </EdgeText>
-            <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
+            <EdgeText style={styles.requestFiat}>
+              <FiatText
+                nativeCryptoAmount={nativeCryptoAmount}
+                cryptoCurrencyCode={fioRequest.content.chain_code}
+                isoFiatCurrencyCode={isoFiatCurrencyCode}
+                cryptoExchangeMultiplier={displayDenomination.multiplier}
+                parenthesisEnclosed
+              />
+            </EdgeText>
           </View>
           <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
         </View>
@@ -165,34 +173,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
-    let displayDenomination = emptyDisplayDenomination
-    const wallet: GuiWallet = getSelectedWallet(state)
-    if (!wallet) {
-      return {
-        displayDenomination,
-        fiatSymbol: '',
-        fiatAmount: ''
-      }
-    }
-    const currencyWallet = getSelectedCurrencyWallet(state)
     const tokenCode = fioRequest.content.token_code.toUpperCase()
-    try {
-      displayDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, tokenCode)
-    } catch (e) {
-      console.log('No denomination for this Token Code -', tokenCode)
-    }
-    const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    const exchangeRates = state.exchangeRates
 
-    const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
-    const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
-    const fiatAmount = formatNumber(bns.mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
+    let displayDenomination = emptyDisplayDenomination
+    let currencyWallet, isoFiatCurrencyCode
+    try {
+      currencyWallet = getCurrencyWallets(state, fioRequest.content.chain_code)[0]
+      displayDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, tokenCode)
+      isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
+    } catch (e) {
+      // TODO: Handle as typed error, include the offending fioRequest
+      // console.log('No denomination for this Token Code -', tokenCode)
+    }
 
     return {
       displayDenomination,
-      fiatSymbol,
-      fiatAmount
+      isoFiatCurrencyCode
     }
   },
   dispatch => ({})
