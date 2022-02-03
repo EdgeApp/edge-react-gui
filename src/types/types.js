@@ -1,5 +1,6 @@
 // @flow
 
+import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
 import {
   type EdgeDenomination,
   type EdgeMetadata,
@@ -23,8 +24,6 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  denominations: EdgeDenomination[],
-  allDenominations: { [currencyCode: string]: { [denomination: string]: EdgeDenomination } },
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
   metaTokens: EdgeMetaToken[],
@@ -33,6 +32,19 @@ export type GuiWallet = {
   addressLoadingProgress?: number,
   blockHeight: number | null
 }
+
+// FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
+export const asSafeDefaultGuiWallet = <T>(guiWallet: T): T => ({
+  ...asOptional(
+    asObject({
+      name: asOptional(asString, ''),
+      currencyNames: asOptional(asObject(asString), {}),
+      currencyCode: asOptional(asString, ''),
+      enabledTokens: asOptional(asArray(asString), [])
+    })
+  )(guiWallet),
+  ...guiWallet
+})
 
 export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
@@ -78,6 +90,23 @@ export type ExchangeData = {
   secondaryCurrencyCode: string
 }
 
+const asEdgeDenomination = asObject({
+  name: asString,
+  multiplier: asString,
+  symbol: asOptional(asString)
+})
+
+export const asCustomTokenInfo = asObject({
+  currencyName: asString,
+  currencyCode: asString,
+  contractAddress: asString,
+  multiplier: asString,
+  denomination: asString,
+  isVisible: asOptional(asBoolean),
+  denominations: asArray(asEdgeDenomination),
+  walletType: asOptional(asString)
+})
+
 export type CustomTokenInfo = {
   currencyName: string,
   currencyCode: string,
@@ -107,9 +136,6 @@ export type CreateTokenType = {
 export type CustomNodeSetting = {
   isEnabled: boolean,
   nodesList: string[]
-}
-export type CurrencySetting = {
-  denomination: string
 }
 
 export type GuiFiatType = {
@@ -171,8 +197,6 @@ export const emptyGuiWallet: GuiWallet = {
   currencyCode: '',
   isoFiatCurrencyCode: '',
   fiatCurrencyCode: '',
-  denominations: [],
-  allDenominations: {},
   symbolImage: '',
   symbolImageDarkMono: '',
   metaTokens: [],
@@ -229,10 +253,12 @@ export type CountryData = {
   filename?: string
 }
 
-export type MostRecentWallet = {
-  id: string,
-  currencyCode: string
-}
+export const asMostRecentWallet = asObject({
+  id: asString,
+  currencyCode: asString
+})
+
+export type MostRecentWallet = $Call<typeof asMostRecentWallet>
 
 export type FioAddress = {
   name: string,

@@ -62,6 +62,8 @@
         <data android:scheme="https" />
         <data android:host="deep.edge.app" />
         <data android:host="dl.edge.app" />
+        <data android:host="test.bitpay.com" />
+        <data android:host="bitpay.com" />
       </intent-filter>
       <intent-filter android:label="Edge Login" android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />

@@ -1,5 +1,41 @@
 # edge-react-gui
 
+## 2.10.0 (2022-02-03)
+
+- FIO: Add staking support
+- Add many new AVAX, MATIC, and FTM tokens
+- Transak: Reenable India support
+- Add support for Bitpay JSON Payment Protocol v2
+- Fix max send for tokens
+- Disable activation-needed currencies from being created in Exchange scene
+- Fix Advanced transaction details device description
+- Fix race conditions in ManageTokensScene and Create wallet flow
+- Organize currency settings by pluginId
+- Consolidate denomination selectors
+- Allow archiving of broken wallets
+- Various visual fixes
+- Upgrade edge-core-js v0.19.4
+  - added: EdgeCurrencyWallet.stakingStatus, along with matching engine methods for returning and updating this.
+  - fixed: Removed unnecessary C++ compiler flags.
+  - fix: Correctly select swaps with the best price.
+  - fix: Correctly prefer swap plugins with active promo codes.
+  - changed: Add more logging to the swap procedure.
+  - fix: Only write the deviceDescription on sent transactions.
+  - fix: Add a native requiresMainQueueSetup method to silence a warning on iOS
+- Upgrade edge-currency-accountbased to v0.11.11
+  - FIO: Add edge-core-js staking API support
+  - FIO: Fix bugs with unlock dates
+  - FIO: Fix bug by removing zero-amount transactions for staking actions
+  - Add ETH, FTM, MATIC and AVAX EVM-based tokens
+  - Initialize walletLocalData balance when enabling tokens
+  - ZEC: Enable max spend
+  - ZEC: Update checkpoints
+  - Miscellaneous cleanups: improve logging, general refactoring and removal of dead code
+- Upgrade edge-exchange-plugins to v0.12.8
+  - Coingecko: Add new tokens
+  - Coingecko: Fix BNT unique ID
+  - Add constant rates for AVAX wrapped tokens
+
 ## 2.9.0 (2022-01-14)
 
 - Add Avalanche (AVAX) C-Chain support

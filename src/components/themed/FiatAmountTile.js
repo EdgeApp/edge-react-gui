@@ -10,14 +10,22 @@ type Props = {
   nativeCryptoAmount: string,
   cryptoCurrencyCode: string,
   isoFiatCurrencyCode: string,
-  title: string
+  title: string,
+  cryptoExchangeMultiplier: string
 }
 
 export const FiatAmountTile = (props: Props) => {
-  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode } = props
+  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoExchangeMultiplier } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const fiatAmount = <FiatText nativeCryptoAmount={nativeCryptoAmount} cryptoCurrencyCode={cryptoCurrencyCode} isoFiatCurrencyCode={isoFiatCurrencyCode} />
+  const fiatAmount = (
+    <FiatText
+      nativeCryptoAmount={nativeCryptoAmount}
+      cryptoCurrencyCode={cryptoCurrencyCode}
+      isoFiatCurrencyCode={isoFiatCurrencyCode}
+      cryptoExchangeMultiplier={cryptoExchangeMultiplier}
+    />
+  )
 
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>

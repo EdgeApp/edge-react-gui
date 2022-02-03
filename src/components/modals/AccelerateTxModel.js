@@ -9,10 +9,9 @@ import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
+import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import type { GuiWallet } from '../../types/types.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
@@ -26,16 +25,16 @@ type Status = 'confirming' | 'sending' | 'sent'
 type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
-  wallet: EdgeCurrencyWallet,
-  guiWallet: GuiWallet
+  wallet: EdgeCurrencyWallet
 }
 type StateProps = {
-  edgeDenomination: EdgeDenomination,
-  selectedCurrencyCode: string,
-  exchangeRates: GuiExchangeRates,
-  settings: any
+  exchangeRates: GuiExchangeRates
 }
-type Props = OwnProps & StateProps & ThemeProps
+type DispatchProps = {
+  getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination,
+  getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
+}
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 type State = {
   edgeUnsignedTransaction?: EdgeTransaction,
@@ -160,24 +159,26 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
     this.closeModal()
   }
 
-  getTxFeeDisplay = (edgeTransaction: EdgeTransaction, edgeDenomination: EdgeDenomination): string => {
-    const { exchangeRates, guiWallet, settings, selectedCurrencyCode } = this.props
+  getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
+    const { exchangeRates, wallet, getDisplayDenomination, getExchangeDenomination } = this.props
 
-    const transactionFee = convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
+    const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeDefaultDenomination)
 
-    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+    const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
 
     return feeSyntax
   }
 
   render() {
-    const { bridge, edgeTransaction, theme, edgeDenomination } = this.props
+    const { bridge, edgeTransaction, theme } = this.props
     const { error, status, edgeUnsignedTransaction } = this.state
 
     const styles = getStyles(theme)
 
-    const oldFee = this.getTxFeeDisplay(edgeTransaction, edgeDenomination)
-    const newFee = edgeUnsignedTransaction != null ? this.getTxFeeDisplay(edgeUnsignedTransaction, edgeDenomination) : ''
+    const oldFee = this.getTxFeeDisplay(edgeTransaction)
+    const newFee = edgeUnsignedTransaction != null ? this.getTxFeeDisplay(edgeUnsignedTransaction) : ''
 
     const isSending = status === 'sending'
 
@@ -239,12 +240,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModel = connect<StateProps, {}, OwnProps>(
+export const AccelerateTxModel = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
-    edgeDenomination: getDisplayDenomination(state, ownProps.wallet.currencyInfo.currencyCode),
-    selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
-    exchangeRates: state.exchangeRates,
-    settings: state.ui.settings
+    exchangeRates: state.exchangeRates
   }),
-  dispatch => ({})
+  dispatch => ({
+    getDisplayDenomination(pluginId: string, currencyCode: string) {
+      return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
+    },
+    getExchangeDenomination(pluginId: string, currencyCode: string) {
+      return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
+    }
+  })
 )(withTheme(AccelerateTxModelComponent))

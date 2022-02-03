@@ -20,7 +20,8 @@ type OwnProps = {
   showCreateWallet?: boolean,
   excludeWalletIds?: string[],
   allowedCurrencyCodes?: string[],
-  excludeCurrencyCodes?: string[]
+  excludeCurrencyCodes?: string[],
+  filterActivation?: boolean
 }
 
 type State = {
@@ -47,7 +48,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
   handleClearText = () => this.setState({ search: '' })
 
   render() {
-    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, headerTitle } = this.props
+    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, headerTitle, filterActivation } = this.props
     const { search, searching } = this.state
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
@@ -71,6 +72,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           excludeCurrencyCodes={excludeCurrencyCodes}
           searchText={search}
           searching={searching}
+          filterActivation={filterActivation}
           isModal
         />
         <ModalCloseArrow onPress={() => bridge.resolve({})} />

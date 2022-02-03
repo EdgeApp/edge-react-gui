@@ -34,6 +34,7 @@ type Props = {
 
 const icons = {
   delete: 'warning',
+  rawDelete: 'warning',
   exportWalletTransactions: 'export',
   getRawKeys: 'lock',
   getSeed: 'key',
@@ -54,7 +55,10 @@ const getWalletOptions = async (params: {
   const { walletId, currencyCode, isToken, account } = params
 
   if (!currencyCode) {
-    return [{ label: s.strings.string_get_raw_keys, value: 'getRawKeys' }]
+    return [
+      { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
+      { label: s.strings.string_archive_wallet, value: 'rawDelete' }
+    ]
   }
 
   if (isToken) {

@@ -11,8 +11,8 @@ import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkPubAddress, getRemainingBundles } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { getExchangeRate, getSelectedCurrencyWallet, getSelectedWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
@@ -317,6 +317,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
   state => {
     const guiWallet: GuiWallet = getSelectedWallet(state)
+    const selectedWallet: EdgeCurrencyWallet = getSelectedCurrencyWallet(state)
     const { account } = state.core
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
@@ -339,8 +340,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       }
     }
 
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name

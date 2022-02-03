@@ -42,21 +42,6 @@ type ColorProps = {
 type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
 
-export function ClickableText(props: Props) {
-  const { children, label, onPress } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  return (
-    <TouchableHighlight style={spacingStyles(props, theme)} onPress={onPress} underlayColor={theme.secondaryButton}>
-      <View>
-        {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
-        {children}
-      </View>
-    </TouchableHighlight>
-  )
-}
-
 export function SquareButton(props: SquareButtonProps) {
   const { children, label, color, onPress } = props
   const theme = useTheme()

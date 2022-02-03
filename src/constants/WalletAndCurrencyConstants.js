@@ -205,7 +205,12 @@ type SpecialCurrencyInfo = {|
   noChangeMiningFee?: boolean,
   noMaxSpend?: boolean,
   keysOnlyMode?: boolean,
-  isPrivateKeySweepable?: boolean
+  isPrivateKeySweepable?: boolean,
+  isBitPayProtocolSupported?: boolean,
+  isStakingSupported?: boolean,
+  stakeActions?: { [stakeActionKey: string]: string },
+  stakeLockPeriod?: number,
+  stakeMaxApy?: number
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -224,24 +229,35 @@ export const SPECIAL_CURRENCY_INFO: {
   BTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
+  },
+  TESTBTC: {
+    displayBuyCrypto: true,
+    isImportKeySupported: false,
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   BCH: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   BSV: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   DGB: {
     displayBuyCrypto: true,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
@@ -351,7 +367,8 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isRbfSupported: true
+    isRbfSupported: true,
+    isBitPayProtocolSupported: false
   },
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -399,37 +416,54 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
-    }
+    },
+    isStakingSupported: true,
+    stakeActions: {
+      add: 'stakeFioTokens',
+      remove: 'unStakeFioTokens'
+    },
+    stakeLockPeriod: 1000 * 60 * 60 * 24 * 7,
+    stakeMaxApy: 450
   },
   DASH: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   RVN: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   DOGE: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   FIRO: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   SMART: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   VTC: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   BTG: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   FTC: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   GRS: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   QTUM: {
-    isPrivateKeySweepable: true
+    isPrivateKeySweepable: true,
+    isBitPayProtocolSupported: true
   },
   FTM: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -458,7 +492,11 @@ export const SPECIAL_CURRENCY_INFO: {
   ZEC: {
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
-    noMaxSpend: true
+    uniqueIdentifierInfo: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      keyboardType: 'default'
+    }
   },
   MATIC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -719,6 +757,11 @@ export const FIAT_CODES_SYMBOLS = {
   YER: '﷼',
   ZAR: 'R',
   ZMW: 'ZK'
+}
+
+export const STAKING_BALANCES = {
+  staked: ':STAKED',
+  locked: ':LOCKED'
 }
 
 export const FIO_WALLET_TYPE = 'wallet:fio'

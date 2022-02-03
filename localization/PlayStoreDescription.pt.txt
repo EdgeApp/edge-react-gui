@@ -1,12 +1,12 @@
-Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+Título: Carteira Edge - Bitcoin, Ethereum, Monero e Ripple
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+Breve descrição: Privado, seguro & fácil de usar. Compre, venda, envie e receba Bitcoin & outras criptos.
 
 <b> Privacidade total e segurança em nossa carteira fácil de usar. </b> Comprar, vender, enviar e receber Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) e outros criptoativos de ponta.
 
 Gerenciar suas criptomoedas nunca foi tão fácil. A Carteira Edge provê a máxima segurança ao mesmo tempo em que mantém a simplicidade, permitindo que todos os tipos de usuários facilmente gerenciem, transfiram ou troquem suas moedas.
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). Deseja ver outras criptomoedas em nossa carteira? Envie-nos uma solicitação!
+<b>De momento, a Criptocarteira Edge suporta:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE) e Feathercoin (FTC). Deseja ver outras criptomoedas em nossa carteira? Envie-nos uma solicitação!
 
 A Edge é uma Carteira de Criptomoeda poderosa e fácil de usar, que permite aos usuários controlar suas próprias chaves privadas com a familiaridade e a tranquilidade de um serviço bancário no celular. 
 

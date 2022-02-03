@@ -13,7 +13,7 @@ import { cacheStyles, withTheme } from '../../../components/services/ThemeContex
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
 import { Tile } from '../../../components/themed/Tile'
-import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
+import { FIO_STR, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { connect } from '../../../types/reactRedux.js'
@@ -163,7 +163,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { addressTitles } = this.props
     const { paymentWallet } = this.state
     if (paymentWallet) {
-      const balance = paymentWallet.balances[paymentWallet.currencyInfo.currencyCode] ?? '0'
+      const { currencyCode } = paymentWallet.currencyInfo
+      let balance = paymentWallet.balances[currencyCode] ?? '0'
+      if (SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) {
+        const lockedBalance = paymentWallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+        balance = bns.sub(balance, lockedBalance)
+      }
       this.setState({ balance: this.formatFio(balance) })
     } else {
       showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
@@ -171,7 +176,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   formatFio(val: string): number {
-    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DECIMAL_PRECISION), 6))
+    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DECIMAL_PRECISION)))
   }
 
   renderFeeAndBalance() {
@@ -273,8 +278,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
-  state => ({
-    denominationMultiplier: getDisplayDenomination(state, FIO_STR).multiplier,
+  (state, ownProps) => ({
+    denominationMultiplier: getDisplayDenomination(state, ownProps.fioWallet.currencyInfo.pluginId, FIO_STR).multiplier,
     currencyWallets: state.core.account.currencyWallets,
     fioWallets: state.ui.wallets.fioWallets
   }),

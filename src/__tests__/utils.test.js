@@ -3,6 +3,7 @@
 import { bns } from 'biggystring'
 
 import { sanitizeDecimalAmount } from '../components/themed/FlipInput'
+import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../selectors/DenominationSelectors.js'
 import {
   autoCorrectDate,
   convertDisplayToNative,
@@ -10,7 +11,6 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
-  getDenomination,
   getNewArrayWithItem,
   getNewArrayWithoutItem,
   getObjectDiff,
@@ -666,23 +666,24 @@ describe('precisionAdjust', function () {
 })
 
 describe('getDisplayDenomination', function () {
-  const tests = fixtures.getDisplayDenomination
+  const { getDisplayDenomination: tests, state } = fixtures
   const { title, input, output } = tests
 
   input.forEach((currency, index) => {
-    test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, 'display')).toMatchObject(output[index])
+    test(`${title} ${currency.currencyCode}`, function () {
+      expect(getDisplayDenomination(state, currency.pluginId, currency.currencyCode)).toMatchObject(output[index])
     })
   })
 })
 
 describe('getExchangeDenomination', function () {
-  const tests = fixtures.getExchangeDenomination
+  const { getExchangeDenomination: tests, currencyInfos } = fixtures
   const { title, input, output } = tests
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
+      const currencyInfo = currencyInfos[currency] ?? currencyInfos.ETH
+      expect(getDenominationFromCurrencyInfo(currencyInfo, currency)).toMatchObject(output[index])
     })
   })
 })

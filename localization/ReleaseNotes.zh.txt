@@ -1,8 +1,8 @@
 v1.9.0
-* Improved stability when coming in and out of background
-* Integrate Safello for buying and selling in Europe
+* 进出背景时更加稳定。
+* 集成Safello在欧洲购买和销售
 * Integrate Bits of Gold for selling to Israeli and European bank account
-* Integrate CoinSwitch as an exchange provider
+* 将 CoinSwitch 整合为一个交易所提供商
 
 v1.8.7
 * FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!

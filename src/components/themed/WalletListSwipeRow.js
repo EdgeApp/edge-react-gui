@@ -133,6 +133,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   render() {
     const { swipeDirection } = this.state
     const { currencyCode, guiWallet, theme } = this.props
+    if (guiWallet == null) return null
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
     const isSwipingRight = swipeDirection === 'right'

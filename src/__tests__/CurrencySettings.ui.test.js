@@ -37,7 +37,7 @@ describe('CurrencySettings', () => {
         currencyInfo={currencyInfo}
         route={route}
         selectDenomination={jest.fn()}
-        selectedDenominationKey="100"
+        selectedDenominationMultiplier="100"
         theme={edgeDark}
       />
     )

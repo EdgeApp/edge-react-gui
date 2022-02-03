@@ -61,7 +61,7 @@ describe('Transaction List Row', () => {
     }
     // CryptoAmount
     const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
-    const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, 6), 6))
+    const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount), 6))
     // FiatAmount
     const fiatAmount = bns.abs(transaction.metadata.amountFiat.toFixed(2))
     const fiatAmountFormat = formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })

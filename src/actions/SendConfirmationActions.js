@@ -78,7 +78,7 @@ export const sendConfirmationUpdateTx =
         nativeAmount: spendTarget.nativeAmount === '' ? '0' : spendTarget.nativeAmount
       }))
     }
-    const authRequired = getAuthRequired(state, spendInfo)
+    const authRequired = getAuthRequired(state, spendInfo, walletId)
     dispatch({
       type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: { spendInfo, authRequired }
@@ -108,7 +108,7 @@ export const sendConfirmationUpdateTx =
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
           const { currencyCode, networkFee = '' } = insufficientFunds
-          const multiplier = getExchangeDenomination(state, currencyCode).multiplier
+          const multiplier = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode).multiplier
           const amountString = roundedFee(networkFee, 2, multiplier)
           const result = await Airship.show(bridge => (
             <ButtonsModal
@@ -159,13 +159,13 @@ export const updateMaxSpend =
       .then(nativeAmount => {
         const state = getState()
         const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
-        const authRequired = getAuthRequired(state, spendInfo)
+        const authRequired = getAuthRequired(state, spendInfo, walletId)
 
         const wallets = state.ui.wallets.byId
         const guiWallet = wallets[walletId]
         const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
         const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-        const exchangeDenomination = getExchangeDenomination(state, currencyCode)
+        const exchangeDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
 
         const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
         const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -200,7 +200,7 @@ export const signBroadcastAndSave =
     const guiWallet = wallets[walletId || state.ui.wallets.selectedWalletId]
     const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-    const exchangeDenomination = getExchangeDenomination(state, currencyCode)
+    const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
     const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(edgeUnsignedTransaction.nativeAmount)
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode).toString()
@@ -231,7 +231,7 @@ export const signBroadcastAndSave =
     }
 
     if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
-    const authRequired = getAuthRequired(state, spendInfo)
+    const authRequired = getAuthRequired(state, spendInfo, selectedWalletId)
     const pin = state.ui.scenes.sendConfirmation.pin
 
     // check hwo high fee is and decide whether to display warninig
@@ -387,8 +387,8 @@ export const signBroadcastAndSave =
       } else if (
         edgeSignedTransaction &&
         edgeSignedTransaction.otherParams &&
-        edgeSignedTransaction.otherParams.transactionJson &&
-        edgeSignedTransaction.otherParams.transactionJson.fioAction === 'transferFioAddress' &&
+        edgeSignedTransaction.otherParams.action &&
+        edgeSignedTransaction.otherParams.action.name === 'transferFioAddress' &&
         e.json &&
         e.json.code === 500 &&
         e.json.error.code === 3050003
@@ -442,7 +442,7 @@ export const updateTransactionAmount =
     const guiMakeSpendInfo = { nativeAmount, metadata }
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
     const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
-    const authType = getAuthRequired(state, spendInfo)
+    const authType = getAuthRequired(state, spendInfo, walletId)
 
     // Transaction Update
     dispatch({

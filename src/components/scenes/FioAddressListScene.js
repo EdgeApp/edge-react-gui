@@ -18,10 +18,10 @@ import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
-import { ClickableText } from '../themed/ThemedButtons'
 
 type LocalState = {
   initLoading: boolean,

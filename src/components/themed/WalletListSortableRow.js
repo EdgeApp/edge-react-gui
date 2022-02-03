@@ -1,43 +1,48 @@
 // @flow
 
 import { bns } from 'biggystring'
+import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { formatNumberInput } from '../../locales/intl.js'
-import s from '../../locales/strings.js'
-import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
-import { getDisplayDenominationFromSettings } from '../../selectors/DenominationSelectors.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
+import { getDisplayDenominationFromState, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
+import { type GuiExchangeRates } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
-  guiWallet?: GuiWallet
+  wallet?: EdgeCurrencyWallet
 }
 
 type StateProps = {
   exchangeRates: GuiExchangeRates,
   showBalance: boolean,
-  settings: SettingsState,
-  walletFiatSymbol: string | null
+  walletFiatSymbol: string | null,
+  exchangeDenomination: EdgeDenomination | null
 }
 
-type Props = OwnProps & StateProps & ThemeProps
+type DispatchProps = {
+  getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
+}
+
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 class WalletListSortableRowComponent extends React.PureComponent<Props> {
   render() {
-    const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance, theme } = this.props
+    const { wallet, walletFiatSymbol, exchangeRates, showBalance, theme, getDisplayDenomination, exchangeDenomination } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:
     const { sortHandlers } = this.props
     const styles = getStyles(theme)
 
-    if (!guiWallet) {
+    if (wallet == null || exchangeDenomination == null) {
       return (
         <View style={styles.container}>
           <TouchableOpacity activeOpacity={0.95} underlayColor={theme.underlayColor} {...sortHandlers}>
@@ -49,16 +54,18 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
       )
     }
 
-    const displayDenomination = getDisplayDenominationFromSettings(this.props.settings, guiWallet.currencyCode)
+    const { currencyCode, pluginId } = wallet.currencyInfo
+    const displayDenomination = getDisplayDenomination(pluginId, currencyCode)
     const multiplier = displayDenomination.multiplier
-    const name = guiWallet.name || s.strings.string_no_name
+    const name = getWalletName(wallet)
     const symbol = displayDenomination.symbol
-    const symbolImageDarkMono = guiWallet.symbolImageDarkMono
-    const currencyCode = guiWallet.currencyCode
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DECIMAL_PRECISION), 6)
+    const { symbolImageDarkMono } = getCurrencyIcon(currencyCode)
+
+    const balance = wallet.balances[currencyCode] ?? '0'
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, multiplier, DECIMAL_PRECISION))
     const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
+    const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance ? fiatBalanceFormat : ''
@@ -158,12 +165,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSortableRow = connect<StateProps, {}, OwnProps>(
+export const WalletListSortableRow = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
     showBalance: state.ui.settings.isAccountBalanceVisible,
-    settings: state.ui.settings,
     exchangeRates: state.exchangeRates,
-    walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null
+    walletFiatSymbol: ownProps.wallet ? getFiatSymbol(ownProps.wallet.fiatCurrencyCode) : null,
+    exchangeDenomination: ownProps.wallet
+      ? getExchangeDenomination(state, ownProps.wallet.currencyInfo.pluginId, ownProps.wallet.currencyInfo.currencyCode)
+      : null
   }),
-  dispatch => ({})
+  dispatch => ({
+    getDisplayDenomination(pluginId: string, currencyCode: string) {
+      return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
+    }
+  })
 )(withTheme(WalletListSortableRowComponent))

@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { type ButtonInfo, ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { TextInputModal } from '../components/modals/TextInputModal.js'
-import { Airship, showToast } from '../components/services/AirshipInstance.js'
+import { Airship, showError, showToast } from '../components/services/AirshipInstance.js'
 import { ModalMessage } from '../components/themed/ModalParts.js'
 import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
@@ -21,7 +21,17 @@ import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
 import { refreshWallet } from './WalletActions.js'
 
-export type WalletListMenuKey = 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub' | 'getRawKeys'
+export type WalletListMenuKey =
+  | 'rename'
+  | 'delete'
+  | 'resync'
+  | 'exportWalletTransactions'
+  | 'getSeed'
+  | 'split'
+  | 'manageTokens'
+  | 'viewXPub'
+  | 'getRawKeys'
+  | 'rawDelete'
 
 export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
   switch (option) {
@@ -33,6 +43,13 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       }
     }
 
+    case 'rawDelete': {
+      return async (dispatch: Dispatch, getState: GetState) => {
+        const state = getState()
+        const { account } = state.core
+        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(showError)
+      }
+    }
     case 'delete': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()

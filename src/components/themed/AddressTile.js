@@ -7,14 +7,16 @@ import { AppState, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
+import { launchBitPay } from '../../actions/BitPayActions.js'
 import { addressWarnings } from '../../actions/ScanActions.js'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
+import { BitPayError, BitPayErrorCode } from '../../types/BitPayError.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
+import { parseDeepLink } from '../../util/DeepLinkParser.js'
 import { AddressModal } from '../modals/AddressModal'
-import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -109,11 +111,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolURL && !parsedUri.publicAddress) {
-        const guiMakeSpendInfo: ?GuiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
-
-        if (guiMakeSpendInfo) {
-          onChangeAddress(guiMakeSpendInfo)
-        }
+        await launchBitPay(parsedUri.paymentProtocolURL, { wallet: coreWallet }).catch(showError)
 
         return
       }
@@ -125,7 +123,11 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       // set address
       onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
     } catch (e) {
-      showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
+      const currencyInfo = coreWallet.currencyInfo
+      const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings ?? ''
+      if (ercTokenStandard === 'ERC20' && parseDeepLink(address).type === 'bitPay')
+        showError(new BitPayError(BitPayErrorCode.CurrencyNotSupported, { text: currencyInfo.currencyCode }))
+      else showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ loading: false })
     }
   }
