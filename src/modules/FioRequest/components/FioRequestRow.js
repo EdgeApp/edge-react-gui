@@ -12,7 +12,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
-import { getSelectedCurrencyWallet, getSelectedWallet } from '../../../selectors/WalletSelectors.js'
+import { getSelectedWallet } from '../../../selectors/WalletSelectors.js'
 import { connect } from '../../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
@@ -174,10 +174,17 @@ export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
         fiatAmount: ''
       }
     }
-    const currencyWallet = getSelectedCurrencyWallet(state)
     const tokenCode = fioRequest.content.token_code.toUpperCase()
     try {
-      displayDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, tokenCode)
+      const { allCurrencyInfos } = state.ui.settings.plugins
+      const plugin = allCurrencyInfos.find(plugin => {
+        const { currencyCode: pluginCurrencyCode } = plugin
+        if (pluginCurrencyCode == null) return false
+        return pluginCurrencyCode.toUpperCase() === fioRequest.content.chain_code.toUpperCase()
+      })
+
+      if (plugin == null) throw new Error(`No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`)
+      displayDenomination = getDisplayDenomination(state, plugin.pluginId, tokenCode)
     } catch (e) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
