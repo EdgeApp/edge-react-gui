@@ -71,6 +71,7 @@
     "process-nextick-args": "2.0.0",
     "randombytes": "2.1.0",
     "react-native-material-textfield": "0.16.1",
+    "deprecated-react-native-listview": "0.0.7",
     "react-native-safe-area-view": "0.14.9",
     "readable-stream": "2.3.6",
     "regenerator-runtime": "0.13.2",

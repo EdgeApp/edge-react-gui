@@ -5044,10 +5044,10 @@ depd@~1.1.2:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
-deprecated-react-native-listview@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/deprecated-react-native-listview/-/deprecated-react-native-listview-0.0.5.tgz#fc8a6dc45b0a8ba611e6014e13b38d6d763e763f"
-  integrity sha512-Cy7nDdd+KU+nR3tY1BSMuoZpsYC6OVSZyAiUSTDBop2lIgzCseDx7XI57x6h+NXer/8aor2yiQDQfeFcmBMwgQ==
+deprecated-react-native-listview@0.0.7, deprecated-react-native-listview@^0.0.5:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/deprecated-react-native-listview/-/deprecated-react-native-listview-0.0.7.tgz#781c9e4f6b4c52d8887cc0328e5a1936ae0a0a21"
+  integrity sha512-l0lWjpU70MlHF0Sy/xi1I6vQkb5tatXKag5iSbXmEKh9g8ZqUbdlP9wGTy5g3GQc5qqaUYAf6mIY5CtkN5BStQ==
   dependencies:
     create-react-class "*"
     fbjs "*"
