@@ -5150,6 +5150,13 @@ disklet@^0.4.5:
   dependencies:
     rfc4648 "^1.3.0"
 
+disklet@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.5.2.tgz#eb1b3bfc2840883cb432aaa16d2c78a345cdd778"
+  integrity sha512-Fx9LFHztHa47QVCHKaABvk+R/zInmi17HweWM+PQyO3bv55E709IPcJIMOH1WyuPNTPHAAM9GToN6NgpdLhUCQ==
+  dependencies:
+    rfc4648 "^1.3.0"
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
@@ -5320,17 +5327,17 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.4:
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.4.tgz#550164ca94ba5270d6b3ad130aff08ffb52f3acc"
-  integrity sha512-PgB4uELyL0r6USF2bqipU1IrC7lQKWNh0XHW/dFz+a4zSSSz+wa3dST6hOh2G0sMHgCrKiXBddfF37xZbO0UyQ==
+edge-core-js@^0.19.5:
+  version "0.19.5"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.5.tgz#79bebec1444f3b1319121c84c2d11d00b55013f1"
+  integrity sha512-ekO0MSoHyA4cncXn00+PANUHszpFhQuc+a2p56d0BFjjkEP7+6aKCeFEU7m8GVpPt5e3iSfsRv5m22p/sAznkA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
     cleaners "^0.3.11"
     currency-codes "^1.1.2"
-    disklet "^0.4.5"
+    disklet "^0.5.2"
     edge-sync-client "^0.2.6"
     elliptic "^6.4.0"
     ethereumjs-tx "^1.3.7"
