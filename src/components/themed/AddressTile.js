@@ -124,7 +124,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
     } catch (e) {
       const currencyInfo = coreWallet.currencyInfo
-      const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings ?? ''
+      const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
       if (ercTokenStandard === 'ERC20' && parseDeepLink(address).type === 'bitPay')
         showError(new BitPayError(BitPayErrorCode.CurrencyNotSupported, { text: currencyInfo.currencyCode }))
       else showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
