@@ -18,22 +18,14 @@ target 'edge' do
   # you should disable the next line.
   use_flipper!()
 
-  pod 'react-native-zcash', :path => '../node_modules/react-native-zcash'
-  # Necessary for Zcash
-  pod ‘CNIOAtomics’,:modular_headers => true
-  pod ‘CNIOBoringSSL’,:modular_headers => true
-  pod ‘CNIOBoringSSLShims’,:modular_headers => true
-  pod ‘CNIOLinux’,:modular_headers => true
-  pod ‘CNIODarwin’,:modular_headers => true
-  pod ‘CNIOHTTPParser’,:modular_headers => true
-  pod ‘CNIOWindows’,:modular_headers => true
-  pod ‘CGRPCZlib’,:modular_headers => true
-
   post_install do |installer|
     react_native_post_install(installer)
   end
 
+  # --------------------------------------------------------------------------
   # Edge additions
+  # --------------------------------------------------------------------------
+
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   # Permissions
@@ -46,4 +38,14 @@ target 'edge' do
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
+  # Necessary for Zcash
+  pod 'react-native-zcash', :path => '../node_modules/react-native-zcash'
+  pod 'CNIOAtomics', :modular_headers => true
+  pod 'CNIOBoringSSL', :modular_headers => true
+  pod 'CNIOBoringSSLShims', :modular_headers => true
+  pod 'CNIOLinux', :modular_headers => true
+  pod 'CNIODarwin', :modular_headers => true
+  pod 'CNIOHTTPParser', :modular_headers => true
+  pod 'CNIOWindows', :modular_headers => true
+  pod 'CGRPCZlib', :modular_headers => true
 end
