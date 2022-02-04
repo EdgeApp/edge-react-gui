@@ -103,7 +103,7 @@
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",
     "detox": "^18.10.0",
-    "disklet": "^0.4.5",
+    "disklet": "^0.5.2",
     "edge-core-js": "^0.19.5",
     "edge-currency-accountbased": "^0.11.11",
     "edge-currency-bitcoin": "^4.9.20",

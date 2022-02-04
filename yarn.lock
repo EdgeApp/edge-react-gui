@@ -5143,13 +5143,6 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-disklet@^0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.4.5.tgz#f62546a94f939cca4dd20d9c3d5c5e43c9529441"
-  integrity sha512-ivPnHcgFOR5kXcAhR2pMrwtNfNAtoWW0SZ0laSFCr4vboU28PERUKLtUeCC0PWh/X3ykZ+3UFE5doALSOuthnQ==
-  dependencies:
-    rfc4648 "^1.3.0"
-
 disklet@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.5.2.tgz#eb1b3bfc2840883cb432aaa16d2c78a345cdd778"
