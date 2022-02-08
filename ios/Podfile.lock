@@ -420,7 +420,7 @@ PODS:
     - React-Core
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.1.0):
+  - react-native-mymonero-core (0.1.1):
     - React
   - react-native-netinfo (5.9.10):
     - React-Core
@@ -1040,7 +1040,7 @@ SPEC CHECKSUMS:
   react-native-flipper: 8d0ada062fbc2c7460cc0d343aded6fc3f9c90dc
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
-  react-native-mymonero-core: c5e0e039b4977be65ed936a1d5301da3448edff7
+  react-native-mymonero-core: 59aaed6e2aef48f8d0e12b564e1927d613076b86
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
