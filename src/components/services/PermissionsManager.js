@@ -114,8 +114,11 @@ export const checkIfDenied = (status: PermissionStatus) => status === RESULTS.BL
 
 // Returns true if denied, false if accepted
 export async function requestPermissionOnSettings(disklet: Disklet, data: Permission, name: string, mandatory: boolean): Promise<boolean> {
-  const permissionLimits = await disklet.getText(SETTINGS_PERMISSION_LIMITS).catch(_ => null) // Ignore and don't throw error when file not found
-  const permissionLimit = permissionLimits != null && JSON.parse(permissionLimits)[data] != null ? JSON.parse(permissionLimits)[data] : 0
+  const permissionLimits = await disklet
+    .getText(SETTINGS_PERMISSION_LIMITS)
+    .then(text => JSON.parse(text))
+    .catch(() => ({})) // Ignore and don't throw error when file not found
+  const permissionLimit = permissionLimits[data] ?? 0
 
   // Check to ignore the permission checks if not mandatory and already past the limit
   if (!mandatory && permissionLimit >= SETTINGS_PERMISSION_QUANTITY) return false
@@ -144,7 +147,7 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
       .setText(
         SETTINGS_PERMISSION_LIMITS,
         JSON.stringify({
-          ...JSON.parse(permissionLimits),
+          ...permissionLimits,
           [data]: permissionLimit + 1
         })
       )
