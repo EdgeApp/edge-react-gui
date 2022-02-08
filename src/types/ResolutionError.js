@@ -1,40 +1,24 @@
 // @flow
-/** Explains Resolution Error options */
-type ResolutionErrorOptions = {
+
+export type ResolutionErrorCode =
+  | 'UnregisteredDomain'
+  | 'UnspecifiedResolver'
+  | 'UnsupportedDomain'
+  | 'UnspecifiedCurrency'
+  | 'NamingServiceDown'
+  | 'UnsupportedCurrency'
+  | 'IncorrectResolverInterface'
+  | 'RecordNotFound'
+
+/**
+ * Options passed to the ResolutionError constructor
+ */
+type ResolutionErrorOptions = {|
   domain: string,
   method?: string,
   currencyTicker?: string,
   recordName?: string
-}
-
-/** Alias for Resolution error handler function */
-type ResolutionErrorHandler = (error: ResolutionErrorOptions) => string
-
-export const ResolutionErrorCode = {
-  UnregisteredDomain: 'UnregisteredDomain',
-  UnspecifiedResolver: 'UnspecifiedResolver',
-  UnsupportedDomain: 'UnsupportedDomain',
-  UnspecifiedCurrency: 'UnspecifiedCurrency',
-  NamingServiceDown: 'NamingServiceDown',
-  UnsupportedCurrency: 'UnsupportedCurrency',
-  IncorrectResolverInterface: 'IncorrectResolverInterface',
-  RecordNotFound: 'RecordNotFound'
-}
-
-/**
- * @internal
- * Internal Mapping object from ResolutionErrorCode to a ResolutionErrorHandler
- */
-const HandlersByCode = {
-  [ResolutionErrorCode.UnregisteredDomain]: (params: { domain: string }) => `Domain ${params.domain} is not registered`,
-  [ResolutionErrorCode.UnspecifiedResolver]: (params: { domain: string }) => `Domain ${params.domain} is not configured`,
-  [ResolutionErrorCode.UnsupportedDomain]: (params: { domain: string }) => `Domain ${params.domain} is not supported`,
-  [ResolutionErrorCode.UnspecifiedCurrency]: (params: { domain: string, currencyTicker: string }) =>
-    `Domain ${params.domain} has no ${params.currencyTicker} attached to it`,
-  [ResolutionErrorCode.NamingServiceDown]: (params: { method: string }) => `${params.method} naming service is down at the moment`,
-  [ResolutionErrorCode.UnsupportedCurrency]: (params: { currencyTicker: string }) => `${params.currencyTicker} is not supported`,
-  [ResolutionErrorCode.RecordNotFound]: (params: { recordName: string, domain: string }) => `No ${params.recordName} record found for ${params.domain}`
-}
+|}
 
 /**
  * Resolution Error class is designed to control every error being thrown by Resolution
@@ -51,21 +35,41 @@ const HandlersByCode = {
  * @param method
  */
 export class ResolutionError extends Error {
-  code: string
-  message: string
+  code: ResolutionErrorCode
   domain: string
   method: string
   currencyTicker: string
+  recordName: string
 
-  constructor(code: string, options: ResolutionErrorOptions = { domain: '' }) {
-    const resolutionErrorHandler: ResolutionErrorHandler = HandlersByCode[code]
-    const { domain, method, currencyTicker, recordName } = options
-    super(resolutionErrorHandler({ domain, method, currencyTicker, recordName }))
+  constructor(code: ResolutionErrorCode, options: ResolutionErrorOptions = { domain: '' }) {
+    const { domain = '', method = '', currencyTicker = '', recordName = '' } = options
+    super(code)
+    this.name = 'ResolutionError'
     this.code = code
     this.domain = domain
-    this.method = method || ''
-    this.currencyTicker = currencyTicker || ''
-    this.name = 'ResolutionError'
-    Object.setPrototypeOf(this, ResolutionError.prototype)
+    this.method = method
+    this.currencyTicker = currencyTicker
+    this.recordName = recordName
+  }
+}
+
+export function translateResolutionError(error: ResolutionError): string {
+  switch (error.code) {
+    case 'UnregisteredDomain':
+      return `Domain ${error.domain} is not registered`
+    case 'UnspecifiedResolver':
+      return `Domain ${error.domain} is not configured`
+    case 'UnsupportedDomain':
+      return `Domain ${error.domain} is not supported`
+    case 'UnspecifiedCurrency':
+      return `Domain ${error.domain} has no ${error.currencyTicker} attached to it`
+    case 'NamingServiceDown':
+      return `${error.method} naming service is down at the moment`
+    case 'UnsupportedCurrency':
+      return `${error.currencyTicker} is not supported`
+    case 'RecordNotFound':
+      return `No ${error.recordName} record found for ${error.domain}`
+    default:
+      return error.message
   }
 }

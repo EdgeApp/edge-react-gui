@@ -8,8 +8,9 @@ jobs:
     if: >-
       github.event.issue.pull_request != '' && 
       (
-        contains(github.event.comment.body, '/rebase') || 
-        contains(github.event.comment.body, '/autosquash')
+        contains(github.event.comment.body, '/autosquash') || 
+        contains(github.event.comment.body, '/fixup') ||
+        contains(github.event.comment.body, '/rebase')
       )
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +22,6 @@ jobs:
       - name: Automatic Rebase
         uses: samholmes/rebase@autosquash
         with:
-          autosquash: ${{ contains(github.event.comment.body, '/autosquash') || contains(github.event.comment.body, '/rebase-autosquash') }}
+          autosquash: ${{ true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

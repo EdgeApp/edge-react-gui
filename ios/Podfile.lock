@@ -15,10 +15,10 @@ PODS:
   - CNIOLinux (2.32.3)
   - CNIOWindows (2.32.3)
   - CocoaAsyncSocket (7.6.5)
-  - disklet (0.4.5):
+  - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (0.19.4):
+  - edge-core-js (0.19.5):
     - React
   - edge-login-ui-rn (0.9.29):
     - React
@@ -414,13 +414,13 @@ PODS:
   - react-native-fast-crypto (2.0.0):
     - OpenSSL-Universal
     - React
-  - react-native-flipper (0.87.0):
+  - react-native-flipper (0.131.1):
     - React-Core
   - react-native-image-picker (4.0.6):
     - React-Core
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.1.0):
+  - react-native-mymonero-core (0.1.1):
     - React
   - react-native-netinfo (5.9.10):
     - React-Core
@@ -537,7 +537,7 @@ PODS:
     - React-Core
   - RNQrGenerator (1.1.7):
     - React
-  - RNReanimated (2.2.0):
+  - RNReanimated (2.3.1):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -563,7 +563,6 @@ PODS:
     - React-RCTNetwork
     - React-RCTSettings
     - React-RCTText
-    - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
   - RNShare (7.1.2):
@@ -985,9 +984,9 @@ SPEC CHECKSUMS:
   CNIOLinux: 5921dfefbc4bbe017380b34c510855622147ea41
   CNIOWindows: f5aa9dfb401b440a7b4c9cd911e53e981a787193
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
+  disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  edge-core-js: fd0711a17c4f282d4b33898c9a66433ea48ce29f
+  edge-core-js: 351b78ee9c2839dea279c5addd96ec32013d0a97
   edge-login-ui-rn: bb229d0087d664f76a03949df7627ed49fed4144
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 86d9e030dbb7af0ba0eb4e1b6d52e4af26c7f1f3
@@ -1038,10 +1037,10 @@ SPEC CHECKSUMS:
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
   react-native-fast-crypto: b6dea8324fb1b095dd4f29a80356b43acb3ee2e9
-  react-native-flipper: a5770950f79017f17f50b316cb74b66d14192c79
+  react-native-flipper: 8d0ada062fbc2c7460cc0d343aded6fc3f9c90dc
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
-  react-native-mymonero-core: c5e0e039b4977be65ed936a1d5301da3448edff7
+  react-native-mymonero-core: 59aaed6e2aef48f8d0e12b564e1927d613076b86
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
@@ -1074,7 +1073,7 @@ SPEC CHECKSUMS:
   RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
   RNPermissions: 58c1eb5638504e3afda963a8b0f43b6752132b05
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
-  RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
+  RNReanimated: 7f143675d94978c3555345d5bfa8ed6ae800c5d3
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
