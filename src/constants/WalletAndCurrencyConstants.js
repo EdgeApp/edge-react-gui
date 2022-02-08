@@ -61,7 +61,8 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XLM: s.strings.string_first_stellar_wallet_name,
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
-  XTZ: s.strings.string_first_tezos_wallet_name
+  XTZ: s.strings.string_first_tezos_wallet_name,
+  SOL: s.strings.string_first_solana_wallet_name
 }
 
 /**
@@ -103,6 +104,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:zcash',
   'wallet:ethereumclassic',
   'wallet:binance',
+  'wallet:solana',
   'wallet:bitcoinsv',
   'wallet:litecoin',
   'wallet:eos',
@@ -159,6 +161,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RBTC: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
+  SOL: 'solana',
   TESTBTC: 'bitcointestnet',
   TLOS: 'telos',
   UFO: 'ufo',
@@ -409,6 +412,19 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
+  },
+  SOL: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
+    dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
+    uniqueIdentifierInfo: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      keyboardType: 'default'
+    },
+    noChangeMiningFee: true
   },
   FIO: {
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
