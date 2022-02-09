@@ -17,3 +17,14 @@ export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: s
   const { fiatCurrencyCode } = wallet
   return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
 }
+
+export function getCurrencyNames(wallet: EdgeCurrencyWallet) {
+  const { currencyCode, displayName, metaTokens } = wallet.currencyInfo
+  return metaTokens.reduce(
+    (currencyNames, token) => {
+      currencyNames[token.currencyCode] = token.currencyName
+      return currencyNames
+    },
+    { [currencyCode]: displayName }
+  )
+}

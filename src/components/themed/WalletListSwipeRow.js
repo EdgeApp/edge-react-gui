@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Dimensions, Keyboard, Platform, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
@@ -8,8 +9,8 @@ import { Fontello } from '../../assets/vector/index.js'
 import { REQUEST, SEND, TRANSACTION_LIST } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import { Actions } from '../../types/routerTypes.js'
-import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -23,7 +24,7 @@ const WIDTH_DIMENSION_SHOW = FULL_WIDTH * 0.15
 
 type Props = {
   currencyCode: string,
-  guiWallet: GuiWallet,
+  wallet: EdgeCurrencyWallet,
   isToken: boolean,
   openRowLeft: boolean,
   selectWallet(walletId: string, currencyCode: string): void,
@@ -65,34 +66,34 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleSelectWallet = (): void => {
-    const { currencyCode, guiWallet, isToken } = this.props
-    const walletId = guiWallet.id
-    const publicAddress = guiWallet.receiveAddress.publicAddress
-
-    this.closeRow()
-    this.props.selectWallet(walletId, currencyCode)
-    if (!isToken) {
-      // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
-      // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-      const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
-      if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
+    const { currencyCode, wallet, isToken } = this.props
+    const walletId = wallet.id
+    wallet.getReceiveAddress().then(publicAddress => {
+      this.closeRow()
+      this.props.selectWallet(walletId, currencyCode)
+      if (!isToken) {
+        // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
+        // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
+        const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
+        if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
+          Actions.push(TRANSACTION_LIST)
+        }
+      } else {
         Actions.push(TRANSACTION_LIST)
       }
-    } else {
-      Actions.push(TRANSACTION_LIST)
-    }
+    })
   }
 
   handleOpenWalletListMenuModal = (): void => {
-    const { currencyCode, guiWallet, isToken } = this.props
-    const { symbolImage } = getCurrencyIcon(guiWallet.currencyCode, currencyCode)
+    const { currencyCode, wallet, isToken } = this.props
+    const { symbolImage } = getCurrencyIcon(wallet.currencyInfo.currencyCode, currencyCode)
 
     this.closeRow()
     Airship.show(bridge => (
       <WalletListMenuModal
         bridge={bridge}
-        walletId={guiWallet.id}
-        walletName={guiWallet.name}
+        walletId={wallet.id}
+        walletName={getWalletName(wallet)}
         currencyCode={currencyCode}
         image={symbolImage}
         isToken={isToken}
@@ -101,16 +102,16 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleOpenRequest = () => {
-    const { currencyCode, guiWallet } = this.props
-    const walletId = guiWallet.id
+    const { currencyCode, wallet } = this.props
+    const walletId = wallet.id
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     Actions.jump(REQUEST)
   }
 
   handleOpenSend = () => {
-    const { currencyCode, guiWallet } = this.props
-    const walletId = guiWallet.id
+    const { currencyCode, wallet } = this.props
+    const walletId = wallet.id
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     Actions.jump(SEND, {
@@ -132,8 +133,8 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 
   render() {
     const { swipeDirection } = this.state
-    const { currencyCode, guiWallet, theme } = this.props
-    if (guiWallet == null) return null
+    const { currencyCode, wallet, theme } = this.props
+    if (wallet == null) return null
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
     const isSwipingRight = swipeDirection === 'right'
@@ -194,7 +195,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           onPress={this.handleSelectWallet}
           onLongPress={this.handleOpenWalletListMenuModal}
           showRate
-          walletId={guiWallet.id}
+          walletId={wallet.id}
         />
       </SwipeRow>
     )
