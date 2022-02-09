@@ -40,9 +40,11 @@ export const asSafeDefaultGuiWallet = <T>(guiWallet: T): T => ({
       name: asOptional(asString, ''),
       currencyNames: asOptional(asObject(asString), {}),
       currencyCode: asOptional(asString, ''),
-      enabledTokens: asOptional(asArray(asString), [])
+      enabledTokens: asOptional(asArray(asString), []),
+      nativeBalances: asOptional(asObject(asString), {}),
+      isoFiatCurrencyCode: asOptional(asString, '')
     })
-  )(guiWallet),
+  )(guiWallet ?? {}),
   ...guiWallet
 })
 
