@@ -4,6 +4,7 @@ import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
+import { type EdgeTokenId } from '../../types/types.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -21,7 +22,8 @@ type OwnProps = {
   excludeWalletIds?: string[],
   allowedCurrencyCodes?: string[],
   excludeCurrencyCodes?: string[],
-  filterActivation?: boolean
+  filterActivation?: boolean,
+  allowedTokenIds?: EdgeTokenId[]
 }
 
 type State = {
@@ -48,7 +50,8 @@ export class WalletListModal extends React.PureComponent<Props, State> {
   handleClearText = () => this.setState({ search: '' })
 
   render() {
-    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, headerTitle, filterActivation } = this.props
+    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, headerTitle, filterActivation, allowedTokenIds } =
+      this.props
     const { search, searching } = this.state
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
@@ -69,6 +72,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           showCreateWallet={showCreateWallet}
           excludeWalletIds={excludeWalletIds}
           allowedCurrencyCodes={allowedCurrencyCodes}
+          allowedTokenIds={allowedTokenIds}
           excludeCurrencyCodes={excludeCurrencyCodes}
           searchText={search}
           searching={searching}

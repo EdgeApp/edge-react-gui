@@ -10,7 +10,7 @@ import s from '../../locales/strings'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, MostRecentWallet } from '../../types/types.js'
+import type { CreateTokenType, CreateWalletType, CustomTokenInfo, EdgeTokenId, FlatListItem, MostRecentWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { getCurrencyNames, getWalletName } from '../../util/CurrencyWalletHelpers.js'
@@ -53,6 +53,7 @@ type OwnProps = {
   showCreateWallet?: boolean,
   excludeWalletIds?: string[],
   allowedCurrencyCodes?: string[],
+  allowedTokenIds?: EdgeTokenId[],
   excludeCurrencyCodes?: string[],
   activateSearch?: () => void,
   showSlidingTutorial?: boolean,
@@ -145,7 +146,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   getWalletList(): WalletListItem[] {
-    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets, filterActivation } = this.props
+    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets, filterActivation, allowedTokenIds } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
@@ -164,40 +165,46 @@ class WalletListComponent extends React.PureComponent<Props> {
               }
             : () => {}
         })
-      } else if (wallet != null) {
+      }
+
+      if (wallet == null) continue
+
+      const { customTokens, enabledTokensByWalletId } = this.props
+      const enabledTokens = enabledTokensByWalletId[wallet.id] ?? []
+      const enabledNotHiddenTokens = enabledTokens.filter(token => {
+        let isVisible = true // assume we will enable token
+        const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
+        // if token is not supposed to be visible, not point in enabling it
+        if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
+        return isVisible
+      })
+
+      if (allowedTokenIds != null) {
+        // New logic for EdgeTokenId array
         const {
-          currencyInfo: { currencyCode }
+          currencyInfo: { currencyCode: walletCurrencyCode, pluginId: walletPluginId }
         } = wallet
-        const { customTokens, enabledTokensByWalletId } = this.props
-        const name = getWalletName(wallet)
-        const currencyNames = getCurrencyNames(wallet)
-        const enabledTokens = enabledTokensByWalletId[wallet.id] ?? []
 
-        // Initialize wallets
-        if (this.checkFilterWallet({ name, currencyCode, currencyName: currencyNames[currencyCode] })) {
-          walletList.push({
-            id: walletId,
-            fullCurrencyCode: currencyCode,
-            key: `${walletId}-${currencyCode}`,
-            onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, currencyCode) : this.props.selectWallet(walletId, currencyCode))
-          })
-        }
+        for (const tokenId of allowedTokenIds) {
+          const { pluginId, currencyCode } = tokenId
+          if (walletPluginId !== pluginId) continue
 
-        // Old logic on getting tokens
-        const enabledNotHiddenTokens = enabledTokens.filter(token => {
-          let isVisible = true // assume we will enable token
-          const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
-          // if token is not supposed to be visible, not point in enabling it
-          if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-          return isVisible
-        })
+          // Check mainnet currency code
+          if (walletCurrencyCode === currencyCode || currencyCode == null) {
+            walletList.push({
+              id: walletId,
+              fullCurrencyCode: walletCurrencyCode,
+              key: `${walletId}-${walletCurrencyCode}`,
+              onPress: () =>
+                this.props.onPress != null ? this.props.onPress(walletId, walletCurrencyCode) : this.props.selectWallet(walletId, walletCurrencyCode)
+            })
+            continue
+          }
 
-        // Initialize tokens
-        for (const tokenCode of enabledNotHiddenTokens) {
-          const fullCurrencyCode = `${currencyCode}-${tokenCode}`
-          const customTokenInfo = currencyNames[tokenCode] ? undefined : customTokens.find(token => token.currencyCode === tokenCode)
-
-          if (this.checkFilterWallet({ name, currencyCode: fullCurrencyCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' })) {
+          // Check tokens
+          for (const tokenCode of enabledNotHiddenTokens) {
+            if (currencyCode == null || tokenCode !== currencyCode) continue
+            const fullCurrencyCode = `${walletCurrencyCode}-${currencyCode}`
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,
@@ -205,6 +212,38 @@ class WalletListComponent extends React.PureComponent<Props> {
               onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, tokenCode) : this.props.selectWallet(walletId, tokenCode))
             })
           }
+        }
+        continue
+      }
+      // Old logic for currency code array
+      const {
+        currencyInfo: { currencyCode }
+      } = wallet
+      const name = getWalletName(wallet)
+      const currencyNames = getCurrencyNames(wallet)
+
+      // Initialize wallets
+      if (this.checkFilterWallet({ name, currencyCode, currencyName: currencyNames[currencyCode] })) {
+        walletList.push({
+          id: walletId,
+          fullCurrencyCode: currencyCode,
+          key: `${walletId}-${currencyCode}`,
+          onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, currencyCode) : this.props.selectWallet(walletId, currencyCode))
+        })
+      }
+
+      // Initialize tokens
+      for (const tokenCode of enabledNotHiddenTokens) {
+        const fullCurrencyCode = `${currencyCode}-${tokenCode}`
+        const customTokenInfo = currencyNames[tokenCode] ? undefined : customTokens.find(token => token.currencyCode === tokenCode)
+
+        if (this.checkFilterWallet({ name, currencyCode: fullCurrencyCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' })) {
+          walletList.push({
+            id: walletId,
+            fullCurrencyCode: fullCurrencyCode,
+            key: `${walletId}-${fullCurrencyCode}`,
+            onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, tokenCode) : this.props.selectWallet(walletId, tokenCode))
+          })
         }
       }
     }
@@ -215,39 +254,68 @@ class WalletListComponent extends React.PureComponent<Props> {
       // Initialize Create Wallets
       const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
       for (const createWalletCurrency of createWalletCurrencies) {
-        const { currencyCode, currencyName } = createWalletCurrency
+        const { currencyCode, currencyName, walletType } = createWalletCurrency
+
+        const newWallet = {
+          id: null,
+          fullCurrencyCode: currencyCode,
+          key: currencyCode,
+          createWalletType: createWalletCurrency
+        }
+
+        if (allowedTokenIds != null) {
+          // Add create wallet row if we haven't already added an existing wallet to the wallet list
+          const pluginId = walletType.split(':')[0]
+          if (
+            allowedTokenIds.find(tokenInfo => tokenInfo.pluginId === pluginId && (tokenInfo.currencyCode === currencyCode || tokenInfo.currencyCode == null)) !=
+              null &&
+            sortedWalletlist.find(tokenInfo => tokenInfo.fullCurrencyCode === newWallet.fullCurrencyCode) == null
+          ) {
+            sortedWalletlist.push(newWallet)
+          }
+          continue
+        }
 
         if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
-          sortedWalletlist.push({
-            id: null,
-            fullCurrencyCode: currencyCode,
-            key: currencyCode,
-            createWalletType: createWalletCurrency
-          })
+          sortedWalletlist.push(newWallet)
         }
       }
 
       // Initialize Create Tokens
       const currencyInfos = getCurrencyInfos(account)
       for (const currencyInfo of currencyInfos) {
+        const { pluginId } = currencyInfo
         for (const metaToken of currencyInfo.metaTokens) {
           const { currencyCode, currencyName } = metaToken
           // Fix for when the token code and chain code are the same (like EOS/TLOS)
           if (currencyCode === currencyInfo.currencyCode) continue
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
 
+          const newToken = {
+            id: null,
+            fullCurrencyCode,
+            key: fullCurrencyCode,
+            createTokenType: {
+              currencyCode,
+              currencyName,
+              ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode),
+              parentCurrencyCode: currencyInfo.currencyCode
+            }
+          }
+
+          if (allowedTokenIds != null) {
+            // Add create token row if we haven't already added an existing enabled token to the wallet list
+            if (
+              allowedTokenIds.find(tokenInfo => tokenInfo.pluginId === pluginId && tokenInfo.currencyCode === currencyCode) != null &&
+              sortedWalletlist.find(tokenInfo => tokenInfo.fullCurrencyCode === newToken.fullCurrencyCode) == null
+            ) {
+              sortedWalletlist.push(newToken)
+            }
+            continue
+          }
+
           if (this.checkFilterWallet({ name: '', currencyCode: fullCurrencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
-            sortedWalletlist.push({
-              id: null,
-              fullCurrencyCode,
-              key: fullCurrencyCode,
-              createTokenType: {
-                currencyCode,
-                currencyName,
-                ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode),
-                parentCurrencyCode: currencyInfo.currencyCode
-              }
-            })
+            sortedWalletlist.push(newToken)
           }
         }
       }

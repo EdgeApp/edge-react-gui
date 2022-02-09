@@ -19,7 +19,8 @@ import s from '../../../../locales/strings'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
-import { type GuiMakeSpendInfo, type GuiWallet } from '../../../../types/types.js'
+import { type EdgeTokenId, type GuiMakeSpendInfo, type GuiWallet } from '../../../../types/types.js'
+import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
 
 type EdgeReceiveAddress = {
   publicAddress?: string,
@@ -32,7 +33,8 @@ type WalletDetails = {
     publicAddress: string
   },
   currencyCode: string,
-  fiatCurrencyCode: string
+  fiatCurrencyCode: string,
+  pluginId?: string
 }
 
 type EdgeRequestSpendOptions = {
@@ -132,6 +134,20 @@ export class EdgeProvider extends Bridgeable {
     throw new Error(s.strings.user_closed_modal_no_wallet)
   }
 
+  async chooseWallet(allowedTokenIds: EdgeTokenId[] = []): Promise<WalletDetails> {
+    const selectedWallet: WalletListResult = await Airship.show(bridge => (
+      <WalletListModal bridge={bridge} showCreateWallet allowedTokenIds={allowedTokenIds} headerTitle={s.strings.choose_your_wallet} />
+    ))
+
+    const { walletId, currencyCode } = selectedWallet
+    if (walletId && currencyCode) {
+      this._dispatch(selectWallet(walletId, currencyCode))
+      return Promise.resolve(this.getWalletInfo(walletId, currencyCode))
+    }
+
+    throw new Error(s.strings.user_closed_modal_no_wallet)
+  }
+
   // Get an address from the user's wallet
   getReceiveAddress(options: EdgeGetReceiveAddressOptions): EdgeReceiveAddress {
     const wallet: GuiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
@@ -141,23 +157,26 @@ export class EdgeProvider extends Bridgeable {
     return Promise.resolve(wallet.receiveAddress)
   }
 
-  getCurrentWalletInfo(): Promise<WalletDetails> {
-    const wallet: GuiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
-    const currentCode = this._state.ui.wallets.selectedCurrencyCode
-    let walletName = wallet.name
-    if (wallet.enabledTokens.length > 1) {
-      console.log('EP: We have tokens.. what do we do with them ')
-      walletName = currentCode
-    }
+  getWalletInfo(walletId: string, currencyCode: string): Promise<WalletDetails> {
+    const wallet: GuiWallet = this._state.ui.wallets.byId[walletId]
+    const currentCode = currencyCode ?? wallet.currencyCode
+    const walletName = currentCode !== wallet.currencyCode ? currentCode : wallet.name
+
+    const { symbolImage, symbolImageDarkMono } = getCurrencyIcon(wallet.currencyCode, currencyCode)
     const returnObject: WalletDetails = {
       name: walletName,
       receiveAddress: wallet.receiveAddress,
       currencyCode: currentCode,
       fiatCurrencyCode: wallet.fiatCurrencyCode,
-      currencyIcon: wallet.symbolImage,
-      currencyIconDark: wallet.symbolImageDarkMono
+      currencyIcon: symbolImage,
+      currencyIconDark: symbolImageDarkMono,
+      pluginId: this._state.core.account.currencyWallets[this._state.ui.wallets.selectedWalletId].currencyInfo.pluginId
     }
     return Promise.resolve(returnObject)
+  }
+
+  getCurrentWalletInfo(): Promise<WalletDetails> {
+    return this.getWalletInfo(this._state.ui.wallets.selectedWalletId, this._state.ui.wallets.selectedCurrencyCode)
   }
 
   openURL(url: string): void {
