@@ -370,3 +370,8 @@ export type wcGetConnection = {
   uri: string,
   timeConnected: number
 }
+
+export type EdgeTokenId = {
+  pluginId: string,
+  currencyCode?: string
+}
