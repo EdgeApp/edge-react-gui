@@ -257,12 +257,8 @@ export const StakingChangeSceneComponent = (props: Props) => {
   }
 
   const renderRemove = () => {
-    let unlockDate = ''
-    if (SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod != null) {
-      const DAY_INTERVAL = 1000 * 60 * 60 * 24
-      const beginingOfGmtDay = Math.floor(Date.now() / DAY_INTERVAL) * DAY_INTERVAL
-      unlockDate = formatTimeDate(new Date(beginingOfGmtDay + SPECIAL_CURRENCY_INFO[currencyCode].stakeLockPeriod), true)
-    }
+    const unlockDate = tx?.otherParams?.ui.unlockDate
+    const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, true) : ''
     let estReward = '0'
     if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {
       estReward = bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
@@ -281,7 +277,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
           </Tile>
         )}
         <Tile type="questionable" title={s.strings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
-          <EdgeText>{unlockDate}</EdgeText>
+          <EdgeText>{unlockDateFormat}</EdgeText>
         </Tile>
       </>
     )
