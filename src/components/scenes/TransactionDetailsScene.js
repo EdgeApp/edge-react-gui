@@ -358,7 +358,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
+    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
     const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
     return {
@@ -375,7 +375,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
-    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
+    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
 
     if (edgeTransaction.networkFee) {
       const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
