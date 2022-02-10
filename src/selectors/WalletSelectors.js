@@ -1,11 +1,10 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 
 import { FIAT_PRECISION } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
-import { getDenominationFromCurrencyInfo } from '../selectors/DenominationSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import { type GuiWallet } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
@@ -81,13 +80,6 @@ export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomin
   const { isoFiatCurrencyCode } = getWalletFiat(wallet)
   const fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
   return formatNumber(fiatValue, { toFixed: FIAT_PRECISION }) || '0'
-}
-
-export const convertNativeToExchangeRateDenomination = (currencyInfo: EdgeCurrencyInfo, currencyCode: string, nativeAmount: string): string => {
-  const exchangeDenomination = getDenominationFromCurrencyInfo(currencyInfo, currencyCode)
-  if (!exchangeDenomination || zeroString(nativeAmount)) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
 }
 
 export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
