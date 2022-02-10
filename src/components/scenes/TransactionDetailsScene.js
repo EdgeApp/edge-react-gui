@@ -14,7 +14,7 @@ import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../.
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
+import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
@@ -22,6 +22,7 @@ import {
   autoCorrectDate,
   capitalize,
   convertNativeToDisplay,
+  convertNativeToExchange,
   displayFiatAmount,
   getFiatSymbol,
   isCryptoParentCurrency,
@@ -357,7 +358,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
+    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
     const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
     return {
@@ -374,7 +375,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
-    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
+    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
 
     if (edgeTransaction.networkFee) {
       const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
@@ -574,7 +575,8 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
       : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
-    const cryptoAmount = convertNativeToExchangeRateDenomination(currencyInfo, currencyCode, nativeAmount)
+    const exchangeDenom = getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+    const cryptoAmount = convertNativeToExchange(exchangeDenom.multiplier)(nativeAmount)
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
 
     const { swapData } = edgeTransaction
