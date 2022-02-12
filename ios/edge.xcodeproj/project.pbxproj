@@ -17,6 +17,8 @@
 		3DC7E8532525AB490061CF16 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7E8522525AB490061CF16 /* Dummy.swift */; };
 		50FDCD65EBE045E282509085 /* SourceSansPro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */; };
 		5872448FDFE840DEBB46A6BA /* SourceSansPro-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */; };
+		5AA15E9927B74D7F00B6A5A0 /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AA15E9827B74D7F00B6A5A0 /* Stickers.xcassets */; };
+		5AA15E9D27B74D7F00B6A5A0 /* stickersExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5AA15E9627B74D7D00B6A5A0 /* stickersExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6E22C89C256B72B700080A59 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */; };
 		6EBB19CE256ABE0A006E5A8F /* Quicksand-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19CA256ABDD4006E5A8F /* Quicksand-Medium.ttf */; };
 		6EBB19CF256ABE0A006E5A8F /* Quicksand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19CC256ABDD4006E5A8F /* Quicksand-Regular.ttf */; };
@@ -40,6 +42,30 @@
 		FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		5AA15E9B27B74D7F00B6A5A0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5AA15E9527B74D7D00B6A5A0;
+			remoteInfo = stickersExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5AA15E9E27B74D7F00B6A5A0 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5AA15E9D27B74D7F00B6A5A0 /* stickersExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0F91EE15341B486DB1AD6756 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Regular.otf"; path = "../src/assets/fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* edge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = edge.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +84,9 @@
 		3DC7E8522525AB490061CF16 /* Dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 		5374C609A9164C53819F3FDD /* SourceSansPro-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Semibold.ttf"; path = "../src/assets/fonts/SourceSansPro-Semibold.ttf"; sourceTree = "<group>"; };
 		550016E295D7C4722CD35EF9 /* Pods-edge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.debug.xcconfig"; sourceTree = "<group>"; };
+		5AA15E9627B74D7D00B6A5A0 /* stickersExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = stickersExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AA15E9827B74D7F00B6A5A0 /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = "<group>"; };
+		5AA15E9A27B74D7F00B6A5A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6315893BA6CF465CB1E166CF /* SourceSansPro-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Black.ttf"; path = "../src/assets/fonts/SourceSansPro-Black.ttf"; sourceTree = "<group>"; };
 		67EDE898A18B445AB08D1ED3 /* SourceSansPro-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-ExtraLight.ttf"; path = "../src/assets/fonts/SourceSansPro-ExtraLight.ttf"; sourceTree = "<group>"; };
 		6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
@@ -152,6 +181,15 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		5AA15E9727B74D7D00B6A5A0 /* stickersExtension */ = {
+			isa = PBXGroup;
+			children = (
+				5AA15E9827B74D7F00B6A5A0 /* Stickers.xcassets */,
+				5AA15E9A27B74D7F00B6A5A0 /* Info.plist */,
+			);
+			path = stickersExtension;
+			sourceTree = "<group>";
+		};
 		82DAC2543B5A97898904086F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +213,7 @@
 				FD982BC41FABFA020057F035 /* SplashScreenResource */,
 				13B07FAE1A68108700A75B9A /* edge */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				5AA15E9727B74D7D00B6A5A0 /* stickersExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				3BB21E930C5F437EB1EAE492 /* Resources */,
 				1189D14E429D3398A100CB8A /* Pods */,
@@ -189,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* edge.app */,
+				5AA15E9627B74D7D00B6A5A0 /* stickersExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -224,15 +264,32 @@
 				66E3B72D0FE8946FF30D15F8 /* [CP] Copy Pods Resources */,
 				4C2A5582716AD8DF4041D824 /* [CP-User] [RNFB] Core Configuration */,
 				A818410845C14E4992E13CC8 /* [CP] Embed Pods Frameworks */,
+				5AA15E9E27B74D7F00B6A5A0 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				5AA15E9C27B74D7F00B6A5A0 /* PBXTargetDependency */,
 			);
 			name = edge;
 			productName = "Hello World";
 			productReference = 13B07F961A680F5B00A75B9A /* edge.app */;
 			productType = "com.apple.product-type.application";
+		};
+		5AA15E9527B74D7D00B6A5A0 /* stickersExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AA15EA127B74D7F00B6A5A0 /* Build configuration list for PBXNativeTarget "stickersExtension" */;
+			buildPhases = (
+				5AA15E9427B74D7D00B6A5A0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = stickersExtension;
+			productName = stickersExtension;
+			productReference = 5AA15E9627B74D7D00B6A5A0 /* stickersExtension.appex */;
+			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
 		};
 /* End PBXNativeTarget section */
 
@@ -240,6 +297,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = edge;
 				TargetAttributes = {
@@ -254,6 +312,11 @@
 								enabled = 1;
 							};
 						};
+					};
+					5AA15E9527B74D7D00B6A5A0 = {
+						CreatedOnToolsVersion = 13.2.1;
+						DevelopmentTeam = G5LQ7MERPK;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -272,6 +335,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* edge */,
+				5AA15E9527B74D7D00B6A5A0 /* stickersExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -308,6 +372,14 @@
 				8CBFB9E2496842FC8F06CE3C /* SourceSansPro-Semibold.ttf in Resources */,
 				6EBB19D0256ABE0A006E5A8F /* Quicksand-Light.ttf in Resources */,
 				BBF0CDD08FB044868A4B510C /* SourceSansPro-SemiboldItalic.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AA15E9427B74D7D00B6A5A0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AA15E9927B74D7F00B6A5A0 /* Stickers.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,6 +515,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		5AA15E9C27B74D7F00B6A5A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5AA15E9527B74D7D00B6A5A0 /* stickersExtension */;
+			targetProxy = 5AA15E9B27B74D7F00B6A5A0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -522,6 +602,68 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		5AA15E9F27B74D7F00B6A5A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 99999999;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = G5LQ7MERPK;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = stickersExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 99.99.99;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "co.edgesecure.app.edge-stickersExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5AA15EA027B74D7F00B6A5A0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 99999999;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = G5LQ7MERPK;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = stickersExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 99.99.99;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "co.edgesecure.app.edge-stickersExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -636,6 +778,15 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5AA15EA127B74D7F00B6A5A0 /* Build configuration list for PBXNativeTarget "stickersExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AA15E9F27B74D7F00B6A5A0 /* Debug */,
+				5AA15EA027B74D7F00B6A5A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

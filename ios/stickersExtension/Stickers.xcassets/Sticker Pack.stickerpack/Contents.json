@@ -1,0 +1,32 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "grid-size" : "regular"
+  },
+  "stickers" : [
+    {
+      "filename" : "Dogecoin-Cupid.sticker"
+    },
+    {
+      "filename" : "EdgeValentineCharacter.sticker"
+    },
+    {
+      "filename" : "HeartCandy_BTC.sticker"
+    },
+    {
+      "filename" : "HeartCandy_ETH.sticker"
+    },
+    {
+      "filename" : "HeartCandy_HODLme.sticker"
+    },
+    {
+      "filename" : "HeartCandy_ToTheMoon.sticker"
+    },
+    {
+      "filename" : "ValentinesDayNotecard.sticker"
+    }
+  ]
+}
