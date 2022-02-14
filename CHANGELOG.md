@@ -1,5 +1,23 @@
 # edge-react-gui
 
+## 2.11.0 (2022-02-14)
+
+- Add Solana (SOL) support
+- Add error localization
+- Fix staking end date display
+- Fix Bitpay error for unsupported currencies
+- Fix React Native Promise type-checking
+- Log error stack traces in development mode
+- Upgrade edge-core-js to v0.19.5
+  - changed: Send the optional keyOptions parameter through the importKey methods.
+  - fixed: Remove JCenter from the Android build file.
+- Upgrade edge-currency-accountbased to v0.12.2
+  - Add Solana (SOL)
+  - FIO: Abstract unlockDate calculation into a getUnlockDate method
+  - SOL: Use industry standard derivation path
+  - SOL: Prevent sending empty memo
+  - SOL: Update explorer links
+
 ## 2.10.0 (2022-02-03)
 
 - FIO: Add staking support
