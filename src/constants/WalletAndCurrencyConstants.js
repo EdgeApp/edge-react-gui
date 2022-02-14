@@ -62,6 +62,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
   XTZ: s.strings.string_first_tezos_wallet_name,
+  CELO: s.strings.string_first_celo_wallet_name,
   SOL: s.strings.string_first_solana_wallet_name
 }
 
@@ -162,6 +163,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RVN: 'ravencoin',
   SMART: 'smartcash',
   SOL: 'solana',
+  CELO: 'celo',
   TESTBTC: 'bitcointestnet',
   TLOS: 'telos',
   UFO: 'ufo',
@@ -425,6 +427,16 @@ export const SPECIAL_CURRENCY_INFO: {
       keyboardType: 'default'
     },
     noChangeMiningFee: true
+  },
+  CELO: {
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isRbfSupported: true
   },
   FIO: {
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
