@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
-import { refreshWallet } from '../../actions/WalletActions.js'
+import { refreshWallet, selectWallet } from '../../actions/WalletActions.js'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
@@ -99,9 +99,9 @@ class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchP
 
   handlePress = () => {
     if (this.props.createWalletType) {
-      this.createAndSelectWallet()
+      this.createAndSelectWallet().catch(showError)
     } else {
-      this.createAndSelectToken()
+      this.createAndSelectToken().catch(showError)
     }
   }
 
@@ -177,7 +177,9 @@ export const WalletListCreateRow = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(refreshWallet(walletId))
     },
     async createWallet(walletName: string, walletType: string, fiatCurrencyCode: string) {
-      return dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, false, true))
+      const wallet = await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
+      dispatch(selectWallet(wallet.id, wallet.currencyInfo.currencyCode))
+      return wallet
     }
   })
 )(withTheme(WalletListCreateRowComponent))

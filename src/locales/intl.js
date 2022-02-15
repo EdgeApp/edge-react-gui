@@ -195,7 +195,7 @@ export function formatDate(date: Date, monthShort: boolean = false): string {
 }
 
 /**
- * Returns time string depending on locale
+ * Returns h:mm am/pm time string depending on locale
  */
 export function formatTime(date: Date): string {
   try {
@@ -204,6 +204,13 @@ export function formatTime(date: Date): string {
     //
   }
   return format(date, 'h:mm bb')
+}
+
+/**
+ * Returns 'h:mm am/pm, date' string depending on locale.
+ */
+export function formatTimeDate(date: Date, monthShort: boolean = false): string {
+  return `${formatTime(date)}, ${formatDate(date, monthShort)}`
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {

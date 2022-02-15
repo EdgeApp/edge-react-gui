@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Keyboard, View } from 'react-native'
 
@@ -49,9 +50,16 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
   }
 
   async createWallet() {
-    const { createCurrencyWallet, route } = this.props
+    const { createCurrencyWallet, navigation, route } = this.props
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey } = route.params
-    const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
+    const createdWallet: EdgeCurrencyWallet | void = await createCurrencyWallet(
+      walletName,
+      selectedWalletType.walletType,
+      fixFiatCurrencyCode(selectedFiat.value),
+      cleanedPrivateKey
+    ).catch(showError)
+    navigation.navigate('walletListScene')
+
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
     if (createdWallet && cleanedPrivateKey) {
       this.setState({
@@ -136,7 +144,7 @@ export const CreateWalletReviewScene = connect<{}, DispatchProps, OwnProps>(
   state => ({}),
   dispatch => ({
     async createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
-      await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
+      await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, importText))
     }
   })
 )(withTheme(CreateWalletReviewComponent))

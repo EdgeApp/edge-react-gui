@@ -20,31 +20,11 @@ export type AccountActivationPaymentInfo = {
 }
 
 export type CreateWalletState = {
-  isCreatingWallet: boolean,
   isCheckingHandleAvailability: boolean,
   handleAvailableStatus: HandleAvailableStatus,
   handleActivationInfo: HandleActivationInfo,
   walletAccountActivationPaymentInfo: AccountActivationPaymentInfo,
   walletAccountActivationQuoteError: string
-}
-
-const isCreatingWallet = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'UI/WALLETS/CREATE_WALLET_START': {
-      return true
-    }
-
-    case 'UI/WALLETS/CREATE_WALLET_SUCCESS': {
-      return false
-    }
-
-    case 'UI/WALLETS/CREATE_WALLET_FAILURE': {
-      return false
-    }
-
-    default:
-      return state
-  }
 }
 
 const isCheckingHandleAvailability: Reducer<boolean, Action> = (state = false, action: Action): boolean => {
@@ -111,7 +91,6 @@ const walletAccountActivationQuoteError = (state: string = '', action: Action): 
 }
 
 export const createWallet: Reducer<CreateWalletState, Action> = combineReducers({
-  isCreatingWallet,
   isCheckingHandleAvailability,
   handleAvailableStatus,
   handleActivationInfo,

@@ -31,8 +31,7 @@ export type CryptoExchangeState = {
   // Activity flags:
   forceUpdateGuiCounter: number,
   shiftPendingTransaction: boolean,
-  calculatingMax: boolean,
-  creatingWallet: boolean
+  calculatingMax: boolean
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -71,23 +70,12 @@ const initialState: CryptoExchangeState = {
   genericShapeShiftError: null,
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
-  calculatingMax: false,
-  creatingWallet: false
+  calculatingMax: false
 }
 
 function cryptoExchangeInner(state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
-    case 'UI/WALLETS/CREATE_WALLET_START': {
-      return { ...state, creatingWallet: true }
-    }
-    case 'UI/WALLETS/CREATE_WALLET_SUCCESS': {
-      return { ...state, creatingWallet: false }
-    }
-    case 'UI/WALLETS/CREATE_WALLET_FAILURE': {
-      return { ...state, creatingWallet: false }
-    }
-
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       return {
         ...state,

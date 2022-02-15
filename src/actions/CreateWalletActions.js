@@ -15,22 +15,18 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
-import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const createCurrencyWallet =
   (
     walletName: string,
     walletType: string,
     fiatCurrencyCode: string,
-    popScene: boolean = true,
-    selectWallet: boolean = false,
     importText?: string // for creating wallet from private seed / key
   ) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+  async (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet> => {
     const state = getState()
     const { account } = state.core
 
-    dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
     // Try and get the new format param from the legacy walletType if it's mentioned
     const [type, format] = walletType.split('-')
     const opts = {
@@ -39,21 +35,7 @@ export const createCurrencyWallet =
       keyOptions: format ? { format } : {},
       importText
     }
-    return account
-      .createCurrencyWallet(type, opts)
-      .then(edgeWallet => {
-        const { currencyCode } = edgeWallet.currencyInfo
-        if (popScene) Actions.popTo(WALLET_LIST_SCENE)
-        dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
-        if (selectWallet) {
-          dispatch(selectWalletAction(edgeWallet.id, currencyCode))
-        }
-        return edgeWallet
-      })
-      .catch(error => {
-        showError(error)
-        dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
-      })
+    return await account.createCurrencyWallet(type, opts)
   }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector

@@ -14,7 +14,7 @@ import s from '../../locales/strings.js'
 import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { connect } from '../../types/reactRedux.js'
-import { ResolutionError, ResolutionErrorCode } from '../../types/ResolutionError.js'
+import { ResolutionError } from '../../types/ResolutionError.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -149,18 +149,18 @@ class AddressModalComponent extends React.Component<Props, State> {
   fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()
     if (!this.checkIfDomain(domain)) {
-      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
+      throw new ResolutionError('UnsupportedDomain', { domain })
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = this.checkIfEnsDomain(domain) ? `${baseurl}/${domain}/${currencyTicker}` : `${baseurl}/${domain}`
     const response = await global.fetch(url).then(res => res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
-      throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, { domain })
+      throw new ResolutionError('UnregisteredDomain', { domain })
     }
     const ticker = currencyTicker.toUpperCase()
     if (!addresses || !addresses[ticker]) {
-      throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, { domain, currencyTicker })
+      throw new ResolutionError('UnspecifiedCurrency', { domain, currencyTicker })
     }
     return addresses[ticker]
   }
