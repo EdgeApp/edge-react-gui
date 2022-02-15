@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 2.11.1 (2022-02-15)
+
+- Fix activation-needed wallet creation flow
+- Fix wallet picker token issue
+- Fix transaction details fiat amount for custom tokens
+- Fix BOO exchange rate
+
 ## 2.11.0 (2022-02-14)
 
 - Add Solana (SOL) support
