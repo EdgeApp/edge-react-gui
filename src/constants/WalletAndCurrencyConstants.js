@@ -170,7 +170,10 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_bitcoin_wallet_name,
     chainCode: 'BTC',
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -178,7 +181,10 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -186,13 +192,20 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_bitcoincash_wallet_name,
     chainCode: 'BCH',
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   bitcoinsv: {
     initWalletName: s.strings.string_first_bitcoin_sv_wallet_name,
     chainCode: 'BSV',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -200,6 +213,10 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_digibyte_wallet_name,
     chainCode: 'DGB',
     displayBuyCrypto: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -207,7 +224,10 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_litecoin_wallet_name,
     chainCode: 'LTC',
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -437,42 +457,70 @@ export const SPECIAL_CURRENCY_INFO: {
   dash: {
     initWalletName: s.strings.string_first_dash_wallet_name,
     chainCode: 'DASH',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   ravencoin: {
     initWalletName: s.strings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   dogecoin: {
     initWalletName: s.strings.string_first_doge_wallet_name,
     chainCode: 'DOGE',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   zcoin: {
     initWalletName: s.strings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   smartcash: {
     initWalletName: s.strings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   vertcoin: {
     initWalletName: s.strings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   bitcoingold: {
     initWalletName: s.strings.string_first_bitcoin_gold_wallet_name,
     chainCode: 'BTG',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isSplittingDisabled: true,
     isBitPayProtocolSupported: true
@@ -480,18 +528,30 @@ export const SPECIAL_CURRENCY_INFO: {
   feathercoin: {
     initWalletName: s.strings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   groestlcoin: {
     initWalletName: s.strings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   qtum: {
     initWalletName: s.strings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
