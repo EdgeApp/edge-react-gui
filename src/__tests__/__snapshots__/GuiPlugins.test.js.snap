@@ -99,7 +99,7 @@ Array [
     "description": "Fee: 5.95% / Settlement: 1 - 48 hours
 Level 1 Limit:  €10000/day
 Level 2 Limit: Unlimited",
-    "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
+    "partnerIconPath": "bits-of-gold-logo-sm.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
       "bank",
@@ -121,7 +121,7 @@ Level 2 Limit: Unlimited",
     "description": "Fee: 7% / Settlement: 10 - 30 minutes
 Daily Limit: $18000
 Monthly Limit: $47000",
-    "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
+    "partnerIconPath": "simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
       "credit",
@@ -154,7 +154,7 @@ Monthly Limit: $47000",
 Daily Limit: $5500
 Monthly Limit: $54000
 Doge supported on USA",
-    "partnerIconPath": "https://content.edge.app/icon_black_small.png",
+    "partnerIconPath": "icon_black_small.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
       "credit",
@@ -179,7 +179,7 @@ Array [
     "description": "Fee: 1% / Settlement: 1 - 5 days
 Weekly Limit: $25000
 Monthly Limit: $50000",
-    "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
+    "partnerIconPath": "wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
       "bank",
@@ -201,7 +201,7 @@ Monthly Limit: $50000",
     "description": "Fee: 7% / Settlement: 10 - 30 minutes
 Daily Limit: $18000
 Monthly Limit: $47000",
-    "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
+    "partnerIconPath": "simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
       "credit",
@@ -234,7 +234,7 @@ Monthly Limit: $47000",
 Daily Limit: $5500
 Monthly Limit: $54000
 Doge supported on USA",
-    "partnerIconPath": "https://content.edge.app/icon_black_small.png",
+    "partnerIconPath": "icon_black_small.png",
     "paymentTypeLogoKey": "applepay",
     "paymentTypes": Array [
       "credit",
@@ -251,7 +251,7 @@ Doge supported on USA",
     "deepQuery": Object {},
     "description": "Fee: 3-8% / Settlement: Instant
 Limit: $200 - $3000/day",
-    "partnerIconPath": "https://content.edge.app/libertyXlogo.png",
+    "partnerIconPath": "libertyXlogo.png",
     "paymentTypeLogoKey": "cash",
     "paymentTypes": Array [
       "cash",
@@ -276,7 +276,7 @@ Array [
     "deepQuery": Object {},
     "description": "Fee: 1% / Settlement: 1 - 5 days
 Monthly Limit: $150000",
-    "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
+    "partnerIconPath": "wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
       "bank",
@@ -298,7 +298,7 @@ Monthly Limit: $150000",
     },
     "description": "Fee: Varies / Settlement: 10 - 20 minutes
 Limit: Varies",
-    "partnerIconPath": "https://content.edge.app/mktg/bitaccess.png",
+    "partnerIconPath": "mktg/bitaccess.png",
     "paymentTypeLogoKey": "cash",
     "paymentTypes": Array [
       "cash",
@@ -317,7 +317,7 @@ Limit: Varies",
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Buy gift cards and reload phones with crypto",
-    "partnerIconPath": "https://content.edge.app/bitrefill-2.png",
+    "partnerIconPath": "bitrefill-2.png",
     "paymentTypeLogoKey": "giftcard",
     "paymentTypes": Array [
       "giftcard",
