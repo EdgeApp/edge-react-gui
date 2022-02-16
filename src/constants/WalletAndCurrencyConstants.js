@@ -212,6 +212,7 @@ type SpecialCurrencyInfo = {|
   keysOnlyMode?: boolean,
   isPrivateKeySweepable?: boolean,
   isBitPayProtocolSupported?: boolean,
+  isSplittingDisabled?: boolean,
   isStakingSupported?: boolean,
   stakeActions?: { [stakeActionKey: string]: string },
   stakeLockPeriod?: number,
@@ -271,6 +272,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isSplittingDisabled: true,
     isCustomTokensSupported: true
   },
   XLM: {
@@ -377,6 +379,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isSplittingDisabled: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -436,6 +439,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
+    isSplittingDisabled: true,
     isRbfSupported: true
   },
   FIO: {
@@ -479,6 +483,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   BTG: {
     isPrivateKeySweepable: true,
+    isSplittingDisabled: true,
     isBitPayProtocolSupported: true
   },
   FTC: {

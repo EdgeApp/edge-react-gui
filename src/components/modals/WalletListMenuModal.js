@@ -9,7 +9,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
-import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
@@ -79,9 +79,8 @@ const getWalletOptions = async (params: {
 
   const currencyInfos = getCurrencyInfos(account)
   for (const splitWalletType of splittable) {
-    if (splitWalletType === 'wallet:bitcoingold') continue // TODO: Remove after fixing BTG splitting
     const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-    if (info == null) continue
+    if (info == null || getSpecialCurrencyInfo(info.currencyCode).isSplittingDisabled) continue
     result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
   }
 
