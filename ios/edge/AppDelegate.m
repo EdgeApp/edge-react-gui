@@ -1,7 +1,6 @@
 #import "AppDelegate.h"
 #import "edgeApiKey.h"
 
-#import "RCTSplashScreen.h"
 #import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <Foundation/Foundation.h>
@@ -72,7 +71,6 @@ static void InitializeFlipper(UIApplication *application) {
                                                    moduleName:@"edge"
                                             initialProperties:nil];
 
-  [RCTSplashScreen open:rootView withImageNamed:@"splash"];
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {
@@ -87,6 +85,9 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  UIStoryboard *sb = [UIStoryboard storyboardWithName:@"LaunchScreen" bundle:nil];
+  UIViewController *vc = [sb instantiateInitialViewController];
+  rootView.loadingView = vc.view;
   return YES;
 }
 
