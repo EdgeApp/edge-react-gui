@@ -9,7 +9,7 @@ import { getTheme } from '../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
 import { formatNumber } from '../locales/intl.js'
 import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, isSentTransaction, truncateDecimals } from '../util/utils'
-import { IMAGE_SERVER_URL } from './../constants/WalletAndCurrencyConstants.js'
+import { EDGE_CONTENT_SERVER } from './../constants/WalletAndCurrencyConstants.js'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -30,8 +30,8 @@ describe('Transaction List Row', () => {
       enabledTokens: [],
       receiveAddress: { metadata: {}, nativeAmount: '0', publicAddress: '432hJPUp2C...' },
       blockHeight: 1688551,
-      symbolImage: `${IMAGE_SERVER_URL}/XMR/XMR.png`,
-      symbolImageDarkMono: `${IMAGE_SERVER_URL}/XMR/XMR_dark.png`,
+      symbolImage: `${EDGE_CONTENT_SERVER}/XMR/XMR.png`,
+      symbolImageDarkMono: `${EDGE_CONTENT_SERVER}/XMR/XMR_dark.png`,
       key: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA='
     }
     const transaction = {

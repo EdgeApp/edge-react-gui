@@ -5,10 +5,14 @@ import { Disklet } from 'disklet'
 import { ImageSourcePropType, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
+import { EDGE_CONTENT_SERVER } from '../constants/WalletAndCurrencyConstants.js'
+
 const directory = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.ExternalCachesDirectoryPath
 
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
-const EDGE_CONTENT_SERVER = 'https://content.edge.app'
+const BACKGROUND_IMAGE_FILE_NAME = 'login_bg.gif'
+const BACKGROUND_IMAGE_URL = `${EDGE_CONTENT_SERVER}/${BACKGROUND_IMAGE_FILE_NAME}`
+const BACKGROUND_IMAGE_LOCAL_URI = `file://${directory}/${BACKGROUND_IMAGE_FILE_NAME}`
 
 const asThemeCache = asObject({
   assets: asMap(
@@ -62,9 +66,6 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
 }
 
 export async function getBackgroundImage(disklet: Disklet): Promise<ImageSourcePropType | null> {
-  const BACKGROUND_IMAGE_FILE_NAME = 'login_bg.gif'
-  const BACKGROUND_IMAGE_URL = `${EDGE_CONTENT_SERVER}/${BACKGROUND_IMAGE_FILE_NAME}`
-  const BACKGROUND_IMAGE_LOCAL_URI = `file://${directory}/${BACKGROUND_IMAGE_FILE_NAME}`
   const now = Date.now()
 
   const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))

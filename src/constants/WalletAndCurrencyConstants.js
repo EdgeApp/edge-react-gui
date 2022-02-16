@@ -12,13 +12,13 @@ export const MAX_ADDRESS_CHARACTERS = 17 // for displaying a truncated wallet ad
 export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fractional characters
 export const FIAT_PRECISION = 2
 
-export const IMAGE_SERVER_URL = 'https://content.edge.app'
+export const EDGE_CONTENT_SERVER = 'https://content.edge.app'
 
 export const CURRENCY_SYMBOL_IMAGES = {
-  BCH: `${IMAGE_SERVER_URL}/bitcoincash-logo-solo-64.png`,
-  BTC: `${IMAGE_SERVER_URL}/bitcoin-logo-solo-64.png`,
-  ETH: `${IMAGE_SERVER_URL}/ethereum-logo-solo-64.png`,
-  ETC: `${IMAGE_SERVER_URL}/ethereum-classic-logo-solo-64.png`
+  BCH: `${EDGE_CONTENT_SERVER}/bitcoincash-logo-solo-64.png`,
+  BTC: `${EDGE_CONTENT_SERVER}/bitcoin-logo-solo-64.png`,
+  ETH: `${EDGE_CONTENT_SERVER}/ethereum-logo-solo-64.png`,
+  ETC: `${EDGE_CONTENT_SERVER}/ethereum-classic-logo-solo-64.png`
 }
 
 // Translations for custom fee keys:
