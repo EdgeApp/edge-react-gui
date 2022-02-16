@@ -11566,10 +11566,6 @@ react-native-share@^7.1.2:
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
   integrity sha512-kmwp11XYL1TBvKQ1s3Y4HTxu5QNZM6W1SopItAovoC+UD+9g4lVFIPL64bww16Oz15xQTTDtvDHCG8zDWKOVPA==
 
-"react-native-smart-splash-screen@https://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
-  version "2.3.5"
-  resolved "https://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
-
 "react-native-sortable-listview@https://github.com/EdgeApp/react-native-sortable-listview.git":
   version "0.2.8"
   resolved "https://github.com/EdgeApp/react-native-sortable-listview.git#209f808af19f719566e50475cc883ffc7c19d0e5"
