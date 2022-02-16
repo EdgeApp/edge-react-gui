@@ -233,34 +233,54 @@ export const SPECIAL_CURRENCY_INFO: {
 } = {
   BTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   TESTBTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   BCH: {
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   BSV: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   DGB: {
     displayBuyCrypto: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   LTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -454,22 +474,42 @@ export const SPECIAL_CURRENCY_INFO: {
     stakeMaxApy: 450
   },
   DASH: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   RVN: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   DOGE: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   FIRO: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   SMART: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -478,18 +518,34 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   BTG: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   FTC: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   GRS: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   QTUM: {
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
