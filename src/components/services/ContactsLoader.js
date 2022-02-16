@@ -163,6 +163,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Exolix',
+    hasThumbnail: true,
+    thumbnailPath: 'exolix-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'SideShift.ai',
     hasThumbnail: true,
     thumbnailPath: 'sideshift-logo.png',
