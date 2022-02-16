@@ -471,7 +471,8 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   SMART: {
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isBitPayProtocolSupported: true,
+    keysOnlyMode: true
   },
   VTC: {
     isPrivateKeySweepable: true,
@@ -483,7 +484,8 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   FTC: {
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isBitPayProtocolSupported: true,
+    keysOnlyMode: true
   },
   GRS: {
     isPrivateKeySweepable: true,
@@ -546,6 +548,12 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isCustomTokensSupported: true,
     isRbfSupported: true
+  },
+  EBST: {
+    keysOnlyMode: true
+  },
+  UFO: {
+    keysOnlyMode: true
   }
 }
 
