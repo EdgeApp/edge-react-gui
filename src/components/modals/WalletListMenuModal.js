@@ -41,7 +41,6 @@ const icons = {
   manageTokens: 'plus',
   rename: 'edit',
   resync: 'sync',
-  split: 'arrowsalt',
   viewXPub: 'eye'
 }
 
@@ -78,11 +77,12 @@ const getWalletOptions = async (params: {
 
   const splittable = await account.listSplittableWalletTypes(walletId)
 
+  const currencyInfos = getCurrencyInfos(account)
   for (const splitWalletType of splittable) {
     if (splitWalletType === 'wallet:bitcoingold') continue // TODO: Remove after fixing BTG splitting
-    const info = getCurrencyInfos(account).find(({ walletType }) => walletType === splitWalletType)
-
-    result.push({ label: sprintf(s.strings.string_split_wallet, info?.displayName), value: 'split' })
+    const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+    if (info == null) continue
+    result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
   }
 
   for (const option of WALLET_LIST_MENU) {
@@ -133,7 +133,7 @@ export function WalletListMenuModal(props: Props) {
       {options.map((option: Option) => (
         <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.optionRow}>
           <AntDesignIcon
-            name={icons[option.value]}
+            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
             size={theme.rem(1)}
             style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
           />

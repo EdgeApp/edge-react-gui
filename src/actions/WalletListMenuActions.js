@@ -26,14 +26,16 @@ export type WalletListMenuKey =
   | 'resync'
   | 'exportWalletTransactions'
   | 'getSeed'
-  | 'split'
   | 'manageTokens'
   | 'viewXPub'
   | 'getRawKeys'
   | 'rawDelete'
+  | string // for split keys like splitBCH, splitETH, etc.
 
 export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
-  switch (option) {
+  const switchString = option.startsWith('split') ? 'split' : option
+
+  switch (switchString) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
         Actions.push(MANAGE_TOKENS, {
@@ -96,8 +98,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     }
 
     case 'split': {
-      return (dispatch: Dispatch) => {
-        dispatch(showSplitWalletModal(walletId))
+      return async (dispatch: Dispatch) => {
+        dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
       }
     }
 
