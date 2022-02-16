@@ -7,6 +7,7 @@ import { type AirshipBridge } from 'react-native-airship'
 import s from '../../locales/strings.js'
 import { useState } from '../../types/reactHooks.js'
 import { showError } from '../services/AirshipInstance.js'
+import { Alert } from '../themed/Alert.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
@@ -27,6 +28,7 @@ type Props = {|
   initialValue?: string,
   inputLabel?: string,
   submitLabel?: string,
+  warning?: string,
 
   // Text input options:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
@@ -53,7 +55,8 @@ export function TextInputModal(props: Props) {
     multiline = false,
     submitLabel = s.strings.submit,
     title,
-    maxLength
+    maxLength,
+    warning
   } = props
 
   const [errorMessage, setErrorMessage] = useState<string | void>()
@@ -88,6 +91,7 @@ export function TextInputModal(props: Props) {
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
+      {warning != null ? <Alert type="warning" title={s.strings.string_warning} marginRem={0.5} message={warning} numberOfLines={0} /> : null}
       <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}

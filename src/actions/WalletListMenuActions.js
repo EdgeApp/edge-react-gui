@@ -14,7 +14,6 @@ import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { validatePassword } from './AccountActions.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
@@ -159,8 +158,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
 
         const passwordValid = await dispatch(
           validatePassword({
-            message: `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`,
-            submitLabel: s.strings.fragment_wallets_get_seed_wallet
+            title: s.strings.fragment_wallets_get_seed_title,
+            submitLabel: s.strings.fragment_wallets_get_seed_wallet,
+            warning: s.strings.fragment_wallets_get_seed_warning_message
           })
         )
 
