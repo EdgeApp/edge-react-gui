@@ -56,6 +56,7 @@ type StateProps = {
   // Fees
   feeCurrencyCode: string,
   feeDisplayDenomination: EdgeDenomination,
+  feeExchangeDenomination: EdgeDenomination,
   feeNativeAmount: string,
   feeAmount: string,
   feeStyle?: string,
@@ -192,7 +193,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees = () => {
-    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, primaryInfo, secondaryInfo, theme } = this.props
+    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeExchangeDenomination, feeNativeAmount, feeStyle, secondaryInfo, theme } = this.props
     const truncatedFeeAmount = truncateDecimals(feeAmount, DEFAULT_TRUNCATE_PRECISION, false)
     const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
@@ -209,7 +210,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             nativeCryptoAmount={feeNativeAmount}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
-            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
+            cryptoExchangeMultiplier={feeExchangeDenomination.multiplier}
             parenthesisEnclosed
           />
         </EdgeText>
@@ -335,13 +336,13 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     // Fees
     const feeDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    const feeDefaultDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
     const transactionFee = convertTransactionFeeToDisplayFee(
       wallet,
       state.exchangeRates,
       state.ui.scenes.sendConfirmation.transaction,
       feeDisplayDenomination,
-      feeDefaultDenomination
+      feeExchangeDenomination
     )
 
     // Error
@@ -367,6 +368,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       // Fees
       feeCurrencyCode: wallet.currencyInfo.currencyCode,
       feeDisplayDenomination,
+      feeExchangeDenomination,
       feeNativeAmount: transactionFee.nativeCryptoAmount,
       feeAmount: transactionFee.cryptoAmount,
       feeStyle: transactionFee.fiatStyle,
