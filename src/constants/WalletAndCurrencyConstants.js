@@ -102,6 +102,7 @@ export const getPluginId = (walletType: string): string => walletType.replace('w
 
 type SpecialCurrencyInfo = {|
   initWalletName: string,
+  chainCode: string,
 
   // Marketing:
   displayBuyCrypto?: boolean,
@@ -151,6 +152,7 @@ export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInf
   } else {
     return {
       initWalletName: '',
+      chainCode: '',
       displayBuyCrypto: false
     }
   }
@@ -161,6 +163,7 @@ export const SPECIAL_CURRENCY_INFO: {
 } = {
   BTC: {
     initWalletName: s.strings.string_first_bitcoin_wallet_name,
+    chainCode: 'BTC',
     displayBuyCrypto: true,
     isImportKeySupported: false,
     isPrivateKeySweepable: true,
@@ -168,6 +171,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   TESTBTC: {
     initWalletName: s.strings.string_first_bitcoin_testnet_wallet_name,
+    chainCode: 'TESTBTC',
     displayBuyCrypto: true,
     isImportKeySupported: false,
     isPrivateKeySweepable: true,
@@ -175,6 +179,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   BCH: {
     initWalletName: s.strings.string_first_bitcoincash_wallet_name,
+    chainCode: 'BCH',
     displayBuyCrypto: true,
     isImportKeySupported: false,
     isPrivateKeySweepable: true,
@@ -182,17 +187,20 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   BSV: {
     initWalletName: s.strings.string_first_bitcoin_sv_wallet_name,
+    chainCode: 'BSV',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   DGB: {
     initWalletName: s.strings.string_first_digibyte_wallet_name,
+    chainCode: 'DGB',
     displayBuyCrypto: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   LTC: {
     initWalletName: s.strings.string_first_litecoin_wallet_name,
+    chainCode: 'LTC',
     displayBuyCrypto: true,
     isImportKeySupported: false,
     isPrivateKeySweepable: true,
@@ -200,6 +208,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   RBTC: {
     initWalletName: s.strings.string_first_rsk_wallet_name,
+    chainCode: 'RBTC',
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: {
@@ -211,6 +220,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   XLM: {
     initWalletName: s.strings.string_first_stellar_wallet_name,
+    chainCode: 'XLM',
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
     uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
@@ -230,6 +240,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   XRP: {
     initWalletName: s.strings.string_first_ripple_wallet_name,
+    chainCode: 'XRP',
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
@@ -249,12 +260,14 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   XMR: {
     initWalletName: s.strings.string_first_monero_wallet_name,
+    chainCode: 'XMR',
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     noMaxSpend: true,
     isImportKeySupported: false
   },
   EOS: {
     initWalletName: s.strings.string_first_eos_wallet_name,
+    chainCode: 'EOS',
     isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
@@ -272,6 +285,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   TLOS: {
     initWalletName: s.strings.string_first_telos_wallet_name,
+    chainCode: 'TLOS',
     isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
@@ -289,6 +303,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   WAX: {
     initWalletName: s.strings.string_first_wax_wallet_name,
+    chainCode: 'WAX',
     isAccountActivationRequired: false,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: false,
@@ -307,6 +322,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   ETH: {
     initWalletName: s.strings.string_first_ethereum_wallet_name,
+    chainCode: 'ETH',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
@@ -320,6 +336,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   ETC: {
     initWalletName: s.strings.string_first_ethereum_classic_wallet_name,
+    chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isSplittingDisabled: true,
     isImportKeySupported: {
@@ -329,6 +346,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   XTZ: {
     initWalletName: s.strings.string_first_tezos_wallet_name,
+    chainCode: 'XTZ',
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
@@ -340,6 +358,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   BNB: {
     initWalletName: s.strings.string_first_bnb_wallet_name,
+    chainCode: 'BNB',
     uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
@@ -353,6 +372,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   SOL: {
     initWalletName: s.strings.string_first_solana_wallet_name,
+    chainCode: 'SOL',
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_instructions
@@ -367,6 +387,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   CELO: {
     initWalletName: s.strings.string_first_celo_wallet_name,
+    chainCode: 'CELO',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: {
@@ -379,6 +400,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   FIO: {
     initWalletName: s.strings.string_first_fio_wallet_name,
+    chainCode: 'FIO',
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
     noChangeMiningFee: true,
     isImportKeySupported: {
@@ -395,57 +417,68 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   DASH: {
     initWalletName: s.strings.string_first_dash_wallet_name,
+    chainCode: 'DASH',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   RVN: {
     initWalletName: s.strings.string_first_ravencoin_wallet_name,
+    chainCode: 'RVN',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   DOGE: {
     initWalletName: s.strings.string_first_doge_wallet_name,
+    chainCode: 'DOGE',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   FIRO: {
     initWalletName: s.strings.string_first_zcoin_wallet_name,
+    chainCode: 'FIRO',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   SMART: {
     initWalletName: s.strings.string_first_smartcash_wallet_name,
+    chainCode: 'SMART',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   VTC: {
     initWalletName: s.strings.string_first_vertcoin_wallet_name,
+    chainCode: 'VTC',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   BTG: {
     initWalletName: s.strings.string_first_bitcoin_gold_wallet_name,
+    chainCode: 'BTG',
     isPrivateKeySweepable: true,
     isSplittingDisabled: true,
     isBitPayProtocolSupported: true
   },
   FTC: {
     initWalletName: s.strings.string_first_feather_coin_wallet_name,
+    chainCode: 'FTC',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   GRS: {
     initWalletName: s.strings.string_first_groestlcoin_wallet_name,
+    chainCode: 'GRS',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   QTUM: {
     initWalletName: s.strings.string_first_qtum_wallet_name,
+    chainCode: 'QTUM',
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
   FTM: {
     initWalletName: s.strings.string_first_fantom_wallet_name,
+    chainCode: 'FTM',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
@@ -455,6 +488,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   HBAR: {
     initWalletName: s.strings.string_first_hedera_wallet_name,
+    chainCode: 'HBAR',
     dummyPublicAddress: '0.0.14625',
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
@@ -472,6 +506,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   ZEC: {
     initWalletName: s.strings.string_first_zcash_wallet_name,
+    chainCode: 'ZEC',
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
@@ -482,6 +517,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   MATIC: {
     initWalletName: s.strings.string_first_polygon_wallet_name,
+    chainCode: 'MATIC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
@@ -494,6 +530,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   AVAX: {
     initWalletName: s.strings.string_first_avalanche_wallet_name,
+    chainCode: 'AVAX',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: {
@@ -531,7 +568,9 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getSeed'
   },
   {
-    currencyCodes: Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code]?.isCustomTokensSupported),
+    currencyCodes: Object.keys(SPECIAL_CURRENCY_INFO)
+      .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
+      .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode),
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },

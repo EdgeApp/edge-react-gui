@@ -39,7 +39,9 @@ import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
-const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(currencyCode => SPECIAL_CURRENCY_INFO[currencyCode].isPrivateKeySweepable)
+const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function ControlPanel(props: Props) {
   const { navigation } = props

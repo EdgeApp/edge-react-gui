@@ -79,7 +79,9 @@ type State = {
 }
 
 // Prevent currencies that are "watch only" from being allowed to exchange
-const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code].keysOnlyMode ?? false)
+const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
