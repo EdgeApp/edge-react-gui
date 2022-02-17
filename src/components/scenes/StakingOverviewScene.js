@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { add, gt } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeStakingStatus } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
@@ -84,7 +84,7 @@ export const StakingOverviewSceneComponent = (props: Props) => {
           id: new Date(unlockDate).toDateString(),
           // $FlowFixMe Flow does not understand that unlockDate here can't be undefined
           title: sprintf(s.strings.staking_locked_title, formatTimeDate(new Date(unlockDate), true)),
-          amount: formatNumber(bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
+          amount: formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
         }))
     )
   }, [stakingStatus, currencyDenomination])
@@ -175,13 +175,13 @@ export const StakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>
 
     const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
     const stakingCryptoAmountFormat = formatNumber(
-      bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0'), '0')
+      add(convertNativeToDenomination(currencyDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0'), '0')
     )
 
     const defaultDenomination = getExchangeDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
     const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0')
     const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
-    const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && bns.gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+    const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
     return {
       currencyWallet,

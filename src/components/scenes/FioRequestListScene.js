@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -390,8 +390,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const currencyWallet = currencyWallets[walletId]
     const exchangeDenomination = getExchangeDenomination(currencyWallet.currencyInfo.pluginId, pendingRequest.content.token_code.toUpperCase())
-    let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
-    nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+    let nativeAmount = mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
+    nativeAmount = toFixed(nativeAmount, 0, 0)
     const currencyCode = pendingRequest.content.token_code.toUpperCase()
 
     const parsedUri = await currencyWallet.parseUri(pendingRequest.content.payee_public_address, currencyCode)

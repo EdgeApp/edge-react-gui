@@ -1,7 +1,7 @@
 /* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import { bns } from 'biggystring'
+import { abs, toFixed } from 'biggystring'
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
@@ -60,11 +60,11 @@ describe('Transaction List Row', () => {
       symbol: '‎ɱ'
     }
     // CryptoAmount
-    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
+    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(abs(transaction.nativeAmount || ''))
     const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount), 6))
     // FiatAmount
-    const fiatAmount = bns.abs(transaction.metadata.amountFiat.toFixed(2))
-    const fiatAmountFormat = formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    const fiatAmount = abs(transaction.metadata.amountFiat.toFixed(2))
+    const fiatAmountFormat = formatNumber(toFixed(fiatAmount, 2, 2), { toFixed: 2 })
     const props = {
       cryptoAmount: cryptoAmountFormat,
       denominationSymbol: displayDenomination.symbol,

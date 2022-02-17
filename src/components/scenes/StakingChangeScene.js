@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { add, gt } from 'biggystring'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -93,7 +93,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
             spendTargets: [{ nativeAmount: '', otherParams: {}, publicAddress: '' }]
           })
           .then(nativeAmount => {
-            onAmountChanged(nativeAmount, bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
+            onAmountChanged(nativeAmount, add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
           })
         break
       }
@@ -261,7 +261,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
     const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, true) : ''
     let estReward = '0'
     if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {
-      estReward = bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
+      estReward = add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
     }
     return (
       <>
@@ -372,11 +372,11 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
         const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
-        const stakingCryptoAmountFormat = formatNumber(bns.add(stakingCryptoAmount, '0'))
+        const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
         const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
         const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
-        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && bns.gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
         stakingBalances[stakingCurrencyCode] = {
           native: stakingNativeAmount,

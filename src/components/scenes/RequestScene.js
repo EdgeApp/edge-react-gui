@@ -1,7 +1,7 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import { bns } from 'biggystring'
+import { gt, lt, lte } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
@@ -353,7 +353,7 @@ export class RequestComponent extends React.Component<Props, State> {
     if (!currencyCode) return
     const edgeEncodeUri: EdgeEncodeUri =
       this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
-    if (bns.gt(amounts.nativeAmount, '0')) {
+    if (gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
     let encodedURI
@@ -385,7 +385,7 @@ export class RequestComponent extends React.Component<Props, State> {
       if (this.state.minimumPopupModalState[currencyCode] === 'NOT_YET_SHOWN') {
         const { minimumPopupModals } = getSpecialCurrencyInfo(currencyCode)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
-        if (bns.lt(guiWallet.primaryNativeBalance, minBalance)) {
+        if (lt(guiWallet.primaryNativeBalance, minBalance)) {
           return true
         }
       }
@@ -446,7 +446,7 @@ export class RequestComponent extends React.Component<Props, State> {
       showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (!this.amounts || bns.lte(this.amounts.nativeAmount, '0')) {
+    if (!this.amounts || lte(this.amounts.nativeAmount, '0')) {
       if (Platform.OS === 'android') {
         showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
         return
@@ -476,7 +476,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   nextFioMode = () => {
-    if (this.state.isFioMode && (!this.amounts || bns.lte(this.amounts.nativeAmount, '0'))) {
+    if (this.state.isFioMode && (!this.amounts || lte(this.amounts.nativeAmount, '0'))) {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {

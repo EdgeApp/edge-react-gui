@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { add } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -238,7 +238,7 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
     const { displayCurrencyCode, displayDenomination } = ownProps.primaryCurrencyInfo
     const balance = balances?.[displayCurrencyCode] ?? '0'
     const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
-    const cryptoAmount = formatNumber(bns.add(cryptoAmountRaw, '0'))
+    const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
 
     return { name: name ?? '', cryptoAmount: cryptoAmount }
   },

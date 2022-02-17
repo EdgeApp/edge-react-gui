@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
@@ -141,8 +141,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
         const wallet = state.core.account.currencyWallets[walletId]
         const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, paymentCurrencyCode)
-        let nativeAmount = bns.mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
-        nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+        let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
+        nativeAmount = toFixed(nativeAmount, 0, 0)
 
         const guiMakeSpendInfo = {
           currencyCode: paymentCurrencyCode,

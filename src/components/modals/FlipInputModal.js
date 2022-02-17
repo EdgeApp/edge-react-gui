@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div, eq } from 'biggystring'
 import { type EdgeDenomination, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
@@ -19,7 +19,7 @@ import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
-import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
+import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -147,7 +147,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const { balanceCrypto, primaryInfo, secondaryInfo, theme } = this.props
     const styles = getStyles(theme)
     const { multiplier, name } = primaryInfo.displayDenomination
-    const balance = `${formatNumber(bns.div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
+    const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
     return (
       <View style={styles.rateBalanceContainer}>
         <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
@@ -183,7 +183,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
           onNext={this.handleCloseModal}
           keyboardVisible={false}
           isFocus
-          isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
+          isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
         {getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
           <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
@@ -332,7 +332,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const { forceUpdateGuiCounter, nativeAmount } = state.ui.scenes.sendConfirmation
-    const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+    const overridePrimaryExchangeAmount = div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
     const feeDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
@@ -354,7 +354,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       // Balances
-      balanceCrypto: wallet.balances[currencyCode] ?? '0',
+      balanceCrypto: getAvailableBalance(wallet),
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),

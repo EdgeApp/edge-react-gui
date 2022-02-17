@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { gte } from 'biggystring'
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { getExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
@@ -168,7 +168,7 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo, wall
   const nativeToExchangeRatio = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
   const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, exchangeAmount)
-  const exceedsLimit = bns.gte(fiatAmount, spendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
+  const exceedsLimit = gte(fiatAmount, spendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
 
   return exceedsLimit ? 'pin' : 'none'
 }
