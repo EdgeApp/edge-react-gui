@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
+import { USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import {
   getLocalSettings,
@@ -229,25 +229,6 @@ export const mergeSettings = (
       finalSettings[key] = defaults[key]
     } else {
       finalSettings[key] = loadedSettings[key]
-    }
-
-    if (account && loadedSettings[key] != null) {
-      const currencyName = CURRENCY_PLUGIN_NAMES[key]
-      const doesHaveDenominations = loadedSettings[key].denominations
-      const doesHavePlugin = account.currencyConfig[currencyName]
-      // if there are settings for this key
-      // and currency (not token) and has a plugin name
-      if (loadedSettings && loadedSettings[key] && doesHaveDenominations && doesHavePlugin && currencyName) {
-        // for each currency info (each native currency)
-        const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
-        const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms
-        if (settingDenominationIndex === -1) {
-          // setting denomination is not present in plugin (and on wallet)
-          finalSettings[key].denomination = pluginDenominations[0].multiplier // grab the first denom multiplier from plugin
-          console.warn(`${key} denomination ${loadedSettings[key].denomination} invalid, overwriting with plugin denom`)
-          isOverwriteNeeded = true // make sure synced settings get overwritten
-        }
-      }
     }
   }
 

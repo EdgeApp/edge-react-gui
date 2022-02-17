@@ -97,46 +97,8 @@ export const WALLET_TYPE_ORDER = [
 // Put these in reverse order of preference
 export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 
-// DO NOT PUT ANY TOKENS IN HERE!
-export const CURRENCY_PLUGIN_NAMES = {
-  BCH: 'bitcoincash',
-  BNB: 'binance',
-  BSV: 'bitcoinsv',
-  BTC: 'bitcoin',
-  BTG: 'bitcoingold',
-  DASH: 'dash',
-  DGB: 'digibyte',
-  DOGE: 'dogecoin',
-  EBST: 'eboost',
-  EOS: 'eos',
-  ETC: 'ethereumclassic',
-  ETH: 'ethereum',
-  FIO: 'fio',
-  FIRO: 'zcoin',
-  FTC: 'feathercoin',
-  FTM: 'fantom',
-  GRS: 'groestlcoin',
-  HBAR: 'hedera',
-  LTC: 'litecoin',
-  MATIC: 'polygon',
-  AVAX: 'avalanche',
-  QTUM: 'qtum',
-  RBTC: 'rsk',
-  RVN: 'ravencoin',
-  SMART: 'smartcash',
-  SOL: 'solana',
-  CELO: 'celo',
-  TESTBTC: 'bitcointestnet',
-  TLOS: 'telos',
-  UFO: 'ufo',
-  VTC: 'vertcoin',
-  WAX: 'wax',
-  XLM: 'stellar',
-  XMR: 'monero',
-  XRP: 'ripple',
-  XTZ: 'tezos',
-  ZEC: 'zcash'
-}
+// Strip away 'wallet:' prefix and '-bip' suffix, if present
+export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
 
 type SpecialCurrencyInfo = {|
   initWalletName: string,

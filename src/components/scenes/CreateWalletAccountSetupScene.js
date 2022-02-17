@@ -221,7 +221,7 @@ export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, 
   }),
   (dispatch, { route: { params } }) => ({
     checkHandleAvailability(handle: string) {
-      dispatch(checkHandleAvailability(params.selectedWalletType.currencyCode, handle))
+      dispatch(checkHandleAvailability(params.selectedWalletType.walletType, handle))
     }
   })
 )(CreateWalletAccountSetup)
