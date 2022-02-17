@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { sub } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../constants/WalletAndCurrencyConstants'
@@ -25,7 +25,7 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet): string => {
   let balance = wallet.balances[currencyCode] ?? '0'
   if (SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) {
     const lockedBalance = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
-    balance = bns.sub(balance, lockedBalance)
+    balance = sub(balance, lockedBalance)
   }
   return balance
 }

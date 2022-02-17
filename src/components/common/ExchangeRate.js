@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div, log10, mul } from 'biggystring'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -36,11 +36,11 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
-      const primaryRatio = bns.div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
-      const secondaryRatio = bns.div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
-      return bns.mul(bns.div(primaryRatio, secondaryRatio, 4), secondaryDisplayAmount)
+      const primaryRatio = div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      const secondaryRatio = div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      return mul(div(primaryRatio, secondaryRatio, 4), secondaryDisplayAmount)
     }
-    let precision = secondaryInfo.displayDenomination.multiplier ? bns.log10(secondaryInfo.displayDenomination.multiplier) : 0
+    let precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
     let formattedSecondaryDisplayAmount: string = parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision)
     // if exchange rate is too low, then add decimal places
     if (parseFloat(formattedSecondaryDisplayAmount) <= 0.1) {

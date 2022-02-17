@@ -1,5 +1,5 @@
 // @flow
-import { bns } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -128,8 +128,8 @@ export const createAccountTransaction =
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentWalletPluginName = CURRENCY_PLUGIN_NAMES[paymentWallet.currencyInfo.currencyCode]
     const paymentDenom = getExchangeDenomination(state, paymentWalletPluginName, currencyCode)
-    let nativeAmount = bns.mul(amount, paymentDenom.multiplier)
-    nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+    let nativeAmount = mul(amount, paymentDenom.multiplier)
+    nativeAmount = toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {
       const guiMakeSpendInfo = {
         currencyCode,

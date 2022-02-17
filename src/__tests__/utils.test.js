@@ -1,6 +1,6 @@
 // @flow
 /* globals describe test expect */
-import { bns } from 'biggystring'
+import { log10 } from 'biggystring'
 
 import { sanitizeDecimalAmount } from '../components/themed/FlipInput'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../selectors/DenominationSelectors.js'
@@ -658,7 +658,7 @@ describe('precisionAdjust', function () {
     test(key, function () {
       const precisionAdjustmentValue = precisionAdjust({ primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio })
       expect(precisionAdjustmentValue).toBe(output.precisionAdjustmentValue)
-      expect(maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenominationMultiplier), precisionAdjustmentValue)).toBe(
+      expect(maxPrimaryCurrencyConversionDecimals(log10(displayDenominationMultiplier), precisionAdjustmentValue)).toBe(
         output.maxPrimaryCurrencyConversionDecimals
       )
     })

@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div, gt, gte, mul } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -124,7 +124,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (props.forceUpdateGuiCounter !== state.forceUpdateGuiCounter) {
       return {
-        fromAmountNative: bns.mul(props.fromExchangeAmount, props.fromWalletPrimaryInfo.exchangeDenomination.multiplier),
+        fromAmountNative: mul(props.fromExchangeAmount, props.fromWalletPrimaryInfo.exchangeDenomination.multiplier),
         fromExchangeAmount: props.fromExchangeAmount,
         toExchangeAmount: props.toExchangeAmount,
         forceUpdateGuiCounter: props.forceUpdateGuiCounter
@@ -162,7 +162,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const { fromAmountNative, whichWalletFocus } = this.state
     const fromNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
-    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0') && bns.gt(fromAmountNative, fromNativeBalance)
+    return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
   }
 
   launchFromWalletSelector = () => {
@@ -384,7 +384,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         fromIsoFiatCurrencyCode,
         fromCurrencyCode: exchangeCurrencyCode,
         fromWalletPrimaryInfo,
-        fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
+        fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
         fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromIsoFiatCurrencyCode),
         hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
       })
@@ -407,7 +407,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         toFiatCurrencyCode,
         toIsoFiatCurrencyCode,
         toWalletPrimaryInfo,
-        toExchangeAmount: bns.div(toNativeAmount, multiplier, DECIMAL_PRECISION),
+        toExchangeAmount: div(toNativeAmount, multiplier, DECIMAL_PRECISION),
         toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toIsoFiatCurrencyCode)
       })
     }

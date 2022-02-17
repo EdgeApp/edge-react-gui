@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div, eq, toFixed } from 'biggystring'
 import {
   type EdgeAccount,
   type EdgeCurrencyWallet,
@@ -402,13 +402,13 @@ class SendComponent extends React.PureComponent<Props, State> {
       if (nativeAmount === '') {
         cryptoAmountSyntax = s.strings.string_tap_to_edit
         cryptoAmountStyle = styles.amountTextMuted
-      } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
-        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
-        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
+      } else if (nativeAmount != null && !eq(nativeAmount, '0')) {
+        const displayAmount = div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+        const exchangeAmount = div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, isoFiatCurrencyCode, exchangeAmount)
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
-          fiatAmountSyntax = `${fiatSymbol} ${bns.toFixed(fiatAmount, 2, 2) ?? '0'}`
+          fiatAmountSyntax = `${fiatSymbol} ${toFixed(fiatAmount, 2, 2) ?? '0'}`
         }
       } else {
         cryptoAmountSyntax = `0 ${cryptoDisplayDenomination.name}`

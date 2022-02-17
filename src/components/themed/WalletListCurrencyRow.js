@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { abs, div, gt, mul, sub } from 'biggystring'
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
@@ -69,18 +69,18 @@ export const getRate = (getRateParams: GetRatesParams) => {
   // Yesterdays Exchange Rate
   const currencyPair = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
   const yesterdayUsdExchangeRate = exchangeRates[currencyPair] ?? '0'
-  const yesterdayExchangeRate = bns.mul(yesterdayUsdExchangeRate, fiatExchangeRate)
+  const yesterdayExchangeRate = mul(yesterdayUsdExchangeRate, fiatExchangeRate)
   // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rate
   if (zeroString(yesterdayExchangeRate)) return result()
   // Calculate the percentage difference in rate between yesterday and today
-  const differenceYesterday = bns.sub(todayExchangeRate, yesterdayExchangeRate)
-  const differencePercentage = bns.mul(bns.div(differenceYesterday, yesterdayExchangeRate, 3), '100')
+  const differenceYesterday = sub(todayExchangeRate, yesterdayExchangeRate)
+  const differencePercentage = mul(div(differenceYesterday, yesterdayExchangeRate, 3), '100')
   // Return zero result
   if (zeroString(differencePercentage)) return result('0.00')
   // If not zero, create the `percentageString`
-  const percentageString = bns.abs(differencePercentage)
+  const percentageString = abs(differencePercentage)
   // Return Positive result if greater then zero
-  if (bns.gt(differencePercentage, '0')) return result(`+${percentageString}`, 'Positive')
+  if (gt(differencePercentage, '0')) return result(`+${percentageString}`, 'Positive')
   // If it's not zero or positive, it must be a Negative result
   return result(`-${percentageString}`, 'Negative')
 }

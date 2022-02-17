@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div, mul } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -119,7 +119,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
-      const val = bns.div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      const val = div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       try {
         if (!isConnected) {
           showError(s.strings.fio_network_alert_text)
@@ -275,15 +275,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
-      cryptoAmount = bns.div(amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
-      exchangeAmount = bns.div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      cryptoAmount = div(amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+      exchangeAmount = div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
     } catch (e) {
       return null
     }
 
     const styles = getStyles(theme)
 
-    const fiatAmount = formatNumber(bns.mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
+    const fiatAmount = formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 

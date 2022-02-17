@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -172,7 +172,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   formatFio(val: string): number {
-    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DECIMAL_PRECISION)))
+    return parseFloat(truncateDecimals(div(val, this.props.denominationMultiplier, DECIMAL_PRECISION)))
   }
 
   renderFeeAndBalance() {

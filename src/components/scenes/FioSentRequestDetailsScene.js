@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul } from 'biggystring'
 import * as React from 'react'
 
 import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -33,7 +33,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
     const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
     const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
-    const fiatAmount = bns.mul(fiatPerCrypto, amount)
+    const fiatAmount = mul(fiatPerCrypto, amount)
 
     return formatNumber(fiatAmount, { toFixed: 2 })
   }
