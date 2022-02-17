@@ -12,7 +12,7 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import { type ReturnAddressLink } from '../types/DeepLinkTypes.js'
@@ -115,7 +115,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
   let fioAddress
   if (account && account.currencyConfig) {
-    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig.fio
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
     try {
       const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)

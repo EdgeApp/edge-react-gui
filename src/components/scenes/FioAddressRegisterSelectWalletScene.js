@@ -6,7 +6,7 @@ import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
+import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -277,7 +277,7 @@ export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchP
   (state, { route: { params } }) => ({
     state,
     fioWallets: state.ui.wallets.fioWallets,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: getDisplayDenomination(state, params.selectedWallet.currencyInfo.pluginId, FIO_STR),
     defaultFiatCode: state.ui.settings.defaultIsoFiat,
     wallets: state.ui.wallets.byId,
