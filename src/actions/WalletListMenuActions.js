@@ -181,7 +181,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const passwordValid = await dispatch(
           validatePassword({
-            message: s.strings.fragment_wallets_get_raw_key_wallet_confirm_message,
+            title: s.strings.fragment_wallets_get_raw_keys_title,
+            warning: s.strings.fragment_wallets_get_raw_keys_warning_message,
             submitLabel: s.strings.string_get_raw_keys
           })
         )
