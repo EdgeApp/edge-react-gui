@@ -52,6 +52,7 @@ type StateProps = {
   fiatPerCrypto: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
+  pluginId: string,
 
   // Fees
   feeCurrencyCode: string,
@@ -166,7 +167,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto } = this.props
+    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
       <Card marginRem={0}>
@@ -185,7 +186,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFocus
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
-        {getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
+        {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true ? (
           <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
         ) : null}
       </Card>
@@ -308,10 +309,11 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const name = getWalletName(wallet)
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
     const { symbolImageDarkMono } = getCurrencyIcon(wallet.currencyInfo.currencyCode, currencyCode)
+    const { pluginId } = wallet.currencyInfo
 
     // Denominations
-    const cryptoDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const cryptoExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const cryptoDenomination = getDisplayDenomination(state, pluginId, currencyCode)
+    const cryptoExchangeDenomination = getExchangeDenomination(state, pluginId, currencyCode)
     const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
     // FlipInput
@@ -335,8 +337,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const overridePrimaryExchangeAmount = div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
-    const feeDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    const feeExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeDisplayDenomination = getDisplayDenomination(state, pluginId, wallet.currencyInfo.currencyCode)
+    const feeExchangeDenomination = getExchangeDenomination(state, pluginId, wallet.currencyInfo.currencyCode)
     const transactionFee = convertTransactionFeeToDisplayFee(
       wallet,
       state.exchangeRates,
@@ -364,6 +366,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       fiatPerCrypto: fiatPerCrypto ?? '0',
       overridePrimaryExchangeAmount,
       forceUpdateGuiCounter,
+      pluginId,
 
       // Fees
       feeCurrencyCode: wallet.currencyInfo.currencyCode,

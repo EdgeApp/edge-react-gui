@@ -315,14 +315,14 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
   try {
     const state = getState()
     const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
-    const wallets = state.ui.wallets.byId
-    const wallet = wallets[selectedWalletId || state.ui.wallets.selectedWalletId]
+    const { currencyWallets } = state.core.account
+    const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
     // check if balance is zero
-    const balance = wallet.nativeBalances[currencyCode]
+    const balance = wallet.balances[currencyCode]
     if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal
-    const { displayBuyCrypto } = getSpecialCurrencyInfo(currencyCode)
+    const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
       threeButtonModal = await Airship.show(bridge => (

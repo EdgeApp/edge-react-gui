@@ -44,6 +44,7 @@ type StateProps = {
   toExchangeAmount: string,
   toWalletPrimaryInfo: GuiCurrencyInfo,
   toFiatToCrypto: string,
+  pluginId: string,
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
@@ -93,6 +94,7 @@ const defaultFromWalletInfo = {
   fromExchangeAmount: '',
   fromFiatToCrypto: '1',
   fromWalletId: '',
+  pluginId: '',
   hasMaxSpend: false
 }
 
@@ -208,9 +210,9 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   renderAlert = () => {
-    const { fromWalletBalances, fromCurrencyCode, insufficient, genericError } = this.props
+    const { fromWalletBalances, fromCurrencyCode, insufficient, genericError, pluginId } = this.props
 
-    const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
+    const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
     const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
@@ -374,7 +376,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       const fromWalletName = getWalletName(currencyWallets[fromWalletId])
       const { fiatCurrencyCode: fromFiatCurrencyCode, isoFiatCurrencyCode: fromIsoFiatCurrencyCode } = getWalletFiat(currencyWallets[fromWalletId])
       const {
-        currencyInfo: { currencyCode },
+        currencyInfo: { pluginId },
         balances: fromWalletBalances
       } = currencyWallets[fromWalletId]
 
@@ -388,7 +390,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         fromWalletPrimaryInfo,
         fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
         fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromIsoFiatCurrencyCode),
-        hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
+        pluginId,
+        hasMaxSpend: getSpecialCurrencyInfo(pluginId).noMaxSpend !== true
       })
     }
 

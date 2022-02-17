@@ -60,7 +60,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
 
     if (this.isValidFiatType()) {
       // check if account-based or not
-      const specialCurrencyInfo = getSpecialCurrencyInfo(selectedWalletType.currencyCode)
+      const specialCurrencyInfo = getSpecialCurrencyInfo(selectedWalletType.walletType)
       // check if eos-like
       if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
         navigation.navigate('createWalletName', {

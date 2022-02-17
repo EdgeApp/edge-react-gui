@@ -1,7 +1,7 @@
 // @flow
 
 import type { Disklet } from 'disklet'
-import type { EdgeMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetaToken } from 'edge-core-js'
 import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
@@ -36,6 +36,7 @@ type DispatchProps = {
 type StateProps = {
   disklet: Disklet,
   wallets: { [walletId: string]: GuiWallet },
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet },
   manageTokensPending: boolean,
   enabledTokens: string[],
   settingsCustomTokens: CustomTokenInfo[]
@@ -65,11 +66,12 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   getTokens(): EdgeMetaToken[] {
-    const { route, wallets } = this.props
+    const { route, wallets, currencyWallets } = this.props
     const { walletId } = route.params
-    const { metaTokens, currencyCode, type } = wallets[walletId]
+    const { metaTokens, type } = wallets[walletId]
+    const { pluginId } = currencyWallets[walletId].currencyInfo
 
-    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
 
     const customTokens = this.props.settingsCustomTokens
 
@@ -266,6 +268,7 @@ export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
     manageTokensPending: state.ui.wallets.manageTokensPending,
     settingsCustomTokens: state.ui.settings.customTokens,
     wallets: state.ui.wallets.byId,
+    currencyWallets: state.core.account.currencyWallets,
     enabledTokens: asSafeDefaultGuiWallet(state.ui.wallets.byId[params.walletId]).enabledTokens
   }),
   dispatch => ({

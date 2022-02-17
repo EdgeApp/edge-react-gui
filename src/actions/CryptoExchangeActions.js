@@ -133,13 +133,12 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const { currencyWallets } = state.core.account
   const wallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
-  const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  if (getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
+  if (getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).noMaxSpend) {
     const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
     Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
     return
   }
-  const dummyPublicAddress = getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
+  const dummyPublicAddress = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).dummyPublicAddress
   dispatch({ type: 'START_CALC_MAX' })
   let primaryNativeAmount = '0'
 

@@ -84,9 +84,9 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     const { route } = this.props
     const { error, isProcessing, input } = this.state
     const { selectedWalletType } = route.params
-    const { currencyCode } = selectedWalletType
+    const { walletType } = selectedWalletType
 
-    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    const specialCurrencyInfo = getSpecialCurrencyInfo(walletType)
     if (!specialCurrencyInfo.isImportKeySupported) throw new Error()
     const instructionSyntax = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
     const labelKeySyntax = specialCurrencyInfo.isImportKeySupported.privateKeyLabel

@@ -67,8 +67,9 @@ export const StakingChangeSceneComponent = (props: Props) => {
     fioAddresses
   } = props
   const styles = getStyles(theme)
+  const { pluginId } = currencyWallet.currencyInfo
 
-  const maxApy = SPECIAL_CURRENCY_INFO[currencyCode]?.stakeMaxApy
+  const maxApy = SPECIAL_CURRENCY_INFO[pluginId]?.stakeMaxApy
 
   const [nativeAmount, setNativeAmount] = useState('0')
   const [exchangeAmount, setExchangeAmount] = useState('0')
@@ -201,7 +202,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
       return
     }
 
-    const actionName = SPECIAL_CURRENCY_INFO[currencyCode].stakeActions != null ? SPECIAL_CURRENCY_INFO[currencyCode].stakeActions[change] : ''
+    const actionName = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? ''
     currencyWallet
       .makeSpend({
         spendTargets: [

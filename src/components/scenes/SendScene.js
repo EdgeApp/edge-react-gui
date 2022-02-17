@@ -459,11 +459,11 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderFees() {
     const { exchangeRates, transaction, theme, currencyWallets, getDisplayDenomination, getExchangeDenomination } = this.props
-    const { selectedCurrencyCode, selectedWalletId, recipientAddress } = this.state
-    const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
+    const { selectedWalletId, recipientAddress } = this.state
 
     if (recipientAddress) {
       const wallet = currencyWallets[selectedWalletId]
+      const { noChangeMiningFee } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
       const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, transaction, feeDisplayDenomination, feeDefaultDenomination)
@@ -520,10 +520,12 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderUniqueIdentifier() {
     const {
-      guiMakeSpendInfo: { uniqueIdentifier }
+      guiMakeSpendInfo: { uniqueIdentifier },
+      currencyWallets
     } = this.props
-    const { recipientAddress, selectedCurrencyCode } = this.state
-    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(selectedCurrencyCode)
+    const { recipientAddress, selectedWalletId } = this.state
+    const edgeWallet = currencyWallets[selectedWalletId]
+    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId)
 
     if (recipientAddress && uniqueIdentifierInfo != null) {
       const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo

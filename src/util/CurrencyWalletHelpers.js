@@ -21,9 +21,9 @@ export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: s
 }
 
 export const getAvailableBalance = (wallet: EdgeCurrencyWallet): string => {
-  const { currencyCode } = wallet.currencyInfo
+  const { currencyCode, pluginId } = wallet.currencyInfo
   let balance = wallet.balances[currencyCode] ?? '0'
-  if (SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) {
+  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
     const lockedBalance = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
     balance = sub(balance, lockedBalance)
   }
