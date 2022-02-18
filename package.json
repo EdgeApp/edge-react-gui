@@ -106,7 +106,7 @@
     "detox": "^18.10.0",
     "disklet": "^0.5.2",
     "edge-core-js": "^0.19.7",
-    "edge-currency-accountbased": "^0.13.1",
+    "edge-currency-accountbased": "^0.14.0",
     "edge-currency-bitcoin": "^4.9.20",
     "edge-currency-monero": "^0.3.4",
     "edge-exchange-plugins": "^0.12.10",
