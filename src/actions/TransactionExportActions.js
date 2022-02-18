@@ -1,10 +1,15 @@
 // @flow
 
-import { abs, div, lt } from 'biggystring'
+import { abs, div, lt, mul, toFixed } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
 
-import { DECIMAL_PRECISION } from '../util/utils.js'
+import { DECIMAL_PRECISION, isSentTransaction, splitTransactionCategory } from '../util/utils.js'
+
+const checkIfCategoryIsTransfer = (fullCategory: string): boolean => {
+  const { category } = splitTransactionCategory(fullCategory)
+  return category.toLowerCase() === 'transfer'
+}
 
 export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, txs: EdgeTransaction[], opts: EdgeGetTransactionsOptions): Promise<string> {
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
@@ -224,6 +229,43 @@ export function exportTransactionsToQBOInner(
   return exportOfx(header, body)
 }
 
+// Export Transaction To CSV
+
+type CSVData = {
+  currencyCode: string,
+  date: string,
+  time: string,
+  name: string,
+  amount: string,
+  denomName: string,
+  fiatCurrencyCode: string,
+  amountFiat: string,
+  networkFeeField: string,
+  category: string,
+  notes: string,
+  edgeTx: EdgeTransaction
+}
+
+const processCsvData = (data: CSVData) => {
+  const { currencyCode, date, time, name, amount, denomName, fiatCurrencyCode, amountFiat, networkFeeField, category, notes, edgeTx } = data
+  return {
+    CURRENCY_CODE: currencyCode,
+    DATE: date,
+    TIME: time,
+    PAYEE_PAYER_NAME: name,
+    AMT_ASSET: amount,
+    DENOMINATION: denomName,
+    [fiatCurrencyCode]: String(amountFiat),
+    CATEGORY: category,
+    NOTES: notes,
+    AMT_NETWORK_FEES_ASSET: networkFeeField,
+    TXID: edgeTx.txid,
+    OUR_RECEIVE_ADDRESSES: edgeTx.ourReceiveAddresses.join(','),
+    VER: 1,
+    DEVICE_DESCRIPTION: edgeTx.deviceDescription ?? ''
+  }
+}
+
 export function exportTransactionsToCSVInner(
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
@@ -237,33 +279,22 @@ export function exportTransactionsToCSVInner(
     const amount: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
     const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
-    let name: string = ''
-    let amountFiat: number = 0
-    let category: string = ''
-    let notes: string = ''
-    if (edgeTx.metadata) {
-      name = edgeTx.metadata.name ? edgeTx.metadata.name : ''
-      amountFiat = edgeTx.metadata.amountFiat ? edgeTx.metadata.amountFiat : 0
-      category = edgeTx.metadata.category ? edgeTx.metadata.category : ''
-      notes = edgeTx.metadata.notes ? edgeTx.metadata.notes : ''
-    }
+    const { metadata = {} } = edgeTx
+    const { name = '', category = '', notes = '' } = metadata
+    const amountFiat = metadata ? String(metadata.amountFiat) : '0'
+    const csvData = { currencyCode, date, time, name, amount, denomName, fiatCurrencyCode, amountFiat, networkFeeField, category, notes, edgeTx }
 
-    items.push({
-      CURRENCY_CODE: currencyCode,
-      DATE: date,
-      TIME: time,
-      PAYEE_PAYER_NAME: name,
-      AMT_ASSET: amount,
-      DENOMINATION: denomName,
-      [fiatCurrencyCode]: String(amountFiat),
-      CATEGORY: category,
-      NOTES: notes,
-      AMT_NETWORK_FEES_ASSET: networkFeeField,
-      TXID: edgeTx.txid,
-      OUR_RECEIVE_ADDRESSES: edgeTx.ourReceiveAddresses.join(','),
-      VER: 1,
-      DEVICE_DESCRIPTION: edgeTx.deviceDescription ?? ''
-    })
+    if (isSentTransaction(edgeTx) && checkIfCategoryIsTransfer(category)) {
+      const absFiat = abs(amountFiat.toString())
+      const absAmount = abs(amount)
+      const rate = absAmount !== '0' ? div(absFiat, absAmount, 8) : '0'
+      const networkFeeFiat = toFixed(mul(networkFeeField, rate), 2, 2)
+
+      items.push(processCsvData({ ...csvData, networkFeeField: '' }))
+      items.push(processCsvData({ ...csvData, amount: '', amountFiat: networkFeeFiat }))
+    } else {
+      items.push(processCsvData(csvData))
+    }
   }
 
   return csvStringify(items, {
