@@ -802,3 +802,9 @@ export function logPrefix(wallet: EdgeCurrencyWallet): string {
   const name = wallet.name ? wallet.name : 'NULL'
   return `${prettyDate} ${wallet.currencyInfo.currencyCode}-${wallet.id.slice(0, 2)}-${name}`
 }
+
+export const getDenominationName = (wallet: EdgeCurrencyWallet, denomination?: string): string => {
+  if (denomination == null) return ''
+  const denominationObject = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)
+  return denominationObject?.name ?? ''
+}

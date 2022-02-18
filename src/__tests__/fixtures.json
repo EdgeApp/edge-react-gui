@@ -199,5 +199,112 @@
       "multiplier": "1000000000"
     }],
     "output": ["0.0000013 ", "548735948.753 ", "0.1 ", ""]
+  },
+  "wallets": {
+    "BTC": {
+      "balances": {
+        "BTC": "0"
+      },
+      "blockHeight": 730254,
+      "currencyInfo": {
+        "addressExplorer": "https://blockchair.com/bitcoin/address/%s?from=edgeapp",
+        "blockExplorer": "https://blockchair.com/bitcoin/block/%s?from=edgeapp",
+        "currencyCode": "BTC",
+        "defaultSettings": {
+          "customFeeSettings": ["satPerByte"],
+          "disableFetchingServers": false,
+          "electrumServers": ["electrum://electrum-bc-az-eusa.airbitz.co:50001", "electrum://electrum.hsmiths.com:8080", "electrum://node.arihanc.com:50001", "electrum://electrum.petrkr.net:50001", "electrum://electrum2.everynothing.net:50001", "electrum://currentlane.lovebitco.in:50001", "electrum://electrum.hsmiths.com:50001", "electrum://electrumx.westeurope.cloudapp.azure.com:50001"]
+        },
+        "denominations": [{
+          "multiplier": "100000000",
+          "name": "BTC",
+          "symbol": "₿"
+        }, {
+          "multiplier": "100000",
+          "name": "mBTC",
+          "symbol": "m₿"
+        }, {
+          "multiplier": "100",
+          "name": "bits",
+          "symbol": "ƀ"
+        }, {
+          "multiplier": "1",
+          "name": "sats",
+          "symbol": "s"
+        }],
+        "displayName": "Bitcoin",
+        "pluginId": "bitcoin",
+        "transactionExplorer": "https://blockchair.com/bitcoin/transaction/%s?from=edgeapp",
+        "walletType": "wallet:bitcoin"
+      },
+      "displayPrivateSeed": "888888888853412b8e63329923b1eca8b5913d075e16eeeeeeeeeeeeeeeeeeee",
+      "displayPublicSeed": "xpub68o8PTDKqBo7JqoY7qM7huRi63NpLGAZME5iAMe8wkqaoC8C5FxM1HFZkM5qhBNkYfTqP9WhQXWPw2uz5PHHHHHxxxxxxxxxxxxxxxxxxxx",
+      "fiatCurrencyCode": "iso:USD",
+      "id": "EJ8kME1SnONgHfhWZEJgag6ot+IjZl32Lk173rzQptw=",
+      "keys": {
+        "bitcoinKey": "hQhKU9BTQSuOYzKZI7HsqLWRPQdeFmYm+FQaBbPMIzo=",
+        "dataKey": "/EyBG8/RPVs4JvJeXWkrTXGZs0hgXKcR0lCR7K97Ydg=",
+        "format": "bip32",
+        "syncKey": "6s5yF9Ug13t5vF0rnyuD7ok3BNA="
+      },
+      "name": "My Wallet",
+      "publicWalletInfo": {
+        "id": "EJ8kME1SnONgHfhWZEJgag6ot+IjZl32Lk173rzQptw=",
+        "keys": {},
+        "type": "wallet:bitcoin"
+      },
+      "stakingStatus": {
+        "stakedAmounts": []
+      },
+      "syncRatio": 1,
+      "type": "wallet:bitcoin"
+    }
+  },
+  "transactions": {
+    "edgeTxs": [{
+      "txid": "txid1",
+      "date": 1524476980,
+      "currencyCode": "BTC",
+      "blockHeight": 500000,
+      "nativeAmount": "123000000",
+      "networkFee": "1000",
+      "ourReceiveAddresses": [
+        "receiveaddress1", "receiveaddress2"
+      ],
+      "signedTx": "298t983y4t983y4t93y4g98oeshfgi4t89w394t",
+      "parentNetworkFee": "10002",
+      "metadata": {
+        "name": "Crazy Person",
+        "category": "Income: Mo Money",
+        "notes": "Hell yeah! Thanks for the fish <<&&>>",
+        "amountFiat": "12000.45"
+      },
+      "deviceDescription": "iphone12"
+    },
+    {
+      "txid": "txid2",
+      "date": 1524486980,
+      "currencyCode": "BTC",
+      "blockHeight": 500000,
+      "nativeAmount": "-321000000",
+      "networkFee": "2000",
+      "ourReceiveAddresses": [
+        "receiveaddress3",
+        "receiveaddress4"
+      ],
+      "signedTx": "fiuwh34f98h3tiuheirgserg",
+      "parentNetworkFee": "20001",
+      "metadata": {
+        "name": "Crazy Person 2",
+        "category": "Transfer: Airbitz",
+        "notes": "Hell yeah! Here's a fish",
+        "amountFiat": "36001.45"
+      },
+      "deviceDescription": "iphone12"
+    }],
+    "options": {
+      "currencyCode": "BTC",
+      "denomination": "100"
+    }
   }
 }

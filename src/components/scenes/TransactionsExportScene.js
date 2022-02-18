@@ -7,7 +7,7 @@ import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { exportTransactionsToCSV, exportTransactionsToQBO } from '../../actions/TransactionExportActions.js'
+import { exportTransactions } from '../../actions/TransactionExportActions.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
@@ -197,7 +197,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
-    const csvFile = await exportTransactionsToCSV(sourceWallet, txs, transactionOptions)
+    const csvFile = exportTransactions('csv', sourceWallet, txs, transactionOptions)
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showError(s.strings.export_transaction_export_error)
       return
@@ -213,7 +213,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportQbo) {
-      const qboFile = await exportTransactionsToQBO(sourceWallet, txs, transactionOptions)
+      const qboFile = exportTransactions('qbo', sourceWallet, txs, transactionOptions)
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',
