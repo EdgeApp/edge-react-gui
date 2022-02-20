@@ -426,6 +426,8 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
   return resolveValue === 'confirm'
 }
 
+let globalCounter = 0
+
 export const updateTransactionAmount =
   (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -458,9 +460,12 @@ export const updateTransactionAmount =
       return
     }
 
+    const myCount = ++globalCounter
+
     coreWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
+        if (myCount < globalCounter) return
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -472,6 +477,7 @@ export const updateTransactionAmount =
         })
       })
       .catch(error => {
+        if (myCount < globalCounter) return
         let customError
 
         if (error.labelCode && coreWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {
