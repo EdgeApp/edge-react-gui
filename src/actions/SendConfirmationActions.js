@@ -426,6 +426,8 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
   return resolveValue === 'confirm'
 }
 
+let lastUpdateTransactionAmountNonce = 0
+
 export const updateTransactionAmount =
   (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -458,9 +460,14 @@ export const updateTransactionAmount =
       return
     }
 
+    // Fixes race-condition caused by concurrent makeSpend calls from each
+    // key stroke from user input
+    const nonce = ++lastUpdateTransactionAmountNonce
+
     coreWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
+        if (nonce < lastUpdateTransactionAmountNonce) return
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -472,6 +479,7 @@ export const updateTransactionAmount =
         })
       })
       .catch(error => {
+        if (nonce < lastUpdateTransactionAmountNonce) return
         let customError
 
         if (error.labelCode && coreWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {
