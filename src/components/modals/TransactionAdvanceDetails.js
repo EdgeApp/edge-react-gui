@@ -74,25 +74,23 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     })
   }
 
-  renderFeeOptions(styles: StyleSheet) {
-    const { networkFeeOption, requestedCustomFee } = this.props.transaction
+  renderFeeOptions(styles: StyleSheet): string {
+    const { networkFeeOption } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
-      return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
+      return s.strings.mining_fee_custom_label_choice
+      // return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
     }
-    return <EdgeText style={styles.text}>{networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</EdgeText>
+
+    return networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice
   }
 
   renderFees(styles: StyleSheet, title: string, fees: Object = {}) {
     const feeRows = []
     for (const feeKey of Object.keys(fees)) {
       const feeString = localizedFeeText[feeKey] ?? feeKey
-      feeRows.push(
-        <View key={feeKey} style={styles.feesRow}>
-          <EdgeText style={styles.feesRowText}>{feeString + ' '}</EdgeText>
-          <EdgeText style={styles.feesRowText}>{fees[feeKey]}</EdgeText>
-        </View>
-      )
+      const feeFullString = `${feeString} ${fees[feeKey]}`
+      feeRows.push(<EdgeText key={feeKey}>{feeFullString}</EdgeText>)
     }
     return (
       <View style={styles.feesContainer}>
@@ -124,10 +122,12 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
                 onPress={this.openUrl}
               />
             )}
-            {(networkFeeOption != null || feeRateUsed != null) && (
+            {networkFeeOption != null && (
+              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions(styles)} />
+            )}
+            {feeRateUsed != null && (
               <Tile type="static" title={s.strings.transaction_details_advance_details_fee_info}>
-                {networkFeeOption != null ? this.renderFeeOptions(styles) : null}
-                {feeRateUsed != null ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
+                {feeRateUsed != null && this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed)}
               </Tile>
             )}
             {txSecret != null && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
