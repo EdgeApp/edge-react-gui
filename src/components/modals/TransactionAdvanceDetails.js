@@ -2,7 +2,7 @@
 
 import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
+import { Linking, Platform, ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import SafariView from 'react-native-safari-view'
 
@@ -74,7 +74,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     })
   }
 
-  renderFeeOptions(styles: StyleSheet): string {
+  renderFeeOptions(): string {
     const { networkFeeOption } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
@@ -85,7 +85,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     return networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice
   }
 
-  renderFees(styles: StyleSheet, fees: Object = {}): string {
+  renderFees(fees: Object = {}): string {
     let feeValueText = ''
 
     for (const feeKey of Object.keys(fees)) {
@@ -119,11 +119,9 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
               />
             )}
             {networkFeeOption != null && (
-              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions(styles)} />
+              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />
             )}
-            {feeRateUsed != null && (
-              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_used} body={this.renderFees(styles, feeRateUsed)} />
-            )}
+            {feeRateUsed != null && <Tile type="static" title={s.strings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
             {txSecret != null && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
             {txSecret != null && recipientAddress !== '' && txid !== '' && (
               <Tile
@@ -163,25 +161,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   body: {
     maxHeight: theme.rem(20)
-  },
-  text: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
-  },
-  feesContainer: {
-    width: '100%',
-    flexDirection: 'row'
-  },
-  feesBodyContainer: {
-    flexDirection: 'column',
-    marginLeft: theme.rem(0.25)
-  },
-  feesRow: {
-    flexDirection: 'row'
-  },
-  feesRowText: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
   }
 }))
 
