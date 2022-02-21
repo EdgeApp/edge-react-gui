@@ -492,7 +492,6 @@ const strings = {
   transaction_details_choose_a_sub_category: 'Choose a sub-category',
   transaction_details_recipient_addresses: 'Recipient Addresses',
   transaction_details_advance_details_header: 'Advanced Details',
-  transaction_details_advance_details_fee_info: 'Fee Info',
   transaction_details_advance_details_fee_setting: 'Fee Setting',
   transaction_details_advance_details_device: 'Device',
   transaction_details_advance_details_fee_used: 'Fee Used',

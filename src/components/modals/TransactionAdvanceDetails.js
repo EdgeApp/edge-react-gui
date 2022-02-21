@@ -85,19 +85,15 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     return networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice
   }
 
-  renderFees(styles: StyleSheet, title: string, fees: Object = {}) {
-    const feeRows = []
+  renderFees(styles: StyleSheet, fees: Object = {}): string {
+    let feeValueText = ''
+
     for (const feeKey of Object.keys(fees)) {
-      const feeString = localizedFeeText[feeKey] ?? feeKey
-      const feeFullString = `${feeString} ${fees[feeKey]}`
-      feeRows.push(<EdgeText key={feeKey}>{feeFullString}</EdgeText>)
+      const feeFullString = `${localizedFeeText[feeKey] ?? feeKey} ${fees[feeKey]}`
+      feeValueText = feeValueText === '' ? feeValueText + feeFullString : feeValueText + `\n${feeFullString}`
     }
-    return (
-      <View style={styles.feesContainer}>
-        <EdgeText style={styles.feesRowText}>{title + ':'}</EdgeText>
-        <View style={styles.feesBodyContainer}>{feeRows}</View>
-      </View>
-    )
+
+    return feeValueText
   }
 
   render() {
@@ -126,9 +122,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
               <Tile type="static" title={s.strings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions(styles)} />
             )}
             {feeRateUsed != null && (
-              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_info}>
-                {feeRateUsed != null && this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed)}
-              </Tile>
+              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_used} body={this.renderFees(styles, feeRateUsed)} />
             )}
             {txSecret != null && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
             {txSecret != null && recipientAddress !== '' && txid !== '' && (
