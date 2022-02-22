@@ -152,6 +152,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
         const pluginId = token.walletType.replace('wallet:', '')
         const denom = token.denominations.find(denom => denom.name === token.currencyCode)
         if (denom != null) {
+          if (accountInitObject.denominationSettings[pluginId] == null) {
+            accountInitObject.denominationSettings[pluginId] = {}
+          }
           accountInitObject.denominationSettings[pluginId][token.currencyCode] = denom
         }
       }
