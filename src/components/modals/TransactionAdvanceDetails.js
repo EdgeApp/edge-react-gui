@@ -75,11 +75,10 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   }
 
   renderFeeOptions(): string {
-    const { networkFeeOption } = this.props.transaction
+    const { networkFeeOption, requestedCustomFee } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
-      return s.strings.mining_fee_custom_label_choice
-      // return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
+      return `${s.strings.mining_fee_custom_label_choice}\n${this.renderFees(requestedCustomFee)}`
     }
 
     return networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice
