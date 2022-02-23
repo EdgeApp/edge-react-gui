@@ -131,7 +131,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
               />
             )}
             {signedTx != null && signedTx !== '' ? (
-              <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} />
+              <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
             ) : null}
 
             {deviceDescription != null && <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={deviceDescription} />}

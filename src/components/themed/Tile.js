@@ -11,6 +11,12 @@ import { showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
+const textHeights = {
+  small: 2,
+  medium: 3,
+  large: 0
+}
+
 type OwnProps = {
   body?: string,
   children?: React.Node,
@@ -18,7 +24,8 @@ type OwnProps = {
   onPress?: () => void,
   title: string,
   type: 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable',
-  contentPadding?: boolean
+  contentPadding?: boolean,
+  maximumHeight?: 'small' | 'medium' | 'large'
 }
 type Props = OwnProps & ThemeProps
 
@@ -30,9 +37,11 @@ class TileComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { body, title, contentPadding = true, children, theme, type, error } = this.props
+    const { body, title, contentPadding = true, children, theme, type, maximumHeight = 'medium', error } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
+    const numberOfLines = textHeights[maximumHeight]
+
     if (type === 'loading') {
       return (
         <View>
@@ -56,7 +65,7 @@ class TileComponent extends React.PureComponent<Props> {
               {type === 'questionable' && <SimpleLineIcons name="question" style={styles.editIcon} />}
               <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
               {typeof body === 'string' && (
-                <EdgeText style={styles.textBody} numberOfLines={3}>
+                <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
                   {body}
                 </EdgeText>
               )}
