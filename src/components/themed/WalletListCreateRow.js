@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
 import { refreshWallet, selectWallet } from '../../actions/WalletActions.js'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { getPluginId, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { connect } from '../../types/reactRedux.js'
@@ -50,7 +50,7 @@ class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchP
       const { walletType } = createWalletType
       const wallet = await showFullScreenSpinner(
         s.strings.wallet_list_modal_creating_wallet,
-        this.props.createWallet(SPECIAL_CURRENCY_INFO[walletType].initWalletName, walletType, defaultIsoFiat)
+        this.props.createWallet(SPECIAL_CURRENCY_INFO[getPluginId(walletType)].initWalletName, walletType, defaultIsoFiat)
       )
       onPress(wallet.id, wallet.currencyInfo.currencyCode)
     } catch (error) {
