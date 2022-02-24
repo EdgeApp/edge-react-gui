@@ -1,5 +1,47 @@
 # edge-react-gui
 
+## 2.12.0 (2022-02-23)
+
+- Add BNB Smart Chain support
+- Add CELO support with CUSD and CEUR tokens
+- Add new swap partner Exolix
+- Add support for splitting between EVM-compatible chains
+- Show available unlocked balance in flip input
+- Add additional warning before display wallet private keys
+- Fix incorrect spend race condition
+- Add imported wallet flag to log output
+- Convert special currency info map keys from currency code to pluginId
+- Fix fee display in flip input
+- Import biggystring functions individually
+- Upgrade edge-core-js to v0.19.9
+  - fixed: Stop adding undefined entries to EdgeAccount.currencyWallets.
+  - added: Define a new EdgeToken type and make that available as EdgeCurrencyConfig.builtinTokens and EdgeCurrencyConfig.customTokens.
+  - added: Define a new EdgeCurrencyPlugin.getBuiltinTokens method, and use that to populate EdgeCurrencyConfig.builtinTokens when available.
+  - added: Pass EdgeToken fields to EdgeCurrencyEngine.addCustomToken, along with the existing EdgeMetaToken fields.
+  - deprecated: EdgeCurrencyInfo.defaultSettings
+  - deprecated: EdgeCurrencyInfo.metaTokens
+  - deprecated: EdgeCurrencyInfo.symbolImage
+  - deprecated: EdgeCurrencyInfo.symbolImageDarkMono
+  - added: Include an imported flag with all new wallet keys, to indicate whether they were derived freshly or imported from user-entered data.
+  - fixed: Do not hang forever if creating a currency engine fails.
+  - changed: Add comments and improve organization in the public types file.
+  - changed: Use cleaners to load & save many files for additional safety.
+  - fixed: Improve wallet start-up performance by loading fewer files.
+- Upgrade edge-currency-accountbased to v0.14.1
+  - Add Binance Smart Chain (BNB) support
+  - Add Celo support
+  - Add getSplittableTypes method to ethEngine
+  - Use binary search in ethEngine's getMaxSpendable for main chain currency code
+  - Update ZEC checkpoints
+- Upgrade edge-exchange-plugins to v0.12.11
+  - Add Binance Smart Chain to swap partners
+  - Changenow: Fix corner case where standard flow was skipped
+  - Exolix: Update plugin to use mainchain:tokencode values in requests
+  - Coingecko: Add Celo and Aave unique IDs
+  - Godex: Disable DGB selling
+  - Use pluginIds instead of currency code keys in transcription and invalid-code maps
+  - Add helper function and transcription maps for changing mainnet codes
+
 ## 2.11.1 (2022-02-15)
 
 - Fix activation-needed wallet creation flow
