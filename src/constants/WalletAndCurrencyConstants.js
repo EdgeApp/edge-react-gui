@@ -480,6 +480,16 @@ export const SPECIAL_CURRENCY_INFO: {
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
+  eboost: {
+    initWalletName: s.strings.string_first_eboost_wallet_name,
+    chainCode: 'EBST',
+    isPrivateKeySweepable: true
+  },
+  ufo: {
+    initWalletName: s.strings.string_first_ufo_wallet_name,
+    chainCode: 'ufo',
+    isPrivateKeySweepable: true
+  },
   fantom: {
     initWalletName: s.strings.string_first_fantom_wallet_name,
     chainCode: 'FTM',
