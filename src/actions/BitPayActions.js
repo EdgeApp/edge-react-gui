@@ -82,10 +82,11 @@ export async function launchBitPay(
   const isTestBp = uri.toLowerCase().includes('test.bitpay.com')
   const paymentCurrencies: string[] = options
     .map<any>(po => po.currency)
-    .filter(currency => {
-      // Omit 'BTC' if using BitPay testnet, since our testnet BTC has its own currency code.
-      return bitPaySupportedCurrencyCodes.find(currency) != null && !(isTestBp && currency === 'BTC')
-    })
+    .filter(
+      currency =>
+        // Omit 'BTC' if using BitPay testnet, since our testnet BTC has its own currency code.
+        bitPaySupportedCurrencyCodes.includes(currency) && !(isTestBp && currency === 'BTC')
+    )
 
   // Add our test BTC currency code for BitPay testnet
   if (isTestBp) {
