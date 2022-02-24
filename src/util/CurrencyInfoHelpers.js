@@ -14,7 +14,9 @@ type CurrencyIcons = {
   symbolImageDarkMono: string
 }
 
-const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code].isAccountActivationRequired ?? false)
+const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired ?? false)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function getCurrencyIcon(chainCode: string, currencyCode: string = chainCode): CurrencyIcons {
   const url = `${EDGE_CONTENT_SERVER}/${chainCode}/${currencyCode}`

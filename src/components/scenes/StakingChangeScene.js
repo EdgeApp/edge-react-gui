@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
-import { CURRENCY_PLUGIN_NAMES, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTimeDate } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
@@ -67,8 +67,9 @@ export const StakingChangeSceneComponent = (props: Props) => {
     fioAddresses
   } = props
   const styles = getStyles(theme)
+  const { pluginId } = currencyWallet.currencyInfo
 
-  const maxApy = SPECIAL_CURRENCY_INFO[currencyCode]?.stakeMaxApy
+  const maxApy = SPECIAL_CURRENCY_INFO[pluginId]?.stakeMaxApy
 
   const [nativeAmount, setNativeAmount] = useState('0')
   const [exchangeAmount, setExchangeAmount] = useState('0')
@@ -201,7 +202,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
       return
     }
 
-    const actionName = SPECIAL_CURRENCY_INFO[currencyCode].stakeActions != null ? SPECIAL_CURRENCY_INFO[currencyCode].stakeActions[change] : ''
+    const actionName = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? ''
     currencyWallet
       .makeSpend({
         spendTargets: [
@@ -359,7 +360,7 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
       }
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
-    const currencyPlugin = state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES[currencyCode]]
+    const currencyPlugin = state.core.account.currencyConfig[currencyWallet.currencyInfo.pluginId]
     const guiWallet = state.ui.wallets.byId[walletId]
     const stakingBalances = {}
 

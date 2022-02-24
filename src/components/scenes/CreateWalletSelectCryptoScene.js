@@ -56,8 +56,8 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     }
 
     // Does this wallet type support private key import?
-    const { currencyCode } = createWalletType
-    const { isImportKeySupported } = getSpecialCurrencyInfo(currencyCode)
+    const { walletType } = createWalletType
+    const { isImportKeySupported } = getSpecialCurrencyInfo(walletType)
 
     // Go to the next screen:
     if (isImportKeySupported) {
@@ -114,7 +114,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     const sortedArray = getCreateWalletTypes(account)
     const filteredArray = sortedArray.filter(
       entry =>
-        !SPECIAL_CURRENCY_INFO[entry.currencyCode]?.keysOnlyMode &&
+        !SPECIAL_CURRENCY_INFO[entry.walletType]?.keysOnlyMode &&
         (entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0)
     )
 

@@ -52,7 +52,6 @@ type StateProps = {
   defaultSelectedWalletCurrencyCode: string,
   error: Error | null,
   exchangeRates: GuiExchangeRates,
-  lockInputs?: boolean,
   nativeAmount: string | null,
   pending: boolean,
   pin: string,
@@ -60,8 +59,6 @@ type StateProps = {
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
   transactionMetadata: EdgeMetadata | null,
-  uniqueIdentifier?: string,
-  wallets: { [walletId: string]: EdgeCurrencyWallet },
   isSendUsingFioAddress?: boolean,
   guiMakeSpendInfo: GuiMakeSpendInfo,
   maxSpendSet: boolean,
@@ -123,13 +120,13 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   setWallets(props: Props, selectedWalletId?: string, selectedCurrencyCode?: string): WalletStates {
-    const { account, defaultSelectedWalletId, defaultSelectedWalletCurrencyCode, wallets } = this.props
+    const { account, defaultSelectedWalletId, defaultSelectedWalletCurrencyCode, currencyWallets } = this.props
     const walletId = selectedWalletId || defaultSelectedWalletId
     const currencyCode = selectedCurrencyCode || defaultSelectedWalletCurrencyCode
     return {
       selectedWalletId: walletId,
       selectedCurrencyCode: currencyCode,
-      wallet: wallets[walletId],
+      wallet: currencyWallets[walletId],
       coreWallet: account && account.currencyWallets ? account.currencyWallets[walletId] : undefined
     }
   }
@@ -344,7 +341,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectedWallet() {
-    const { lockInputs, route } = this.props
+    const {
+      guiMakeSpendInfo: { lockInputs },
+      route
+    } = this.props
     const { lockTilesMap = {} } = route.params
 
     const { wallet, selectedCurrencyCode } = this.state
@@ -361,7 +361,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAddressTile() {
-    const { route, lockInputs } = this.props
+    const {
+      route,
+      guiMakeSpendInfo: { lockInputs }
+    } = this.props
     const { isCameraOpen, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { recipientAddress, coreWallet, selectedCurrencyCode } = this.state
 
@@ -385,7 +388,16 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, nativeAmount, theme, route, currencyWallets, getExchangeDenomination, getDisplayDenomination } = this.props
+    const {
+      exchangeRates,
+      guiMakeSpendInfo: { lockInputs },
+      nativeAmount,
+      theme,
+      route,
+      currencyWallets,
+      getExchangeDenomination,
+      getDisplayDenomination
+    } = this.props
     const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { wallet, selectedCurrencyCode, recipientAddress } = this.state
     const { isoFiatCurrencyCode } = getWalletFiat(wallet)
@@ -447,11 +459,11 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderFees() {
     const { exchangeRates, transaction, theme, currencyWallets, getDisplayDenomination, getExchangeDenomination } = this.props
-    const { selectedCurrencyCode, selectedWalletId, recipientAddress } = this.state
-    const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
+    const { selectedWalletId, recipientAddress } = this.state
 
     if (recipientAddress) {
       const wallet = currencyWallets[selectedWalletId]
+      const { noChangeMiningFee } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
       const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, transaction, feeDisplayDenomination, feeDefaultDenomination)
@@ -507,9 +519,13 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderUniqueIdentifier() {
-    const { uniqueIdentifier } = this.props
-    const { recipientAddress, selectedCurrencyCode } = this.state
-    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(selectedCurrencyCode)
+    const {
+      guiMakeSpendInfo: { uniqueIdentifier },
+      currencyWallets
+    } = this.props
+    const { recipientAddress, selectedWalletId } = this.state
+    const edgeWallet = currencyWallets[selectedWalletId]
+    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId)
 
     if (recipientAddress && uniqueIdentifierInfo != null) {
       const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
@@ -647,8 +663,6 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
       error,
       exchangeRates: state.exchangeRates,
-      lockInputs: guiMakeSpendInfo.lockInputs,
-      metadata: guiMakeSpendInfo && guiMakeSpendInfo.metadata ? guiMakeSpendInfo : undefined,
       nativeAmount,
       pending,
       pin: state.ui.scenes.sendConfirmation.pin,
@@ -656,8 +670,6 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       sliderDisabled: !transaction || !!error || !!pending,
       transaction,
       transactionMetadata,
-      uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
-      wallets: state.core.account.currencyWallets,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
       maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet,

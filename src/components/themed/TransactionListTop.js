@@ -37,6 +37,7 @@ type OwnProps = {
 type StateProps = {
   cryptoAmount: string,
   currencyCode: string,
+  pluginId: string,
   denominationName: string,
   fiatCurrencyCode: string,
   fiatBalance: string,
@@ -119,10 +120,10 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderStakingBox() {
-    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
+    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode, pluginId } = this.props
     const styles = getStyles(theme)
 
-    if (!SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) return null
+    if (!SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) return null
 
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
 
@@ -351,6 +352,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const { currencyInfo } = state.core.account.currencyWallets[selectedWalletId]
+    const { pluginId } = currencyInfo
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
@@ -367,7 +369,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
     const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
-    if (SPECIAL_CURRENCY_INFO[selectedCurrencyCode]?.isStakingSupported) {
+    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
         const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
 
@@ -388,6 +390,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       currencyCode: selectedCurrencyCode,
+      pluginId,
       cryptoAmount: cryptoAmountFormat,
       denominationName: currencyDenomination.name,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,

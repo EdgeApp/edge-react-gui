@@ -1,6 +1,6 @@
 // @flow
 import { mul, toFixed } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -9,7 +9,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { SEND, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
+import { getPluginId } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -39,14 +39,14 @@ export const createCurrencyWallet =
   }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const fetchAccountActivationInfo = (walletType: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  const currencyPluginName = getPluginId(walletType)
+  const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[currencyPluginName]
   try {
     const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
-    const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyCode)
+    const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
     const activationInfo = await Promise.all([supportedCurrencies, activationCost])
     const modifiedSupportedCurrencies = { ...activationInfo[0].result, FTC: false }
     dispatch({
@@ -89,11 +89,11 @@ export const fetchWalletAccountActivationPaymentInfo =
     }
   }
 
-export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const checkHandleAvailability = (walletType: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
   const state = getState()
   const { account } = state.core
-  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPluginName = getPluginId(walletType)
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     const data = await currencyPlugin.otherMethods.validateAccount(accountName)
@@ -120,14 +120,12 @@ export const createAccountTransaction =
     const { currencyWallets } = account
     const createdWallet = state.ui.wallets.byId[createdWalletId]
     const createdCurrencyWallet = currencyWallets[createdWalletId]
-    const paymentWallet = currencyWallets[paymentWalletId]
+    const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdWallet.currencyCode
-    const currencyPluginName = CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
-    const currencyPlugin = account.currencyConfig[currencyPluginName]
+    const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-    const paymentWalletPluginName = CURRENCY_PLUGIN_NAMES[paymentWallet.currencyInfo.currencyCode]
-    const paymentDenom = getExchangeDenomination(state, paymentWalletPluginName, currencyCode)
+    const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {

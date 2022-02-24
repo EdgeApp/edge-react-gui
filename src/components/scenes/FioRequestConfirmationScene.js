@@ -5,7 +5,6 @@ import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-c
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkPubAddress, getRemainingBundles } from '../../modules/FioAddress/util'
@@ -335,7 +334,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
         isConnected,
         walletId: '',
         currencyCode: '',
-        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+        fioPlugin: account.currencyConfig.fio,
         connectedWalletsByFioAddress: {}
       }
     }
@@ -373,7 +372,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       isConnected,
       walletId: state.ui.wallets.selectedWalletId,
       currencyCode: state.ui.wallets.selectedCurrencyCode,
-      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+      fioPlugin: account.currencyConfig.fio,
       connectedWalletsByFioAddress: state.ui.fio.connectedWalletsByFioAddress
     }
   },
