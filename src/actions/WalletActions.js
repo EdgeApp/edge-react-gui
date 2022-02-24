@@ -46,7 +46,7 @@ export const selectWallet = (walletId: string, currencyCode: string, alwaysActiv
   if (wallet.paused) wallet.changePaused(false).catch(showError)
 
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
+  const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
   if (isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
     const currentWalletId = state.ui.wallets.selectedWalletId
@@ -80,7 +80,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
   const {
     fiatCurrencyCode,
     name,
-    currencyInfo: { currencyCode }
+    currencyInfo: { currencyCode, pluginId }
   } = wallet
   const walletName = name ?? ''
   const { publicAddress } = await wallet.getReceiveAddress()
@@ -104,7 +104,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
     const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
     if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
     const selectedWalletType = makeCreateWalletType(currencyInfo)
-    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
     if (specialCurrencyInfo.skipAccountNameValidation) {
       Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
         selectedFiat: selectedFiat,

@@ -2,7 +2,7 @@
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
-import { IMAGE_SERVER_URL, SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
+import { EDGE_CONTENT_SERVER, SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
 
 /**
@@ -14,10 +14,12 @@ type CurrencyIcons = {
   symbolImageDarkMono: string
 }
 
-const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code].isAccountActivationRequired ?? false)
+const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired ?? false)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function getCurrencyIcon(chainCode: string, currencyCode: string = chainCode): CurrencyIcons {
-  const url = `${IMAGE_SERVER_URL}/${chainCode}/${currencyCode}`
+  const url = `${EDGE_CONTENT_SERVER}/${chainCode}/${currencyCode}`
   return {
     symbolImage: `${url}.png`,
     symbolImageDarkMono: `${url}_dark.png`

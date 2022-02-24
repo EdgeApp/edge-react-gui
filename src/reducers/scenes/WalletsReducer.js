@@ -33,7 +33,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
           enabledTokensOnWallet.forEach(customToken => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].balances[customToken] ?? '0'
           })
-          if (SPECIAL_CURRENCY_INFO[tempWallet.currencyCode]?.isStakingSupported) {
+          if (SPECIAL_CURRENCY_INFO[wallets[walletId].currencyInfo.pluginId]?.isStakingSupported) {
             for (const cCodeKey in STAKING_BALANCES) {
               const stakingCurrencyCode = `${tempWallet.currencyCode}${STAKING_BALANCES[cCodeKey]}`
               tempWallet.nativeBalances[stakingCurrencyCode] = wallets[walletId].balances[stakingCurrencyCode] ?? '0'
@@ -138,7 +138,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
           guiWallet.nativeBalances[customToken] = wallet.balances[customToken] ?? '0'
         })
 
-        if (SPECIAL_CURRENCY_INFO[guiWallet.currencyCode]?.isStakingSupported) {
+        if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported) {
           for (const cCodeKey in STAKING_BALANCES) {
             const stakingCurrencyCode = `${guiWallet.currencyCode}${STAKING_BALANCES[cCodeKey]}`
             guiWallet.nativeBalances[stakingCurrencyCode] = wallet.balances[stakingCurrencyCode] ?? '0'

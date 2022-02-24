@@ -168,62 +168,6 @@
       }
     }
   },
-  "settings": {
-    "BTC": {
-      "currencyCode": "BTC",
-      "denomination": "1",
-      "displayName": "Bitcoin",
-      "denominations": [{
-        "multiplier": "100000000",
-        "name": "BTC",
-        "symbol": "₿"
-      }, {
-        "multiplier": "100000",
-        "name": "mBTC",
-        "symbol": "m₿"
-      }, {
-        "multiplier": "100",
-        "name": "bits",
-        "symbol": "ƀ"
-      }, {
-        "multiplier": "1",
-        "name": "sats",
-        "symbol": "s"
-      }],
-      "symbolImage": "https://content.edge.app/BTC/BTC.png",
-      "symbolImageDarkMono": "https://content.edge.app/BTC/BTC_dark.png"
-    },
-    "ETH": {
-      "currencyCode": "ETH",
-        "denomination": "1000000000000000",
-        "denominations": [{
-          "multiplier": "1000000000000000000",
-          "name": "ETH",
-          "symbol": "Ξ"
-        }, {
-          "multiplier": "1000000000000000",
-          "name": "mETH",
-          "symbol": "mΞ"
-        }],
-        "displayName": "Ethereum",
-        "symbolImage": "https://content.edge.app/ETH/ETH.png",
-        "symbolImageDarkMono": "https://content.edge.app/ETH/ETH_dark.png"
-    },
-    "customTokens": [{
-      "contractAddress": "0x0C658Fa2eAA292E8dcA085Dab0E5CBD2da21C494",
-      "currencyCode": "TKN",
-      "currencyName": "CustomToken",
-      "denomination": "10000000000000000000000000000000000000000000000000",
-      "denominations": [{
-        "multiplier": "10000000000000000000000000000000000000000000000000",
-        "name": "TKN",
-        "symbol": ""
-      }],
-      "isVisible": true,
-      "multiplier": "10000000000000000000000000000000000000000000000000",
-      "walletType": "wallet:ethereum"
-    }]
-  },
   "zerosAfterDecimal": {
     "title": "Zeros after decimal place of",
     "input": ["0.00036270", "128372", "12392.0123", "123.456"],

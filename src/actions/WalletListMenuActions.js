@@ -14,7 +14,6 @@ import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { validatePassword } from './AccountActions.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
@@ -27,14 +26,16 @@ export type WalletListMenuKey =
   | 'resync'
   | 'exportWalletTransactions'
   | 'getSeed'
-  | 'split'
   | 'manageTokens'
   | 'viewXPub'
   | 'getRawKeys'
   | 'rawDelete'
+  | string // for split keys like splitBCH, splitETH, etc.
 
 export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
-  switch (option) {
+  const switchString = option.startsWith('split') ? 'split' : option
+
+  switch (switchString) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
         Actions.push(MANAGE_TOKENS, {
@@ -97,8 +98,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     }
 
     case 'split': {
-      return (dispatch: Dispatch) => {
-        dispatch(showSplitWalletModal(walletId))
+      return async (dispatch: Dispatch) => {
+        dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
       }
     }
 
@@ -159,8 +160,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
 
         const passwordValid = await dispatch(
           validatePassword({
-            message: `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`,
-            submitLabel: s.strings.fragment_wallets_get_seed_wallet
+            title: s.strings.fragment_wallets_get_seed_title,
+            submitLabel: s.strings.fragment_wallets_get_seed_wallet,
+            warning: s.strings.fragment_wallets_get_seed_warning_message
           })
         )
 
@@ -181,7 +183,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const passwordValid = await dispatch(
           validatePassword({
-            message: s.strings.fragment_wallets_get_raw_key_wallet_confirm_message,
+            title: s.strings.fragment_wallets_get_raw_keys_title,
+            warning: s.strings.fragment_wallets_get_raw_keys_warning_message,
             submitLabel: s.strings.string_get_raw_keys
           })
         )

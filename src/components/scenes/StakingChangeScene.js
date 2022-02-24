@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { add, gt } from 'biggystring'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
-import { CURRENCY_PLUGIN_NAMES, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTimeDate } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
@@ -67,8 +67,9 @@ export const StakingChangeSceneComponent = (props: Props) => {
     fioAddresses
   } = props
   const styles = getStyles(theme)
+  const { pluginId } = currencyWallet.currencyInfo
 
-  const maxApy = SPECIAL_CURRENCY_INFO[currencyCode]?.stakeMaxApy
+  const maxApy = SPECIAL_CURRENCY_INFO[pluginId]?.stakeMaxApy
 
   const [nativeAmount, setNativeAmount] = useState('0')
   const [exchangeAmount, setExchangeAmount] = useState('0')
@@ -93,7 +94,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
             spendTargets: [{ nativeAmount: '', otherParams: {}, publicAddress: '' }]
           })
           .then(nativeAmount => {
-            onAmountChanged(nativeAmount, bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
+            onAmountChanged(nativeAmount, add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
           })
         break
       }
@@ -201,7 +202,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
       return
     }
 
-    const actionName = SPECIAL_CURRENCY_INFO[currencyCode].stakeActions != null ? SPECIAL_CURRENCY_INFO[currencyCode].stakeActions[change] : ''
+    const actionName = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? ''
     currencyWallet
       .makeSpend({
         spendTargets: [
@@ -261,7 +262,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
     const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, true) : ''
     let estReward = '0'
     if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {
-      estReward = bns.add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
+      estReward = add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
     }
     return (
       <>
@@ -359,7 +360,7 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
       }
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
-    const currencyPlugin = state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES[currencyCode]]
+    const currencyPlugin = state.core.account.currencyConfig[currencyWallet.currencyInfo.pluginId]
     const guiWallet = state.ui.wallets.byId[walletId]
     const stakingBalances = {}
 
@@ -372,11 +373,11 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
         const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
-        const stakingCryptoAmountFormat = formatNumber(bns.add(stakingCryptoAmount, '0'))
+        const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
         const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
         const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
-        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && bns.gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
         stakingBalances[stakingCurrencyCode] = {
           native: stakingNativeAmount,

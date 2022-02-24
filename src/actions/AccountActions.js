@@ -24,13 +24,15 @@ export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getSt
 
 type ValidatePasswordOptions = {
   message?: string,
-  submitLabel?: string
+  submitLabel?: string,
+  title?: string,
+  warning?: string
 }
 
 export const validatePassword =
   (opts: ValidatePasswordOptions = {}) =>
   async (dispatch: Dispatch, getState: GetState): Promise<boolean> => {
-    const { message, submitLabel } = opts
+    const { message, submitLabel, title = s.strings.confirm_password_text, warning } = opts
     const state = getState()
     const { account } = state.core
 
@@ -43,7 +45,8 @@ export const validatePassword =
         returnKeyType="go"
         secureTextEntry
         submitLabel={submitLabel}
-        title={s.strings.confirm_password_text}
+        title={title}
+        warning={warning}
         onSubmit={async password => {
           const isOk = await account.checkPassword(password)
           if (!isOk) return s.strings.password_reminder_invalid

@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 
 import { FIAT_PRECISION } from '../constants/WalletAndCurrencyConstants.js'
@@ -55,7 +55,7 @@ export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCu
 
 export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): string => {
   const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
-  const convertedAmount = bns.mul(amount, exchangeRate)
+  const convertedAmount = mul(amount, exchangeRate)
   return convertedAmount
 }
 
@@ -67,7 +67,7 @@ export const convertCurrencyFromExchangeRates = (
 ): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ?? '0'
-  const convertedAmount = bns.mul(amount, rate)
+  const convertedAmount = mul(amount, rate)
   return convertedAmount
 }
 

@@ -7,7 +7,7 @@
     ],
     "description": "Fee: 1% / Settlement: 1 - 5 days\nMonthly Limit: $150000",
     "title": "ACH Bank Transfer",
-    "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
+    "partnerIconPath": "wyre-logo-square-small.png",
     "forCountries": [
       "US"
     ],
@@ -27,7 +27,7 @@
     ],
     "description": "Fee: 3% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
+    "partnerIconPath": "bits-of-gold-logo-sm.png",
     "forCountries": [
       "AD",
       "AT",
@@ -101,7 +101,7 @@
     ],
     "description": "Buy gift cards and reload phones with crypto",
     "title": "Gift Cards",
-    "partnerIconPath": "https://content.edge.app/bitrefill-2.png",
+    "partnerIconPath": "bitrefill-2.png",
     "forCountries": [
       "AD",
       "AE",
@@ -403,7 +403,7 @@
     ],
     "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "https://content.edge.app/logoBity.png",
+    "partnerIconPath": "logoBity.png",
     "paymentTypeLogoKey": "bank",
     "deepQuery": {
       "type": "sell"
@@ -417,7 +417,7 @@
     ],
     "description": "Fee: 3% / Settlement: 1 - 2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
-    "partnerIconPath": "https://content.edge.app/Safello-Logo-Green-background.png",
+    "partnerIconPath": "Safello-Logo-Green-background.png",
     "forCountries": [
       "SE"
     ],
@@ -441,7 +441,7 @@
     ],
     "description": "Fee: Varies / Settlement: 10 - 20 minutes\nLimit: Varies",
     "title": "Cash",
-    "partnerIconPath": "https://content.edge.app/mktg/bitaccess.png",
+    "partnerIconPath": "mktg/bitaccess.png",
     "forCountries": [
       "US",
       "CA",
@@ -473,7 +473,7 @@
     ],
     "description": "Fee: 1.5% / Settlement: 5 min - 24 hours\nDaily Limit: $30000\nMonthly Limit: $500000",
     "title": "Bank Transfer",
-    "partnerIconPath": "https://content.edge.app/banxa.png",
+    "partnerIconPath": "banxa.png",
     "forCountries": [
       "AU"
     ],

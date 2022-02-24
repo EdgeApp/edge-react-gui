@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { abs } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
@@ -381,7 +381,7 @@ export class EdgeProvider extends Bridgeable {
           orderId,
           account: this._state.core.account,
           currencyCode: transaction.currencyCode,
-          exchangeAmount: Number(bns.abs(exchangeAmount))
+          exchangeAmount: Number(abs(exchangeAmount))
         })
       )
     }

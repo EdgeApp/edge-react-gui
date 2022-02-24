@@ -11,6 +11,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
+import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { type GuiPluginRow, asGuiPluginJson } from '../../types/GuiPluginTypes.js'
@@ -217,7 +218,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
-    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: item.partnerIconPath }
+    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: `${EDGE_CONTENT_SERVER}/${item.partnerIconPath}` }
 
     return (
       <View style={styles.pluginRowContainer}>
