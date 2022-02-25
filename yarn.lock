@@ -5585,9 +5585,9 @@ edge-login-ui-rn@^0.9.29:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#c2e4d320b1863ebad5fb994f5bd03ccd6a0cb9c8":
+"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#c2e4d320b1863ebad5fb994f5bd03ccd6a0cb9c8"
+  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a"
   dependencies:
     cleaners "^0.3.1"
 
