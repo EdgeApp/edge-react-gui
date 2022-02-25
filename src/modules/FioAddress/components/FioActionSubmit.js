@@ -265,6 +265,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(1.25),
     paddingRight: theme.rem(1.25)
   },
+  slider: {
+    alignItems: 'center'
+  },
   spacer: {
     paddingTop: theme.rem(1.25)
   }

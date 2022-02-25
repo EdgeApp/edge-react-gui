@@ -221,6 +221,11 @@
 - Upgrade edge-currency-accountbased to v0.9.3
   - Update ZEC checkpoints
 
+## 2.6.1 (2021-11-24)
+
+- Force Android to create a compressed APK to reduce app size
+- Fix ZEC Trasaction Exchange details
+
 ## 2.6.0 (2021-11-21)
 
 - Add Zcash (Android only)
