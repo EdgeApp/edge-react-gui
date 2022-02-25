@@ -389,7 +389,7 @@ export class RequestComponent extends React.Component<Props, State> {
       if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
         const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
-        if (lt(edgeWallet.balances[currencyCode], minBalance)) {
+        if (lt(edgeWallet.balances[currencyCode] ?? '0', minBalance)) {
           return true
         }
       }
