@@ -80,7 +80,7 @@ const getWalletOptions = async (params: {
   const currencyInfos = getCurrencyInfos(account)
   for (const splitWalletType of splittable) {
     const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-    if (info == null || getSpecialCurrencyInfo(info.currencyCode).isSplittingDisabled) continue
+    if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
     result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
   }
 
