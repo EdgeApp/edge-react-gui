@@ -73,6 +73,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   constructor(props: Props) {
     super(props)
+    this.props.refreshAllFioAddresses()
     this.state = {
       loadingPending: true,
       loadingSent: true,
