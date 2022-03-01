@@ -6,7 +6,7 @@ jest.useFakeTimers()
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler() {}
 }))
-jest.mock('edge-currency-bitcoin', () => () => ({}))
+// jest.mock('edge-currency-bitcoin', () => () => ({}))
 
 jest.mock('rn-qr-generator', () => () => {
   return Promise.detect({})
