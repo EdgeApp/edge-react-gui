@@ -15,7 +15,7 @@ import { type PluginTweak } from '../../types/TweakTypes.js'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
+import { RadioListModal } from '../modals/RadioListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
@@ -81,16 +81,36 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   handlePreferredModal = () => {
-    const { accountPlugins, changePreferredSwapPlugin, exchanges, ignoreAccountSwap, accountReferral, settingsPreferredSwap } = this.props
+    const { accountPlugins, changePreferredSwapPlugin, exchanges, ignoreAccountSwap, accountReferral, settingsPreferredSwap, theme } = this.props
+    const styles = getStyles(this.props.theme)
 
-    // Pick plugin:
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
-    const pluginId = activePlugins.preferredSwapPluginId
 
-    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={pluginId} />).then(result => {
-      if (result.type === 'cancel') return
+    // Selected Exchange
+    const selectedPluginId = activePlugins.preferredSwapPluginId ?? ''
+    const selected = exchanges[selectedPluginId] != null ? exchanges[selectedPluginId].swapInfo.displayName : s.strings.swap_preferred_cheapest
+
+    // Process Items
+    const exchangeItems = Object.keys(exchanges)
+      .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+      .filter(pluginId => exchanges[pluginId].enabled)
+      .map(pluginId => ({
+        name: exchanges[pluginId].swapInfo.displayName,
+        icon: getSwapPluginIconUri(pluginId, theme)
+      }))
+
+    const exchangeDefaultItem = {
+      name: s.strings.swap_preferred_cheapest,
+      icon: <AntDesignIcon name="barschart" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
+    }
+
+    // Render
+    Airship.show(bridge => (
+      <RadioListModal bridge={bridge} title={s.strings.swap_preferred_header} items={[exchangeDefaultItem, ...exchangeItems]} selected={selected} />
+    )).then(result => {
+      if (result == null) return
       if (activePlugins.swapSource.type === 'account') ignoreAccountSwap()
-      changePreferredSwapPlugin(result.pluginId)
+      changePreferredSwapPlugin(Object.keys(exchanges).find(pluginId => exchanges[pluginId].swapInfo.displayName === result))
     })
   }
 
@@ -199,6 +219,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(1.25),
     width: theme.rem(1.25),
     marginHorizontal: theme.rem(0.5)
+  },
+  swapExchangeIcon: {
+    height: theme.rem(1.25),
+    width: theme.rem(1.25)
   }
 }))
 
