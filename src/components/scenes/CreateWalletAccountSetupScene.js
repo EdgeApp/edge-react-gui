@@ -106,7 +106,7 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
     const { selectedWalletType } = route.params
     const { currencyCode } = selectedWalletType
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
-    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)
+    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.pluginId)
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
 

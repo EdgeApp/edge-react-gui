@@ -222,7 +222,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       const currencyInfos = getCurrencyInfos(account)
       for (const currencyInfo of currencyInfos) {
         for (const metaToken of currencyInfo.metaTokens) {
-          const { currencyCode, currencyName } = metaToken
+          const { currencyCode, currencyName, contractAddress } = metaToken
           // Fix for when the token code and chain code are the same (like EOS/TLOS)
           if (currencyCode === currencyInfo.currencyCode) continue
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
@@ -235,7 +235,7 @@ class WalletListComponent extends React.PureComponent<Props> {
               createTokenType: {
                 currencyCode,
                 currencyName,
-                ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode),
+                ...getCurrencyIcon(currencyInfo.pluginId, contractAddress),
                 parentCurrencyCode: currencyInfo.currencyCode
               }
             })

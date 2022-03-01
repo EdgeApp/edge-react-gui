@@ -372,7 +372,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction: 'from' | 'to') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.core.account.currencyWallets[walletId]
-  const chainCc = wallet.currencyInfo.currencyCode
+  const { currencyCode: chainCc, pluginId, metaTokens } = wallet.currencyInfo
   const cc = currencyCode || chainCc
   const balanceMessage = await getBalanceMessage(state, walletId, cc)
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
@@ -383,13 +383,14 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
     displayDenomination: primaryDisplayDenomination,
     exchangeDenomination: primaryExchangeDenomination
   }
+  const contractAddress = metaTokens.find(token => token.currencyCode === cc)?.contractAddress
 
   const data = {
     walletId,
     balanceMessage,
     currencyCode: cc,
     primaryInfo,
-    ...getCurrencyIcon(chainCc, cc)
+    ...getCurrencyIcon(pluginId, contractAddress)
   }
 
   if (direction === 'from') {

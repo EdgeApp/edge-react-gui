@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import FastImage from 'react-native-fast-image'
 
+import { getPluginId } from '../../constants/WalletAndCurrencyConstants.js'
 import { connect } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
@@ -103,7 +104,9 @@ export const WalletProgressIcon = connect<StateProps, {}, OwnProps>(
 
     if (walletId) {
       const guiWallet = state.ui.wallets.byId[walletId]
-      icon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
+      const { metaTokens } = guiWallet
+      const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+      icon = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress).symbolImage
       const walletsProgress = state.ui.wallets.walletLoadingProgress
       progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
     }
