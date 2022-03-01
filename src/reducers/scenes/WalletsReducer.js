@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeReceiveAddress } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
 import { FIO_WALLET_TYPE, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
@@ -290,11 +290,9 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
 
-  const currencyCode: string = wallet.currencyInfo.currencyCode
+  const { currencyCode, metaTokens, denominations, pluginId } = wallet.currencyInfo
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
-  const metaTokens: EdgeMetaToken[] = wallet.currencyInfo.metaTokens
-  const denominations: EdgeDenomination[] = wallet.currencyInfo.denominations
   const blockHeight: number = wallet.blockHeight
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: string[] = []
@@ -357,7 +355,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     enabledTokens,
     receiveAddress,
     blockHeight,
-    ...getCurrencyIcon(currencyCode)
+    ...getCurrencyIcon(pluginId)
   }
 
   return newWallet

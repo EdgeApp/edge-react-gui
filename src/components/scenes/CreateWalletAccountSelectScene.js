@@ -248,7 +248,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
     const { selectedWalletType } = route.params
     const { walletId } = this.state
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
-    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)
+    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.pluginId)
     const instructionSyntax = sprintf(
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,

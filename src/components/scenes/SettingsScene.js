@@ -252,8 +252,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
-            const { displayName, currencyCode } = currencyInfo
-            const { symbolImage } = getCurrencyIcon(currencyCode)
+            const { displayName } = currencyInfo
+            const { symbolImage } = getCurrencyIcon(pluginId)
             const onPress = () =>
               navigation.navigate('currencySettings', {
                 currencyInfo

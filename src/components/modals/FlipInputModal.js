@@ -308,8 +308,9 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const wallet = state.core.account.currencyWallets[walletId]
     const name = getWalletName(wallet)
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
-    const { symbolImageDarkMono } = getCurrencyIcon(wallet.currencyInfo.currencyCode, currencyCode)
-    const { pluginId } = wallet.currencyInfo
+    const { pluginId, metaTokens } = wallet.currencyInfo
+    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    const { symbolImageDarkMono } = getCurrencyIcon(pluginId, contractAddress)
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, pluginId, currencyCode)
