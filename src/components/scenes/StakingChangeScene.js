@@ -202,7 +202,7 @@ export const StakingChangeSceneComponent = (props: Props) => {
       return
     }
 
-    const actionName = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? ''
+    const { [change]: actionName } = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? { [change]: '' }
     currencyWallet
       .makeSpend({
         spendTargets: [
