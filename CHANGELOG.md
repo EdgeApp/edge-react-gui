@@ -13,17 +13,19 @@
 - Convert special currency info map keys from currency code to pluginId
 - Fix fee display in flip input
 - Import biggystring functions individually
-- Upgrade edge-core-js to v0.19.9
+- Upgrade edge-core-js to v0.19.10
   - fixed: Stop adding undefined entries to EdgeAccount.currencyWallets.
   - added: Define a new EdgeToken type and make that available as EdgeCurrencyConfig.builtinTokens and EdgeCurrencyConfig.customTokens.
   - added: Define a new EdgeCurrencyPlugin.getBuiltinTokens method, and use that to populate EdgeCurrencyConfig.builtinTokens when available.
   - added: Pass EdgeToken fields to EdgeCurrencyEngine.addCustomToken, along with the existing EdgeMetaToken fields.
+  - added: EdgeCurrencyInfo.canReplaceByFee.
   - deprecated: EdgeCurrencyInfo.defaultSettings
   - deprecated: EdgeCurrencyInfo.metaTokens
   - deprecated: EdgeCurrencyInfo.symbolImage
   - deprecated: EdgeCurrencyInfo.symbolImageDarkMono
   - added: Include an imported flag with all new wallet keys, to indicate whether they were derived freshly or imported from user-entered data.
   - fixed: Do not hang forever if creating a currency engine fails.
+  - changed: Make denominationToNative and nativeToDenomination only look at the currencies available on the current wallet.
   - changed: Add comments and improve organization in the public types file.
   - changed: Use cleaners to load & save many files for additional safety.
   - fixed: Improve wallet start-up performance by loading fewer files.
@@ -33,14 +35,13 @@
   - Add getSplittableTypes method to ethEngine
   - Use binary search in ethEngine's getMaxSpendable for main chain currency code
   - Update ZEC checkpoints
-- Upgrade edge-exchange-plugins to v0.12.12
+- Upgrade edge-exchange-plugins to v0.12.13
   - Add Binance Smart Chain to swap partners
   - Changelly: Add BNB Smart Chain support
   - Changenow: Fix corner case where standard flow was skipped
   - Exolix: Update plugin to use mainchain:tokencode values in requests
   - Coingecko: Add Celo and Aave unique IDs
   - Godex: Disable DGB selling
-  - Disable BNB Beacon Chain in all swap plugins
   - Transfer: Use pluginIds instead of currency codes
   - Use pluginIds instead of currency code keys in transcription and invalid-code maps
   - Add helper function and transcription maps for changing mainnet codes
