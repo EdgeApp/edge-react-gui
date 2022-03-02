@@ -7,7 +7,7 @@ import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions.js'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions.js'
 import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../actions/WalletActions.js'
 import { connect } from '../../types/reactRedux.js'
-import { isReceivedTransaction } from '../../util/utils.js'
+import { isReceivedTransaction, logPrefix } from '../../util/utils.js'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal.js'
 import { Airship } from './AirshipInstance.js'
 
@@ -37,15 +37,16 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
 
   componentDidMount() {
     const { wallet } = this.props
+    const prefix = logPrefix(wallet)
 
     wallet.on('newTransactions', transactions => {
       if (transactions && transactions.length) {
-        console.log(`${this.props.id} - onNewTransactions, num of new tx's: ${transactions.length}`)
+        console.log(`${prefix} - onNewTransactions, num of new tx's: ${transactions.length}`)
         for (const tx of transactions) {
-          console.log(`${this.props.id} - onNewTransactions with TXID: ${tx.txid}`)
+          console.log(`${prefix} - onNewTransactions with TXID: ${tx.txid}`)
         }
       } else {
-        console.log(`${this.props.id} - onNewTransactions: No transactions`)
+        console.log(`${prefix} - onNewTransactions: No transactions`)
       }
 
       this.props.refreshReceiveAddressRequest(this.props.id)
@@ -59,12 +60,12 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
 
     wallet.on('transactionsChanged', transactions => {
       if (transactions && transactions.length) {
-        console.log(`${this.props.id} - onTransactionsChanged, num of tx's changed: ${transactions.length}`)
+        console.log(`${prefix} - onTransactionsChanged, num of tx's changed: ${transactions.length}`)
         for (const tx of transactions) {
-          console.log(`${this.props.id} - onTransactionsChanged with TXID: ${tx.txid}`)
+          console.log(`${prefix} - onTransactionsChanged with TXID: ${tx.txid}`)
         }
       } else {
-        console.log(`${this.props.id} - onTransactionsChanged: No transactions`)
+        console.log(`${prefix} - onTransactionsChanged: No transactions`)
       }
 
       this.props.refreshReceiveAddressRequest(this.props.id)
@@ -77,7 +78,7 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
     })
 
     wallet.watch('syncRatio', transactionCount => {
-      console.log(`${this.props.id} - onAddressesChecked with progress ratio: ${transactionCount}`)
+      console.log(`${prefix} - onAddressesChecked with progress ratio: ${transactionCount}`)
 
       if (transactionCount > 0) {
         this.props.updateWalletLoadingProgress(this.props.id, transactionCount)
@@ -89,13 +90,13 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
     })
 
     wallet.watch('blockHeight', blockHeight => {
-      console.log(`${this.props.id} - onBlockHeightChanged with height:${blockHeight}`)
+      console.log(`${prefix} - onBlockHeightChanged with height:${blockHeight}`)
 
       this.props.refreshWallet(this.props.id)
     })
 
     wallet.watch('name', walletName => {
-      console.log(`${this.props.id} - onWalletNameChanged with new name:${walletName || ''}`)
+      console.log(`${prefix} - onWalletNameChanged with new name:${walletName || ''}`)
 
       this.props.refreshWallet(this.props.id)
     })
