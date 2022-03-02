@@ -200,7 +200,10 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
   // Format fiat fee:
-  const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
+  const feeDenominatedAmount = div(
+    feeNativeAmount,
+    getExchangeDenomination(state, fromWallet.currencyInfo.pluginId, fromWallet.currencyInfo.currencyCode).multiplier
+  )
   const feeFiatAmountRaw = await currencyConverter.convertCurrency(
     request.fromWallet.currencyInfo.currencyCode,
     fromWallet.fiatCurrencyCode,
@@ -348,7 +351,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 
     updateSwapCount(state)
 
-    const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
+    const exchangeAmount = div(toNativeAmount, getExchangeDenomination(state, toWallet.currencyInfo.pluginId, toCurrencyCode).multiplier)
     const trackConversionOpts: { [key: string]: any } = {
       account,
       pluginId,
