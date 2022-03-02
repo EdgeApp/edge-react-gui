@@ -1,6 +1,6 @@
 // @flow
 
-import { add, div, toFixed } from 'biggystring'
+import { add, div, mul, toFixed } from 'biggystring'
 import {
   type EdgeCurrencyWallet,
   type EdgeMetadata,
@@ -55,14 +55,42 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 
     const { currencyWallets } = state.core.account
     const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
+    const fromPluginId = fromCoreWallet.currencyInfo.pluginId
     const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
+    const toPluginId = fromCoreWallet.currencyInfo.pluginId
+
+    // These functions in the core search through all plugins to find a currency code match.
+    // Since there can be duplicate currency codes across plugins we need to override to provide
+    // plugin-specific denominations
+    const nativeToDenomination =
+      (pluginId: string) =>
+      async (nativeAmount: string, currencyCode: string): Promise<string> => {
+        const { multiplier } = getExchangeDenomination(state, pluginId, currencyCode)
+        return div(nativeAmount, multiplier, multiplier.length)
+      }
+    const denominationToNative =
+      (pluginId: string) =>
+      async (denominatedAmount: string, currencyCode: string): Promise<string> => {
+        const { multiplier } = getExchangeDenomination(state, pluginId, currencyCode)
+        return mul(denominatedAmount, multiplier)
+      }
+    const overrideFromWallet = {
+      ...fromCoreWallet,
+      denominationToNative: denominationToNative(fromPluginId),
+      nativeToDenomination: nativeToDenomination(fromPluginId)
+    }
+    const overrideToWallet = {
+      ...toCoreWallet,
+      denominationToNative: denominationToNative(toPluginId),
+      nativeToDenomination: nativeToDenomination(toPluginId)
+    }
     const request: EdgeSwapRequest = {
       fromCurrencyCode,
-      fromWallet: fromCoreWallet,
+      fromWallet: overrideFromWallet,
       nativeAmount: info.primaryNativeAmount,
       quoteFor: info.whichWallet,
       toCurrencyCode,
-      toWallet: toCoreWallet
+      toWallet: overrideToWallet
     }
 
     const swapInfo = await fetchSwapQuote(state, request)
