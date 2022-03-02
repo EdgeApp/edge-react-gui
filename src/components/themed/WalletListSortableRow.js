@@ -59,7 +59,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const multiplier = displayDenomination.multiplier
     const name = getWalletName(wallet)
     const symbol = displayDenomination.symbol
-    const { symbolImageDarkMono } = getCurrencyIcon(currencyCode)
+    const { symbolImageDarkMono } = getCurrencyIcon(pluginId)
 
     const balance = wallet.balances[currencyCode] ?? '0'
     const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))

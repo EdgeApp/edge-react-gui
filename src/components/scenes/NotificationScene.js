@@ -97,8 +97,8 @@ class NotificationComponent extends React.Component<Props, State> {
           <ScrollView>
             <SettingsSwitchRow label={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
-              const { displayName, currencyCode } = currencyInfo
-              const { symbolImage } = getCurrencyIcon(currencyCode)
+              const { displayName, pluginId } = currencyInfo
+              const { symbolImage } = getCurrencyIcon(pluginId)
               const onPress = () =>
                 enabled
                   ? navigation.navigate('currencyNotificationSettings', {
@@ -107,7 +107,7 @@ class NotificationComponent extends React.Component<Props, State> {
                   : undefined
 
               return (
-                <SettingsTappableRow disabled={!enabled} key={currencyCode} label={displayName} onPress={onPress}>
+                <SettingsTappableRow disabled={!enabled} key={pluginId} label={displayName} onPress={onPress}>
                   <FastImage style={styles.currencyLogo} source={{ uri: symbolImage }} />
                 </SettingsTappableRow>
               )

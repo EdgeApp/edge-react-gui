@@ -57,7 +57,7 @@ export const WcSmartContractModal = (props: Props) => {
     const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
     if (token != null) amountCurrencyCode = token.currencyCode
   }
-  const feeCurrencyCode = wallet.currencyInfo.currencyCode
+  const { currencyCode: feeCurrencyCode, pluginId, metaTokens } = wallet.currencyInfo
 
   const { isoFiatCurrencyCode } = guiWallet
 
@@ -111,7 +111,8 @@ export const WcSmartContractModal = (props: Props) => {
     )
   }
 
-  const walletImageUri = getCurrencyIcon(feeCurrencyCode, amountCurrencyCode).symbolImage
+  const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
+  const walletImageUri = getCurrencyIcon(pluginId, contractAddress).symbolImage
   const slider = isInsufficientBal ? null : (
     <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
   )

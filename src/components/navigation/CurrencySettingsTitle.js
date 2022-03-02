@@ -15,7 +15,7 @@ type Props = {
 
 export function CurrencySettingsTitle(props: Props) {
   const { displayName } = props.currencyInfo
-  const { symbolImage } = getCurrencyIcon(props.currencyInfo.currencyCode)
+  const { symbolImage } = getCurrencyIcon(props.currencyInfo.pluginId)
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>

@@ -195,11 +195,12 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, manageTokensPending, theme, wallets, enabledTokens } = this.props
+    const { route, manageTokensPending, theme, wallets, enabledTokens, currencyWallets } = this.props
     const { searchValue } = this.state
     const { walletId } = route.params
-    if (wallets[walletId] == null) return null
-    const { name, currencyCode, metaTokens } = wallets[walletId]
+    if (wallets[walletId] == null || currencyWallets[walletId] == null) return null
+    const { name, currencyCode } = wallets[walletId]
+    const { pluginId, metaTokens } = currencyWallets[walletId].currencyInfo
     const styles = getStyles(theme)
     const tempEnabledTokens = difference(union(this.state.tokensToEnable, enabledTokens), this.state.tokensToDisable)
 
@@ -223,7 +224,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
               goToEditTokenScene={this.goToEditTokenScene}
               metaToken={metaToken}
               walletId={walletId}
-              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode).symbolImage}
+              symbolImage={getCurrencyIcon(pluginId, metaToken.item.contractAddress).symbolImage}
               toggleToken={this.toggleToken}
               enabledList={tempEnabledTokens}
               metaTokens={metaTokens}
