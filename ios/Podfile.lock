@@ -426,8 +426,6 @@ PODS:
     - React-Core
   - react-native-safari-view (1.0.0):
     - React
-  - react-native-smart-splash-screen (2.3.5):
-    - React
   - react-native-webview (10.2.3):
     - React
   - react-native-zcash (0.2.0):
@@ -723,7 +721,6 @@ DEPENDENCIES:
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
-  - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -893,8 +890,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
-  react-native-smart-splash-screen:
-    :path: "../node_modules/react-native-smart-splash-screen"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   react-native-zcash:
@@ -1043,7 +1038,6 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 59aaed6e2aef48f8d0e12b564e1927d613076b86
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
-  react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-webview: 0bacc79175bc44869e4c1a015b9bc21df8cf4feb
   react-native-zcash: dc5a57c6e5445a0f4dc29dc955e674e5c22537df
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737

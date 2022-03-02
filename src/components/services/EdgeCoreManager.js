@@ -9,7 +9,6 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import * as React from 'react'
 import { Alert, AppState } from 'react-native'
 import { getBrand, getDeviceId } from 'react-native-device-info'
-import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
 import { allPlugins } from '../../util/corePlugins.js'
@@ -65,7 +64,6 @@ const crashReporter: EdgeCrashReporter = {
  * once the core context is ready.
  */
 export class EdgeCoreManager extends React.PureComponent<Props, State> {
-  splashHidden: boolean = false
   paused: boolean = false
 
   constructor(props: Props) {
@@ -94,32 +92,17 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
     }
   }
 
-  hideSplash() {
-    if (!this.splashHidden) {
-      this.splashHidden = true
-      SplashScreen.close({
-        animationType: SplashScreen.animationType.fade,
-        duration: 850,
-        delay: 500
-      })
-    }
-  }
-
   onContext = (context: EdgeContext) => {
     console.log('EdgeContext opened')
     context.on('close', () => {
       console.log('EdgeContext closed')
       this.setState({ context: null })
     })
-    this.setState(
-      state => ({ context, counter: state.counter + 1 }),
-      () => this.hideSplash()
-    )
+    this.setState(state => ({ context, counter: state.counter + 1 }))
   }
 
   onError = (error: Error) => {
     console.log('EdgeContext failed', error)
-    this.hideSplash()
     Alert.alert('Edge core failed to load', String(error))
   }
 

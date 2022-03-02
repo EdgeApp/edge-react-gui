@@ -145,7 +145,6 @@
     "react-native-safari-view": "^2.1.0",
     "react-native-safe-area-view": "0.14.9",
     "react-native-share": "^7.1.2",
-    "react-native-smart-splash-screen": "https://github.com/swansontec/react-native-smart-splash-screen#fix-rn59",
     "react-native-sortable-listview": "https://github.com/EdgeApp/react-native-sortable-listview.git",
     "react-native-sound": "^0.11.0",
     "react-native-store-review": "^0.1.5",
