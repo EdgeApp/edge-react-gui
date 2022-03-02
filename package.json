@@ -109,7 +109,7 @@
     "edge-currency-accountbased": "^0.14.1",
     "edge-currency-bitcoin": "^4.9.20",
     "edge-currency-monero": "^0.3.4",
-    "edge-exchange-plugins": "^0.12.11",
+    "edge-exchange-plugins": "^0.12.12",
     "edge-login-ui-rn": "^0.9.29",
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a",
     "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#4842daad5fd560cd462f4668ab17c521a16a6cd9",
