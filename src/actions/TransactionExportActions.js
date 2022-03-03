@@ -142,6 +142,17 @@ export function exportTransactionsToQBOInner(
     if (memo.length > 250) {
       memo = memo.substring(0, 250) + '...'
     }
+    const qboTx = {
+      TRNTYPE,
+      DTPOSTED,
+      TRNAMT,
+      FITID: edgeTx.txid,
+      MEMO: memo,
+      CURRENCY: {
+        CURRATE: CURRATE,
+        CURSYM: fiatCurrencyCode
+      }
+    }
     const qboTxNamed = {
       TRNTYPE,
       DTPOSTED,
@@ -154,19 +165,13 @@ export function exportTransactionsToQBOInner(
         CURSYM: fiatCurrencyCode
       }
     }
-    const qboTx = {
-      TRNTYPE,
-      DTPOSTED,
-      TRNAMT,
-      FITID: edgeTx.txid,
-      MEMO: memo,
-      CURRENCY: {
-        CURRATE: CURRATE,
-        CURSYM: fiatCurrencyCode
-      }
-    }
     const use = NAME === '' ? qboTx : qboTxNamed
-    STMTTRN.push(use)
+    if (isSentTransaction(edgeTx) && checkIfCategoryIsTransfer(category)) {
+      STMTTRN.push(use)
+      STMTTRN.push({ ...use, TRNTYPE: denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee })
+    } else {
+      STMTTRN.push(use)
+    }
   }
 
   const header = {
