@@ -11,7 +11,9 @@ import { type CreateWalletType } from '../types/types.js'
 
 type CurrencyIcons = {
   symbolImage: string,
-  symbolImageDarkMono: string
+  symbolImageDarkMono: string,
+  parentSymbolImage?: string,
+  parentSymbolImageDarkMono?: string
 }
 
 const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
@@ -19,11 +21,22 @@ const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function getCurrencyIcon(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
-  const url = `${EDGE_CONTENT_SERVER}/currencyIcons/${pluginId.toLowerCase()}/${contractAddress.toLowerCase().replace('0x', '')}`
-  return {
-    symbolImage: `${url}.png`,
-    symbolImageDarkMono: `${url}_dark.png`
+  const url = (source1: string, source2: string): string =>
+    `${EDGE_CONTENT_SERVER}/currencyIcons/${source1.toLowerCase()}/${source2.toLowerCase().replace('0x', '')}`
+  const images = {
+    symbolImage: `${url(pluginId, contractAddress)}.png`,
+    symbolImageDarkMono: `${url(pluginId, contractAddress)}_dark.png`
   }
+
+  if (pluginId !== contractAddress) {
+    return {
+      ...images,
+      parentSymbolImage: `${url(pluginId, pluginId)}.png`,
+      parentSymbolImageDarkMono: `${url(pluginId, pluginId)}_dark.png`
+    }
+  }
+
+  return images
 }
 
 /**
