@@ -5564,15 +5564,17 @@ edge-currency-bitcoin@^4.9.20:
     uri-js "^4.4.1"
     url-parse "^1.5.1"
 
-edge-currency-monero@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.4.tgz#54c6755e1099e9468e4f87afeb7d6a06465bc785"
-  integrity sha512-dUJWMhBJ/gmIJ3tgqixs9uFbjo0Yo9riTT4cdd8arHnQcZag0qxtbywIZhNliue9Oz5QC+vsvKWtpEnjKy45eQ==
+edge-currency-monero@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.4.0.tgz#ddc5df860f8b06fa1a416512bcf8040cc7e7a070"
+  integrity sha512-EsPukSjLQJVOyl4WLm8qvjDgzL+wIn9ny1wD3xpqF80TPJihgmjbBc/7E8lDJy6dh0YsI9P/13Y58nTqo+zVqA==
   dependencies:
+    "@mymonero/mymonero-bigint" "^1.4.2"
+    "@mymonero/mymonero-money-format" "^1.4.2"
+    "@mymonero/mymonero-nettype" "^1.4.2"
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "https://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
 edge-exchange-plugins@^0.12.14:
@@ -10163,12 +10165,6 @@ mv@~2:
     mkdirp "~0.5.1"
     ncp "~2.0.0"
     rimraf "~2.4.0"
-
-"mymonero-core-js@https://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey":
-  version "1.1.0"
-  resolved "https://github.com/EdgeApp/mymonero-core-js.git#c63ab750d169725a980e63c53ea7dab2c4161aa1"
-  dependencies:
-    node-fetch "^2.2.0"
 
 mz@^2.7.0:
   version "2.7.0"
