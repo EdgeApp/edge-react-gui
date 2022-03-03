@@ -3,6 +3,7 @@
 import { Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
+import changeheroLogo from '../../assets/images/exchange/settingsExchangeChangehero.png'
 import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
 import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
 import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
@@ -274,6 +275,7 @@ export const edgeDark: Theme = {
   fadeDisable: palette.gray,
 
   // Images
+  settingsChangeheroLogo: changeheroLogo,
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
   settingsDefaultLogo: defaultLogo,

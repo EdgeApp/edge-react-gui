@@ -209,6 +209,7 @@ export type Theme = {
   fadeDisable: string,
 
   // Images
+  settingsChangeheroLogo: string,
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
   settingsDefaultLogo: string,

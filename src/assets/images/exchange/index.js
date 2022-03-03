@@ -1,6 +1,7 @@
 // @flow
 
 import { type Theme } from '../../../types/Theme.js'
+import changeheroLogo from './settingsExchangeChangehero.png'
 import changellyLogo from './settingsExchangeChangelly.png'
 import changenowLogo from './settingsExchangeChangenow.png'
 import defaultLogo from './settingsExchangeDefault.png'
@@ -21,6 +22,7 @@ export function getSwapPluginIcon(pluginId: string, theme?: Theme) {
 // Small icons for the settings using themes:
 export const swapThemePluginIcons = (pluginId: string, theme: Theme) => {
   const logos = {
+    changehero: theme.settingsChangeheroLogo,
     changelly: theme.settingsChangellyLogo,
     changenow: theme.settingsChangenowLogo,
     exolix: theme.settingsExolixLogo,
@@ -36,6 +38,7 @@ export const swapThemePluginIcons = (pluginId: string, theme: Theme) => {
 
 // Small icons for the settings:
 export const swapPluginIcons = {
+  changehero: changeheroLogo,
   changelly: changellyLogo,
   changenow: changenowLogo,
   exolix: exolixLogo,
