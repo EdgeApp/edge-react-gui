@@ -35,7 +35,7 @@
   - Add getSplittableTypes method to ethEngine
   - Use binary search in ethEngine's getMaxSpendable for main chain currency code
   - Update ZEC checkpoints
-- Upgrade edge-exchange-plugins to v0.12.13
+- Upgrade edge-exchange-plugins to v0.12.14
   - Add Binance Smart Chain to swap partners
   - Changelly: Add BNB Smart Chain support
   - Changenow: Fix corner case where standard flow was skipped
@@ -43,6 +43,7 @@
   - Coingecko: Add Celo and Aave unique IDs
   - Godex: Disable DGB selling
   - Transfer: Use pluginIds instead of currency codes
+  - Fix calling denomination methods from wrong wallet
   - Use pluginIds instead of currency code keys in transcription and invalid-code maps
   - Add helper function and transcription maps for changing mainnet codes
 
