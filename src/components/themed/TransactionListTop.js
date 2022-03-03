@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { add, gt } from 'biggystring'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -37,6 +37,7 @@ type OwnProps = {
 type StateProps = {
   cryptoAmount: string,
   currencyCode: string,
+  pluginId: string,
   denominationName: string,
   fiatCurrencyCode: string,
   fiatBalance: string,
@@ -119,10 +120,10 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderStakingBox() {
-    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
+    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode, pluginId } = this.props
     const styles = getStyles(theme)
 
-    if (!SPECIAL_CURRENCY_INFO[currencyCode]?.isStakingSupported) return null
+    if (!SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) return null
 
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
 
@@ -351,6 +352,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const { currencyInfo } = state.core.account.currencyWallets[selectedWalletId]
+    const { pluginId } = currencyInfo
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
@@ -359,25 +361,25 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     // Crypto Amount Formatting
     const currencyDenomination = getDisplayDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
-    const cryptoAmountFormat = formatNumber(bns.add(cryptoAmount, '0'))
+    const cryptoAmountFormat = formatNumber(add(cryptoAmount, '0'))
 
     // Fiat Balance Formatting
     const defaultDenomination = getExchangeDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
     const defaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(balance)
     const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
-    const fiatBalanceFormat = formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
+    const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
-    if (SPECIAL_CURRENCY_INFO[selectedCurrencyCode]?.isStakingSupported) {
+    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
         const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
         const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
-        const stakingCryptoAmountFormat = formatNumber(bns.add(stakingCryptoAmount, '0'))
+        const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
         const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
         const stakingFiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
-        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && bns.gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
         stakingBalances[stakingCurrencyCode] = {
           crypto: stakingCryptoAmountFormat,
@@ -388,6 +390,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       currencyCode: selectedCurrencyCode,
+      pluginId,
       cryptoAmount: cryptoAmountFormat,
       denominationName: currencyDenomination.name,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,

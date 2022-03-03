@@ -9,9 +9,7 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { refreshWallet } from './WalletActions.js'
 
-const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')
-
-export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const showSplitWalletModal = (walletId: string, currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
   const { currencyWallets } = account
@@ -34,11 +32,14 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
     />
   ))
 
+  const { allCurrencyInfos } = state.ui.settings.plugins
+  const newCurrencyInfo = allCurrencyInfos.find(info => info.currencyCode === currencyCode)
+  if (newCurrencyInfo == null) return
+  const newWalletType = newCurrencyInfo.walletType
+
   if (resolveValue === 'confirm') {
     try {
-      const wallet = currencyWallets[walletId]
-      const splitType = getSplitType(wallet.currencyInfo.currencyCode)
-      await account.splitWalletInfo(walletId, splitType)
+      await account.splitWalletInfo(walletId, newWalletType)
       dispatch(refreshWallet(walletId))
     } catch (error) {
       showError(error)

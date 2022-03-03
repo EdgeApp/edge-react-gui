@@ -55,7 +55,7 @@ type StateProps = {
 
 type DispatchProps = {
   createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>,
-  fetchAccountActivationInfo: (currencyCode: string) => void,
+  fetchAccountActivationInfo: (walletType: string) => void,
   createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) => void,
   fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => void,
   setWalletAccountActivationQuoteError: (message: string) => void
@@ -92,8 +92,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
       walletName: '',
       createdWallet
     }
-    const currencyCode = selectedWalletType.currencyCode
-    props.fetchAccountActivationInfo(currencyCode)
+    props.fetchAccountActivationInfo(selectedWalletType.walletType)
   }
 
   renameAndReturnWallet = async (wallet: EdgeCurrencyWallet) => {
@@ -249,7 +248,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
     const { selectedWalletType } = route.params
     const { walletId } = this.state
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
-    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)
+    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.pluginId)
     const instructionSyntax = sprintf(
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
@@ -434,8 +433,8 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     createAccountTransaction(createdWalletId: string, accountName: string, paymentWalletId: string) {
       dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId))
     },
-    fetchAccountActivationInfo(currencyCode: string) {
-      dispatch(fetchAccountActivationInfo(currencyCode))
+    fetchAccountActivationInfo(walletType: string) {
+      dispatch(fetchAccountActivationInfo(walletType))
     },
     fetchWalletAccountActivationPaymentInfo(paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) {
       dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet))

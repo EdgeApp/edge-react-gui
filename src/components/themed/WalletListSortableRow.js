@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
@@ -59,10 +59,10 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const multiplier = displayDenomination.multiplier
     const name = getWalletName(wallet)
     const symbol = displayDenomination.symbol
-    const { symbolImageDarkMono } = getCurrencyIcon(currencyCode)
+    const { symbolImageDarkMono } = getCurrencyIcon(pluginId)
 
     const balance = wallet.balances[currencyCode] ?? '0'
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, multiplier, DECIMAL_PRECISION))
+    const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
     const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
     const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)

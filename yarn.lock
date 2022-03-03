@@ -5452,10 +5452,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.5:
-  version "0.19.5"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.5.tgz#79bebec1444f3b1319121c84c2d11d00b55013f1"
-  integrity sha512-ekO0MSoHyA4cncXn00+PANUHszpFhQuc+a2p56d0BFjjkEP7+6aKCeFEU7m8GVpPt5e3iSfsRv5m22p/sAznkA==
+edge-core-js@^0.19.10:
+  version "0.19.10"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.10.tgz#a03e2b805cbc4538817d6170471f2e368c605765"
+  integrity sha512-XEi0YAVIEvwOejsKMAahmDj44ogVcjwNiM3AN0Hyo4ZR+U3AL2NzJOhWItofsXz7+HB/LeHTvhvUR8vLJB0+vA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -5479,10 +5479,10 @@ edge-core-js@^0.19.5:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.12.2:
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.12.2.tgz#69d9415bbe9f8f60c2c66386558254c892db2916"
-  integrity sha512-Sk0IyYu1U4F4yXUJ4Nu8K73F9N4BBP2mU3bMmR7OWdu4dx3/RbIcLWaQ156SbLrnt5ieLGhYthMsXjhi/5aDvA==
+edge-currency-accountbased@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.14.1.tgz#884d0286c7635f742808041beee8c2923ebe1db9"
+  integrity sha512-4tKcL+EsENAsaQgwJMjU6DcJpaAx0w16XhLB+qv3czWd22hTOxM8TH5D/q2m8AVBBkIM4vJx7O4yjbZKil6ASQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@ethereumjs/common" "^2.4.0"
@@ -5547,10 +5547,10 @@ edge-currency-monero@^0.3.4:
     mymonero-core-js "https://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.12.9:
-  version "0.12.9"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.12.9.tgz#07cd5fb67647b5b89b9ddb6967d9361736929878"
-  integrity sha512-N6Cp6QsLdGoXefEFAojFddW+qnQDxZMnq6q+hYjDeC1hTGwPabccIWzfyKMGAFWsUpkHNb5qKRoz853FLulDHg==
+edge-exchange-plugins@^0.12.14:
+  version "0.12.14"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.12.14.tgz#baf538d5d5f380e79ea88708de4774990e84023c"
+  integrity sha512-i/iBlMGjDLFcztytcpnsgEbZID0iA4M4UmLzGTd7cPqmk7iGAVC6xnSrHP5PjPVMnBNURRGo7k8cW7u2k2mRAQ==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
@@ -5585,9 +5585,9 @@ edge-login-ui-rn@^0.9.29:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#c2e4d320b1863ebad5fb994f5bd03ccd6a0cb9c8":
+"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#c2e4d320b1863ebad5fb994f5bd03ccd6a0cb9c8"
+  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a"
   dependencies:
     cleaners "^0.3.1"
 
@@ -5710,7 +5710,7 @@ envinfo@^7.7.2, envinfo@^7.7.3:
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.8.1.tgz#06377e3e5f4d379fea7ac592d5ad8927e0c4d475"
   integrity sha512-/o+BXHmB7ocbHEAs6F2EnG0ogybVVUdkRunTT2glZU9XAaGmhqskrvKwqXuDfNjEO0LZKWdejEEpnq8aM0tOaw==
 
-"eosjs-api@git+https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb", "eosjs-api@https://github.com/EdgeApp/eosjs-api.git#prepare-script":
+"eosjs-api@https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb", "eosjs-api@https://github.com/EdgeApp/eosjs-api.git#prepare-script":
   version "7.0.4"
   resolved "https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
   dependencies:
@@ -6240,9 +6240,9 @@ ethereumjs-util@^7.1.0:
     ethjs-util "0.1.6"
     rlp "^2.2.4"
 
-"ethereumjs-wallet@git+https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
+"ethereumjs-wallet@https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
   version "0.6.0"
-  resolved "git+https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
+  resolved "https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
   dependencies:
     aes-js "^0.2.3"
     bs58check "^1.0.8"
@@ -6536,9 +6536,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha1-Ys8SAjTGg3hdkCNIqADvPgzCC8A=
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#6937ce236912dae8da8409838518023a88eacf6c"
+  resolved "https://github.com/EdgeApp/eztz.git#6937ce236912dae8da8409838518023a88eacf6c"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"

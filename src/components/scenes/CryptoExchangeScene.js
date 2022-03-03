@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div, gt, gte, mul } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -44,6 +44,7 @@ type StateProps = {
   toExchangeAmount: string,
   toWalletPrimaryInfo: GuiCurrencyInfo,
   toFiatToCrypto: string,
+  pluginId: string,
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
@@ -79,7 +80,9 @@ type State = {
 }
 
 // Prevent currencies that are "watch only" from being allowed to exchange
-const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => SPECIAL_CURRENCY_INFO[code].keysOnlyMode ?? false)
+const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
@@ -91,6 +94,7 @@ const defaultFromWalletInfo = {
   fromExchangeAmount: '',
   fromFiatToCrypto: '1',
   fromWalletId: '',
+  pluginId: '',
   hasMaxSpend: false
 }
 
@@ -124,7 +128,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (props.forceUpdateGuiCounter !== state.forceUpdateGuiCounter) {
       return {
-        fromAmountNative: bns.mul(props.fromExchangeAmount, props.fromWalletPrimaryInfo.exchangeDenomination.multiplier),
+        fromAmountNative: mul(props.fromExchangeAmount, props.fromWalletPrimaryInfo.exchangeDenomination.multiplier),
         fromExchangeAmount: props.fromExchangeAmount,
         toExchangeAmount: props.toExchangeAmount,
         forceUpdateGuiCounter: props.forceUpdateGuiCounter
@@ -162,7 +166,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const { fromAmountNative, whichWalletFocus } = this.state
     const fromNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
-    return whichWalletFocus === 'from' && bns.gte(fromNativeBalance, '0') && bns.gt(fromAmountNative, fromNativeBalance)
+    return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
   }
 
   launchFromWalletSelector = () => {
@@ -206,9 +210,9 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   renderAlert = () => {
-    const { fromWalletBalances, fromCurrencyCode, insufficient, genericError } = this.props
+    const { fromWalletBalances, fromCurrencyCode, insufficient, genericError, pluginId } = this.props
 
-    const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
+    const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
     const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
@@ -372,7 +376,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       const fromWalletName = getWalletName(currencyWallets[fromWalletId])
       const { fiatCurrencyCode: fromFiatCurrencyCode, isoFiatCurrencyCode: fromIsoFiatCurrencyCode } = getWalletFiat(currencyWallets[fromWalletId])
       const {
-        currencyInfo: { currencyCode },
+        currencyInfo: { pluginId },
         balances: fromWalletBalances
       } = currencyWallets[fromWalletId]
 
@@ -384,9 +388,10 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         fromIsoFiatCurrencyCode,
         fromCurrencyCode: exchangeCurrencyCode,
         fromWalletPrimaryInfo,
-        fromExchangeAmount: bns.div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
+        fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
         fromFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, fromIsoFiatCurrencyCode),
-        hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
+        pluginId,
+        hasMaxSpend: getSpecialCurrencyInfo(pluginId).noMaxSpend !== true
       })
     }
 
@@ -407,7 +412,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
         toFiatCurrencyCode,
         toIsoFiatCurrencyCode,
         toWalletPrimaryInfo,
-        toExchangeAmount: bns.div(toNativeAmount, multiplier, DECIMAL_PRECISION),
+        toExchangeAmount: div(toNativeAmount, multiplier, DECIMAL_PRECISION),
         toFiatToCrypto: getExchangeRate(state, exchangeCurrencyCode, toIsoFiatCurrencyCode)
       })
     }

@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { add, div, toFixed } from 'biggystring'
 import {
   type EdgeCurrencyWallet,
   type EdgeMetadata,
@@ -133,13 +133,12 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const { currencyWallets } = state.core.account
   const wallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
-  const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  if (getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
+  if (getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).noMaxSpend) {
     const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
     Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
     return
   }
-  const dummyPublicAddress = getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
+  const dummyPublicAddress = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).dummyPublicAddress
   dispatch({ type: 'START_CALC_MAX' })
   let primaryNativeAmount = '0'
 
@@ -185,8 +184,8 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-  const fromDisplayAmountTemp = bns.div(quote.fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
-  const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
+  const fromDisplayAmountTemp = div(quote.fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+  const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
 
   // Format from fiat:
   const fromExchangeDenomination = getExchangeDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
@@ -197,8 +196,8 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   // Format crypto fee:
   const feeDenomination = getDisplayDenomination(state, fromWallet.currencyInfo.pluginId, fromWallet.currencyInfo.currencyCode)
   const feeNativeAmount = quote.networkFee.nativeAmount
-  const feeTempAmount = bns.div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
-  const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 6)
+  const feeTempAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
+  const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
   // Format fiat fee:
   const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
@@ -209,12 +208,12 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   )
   const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
-  const fromTotalFiat = formatNumber(bns.add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
+  const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
-  const toDisplayAmountTemp = bns.div(quote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
-  const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
+  const toDisplayAmountTemp = div(quote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+  const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
 
   // Format to fiat:
   const toExchangeDenomination = getExchangeDenomination(state, toWallet.currencyInfo.pluginId, toCurrencyCode)
@@ -373,7 +372,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction: 'from' | 'to') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.core.account.currencyWallets[walletId]
-  const chainCc = wallet.currencyInfo.currencyCode
+  const { currencyCode: chainCc, pluginId, metaTokens } = wallet.currencyInfo
   const cc = currencyCode || chainCc
   const balanceMessage = await getBalanceMessage(state, walletId, cc)
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
@@ -384,13 +383,14 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
     displayDenomination: primaryDisplayDenomination,
     exchangeDenomination: primaryExchangeDenomination
   }
+  const contractAddress = metaTokens.find(token => token.currencyCode === cc)?.contractAddress
 
   const data = {
     walletId,
     balanceMessage,
     currencyCode: cc,
     primaryInfo,
-    ...getCurrencyIcon(chainCc, cc)
+    ...getCurrencyIcon(pluginId, contractAddress)
   }
 
   if (direction === 'from') {
@@ -431,7 +431,7 @@ async function getBalanceMessage(state: RootState, walletId: string, currencyCod
   const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
   const cryptoBalanceAmount: string = convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
-  const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+  const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
   const balanceInFiatString = formatNumber(balanceInFiat || 0, { toFixed: 2 })
 
   const fiatCurrencyCode = getDenomFromIsoCode(isoFiatCurrencyCode)

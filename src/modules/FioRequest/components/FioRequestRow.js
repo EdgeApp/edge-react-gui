@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -194,7 +194,7 @@ export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
 
     const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
     const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
-    const fiatAmount = formatNumber(bns.mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
+    const fiatAmount = formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
 
     return {
       displayDenomination,

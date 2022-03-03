@@ -14,7 +14,9 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
-const allowedCurrencies = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].displayBuyCrypto)
+const allowedCurrencies = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 type OwnProps = {
   // eslint-disable-next-line react/no-unused-prop-types

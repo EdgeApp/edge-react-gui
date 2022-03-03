@@ -145,6 +145,7 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
         {...contextOptions}
         crashReporter={crashReporter}
         debug={ENV.DEBUG_CORE}
+        allowDebugging={ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
         nativeIo={nativeIo}
         pluginUris={pluginUris}
         onLoad={this.onContext}

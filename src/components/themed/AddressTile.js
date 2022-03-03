@@ -9,7 +9,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions.js'
 import { addressWarnings } from '../../actions/ScanActions.js'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
@@ -250,7 +249,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
 )(withTheme(AddressTileComponent))

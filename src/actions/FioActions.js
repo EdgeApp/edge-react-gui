@@ -6,7 +6,7 @@ import React from 'react'
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { FIO_DOMAIN_SETTINGS } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
+import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings'
 import {
   addToFioAddressCache,
@@ -66,7 +66,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
     }, 400)
   }
   try {
-    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig.fio
     const wallet = account.currencyWallets[walletId]
 
     const obtDataRecords = await getFioObtData(fioWallets)

@@ -1,13 +1,13 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
+import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -141,8 +141,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
         const wallet = state.core.account.currencyWallets[walletId]
         const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, paymentCurrencyCode)
-        let nativeAmount = bns.mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
-        nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+        let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
+        nativeAmount = toFixed(nativeAmount, 0, 0)
 
         const guiMakeSpendInfo = {
           currencyCode: paymentCurrencyCode,
@@ -255,7 +255,7 @@ export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchPr
   (state, { route: { params } }) => ({
     state,
     fioWallets: state.ui.wallets.fioWallets,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: getDisplayDenomination(state, params.selectedWallet.currencyInfo.pluginId, FIO_STR),
     wallets: state.ui.wallets.byId,
     isConnected: state.network.isConnected

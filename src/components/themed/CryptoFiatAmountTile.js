@@ -1,5 +1,5 @@
 // @flow
-import { bns } from 'biggystring'
+import { abs, div } from 'biggystring'
 import { type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
@@ -29,7 +29,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   // Convert wallet native denomination to exchange denomination
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
-  const cryptoAmountDenom = bns.div(nativeCryptoAmount, cryptoDenomMult, DECIMAL_PRECISION)
+  const cryptoAmountDenom = div(nativeCryptoAmount, cryptoDenomMult, DECIMAL_PRECISION)
 
   // Default to 10 displayed chars for crypto amount
   const fmtCryptoAmount = formatNumber(cryptoAmountDenom, { toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars })
@@ -37,7 +37,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const cryptoAmountText = `${fmtCryptoAmount} ${cryptoName} `
 
   // Fiat amount is always positive for this specific tile
-  const absCryptoAmount = bns.abs(nativeCryptoAmount)
+  const absCryptoAmount = abs(nativeCryptoAmount)
   const fiatAmount = (
     <FiatText
       nativeCryptoAmount={absCryptoAmount}

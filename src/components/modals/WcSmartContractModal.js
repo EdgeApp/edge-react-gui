@@ -1,5 +1,5 @@
 // @flow
-import { bns } from 'biggystring'
+import { abs, add, div, gt, mul } from 'biggystring'
 import { type JsonObject } from 'edge-core-js/types'
 import { WcRpcPayload } from 'edge-currency-accountbased'
 import * as React from 'react'
@@ -57,7 +57,7 @@ export const WcSmartContractModal = (props: Props) => {
     const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
     if (token != null) amountCurrencyCode = token.currencyCode
   }
-  const feeCurrencyCode = wallet.currencyInfo.currencyCode
+  const { currencyCode: feeCurrencyCode, pluginId, metaTokens } = wallet.currencyInfo
 
   const { isoFiatCurrencyCode } = guiWallet
 
@@ -70,19 +70,18 @@ export const WcSmartContractModal = (props: Props) => {
     amountCrypto = hexToDecimal(params.value)
   }
   if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
-    networkFeeCrypto = hexToDecimal(removeHexPrefix(bns.mul(params.gas, params.gasPrice, 16)))
+    networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
   }
 
   const amountDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, amountCurrencyCode)
   const feeDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, feeCurrencyCode)
 
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
-  const amountCurrencyToFeeCurrencyExchangeRate = bns.div(amountDenom.multiplier, feeDenom.multiplier)
-  const amountCryptoAsFeeCrypto = bns.mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
-  const totalNativeCrypto = bns.mul(bns.add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
+  const amountCurrencyToFeeCurrencyExchangeRate = div(amountDenom.multiplier, feeDenom.multiplier)
+  const amountCryptoAsFeeCrypto = mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
+  const totalNativeCrypto = mul(add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
 
-  const isInsufficientBal =
-    amountCurrencyCode === feeCurrencyCode ? bns.gt(bns.abs(totalNativeCrypto), feeCurrencyBalance) : bns.gt(networkFeeCrypto, feeCurrencyBalance)
+  const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
 
   const handleSubmit = async () => {
     try {
@@ -112,7 +111,8 @@ export const WcSmartContractModal = (props: Props) => {
     )
   }
 
-  const walletImageUri = getCurrencyIcon(feeCurrencyCode, amountCurrencyCode).symbolImage
+  const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
+  const walletImageUri = getCurrencyIcon(pluginId, contractAddress).symbolImage
   const slider = isInsufficientBal ? null : (
     <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
   )

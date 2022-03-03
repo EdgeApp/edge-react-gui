@@ -6,7 +6,7 @@ import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
 import { REQUEST, SEND, TRANSACTION_LIST } from '../../constants/SceneKeys.js'
-import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
+import { getPluginId, getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -66,7 +66,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 
   handleSelectWallet = (): void => {
     const { currencyCode, guiWallet, isToken } = this.props
-    const walletId = guiWallet.id
+    const { id: walletId, type: walletType } = guiWallet
     const publicAddress = guiWallet.receiveAddress.publicAddress
 
     this.closeRow()
@@ -74,7 +74,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     if (!isToken) {
       // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
       // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-      const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
+      const { isAccountActivationRequired } = getSpecialCurrencyInfo(walletType)
       if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
         Actions.push(TRANSACTION_LIST)
       }
@@ -85,7 +85,9 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 
   handleOpenWalletListMenuModal = (): void => {
     const { currencyCode, guiWallet, isToken } = this.props
-    const { symbolImage } = getCurrencyIcon(guiWallet.currencyCode, currencyCode)
+    const { metaTokens } = guiWallet
+    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    const { symbolImage } = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress)
 
     this.closeRow()
     Airship.show(bridge => (

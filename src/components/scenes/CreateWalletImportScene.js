@@ -4,7 +4,7 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
-import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { getPluginId, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -50,8 +50,8 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     const { account, navigation, route } = this.props
     const { selectedWalletType } = route.params
     const { input } = this.state
-    const { currencyCode } = selectedWalletType
-    const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+    const { walletType } = selectedWalletType
+    const currencyPluginName = getPluginId(walletType)
     const currencyPlugin = account.currencyConfig[currencyPluginName]
 
     this.setState({ isProcessing: true })
@@ -84,9 +84,9 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     const { route } = this.props
     const { error, isProcessing, input } = this.state
     const { selectedWalletType } = route.params
-    const { currencyCode } = selectedWalletType
+    const { walletType } = selectedWalletType
 
-    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    const specialCurrencyInfo = getSpecialCurrencyInfo(walletType)
     if (!specialCurrencyInfo.isImportKeySupported) throw new Error()
     const instructionSyntax = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
     const labelKeySyntax = specialCurrencyInfo.isImportKeySupported.privateKeyLabel

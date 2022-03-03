@@ -28,6 +28,7 @@ if (ENV.CHANGE_NOW_INIT == null && ENV.CHANGE_NOW_API_KEY) {
 export const currencyPlugins = {
   // edge-currency-accountbased:
   binance: true,
+  binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
   hedera: true,
   eos: true,
   telos: true,
@@ -43,6 +44,7 @@ export const currencyPlugins = {
   stellar: true,
   tezos: true,
   solana: true,
+  celo: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
@@ -88,7 +90,7 @@ export const ratePlugins = {
 export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
-  exolix: false,
+  exolix: ENV.EXOLIX_INIT,
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,

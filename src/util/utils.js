@@ -1,6 +1,6 @@
 // @flow
 
-import { bns, div, eq, gt, gte, mul, toFixed } from 'biggystring'
+import { abs, add, div, eq, gt, gte, log10, lt, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
@@ -60,8 +60,8 @@ export const getFiatSymbol = (code: string) => {
 export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
   if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const initialAmount = fiatAmount.toFixed(precision)
-  const absoluteAmount = bns.abs(initialAmount)
-  return formatNumber(bns.toFixed(absoluteAmount, 2, precision), { noGrouping })
+  const absoluteAmount = abs(initialAmount)
+  return formatNumber(toFixed(absoluteAmount, 2, precision), { noGrouping })
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
@@ -143,7 +143,7 @@ export const roundUpToLeastSignificant = (input: string): string => {
   if (!input.includes('.')) return input
   const precision = input.split('.')[1].length
   const oneExtra = `0.${'1'.padStart(precision, '0')}`
-  return bns.add(input, oneExtra)
+  return add(input, oneExtra)
 }
 
 export const zeroString = (input: any): boolean => input == null || typeof input !== 'string' || input === '' || eq(input, '0')
@@ -175,7 +175,7 @@ export function isHex(h: string) {
 }
 
 export function hexToDecimal(num: string) {
-  return bns.add(num, '0', 10)
+  return add(num, '0', 10)
 }
 
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
@@ -342,11 +342,11 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in tenth of pennies
-  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), bns.mul(params.secondaryExchangeMultiplier, '10'))
+  const exchangeRateString = mul(exchangeRateOrderOfMagnitude.toString(), mul(params.secondaryExchangeMultiplier, '10'))
 
-  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DECIMAL_PRECISION)
+  const precisionAdjust = div(exchangeRateString, params.primaryExchangeMultiplier, DECIMAL_PRECISION)
 
-  if (bns.lt(precisionAdjust, '1')) {
+  if (lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
     let order = 2 + Math.floor(Math.log(fPrecisionAdject) / Math.LN10 - 0.000000001) // because float math sucks like that
     order = Math.abs(order)
@@ -679,8 +679,8 @@ export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, p
 
 export const convertToCryptoFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
   const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(exchangeMultiplier)(networkFee) : ''
-  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
-  return bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+  const exchangeToDisplayMultiplierRatio = div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
+  return mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
 }
 
 export const feeStyle = {
@@ -699,7 +699,7 @@ export const convertToFiatFee = (
   const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
   const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
   return {
-    amount: bns.toFixed(fiatFeeAmount, FIAT_PRECISION, FIAT_PRECISION),
+    amount: toFixed(fiatFeeAmount, FIAT_PRECISION, FIAT_PRECISION),
     style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
   }
 }
@@ -719,7 +719,7 @@ export const convertTransactionFeeToDisplayFee = (
     feeNativeAmount = transaction?.parentNetworkFee
   } else if (transaction?.networkFee != null) feeNativeAmount = transaction?.networkFee
 
-  if (feeNativeAmount != null && bns.gt(feeNativeAmount, '0')) {
+  if (feeNativeAmount != null && gt(feeNativeAmount, '0')) {
     const cryptoFeeSymbol = feeDisplayDenomination && feeDisplayDenomination.symbol ? feeDisplayDenomination.symbol : ''
     const displayMultiplier = feeDisplayDenomination ? feeDisplayDenomination.multiplier : ''
     const exchangeMultiplier = feeDefaultDenomination ? feeDefaultDenomination.multiplier : ''
@@ -773,10 +773,10 @@ export function getCryptoAmount(
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
       exchangeSecondaryToPrimaryRatio: exchangeRate
     })
-    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(denomination.multiplier), precisionAdjustValue)
   }
   try {
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DECIMAL_PRECISION), maxConversionDecimals)
+    const preliminaryCryptoAmount = truncateDecimals(div(balance, denomination.multiplier, DECIMAL_PRECISION), maxConversionDecimals)
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
