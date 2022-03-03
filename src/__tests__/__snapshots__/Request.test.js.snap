@@ -61,7 +61,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        <ForwardRef
+        <TouchableOpacity
           onPress={[Function]}
           style={
             Object {
@@ -79,8 +79,8 @@ exports[`Request should render with loaded props 1`] = `
           >
             
           </Text>
-        </ForwardRef>
-        <ForwardRef
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={[Function]}
           style={
             Object {
@@ -98,13 +98,13 @@ exports[`Request should render with loaded props 1`] = `
           >
             Done
           </Text>
-        </ForwardRef>
+        </TouchableOpacity>
       </View>
     </InputAccessoryView>
     <QrCode
       onPress={[Function]}
     />
-    <ForwardRef
+    <TouchableOpacity
       onPress={[Function]}
     >
       <View
@@ -132,7 +132,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       />
-    </ForwardRef>
+    </TouchableOpacity>
   </View>
   <ShareButtons
     copyToClipboard={[Function]}
@@ -144,9 +144,7 @@ exports[`Request should render with loaded props 1`] = `
 
 exports[`Request should render with loading props 1`] = `
 <ActivityIndicator
-  animating={true}
   color="#FFFFFF"
-  hidesWhenStopped={true}
   size="large"
   style={
     Object {
