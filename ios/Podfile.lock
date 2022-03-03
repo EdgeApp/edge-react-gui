@@ -442,7 +442,7 @@ PODS:
     - React-Core
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.1.1):
+  - react-native-mymonero-core (0.1.2):
     - React
   - react-native-netinfo (5.9.10):
     - React-Core
@@ -1021,7 +1021,7 @@ SPEC CHECKSUMS:
   CNIOWindows: f5aa9dfb401b440a7b4c9cd911e53e981a787193
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
-  DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
+  DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   edge-core-js: 0f4ff3105e6008d0795d77fb81f3e4893c6f706e
   edge-login-ui-rn: bb229d0087d664f76a03949df7627ed49fed4144
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
@@ -1043,7 +1043,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: d8d346844eca5d9120c17d441a2f38596e8ed2b9
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   GoogleAppMeasurement: c542a2feaac9ab98fd074e8f1a02c3585bbfbd47
   GoogleDataTransport: 8b0e733ea77c9218778e5a9e34ba9508b8328939
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
@@ -1081,7 +1081,7 @@ SPEC CHECKSUMS:
   react-native-flipper: 8d0ada062fbc2c7460cc0d343aded6fc3f9c90dc
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
-  react-native-mymonero-core: 59aaed6e2aef48f8d0e12b564e1927d613076b86
+  react-native-mymonero-core: d5e67aca5f755ba87a4305e1a5861323b3b0a980
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b

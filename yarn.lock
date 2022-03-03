@@ -1584,6 +1584,23 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.68.2.tgz#3ba74680927807f83d9f0bfd7da45f192d2c0893"
   integrity sha512-iFwGIzPmAMDvxVLtTvBUo0DCWz8vVaD0C4IsprNaXbxu+AsDmlc9kO9CKLB5YFEZblKNNKqJMJDfKvg5brIpTw==
 
+"@mymonero/mymonero-bigint@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@mymonero/mymonero-bigint/-/mymonero-bigint-1.4.2.tgz#23174269ffdb983181972f021fb237069d135a7f"
+  integrity sha512-JVGPBWT9jeCNaXAW1vnZEHnX+flP8Wl/FC6sq2bwan9nblAkRB59UsAzpOm8VjiPwmUqm073sekLsIpAgUB2IQ==
+
+"@mymonero/mymonero-money-format@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@mymonero/mymonero-money-format/-/mymonero-money-format-1.4.2.tgz#cf852de67bc02522c64cf4020d6ec3900d87aee4"
+  integrity sha512-M+VXwrF/fnkGOSsy9f+DwtLz940MeMknkpiPICtFXDtL8/vluQBenxiq+qC5pr5LYYPqvP4TGK2wKxqSORORZw==
+  dependencies:
+    "@mymonero/mymonero-bigint" "^1.4.2"
+
+"@mymonero/mymonero-nettype@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@mymonero/mymonero-nettype/-/mymonero-nettype-1.4.2.tgz#18b9ec8060a5a2cb0f681cdfbf42055757764fec"
+  integrity sha512-3QocFvyzUEIUdqLL5lZvIbgLTXuuapQuztPzjtTok0P6uoPFm0KMLgYiOK4hOAtalr3B6FxlbojhPNL0IHsw4A==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -11617,10 +11634,14 @@ react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1,
   dependencies:
     prop-types "^15.5.9"
 
-react-native-mymonero-core@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.1.tgz#17b8c1172f29ef2c4a52d6343d6158650936dabf"
-  integrity sha512-NMZNSEgkTPNismOJ4frieL1A7SHGureTBxuqIvhhQSLcdemtzcWCeFh907ugMUHPkZwUh0ujN/ZLwBIoCk3MMA==
+react-native-mymonero-core@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.2.tgz#8b65d0ef5bbefb6fff0a92e364b61d809447dd2f"
+  integrity sha512-mfh70iHKZywIJBfqlT80R7xcePr0b7EtpeXQDhIJSVIPCI0XKtKSpYIFpF2vWc5KitPtmQKAImtVM27pMb4hHA==
+  dependencies:
+    "@mymonero/mymonero-bigint" "^1.4.2"
+    "@mymonero/mymonero-money-format" "^1.4.2"
+    "@mymonero/mymonero-nettype" "^1.4.2"
 
 react-native-patina@^0.1.6:
   version "0.1.6"
