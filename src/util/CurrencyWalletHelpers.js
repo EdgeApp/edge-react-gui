@@ -20,11 +20,12 @@ export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: s
   return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
 }
 
-export const getAvailableBalance = (wallet: EdgeCurrencyWallet): string => {
+export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: string): string => {
   const { currencyCode, pluginId } = wallet.currencyInfo
-  let balance = wallet.balances[currencyCode] ?? '0'
+  const cCode = tokenCode ?? currencyCode
+  let balance = wallet.balances[cCode] ?? '0'
   if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
-    const lockedBalance = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const lockedBalance = wallet.balances[`${cCode}${STAKING_BALANCES.locked}`] ?? '0'
     balance = sub(balance, lockedBalance)
   }
   return balance
