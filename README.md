@@ -35,14 +35,6 @@ This project uses Yarn to manage Javascript dependencies:
 
 Do not use NPM to install dependencies, since that will not work.
 
-### Install Rust and Cargo
-
-You need to install Rust and Cargo in order to build the ZcashLightClientKit library. Once installed, you need to add the appropriate architectures using `rustup`:
-
-    curl https://sh.rustup.rs -sSf | sh
-    cargo install cargo-lipo
-    rustup target add aarch64-apple-ios x86_64-apple-ios
-
 ### Checkout develop branch & install node_modules
 
     cd edge-react-gui
