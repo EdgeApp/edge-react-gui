@@ -1,0 +1,56 @@
+diff --git a/node_modules/react-native-zcash/ios/RNZcash.swift b/node_modules/react-native-zcash/ios/RNZcash.swift
+index adef0f1..3614522 100644
+--- a/node_modules/react-native-zcash/ios/RNZcash.swift
++++ b/node_modules/react-native-zcash/ios/RNZcash.swift
+@@ -430,7 +430,7 @@ func documentsDirectoryHelper() throws -> URL {
+ func cacheDbURLHelper(_ alias: String, _ network: ZcashNetwork) throws -> URL {
+     try documentsDirectoryHelper()
+         .appendingPathComponent(
+-            network.constants.DEFAULT_DB_NAME_PREFIX + alias + ZcashSDK.DEFAULT_CACHES_DB_NAME,
++            network.constants.defaultDbNamePrefix + alias + ZcashSDK.defaultCacheDbName,
+             isDirectory: false
+         )
+ }
+@@ -438,14 +438,14 @@ func cacheDbURLHelper(_ alias: String, _ network: ZcashNetwork) throws -> URL {
+ func dataDbURLHelper(_ alias: String, _ network: ZcashNetwork) throws -> URL {
+     try documentsDirectoryHelper()
+         .appendingPathComponent(
+-            network.constants.DEFAULT_DB_NAME_PREFIX + alias + ZcashSDK.DEFAULT_DATA_DB_NAME,
++            network.constants.defaultDbNamePrefix + alias + ZcashSDK.defaultDataDbName,
+             isDirectory: false
+         )
+ }
+ 
+ func pendingDbURLHelper(_ alias: String, _ network: ZcashNetwork) throws -> URL {
+     try documentsDirectoryHelper()
+-        .appendingPathComponent(network.constants.DEFAULT_DB_NAME_PREFIX + alias + ZcashSDK.DEFAULT_PENDING_DB_NAME)
++        .appendingPathComponent(network.constants.defaultDbNamePrefix + alias + ZcashSDK.defaultPendingDbName)
+ }
+ 
+ func spendParamsURLHelper(_ alias: String) throws -> URL {
+diff --git a/node_modules/react-native-zcash/lib/libzcashlc.a b/node_modules/react-native-zcash/lib/libzcashlc.a
+new file mode 100644
+index 0000000..cb6429b
+Binary files /dev/null and b/node_modules/react-native-zcash/lib/libzcashlc.a differ
+diff --git a/node_modules/react-native-zcash/react-native-zcash.podspec b/node_modules/react-native-zcash/react-native-zcash.podspec
+index d5c265c..5861a3e 100644
+--- a/node_modules/react-native-zcash/react-native-zcash.podspec
++++ b/node_modules/react-native-zcash/react-native-zcash.podspec
+@@ -15,15 +15,8 @@ Pod::Spec.new do |s|
+   s.requires_arc = true
+   s.source       = { :git => "https://github.com/EdgeApp/react-native-zcash.git", :tag => "v#{s.version}" }
+   s.source_files = "ios/**/*.{h,m,swift}"
+-  s.script_phase = {
+-      :name => 'Build generate constants and build librustzcash',
+-      :script => 'sh ${PODS_TARGET_SRCROOT}/Scripts/build_librustzcash_xcode.sh',
+-      :execution_position => :before_compile
+-   }
+-   s.prepare_command = <<-CMD
+-   sh Scripts/prepare_zcash_sdk.sh
+- CMD
+ 
+  s.dependency "React"
+- s.dependency 'ZcashLightClientKit', '0.12.0-beta.5'
++ s.dependency 'ZcashLightClientKit', '0.13.0-beta.1'
++
+ end

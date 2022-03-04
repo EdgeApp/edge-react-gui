@@ -1,5 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+source "https://cdn.cocoapods.org/"
+source "https://github.com/zcash-hackworks/CocoaPodsSpecs.git"
 
 # Edge change: React Native itself only requires 11.0:
 platform :ios, '12.0'
@@ -50,4 +52,5 @@ target 'edge' do
   pod 'CNIOHTTPParser', :modular_headers => true
   pod 'CNIOWindows', :modular_headers => true
   pod 'CGRPCZlib', :modular_headers => true
+  pod 'ZcashLightClientKit', :git => 'https://github.com/zcash/ZcashLightClientKit.git'
 end
