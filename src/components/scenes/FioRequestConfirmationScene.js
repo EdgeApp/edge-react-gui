@@ -215,8 +215,13 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
     ))
     if (fioAddressFrom === null) return
-    if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
-      return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
+    if (fioPlugin) {
+      try {
+        await checkPubAddress(fioPlugin, fioAddressFrom, fioPlugin.currencyInfo.currencyCode, fioPlugin.currencyInfo.currencyCode)
+      } catch (e) {
+        return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
+      }
+    }
     if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
     if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
     this.setState({ fioAddressFrom: fioAddressFrom || '' })
@@ -237,10 +242,17 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} isFioOnly />
     ))
     if (fioAddressTo === null) {
-      this.showError()
-    } else if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
-      this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
-    } else if (this.state.fioAddressFrom === fioAddressTo) {
+      return this.showError()
+    }
+    if (fioPlugin) {
+      try {
+        await checkPubAddress(fioPlugin, fioAddressTo, fioPlugin.currencyInfo.currencyCode, fioPlugin.currencyInfo.currencyCode)
+      } catch (e) {
+        this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+      }
+    }
+
+    if (this.state.fioAddressFrom === fioAddressTo) {
       this.showError(s.strings.fio_confirm_request_error_to_same)
     } else {
       this.setState({ fioAddressTo: fioAddressTo || '', settingFioAddressTo: false })

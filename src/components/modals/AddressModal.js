@@ -217,7 +217,13 @@ class AddressModalComponent extends React.Component<Props, State> {
       try {
         const { fioPlugin } = this.props
         if (!fioPlugin) return
-        const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
+        let doesAccountExist = false
+        try {
+          await checkPubAddress(fioPlugin, fioAddress, fioPlugin.currencyInfo.currencyCode, fioPlugin.currencyInfo.currencyCode)
+          doesAccountExist = true
+        } catch (e) {
+          //
+        }
         this.setStatusLabel(s.strings.fragment_send_address)
         if (!doesAccountExist) {
           return this.setState({ fieldError: s.strings.err_no_address_title })
