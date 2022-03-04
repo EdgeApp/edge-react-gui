@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import FastImage from 'react-native-fast-image'
 
+import { SMALL_ICON_RATIO } from '../../constants/constantSettings.js'
 import { getPluginId } from '../../constants/WalletAndCurrencyConstants.js'
 import { connect } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -19,7 +20,8 @@ type OwnProps = {
 }
 
 type StateProps = {
-  icon: string | void,
+  icon?: string,
+  parentIcon?: string,
   progress: number
 }
 
@@ -62,13 +64,14 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
     clearTimeout(this.updateIsDoneState)
   }
 
+  getIconSize = (multiplier: number = 1) => {
+    const { size = this.props.theme.rem(2) } = this.props
+    return { width: size * multiplier, height: size * multiplier }
+  }
+
   render() {
     const { isDone } = this.state
-    const { icon, progress, size, theme } = this.props
-    const iconSize = {
-      width: size || theme.rem(2),
-      height: size || theme.rem(2)
-    }
+    const { icon, parentIcon, progress, size, theme } = this.props
 
     let formattedProgress
     if (!icon) {
@@ -82,16 +85,24 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
     }
 
     return (
-      <AnimatedCircularProgress
-        size={size ? size + theme.rem(0.25) : theme.rem(2.25)}
-        width={theme.rem(3 / 16)}
-        fill={formattedProgress}
-        tintColor={isDone ? theme.walletProgressIconFillDone : theme.walletProgressIconFill}
-        backgroundColor={theme.walletProgressIconBackground}
-        rotation={0}
-      >
-        {() => (icon != null ? <FastImage style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
-      </AnimatedCircularProgress>
+      <View>
+        <AnimatedCircularProgress
+          size={size ? size + theme.rem(0.25) : theme.rem(2.25)}
+          width={theme.rem(3 / 16)}
+          fill={formattedProgress}
+          tintColor={isDone ? theme.walletProgressIconFillDone : theme.walletProgressIconFill}
+          backgroundColor={theme.walletProgressIconBackground}
+          rotation={0}
+        >
+          {() => (icon != null ? <FastImage style={this.getIconSize()} source={{ uri: icon }} /> : <View style={this.getIconSize()} />)}
+        </AnimatedCircularProgress>
+        {parentIcon != null ? (
+          <FastImage
+            style={{ position: 'absolute', bottom: theme.rem(3 / 16), right: theme.rem(3 / 16), ...this.getIconSize(SMALL_ICON_RATIO) }}
+            source={{ uri: parentIcon }}
+          />
+        ) : null}
+      </View>
     )
   }
 }
@@ -99,21 +110,19 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
 export const WalletProgressIcon = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
-    let icon
-    let progress = 100
 
-    if (walletId) {
-      const guiWallet = state.ui.wallets.byId[walletId]
-      const { metaTokens } = guiWallet
-      const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-      icon = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress).symbolImage
-      const walletsProgress = state.ui.wallets.walletLoadingProgress
-      progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
-    }
+    if (walletId == null) return { progress: 0 }
+
+    const guiWallet = state.ui.wallets.byId[walletId]
+    const { metaTokens } = guiWallet
+    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    const { symbolImage, parentSymbolImage } = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress)
+    const { walletLoadingProgress } = state.ui.wallets
 
     return {
-      icon,
-      progress
+      icon: symbolImage,
+      parentIcon: parentSymbolImage,
+      progress: walletLoadingProgress[walletId] ? walletLoadingProgress[walletId] * 100 : 0
     }
   },
   dispatch => ({})
