@@ -42,7 +42,13 @@ exports[`Request should render with loaded props 1`] = `
         onExchangeAmountChanged={[Function]}
         onNext={[Function]}
         overridePrimaryExchangeAmount=""
-        primaryCurrencyInfo={Object {}}
+        primaryCurrencyInfo={
+          Object {
+            "displayDenomination": Object {
+              "multiplier": "100000000",
+            },
+          }
+        }
         secondaryCurrencyInfo={Object {}}
         topReturnKeyType="done"
       />
