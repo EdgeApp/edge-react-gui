@@ -40,7 +40,7 @@ describe('Request', () => {
       exchangeSecondaryToPrimaryRatio: {},
       guiWallet: {},
       loading: false,
-      primaryCurrencyInfo: { displayDenomination: { multiplier: '100000000' } },
+      primaryCurrencyInfo: { displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } },
       receiveAddress: {},
       secondaryCurrencyInfo: {},
       showToWalletModal: false,
