@@ -156,38 +156,39 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   const state = getState()
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
-  if (wallet) {
-    const prefix = logPrefix(wallet)
+  const now = Date.now()
 
-    if (!refreshDetails.delayUpsert) {
-      const now = Date.now()
-      if (now - refreshDetails.lastUpsert > upsertFrequency) {
-        dispatchUpsertWallets(dispatch, [wallet])
-        refreshDetails.lastUpsert = Date.now()
-      } else {
-        console.log(`${prefix}: refreshWallets setTimeout delay upsert`)
-        refreshDetails.delayUpsert = true
-        refreshDetails.walletIds[walletId] = wallet
-        setTimeout(() => {
-          const wallets = []
-          for (const wid of Object.keys(refreshDetails.walletIds)) {
-            const w = refreshDetails.walletIds[wid]
-            console.log(`${logPrefix(w)}: refreshWallets upserting now`)
-            wallets.push(refreshDetails.walletIds[wid])
-          }
-          dispatchUpsertWallets(dispatch, wallets)
-          refreshDetails.delayUpsert = false
-          refreshDetails.lastUpsert = Date.now()
-          refreshDetails.walletIds = {}
-        }, upsertFrequency)
-      }
-    } else {
-      // Add wallet to the queue to upsert
-      refreshDetails.walletIds[walletId] = wallet
-      console.log(`${prefix}: refreshWallets delayUpsert`)
-    }
-  } else {
+  if (!wallet) {
     console.log(`${walletId.slice(0, 2)} refreshWallets no wallet`)
+    return
+  }
+  const prefix = logPrefix(wallet)
+
+  if (refreshDetails.delayUpsert) {
+    refreshDetails.walletIds[walletId] = wallet
+    console.log(`${prefix}: refreshWallets delayUpsert`)
+    return
+  }
+
+  if (now - refreshDetails.lastUpsert > upsertFrequency) {
+    dispatchUpsertWallets(dispatch, [wallet])
+    refreshDetails.lastUpsert = Date.now()
+  } else {
+    console.log(`${prefix}: refreshWallets setTimeout delay upsert`)
+    refreshDetails.delayUpsert = true
+    refreshDetails.walletIds[walletId] = wallet
+    setTimeout(() => {
+      const wallets = []
+      for (const wid of Object.keys(refreshDetails.walletIds)) {
+        const w = refreshDetails.walletIds[wid]
+        console.log(`${logPrefix(w)}: refreshWallets upserting now`)
+        wallets.push(refreshDetails.walletIds[wid])
+      }
+      dispatchUpsertWallets(dispatch, wallets)
+      refreshDetails.delayUpsert = false
+      refreshDetails.lastUpsert = Date.now()
+      refreshDetails.walletIds = {}
+    }, upsertFrequency)
   }
 }
 
