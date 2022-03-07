@@ -434,7 +434,7 @@ PODS:
     - React
   - react-native-contacts (7.0.0):
     - React-Core
-  - react-native-fast-crypto (2.0.0):
+  - react-native-fast-crypto (2.1.0):
     - OpenSSL-Universal
     - React
   - react-native-flipper (0.131.1):
@@ -1089,7 +1089,7 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
-  react-native-fast-crypto: b6dea8324fb1b095dd4f29a80356b43acb3ee2e9
+  react-native-fast-crypto: 027489bc7f180b1274ac99f96222794dcea9de42
   react-native-flipper: 8d0ada062fbc2c7460cc0d343aded6fc3f9c90dc
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
