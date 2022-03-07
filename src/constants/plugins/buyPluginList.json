@@ -787,77 +787,6 @@
       "page": "0"
     }
   },
-  {
-    "id": "transak.upi",
-    "pluginId": "transak",
-    "paymentTypes": [
-      "bank"
-    ],
-    "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
-    "title": "United Payments Interface",
-    "partnerIconPath": "transak_logo.png",
-    "forCountries": [
-      "IN"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-      "and more"
-    ],
-    "paymentTypeLogoKey": "upi",
-    "deepQuery": {
-      "countryCode": "IN",
-      "exchangeScreenTitle": "Buy crypto to your Edge wallet",
-      "paymentMethod": "upi"
-    }
-  },
-  {
-    "id": "transak.bank",
-    "pluginId": "transak",
-    "paymentTypes": [
-      "bank"
-    ],
-    "description": "Fee: 0.75% / Settlement: 2 min - 4 hours\nLimit: ₹1,000,000/day",
-    "title": "NEFT Transfer",
-    "partnerIconPath": "transak_logo.png",
-    "forCountries": [
-      "IN"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-      "and more"
-    ],
-    "paymentTypeLogoKey": "bank",
-    "deepQuery": {
-      "countryCode": "IN",
-      "exchangeScreenTitle": "Buy crypto to your Edge wallet",
-      "paymentMethod": "neft_bank_transfer"
-    }
-  },
-  {
-    "id": "transak.wyre",
-    "pluginId": "transak",
-    "paymentTypes": [
-      "credit"
-    ],
-    "description": "Fee: 3.9% / Settlement: Instant\nLimit: $250/day",
-    "title": "Debit Card",
-    "forCountries": [],
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-      "USDC",
-      "DAI"
-    ],
-    "partnerIconPath": "transak_logo.png",
-    "paymentTypeLogoKey": "debit",
-    "deepQuery": {
-      "countryCode": "US",
-      "paymentMethod": "credit_debit_card",
-      "exchangeScreenTitle": "Buy crypto to your Edge wallet"
-    }
-  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -914,18 +843,6 @@
   {
     "id": "moonpay",
     "sortIndex": 5
-  },
-  {
-    "id": "transak.upi",
-    "sortIndex": 1
-  },
-  {
-    "id": "transak.bank",
-    "sortIndex": 2
-  },
-  {
-    "id": "transak.wyre",
-    "sortIndex": 2
   },
   "----- iOS specifics -----",
   {
