@@ -54,7 +54,7 @@ exports[`Request should render with loaded props 1`] = `
       }
     >
       <WithTheme(EdgeTextComponent)>
-        You have 0.000012 undefined
+        You have 0 undefined
       </WithTheme(EdgeTextComponent)>
       <WithTheme(EdgeTextComponent)
         style={
