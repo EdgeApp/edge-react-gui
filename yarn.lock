@@ -11554,10 +11554,10 @@ react-native-extra-dimensions-android@^1.2.5:
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
   integrity sha512-eorFo9X1vEqAWUkgcZ300yKBG1wtgNeE7tdWAH2CE+P50FGTniJg5Sr6l1iPWG8ZskQOuF+KeiSTFlDa4vLfMw==
 
-react-native-fast-crypto@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-2.0.0.tgz#d15958e089f3862ed6bd88ea6ef9ce241571e7a1"
-  integrity sha512-EcQL6XNK7l6hDcvrUwhvbKzV3Sm+iCoebrFBxhX94A+Gm+5Bihg3D9bHL/48M8wpxriuxpQksmk3qDqabnefCg==
+react-native-fast-crypto@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-2.1.0.tgz#d53df69d07b1d9fa65164ebbd139085e44945351"
+  integrity sha512-hxY6YiMdz4Z+OzwwU609OcaZhtgIEZAFsfLmxkKtGB98kWBLKSaoMwnpc/ZAkjIutej8N4x+kGC7LME0OhYVdA==
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
