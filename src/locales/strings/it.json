@@ -467,7 +467,7 @@
   "transaction_details_choose_a_sub_category": "Scegli una sotto-categoria",
   "transaction_details_recipient_addresses": "Indirizzo destinatario",
   "transaction_details_advance_details_header": "Dettagli avanzati",
-  "transaction_details_advance_details_fee_info": "Info Commissioni",
+  "transaction_details_advance_details_fee_setting": "Fee Setting",
   "transaction_details_advance_details_device": "Dispositivo",
   "transaction_details_advance_details_fee_used": "Commissione Usata",
   "transaction_details_advance_details_show_explorer": "Mostra nell'Explorer",
