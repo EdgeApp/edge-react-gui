@@ -56,10 +56,28 @@ module.exports = {
     path: path.join(path.resolve(__dirname), 'android/app/src/main/assets/edge-core')
   },
   performance: { hints: false },
-  node: { fs: 'empty' },
-  plugins: [new webpack.IgnorePlugin(/^(https-proxy-agent)$/)],
+  plugins: [
+    new webpack.IgnorePlugin({ resourceRegExp: /^(https-proxy-agent)$/ }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer']
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser'
+    })
+  ],
   resolve: {
     aliasFields: ['browser'],
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      assert: require.resolve('assert'),
+      fs: false,
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      path: require.resolve('path-browserify'),
+      stream: require.resolve('stream-browserify'),
+      vm: require.resolve('vm-browserify')
+    },
     mainFields: ['browser', 'module', 'main']
   }
 }
