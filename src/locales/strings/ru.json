@@ -467,7 +467,7 @@
   "transaction_details_choose_a_sub_category": "Выберите подкатегорию",
   "transaction_details_recipient_addresses": "Адрес получателя",
   "transaction_details_advance_details_header": "Дополнительные сведения",
-  "transaction_details_advance_details_fee_info": "Информация о оплате комиссии",
+  "transaction_details_advance_details_fee_setting": "Fee Setting",
   "transaction_details_advance_details_device": "Device",
   "transaction_details_advance_details_fee_used": "Использована коммисия",
   "transaction_details_advance_details_show_explorer": "Показать в проводнике",
