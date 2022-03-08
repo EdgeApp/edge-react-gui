@@ -5589,17 +5589,17 @@ edge-exchange-plugins@^0.12.14:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.29:
-  version "0.9.29"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.29.tgz#f6dd52f50cec3c2076702bb16a4a465071807a34"
-  integrity sha512-b9t55b49FNg7o9RClKU1/WHG8DVaBITjLno1SRESuCA4Sp8asqjISzdVTHdzczBB7GB3mNr4fvMaJdKMIsWHJw==
+edge-login-ui-rn@^0.9.30:
+  version "0.9.30"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.30.tgz#cdaf645f5aafbaec2c9101ef89aa752b680ed938"
+  integrity sha512-9mtshkqGEKAO/VF6ZrLYen+XBgddqQ35Ier2/nuoEBNdc7RIUQQnFbVhvYLXY4obCtdP5EU/O8if6MAAAmWMYA==
   dependencies:
     cleaners "^0.3.1"
     date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
     react-native-airship "^0.2.6"
     react-native-gesture-handler "^1.10.3"
-    react-native-keyboard-aware-scroll-view "^0.9.1"
+    react-native-keyboard-aware-scroll-view "^0.9.5"
     react-native-linear-gradient "^2.0.0"
     react-native-localize "^2.0.2"
     react-native-mail "^6.1.0"
@@ -11600,10 +11600,10 @@ react-native-iphone-x-helper@^1.0.3:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
   integrity sha512-xIeTo4s77wwKgBZLVRIZC9tM9/PkXS46Ul76NXmvmixEb3ZwqGdQesR3zRiLMOoIdfOURB6N9bba9po7+x9Bag==
 
-react-native-keyboard-aware-scroll-view@^0.9.1, react-native-keyboard-aware-scroll-view@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.9.3.tgz#65ab4cab1a987b486d97924602756fa88b7fbfcc"
-  integrity sha512-EDyFp8wAJoKvi1T2pzoPRn8R0Inp3G+575jPAWEFTlXq26URMmk8760rzde2XLW+v/1+QwDyBg6d/5mz63/ZRA==
+react-native-keyboard-aware-scroll-view@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.9.5.tgz#e2e9665d320c188e6b1f22f151b94eb358bf9b71"
+  integrity sha512-XwfRn+T/qBH9WjTWIBiJD2hPWg0yJvtaEw6RtPCa5/PYHabzBaWxYBOl0usXN/368BL1XktnZPh8C2lmTpOREA==
   dependencies:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
@@ -11623,7 +11623,7 @@ react-native-mail@^6.1.0, react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
