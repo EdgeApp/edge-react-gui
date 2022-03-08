@@ -467,7 +467,7 @@
   "transaction_details_choose_a_sub_category": "Wähle eine Unterkategorie",
   "transaction_details_recipient_addresses": "Empfänger-Adressen",
   "transaction_details_advance_details_header": "Erweiterte Details",
-  "transaction_details_advance_details_fee_info": "Gebühreninfo",
+  "transaction_details_advance_details_fee_setting": "Fee Setting",
   "transaction_details_advance_details_device": "Gerät",
   "transaction_details_advance_details_fee_used": "verwendete Gebühr",
   "transaction_details_advance_details_show_explorer": "Im Explorer anzeigen",
