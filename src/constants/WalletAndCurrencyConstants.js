@@ -131,7 +131,6 @@ type SpecialCurrencyInfo = {|
   allowZeroTx?: boolean,
   isAccountActivationRequired?: boolean,
   isCustomTokensSupported?: boolean,
-  isRbfSupported?: boolean,
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
   skipAccountNameValidation?: boolean,
@@ -337,7 +336,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isRbfSupported: true,
     isBitPayProtocolSupported: false
   },
   ethereumclassic: {
@@ -386,8 +384,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isCustomTokensSupported: true,
-    isRbfSupported: true
+    isCustomTokensSupported: true
   },
   solana: {
     initWalletName: s.strings.string_first_solana_wallet_name,
@@ -414,8 +411,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isSplittingDisabled: true,
-    isRbfSupported: true
+    isSplittingDisabled: true
   },
   fio: {
     initWalletName: s.strings.string_first_fio_wallet_name,
@@ -555,8 +551,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
-    isCustomTokensSupported: true,
-    isRbfSupported: true
+    isCustomTokensSupported: true
   },
   avalanche: {
     initWalletName: s.strings.string_first_avalanche_wallet_name,
@@ -567,8 +562,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
-    isCustomTokensSupported: true,
-    isRbfSupported: true
+    isCustomTokensSupported: true
   }
 }
 
