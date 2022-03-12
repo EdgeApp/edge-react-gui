@@ -678,6 +678,7 @@ const strings = {
   plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
   plugin_powered_by: 'Powered by',
   no_exchange_rate: 'No Exchange Rate',
+  unstake_from_wallet: 'Unstake from %s',
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_from_wallet: 'Exchange from %s',

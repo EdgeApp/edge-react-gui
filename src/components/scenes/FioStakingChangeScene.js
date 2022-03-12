@@ -31,8 +31,8 @@ import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
-  route: RouteProp<'stakingChange'>,
-  navigation: NavigationProp<'stakingChange'>
+  route: RouteProp<'fioStakingChange'>,
+  navigation: NavigationProp<'fioStakingChange'>
 }
 
 type StateProps = {
@@ -53,7 +53,7 @@ type DispatchProps = {
 }
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
-export const StakingChangeSceneComponent = (props: Props) => {
+export const FioStakingChangeSceneComponent = (props: Props) => {
   const {
     theme,
     route: {
@@ -352,7 +352,7 @@ const getStyles = cacheStyles(theme => ({
   }
 }))
 
-export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
+export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const {
       route: {
@@ -399,4 +399,4 @@ export const StakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(refreshAllFioAddresses())
     }
   })
-)(withTheme(StakingChangeSceneComponent))
+)(withTheme(FioStakingChangeSceneComponent))

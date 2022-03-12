@@ -27,7 +27,7 @@ import { SceneHeader } from '../themed/SceneHeader.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
-  route: RouteProp<'stakingOverview'>
+  route: RouteProp<'fioStakingOverview'>
 }
 type StateProps = {
   currencyWallet: EdgeCurrencyWallet,
@@ -47,7 +47,7 @@ type Lock = {
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-export const StakingOverviewSceneComponent = (props: Props) => {
+export const FioStakingOverviewSceneComponent = (props: Props) => {
   const {
     theme,
     route: {
@@ -90,10 +90,10 @@ export const StakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    Actions.jump('stakingChange', { change: 'add', currencyCode, walletId })
+    Actions.jump('fioStakingChange', { change: 'add', currencyCode, walletId })
   }
   const handlePressUnstake = () => {
-    Actions.jump('stakingChange', { change: 'remove', currencyCode, walletId })
+    Actions.jump('fioStakingChange', { change: 'remove', currencyCode, walletId })
   }
 
   const renderItems = () =>
@@ -161,7 +161,7 @@ const getStyles = cacheStyles(theme => ({
   }
 }))
 
-export const StakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>(
+export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const {
       route: {
@@ -197,4 +197,4 @@ export const StakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>
       dispatch(refreshAllFioAddresses())
     }
   })
-)(withTheme(StakingOverviewSceneComponent))
+)(withTheme(FioStakingOverviewSceneComponent))
