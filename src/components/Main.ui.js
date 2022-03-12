@@ -78,6 +78,8 @@ import {
   FIO_REQUEST_CONFIRMATION,
   FIO_REQUEST_LIST,
   FIO_SENT_REQUEST_DETAILS,
+  FIO_STAKING_CHANGE,
+  FIO_STAKING_OVERVIEW,
   LOGIN,
   MANAGE_TOKENS,
   MANAGE_TOKENS_NOT_USED,
@@ -96,8 +98,6 @@ import {
   SETTINGS_OVERVIEW,
   SETTINGS_OVERVIEW_TAB,
   SPENDING_LIMITS,
-  STAKING_CHANGE,
-  STAKING_OVERVIEW,
   TERMS_OF_SERVICE,
   TRANSACTION_DETAILS,
   TRANSACTION_LIST,
@@ -135,6 +135,8 @@ import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
 import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
+import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
+import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
@@ -148,8 +150,6 @@ import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { SpendingLimitsScene } from './scenes/SpendingLimitsScene.js'
-import { StakingChangeScene } from './scenes/StakingChangeScene'
-import { StakingOverviewScene } from './scenes/StakingOverviewScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
@@ -351,17 +351,17 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={STAKING_OVERVIEW}
+                key={FIO_STAKING_OVERVIEW}
                 navTransparent
-                component={ifLoggedIn(StakingOverviewScene)}
+                component={ifLoggedIn(FioStakingOverviewScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />
 
               <Scene
-                key={STAKING_CHANGE}
+                key={FIO_STAKING_CHANGE}
                 navTransparent
-                component={ifLoggedIn(StakingChangeScene)}
+                component={ifLoggedIn(FioStakingChangeScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />
