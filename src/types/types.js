@@ -129,7 +129,10 @@ export type CreateWalletType = {
 export type CreateTokenType = {
   currencyCode: string,
   currencyName: string,
+  parentSymbolImage?: string,
+  parentSymbolImageDarkMono?: string,
   symbolImage?: string,
+  symbolImageDarkMono?: string,
   parentCurrencyCode: string
 }
 
