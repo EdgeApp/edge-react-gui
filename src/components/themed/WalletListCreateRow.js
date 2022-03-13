@@ -4,7 +4,6 @@ import type { Disklet } from 'disklet'
 import { type EdgeAccount, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
@@ -19,6 +18,7 @@ import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { WalletIcon } from './WalletIcon.js'
 import { WalletListRow } from './WalletListRow.js'
 
 type OwnProps = {
@@ -107,10 +107,12 @@ class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchP
 
   renderIcon() {
     const { createWalletType, createTokenType } = this.props
-    const styles = getStyles(this.props.theme)
     return (
-      <View style={styles.iconContainer}>
-        <FastImage style={styles.iconSize} source={{ uri: createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? '' }} />
+      <View style={getStyles(this.props.theme).iconContainer}>
+        <WalletIcon
+          walletIcon={createWalletType?.symbolImage ?? createTokenType?.parentSymbolImage ?? undefined}
+          tokenIcon={createTokenType?.symbolImage ?? undefined}
+        />
       </View>
     )
   }
@@ -146,10 +148,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  iconSize: {
-    width: theme.rem(2),
-    height: theme.rem(2)
   },
 
   // Label
