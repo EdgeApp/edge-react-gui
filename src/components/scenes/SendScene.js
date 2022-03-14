@@ -1,6 +1,5 @@
 // @flow
 
-import { div, eq, toFixed } from 'biggystring'
 import {
   type EdgeAccount,
   type EdgeCurrencyWallet,
@@ -23,12 +22,11 @@ import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo } from '../../types/types.js'
-import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
+import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
@@ -39,6 +37,7 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
+import { EditableAmountTile } from '../themed/EditableAmountTile'
 import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
@@ -392,49 +391,29 @@ class SendComponent extends React.PureComponent<Props, State> {
       exchangeRates,
       guiMakeSpendInfo: { lockInputs },
       nativeAmount,
-      theme,
       route,
       currencyWallets,
       getExchangeDenomination,
       getDisplayDenomination
     } = this.props
     const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
-    const { wallet, selectedCurrencyCode, recipientAddress } = this.state
-    const { isoFiatCurrencyCode } = getWalletFiat(wallet)
-    const styles = getStyles(theme)
+    const { selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress && !hiddenTilesMap.amount) {
-      let cryptoAmountSyntax
-      let cryptoAmountStyle
-      let fiatAmountSyntax
       const cryptoDisplayDenomination = getDisplayDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
       const cryptoExchangeDenomination = getExchangeDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
-      const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
-      const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
-      if (nativeAmount === '') {
-        cryptoAmountSyntax = s.strings.string_tap_to_edit
-        cryptoAmountStyle = styles.amountTextMuted
-      } else if (nativeAmount != null && !eq(nativeAmount, '0')) {
-        const displayAmount = div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
-        const exchangeAmount = div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
-        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, isoFiatCurrencyCode, exchangeAmount)
-        cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
-        if (fiatAmount) {
-          fiatAmountSyntax = `${fiatSymbol} ${toFixed(fiatAmount, 2, 2) ?? '0'}`
-        }
-      } else {
-        cryptoAmountSyntax = `0 ${cryptoDisplayDenomination.name}`
-      }
 
       return (
-        <Tile
-          type={lockInputs || lockTilesMap.amount ? 'static' : 'touchable'}
-          title={s.strings.fio_request_amount}
-          onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipInputModal}
-        >
-          <EdgeText style={[styles.amountText, cryptoAmountStyle]}>{cryptoAmountSyntax}</EdgeText>
-          {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
-        </Tile>
+        <EditableAmountTile
+          exchangeRates={exchangeRates}
+          nativeAmount={nativeAmount ?? '0'}
+          currencyWallet={currencyWallets[this.state.selectedWalletId]}
+          currencyCode={selectedCurrencyCode}
+          exchangeDenomination={cryptoExchangeDenomination}
+          displayDenomination={cryptoDisplayDenomination}
+          lockInputs={lockInputs || (lockTilesMap.amount ?? false)}
+          onPress={this.handleFlipInputModal}
+        />
       )
     }
 
