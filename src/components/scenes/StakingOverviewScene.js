@@ -183,6 +183,14 @@ export const StakingOverviewScene = connect<StateProps, DispatchProps, OwnProps>
     const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
+    const pluginIds = ['stake:uniswapv2', 'stake:moonswap']
+
+    const stakePlugins = pluginIds.map(pluginId => getStakePlugin(state.core.account, pluginId))
+
+    const policies = stakePlugin.getStakePolicies()
+
+    const foundPolicy = policies
+
     return {
       currencyWallet,
       stakingCryptoAmountFormat,
