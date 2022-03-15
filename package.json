@@ -113,6 +113,7 @@
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a",
     "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#4842daad5fd560cd462f4668ab17c521a16a6cd9",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#6412ad28462278b84313537f21a53d307633c5d0",
+    "ethers": "^5.6.0",
     "qrcode-generator": "^1.4.4",
     "react": "17.0.2",
     "react-native": "^0.67.2",
