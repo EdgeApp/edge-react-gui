@@ -7,17 +7,21 @@ import FastImage from 'react-native-fast-image'
 import rightArrow from '../../assets/images/rightArrow.png'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-export function PairIcons({ icons }: { icons: string[] }): React.Node {
+export function PairIcons({ icons, withArrow = false }: { icons: string[], withArrow?: boolean }): React.Node {
   const styles = getStyles(useTheme())
-  const lastIcon = icons.pop()
+  const lastIcon = withArrow ? icons.pop() : undefined
 
   return (
     <View style={styles.container}>
       {icons.map((icon, index) => (
         <FastImage style={[styles.icon, index > 0 ? styles.consecutiveIcon : undefined]} source={{ uri: icon }} key={index} />
       ))}
-      <FastImage style={styles.arrow} source={rightArrow} resizeMode="contain" />
-      <FastImage style={styles.icon} source={{ uri: lastIcon }} />
+      {lastIcon != null ? (
+        <>
+          <FastImage style={styles.arrow} source={rightArrow} resizeMode="contain" />
+          <FastImage style={styles.icon} source={{ uri: lastIcon }} />
+        </>
+      ) : null}
     </View>
   )
 }

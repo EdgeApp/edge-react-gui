@@ -7,7 +7,17 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { PairIcons } from './PairIcons.js'
 
-export function StakingReturnsCard({ fromCurrencyLogos, text }: { fromCurrencyLogos: string[], text: string }): React.Node {
+export function StakingIconsCard({
+  fromCurrencyLogos,
+  withArrow,
+  primaryText,
+  secondaryText
+}: {
+  fromCurrencyLogos: string[],
+  withArrow?: boolean,
+  primaryText: string,
+  secondaryText?: string
+}): React.Node {
   const styles = getStyles(useTheme())
 
   return (
@@ -16,11 +26,12 @@ export function StakingReturnsCard({ fromCurrencyLogos, text }: { fromCurrencyLo
       <View>
         <View style={styles.iconsContainer}>
           <View style={styles.leftIconsLine} />
-          <PairIcons icons={fromCurrencyLogos} />
+          <PairIcons icons={fromCurrencyLogos} withArrow={withArrow} />
           <View style={styles.rightIconsLine} />
         </View>
         <View style={styles.textContainer}>
-          <EdgeText>{text}</EdgeText>
+          <EdgeText>{primaryText}</EdgeText>
+          {secondaryText ? <EdgeText style={styles.secondaryText}>{primaryText}</EdgeText> : null}
         </View>
       </View>
       <View style={styles.rightCap} />
@@ -49,7 +60,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       flexDirection: 'row',
       alignItems: 'center',
       position: 'absolute',
-      bottom: theme.rem(2.75) + 2 * theme.thinLineWidth
+      top: theme.rem(-1.5)
     },
     textContainer: {
       alignItems: 'center',
@@ -81,6 +92,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderRightWidth: theme.thinLineWidth,
       borderBottomRightRadius: theme.rem(0.5),
       borderTopRightRadius: theme.rem(0.5)
+    },
+    secondaryText: {
+      marginTop: theme.rem(1),
+      fontSize: theme.rem(0.75)
     }
   }
 })
