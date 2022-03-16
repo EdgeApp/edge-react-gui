@@ -186,7 +186,7 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
-  - libzcashlc (0.0.1)
+  - libzcashlc (0.0.2)
   - Logging (1.4.0)
   - nanopb (2.30907.0):
     - nanopb/decode (= 2.30907.0)
@@ -452,9 +452,9 @@ PODS:
     - React
   - react-native-webview (10.2.3):
     - React
-  - react-native-zcash (0.2.0):
+  - react-native-zcash (0.2.1):
     - React
-    - ZcashLightClientKit (= 0.13.0-beta.1)
+    - ZcashLightClientKit (= 0.13.0-beta.2)
   - React-perflogger (0.67.2)
   - React-RCTActionSheet (0.67.2):
     - React-Core/RCTActionSheetHeaders (= 0.67.2)
@@ -673,9 +673,9 @@ PODS:
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
-  - ZcashLightClientKit (0.13.0-beta.1):
+  - ZcashLightClientKit (0.13.0-beta.2):
     - gRPC-Swift (= 1.0.0)
-    - libzcashlc (= 0.0.1)
+    - libzcashlc (= 0.0.2)
     - SQLite.swift (~> 0.12.2)
 
 DEPENDENCIES:
@@ -790,11 +790,9 @@ DEPENDENCIES:
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - TcpSockets (from `../node_modules/react-native-tcp`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
-  - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`)
+  - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`, tag `0.13.0-beta.2`)
 
 SPEC REPOS:
-  https://github.com/zcash-hackworks/CocoaPodsSpecs.git:
-    - libzcashlc
   trunk:
     - _NIODataStructures
     - CGRPCZlib
@@ -830,6 +828,7 @@ SPEC REPOS:
     - hermes-engine
     - libevent
     - libwebp
+    - libzcashlc
     - Logging
     - nanopb
     - OpenSSL-Universal
@@ -1010,11 +1009,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
   ZcashLightClientKit:
     :git: https://github.com/zcash/ZcashLightClientKit.git
+    :tag: 0.13.0-beta.2
 
 CHECKOUT OPTIONS:
   ZcashLightClientKit:
-    :commit: e1507c1a7d1a9ad824996bb0b0427ff3fe3d0e9b
     :git: https://github.com/zcash/ZcashLightClientKit.git
+    :tag: 0.13.0-beta.2
 
 SPEC CHECKSUMS:
   _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
@@ -1061,7 +1061,7 @@ SPEC CHECKSUMS:
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  libzcashlc: cb37e2bbe2f9b8237237e46ed31f16cd1151ce6a
+  libzcashlc: d32ab47e7676905990610e999fc5d15d062061d5
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
@@ -1097,7 +1097,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-webview: 0bacc79175bc44869e4c1a015b9bc21df8cf4feb
-  react-native-zcash: 5711230c903e2b6df8ec24387b4911061b918770
+  react-native-zcash: febe4cb0f4b4953a91eda20c2754658e9931cc84
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
   React-RCTActionSheet: 052606483045a408693aa7e864410b4a052f541a
   React-RCTAnimation: 08d4cac13222bb1348c687a0158dfd3b577cdb63
@@ -1151,8 +1151,8 @@ SPEC CHECKSUMS:
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
-  ZcashLightClientKit: c6611f27b52e0f96e9bafe801f0d1a85d9b0ea45
+  ZcashLightClientKit: ac11c62951bc8130abbce780705956fb7fb54fd9
 
-PODFILE CHECKSUM: e1c918c672612b51fec5c0873e2ff8d233d36e54
+PODFILE CHECKSUM: 157dbafbf221a5ac85992c145b3f34cb806544c7
 
 COCOAPODS: 1.11.2
