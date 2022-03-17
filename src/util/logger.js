@@ -102,19 +102,17 @@ export async function readLogs() {
 }
 
 export async function log(...info: Array<number | string | null | {}>) {
-  const logs = normalize(...info)
-
-  const now = Date.now()
-  const d = dateFormat(now, 'HH:MM:ss:l')
-
-  try {
-    await lock.acquire('logger', async () => {
-      return writeLog(d + ': ' + logs)
-    })
-  } catch (e) {
-    global.clog(e)
-  }
-  global.clog(logs)
+  // const logs = normalize(...info)
+  // const now = Date.now()
+  // const d = dateFormat(now, 'HH:MM:ss:l')
+  // try {
+  //   await lock.acquire('logger', async () => {
+  //     return writeLog(d + '..... ' + logs)
+  //   })
+  // } catch (e) {
+  //   global.clog(e)
+  // }
+  // global.clog(logs)
 }
 
 async function request(data: string) {

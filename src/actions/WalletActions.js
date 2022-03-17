@@ -165,14 +165,14 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
         dispatchUpsertWallets(dispatch, [wallet])
         refreshDetails.lastUpsert = Date.now()
       } else {
-        console.log(`${prefix}: refreshWallets setTimeout delay upsert`)
+        // console.log(`${prefix}: refreshWallets setTimeout delay upsert`)
         refreshDetails.delayUpsert = true
         refreshDetails.walletIds[walletId] = wallet
         setTimeout(() => {
           const wallets = []
           for (const wid of Object.keys(refreshDetails.walletIds)) {
             const w = refreshDetails.walletIds[wid]
-            console.log(`${logPrefix(w)}: refreshWallets upserting now`)
+            // console.log(`${logPrefix(w)}: refreshWallets upserting now`)
             wallets.push(refreshDetails.walletIds[wid])
           }
           dispatchUpsertWallets(dispatch, wallets)
@@ -184,7 +184,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
     } else {
       // Add wallet to the queue to upsert
       refreshDetails.walletIds[walletId] = wallet
-      console.log(`${prefix}: refreshWallets delayUpsert`)
+      // console.log(`${prefix}: refreshWallets delayUpsert`)
     }
   } else {
     console.log(`${walletId.slice(0, 2)} refreshWallets no wallet`)

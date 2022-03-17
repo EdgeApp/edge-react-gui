@@ -4,6 +4,7 @@ import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, typ
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
+import { type StakePolicy } from '../components/scenes/Staking/StakeApi.js'
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
 import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
 import {
@@ -209,6 +210,10 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
+  stakeChange: { walletId: string },
+  stakeClaim: { walletId: string, stakePolicy: StakePolicy },
+  stakeOptions: { walletId: string },
+  stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   fioStakingChange: {
     change: 'add' | 'remove',
     currencyCode: string,

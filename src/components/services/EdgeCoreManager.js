@@ -31,10 +31,8 @@ const contextOptions: EdgeContextOptions = {
 
   // Use this to adjust logging verbosity on a plugin-by-plugin basis:
   logSettings: {
-    defaultLogLevel: 'warn',
-    sources: {
-      'edge-core': 'warn'
-    }
+    defaultLogLevel: 'silent',
+    sources: {}
   },
 
   plugins: allPlugins

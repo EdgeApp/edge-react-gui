@@ -27,7 +27,7 @@ console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
-global.clog = console.log
+global.clog = {} // console.log
 
 // TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
 const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time', 'Warning: isMounted(...) is deprecated']
@@ -75,7 +75,7 @@ if (ENV.LOG_SERVER) {
   console.error = console.log
 }
 
-const clog = console.log
+const clog = {} // console.log
 
 if (PERF_LOGGING_ONLY) {
   // $FlowFixMe: suppressing this error until we can find a workaround
