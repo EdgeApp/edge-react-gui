@@ -1,15 +1,18 @@
 // @flow
-
 import type { EdgeCurrencyWallet, EdgeToken, JsonObject } from 'edge-core-js'
 
-// Staking Policy
-// ---------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Stake Policy
+// -----------------------------------------------------------------------------
 
 // Not sure if this is going be enough because how "LP-staking" works;
 // Need to figure out how we deal with LP pool asset-ratios.
 export type StakePolicy = {
   // Perhaps we need a UUID for each policy?
-  policyId: string,
+  stakePolicyId: string,
+
+  // A percentage number representing the yield per year
+  apy: number,
 
   // The assets which must be staked
   stakeAssets: {
@@ -19,7 +22,7 @@ export type StakePolicy = {
   },
 
   // The assets which can be earned
-  rewardsAssets: {
+  rewardAssets: {
     [pluginId: string]: {
       [tokenId: string]: boolean
     }
@@ -29,18 +32,30 @@ export type StakePolicy = {
   mustClaimRewards: boolean
 }
 
-// Stake Quote
-// ---------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Change Quote
+// -----------------------------------------------------------------------------
 
-export type StakeQuoteRequest = {
-  policyId: string,
-  wallet: EdgeCurrencyWallet,
+export type ChangeQuoteRequest = {
+  action: 'stake' | 'unstake' | 'claim',
+  stakePolicyId: string,
   tokenId: string,
-  nativeAmount: string
+  nativeAmount: string,
+  wallet: EdgeCurrencyWallet
 }
 
-export type StakeQuote = {
+export type ChangeQuote = {
   stakes: {
+    [tokenId: string]: {
+      nativeAmount: string
+    }
+  },
+  claims: {
+    [tokenId: string]: {
+      nativeAmount: string
+    }
+  },
+  unstakes: {
     [tokenId: string]: {
       nativeAmount: string
     }
@@ -55,19 +70,20 @@ export type StakeQuote = {
   approve: () => Promise<void>
 }
 
+// -----------------------------------------------------------------------------
+// Stake Details
+// -----------------------------------------------------------------------------
+
 export type StakeDetailRequest = {
-  policyId: string,
+  stakePolicyId: string,
   wallet: EdgeCurrencyWallet
 }
 
-// Stake Details
-// ---------------------------------------------------------------------
-
 export type StakeDetails = {
   allocations: Array<{
-    // The export type of asset for this allocation
+    // The type of asset for this allocation
     token: EdgeToken,
-    // The export type of the allocation
+    // The type of the allocation
     allocationType: 'staked' | 'unstaked' | 'earned',
     // Amount of the asset allocated
     nativeAmount: string,
@@ -87,12 +103,12 @@ export type StakeDetails = {
   }>
 }
 
-// ---------------------------------------------------------------------
-// Stake API
-// ---------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Stake Plugin
+// -----------------------------------------------------------------------------
 
 export type StakePlugin = {
   getStakePolicies: () => Promise<StakePolicy[]>,
-  fetchStakeQuote: (request: StakeQuoteRequest) => Promise<StakeQuote>,
-  fetchStakeDetails: (request: StakeDetailRequest) => StakeDetails
+  fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>,
+  fetchStakeDetails: (request: StakeDetailRequest) => Promise<StakeDetails>
 }
