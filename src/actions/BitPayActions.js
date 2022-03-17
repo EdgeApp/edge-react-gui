@@ -229,11 +229,19 @@ export async function launchBitPay(
   }
 
   // Send confirmation scene
-  Actions.push('send', {
-    guiMakeSpendInfo,
-    selectedWalletId: selectedWallet.id,
-    selectedCurrencyCode
-  })
+  if (Actions.currentScene === 'send') {
+    Actions.refresh({
+      guiMakeSpendInfo,
+      selectedWalletId: selectedWallet?.id ?? '',
+      selectedCurrencyCode
+    })
+  } else {
+    Actions.push('send', {
+      guiMakeSpendInfo,
+      selectedWalletId: selectedWallet.id,
+      selectedCurrencyCode
+    })
+  }
 }
 
 /**
