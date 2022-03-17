@@ -220,7 +220,6 @@ export async function launchBitPay(
       name: sprintf(s.strings.bitpay_metadata_name, paymentId),
       notes: sprintf(s.strings.bitpay_metadata_name, paymentId)
     },
-    dismissAlert: true,
     lockInputs: true,
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
