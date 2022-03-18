@@ -220,7 +220,6 @@ export async function launchBitPay(
       name: sprintf(s.strings.bitpay_metadata_name, paymentId),
       notes: sprintf(s.strings.bitpay_metadata_name, paymentId)
     },
-    dismissAlert: true,
     lockInputs: true,
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
@@ -229,11 +228,19 @@ export async function launchBitPay(
   }
 
   // Send confirmation scene
-  Actions.push('send', {
-    guiMakeSpendInfo,
-    selectedWalletId: selectedWallet.id,
-    selectedCurrencyCode
-  })
+  if (Actions.currentScene === 'send') {
+    Actions.refresh({
+      guiMakeSpendInfo,
+      selectedWalletId: selectedWallet?.id ?? '',
+      selectedCurrencyCode
+    })
+  } else {
+    Actions.push('send', {
+      guiMakeSpendInfo,
+      selectedWalletId: selectedWallet.id,
+      selectedCurrencyCode
+    })
+  }
 }
 
 /**
