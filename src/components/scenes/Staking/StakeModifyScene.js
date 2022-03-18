@@ -1,7 +1,10 @@
 // @flow
 import * as React from 'react'
+import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import s from '../../../locales/strings.js'
+import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
 import { makeStakePlugin } from '../../../plugins/stake-plugins/index.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
@@ -11,11 +14,15 @@ import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName } from '../../../util/stakeUtils.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
+import { FlipInputModal } from '../../modals/FlipInputModal.js'
+import { Airship } from '../../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
-import { Card } from '../../themed/Card.js'
+import { Alert } from '../../themed/Alert.js'
 import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
+import { EdgeText } from '../../themed/EdgeText.js'
 import { EditableAmountTile } from '../../themed/EditableAmountTile.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
+import { Tile } from '../../themed/Tile.js'
 
 type Props = {
   // navigation: NavigationProp<'stakeModify'>,
@@ -77,6 +84,7 @@ export const StakeModifyScene = (props: Props) => {
 
   const [stakeAllocation, setStakeAllocation] = useState()
   const [rewardAllocation, setRewardAllocation] = useState()
+  const [stakeModRequest, setStakeModRequest] = useState()
 
   useEffect(() => {
     async function fetchStakeDetails() {
@@ -91,22 +99,27 @@ export const StakeModifyScene = (props: Props) => {
     })
   }, [currencyWallet, stakePolicyId])
 
-  const renderWalletSelect = () => {
-    // if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-    //   return <SelectableRow onPress={showWalletListModal} title={s.strings.wc_confirm_select_wallet} arrowTappable />
-    // } else {
-    //   const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
-    //   const walletImage = <FastImage style={styles.currencyLogo} source={{ uri: walletImageUri }} />
-    //   const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
-    //   return <SelectableRow onPress={showWalletListModal} icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
-    // }
-  }
-
   const titleMap = {
     stake: 'Amount to Stake',
     claim: 'Amount of reward to claim',
     unstake: 'Amount to Unstake'
   }
+
+  const handleFlipInputModal = () => {
+    Airship.show(bridge => (
+      <FlipInputModal bridge={bridge} walletId={walletId} currencyCode={currencyWallet.currencyInfo.currencyCode} onAmountChanged={() => {}} />
+    )).catch(error => console.log(error))
+  }
+
+  const renderWarning = modification => {
+    if (modification !== 'claim') return null
+
+    const warningText =
+      'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose “claim rewards and unstake” instead.'
+
+    return <Alert marginTop={0.5} title={s.strings.wc_smartcontract_warning_title} message={warningText} numberOfLines={0} type="warning" />
+  }
+
   const renderAmountTiles = (allocationToMod, modification) => {
     const isClaim = modification === 'claim'
     const amountCurrencyCode = isClaim ? rewardAssetsName : stakeAssetsName
@@ -114,9 +127,12 @@ export const StakeModifyScene = (props: Props) => {
     const displayDenomination = isClaim ? rewardDisplayDenom : stakeDisplayDenom
     return (
       <>
-        <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
-          {/* {renderWalletSelect()} */}
-        </Card>
+        <Tile type="static" title="Wallet">
+          <View style={styles.walletContainer}>
+            <FastImage style={styles.currencyLogo} source={{ uri: stakeImages[0] }} />
+            <EdgeText>{currencyWallet.name}</EdgeText>
+          </View>
+        </Tile>
         <EditableAmountTile
           title={titleMap[modification]}
           exchangeRates={guiExchangeRates}
@@ -126,15 +142,21 @@ export const StakeModifyScene = (props: Props) => {
           exchangeDenomination={exchangeDenomination}
           displayDenomination={displayDenomination}
           lockInputs={isClaim}
-          onPress={() => {}}
+          onPress={handleFlipInputModal}
         />
         <CryptoFiatAmountTile
           title={s.strings.wc_smartcontract_network_fee}
-          nativeCryptoAmount={'0' /** TODO */}
+          nativeCryptoAmount={
+            '0' /** 
+        // TODO: fees 
+      */
+          }
           cryptoCurrencyCode={currencyWallet.currencyInfo.currencyCode}
           isoFiatCurrencyCode={isoFiatCurrencyCode}
           denomination={nativeAssetDenomination}
         />
+        {renderWarning(modification)}
+        <Slider onSlidingComplete={() => {}} disabled={false} showSpinner={null} disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label} />
       </>
     )
   }
@@ -204,6 +226,9 @@ export const StakeModifyScene = (props: Props) => {
 }
 
 const getStyles = cacheStyles(theme => ({
+  walletContainer: {
+    flexDirection: 'row'
+  },
   icon: {
     height: theme.rem(1.5),
     width: theme.rem(1.5),
@@ -219,7 +244,7 @@ const getStyles = cacheStyles(theme => ({
     height: theme.rem(1.25),
     width: theme.rem(1.25),
     resizeMode: 'contain',
-    marginLeft: theme.rem(1)
+    marginRight: theme.rem(0.5)
   },
   explainer: {
     margin: theme.rem(0.5)
