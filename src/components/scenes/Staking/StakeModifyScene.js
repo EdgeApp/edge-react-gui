@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
@@ -25,7 +26,6 @@ import { SceneHeader } from '../../themed/SceneHeader.js'
 import { Tile } from '../../themed/Tile.js'
 
 type Props = {
-  // navigation: NavigationProp<'stakeModify'>,
   route: RouteProp<'stakeModify'>
 }
 
@@ -99,10 +99,16 @@ export const StakeModifyScene = (props: Props) => {
     })
   }, [currencyWallet, stakePolicyId])
 
-  const titleMap = {
-    stake: 'Amount to Stake',
-    claim: 'Amount of reward to claim',
-    unstake: 'Amount to Unstake'
+  const sceneTitleMap = {
+    stake: sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName),
+    claim: s.strings.stake_claim_rewards,
+    unstake: s.strings.stake_claim_unstake
+  }
+
+  const amountTileTitleMap = {
+    stake: s.strings.stake_amount_stake,
+    claim: s.strings.stake_amount_claim,
+    unstake: s.strings.stake_amount_unstake
   }
 
   const handleFlipInputModal = () => {
@@ -114,10 +120,7 @@ export const StakeModifyScene = (props: Props) => {
   const renderWarning = modification => {
     if (modification !== 'claim') return null
 
-    const warningText =
-      'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose “claim rewards and unstake” instead.'
-
-    return <Alert marginTop={0.5} title={s.strings.wc_smartcontract_warning_title} message={warningText} numberOfLines={0} type="warning" />
+    return <Alert marginTop={0.5} title={s.strings.wc_smartcontract_warning_title} message={s.strings.stake_warning_claim} numberOfLines={0} type="warning" />
   }
 
   const renderAmountTiles = (allocationToMod, modification) => {
@@ -127,14 +130,14 @@ export const StakeModifyScene = (props: Props) => {
     const displayDenomination = isClaim ? rewardDisplayDenom : stakeDisplayDenom
     return (
       <>
-        <Tile type="static" title="Wallet">
+        <Tile type="static" title={sceneTitleMap[modification]}>
           <View style={styles.walletContainer}>
             <FastImage style={styles.currencyLogo} source={{ uri: stakeImages[0] }} />
             <EdgeText>{currencyWallet.name}</EdgeText>
           </View>
         </Tile>
         <EditableAmountTile
-          title={titleMap[modification]}
+          title={amountTileTitleMap[modification]}
           exchangeRates={guiExchangeRates}
           nativeAmount={allocationToMod?.nativeAmount ?? '0'}
           currencyWallet={currencyWallet}
@@ -148,9 +151,10 @@ export const StakeModifyScene = (props: Props) => {
           title={s.strings.wc_smartcontract_network_fee}
           nativeCryptoAmount={
             '0' /** 
-        // TODO: fees 
+        // TODO: network fees 
       */
           }
+          style={styles.lastTile}
           cryptoCurrencyCode={currencyWallet.currencyInfo.currencyCode}
           isoFiatCurrencyCode={isoFiatCurrencyCode}
           denomination={nativeAssetDenomination}
@@ -162,65 +166,9 @@ export const StakeModifyScene = (props: Props) => {
   }
 
   return (
-    /**
-     * Header:
-     * S: Stake S to earn R
-     * C: Claim Rewards [R icon]
-     * U: Unstake S [S icon]
-     *
-     ******************
-     * Body:
-     * S: *'Stake your coins to earn passive income on your funds
-     *    
-     *    Staked coins are unusable for the duration of the stake'
-     * 
-     *    Wallet
-     *    EAT (Amount to stake)
-     *    Network Fee Tile
-     *
-     * C: 
-     *    Wallet
-     *    EAT (Amount of reward to claim)
-     *    Network Fee Tile
-     * 
-     *    * Warning: 
-     *      Claiming rewards will block you from withdrawing your staked funds for 36 hours. 
-
-          To claim rewards AND unstake any staked funds, choose “claim rewards and unstake” instead.
-     * 
-     * U: 
-     *    Wallet
-     *    EAT (Amount to Unstake)
-     *    Network Fee Tile
-     ******************
-     * ALL: Slider
-     */
-
     <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={`Stake ${stakeAssetsName} to earn ${rewardAssetsName}`} underline withTopMargin />
       {renderAmountTiles(allocationToMod, modification)}
-      {/* <StakingReturnsCard
-        fromCurrencyLogos={stakeImages}
-        toCurrencyLogos={rewardImages}
-        text={`Estimated Return: ${toFixed(stakePolicy.apy.toString(), 1, 1)}`}
-      />
-      <CryptoFiatAmountTile
-        title="Currently Staked"
-        nativeCryptoAmount={stakeAllocation?.nativeAmount ?? ''}
-        cryptoCurrencyCode={stakeAssetsName}
-        isoFiatCurrencyCode={isoFiatCurrencyCode}
-        denomination={stakeDisplayDenom}
-      />
-      <CryptoFiatAmountTile
-        title={`${rewardAssetsName} Earned`}
-        nativeCryptoAmount={rewardAllocation?.nativeAmount ?? ''}
-        cryptoCurrencyCode={rewardAssetsName}
-        isoFiatCurrencyCode={isoFiatCurrencyCode}
-        denomination={rewardDisplayDenom}
-      />
-      <MainButton label="Stake More Funds" type="primary" onPress={() => {}} marginRem={0.5} />
-      <MainButton label="Claim Rewards" type="secondary" onPress={() => {}} marginRem={0.5} />
-      <MainButton label="Unstake" type="secondary" onPress={() => {}} marginRem={0.5} /> */}
     </SceneWrapper>
   )
 }
@@ -267,5 +215,8 @@ const getStyles = cacheStyles(theme => ({
     borderRadius: theme.rem(0.5),
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  lastTile: {
+    marginBottom: theme.rem(0.5)
   }
 }))

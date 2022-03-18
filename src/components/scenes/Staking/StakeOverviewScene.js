@@ -2,7 +2,9 @@
 import { toFixed } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
+import s from '../../../locales/strings.js'
 import { type DetailAllocation, type StakePolicy, makeStakePlugin } from '../../../plugins/stake-plugins'
 import type { RootState } from '../../../reducers/RootReducer.js'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
@@ -47,9 +49,9 @@ export const StakeOverviewScene = (props: Props) => {
     const currencyWallet = currencyWallets[walletId]
     const walletPluginId = currencyWallet.currencyInfo.pluginId
     const stakeAssetsDenomination = getDisplayDenomination(state, walletPluginId, stakeAssetsName)
-    const rewardAssetDenomination = getDisplayDenomination(state, walletPluginId, rewardAssetsName)
+    const rewardAssetsDenomination = getDisplayDenomination(state, walletPluginId, rewardAssetsName)
     const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
-    return { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination, isoFiatCurrencyCode }
+    return { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination: rewardAssetsDenomination, isoFiatCurrencyCode }
   })
   const metaTokens = currencyWallet.currencyInfo.metaTokens
   const stakeContractAddress = metaTokens.find(token => token.currencyCode === stakeAssetsName)?.contractAddress
@@ -82,31 +84,43 @@ export const StakeOverviewScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      <SceneHeader style={styles.sceneHeader} title={stakeAssetsName} underline withTopMargin />
+      <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName)} underline withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard
           fromCurrencyLogos={stakeImages}
           toCurrencyLogos={rewardImages}
-          text={`Estimated Return: ${toFixed(stakePolicy.apy.toString(), 1, 1)}% APR`}
+          text={sprintf(s.strings.stake_estimated_return, toFixed(stakePolicy.apy.toString(), 1, 1))}
         />
       </View>
       <CryptoFiatAmountTile
-        title="Currently Staked"
+        title={s.strings.stake_currently_staked}
         nativeCryptoAmount={stakeAllocation?.nativeAmount ?? ''}
         cryptoCurrencyCode={stakeAssetsName}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={stakeAssetsDenomination}
       />
       <CryptoFiatAmountTile
-        title={`${rewardAssetsName} Earned`}
+        title={sprintf(s.strings.stake_earned, rewardAssetsName)}
         nativeCryptoAmount={rewardAllocation?.nativeAmount ?? ''}
         cryptoCurrencyCode={rewardAssetsName}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={rewardAssetDenomination}
       />
-      <MainButton label="Stake More Funds" type="primary" disabled={stakeAllocation == null} onPress={handleModifyPress('stake')} marginRem={0.5} />
-      <MainButton label="Claim Rewards" type="secondary" disabled={stakeAllocation == null} onPress={handleModifyPress('claim')} marginRem={0.5} />
-      <MainButton label="Unstake" type="secondary" disabled={stakeAllocation == null} onPress={handleModifyPress('unstake')} marginRem={0.5} />
+      <MainButton
+        label={s.strings.stake_stake_more_funds}
+        type="primary"
+        disabled={stakeAllocation == null}
+        onPress={handleModifyPress('stake')}
+        marginRem={0.5}
+      />
+      <MainButton
+        label={s.strings.stake_claim_rewards}
+        type="secondary"
+        disabled={stakeAllocation == null}
+        onPress={handleModifyPress('claim')}
+        marginRem={0.5}
+      />
+      <MainButton label={s.strings.stake_unstake} type="secondary" disabled={stakeAllocation == null} onPress={handleModifyPress('unstake')} marginRem={0.5} />
     </SceneWrapper>
   )
 }
