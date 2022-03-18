@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
+import { type StakePolicy, makeStakePlugin } from '../../../plugins/stake-plugins/index.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
@@ -15,15 +16,14 @@ import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Card } from '../../themed/Card.js'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader.js'
-import { type StakePolicy, getFakeStakePlugin } from './StakeApi.js'
 
 type Props = {
   route: RouteProp<'stakeOptions'>,
   navigation: NavigationProp<'stakeOptions'>
 }
 
-// TODO: Hack for V1/V2 where we only have one plugin.
-const stakePlugin = getFakeStakePlugin()
+// TODO: Use a plugin instance stored in the plugin-management system
+const stakePlugin = makeStakePlugin()
 
 export const StakeOptionsScene = (props: Props) => {
   const { walletId } = props.route.params

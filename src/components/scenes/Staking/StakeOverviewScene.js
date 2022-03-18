@@ -2,10 +2,8 @@
 import { toFixed } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
-import { Button } from 'react-native-share'
-import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings.js'
+import { makeStakePlugin } from '../../../plugins/stake-plugins/index.js'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -13,21 +11,13 @@ import type { ParamList, RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import {
-  getRewardAllocation,
-  getRewardAssetsName,
-  getStakeAllocation,
-  getStakeAssetsName,
-  getStakeDetails,
-  getStakePolicyById
-} from '../../../util/stakeUtils.js'
+import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName } from '../../../util/stakeUtils.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
 import { MainButton } from '../../themed/MainButton.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 import { StakingReturnsCard } from '../../themed/StakingReturnsCard.js'
-import { getFakeStakePlugin } from './StakeApi.js'
 
 type Props = {
   navigation: NavigationProp<'stakeModify'>,
@@ -36,8 +26,8 @@ type Props = {
 
 type Modification = $PropertyType<$PropertyType<ParamList, 'stakeModify'>, 'modification'>
 
-// TODO: Hack for V1/V2 where we only have one plugin.
-const stakePlugin = getFakeStakePlugin()
+// TODO: Use a plugin instance stored in the plugin-management system
+const stakePlugin = makeStakePlugin()
 
 export const StakeOverviewScene = (props: Props) => {
   const { navigation } = props

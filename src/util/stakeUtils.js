@@ -1,7 +1,7 @@
 // @flow
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { type StakePlugin, type StakePolicy } from '../components/scenes/Staking/StakeApi.js'
+import { type StakePlugin, type StakePolicy } from '../plugins/stake-plugins/types.js'
 
 export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
   return stakePlugin.fetchStakeDetails({ stakePolicyId, wallet: currencyWallet })
