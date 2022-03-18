@@ -12,10 +12,73 @@ import { fromHex, toHex } from './util/hex.js'
 
 export * from './types.js'
 
+const HOUR = 1000 * 60 * 60
+
 export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   // Get the pool contract necessary for the staking
   // TODO: Replace the hardcode with a configuration from initOptions
   const poolContract = makeContract('TOMB_MASONRY')
+  const treasuryContract = makeContract('TOMB_TREASURY')
+
+  /**
+   * This method calculates and returns in a from to to format
+   * the period the user needs to wait before being allowed to claim
+   * their reward from the masonry or void if there is no wait time.
+   * @param {string} accountAddress - The address of the account
+   * @returns Promise<Date | void>
+   */
+  async function getUserClaimRewardTime(accountAddress: string): Promise<Date | void> {
+    const nextEpochTimestamp = await poolContract.nextEpochPoint() // in unix timestamp
+    const currentEpoch = await poolContract.epoch()
+    const mason = await poolContract.masons(accountAddress)
+    const startTimeEpoch = mason.epochTimerStart
+    const period = await treasuryContract.PERIOD()
+    const periodInHours = period / 60 / 60 // 6 hours, period is displayed in seconds which is 21600
+    const rewardLockupEpochs = await poolContract.rewardLockupEpochs()
+    const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(rewardLockupEpochs)
+
+    if (targetEpochForClaimUnlock - currentEpoch <= 0) return
+
+    const nextEpochDate = new Date(nextEpochTimestamp * 1000)
+
+    if (targetEpochForClaimUnlock - currentEpoch === 1) {
+      return nextEpochDate
+    } else {
+      const delta = targetEpochForClaimUnlock - currentEpoch - 1
+      const endDate = new Date(nextEpochDate.getTime() + delta * periodInHours * HOUR)
+      return endDate
+    }
+  }
+
+  /**
+   * This method calculates and returns in a from to to format
+   * the period the user needs to wait before being allowed to unstake
+   * from the masonry or void if there is no wait time.
+   * @param {string} accountAddress - The address of the account
+   * @returns Promise<Date | void>
+   */
+  async function getUserUnstakeTime(accountAddress: string): Promise<Date | void> {
+    const nextEpochTimestamp = await poolContract.nextEpochPoint()
+    const currentEpoch = await poolContract.epoch()
+    const mason = await poolContract.masons(accountAddress)
+    const startTimeEpoch = mason.epochTimerStart
+    const period = await treasuryContract.PERIOD()
+    const periodInHours = period / 60 / 60
+    const withdrawLockupEpochs = await poolContract.withdrawLockupEpochs()
+    const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(withdrawLockupEpochs)
+
+    if (targetEpochForClaimUnlock - currentEpoch <= 0) return
+
+    const nextEpochDate = new Date(nextEpochTimestamp * 1000)
+
+    if (targetEpochForClaimUnlock - currentEpoch === 1) {
+      return nextEpochDate
+    } else {
+      const delta = targetEpochForClaimUnlock - currentEpoch - 1
+      const endDate = new Date(nextEpochDate.getTime() + delta * periodInHours * HOUR)
+      return endDate
+    }
+  }
 
   const instance: StakePlugin = {
     async getStakePolicies(): Promise<StakePolicy[]> {
@@ -213,9 +276,41 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
         approve
       }
     },
+    // TODO: Implement support for multi-asset staking
     async fetchStakeDetails(request: StakeDetailRequest): Promise<StakeDetails> {
+      const { stakePolicyId, wallet } = request
+
+      const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
+      if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
+
+      // Get the signer for the wallet
+      const signer = new ethers.Wallet(wallet.displayPrivateSeed, jsonRpcProvider)
+      const accountAddress = signer.getAddress()
+
+      // Get staked allocations
+      const balanceOfTxResponse = await poolContract.balanceOf(accountAddress)
+      const stakedAllocations = [
+        {
+          tokenId: policyInfo.stakeAssets[0].tokenId,
+          allocationType: 'staked',
+          nativeAmount: fromHex(balanceOfTxResponse._hex),
+          locktime: await getUserUnstakeTime(accountAddress)
+        }
+      ]
+
+      // Get earned allocations
+      const earnedTxRresponse = await poolContract.earned(accountAddress)
+      const earnedAllocations = [
+        {
+          tokenId: policyInfo.rewardAssets[0].tokenId,
+          allocationType: 'earned',
+          nativeAmount: fromHex(earnedTxRresponse._hex),
+          locktime: await getUserClaimRewardTime(accountAddress)
+        }
+      ]
+
       return {
-        allocations: []
+        allocations: [...stakedAllocations, ...earnedAllocations]
       }
     }
   }
