@@ -105,14 +105,14 @@ export const StakeModifyScene = (props: Props) => {
   }, [currencyWallet, stakePolicyId])
 
   const renderWalletSelect = () => {
-    if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow onPress={showWalletListModal} title={s.strings.wc_confirm_select_wallet} arrowTappable />
-    } else {
-      const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
-      const walletImage = <FastImage style={styles.currencyLogo} source={{ uri: walletImageUri }} />
-      const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
-      return <SelectableRow onPress={showWalletListModal} icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
-    }
+    // if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
+    //   return <SelectableRow onPress={showWalletListModal} title={s.strings.wc_confirm_select_wallet} arrowTappable />
+    // } else {
+    //   const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
+    //   const walletImage = <FastImage style={styles.currencyLogo} source={{ uri: walletImageUri }} />
+    //   const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
+    //   return <SelectableRow onPress={showWalletListModal} icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
+    // }
   }
 
   const titleMap = {
@@ -128,7 +128,7 @@ export const StakeModifyScene = (props: Props) => {
     return (
       <>
         <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
-          {renderWalletSelect()}
+          {/* {renderWalletSelect()} */}
         </Card>
         <EditableAmountTile
           title={titleMap[modification]}

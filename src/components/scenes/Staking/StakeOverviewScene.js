@@ -30,7 +30,7 @@ import { StakingReturnsCard } from '../../themed/StakingReturnsCard.js'
 import { getFakeStakePlugin } from './StakeApi.js'
 
 type Props = {
-  navigation: NavigationProp<'stakeOverview'>,
+  navigation: NavigationProp<'stakeModify'>,
   route: RouteProp<'stakeOverview'>
 }
 
@@ -107,6 +107,7 @@ export const StakeOverviewScene = (props: Props) => {
         label="Stake More Funds"
         type="primary"
         onPress={() => {
+          console.log('\x1b[34m\x1b[43m' + `'stake': ${JSON.stringify('stake', null, 2)}` + '\x1b[0m')
           navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: stakeAllocation, modification: 'stake' })
         }}
         marginRem={0.5}
