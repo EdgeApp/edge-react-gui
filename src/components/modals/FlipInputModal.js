@@ -34,7 +34,7 @@ type OwnProps = {
   bridge: AirshipBridge<void>,
   walletId: string,
   currencyCode: string,
-  onFeesChange: () => void,
+  onFeesChange?: () => void,
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
   overrideExchangeAmount?: string
@@ -92,7 +92,8 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   handleFeesChange = () => {
     this.handleCloseModal()
-    this.props.onFeesChange()
+    const { onFeesChange = () => {} } = this.props
+    onFeesChange()
   }
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
@@ -203,7 +204,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
           <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
-          <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} />
+          {this.props.onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
