@@ -231,7 +231,7 @@ export async function launchBitPay(
           body: JSON.stringify({
             chain: requestCurrencyCode,
             currency: requestCurrencyCode,
-            transactions: [{ tx: signedHex, weightedSize: signedHex.length / 2 }]
+            transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
           })
         })
       }
