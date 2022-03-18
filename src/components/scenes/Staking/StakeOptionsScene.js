@@ -33,12 +33,25 @@ export const StakeOptionsScene = (props: Props) => {
   const walletImageUri = getCurrencyIcon('fantom').symbolImage
   const icon = <Image style={styles.icon} source={{ uri: walletImageUri }} />
 
-  const renderOptions = (guiStakeOptions: Array<{ stakePolicyId: string, bodyText: string, subText: string }>) => {
-    if (guiStakeOptions.length === 0) {
+  const renderOptions = (stakePolcies: StakePolicy[]) => {
+    if (stakePolcies.length === 0) {
       return null
     } else {
-      // TODO: No need for  guiStakeOption. Use stakePolicy directly.
-      return guiStakeOptions.map(guiStakeOption => StakeOptionCard(guiStakeOption.stakePolicyId, guiStakeOption.bodyText, guiStakeOption.subText))
+      return stakePolcies.map(stakePolicy => {
+        const stakeAssetsName = getStakeAssetsName(stakePolicy)
+        const rewardAssetsName = getRewardAssetsName(stakePolicy)
+        const bodyText = stakeAssetsName
+        const subText = `${stakeAssetsName} to Earn ${rewardAssetsName}`
+
+        return (
+          <Card key={bodyText}>
+            <TouchableOpacity onPress={() => handleStakeOptionPress(stakePolicy.stakePolicyId)}>
+              <EdgeText>{bodyText}</EdgeText>
+              <EdgeText>{subText}</EdgeText>
+            </TouchableOpacity>
+          </Card>
+        )
+      })
     }
   }
 
@@ -49,34 +62,11 @@ export const StakeOptionsScene = (props: Props) => {
     else throw new Error(`Could not find stake policy ${stakePolicyId}`)
   }
 
-  const StakeOptionCard = (stakePolicyId, bodyText, subText) => {
-    return (
-      <Card key={bodyText}>
-        <TouchableOpacity onPress={() => handleStakeOptionPress(stakePolicyId)}>
-          <EdgeText>{bodyText.toString()}</EdgeText>
-          <EdgeText>{subText.toString()}</EdgeText>
-        </TouchableOpacity>
-      </Card>
-    )
-  }
-
-  const [guiStakeOptions: Array<{ bodyText: string, subText: string }> = [], setGuiStakeOptions] = useState([])
+  const [stakePolcies, setStakePolicies] = useState<StakePolicy[]>([])
   useEffect(() => {
-    async function fetchStakeData() {
-      const stakePolicies = await stakePlugin.getStakePolicies()
-
-      return stakePolicies.map((stakePolicy: StakePolicy) => {
-        const stakeAssetsName = getStakeAssetsName(stakePolicy)
-        const rewardAssetsName = getRewardAssetsName(stakePolicy)
-        return {
-          stakePolicyId: stakePolicy.stakePolicyId,
-          bodyText: stakeAssetsName,
-          subText: `${stakeAssetsName} to Earn ${rewardAssetsName}`
-        }
-      })
-    }
-    fetchStakeData().then(stakeData => {
-      setGuiStakeOptions(stakeData)
+    stakePlugin.getStakePolicies().then(stakePolicies => {
+      // TODO: Filter stakePolicies by wallet's pluginId and currency tokenId
+      setStakePolicies(stakePolicies)
     })
   }, [walletId])
 
@@ -85,7 +75,7 @@ export const StakeOptionsScene = (props: Props) => {
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, 'Tomb')} underline withTopMargin>
         {icon}
       </SceneHeader>
-      {guiStakeOptions.length === 0 ? null : renderOptions(guiStakeOptions)}
+      {stakePolcies.length === 0 ? null : renderOptions(stakePolcies)}
     </SceneWrapper>
   )
 }
