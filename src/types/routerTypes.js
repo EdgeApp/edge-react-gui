@@ -210,7 +210,7 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
-  stakeModify: {
+  stakeModify: {|
     walletId: string,
     stakePolicy: StakePolicy,
     // TODO: type this?
@@ -222,7 +222,7 @@ export type ParamList = {
       otherParams?: JsonObject
     },
     modification: 'stake' | 'unstake' | 'claim'
-  },
+  |},
   stakeClaim: { walletId: string, stakePolicy: StakePolicy },
   stakeOptions: { walletId: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },

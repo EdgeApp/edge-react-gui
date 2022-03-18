@@ -9,7 +9,7 @@ import s from '../../../locales/strings.js'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
-import type { RouteProp } from '../../../types/routerTypes'
+import type { ParamList, RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
@@ -33,6 +33,8 @@ type Props = {
   navigation: NavigationProp<'stakeModify'>,
   route: RouteProp<'stakeOverview'>
 }
+
+type Modification = $PropertyType<$PropertyType<ParamList, 'stakeModify'>, 'modification'>
 
 // TODO: Hack for V1/V2 where we only have one plugin.
 const stakePlugin = getFakeStakePlugin()
@@ -79,6 +81,10 @@ export const StakeOverviewScene = (props: Props) => {
     })
   }, [currencyWallet, stakePolicyId])
 
+  const handleModifyPress = (modification: Modification) => () => {
+    navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: stakeAllocation, modification })
+  }
+
   return (
     <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={stakeAssetsName} underline withTopMargin />
@@ -103,31 +109,9 @@ export const StakeOverviewScene = (props: Props) => {
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={rewardAssetDenomination}
       />
-      <MainButton
-        label="Stake More Funds"
-        type="primary"
-        onPress={() => {
-          console.log('\x1b[34m\x1b[43m' + `'stake': ${JSON.stringify('stake', null, 2)}` + '\x1b[0m')
-          navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: stakeAllocation, modification: 'stake' })
-        }}
-        marginRem={0.5}
-      />
-      <MainButton
-        label="Claim Rewards"
-        type="secondary"
-        onPress={() => {
-          navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: rewardAllocation, modification: 'claim' })
-        }}
-        marginRem={0.5}
-      />
-      <MainButton
-        label="Unstake"
-        type="secondary"
-        onPress={() => {
-          navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: stakeAllocation, modification: 'unstake' })
-        }}
-        marginRem={0.5}
-      />
+      <MainButton label="Stake More Funds" type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
+      <MainButton label="Claim Rewards" type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
+      <MainButton label="Unstake" type="secondary" onPress={handleModifyPress('unstake')} marginRem={0.5} />
     </SceneWrapper>
   )
 }
