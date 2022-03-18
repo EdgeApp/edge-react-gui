@@ -147,23 +147,19 @@ export async function launchBitPay(
   }
   const invoiceInstruction = invoiceResponse.instructions[0]
   errorData = { ...errorData, invoiceInstruction }
-  if (invoiceInstruction.outputs) {
-    if (invoiceInstruction.outputs.length > 1) {
-      throw new BitPayError('MultiOutputInvoice', { errorData })
-    }
-  } else throw new BitPayError('EmptyOutputInvoice', { errorData })
-  const instructionOutput = invoiceInstruction.outputs[0]
-
+  if (!invoiceInstruction.outputs || invoiceInstruction.outputs.length === 0) {
+    throw new BitPayError('EmptyOutputInvoice', { errorData })
+  }
   // Make the spend to generate the tx hexes
   const requiredFeeRate = invoiceInstruction.requiredFeeRate
   const spendInfo: EdgeSpendInfo = {
     selectedCurrencyCode,
-    spendTargets: [
-      {
-        nativeAmount: instructionOutput.amount.toString(),
-        publicAddress: instructionOutput.address
+    spendTargets: invoiceInstruction.outputs.map(output => {
+      return {
+        nativeAmount: output.amount.toString(),
+        publicAddress: output.address
       }
-    ],
+    }),
     otherParams: {
       paymentProtocolInfo: {
         merchant: {
@@ -225,6 +221,20 @@ export async function launchBitPay(
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
       Actions.pop()
+      if (!error && edgeTransaction) {
+        fetchBitPayJsonResponse(uri, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/payment',
+            'x-paypro-version': '2'
+          },
+          body: JSON.stringify({
+            chain: requestCurrencyCode,
+            currency: requestCurrencyCode,
+            transactions: [{ tx: signedHex, weightedSize: signedHex.length / 2 }]
+          })
+        })
+      }
     }
   }
 
