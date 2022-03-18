@@ -10,7 +10,7 @@ import { useEffect, useState } from '../../../types/reactHooks.js'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers'
-import { getRewardAssetsName, getStakeAssetsName, getStakePolicyById } from '../../../util/stakeUtils.js'
+import { getRewardAssetsName, getStakeAssetsName } from '../../../util/stakeUtils.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Card } from '../../themed/Card.js'
@@ -37,7 +37,7 @@ export const StakeOptionsScene = (props: Props) => {
   // Stake Policies
   //
 
-  const [stakePolcies, setStakePolicies] = useState<StakePolicy[]>([])
+  const [stakePolicies, setStakePolicies] = useState<StakePolicy[]>([])
   useEffect(() => {
     stakePlugin
       .getStakePolicies()
@@ -52,30 +52,31 @@ export const StakeOptionsScene = (props: Props) => {
   // Handlers
   //
 
-  const handleStakeOptionPress = async (stakePolicyId: string) => {
-    const stakePolicy = await getStakePolicyById(stakePlugin, stakePolicyId)
-
-    if (stakePolicy != null) navigation.navigate('stakeOverview', { walletId: walletId, stakePolicy: stakePolicy })
-    else throw new Error(`Could not find stake policy ${stakePolicyId}`)
+  const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
+    navigation.navigate('stakeOverview', { walletId: walletId, stakePolicy: stakePolicy })
   }
 
   //
   // Renders
   //
 
-  const renderOptions = (stakePolcies: StakePolicy[]) => {
-    if (stakePolcies.length === 0) {
+  const renderOptions = () => {
+    if (stakePolicies.length === 0) {
       return null
+    } else if (stakePolicies.length === 1) {
+      // Transition to next scene immediately
+      handleStakeOptionPress(stakePolicies[0])
     } else {
-      return stakePolcies.map(stakePolicy => {
+      return stakePolicies.map(stakePolicy => {
         const stakeAssetsName = getStakeAssetsName(stakePolicy)
         const rewardAssetsName = getRewardAssetsName(stakePolicy)
         const bodyText = stakeAssetsName
         const subText = `${stakeAssetsName} to Earn ${rewardAssetsName}`
 
+        // TODO: Use StakingOptionCard component
         return (
           <Card key={bodyText}>
-            <TouchableOpacity onPress={() => handleStakeOptionPress(stakePolicy.stakePolicyId)}>
+            <TouchableOpacity onPress={() => handleStakeOptionPress(stakePolicy)}>
               <EdgeText>{bodyText}</EdgeText>
               <EdgeText>{subText}</EdgeText>
             </TouchableOpacity>
@@ -90,10 +91,11 @@ export const StakeOptionsScene = (props: Props) => {
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, 'Tomb')} underline withTopMargin>
         {icon}
       </SceneHeader>
-      {stakePolcies.length === 0 ? null : renderOptions(stakePolcies)}
+      {renderOptions()}
     </SceneWrapper>
   )
 }
+
 const getStyles = cacheStyles(theme => ({
   icon: {
     height: theme.rem(1.5),
