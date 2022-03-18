@@ -33,6 +33,33 @@ export const StakeOptionsScene = (props: Props) => {
   const walletImageUri = getCurrencyIcon('fantom').symbolImage
   const icon = <Image style={styles.icon} source={{ uri: walletImageUri }} />
 
+  //
+  // Stake Policies
+  //
+
+  const [stakePolcies, setStakePolicies] = useState<StakePolicy[]>([])
+  useEffect(() => {
+    stakePlugin.getStakePolicies().then(stakePolicies => {
+      // TODO: Filter stakePolicies by wallet's pluginId and currency tokenId
+      setStakePolicies(stakePolicies)
+    })
+  }, [walletId])
+
+  //
+  // Handlers
+  //
+
+  const handleStakeOptionPress = async (stakePolicyId: string) => {
+    const stakePolicy = await getStakePolicyById(stakePlugin, stakePolicyId)
+
+    if (stakePolicy != null) navigation.navigate('stakeOverview', { walletId: walletId, stakePolicy: stakePolicy })
+    else throw new Error(`Could not find stake policy ${stakePolicyId}`)
+  }
+
+  //
+  // Renders
+  //
+
   const renderOptions = (stakePolcies: StakePolicy[]) => {
     if (stakePolcies.length === 0) {
       return null
@@ -54,21 +81,6 @@ export const StakeOptionsScene = (props: Props) => {
       })
     }
   }
-
-  const handleStakeOptionPress = async (stakePolicyId: string) => {
-    const stakePolicy = await getStakePolicyById(stakePlugin, stakePolicyId)
-
-    if (stakePolicy != null) navigation.navigate('stakeOverview', { walletId: walletId, stakePolicy: stakePolicy })
-    else throw new Error(`Could not find stake policy ${stakePolicyId}`)
-  }
-
-  const [stakePolcies, setStakePolicies] = useState<StakePolicy[]>([])
-  useEffect(() => {
-    stakePlugin.getStakePolicies().then(stakePolicies => {
-      // TODO: Filter stakePolicies by wallet's pluginId and currency tokenId
-      setStakePolicies(stakePolicies)
-    })
-  }, [walletId])
 
   return (
     <SceneWrapper background="theme">
