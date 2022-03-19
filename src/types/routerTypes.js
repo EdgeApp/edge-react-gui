@@ -218,8 +218,7 @@ export type ParamList = {
       tokenId: string,
       allocationType: 'staked' | 'unstaked' | 'earned',
       nativeAmount: string,
-      locktime?: Date,
-      otherParams?: JsonObject
+      locktime?: Date
     },
     modification: 'stake' | 'unstake' | 'claim'
   |},
