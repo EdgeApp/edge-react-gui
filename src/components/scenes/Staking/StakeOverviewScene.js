@@ -3,7 +3,8 @@ import { toFixed } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { makeStakePlugin } from '../../../plugins/stake-plugins/index.js'
+import { type DetailAllocation, type StakePolicy, makeStakePlugin } from '../../../plugins/stake-plugins'
+import type { RootState } from '../../../reducers/RootReducer.js'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -31,7 +32,8 @@ const stakePlugin = makeStakePlugin()
 
 export const StakeOverviewScene = (props: Props) => {
   const { navigation } = props
-  const { walletId, stakePolicy } = props.route.params
+  const { walletId } = props.route.params
+  const stakePolicy: StakePolicy = props.route.params.stakePolicy
   const { stakePolicyId } = stakePolicy
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -40,7 +42,7 @@ export const StakeOverviewScene = (props: Props) => {
   const stakeAssetsName = getStakeAssetsName(stakePolicy)
   const rewardAssetsName = getRewardAssetsName(stakePolicy)
 
-  const { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination, isoFiatCurrencyCode } = useSelector(state => {
+  const { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination, isoFiatCurrencyCode } = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[walletId]
     const walletPluginId = currencyWallet.currencyInfo.pluginId
@@ -55,24 +57,27 @@ export const StakeOverviewScene = (props: Props) => {
   const stakeImages = [getCurrencyIcon(walletPluginId, stakeContractAddress).symbolImage]
   const rewardImages = [getCurrencyIcon(walletPluginId, rewardContractAddress).symbolImage]
 
-  const [stakeAllocation, setStakeAllocation] = useState()
-  const [rewardAllocation, setRewardAllocation] = useState()
+  const [stakeAllocation, setStakeAllocation] = useState<DetailAllocation | void>()
+  const [rewardAllocation, setRewardAllocation] = useState<DetailAllocation | void>()
 
   useEffect(() => {
-    async function fetchStakeDetails() {
-      const stakeAllocation = await getStakeAllocation(stakePlugin, stakePolicyId, currencyWallet)
-      const rewardAllocation = await getRewardAllocation(stakePlugin, stakePolicyId, currencyWallet)
-      return { stakeAllocation, rewardAllocation }
-    }
-
-    fetchStakeDetails().then(({ stakeAllocation, rewardAllocation }) => {
-      setStakeAllocation(stakeAllocation)
-      setRewardAllocation(rewardAllocation)
-    })
+    stakePlugin
+      .fetchStakeDetails({ stakePolicyId, wallet: currencyWallet })
+      .then(async stakeDetails => {
+        const stakeAllocation = await getStakeAllocation(stakeDetails)
+        const rewardAllocation = await getRewardAllocation(stakeDetails)
+        setStakeAllocation(stakeAllocation)
+        setRewardAllocation(rewardAllocation)
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }, [currencyWallet, stakePolicyId])
 
   const handleModifyPress = (modification: Modification) => () => {
-    navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: stakeAllocation, modification })
+    if (stakeAllocation != null) {
+      navigation.navigate('stakeModify', { walletId, stakePolicy, allocationToMod: stakeAllocation, modification })
+    }
   }
 
   return (
@@ -99,9 +104,9 @@ export const StakeOverviewScene = (props: Props) => {
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={rewardAssetDenomination}
       />
-      <MainButton label="Stake More Funds" type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
-      <MainButton label="Claim Rewards" type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-      <MainButton label="Unstake" type="secondary" onPress={handleModifyPress('unstake')} marginRem={0.5} />
+      <MainButton label="Stake More Funds" type="primary" disabled={stakeAllocation == null} onPress={handleModifyPress('stake')} marginRem={0.5} />
+      <MainButton label="Claim Rewards" type="secondary" disabled={stakeAllocation == null} onPress={handleModifyPress('claim')} marginRem={0.5} />
+      <MainButton label="Unstake" type="secondary" disabled={stakeAllocation == null} onPress={handleModifyPress('unstake')} marginRem={0.5} />
     </SceneWrapper>
   )
 }

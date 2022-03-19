@@ -1,22 +1,20 @@
 // @flow
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { type StakePlugin, type StakePolicy } from '../plugins/stake-plugins/types.js'
+import type { StakeDetails, StakePlugin, StakePolicy } from '../plugins/stake-plugins/types.js'
 
 export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
   return stakePlugin.fetchStakeDetails({ stakePolicyId, wallet: currencyWallet })
 }
 
 // TODO: (V2) Hard-coded for single asset
-export const getRewardAllocation = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
-  const stakeDetails = await getStakeDetails(stakePlugin, stakePolicyId, currencyWallet)
-  return stakeDetails?.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')[0]
+export const getRewardAllocation = async (stakeDetails: StakeDetails) => {
+  return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')[0]
 }
 
 // TODO: (V2) Hard-coded for single asset
-export const getStakeAllocation = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
-  const stakeDetails = await getStakeDetails(stakePlugin, stakePolicyId, currencyWallet)
-  return stakeDetails?.allocations.filter(stakeDetail => stakeDetail.allocationType === 'staked')[0]
+export const getStakeAllocation = async (stakeDetails: StakeDetails) => {
+  return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'staked')[0]
 }
 
 // Not needed?
