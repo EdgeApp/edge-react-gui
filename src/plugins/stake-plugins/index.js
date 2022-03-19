@@ -1,4 +1,6 @@
 // @flow
+import '@ethersproject/shims'
+
 import { add, gte, lte, mul, sub } from 'biggystring'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 import { ethers } from 'ethers'
