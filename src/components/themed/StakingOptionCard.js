@@ -21,7 +21,7 @@ export function StakingOptionCard({
   return (
     <View style={styles.container}>
       <View style={styles.leftCap} />
-      <View>
+      <View style={styles.center}>
         <View style={styles.iconsContainer}>
           <View style={styles.middleLine} />
           <View style={styles.icon}>
@@ -73,19 +73,22 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderTopWidth: theme.thinLineWidth,
       borderColor: theme.lineDivider
     },
+    center: {
+      flex: 1
+    },
     leftCap: {
       ...commonCap,
       borderLeftWidth: theme.thinLineWidth,
       borderRightWidth: 0,
-      borderBottomLeftRadius: theme.rem(0.5),
-      borderTopLeftRadius: theme.rem(0.5)
+      borderBottomLeftRadius: theme.rem(0.2),
+      borderTopLeftRadius: theme.rem(0.2)
     },
     rightCap: {
       ...commonCap,
       borderLeftWidth: 0,
       borderRightWidth: theme.thinLineWidth,
-      borderBottomRightRadius: theme.rem(0.5),
-      borderTopRightRadius: theme.rem(0.5)
+      borderBottomRightRadius: theme.rem(0.2),
+      borderTopRightRadius: theme.rem(0.2)
     },
     secondaryText: {
       marginTop: theme.rem(1),
