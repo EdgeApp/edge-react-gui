@@ -111,9 +111,22 @@ export const StakeModifyScene = (props: Props) => {
     unstake: s.strings.stake_amount_unstake
   }
 
+  const [nativeAmount, setNativeAmount] = useState('0')
+  const [exchangeAmount, setExchangeAmount] = useState('0')
+  const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
+    setExchangeAmount(exchangeAmount)
+    setNativeAmount(nativeAmount)
+  }
+
   const handleFlipInputModal = () => {
     Airship.show(bridge => (
-      <FlipInputModal bridge={bridge} walletId={walletId} currencyCode={currencyWallet.currencyInfo.currencyCode} onAmountChanged={() => {}} />
+      <FlipInputModal
+        bridge={bridge}
+        walletId={walletId}
+        currencyCode={currencyWallet.currencyInfo.currencyCode}
+        onAmountChanged={onAmountChanged}
+        overrideExchangeAmount={exchangeAmount}
+      />
     )).catch(error => console.log(error))
   }
 
@@ -177,6 +190,12 @@ const getStyles = cacheStyles(theme => ({
   walletContainer: {
     flexDirection: 'row'
   },
+  currencyLogo: {
+    height: theme.rem(1.25),
+    width: theme.rem(1.25),
+    resizeMode: 'contain',
+    marginRight: theme.rem(0.5)
+  },
   icon: {
     height: theme.rem(1.5),
     width: theme.rem(1.5),
@@ -187,34 +206,6 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'
-  },
-  currencyLogo: {
-    height: theme.rem(1.25),
-    width: theme.rem(1.25),
-    resizeMode: 'contain',
-    marginRight: theme.rem(0.5)
-  },
-  explainer: {
-    margin: theme.rem(0.5)
-  },
-  amountText: {
-    fontSize: theme.rem(2)
-  },
-  sliderContainer: {
-    paddingVertical: theme.rem(2)
-  },
-  errorMessage: {
-    color: theme.dangerText
-  },
-  estReturn: {
-    padding: theme.rem(0.75),
-    marginTop: theme.rem(1),
-    marginHorizontal: theme.rem(2.5),
-    borderWidth: theme.thinLineWidth,
-    borderColor: theme.cardBorderColor,
-    borderRadius: theme.rem(0.5),
-    alignItems: 'center',
-    justifyContent: 'center'
   },
   lastTile: {
     marginBottom: theme.rem(0.5)

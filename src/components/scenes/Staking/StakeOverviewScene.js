@@ -140,33 +140,5 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'
-  },
-  currencyLogo: {
-    height: theme.rem(1.25),
-    width: theme.rem(1.25),
-    resizeMode: 'contain',
-    marginLeft: theme.rem(1)
-  },
-  explainer: {
-    margin: theme.rem(0.5)
-  },
-  amountText: {
-    fontSize: theme.rem(2)
-  },
-  sliderContainer: {
-    paddingVertical: theme.rem(2)
-  },
-  errorMessage: {
-    color: theme.dangerText
-  },
-  estReturn: {
-    padding: theme.rem(0.75),
-    marginTop: theme.rem(1),
-    marginHorizontal: theme.rem(2.5),
-    borderWidth: theme.thinLineWidth,
-    borderColor: theme.cardBorderColor,
-    borderRadius: theme.rem(0.5),
-    alignItems: 'center',
-    justifyContent: 'center'
   }
 }))
