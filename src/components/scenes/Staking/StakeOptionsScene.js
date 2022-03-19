@@ -39,10 +39,13 @@ export const StakeOptionsScene = (props: Props) => {
 
   const [stakePolcies, setStakePolicies] = useState<StakePolicy[]>([])
   useEffect(() => {
-    stakePlugin.getStakePolicies().then(stakePolicies => {
-      // TODO: Filter stakePolicies by wallet's pluginId and currency tokenId
-      setStakePolicies(stakePolicies)
-    })
+    stakePlugin
+      .getStakePolicies()
+      .then(stakePolicies => {
+        // TODO: Filter stakePolicies by wallet's pluginId and currency tokenId
+        setStakePolicies(stakePolicies)
+      })
+      .catch(err => console.error(err))
   }, [walletId])
 
   //
