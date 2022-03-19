@@ -85,6 +85,7 @@
   },
   "dependencies": {
     "@bugsnag/react-native": "^7.3.5",
+    "@ethersproject/shims": "^5.6.0",
     "@react-native-community/art": "^1.2.0",
     "@react-native-community/async-storage": "^1.6.2",
     "@react-native-community/blur": "^3.6.0",

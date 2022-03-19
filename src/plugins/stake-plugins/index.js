@@ -1,4 +1,6 @@
 // @flow
+import '@ethersproject/shims'
+
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 
 import type { ChangeQuote, ChangeQuoteRequest, StakeDetailRequest, StakeDetails, StakePlugin, StakePolicy } from './types.js'
