@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { YellowBox } from 'react-native'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
@@ -113,6 +114,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
 import { Actions, withNavigation } from '../types/routerTypes.js'
+import { asSafeDefaultGuiWallet } from '../types/types'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -251,6 +253,15 @@ export class MainComponent extends React.Component<Props> {
     )
   }
 
+  addCavyHook = component => {
+    return hook(
+      React.cloneElement(component, {
+        ...component.props,
+        ref: this.props.generateTestHook('Scene.' + component.key)
+      })
+    )
+  }
+
   renderTabView = () => {
     return (
       <Drawer
@@ -267,15 +278,16 @@ export class MainComponent extends React.Component<Props> {
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
             <Stack key={WALLET_LIST}>
-              <Scene
-                key={WALLET_LIST_SCENE}
-                component={withNavigation(ifLoggedIn(WalletListScene))}
-                navTransparent
-                renderTitle={<EdgeLogoHeader />}
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
-              />
-
+              {this.addCavyHook(
+                <Scene
+                  key={WALLET_LIST_SCENE}
+                  component={withNavigation(ifLoggedIn(WalletListScene))}
+                  navTransparent
+                  renderTitle={<EdgeLogoHeader />}
+                  renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                  renderRightButton={<SideMenuButton />}
+                />
+              )}
               <Scene
                 key={CREATE_WALLET_CHOICE}
                 component={withNavigation(ifLoggedIn(CreateWalletChoiceComponent))}
@@ -433,15 +445,18 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_BUY}>
-              <Scene
-                key={PLUGIN_BUY}
-                component={withNavigation(ifLoggedIn(GuiPluginListScene))}
-                navTransparent
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
-                onLeft={Actions.pop}
-                route={{ params: { direction: 'buy' } }}
-              />
+              {hook(
+                <Scene
+                  key={PLUGIN_BUY}
+                  component={withNavigation(ifLoggedIn(GuiPluginListScene))}
+                  navTransparent
+                  renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                  renderRightButton={<SideMenuButton />}
+                  onLeft={Actions.pop}
+                  route={{ params: { direction: 'buy' } }}
+                  ref={this.props.generateTestHook('Scene.buy')}
+                />
+              )}
               <Scene
                 key={PLUGIN_VIEW}
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
@@ -707,16 +722,17 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_ADDRESS_LIST}>
-            <Scene
-              key={FIO_ADDRESS_LIST}
-              component={withNavigation(ifLoggedIn(FioAddressListScene))}
-              navTransparent
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
+            {this.addCavyHook(
+              <Scene
+                key={FIO_ADDRESS_LIST}
+                component={withNavigation(ifLoggedIn(FioAddressListScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+              />
+            )}
           </Stack>
-
           <Stack key={FIO_ADDRESS_REGISTER}>
             <Scene
               key={FIO_ADDRESS_REGISTER}
@@ -845,16 +861,19 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
-            <Scene
-              key={FIO_REQUEST_APPROVED}
-              component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
-              navTransparent
-              onEnter={() => this.props.requestPermission('contacts')}
-              clone
-              renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-            />
+            {hook(
+              <Scene
+                key={FIO_REQUEST_APPROVED}
+                component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+                navTransparent
+                onEnter={() => this.props.requestPermission('contacts')}
+                clone
+                renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+                ref={this.props.generateTestHook('Scene.fioRequestApproved')}
+              />
+            )}
           </Stack>
 
           <Stack key={FIO_SENT_REQUEST_DETAILS}>
@@ -869,30 +888,39 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key="wcConnections">
-            <Scene
-              key="wcConnections"
-              component={withNavigation(ifLoggedIn(WcConnectionsScene))}
-              navTransparent
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
-            <Scene
-              key="wcDisconnect"
-              component={withNavigation(ifLoggedIn(WcDisconnectScene))}
-              navTransparent
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
-            <Scene
-              key="wcConnect"
-              component={withNavigation(ifLoggedIn(WcConnectScene))}
-              navTransparent
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
+            {hook(
+              <Scene
+                key="wcConnections"
+                component={withNavigation(ifLoggedIn(WcConnectionsScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+                ref={this.props.generateTestHook('Scene.wcConnections')}
+              />
+            )}
+            {hook(
+              <Scene
+                key="wcDisconnect"
+                component={withNavigation(ifLoggedIn(WcDisconnectScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+                ref={this.props.generateTestHook('Scene.wcDisconnect')}
+              />
+            )}
+            {hook(
+              <Scene
+                key="wcConnect"
+                component={withNavigation(ifLoggedIn(WcConnectScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+                ref={this.props.generateTestHook('Scene.wcConnect')}
+              />
+            )}
           </Stack>
         </Scene>
       </Drawer>
