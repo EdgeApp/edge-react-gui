@@ -124,11 +124,12 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     } catch (e) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
-      if (parseDeepLink(address).type === 'bitPay') {
+      const parsedLink = { ...parseDeepLink(address) }
+      if (parsedLink.type === 'bitPay') {
         if (ercTokenStandard === 'ERC20') {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchBitPay(address, { wallet: coreWallet }).catch(showError)
+          await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
