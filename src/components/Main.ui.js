@@ -438,15 +438,18 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_SELL}>
-              <Scene
-                key={PLUGIN_SELL}
-                component={withNavigation(ifLoggedIn(GuiPluginListScene))}
-                navTransparent
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
-                onLeft={Actions.pop}
-                route={{ params: { direction: 'sell' } }}
-              />
+              {hook(
+                <Scene
+                  key={PLUGIN_SELL}
+                  component={withNavigation(ifLoggedIn(GuiPluginListScene))}
+                  navTransparent
+                  renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                  renderRightButton={<SideMenuButton />}
+                  onLeft={Actions.pop}
+                  route={{ params: { direction: 'sell' } }}
+                  ref={this.props.generateTestHook('Scene.sell')}
+                />
+              )}
               <Scene
                 key={PLUGIN_VIEW}
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
@@ -458,14 +461,17 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={EXCHANGE}>
-              <Scene
-                key={EXCHANGE_SCENE}
-                component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
-                navTransparent
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
-                onEnter={() => this.props.checkEnabledExchanges()}
-              />
+              {hook(
+                <Scene
+                  key={EXCHANGE_SCENE}
+                  component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
+                  navTransparent
+                  renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                  renderRightButton={<SideMenuButton />}
+                  onEnter={() => this.props.checkEnabledExchanges()}
+                  ref={this.props.generateTestHook('Scene.exchange')}
+                />
+              )}
               <Scene
                 key={EXCHANGE_QUOTE_PROCESSING_SCENE}
                 component={withNavigation(ifLoggedIn(CryptoExchangeQuoteProcessingScreen))}
@@ -680,15 +686,18 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={TERMS_OF_SERVICE}>
-            <Scene
-              key={TERMS_OF_SERVICE}
-              component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
-              navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
+            {hook(
+              <Scene
+                key={TERMS_OF_SERVICE}
+                component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
+                navTransparent
+                renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+                ref={this.props.generateTestHook('Scene.TermsOfService')}
+              />
+            )}
           </Stack>
 
           <Stack key={FIO_ADDRESS_LIST}>
@@ -823,27 +832,28 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_REQUEST_LIST}>
-            <Scene
-              key={FIO_REQUEST_LIST}
-              component={withNavigation(ifLoggedIn(FioRequestListScene))}
-              navTransparent
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
             {hook(
               <Scene
-                key={FIO_REQUEST_APPROVED}
-                component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+                key={FIO_REQUEST_LIST}
+                component={withNavigation(ifLoggedIn(FioRequestListScene))}
                 navTransparent
-                onEnter={() => this.props.requestPermission('contacts')}
-                clone
-                renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
-                ref={this.props.generateTestHook('Scene.fioRequestApproved')}
+                onLeft={Actions.pop}
+                ref={this.props.generateTestHook('Scene.fioRequestList')}
               />
             )}
+
+            <Scene
+              key={FIO_REQUEST_APPROVED}
+              component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+              navTransparent
+              onEnter={() => this.props.requestPermission('contacts')}
+              clone
+              renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+            />
           </Stack>
 
           <Stack key={FIO_SENT_REQUEST_DETAILS}>
