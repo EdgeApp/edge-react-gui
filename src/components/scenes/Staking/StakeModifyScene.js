@@ -1,4 +1,5 @@
 // @flow
+import { add, bns } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -6,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
-import { makeStakePlugin } from '../../../plugins/stake-plugins'
+import { type ChangeQuote, makeStakePlugin } from '../../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -14,6 +15,7 @@ import type { RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName } from '../../../util/stakeUtils.js'
+import { convertNativeToDenomination } from '../../../util/utils.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
 import { Airship } from '../../services/AirshipInstance.js'
@@ -37,6 +39,9 @@ export const StakeModifyScene = (props: Props) => {
   const { stakePolicyId } = stakePolicy
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  // TODO: Cleanup: Better case handling... Make component builders that only require allocation?
+  const isClaim = modification === 'claim'
 
   // TODO: Remove hard-coding for single asset to support multiple stake/reward assets
   const stakeAssetsName = getStakeAssetsName(stakePolicy)
@@ -84,7 +89,6 @@ export const StakeModifyScene = (props: Props) => {
 
   const [stakeAllocation, setStakeAllocation] = useState()
   const [rewardAllocation, setRewardAllocation] = useState()
-  const [stakeModRequest, setStakeModRequest] = useState()
 
   useEffect(() => {
     async function fetchStakeDetails() {
@@ -111,33 +115,52 @@ export const StakeModifyScene = (props: Props) => {
     unstake: s.strings.stake_amount_unstake
   }
 
-  const [nativeAmount, setNativeAmount] = useState('0')
-  const [exchangeAmount, setExchangeAmount] = useState('0')
-  const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
-    setExchangeAmount(exchangeAmount)
-    setNativeAmount(nativeAmount)
+  const [pendingChangeQuote, setPendingChangeQuote] = useState()
+  const [nativeModAmount, setNativeModAmount] = useState('0')
+  const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
+  const onAmountChanged = (flipNativeAmount: string, displayModAmount: string) => {
+    if (!bns.eq(nativeModAmount, flipNativeAmount)) {
+      setNativeModAmount(flipNativeAmount)
+      // Setup the request
+      stakePlugin
+        .fetchChangeQuote({
+          action: modification,
+          stakePolicyId: stakePolicyId,
+          tokenId: allocationToMod.tokenId,
+          nativeAmount: flipNativeAmount,
+          wallet: currencyWallet
+        })
+        .then(changeQuote => {
+          setPendingChangeQuote(changeQuote)
+          const test = changeQuote.allocations.find(allocation => allocation.allocationType === 'fee').nativeAmount
+          console.log('\x1b[34m\x1b[43m' + `test: ${JSON.stringify(test, null, 2)}` + '\x1b[0m')
+          setNativeFeeAmount(test)
+        })
+    }
+  }
+
+  const onMaxSet = () => {
+    // Allocation to modify is in native currency
+    if (currencyWallet.currencyInfo.currencyCode === stakeAssetsName) {
+      // TODO: V2
+    } else {
+      // TODO: V1
+    }
   }
 
   const handleFlipInputModal = () => {
     Airship.show(bridge => (
-      <FlipInputModal
-        bridge={bridge}
-        walletId={walletId}
-        currencyCode={currencyWallet.currencyInfo.currencyCode}
-        onAmountChanged={onAmountChanged}
-        overrideExchangeAmount={exchangeAmount}
-      />
+      <FlipInputModal bridge={bridge} walletId={walletId} currencyCode={stakeAssetsName} onAmountChanged={onAmountChanged} onMaxSet={onMaxSet} />
     )).catch(error => console.log(error))
   }
 
-  const renderWarning = modification => {
-    if (modification !== 'claim') return null
+  const renderWarning = () => {
+    if (!isClaim) return null
 
     return <Alert marginTop={0.5} title={s.strings.wc_smartcontract_warning_title} message={s.strings.stake_warning_claim} numberOfLines={0} type="warning" />
   }
 
-  const renderAmountTiles = (allocationToMod, modification) => {
-    const isClaim = modification === 'claim'
+  const renderAmountTiles = (modAllocation, nativeAmount, modification) => {
     const amountCurrencyCode = isClaim ? rewardAssetsName : stakeAssetsName
     const exchangeDenomination = isClaim ? rewardExchangeDenom : stakeExchangeDenom
     const displayDenomination = isClaim ? rewardDisplayDenom : stakeDisplayDenom
@@ -152,7 +175,7 @@ export const StakeModifyScene = (props: Props) => {
         <EditableAmountTile
           title={amountTileTitleMap[modification]}
           exchangeRates={guiExchangeRates}
-          nativeAmount={allocationToMod?.nativeAmount ?? '0'}
+          nativeAmount={nativeAmount ?? '0'}
           currencyWallet={currencyWallet}
           currencyCode={amountCurrencyCode}
           exchangeDenomination={exchangeDenomination}
@@ -162,17 +185,13 @@ export const StakeModifyScene = (props: Props) => {
         />
         <CryptoFiatAmountTile
           title={s.strings.wc_smartcontract_network_fee}
-          nativeCryptoAmount={
-            '0' /** 
-        // TODO: network fees 
-      */
-          }
+          nativeCryptoAmount={nativeFeeAmount}
           style={styles.lastTile}
           cryptoCurrencyCode={currencyWallet.currencyInfo.currencyCode}
           isoFiatCurrencyCode={isoFiatCurrencyCode}
           denomination={nativeAssetDenomination}
         />
-        {renderWarning(modification)}
+        {renderWarning()}
         <Slider onSlidingComplete={() => {}} disabled={false} showSpinner={null} disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label} />
       </>
     )
@@ -181,7 +200,7 @@ export const StakeModifyScene = (props: Props) => {
   return (
     <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={`Stake ${stakeAssetsName} to earn ${rewardAssetsName}`} underline withTopMargin />
-      {renderAmountTiles(allocationToMod, modification)}
+      {renderAmountTiles(allocationToMod, nativeModAmount, modification)}
     </SceneWrapper>
   )
 }
