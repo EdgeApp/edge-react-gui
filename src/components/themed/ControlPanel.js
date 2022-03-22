@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 // @flow
 
+import { useCavy } from 'cavy'
 import { type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -50,6 +51,7 @@ export function ControlPanel(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   // ---- Redux State ----
 
@@ -266,7 +268,7 @@ export function ControlPanel(props: Props) {
           )}
         </View>
         {/* ==== Rate Display End ==== */}
-        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
+        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('ToggleDropdown.rows')}>
           <View style={styles.rowIconContainer}>
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
@@ -293,10 +295,10 @@ export function ControlPanel(props: Props) {
               <View key={username} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)}>
+                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)} ref={generateTestHook('SwitchAccount.username')}>
                   <TitleText style={styles.text}>{username}</TitleText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)}>
+                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)} ref={generateTestHook('DeleteAccount.username')}>
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
                 </TouchableOpacity>
               </View>
@@ -305,12 +307,12 @@ export function ControlPanel(props: Props) {
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
+        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('ToggleDropdown.scene')} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
           <ScrollView>
             {rowDatas.map(rowData => (
-              <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+              <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer} ref={generateTestHook('GoToScene.scene')}>
                 <View style={styles.rowIconContainer}>
                   <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
                 </View>
