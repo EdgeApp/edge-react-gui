@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 // @flow
 
-import { useCavy } from 'cavy'
+import { useCavy, wrap } from 'cavy'
 import { type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -52,7 +52,7 @@ export function ControlPanel(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const generateTestHook = useCavy()
-
+  const TestableNativeComponents = wrap(Pressable, ScrollView, TouchableOpacity, View)
   // ---- Redux State ----
 
   const activeUsername = useSelector(state => state.core.account.username)
@@ -245,7 +245,8 @@ export function ControlPanel(props: Props) {
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
-        <View style={styles.rowContainer} ref={generateTestHook('SideMenu.ExchangeRate')}>
+
+        <View style={styles.rowContainer} TestableTouchableOpacity>
           {isoFiatCurrencyCode === null ? (
             <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
@@ -268,7 +269,7 @@ export function ControlPanel(props: Props) {
           )}
         </View>
         {/* ==== Rate Display End ==== */}
-        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
+        <TestableNativeComponents onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
           <View style={styles.rowIconContainer}>
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
@@ -282,7 +283,7 @@ export function ControlPanel(props: Props) {
               </Animated.View>
             </View>
           ) : null}
-        </Pressable>
+        </TestableNativeComponents>
         <DividerLine marginRem={[0.25, -2, 2, 1]} />
       </View>
       {/* ==== Top Panel End ==== */}
@@ -295,24 +296,34 @@ export function ControlPanel(props: Props) {
               <View key={username} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)} ref={generateTestHook('SideMenu.SwitchAccount')}>
+                <TestableNativeComponents
+                  style={styles.rowBodyContainer}
+                  onPress={handleSwitchAccount(username)}
+                  ref={generateTestHook('SideMenu.SwitchAccount')}
+                >
                   <TitleText style={styles.text}>{username}</TitleText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)} ref={generateTestHook('SideMenu.DeleteAccount')}>
+                </TestableNativeComponents>
+                <TestableNativeComponents
+                  style={styles.rowIconContainer}
+                  onPress={handleDeleteAccount(username)}
+                  ref={generateTestHook('SideMenu.DeleteAccount')}
+                >
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
-                </TouchableOpacity>
+                </TestableNativeComponents>
               </View>
             ))}
           </ScrollView>
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDown')} />}
+        {!isDropped ? null : (
+          <TestableNativeComponents style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDownEnd')} />
+        )}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
           <ScrollView>
             {rowDatas.map(rowData => (
-              <TouchableOpacity
+              <TestableNativeComponents
                 onPress={rowData.pressHandler}
                 key={rowData.title}
                 style={styles.rowContainer}
@@ -324,7 +335,7 @@ export function ControlPanel(props: Props) {
                 <View style={styles.rowBodyContainer}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>
                 </View>
-              </TouchableOpacity>
+              </TestableNativeComponents>
             ))}
           </ScrollView>
           {/* === Navigation Rows End === */}
