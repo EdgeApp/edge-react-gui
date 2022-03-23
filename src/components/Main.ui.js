@@ -1,5 +1,6 @@
 // @flow
 
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { YellowBox } from 'react-native'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
@@ -247,16 +248,8 @@ export class MainComponent extends React.Component<Props> {
     )
   }
 
-  // addCavyHook = component => {
-  //   return hook(
-  //     React.cloneElement(component, {
-  //       ...component.props,
-  //       ref: this.props.generateTestHook('Scene.' + component.key)
-  //     })
-  //   )
-  // }
-
   renderTabView = () => {
+    const TestableMainUi = wrap(Scene)
     return (
       <Drawer
         hideTabBar
@@ -279,7 +272,6 @@ export class MainComponent extends React.Component<Props> {
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
-                ref={this.props.generateTestHook('Scene.buy')}
               />
 
               <Scene
@@ -415,7 +407,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_BUY}>
-              <Scene
+              <TestableMainUi
                 key={PLUGIN_BUY}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -423,7 +415,7 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
                 route={{ params: { direction: 'buy' } }}
-                ref={this.props.generateTestHook('NavigationBar.buy')}
+                ref={this.props.generateTestHook('Main.Buy')}
               />
 
               <Scene
@@ -437,7 +429,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_SELL}>
-              <Scene
+              <TestableMainUi
                 key={PLUGIN_SELL}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -445,7 +437,7 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
                 route={{ params: { direction: 'sell' } }}
-                ref={this.props.generateTestHook('Scene.sell')}
+                ref={this.props.generateTestHook('Main.Sell')}
               />
 
               <Scene
@@ -459,14 +451,14 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={EXCHANGE}>
-              <Scene
+              <TestableMainUi
                 key={EXCHANGE_SCENE}
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
-                ref={this.props.generateTestHook('Scene.exchange')}
+                ref={this.props.generateTestHook('Main.Exchange')}
               />
 
               <Scene
@@ -824,14 +816,14 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_REQUEST_LIST}>
-            <Scene
+            <TestableMainUi
               key={FIO_REQUEST_LIST}
               component={withNavigation(ifLoggedIn(FioRequestListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
-              ref={this.props.generateTestHook('Scene.fioRequestList')}
+              ref={this.props.generateTestHook('Main.FioRequestList')}
             />
 
             <Scene
@@ -858,34 +850,34 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key="wcConnections">
-            <Scene
+            <TestableMainUi
               key="wcConnections"
               component={withNavigation(ifLoggedIn(WcConnectionsScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
-              ref={this.props.generateTestHook('Secne.wcConnections')}
+              ref={this.props.generateTestHook('Main.WcConnections')}
             />
 
-            <Scene
+            <TestableMainUi
               key="wcDisconnect"
               component={withNavigation(ifLoggedIn(WcDisconnectScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
-              ref={this.props.generateTestHook('Scene.wcDisconnect')}
+              ref={this.props.generateTestHook('Main.WcDisconnect')}
             />
 
-            <Scene
+            <TestableMainUi
               key="wcConnect"
               component={withNavigation(ifLoggedIn(WcConnectScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
-              ref={this.props.generateTestHook('Scene.wcConnect')}
+              ref={this.props.generateTestHook('Main.WcConnect')}
             />
           </Stack>
         </Scene>
