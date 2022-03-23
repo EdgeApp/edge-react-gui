@@ -18,7 +18,7 @@ import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { convertNativeToDenomination, getFiatSymbol } from '../../util/utils'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { type WalletListResult, WalletPickerModal } from '../modals/WalletListModal2.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -80,7 +80,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
+    Airship.show(bridge => <WalletPickerModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.props.onSelectWallet(walletId, currencyCode)
       }
