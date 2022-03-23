@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { isIPhoneX } from 'react-native-safe-area-view'
@@ -12,7 +13,8 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
-  navigation: NavigationProp<'edge'>
+  navigation: NavigationProp<'edge'>,
+  generateTestHook: (id: string, ref: any) => void
 }
 
 type Props = OwnProps & ThemeProps
@@ -54,7 +56,12 @@ class MenuTabComponent extends React.PureComponent<Props> {
             exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
+            <TouchableOpacity
+              style={styles.content}
+              key={element.key}
+              onPress={() => this.handleOnPress(element.key)}
+              ref={this.props.generateTestHook(`MenuTab.${state.routes}`)}
+            >
               {icon[element.key]}
               <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
             </TouchableOpacity>
@@ -85,4 +92,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const MenuTab = withTheme(MenuTabComponent)
+export const MenuTab = hook(withTheme(MenuTabComponent))

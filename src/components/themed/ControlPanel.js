@@ -245,7 +245,7 @@ export function ControlPanel(props: Props) {
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
-        <View style={styles.rowContainer}>
+        <View style={styles.rowContainer} ref={generateTestHook('SideMenu.ExchangeRate')}>
           {isoFiatCurrencyCode === null ? (
             <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
@@ -268,7 +268,7 @@ export function ControlPanel(props: Props) {
           )}
         </View>
         {/* ==== Rate Display End ==== */}
-        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('ToggleDropdown.rows')}>
+        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
           <View style={styles.rowIconContainer}>
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
@@ -295,10 +295,10 @@ export function ControlPanel(props: Props) {
               <View key={username} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)} ref={generateTestHook('SwitchAccount.username')}>
+                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)} ref={generateTestHook('SideMenu.SwitchAccount')}>
                   <TitleText style={styles.text}>{username}</TitleText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)} ref={generateTestHook('DeleteAccount.username')}>
+                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)} ref={generateTestHook('SideMenu.DeleteAccount')}>
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
                 </TouchableOpacity>
               </View>
@@ -307,12 +307,17 @@ export function ControlPanel(props: Props) {
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('ToggleDropdown.scene')} />}
+        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDown')} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
           <ScrollView>
             {rowDatas.map(rowData => (
-              <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer} ref={generateTestHook('GoToScene.scene')}>
+              <TouchableOpacity
+                onPress={rowData.pressHandler}
+                key={rowData.title}
+                style={styles.rowContainer}
+                ref={generateTestHook(`SideMenu.${rowData.iconName.replace('cp-', '')}`)}
+              >
                 <View style={styles.rowIconContainer}>
                   <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
                 </View>
