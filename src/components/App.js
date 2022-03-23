@@ -1,6 +1,8 @@
 // @flow
 
 import * as React from 'react'
+import { StyleSheet } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { CrashScene } from './scenes/CrashScene.js'
 import { EdgeCoreManager } from './services/EdgeCoreManager.js'
@@ -15,10 +17,12 @@ function logCrash(error: { originalError: mixed }) {
 export function App(props: {}) {
   return (
     <ThemeProvider>
-      <ErrorBoundary FallbackComponent={CrashScene} onError={logCrash}>
-        <StatusBarManager />
-        <EdgeCoreManager />
-      </ErrorBoundary>
+      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+        <ErrorBoundary FallbackComponent={CrashScene} onError={logCrash}>
+          <StatusBarManager />
+          <EdgeCoreManager />
+        </ErrorBoundary>
+      </GestureHandlerRootView>
     </ThemeProvider>
   )
 }
