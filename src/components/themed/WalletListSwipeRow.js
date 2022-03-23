@@ -6,11 +6,10 @@ import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
 import { REQUEST, SEND, TRANSACTION_LIST } from '../../constants/SceneKeys.js'
-import { getPluginId, getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import { forwardRef } from '../../types/reactHooks.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -86,21 +85,9 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 
   handleOpenWalletListMenuModal = (): void => {
     const { currencyCode, guiWallet, isToken } = this.props
-    const { metaTokens } = guiWallet
-    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-    const { symbolImage } = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress)
 
     this.closeRow()
-    Airship.show(bridge => (
-      <WalletListMenuModal
-        bridge={bridge}
-        walletId={guiWallet.id}
-        walletName={guiWallet.name}
-        currencyCode={currencyCode}
-        image={symbolImage}
-        isToken={isToken}
-      />
-    ))
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={isToken} walletId={guiWallet.id} />)
   }
 
   handleOpenRequest = () => {
