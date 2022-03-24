@@ -52,7 +52,7 @@ export function ControlPanel(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const generateTestHook = useCavy()
-  const TestableNativeComponents = wrap(Pressable, ScrollView, TouchableOpacity, View)
+  const TestableTouchableOpacity = wrap(TouchableOpacity)
   // ---- Redux State ----
 
   const activeUsername = useSelector(state => state.core.account.username)
@@ -269,7 +269,7 @@ export function ControlPanel(props: Props) {
           )}
         </View>
         {/* ==== Rate Display End ==== */}
-        <TestableNativeComponents onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
+        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
           <View style={styles.rowIconContainer}>
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
@@ -283,7 +283,7 @@ export function ControlPanel(props: Props) {
               </Animated.View>
             </View>
           ) : null}
-        </TestableNativeComponents>
+        </Pressable>
         <DividerLine marginRem={[0.25, -2, 2, 1]} />
       </View>
       {/* ==== Top Panel End ==== */}
@@ -296,34 +296,24 @@ export function ControlPanel(props: Props) {
               <View key={username} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TestableNativeComponents
-                  style={styles.rowBodyContainer}
-                  onPress={handleSwitchAccount(username)}
-                  ref={generateTestHook('SideMenu.SwitchAccount')}
-                >
+                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)} ref={generateTestHook('SideMenu.SwitchAccount')}>
                   <TitleText style={styles.text}>{username}</TitleText>
-                </TestableNativeComponents>
-                <TestableNativeComponents
-                  style={styles.rowIconContainer}
-                  onPress={handleDeleteAccount(username)}
-                  ref={generateTestHook('SideMenu.DeleteAccount')}
-                >
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)} ref={generateTestHook('SideMenu.DeleteAccount')}>
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
-                </TestableNativeComponents>
+                </TouchableOpacity>
               </View>
             ))}
           </ScrollView>
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : (
-          <TestableNativeComponents style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDownEnd')} />
-        )}
+        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDownEnd')} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
           <ScrollView>
             {rowDatas.map(rowData => (
-              <TestableNativeComponents
+              <TouchableOpacity
                 onPress={rowData.pressHandler}
                 key={rowData.title}
                 style={styles.rowContainer}
@@ -335,7 +325,7 @@ export function ControlPanel(props: Props) {
                 <View style={styles.rowBodyContainer}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>
                 </View>
-              </TestableNativeComponents>
+              </TouchableOpacity>
             ))}
           </ScrollView>
           {/* === Navigation Rows End === */}

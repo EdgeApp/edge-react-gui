@@ -1,6 +1,6 @@
 // @flow
 
-import { wrap } from 'cavy'
+import { hook } from 'cavy'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { isIPhoneX } from 'react-native-safe-area-view'
@@ -45,7 +45,6 @@ class MenuTabComponent extends React.PureComponent<Props> {
     const styles = getStyles(theme)
     const state: any = this.props.navigation.state
     const activeTabIndex = state.index
-    const TestableMenuTab = wrap(TouchableOpacity)
     return (
       <View style={styles.container}>
         {state.routes.map((element, index) => {
@@ -57,15 +56,15 @@ class MenuTabComponent extends React.PureComponent<Props> {
             exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TestableMenuTab
+            <TouchableOpacity
               style={styles.content}
               key={element.key}
               onPress={() => this.handleOnPress(element.key)}
-              ref={this.props.generateTestHook(`MenuTab.${state.routes}`)}
+              ref={this.props.generateTestHook(`MenuTab.${element.key}`)}
             >
               {icon[element.key]}
               <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
-            </TestableMenuTab>
+            </TouchableOpacity>
           )
         })}
       </View>
@@ -93,4 +92,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const MenuTab = wrap(withTheme(MenuTabComponent))
+export const MenuTab = hook(withTheme(MenuTabComponent))

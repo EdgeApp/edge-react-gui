@@ -7,8 +7,9 @@ import * as ReactNative from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { name as appName } from './app.json'
+// import ControlPanelSpec from './specs/ControlPanelSpec.js'
 import ExampleSpec from './specs/exampleSpec'
-import MenuTabSpec from './specs/MenuTabSpec'
+// import MenuTabSpec from './specs/MenuTabSpec'
 import { App } from './src/components/App.js'
 
 // See https://github.com/software-mansion/react-native-reanimated/issues/1794#issuecomment-898393331
@@ -25,7 +26,7 @@ const testHookStore = new TestHookStore()
 class AppWrapper extends Component {
   render() {
     return (
-      <Tester specs={[ExampleSpec, MenuTabSpec]} store={testHookStore}>
+      <Tester specs={[ExampleSpec]} store={testHookStore}>
         <App />
       </Tester>
     )
