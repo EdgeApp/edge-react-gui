@@ -37,7 +37,8 @@ type OwnProps = {
   onFeesChange?: () => void,
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
-  overrideExchangeAmount?: string
+  overrideExchangeAmount?: string,
+  headerText?: string
 }
 
 type StateProps = {
@@ -305,9 +306,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
-    const { walletId, currencyCode } = ownProps
+    const { walletId, currencyCode, headerText } = ownProps
     const wallet = state.core.account.currencyWallets[walletId]
-    const name = getWalletName(wallet)
+    const flipInputHeaderText = headerText ?? sprintf(s.strings.send_from_wallet, getWalletName(wallet))
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
     const { pluginId, metaTokens } = wallet.currencyInfo
     const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
@@ -361,7 +362,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       balanceCrypto: getAvailableBalance(wallet),
 
       // FlipInput
-      flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
+      flipInputHeaderText,
       flipInputHeaderLogo: symbolImageDarkMono,
       primaryInfo,
       secondaryInfo,
