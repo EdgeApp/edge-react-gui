@@ -1,8 +1,11 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import type { DetailAllocation, StakeDetails, StakePlugin, StakePolicy } from '../plugins/stake-plugins'
+import { formatTimeDate } from '../locales/intl'
+import s from '../locales/strings'
 import { getCurrencyIcon } from './CurrencyInfoHelpers.js'
 
 export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
@@ -24,6 +27,10 @@ export const getAllocations = async (
   allocationType: $PropertyType<DetailAllocation, 'allocationType'>
 ): Promise<DetailAllocation[]> => {
   return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === allocationType)
+}
+
+export const getAllocationLocktimeMessage = (allocation: DetailAllocation) => {
+  return allocation.locktime != null ? ` (${sprintf(s.strings.stake_lock_message, formatTimeDate(allocation.locktime))})` : ''
 }
 
 export const getRewardDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {

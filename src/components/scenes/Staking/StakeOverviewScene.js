@@ -14,7 +14,7 @@ import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName } from '../../../util/stakeUtils.js'
+import { getAllocationLocktimeMessage, getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -99,15 +99,15 @@ export const StakeOverviewScene = (props: Props) => {
         />
       </View>
       <CryptoFiatAmountTile
-        title={s.strings.stake_currently_staked}
-        nativeCryptoAmount={stakeAllocation?.nativeAmount ?? ''}
+        title={s.strings.stake_currently_staked + getAllocationLocktimeMessage(stakeAllocation)}
+        nativeCryptoAmount={stakeAllocation.nativeAmount ?? ''}
         cryptoCurrencyCode={stakeAssetsName}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={stakeAssetsDenomination}
       />
       <CryptoFiatAmountTile
-        title={sprintf(s.strings.stake_earned, rewardAssetsName)}
-        nativeCryptoAmount={rewardAllocation?.nativeAmount ?? ''}
+        title={sprintf(s.strings.stake_earned, rewardAssetsName) + getAllocationLocktimeMessage(rewardAllocation)}
+        nativeCryptoAmount={rewardAllocation.nativeAmount ?? ''}
         cryptoCurrencyCode={rewardAssetsName}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={rewardAssetDenomination}
