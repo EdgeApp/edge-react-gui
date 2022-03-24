@@ -1,5 +1,4 @@
 // @flow
-
 import { wrap } from 'cavy'
 import * as React from 'react'
 import { YellowBox } from 'react-native'
@@ -249,7 +248,7 @@ export class MainComponent extends React.Component<Props> {
   }
 
   renderTabView = () => {
-    const TestableMainUi = wrap(Scene)
+    const TestableScene = wrap(Scene)
     return (
       <Drawer
         hideTabBar
@@ -265,13 +264,14 @@ export class MainComponent extends React.Component<Props> {
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
             <Stack key={WALLET_LIST}>
-              <Scene
+              <TestableScene
                 key={WALLET_LIST_SCENE}
                 component={withNavigation(ifLoggedIn(WalletListScene))}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
+                ref={this.props.generateTestHook(`Main.WalletList`)}
               />
 
               <Scene
@@ -407,7 +407,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_BUY}>
-              <TestableMainUi
+              <Scene
                 key={PLUGIN_BUY}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -429,7 +429,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_SELL}>
-              <TestableMainUi
+              <Scene
                 key={PLUGIN_SELL}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -451,7 +451,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={EXCHANGE}>
-              <TestableMainUi
+              <Scene
                 key={EXCHANGE_SCENE}
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
@@ -687,13 +687,14 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_ADDRESS_LIST}>
-            <Scene
+            <TestableScene
               key={FIO_ADDRESS_LIST}
               component={withNavigation(ifLoggedIn(FioAddressListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
+              ref={this.props.generateTestHook('Main.FioNames')}
             />
           </Stack>
           <Stack key={FIO_ADDRESS_REGISTER}>
@@ -816,7 +817,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_REQUEST_LIST}>
-            <TestableMainUi
+            <Scene
               key={FIO_REQUEST_LIST}
               component={withNavigation(ifLoggedIn(FioRequestListScene))}
               navTransparent
@@ -850,7 +851,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key="wcConnections">
-            <TestableMainUi
+            <Scene
               key="wcConnections"
               component={withNavigation(ifLoggedIn(WcConnectionsScene))}
               navTransparent
@@ -860,7 +861,7 @@ export class MainComponent extends React.Component<Props> {
               ref={this.props.generateTestHook('Main.WcConnections')}
             />
 
-            <TestableMainUi
+            <Scene
               key="wcDisconnect"
               component={withNavigation(ifLoggedIn(WcDisconnectScene))}
               navTransparent
@@ -870,7 +871,7 @@ export class MainComponent extends React.Component<Props> {
               ref={this.props.generateTestHook('Main.WcDisconnect')}
             />
 
-            <TestableMainUi
+            <Scene
               key="wcConnect"
               component={withNavigation(ifLoggedIn(WcConnectScene))}
               navTransparent
