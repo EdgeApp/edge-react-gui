@@ -6,17 +6,17 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
-import { ClickableRow } from '../../../components/themed/ClickableRow'
-import { EdgeText } from '../../../components/themed/EdgeText'
-import { formatNumber, formatTime } from '../../../locales/intl.js'
-import s from '../../../locales/strings'
-import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
-import { getSelectedWallet } from '../../../selectors/WalletSelectors.js'
-import { connect } from '../../../types/reactRedux.js'
-import { type FioRequest, type GuiWallet } from '../../../types/types'
-import { getFiatSymbol } from '../../../util/utils'
-import { isRejectedFioRequest, isSentFioRequest } from '../util'
+import { formatNumber, formatTime } from '../../locales/intl.js'
+import s from '../../locales/strings.js'
+import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util.js'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
+import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
+import { connect } from '../../types/reactRedux.js'
+import { type FioRequest, type GuiWallet } from '../../types/types.js'
+import { getFiatSymbol } from '../../util/utils.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ClickableRow } from './ClickableRow.js'
+import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   fioRequest: FioRequest,
@@ -32,7 +32,7 @@ type StateProps = {
 
 type Props = OwnProps & StateProps & ThemeProps
 
-class FioRequestRow extends React.PureComponent<Props> {
+class FioRequestRowComponent extends React.PureComponent<Props> {
   static defaultProps: OwnProps = {
     fioRequest: {
       fio_request_id: '',
@@ -162,7 +162,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
+export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
     let displayDenomination = emptyDisplayDenomination
@@ -203,4 +203,4 @@ export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
     }
   },
   dispatch => ({})
-)(withTheme(FioRequestRow))
+)(withTheme(FioRequestRowComponent))
