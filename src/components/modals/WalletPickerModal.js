@@ -40,7 +40,6 @@ const findParams = filterText => {
 }
 
 export const WalletPickerModal = (props: Props) => {
-  console.log('43. WalletPickerModal')
   const { bridge, headerTitle, filterWallet, filterCreate } = props
   const [rowsData, setRowsData] = useState([])
   const account = useSelector(state => state.core.account)
@@ -58,7 +57,6 @@ export const WalletPickerModal = (props: Props) => {
 
   const getRows = useCallback(async () => {
     const selectWalletRows: WalletListRowData[] = []
-    console.log('61. getRows')
     for (const walletId of activeWalletIds) {
       const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
       const { currencyCode, displayName, pluginId } = wallet.currencyInfo
@@ -90,7 +88,6 @@ export const WalletPickerModal = (props: Props) => {
 
   useEffect(() => {
     if (rowsData.length > 0) return
-    console.log('93. useEffect', rowsData)
     getRows()
   }, [getRows, rowsData])
 
@@ -109,17 +106,22 @@ export const WalletPickerModal = (props: Props) => {
       if (filterCreate != null && !filterCreate(tokenId, specialCurrencyInfo)) return null
       const createData = { currencyName: displayName, currencyCode }
       const createRowProps = {}
-      // Tokens
+      // Main chain Currencies
       if (tokenId === pluginId) {
-        // Main chain Currencies
-        Object.assign(createRowProps, {
-          createWalletType: { ...createData, walletType: currencyConfig[tokenId]?.currencyInfo?.walletType, ...getCurrencyIcon(pluginId) }
-        })
+        createRowProps.createWalletType = {
+          ...createData,
+          walletType: currencyConfig[tokenId]?.currencyInfo?.walletType,
+          ...getCurrencyIcon(pluginId)
+        }
       } else {
-        Object.assign(createRowProps, {
-          createTokenType: { ...createData, parentCurrencyCode: pluginId, ...getCurrencyIcon(pluginId, tokenId) }
-        })
+        // Tokens
+        createRowProps.createTokenType = {
+          ...createData,
+          parentCurrencyCode: pluginId,
+          ...getCurrencyIcon(pluginId, tokenId)
+        }
       }
+
       return <WalletListCreateRow {...createRowProps} onPress={onPress} />
     }
 
