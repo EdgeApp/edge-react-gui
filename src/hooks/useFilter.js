@@ -1,6 +1,6 @@
 // @flow
 
-import { useState } from '../types/reactHooks.js'
+import { useEffect, useState } from '../types/reactHooks.js'
 
 const CACHE_MAX_SIZE = 10
 
@@ -8,6 +8,13 @@ export function useFilter<T>(allData: T[], filterData?: (filter: string, item: T
   const [filteredData, setFilteredData] = useState(allData)
   const [filteredDataCache, setFilteredDataCache] = useState({ '': allData })
   const [fifoCache, setFifoCache] = useState([''])
+
+  // Reset the state if allData changes (used when getting the data is async)
+  useEffect(() => {
+    setFifoCache([''])
+    setFilteredDataCache({ '': allData })
+    setFilteredData(allData)
+  }, [allData])
 
   const setFilter = (filter: string) => {
     // If already existing in cache just return the existing sort
