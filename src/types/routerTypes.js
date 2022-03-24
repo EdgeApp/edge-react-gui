@@ -210,6 +210,19 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
+  stakeModify: {|
+    walletId: string,
+    stakePolicy: StakePolicy,
+    // TODO: type this?
+    allocationToMod?: {
+      tokenId: string,
+      allocationType: 'staked' | 'unstaked' | 'earned',
+      nativeAmount: string,
+      locktime?: Date
+    },
+    modification: 'stake' | 'unstake' | 'claim'
+  |},
+  stakeClaim: { walletId: string, stakePolicy: StakePolicy },
   stakeOptions: { walletId: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   fioStakingChange: {

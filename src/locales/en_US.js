@@ -956,6 +956,16 @@ const strings = {
   stake_currently_staked: 'Currently Staked',
   stake_earned: '%s Earned',
   stake_select_options: 'Select staking options:',
+  stake_stake_more_funds: 'Stake More Funds',
+  stake_claim_rewards: 'Claim Rewards',
+  stake_unstake: 'Unstake',
+  stake_x_to_earn_y: 'Stake %1s to earn %2s',
+  stake_claim_unstake: 'Claim Rewards and Unstake',
+  stake_amount_stake: 'Amount to Stake',
+  stake_amount_claim: 'Amount of Reward to Claim',
+  stake_amount_unstake: 'Amount to Unstake',
+  stake_warning_claim:
+    'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose “Claim Rewards and Unstake” instead.',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
