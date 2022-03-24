@@ -7,6 +7,7 @@ import { SwipeRow } from 'react-native-swipe-list-view'
 import { Fontello } from '../../assets/vector/index.js'
 import { REQUEST, SEND, TRANSACTION_LIST } from '../../constants/SceneKeys.js'
 import { getPluginId, getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
@@ -218,8 +219,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const WalletListSwipeRowInner = withTheme(WalletListSwipeRowComponent)
-// $FlowFixMe - forwardRef is not recognize by flow?
-const WalletListSwipeRow = React.forwardRef((props, ref) => <WalletListSwipeRowInner {...props} swipeRef={ref} />)
-// Lint error about component not having a displayName
-WalletListSwipeRow.displayName = 'WalletListRow'
-export { WalletListSwipeRow }
+
+export const WalletListSwipeRow = forwardRef((props, ref) => <WalletListSwipeRowInner {...props} swipeRef={ref} />)

@@ -5,7 +5,7 @@ import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View }
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { useCallback, useEffect, useImperativeHandle, useRef, useState } from '../../types/reactHooks.js'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from '../../types/reactHooks.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { cacheStyles, useTheme } from '../services/ThemeContext.js'
 
@@ -58,8 +58,7 @@ declare export class OutlinedTextInputRef extends React.Component<Props> {
   clear: () => void;
 }
 
-// $FlowFixMe Our version of Flow doesn't have forwardRef:
-const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
+export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
   const {
     // Contents:
     error,
@@ -411,5 +410,3 @@ const getStyles = cacheStyles(theme => {
     }
   }
 })
-
-export const OutlinedTextInput: Class<OutlinedTextInputRef> = OutlinedTextInputComponent
