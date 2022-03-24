@@ -6,7 +6,7 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import { type SpecialCurrencyInfo, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useCallback, useEffect, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { WalletListCreateRow } from '../themed/WalletListCreateRow.js'
@@ -16,17 +16,19 @@ import { ListModal } from './ListModal'
 export type WalletListRowData = {
   walletId?: string,
   tokenId?: string,
-  currencyCode?: string
+  currencyCode: string,
+  pluginId: string,
+  displayName: string
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<WalletListRowData>,
+  bridge: AirshipBridge<WalletListRowData | null>,
   headerTitle: string,
   // Filter function for which Existing wallets to allow to pick from
-  // Defaults to null which will show all wallets
+  // Defaults to show all wallet rows
   filterWallet?: (wallet: EdgeCurrencyWallet, specialCurrencyInfo: SpecialCurrencyInfo) => boolean,
   // Filter function for which non Existing wallets to allow to create
-  // Defaults to null which won't show any `create wallet` row
+  // Defaults to not show any `create wallet` row
   filterCreate?: (tokenId: string, specialCurrencyInfo: SpecialCurrencyInfo) => boolean
 }
 
@@ -38,6 +40,7 @@ const findParams = filterText => {
 }
 
 export const WalletPickerModal = (props: Props) => {
+  console.log('43. WalletPickerModal')
   const { bridge, headerTitle, filterWallet, filterCreate } = props
   const [rowsData, setRowsData] = useState([])
   const account = useSelector(state => state.core.account)
@@ -53,79 +56,73 @@ export const WalletPickerModal = (props: Props) => {
     return [currencyInfo.displayName, currencyInfo.currencyCode]
   }
 
-  useEffect(() => {
-    const getRows = async () => {
-      const selectWalletRows: WalletListRowData[] = []
-
-      for (const walletId of activeWalletIds) {
-        const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-        const tokens: string[] = await wallet.getEnabledTokens()
-        if (tokens.length === 0) tokens.push(wallet.currencyInfo.currencyCode)
-        const wallets = tokens.map(currencyCode => ({ currencyCode, walletId }))
-        selectWalletRows.push(...wallets)
-      }
-
-      const createWalletRows: WalletListRowData[] = []
-      const addTokenRows: WalletListRowData[] = []
-
-      for (const pluginId of Object.keys(currencyConfig)) {
-        if (currencyConfig[pluginId] == null) continue
-        const { currencyInfo, builtinTokens = {}, customTokens = {} }: EdgeCurrencyConfig = currencyConfig[pluginId]
-        createWalletRows.push({ tokenId: pluginId, currencyCode: currencyInfo.currencyCode })
-        const builtinRows = Object.keys(builtinTokens).map(tokenId => ({ tokenId }))
-        const customRows = Object.keys(customTokens).map(tokenId => ({ tokenId }))
-
-        addTokenRows.push(...builtinRows, ...customRows)
-      }
-
-      const rows = selectWalletRows.concat(createWalletRows).concat(addTokenRows)
-
-      setRowsData(rows)
+  const getRows = useCallback(async () => {
+    const selectWalletRows: WalletListRowData[] = []
+    console.log('61. getRows')
+    for (const walletId of activeWalletIds) {
+      const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+      const { currencyCode, displayName, pluginId } = wallet.currencyInfo
+      const tokens: string[] = await wallet.getEnabledTokens()
+      if (tokens.length === 0) tokens.push(currencyCode)
+      const wallets = tokens.map(currencyCode => ({ currencyCode, walletId, displayName, pluginId }))
+      selectWalletRows.push(...wallets)
     }
-    getRows()
+
+    const createWalletRows: WalletListRowData[] = []
+    const addTokenRows: WalletListRowData[] = []
+
+    for (const pluginId of Object.keys(currencyConfig)) {
+      const { currencyInfo, builtinTokens = {}, customTokens = {} }: EdgeCurrencyConfig = currencyConfig[pluginId]
+      const { currencyCode, displayName } = currencyInfo
+      createWalletRows.unshift({ tokenId: pluginId, currencyCode, displayName, pluginId })
+      const allTokens = { ...builtinTokens, ...customTokens }
+      const tokenRows = Object.keys(allTokens).map(tokenId => {
+        const { currencyCode, displayName } = allTokens[tokenId]
+        return { currencyCode, displayName, tokenId, pluginId }
+      })
+      addTokenRows.unshift(...tokenRows)
+    }
+
+    const rows = selectWalletRows.concat(createWalletRows).concat(addTokenRows)
+
+    setRowsData(rows)
   }, [activeWalletIds, currencyConfig, currencyWallets])
 
-  const rowComponent = ({ walletId, tokenId, currencyCode }) => {
+  useEffect(() => {
+    if (rowsData.length > 0) return
+    console.log('93. useEffect', rowsData)
+    getRows()
+  }, [getRows, rowsData])
+
+  const rowComponent = tokenData => {
+    const onPress = (walletId?, currencyCode?) => bridge.resolve(tokenData)
+    const { walletId, tokenId, currencyCode, displayName, pluginId } = tokenData
+    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
     // Return a `WalletListCurrencyRow` for existing wallets
     if (walletId != null) {
-      const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-      const { walletType, currencyCode: chainCode } = wallet.currencyInfo
-      const specialCurrencyInfo = getSpecialCurrencyInfo(walletType)
-      if (filterWallet != null && !filterWallet(wallet, specialCurrencyInfo)) return null
-      // console.log('82. currencyCode', currencyCode)
-      return <WalletListCurrencyRow currencyCode={currencyCode ?? chainCode} onPress={() => bridge.resolve({ walletId, currencyCode })} walletId={walletId} />
+      if (filterWallet != null && !filterWallet(currencyWallets[walletId], specialCurrencyInfo)) return null
+      return <WalletListCurrencyRow currencyCode={currencyCode} onPress={onPress} walletId={walletId} />
     }
 
-    // Return a `WalletListCreateRow` for non-existing tokenId
+    // Return a `WalletListCreateRow` for non-existing currency wallets
     if (tokenId != null) {
-      console.log('106. tokenId', tokenId)
-      if (currencyConfig[tokenId] == null) return null
-      const { currencyInfo }: EdgeCurrencyConfig = currencyConfig[tokenId]
-
-      const { displayName, walletType, currencyCode, pluginId } = currencyInfo
-      const specialCurrencyInfo = getSpecialCurrencyInfo(walletType)
       if (filterCreate != null && !filterCreate(tokenId, specialCurrencyInfo)) return null
-      const onPress = (walletId, currencyCode) => bridge.resolve({ walletId, currencyCode })
-
+      const createData = { currencyName: displayName, currencyCode }
+      const createRowProps = {}
+      // Tokens
       if (tokenId === pluginId) {
-        const createWalletType = {
-          currencyName: displayName,
-          walletType,
-          currencyCode,
-          ...getCurrencyIcon(pluginId)
-        }
-        return <WalletListCreateRow createWalletType={createWalletType} onPress={onPress} />
+        // Main chain Currencies
+        Object.assign(createRowProps, {
+          createWalletType: { ...createData, walletType: currencyConfig[tokenId]?.currencyInfo?.walletType, ...getCurrencyIcon(pluginId) }
+        })
+      } else {
+        Object.assign(createRowProps, {
+          createTokenType: { ...createData, parentCurrencyCode: pluginId, ...getCurrencyIcon(pluginId, tokenId) }
+        })
       }
-
-      // const createTokenType = {
-      //   currencyCode,
-      //   currencyName: displayName,
-      //   ...getCurrencyIcon(pluginId),
-      //   parentCurrencyCode: pluginId
-      // }
-
-      // return <WalletListCreateRow createTokenType={createTokenType} onPress={onPress} />
+      return <WalletListCreateRow {...createRowProps} onPress={onPress} />
     }
+
     return null
   }
 
@@ -139,9 +136,9 @@ export const WalletPickerModal = (props: Props) => {
   const handleSubmitEditing = filterText => {
     const filter = findParams(filterText)
     const walletId = activeWalletIds.find(walletId => filter(walletSearchParams(walletId)))
-    if (walletId == null) return bridge.resolve({})
-    const { currencyCode } = currencyWallets[walletId].currencyInfo
-    return bridge.resolve({ walletId, currencyCode })
+    if (walletId == null) return bridge.resolve(null)
+    const { currencyCode, displayName, pluginId } = currencyWallets[walletId].currencyInfo
+    return bridge.resolve({ walletId, currencyCode, displayName, pluginId, tokenId: pluginId })
   }
 
   return (
@@ -156,25 +153,3 @@ export const WalletPickerModal = (props: Props) => {
     />
   )
 }
-
-// const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-// const tokens = wallet.getEnabledTokens()
-// const account = useSelector(state => state.core.account)
-// const createWalletTypes = useMemo(() => getCreateWalletTypes(account, true), [account])
-// import { useEffect, useState } from '../../types/reactHooks.js'
-// import { getCreateWalletTypes, getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
-
-// export type CreateWalletType = {
-//   currencyName: string,
-//   walletType: string,
-//   symbolImage?: string,
-//   symbolImageDarkMono?: string,
-//   currencyCode: string
-// }
-
-// export type CreateTokenType = {
-//   currencyCode: string,
-//   currencyName: string,
-//   symbolImage?: string,
-//   parentCurrencyCode: string
-// }
