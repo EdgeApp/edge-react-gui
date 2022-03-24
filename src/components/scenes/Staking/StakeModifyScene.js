@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
-import { type ChangeQuote, type StakeDetails, makeStakePlugin } from '../../../plugins/stake-plugins'
+import { type ChangeQuote, type StakeDetails, makeStakePlugin } from '../../../plugins/stake-plugins/index.js'
 import { type AllocationType } from '../../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
@@ -95,7 +95,7 @@ export const StakeModifyScene = (props: Props) => {
   }, [currencyWallet, modification, stakePolicyId])
 
   // Handlers
-  const [pendingChangeQuote: ChangeQuote, setPendingChangeQuote] = useState({ allocations: [], approve: () => {} })
+  const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote>({ allocations: [], approve: () => {} })
   const [nativeModAmount, setNativeModAmount] = useState('0')
   const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
   const onAmountEdited = (flipNativeAmount: string, displayModAmount: string) => {
@@ -136,14 +136,21 @@ export const StakeModifyScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const showFlipInputModal = () => {
+    const header = modification === 'stake' ? s.strings.stake_modal_modify_stake_title : s.strings.stake_modal_modify_unstake_title
     Airship.show(bridge => (
-      <FlipInputModal bridge={bridge} walletId={walletId} currencyCode={stakeAssetsName} onAmountChanged={onAmountEdited} onMaxSet={onMaxButtonPress} />
+      <FlipInputModal
+        bridge={bridge}
+        walletId={walletId}
+        currencyCode={stakeAssetsName}
+        onAmountChanged={onAmountEdited}
+        onMaxSet={onMaxButtonPress}
+        flipInputHeaderText={sprintf(header, currencyWallet.name)}
+      />
     )).catch(error => console.log(error))
   }
 
   const isClaim = modification === 'claim'
   const renderEditableAmount = (allocationType: AllocationType, stakeDetails: StakeDetails) => {
-    console.log('\x1b[34m\x1b[43m' + `allocationType: ${JSON.stringify(allocationType, null, 2)}` + '\x1b[0m')
     if (stakeDetails !== null) {
       const titleMap = {
         stake: s.strings.stake_amount_stake,
