@@ -36,16 +36,19 @@ export type StakePolicy = {
 // Change Quote
 // -----------------------------------------------------------------------------
 
+export type ActionType = 'stake' | 'unstake' | 'claim'
 export type ChangeQuoteRequest = {
-  action: 'stake' | 'unstake' | 'claim',
+  action: ActionType,
   stakePolicyId: string,
   tokenId: string,
   nativeAmount: string,
   wallet: EdgeCurrencyWallet
 }
 
+// TODO: Change to staked, unstaked, earned, fee? Should fee be separate? Not really an allocation...
+export type AllocationType = 'stake' | 'unstake' | 'claim' | 'fee'
 export type QuoteAllocation = {
-  allocationType: 'stake' | 'unstake' | 'claim' | 'fee',
+  allocationType: AllocationType,
   tokenId: string,
   nativeAmount: string
 }
@@ -68,7 +71,7 @@ export type DetailAllocation = {
   // The type of asset for this allocation
   tokenId: string,
   // The type of the allocation
-  allocationType: 'staked' | 'unstaked' | 'earned',
+  allocationType: AllocationType,
   // Amount of the asset allocated
   nativeAmount: string,
   /*

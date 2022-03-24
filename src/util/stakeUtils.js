@@ -1,25 +1,26 @@
 // @flow
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
+import { type AllocationType, type DetailAllocation } from '../plugins/stake-plugins/types'
 import type { StakeDetails, StakePlugin, StakePolicy } from '../plugins/stake-plugins/types.js'
-import { type DetailAllocation } from '../plugins/stake-plugins/types.js'
 import { getCurrencyIcon } from './CurrencyInfoHelpers.js'
 
 export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
   return stakePlugin.fetchStakeDetails({ stakePolicyId, wallet: currencyWallet })
 }
 
-// TODO: Use getAllocations
+// TODO: Use getAllocations?
 export const getRewardAllocation = async (stakeDetails: StakeDetails) => {
-  return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')[0]
+  const rewardAllocations = stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')
+  return rewardAllocations.length > 0 ? rewardAllocations[0] : null
 }
 
-// TODO: Use getAllocations
+// TODO: Use getAllocations?
 export const getStakeAllocation = async (stakeDetails: StakeDetails) => {
   return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'staked')[0]
 }
 
-export const getAllocations = async (stakeDetails: StakeDetails, allocationType: 'stake' | 'unstake' | 'earned'): Promise<DetailAllocation[]> => {
+export const getAllocations = async (stakeDetails: StakeDetails, allocationType: AllocationType): Promise<DetailAllocation[]> => {
   return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === allocationType)
 }
 
@@ -54,21 +55,4 @@ export const getAllocationIconUris = (currencyWallet: EdgeCurrencyWallet, alloca
     const currencyIcon = getCurrencyIcon(walletPluginId, contractAddress).symbolImage
     return currencyIcon
   })
-}
-
-export const useMyHook = (stakePlugin, stakePolicyId, currencyWallet) => {
-  // Current Allocation Amounts
-  const [allocationAmount, setallocationAmount] = useState()
-  useEffect(() => {
-    async function fetchStakeDetails() {
-      const allocationAmount = await getStakeAllocation(stakePlugin, stakePolicyId, currencyWallet)
-      const rewardAllocation = await getRewardAllocation(stakePlugin, stakePolicyId, currencyWallet)
-      return { stakeAllocation, rewardAllocation }
-    }
-
-    fetchStakeDetails().then(({ stakeAllocation, rewardAllocation }) => {
-      setStakeAllocation(stakeAllocation)
-      setRewardAllocation(rewardAllocation)
-    })
-  }, [currencyWallet, stakePolicyId])
 }
