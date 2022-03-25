@@ -212,13 +212,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fioRequestsSent: fioRequestsSent.filter(item => parseInt(item.fio_request_id) !== parseInt(requestId)) })
   }
 
-  closeRow = (rowMap: { [string]: SwipeRow }, rowKey: string) => {
-    if (rowMap[rowKey]) {
-      rowMap[rowKey].closeRow()
-    }
-  }
-
-  rejectFioRequest = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payerFioAddress: string) => {
+  rejectFioRequest = async (request: FioRequest) => {
+    const payerFioAddress = request.payer_fio_address
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -236,7 +231,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
         } else {
           await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
           this.removeFioPendingRequest(request.fio_request_id)
-          this.closeRow(rowMap, rowKey)
           showToast(s.strings.fio_reject_status)
         }
       } catch (e) {
@@ -248,7 +242,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fullScreenLoader: false })
   }
 
-  cancelFioRequest = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payeeFioAddress: string) => {
+  cancelFioRequest = async (request: FioRequest) => {
+    const payeeFioAddress = request.payee_fio_address
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -261,7 +256,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
       try {
         await cancelFioRequest(fioWallet, parseInt(request.fio_request_id), payeeFioAddress)
         this.removeFioSentRequest(request.fio_request_id)
-        this.closeRow(rowMap, rowKey)
         showToast(s.strings.fio_cancel_status)
       } catch (e) {
         this.setState({ fullScreenLoader: false })
@@ -277,7 +271,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fullScreenLoader: false })
   }
 
-  rejectRowConfirm = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payerFioAddress: string) => {
+  rejectRowConfirm = async (request: FioRequest) => {
     const answer = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -290,14 +284,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return this.rejectFioRequest(rowMap, rowKey, request, payerFioAddress)
-    }
-    if (answer === 'cancel') {
-      return this.closeRow(rowMap, rowKey)
+      return this.rejectFioRequest(request)
     }
   }
 
-  cancelRowConfirm = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payeeFioAddress: string) => {
+  cancelRowConfirm = async (request: FioRequest) => {
     const answer = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -310,10 +301,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return this.cancelFioRequest(rowMap, rowKey, request, payeeFioAddress)
-    }
-    if (answer === 'no') {
-      return this.closeRow(rowMap, rowKey)
+      return this.cancelFioRequest(request)
     }
   }
 
@@ -524,30 +512,36 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
   }
 
-  renderPending = (itemObj: { item: FioRequest }) => {
-    const { item: fioRequest } = itemObj
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectPendingRequest} />
+  renderPending = (listItem: { item: FioRequest }) => {
+    const { item } = listItem
+    return <FioRequestRow fioRequest={item} onSelect={this.selectPendingRequest} />
   }
 
-  renderSent = (itemObj: { item: FioRequest }) => {
-    const { item: fioRequest } = itemObj
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent />
+  renderSent = (listItem: { item: FioRequest }) => {
+    const { item } = listItem
+    return <FioRequestRow fioRequest={item} onSelect={this.selectSentRequest} isSent />
   }
 
-  renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
+  renderHiddenItem = (listItem: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
+    const { item } = listItem
     return (
       <HiddenMenuButtons
         rightSwipable={{
           label: s.strings.swap_terms_reject_button,
           color: 'danger',
-          onPress: _ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)
+          onPress: _ =>
+            this.rejectRowConfirm(item).finally(() => {
+              const id = item.fio_request_id.toString()
+              if (rowMap[id] != null) rowMap[id].closeRow()
+            })
         }}
       />
     )
   }
 
-  renderSentHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
-    if (isSentFioRequest(rowObj.item.status) || isRejectedFioRequest(rowObj.item.status)) {
+  renderSentHiddenItem = (listItem: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
+    const { item } = listItem
+    if (isSentFioRequest(item.status) || isRejectedFioRequest(item.status)) {
       return null
     }
     return (
@@ -555,7 +549,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
         rightSwipable={{
           label: s.strings.string_cancel_cap,
           color: 'danger',
-          onPress: _ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)
+          onPress: _ =>
+            this.cancelRowConfirm(item).finally(() => {
+              const id = item.fio_request_id.toString()
+              if (rowMap[id] != null) rowMap[id].closeRow()
+            })
         }}
       />
     )
