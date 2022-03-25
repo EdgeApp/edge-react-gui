@@ -110,7 +110,6 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
 import { Actions, withNavigation } from '../types/routerTypes.js'
-import { asSafeDefaultGuiWallet } from '../types/types'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -172,9 +171,9 @@ const RouterWithRedux = connect<
   dispatch => ({})
 )(Router)
 
+type OwnProps = { generateTestHook: (id: string, ref: any) => void }
 type DispatchProps = {
   registerDevice: () => void,
-  generateTestHook: (id: string, ref: any) => void,
 
   // Navigation actions:
   logout: (username?: string) => void,
@@ -183,12 +182,12 @@ type DispatchProps = {
   checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   checkEnabledExchanges: () => void,
   dispatchDisableScan: () => void,
-  dispatchEnableScan: () => void,
+
   requestPermission: (permission: Permission) => void,
   showReEnableOtpModal: () => void
 }
 
-type Props = DispatchProps
+type Props = DispatchProps & OwnProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -249,6 +248,8 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     const TestableScene = wrap(Scene)
+    // const generateTestHook = useCavy()
+
     return (
       <Drawer
         hideTabBar
@@ -407,7 +408,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_BUY}>
-              <Scene
+              <TestableScene
                 key={PLUGIN_BUY}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -429,7 +430,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_SELL}>
-              <Scene
+              <TestableScene
                 key={PLUGIN_SELL}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -451,7 +452,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={EXCHANGE}>
-              <Scene
+              <TestableScene
                 key={EXCHANGE_SCENE}
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
@@ -562,7 +563,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={SETTINGS_OVERVIEW_TAB} hideDrawerButton>
-            <Scene
+            <TestableScene
               key={SETTINGS_OVERVIEW}
               component={withNavigation(ifLoggedIn(SettingsScene))}
               navTransparent
@@ -570,6 +571,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              ref={this.props.generateTestHook('Main.SettingsOverview')}
             />
             <Scene
               key={CHANGE_PASSWORD}
@@ -675,7 +677,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={TERMS_OF_SERVICE}>
-            <Scene
+            <TestableScene
               key={TERMS_OF_SERVICE}
               component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
               navTransparent
@@ -683,6 +685,7 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
+              ref={this.props.generateTestHook('Main.TermsOfService')}
             />
           </Stack>
 
@@ -817,7 +820,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_REQUEST_LIST}>
-            <Scene
+            <TestableScene
               key={FIO_REQUEST_LIST}
               component={withNavigation(ifLoggedIn(FioRequestListScene))}
               navTransparent
@@ -851,7 +854,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key="wcConnections">
-            <Scene
+            <TestableScene
               key="wcConnections"
               component={withNavigation(ifLoggedIn(WcConnectionsScene))}
               navTransparent
@@ -861,7 +864,7 @@ export class MainComponent extends React.Component<Props> {
               ref={this.props.generateTestHook('Main.WcConnections')}
             />
 
-            <Scene
+            <TestableScene
               key="wcDisconnect"
               component={withNavigation(ifLoggedIn(WcDisconnectScene))}
               navTransparent
@@ -936,12 +939,9 @@ export class MainComponent extends React.Component<Props> {
   }
 }
 
-export const Main = connect<{}, DispatchProps, {}>(
+export const Main = connect<{}, DispatchProps, OwnProps>(
   state => ({}),
   dispatch => ({
-    generateTestHook() {
-      dispatch(this.props.generateTestHook())
-    },
     registerDevice() {
       dispatch(registerDevice())
     },
@@ -961,9 +961,7 @@ export const Main = connect<{}, DispatchProps, {}>(
     dispatchDisableScan() {
       dispatch({ type: 'DISABLE_SCAN' })
     },
-    dispatchEnableScan() {
-      dispatch({ type: 'ENABLE_SCAN' })
-    },
+
     requestPermission(permission: Permission) {
       requestPermission(permission)
     },
