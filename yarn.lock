@@ -26129,9 +26129,9 @@ toidentifier@1.0.1:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
-"tomb-finance@https://github.com/samholmes/tomb-finance#v0.1.0":
-  version "0.1.0"
-  resolved "https://github.com/samholmes/tomb-finance#a5dfa4662fd125681dd3d3725f52e637b8bbc6e2"
+"tomb-finance@https://github.com/samholmes/tomb-finance#v0.1.1":
+  version "0.1.1"
+  resolved "https://github.com/samholmes/tomb-finance#d20ef290ae265ac2bdf9be498a7bd0217161e134"
   dependencies:
     "@ethersproject/providers" "^5.0.9"
     "@fortawesome/fontawesome-svg-core" "^1.2.30"
