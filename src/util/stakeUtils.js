@@ -11,8 +11,7 @@ export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: s
 
 // TODO: Use getAllocations?
 export const getRewardAllocation = async (stakeDetails: StakeDetails) => {
-  const rewardAllocations = stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')
-  return rewardAllocations.length > 0 ? rewardAllocations[0] : null
+  return stakeDetails.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')[0]
 }
 
 // TODO: Use getAllocations?
