@@ -52,7 +52,7 @@ export function ControlPanel(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const generateTestHook = useCavy()
-  const TestableTouchableOpacity = wrap(TouchableOpacity)
+
   // ---- Redux State ----
 
   const activeUsername = useSelector(state => state.core.account.username)
@@ -120,7 +120,7 @@ export function ControlPanel(props: Props) {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
-        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
+        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput ref={generateTestHook('SideMenu.SweepScanModal')} />)
           .then((result: string | void) => {
             if (result) {
               dispatch(qrCodeScanned(result))
@@ -133,7 +133,7 @@ export function ControlPanel(props: Props) {
 
   const handleLoginQr = () => {
     Actions.drawerClose()
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} />)
+    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} ref={generateTestHook('SideMenu.ScanModal')} />)
       .then((result: string | void) => {
         if (result) {
           dispatch(parseScannedUri(result))
@@ -150,6 +150,7 @@ export function ControlPanel(props: Props) {
       url: Platform.OS === 'ios' ? EDGE_URL : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
+    // is share able to be wrapped?
   }
 
   const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
@@ -296,10 +297,18 @@ export function ControlPanel(props: Props) {
               <View key={username} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)} ref={generateTestHook('SideMenu.SwitchAccount')}>
+                <TouchableOpacity
+                  style={styles.rowBodyContainer}
+                  onPress={handleSwitchAccount(username)}
+                  ref={generateTestHook('SideMenu.SwitchAccountButton')}
+                >
                   <TitleText style={styles.text}>{username}</TitleText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)} ref={generateTestHook('SideMenu.DeleteAccount')}>
+                <TouchableOpacity
+                  style={styles.rowIconContainer}
+                  onPress={handleDeleteAccount(username)}
+                  ref={generateTestHook('SideMenu.DeleteAccountButton')}
+                >
                   <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
                 </TouchableOpacity>
               </View>
