@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
-import { REQUEST, SEND, STAKING_OVERVIEW } from '../../constants/SceneKeys.js'
+import { FIO_STAKING_OVERVIEW, REQUEST, SEND, STAKE_OPTIONS } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -174,7 +174,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
   handleStakePress = () => {
     const { currencyCode, walletId } = this.props
-    Actions.push(STAKING_OVERVIEW, { currencyCode, walletId })
+    if (currencyCode === 'FIO') Actions.push(FIO_STAKING_OVERVIEW, { currencyCode, walletId })
+    else Actions.push(STAKE_OPTIONS, { walletId })
   }
 
   clearText = () => {

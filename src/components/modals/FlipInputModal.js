@@ -34,10 +34,11 @@ type OwnProps = {
   bridge: AirshipBridge<void>,
   walletId: string,
   currencyCode: string,
-  onFeesChange: () => void,
+  onFeesChange?: () => void,
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
-  overrideExchangeAmount?: string
+  overrideExchangeAmount?: string,
+  headerText?: string
 }
 
 type StateProps = {
@@ -92,7 +93,8 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   handleFeesChange = () => {
     this.handleCloseModal()
-    this.props.onFeesChange()
+    const { onFeesChange = () => {} } = this.props
+    onFeesChange()
   }
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
@@ -203,7 +205,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
           <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
-          <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} />
+          {this.props.onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
@@ -304,9 +306,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
-    const { walletId, currencyCode } = ownProps
+    const { walletId, currencyCode, headerText } = ownProps
     const wallet = state.core.account.currencyWallets[walletId]
-    const name = getWalletName(wallet)
+    const flipInputHeaderText = headerText ?? sprintf(s.strings.send_from_wallet, getWalletName(wallet))
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
     const { pluginId, metaTokens } = wallet.currencyInfo
     const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
@@ -360,7 +362,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       balanceCrypto: getAvailableBalance(wallet),
 
       // FlipInput
-      flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
+      flipInputHeaderText,
       flipInputHeaderLogo: symbolImageDarkMono,
       primaryInfo,
       secondaryInfo,
