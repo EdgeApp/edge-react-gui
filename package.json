@@ -85,6 +85,7 @@
   },
   "dependencies": {
     "@bugsnag/react-native": "^7.3.5",
+    "@ethersproject/shims": "^5.6.0",
     "@react-native-community/art": "^1.2.0",
     "@react-native-community/async-storage": "^1.6.2",
     "@react-native-community/blur": "^3.6.0",
@@ -99,6 +100,7 @@
     "biggystring": "^3.0.2",
     "cleaners": "^0.3.12",
     "core-js": "^2.5.2",
+    "crypto-browserify": "^3.12.0",
     "csv-stringify": "^5.6.2",
     "date-fns": "^2.22.1",
     "dateformat": "^3.0.3",
@@ -114,6 +116,9 @@
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a",
     "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#4842daad5fd560cd462f4668ab17c521a16a6cd9",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#6412ad28462278b84313537f21a53d307633c5d0",
+    "ethers": "^5.6.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "qrcode-generator": "^1.4.4",
     "react": "17.0.2",
     "react-native": "^0.67.2",
@@ -161,6 +166,9 @@
     "redux-thunk": "^2.3.0",
     "rn-qr-generator": "^1.1.7",
     "sprintf-js": "^1.1.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tomb-finance": "https://github.com/samholmes/tomb-finance#v0.1.1",
     "url-parse": "^1.5.2"
   },
   "devDependencies": {
