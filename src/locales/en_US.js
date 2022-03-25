@@ -952,6 +952,9 @@ const strings = {
   util_truncate_delimeter: '...',
 
   // Stake
+  stake_estimated_return: 'Estimated Return: %s APR',
+  stake_currently_staked: 'Currently Staked',
+  stake_earned: '%s Earned',
   stake_select_options: 'Select staking options:',
 
   // Currency Labels
