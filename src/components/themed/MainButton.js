@@ -38,7 +38,7 @@ type Props = {|
   spinner?: boolean,
 
   // Which visual style to use. Defaults to primary (solid):
-  type?: 'primary' | 'secondary'
+  type?: 'primary' | 'secondary' | 'escape'
 |}
 
 /**
@@ -53,12 +53,12 @@ export function MainButton(props: Props) {
   // Styles:
   const theme = useTheme()
   const styles = getStyles(theme)
-  const touchableStyle = type === 'primary' ? styles.primaryButton : styles.secondaryButton
+  const touchableStyle = type === 'primary' ? styles.primaryButton : type === 'escape' ? styles.escapeButton : styles.secondaryButton
   const textStyle = type === 'primary' ? styles.primaryText : styles.secondaryText
   const spinnerColor = type === 'primary' ? theme.primaryButtonText : theme.secondaryButtonText
   const dynamicStyles = {
     alignSelf,
-    opacity: disabled || pending ? 0.7 : 1,
+    opacity: disabled ? 0.3 : pending ? 0.7 : 1,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
     ...sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
   }
@@ -111,6 +111,12 @@ const getStyles = cacheStyles((theme: Theme) => {
     secondaryText: {
       ...commonText,
       color: theme.secondaryButtonText
+    },
+
+    escapeButton: {
+      ...commonButton,
+      backgroundColor: theme.secondaryButton,
+      borderColor: 'transparent'
     },
 
     // Common styles:
