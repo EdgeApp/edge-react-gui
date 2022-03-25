@@ -5,8 +5,17 @@ import { ethers } from 'ethers'
 import MASONRY_ABI from './abi/MASONRY_ABI.json'
 import TOMB_TREASURY_ABI from './abi/TOMB_TREASURY_ABI.json'
 import TSHARE_ABI from './abi/TSHARE_ABI.json'
+import { promiseAny } from './util/promiseAny'
 
-export const jsonRpcProvider = new ethers.providers.JsonRpcProvider('https://rpc.ftm.tools')
+export const rpcProviderUrls = [
+  'https://rpc.ftm.tools',
+  'https://rpc.fantom.network',
+  'https://rpc2.fantom.network',
+  'https://rpc3.fantom.network',
+  'https://rpcapi.fantom.network',
+  'https://rpc.ankr.com/fantom'
+]
+export const providers = rpcProviderUrls.map<ethers.Provider>(url => new ethers.providers.JsonRpcProvider(url))
 
 type ContractInfoEntry = {
   abi: mixed,
@@ -50,5 +59,11 @@ export const makeContract = (addressOrName: string) => {
   const contractInfo = getContractInfo(addressOrName)
   if (contractInfo == null) throw new Error(`Unable to contract info for '${addressOrName}'`)
   const { abi, address } = contractInfo
-  return new ethers.Contract(address, abi, jsonRpcProvider)
+  return new ethers.Contract(address, abi, providers[0])
 }
+
+export const multipass = (fn: (provider: ethers.Provider) => Promise<any>) => {
+  return promiseAny(providers.map(provider => fn(provider)))
+}
+
+export const makeSigner = (seed: string, provider: ethers.Provider = providers[0]) => new ethers.Wallet(seed, provider)
