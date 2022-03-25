@@ -70,22 +70,14 @@ export const convertCurrencyFromExchangeRates = (
 }
 
 export const calculateFiatBalance = (currencyWallet: EdgeCurrencyWallet, fullCurrencyCode: string, exchangeRates: { [string]: string }): string => {
-  // console.log('73. fullCurrencyCode', fullCurrencyCode)
   if (fullCurrencyCode == null || fullCurrencyCode === '') {
     fullCurrencyCode = currencyWallet.currencyInfo.currencyCode
   }
   const [currencyCode, tokenCode] = fullCurrencyCode.split('-')
   const code = tokenCode ?? currencyCode
-  console.log('79. code', code)
   const exchangeRate = exchangeRates[`${code}_${currencyWallet.fiatCurrencyCode}`] ?? '0'
-  console.log('81. exchangeRate', exchangeRate)
-  console.log('82. balances', currencyWallet.balances)
   const cryptoAmount = currencyWallet.balances[code] ?? '0'
-  console.log('83. cryptoAmount', cryptoAmount)
   const fiatBalance = mul(cryptoAmount, exchangeRate)
-  console.log('86. fullCurrencyCode', fullCurrencyCode)
-  console.log('86. fiatBalance', fiatBalance)
-  // console.log('82. fiatBalance', fiatBalance)
   return formatNumber(fiatBalance, { toFixed: FIAT_PRECISION }) || '0'
 }
 

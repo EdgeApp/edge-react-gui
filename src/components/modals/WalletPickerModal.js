@@ -130,7 +130,6 @@ const toRowComponent =
   (props: WalletListRowProps) => {
     const onPress = (walletId?, currencyCode?) => handleSelect(props)
     const { walletId, tokenId, currencyCode, displayName, pluginId, symbolImage, symbolImageDarkMono } = props
-    console.log('118. props', props)
 
     // Return a `WalletListCurrencyRow` for existing wallets
     if (walletId != null) {
