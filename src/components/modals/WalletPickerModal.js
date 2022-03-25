@@ -19,7 +19,9 @@ export type WalletListRowProps = {
   tokenId?: string,
   currencyCode: string,
   pluginId: string,
-  displayName: string
+  displayName: string,
+  symbolImage?: string,
+  symbolImageDarkMono?: string
 }
 
 type EdgeCurrencyWallets = { [walletId: string]: EdgeCurrencyWallet }
@@ -81,11 +83,19 @@ const dataFilter = (currencyWallets: EdgeCurrencyWallets, currencyConfig: EdgePl
   }
 }
 
-const getRowsData = async (activeWalletIds: string[], currencyWallets: EdgeCurrencyWallets, currencyConfig: EdgePluginMap<EdgeCurrencyConfig>) => {
+const getRowsData = async (
+  activeWalletIds: string[],
+  currencyWallets: EdgeCurrencyWallets,
+  currencyConfig: EdgePluginMap<EdgeCurrencyConfig>,
+  filterWallet,
+  filterCreate
+) => {
   const selectWalletRows: WalletListRowProps[] = []
   for (const walletId of activeWalletIds) {
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const { currencyCode, displayName, pluginId } = wallet.currencyInfo
+    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
+    if (filterWallet != null && !filterWallet(currencyWallets[walletId], specialCurrencyInfo)) continue
     const tokens: string[] = await wallet.getEnabledTokens()
     if (tokens.length === 0) tokens.push(currencyCode)
     const wallets = tokens.map(currencyCode => ({ currencyCode, walletId, displayName, pluginId }))
@@ -96,15 +106,19 @@ const getRowsData = async (activeWalletIds: string[], currencyWallets: EdgeCurre
   const addTokenRows: WalletListRowProps[] = []
 
   for (const pluginId of Object.keys(currencyConfig)) {
+    const curriedCurrencyIcon = (tokenId: string = pluginId) => getCurrencyIcon(pluginId, tokenId)
     const { currencyInfo, builtinTokens = {}, customTokens = {} }: EdgeCurrencyConfig = currencyConfig[pluginId]
     const { currencyCode, displayName } = currencyInfo
-    createWalletRows.unshift({ tokenId: pluginId, currencyCode, displayName, pluginId })
+    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
+    if (filterCreate != null && !filterCreate({ tokenId: pluginId, pluginId }, specialCurrencyInfo)) continue
+    createWalletRows.unshift({ tokenId: pluginId, currencyCode, displayName, pluginId, ...curriedCurrencyIcon() })
+
     const allTokens = { ...builtinTokens, ...customTokens }
-    const tokenRows = Object.keys(allTokens).map(tokenId => {
+    Object.keys(allTokens).forEach(tokenId => {
       const { currencyCode, displayName } = allTokens[tokenId]
-      return { currencyCode, displayName, tokenId, pluginId }
+      if (filterCreate != null && !filterCreate({ tokenId, pluginId }, specialCurrencyInfo)) return
+      addTokenRows.unshift({ currencyCode, displayName, tokenId, pluginId, ...curriedCurrencyIcon(tokenId) })
     })
-    addTokenRows.unshift(...tokenRows)
   }
 
   return selectWalletRows.concat(createWalletRows).concat(addTokenRows)
@@ -114,28 +128,37 @@ const toRowComponent =
   ({ filterWallet, currencyWallets, filterCreate, currencyConfig, handleSelect }) =>
   (props: WalletListRowProps) => {
     const onPress = (walletId?, currencyCode?) => handleSelect(props)
-    const { walletId, tokenId, currencyCode, displayName, pluginId } = props
-    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
+    const { walletId, tokenId, currencyCode, displayName, pluginId, symbolImage, symbolImageDarkMono } = props
+    console.log('118. props', props)
 
     // Return a `WalletListCurrencyRow` for existing wallets
     if (walletId != null) {
-      if (filterWallet != null && !filterWallet(currencyWallets[walletId], specialCurrencyInfo)) return null
       return <WalletListCurrencyRow currencyCode={currencyCode} onPress={onPress} walletId={walletId} />
     }
 
     // Return a `WalletListCreateRow` for non-existing currency wallets
-    if (tokenId != null) {
-      if (filterCreate != null && !filterCreate({ tokenId, pluginId }, specialCurrencyInfo)) return null
-      const curriedCurrencyIcon = (tokenId: string = pluginId) => getCurrencyIcon(pluginId, tokenId)
-      const createData = { currencyName: displayName, currencyCode }
-      // Main chain Currencies
-      if (tokenId === pluginId) {
-        const { walletType } = currencyConfig[tokenId].currencyInfo
-        return <WalletListCreateRow createWalletType={{ ...createData, walletType, ...curriedCurrencyIcon() }} onPress={onPress} />
-      } else {
-        // Tokens
-        return <WalletListCreateRow createTokenType={{ ...createData, parentCurrencyCode: pluginId, ...curriedCurrencyIcon(tokenId) }} onPress={onPress} />
-      }
+    if (tokenId != null && tokenId === pluginId) {
+      return (
+        <WalletListCreateRow
+          createWalletType={{
+            currencyName: displayName,
+            currencyCode,
+            symbolImage,
+            symbolImageDarkMono,
+            walletType: currencyConfig[tokenId].currencyInfo.walletType
+          }}
+          onPress={onPress}
+        />
+      )
+    }
+    // Tokens
+    if (tokenId != null && tokenId !== pluginId) {
+      return (
+        <WalletListCreateRow
+          createTokenType={{ currencyName: displayName, currencyCode, symbolImage, symbolImageDarkMono, parentCurrencyCode: pluginId }}
+          onPress={onPress}
+        />
+      )
     }
 
     return null
@@ -147,7 +170,10 @@ export const WalletPickerModal = (props: Props) => {
 
   const { activeWalletIds, currencyWallets, currencyConfig } = account
   const searchText = useMemo(() => findWallet(activeWalletIds, currencyWallets), [activeWalletIds, currencyWallets])
-  const getRowsPromise = useCallback(() => getRowsData(activeWalletIds, currencyWallets, currencyConfig), [activeWalletIds, currencyConfig, currencyWallets])
+  const getRowsPromise = useCallback(
+    () => getRowsData(activeWalletIds, currencyWallets, currencyConfig, filterWallet, filterCreate),
+    [activeWalletIds, currencyConfig, currencyWallets, filterWallet, filterCreate]
+  )
 
   const rowsData = useAsync(getRowsPromise)
 

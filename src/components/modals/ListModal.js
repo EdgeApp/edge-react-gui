@@ -57,7 +57,7 @@ export function ListModal<T>(props: Props<T>) {
 
   const [text, setText] = useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
-  const renderItem = ({ item }) => (rowComponent ? rowComponent(item) : null)
+  const renderItem = ({ item }) => (rowComponent ?? ((item: any) => null))(item)
 
   const handleChangeText = (text: string) => {
     setText(text)

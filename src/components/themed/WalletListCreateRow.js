@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 
 import { createAndSelectToken, createAndSelectWallet } from '../../actions/CreateWalletActions'
 import s from '../../locales/strings.js'
-import { useCallback } from '../../types/reactHooks.js'
+import { memo, useCallback } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType } from '../../types/types.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -18,7 +18,7 @@ type Props = {
   createTokenType?: CreateTokenType
 }
 
-export const WalletListCreateRow = (props: Props) => {
+export const WalletListCreateRow = memo((props: Props) => {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -47,7 +47,7 @@ export const WalletListCreateRow = (props: Props) => {
       </View>
     </WalletListRow>
   )
-}
+})
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // Icons

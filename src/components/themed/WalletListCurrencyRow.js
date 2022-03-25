@@ -8,6 +8,7 @@ import { View } from 'react-native'
 import { useFiatText } from '../../hooks/useFiatText.js'
 import { formatNumber } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
+import { memo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import {
@@ -110,7 +111,7 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
   return result(`-${percentageString}`, 'negative')
 }
 
-export const WalletListCurrencyRow = (props: Props) => {
+export const WalletListCurrencyRow = memo((props: Props) => {
   const { currencyCode, showRate = false, onPress, onLongPress, gradient, walletId, walletName } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -181,7 +182,7 @@ export const WalletListCurrencyRow = (props: Props) => {
       </View>
     </WalletListRow>
   )
-}
+})
 
 const getStyles = cacheStyles((theme: Theme) => ({
   balance: {
