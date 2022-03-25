@@ -36,22 +36,14 @@ export const toStakePolicy = (policyInfo: StakePolicyInfo): StakePolicy => {
   const rewardPart = rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
   const stakePolicyId = `${stakePart}=${rewardPart}`
 
-  const stakeAssetMap: { [pluginId: string]: { [tokenId: string]: boolean } } = stakeAssets.reduce(
-    (map, asset) => ({ ...map, [asset.pluginId]: { [asset.tokenId]: true } }),
-    {}
-  )
-  const rewardAssetMap: { [pluginId: string]: { [tokenId: string]: boolean } } = rewardAssets.reduce(
-    (map, asset) => ({ ...map, [asset.pluginId]: { [asset.tokenId]: true } }),
-    {}
-  )
   // TODO: Calculate the APY or use a parameter from the current function
   const apy = 100
 
   return {
     stakePolicyId,
     apy,
-    stakeAssets: stakeAssetMap,
-    rewardAssets: rewardAssetMap,
+    stakeAssets,
+    rewardAssets,
     mustClaimRewards
   }
 }

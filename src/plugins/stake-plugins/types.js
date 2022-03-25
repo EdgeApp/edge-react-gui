@@ -15,18 +15,16 @@ export type StakePolicy = {
   apy: number,
 
   // The assets which must be staked
-  stakeAssets: {
-    [pluginId: string]: {
-      [tokenId: string]: boolean
-    }
-  },
+  stakeAssets: Array<{
+    pluginId: string,
+    tokenId: string
+  }>,
 
   // The assets which can be earned
-  rewardAssets: {
-    [pluginId: string]: {
-      [tokenId: string]: boolean
-    }
-  },
+  rewardAssets: Array<{
+    pluginId: string,
+    tokenId: string
+  }>,
 
   // Whether claim action is required to obtain reward
   mustClaimRewards: boolean
