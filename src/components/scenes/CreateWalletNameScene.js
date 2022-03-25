@@ -42,8 +42,8 @@ export class CreateWalletName extends React.Component<Props, State> {
   onNext = () => {
     const { navigation, route } = this.props
     const { cleanedPrivateKey, selectedFiat, selectedWalletType } = route.params
-    const { currencyCode } = selectedWalletType
-    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    const { walletType } = selectedWalletType
+    const specialCurrencyInfo = getSpecialCurrencyInfo(walletType)
 
     if (this.isValidWalletName() && specialCurrencyInfo.skipAccountNameValidation && !cleanedPrivateKey) {
       navigation.navigate('createWalletAccountSelect', {

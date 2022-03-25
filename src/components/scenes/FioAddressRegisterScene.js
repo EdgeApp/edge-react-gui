@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
 import { Fontello } from '../../assets/vector'
-import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
+import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
@@ -551,7 +551,7 @@ const typeHack: any = {}
 export const FioAddressRegisterScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
+    fioPlugin: state.core.account.currencyConfig.fio ?? typeHack,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

@@ -36,18 +36,17 @@ describe('Request', () => {
 
     const props = {
       currencyCode: 'BTC',
-      edgeWallet: {},
+      edgeWallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
       exchangeSecondaryToPrimaryRatio: {},
       guiWallet: {},
       loading: false,
-      primaryCurrencyInfo: {},
+      primaryCurrencyInfo: { displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } },
       receiveAddress: {},
       secondaryCurrencyInfo: {},
       showToWalletModal: false,
       useLegacyAddress: false,
       currentScene: 'request',
       wallets: {},
-      balance: '0',
       theme: getTheme()
     }
     const actual = renderer.render(<Request {...props} />)

@@ -6,7 +6,7 @@ import { ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
-import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
+import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -335,7 +335,7 @@ const typeHack: any = {}
 export const FioDomainRegisterScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
+    fioPlugin: state.core.account.currencyConfig.fio ?? typeHack,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

@@ -13,7 +13,7 @@ import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalPar
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
+import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
 import { Actions } from '../../../types/routerTypes.js'
@@ -215,7 +215,7 @@ export const DomainListModal = connect<StateProps, {}, OwnProps>(
   state => ({
     userDomains: state.ui.scenes.fioAddress.fioDomains,
     fioWallets: state.ui.wallets.fioWallets,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
 )(withTheme(DomainListModalComponent))

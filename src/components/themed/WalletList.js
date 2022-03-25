@@ -2,8 +2,7 @@
 
 import { type EdgeAccount, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { RefreshControl } from 'react-native'
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+import { FlatList, RefreshControl, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
@@ -14,13 +13,11 @@ import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, 
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type FilterDetailsType, alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils'
-import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { type SortOption } from '../modals/WalletListSortModal.js'
-import { Airship } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
-import { WalletListEmptyRow } from './WalletListEmptyRow.js'
+import { WalletListRow } from './WalletListRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
 import { WalletListSwipeRow } from './WalletListSwipeRow.js'
 
@@ -30,8 +27,7 @@ type WalletListItem = {
   key: string,
   createWalletType?: CreateWalletType,
   createTokenType?: CreateTokenType,
-  onPress?: () => void,
-  onLongPress?: (walletId: string) => void
+  onPress?: () => void
 }
 
 type Section = {
@@ -141,7 +137,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   getWalletList(): WalletListItem[] {
-    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets, filterActivation } = this.props
+    const { activeWalletIds, account, excludeWalletIds, searching, showCreateWallet, wallets, filterActivation } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
@@ -153,12 +149,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         // Initialize wallets that is still loading
         walletList.push({
           id: walletId,
-          key: walletId,
-          onLongPress: !isModal
-            ? () => {
-                Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={walletId} />)
-              }
-            : () => {}
+          key: walletId
         })
       } else if (wallet != null) {
         const { enabledTokens, name, currencyCode, currencyNames } = asSafeDefaultGuiWallet(wallet)
@@ -222,7 +213,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       const currencyInfos = getCurrencyInfos(account)
       for (const currencyInfo of currencyInfos) {
         for (const metaToken of currencyInfo.metaTokens) {
-          const { currencyCode, currencyName } = metaToken
+          const { currencyCode, currencyName, contractAddress } = metaToken
           // Fix for when the token code and chain code are the same (like EOS/TLOS)
           if (currencyCode === currencyInfo.currencyCode) continue
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
@@ -235,7 +226,7 @@ class WalletListComponent extends React.PureComponent<Props> {
               createTokenType: {
                 currencyCode,
                 currencyName,
-                ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode),
+                ...getCurrencyIcon(currencyInfo.pluginId, contractAddress),
                 parentCurrencyCode: currencyInfo.currencyCode
               }
             })
@@ -247,7 +238,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     return sortedWalletlist
   }
 
-  renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
+  renderRow = (data: FlatListItem<WalletListItem>) => {
     const { isModal, onPress, selectWallet, showSlidingTutorial, wallets, account } = this.props
 
     // Create Wallet/Token
@@ -260,8 +251,10 @@ class WalletListComponent extends React.PureComponent<Props> {
     const guiWallet = wallets[walletId]
 
     if (guiWallet == null || account.currencyWallets[walletId] == null) {
-      const { key, onLongPress } = data.item
-      return <WalletListEmptyRow gradient={!isModal} onLongPress={onLongPress} walletId={walletId} swipeRow={rowMap[key]} />
+      if (isModal) {
+        return <WalletListRow currencyCode="" walletName="" walletId={walletId} />
+      }
+      return <WalletListSwipeRow currencyCode="" isToken={false} walletId={walletId} />
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode != null ? data.item.fullCurrencyCode.split('-') : []
@@ -271,16 +264,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         return <WalletListCurrencyRow currencyCode={currencyCode} onPress={data.item.onPress} walletId={walletId} paddingRem={0} />
       }
 
-      return (
-        <WalletListSwipeRow
-          currencyCode={currencyCode}
-          guiWallet={guiWallet}
-          isToken={isToken}
-          openRowLeft={data.index === 0 && showSlidingTutorial}
-          selectWallet={this.props.selectWallet}
-          swipeRow={rowMap[data.item.key]}
-        />
-      )
+      return <WalletListSwipeRow currencyCode={currencyCode} isToken={isToken} openTutorial={data.index === 0 && showSlidingTutorial} walletId={walletId} />
     }
   }
 
@@ -333,7 +317,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { footer, header, isModal, mostRecentWallets, searchText, searching } = this.props
+    const { footer, header, isModal, mostRecentWallets, searchText, searching, theme } = this.props
     const walletList = this.getWalletList()
 
     let isSectionList = false
@@ -345,19 +329,28 @@ class WalletListComponent extends React.PureComponent<Props> {
       }
     }
 
+    if (isSectionList) {
+      return (
+        <SectionList
+          keyboardShouldPersistTaps="handled"
+          ListFooterComponent={footer}
+          ListHeaderComponent={header}
+          renderItem={this.renderRow}
+          renderSectionHeader={this.renderSectionHeader}
+          sections={this.getSection(walletList, walletOnlyList.length)}
+        />
+      )
+    }
+
     return (
-      <SwipeListView
+      <FlatList
+        contentOffset={{ x: 0, y: !searching && !isModal ? theme.rem(4.5) : 0 }}
+        data={walletList}
+        keyboardShouldPersistTaps="handled"
         ListFooterComponent={footer}
         ListHeaderComponent={header}
-        data={!isSectionList ? walletList : undefined}
-        sections={isSectionList ? this.getSection(walletList, walletOnlyList.length) : undefined}
-        renderSectionHeader={isSectionList ? this.renderSectionHeader : undefined}
+        refreshControl={isModal ? undefined : this.renderRefreshControl()}
         renderItem={this.renderRow}
-        refreshControl={!isModal && !isSectionList ? this.renderRefreshControl() : undefined}
-        contentOffset={{ y: !searching && !isModal && !isSectionList ? this.props.theme.rem(4.5) : 0 }}
-        keyboardShouldPersistTaps="handled"
-        useSectionList={isSectionList === true}
-        useFlatList={isSectionList === false}
       />
     )
   }

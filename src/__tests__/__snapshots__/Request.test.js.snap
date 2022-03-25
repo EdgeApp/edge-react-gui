@@ -14,17 +14,65 @@ exports[`Request should render with loaded props 1`] = `
       }
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <View
       style={
         Object {
-          "fontFamily": "Quicksand-Medium",
-          "fontSize": 45,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "fontFamily": "Quicksand-Medium",
+            "fontSize": 45,
+          }
+        }
+      >
+        Request
+      </WithTheme(EdgeTextComponent)>
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "alignSelf": "flex-end",
+            "fontFamily": "Quicksand-Bold",
+            "textAlign": "right",
+          }
+        }
+      >
+        1 undefined
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "space-between",
           "marginBottom": 11,
         }
       }
     >
-      Request
-    </WithTheme(EdgeTextComponent)>
+      <WithTheme(EdgeTextComponent)>
+        You have 0 undefined
+      </WithTheme(EdgeTextComponent)>
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "alignSelf": "flex-end",
+            "fontFamily": "Quicksand-Bold",
+            "textAlign": "right",
+          }
+        }
+      >
+        <FiatText
+          appendFiatCurrencyCode={true}
+          autoPrecision={true}
+          cryptoExchangeMultiplier="100000000"
+          nativeCryptoAmount="100000000"
+        />
+      </WithTheme(EdgeTextComponent)>
+    </View>
     <WithTheme(CardComponent)
       marginRem={0}
     >
@@ -32,7 +80,7 @@ exports[`Request should render with loaded props 1`] = `
         exchangeSecondaryToPrimaryRatio={Object {}}
         forceUpdateGuiCounter={0}
         headerCallback={[Function]}
-        headerText="Receive to undefined"
+        headerText="Receive to No name"
         inputAccessoryViewID=""
         isEditable={true}
         isFiatOnTop={true}
@@ -42,7 +90,16 @@ exports[`Request should render with loaded props 1`] = `
         onExchangeAmountChanged={[Function]}
         onNext={[Function]}
         overridePrimaryExchangeAmount=""
-        primaryCurrencyInfo={Object {}}
+        primaryCurrencyInfo={
+          Object {
+            "displayDenomination": Object {
+              "multiplier": "100000000",
+            },
+            "exchangeDenomination": Object {
+              "multiplier": "100000000",
+            },
+          }
+        }
         secondaryCurrencyInfo={Object {}}
         topReturnKeyType="done"
       />
@@ -61,7 +118,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        <ForwardRef
+        <TouchableOpacity
           onPress={[Function]}
           style={
             Object {
@@ -79,8 +136,8 @@ exports[`Request should render with loaded props 1`] = `
           >
             
           </Text>
-        </ForwardRef>
-        <ForwardRef
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={[Function]}
           style={
             Object {
@@ -98,13 +155,13 @@ exports[`Request should render with loaded props 1`] = `
           >
             Done
           </Text>
-        </ForwardRef>
+        </TouchableOpacity>
       </View>
     </InputAccessoryView>
     <QrCode
       onPress={[Function]}
     />
-    <ForwardRef
+    <TouchableOpacity
       onPress={[Function]}
     >
       <View
@@ -132,7 +189,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       />
-    </ForwardRef>
+    </TouchableOpacity>
   </View>
   <ShareButtons
     copyToClipboard={[Function]}
@@ -144,9 +201,7 @@ exports[`Request should render with loaded props 1`] = `
 
 exports[`Request should render with loading props 1`] = `
 <ActivityIndicator
-  animating={true}
   color="#FFFFFF"
-  hidesWhenStopped={true}
   size="large"
   style={
     Object {

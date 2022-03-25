@@ -1,5 +1,5 @@
 // @flow
-import { bns } from 'biggystring'
+import { div } from 'biggystring'
 
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
@@ -39,7 +39,7 @@ export const FiatText = (props: Props) => {
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
   const fiatAmount = useSelector(state => {
-    const cryptoAmount = bns.div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
+    const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
     return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 

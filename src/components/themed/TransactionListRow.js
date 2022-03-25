@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { abs, div, log10 } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
@@ -120,9 +120,9 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
         secondaryExchangeMultiplier: fiatDenomination.multiplier,
         exchangeSecondaryToPrimaryRatio: exchangeRate
       })
-      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
+      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayDenomination.multiplier), precisionAdjustValue)
     }
-    const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
+    const cryptoAmount = div(abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
     const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
     return {

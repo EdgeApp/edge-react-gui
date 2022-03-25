@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { abs, div, mul, toFixed } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeParsedUri, type EdgeTransaction, asMaybeInsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -47,7 +47,7 @@ const updateAmount =
     selectedCurrencyCode?: string
   ) =>
   (dispatch: Dispatch, getState: GetState) => {
-    const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
+    const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
     dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
@@ -204,7 +204,7 @@ export const signBroadcastAndSave =
 
     const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(edgeUnsignedTransaction.nativeAmount)
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode).toString()
-    const amountFiatString = bns.abs(bns.mul(exchangeAmount, fiatPerCrypto))
+    const amountFiatString = abs(mul(exchangeAmount, fiatPerCrypto))
     const amountFiat = parseFloat(amountFiatString)
 
     const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
@@ -242,7 +242,7 @@ export const signBroadcastAndSave =
       const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
       const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? `${fiatDenomination.symbol} ` : ''
-      const feeString = `${fiatSymbol}${bns.toFixed(feeAmountInWalletFiat.toString(), 2, 2)}`
+      const feeString = `${fiatSymbol}${toFixed(feeAmountInWalletFiat.toString(), 2, 2)}`
       const feeAlertResponse = await displayFeeAlert(guiWallet.currencyCode, feeString)
       if (!feeAlertResponse) {
         dispatch({
@@ -336,7 +336,7 @@ export const signBroadcastAndSave =
                 payeeFioAddress,
                 payerPublicAddress,
                 payeePublicAddress: guiMakeSpendInfo.publicAddress ?? publicAddress ?? '',
-                amount: amount && bns.div(amount, exchangeDenomination.multiplier, DECIMAL_PRECISION),
+                amount: amount && div(amount, exchangeDenomination.multiplier, DECIMAL_PRECISION),
                 currencyCode: edgeSignedTransaction.currencyCode,
                 chainCode: chainCode || guiWallet.currencyCode,
                 txid: edgeSignedTransaction.txid,
@@ -426,6 +426,8 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
   return resolveValue === 'confirm'
 }
 
+let lastUpdateTransactionAmountNonce = 0
+
 export const updateTransactionAmount =
   (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -437,7 +439,7 @@ export const updateTransactionAmount =
 
     // Spend Info
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
+    const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto.toString())
     const metadata: EdgeMetadata = { amountFiat: parseFloat(amountFiatString) }
     const guiMakeSpendInfo = { nativeAmount, metadata }
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
@@ -458,9 +460,14 @@ export const updateTransactionAmount =
       return
     }
 
+    // Fixes race-condition caused by concurrent makeSpend calls from each
+    // key stroke from user input
+    const nonce = ++lastUpdateTransactionAmountNonce
+
     coreWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
+        if (nonce < lastUpdateTransactionAmountNonce) return
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -472,6 +479,7 @@ export const updateTransactionAmount =
         })
       })
       .catch(error => {
+        if (nonce < lastUpdateTransactionAmountNonce) return
         let customError
 
         if (error.labelCode && coreWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {

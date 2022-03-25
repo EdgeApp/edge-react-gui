@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_REQUEST_APPROVED } from '../../constants/SceneKeys'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -74,6 +73,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   constructor(props: Props) {
     super(props)
+    this.props.refreshAllFioAddresses()
     this.state = {
       loadingPending: true,
       loadingSent: true,
@@ -122,7 +122,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   getFioRequestsPending = async () => {
     const { fioWallets = [], account, fioAddresses } = this.props
     const { pendingRequestPaging, fioRequestsPending } = this.state
-    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
     let newRequests = []
     try {
@@ -145,7 +145,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   getFioRequestsSent = async () => {
     const { fioWallets = [], account } = this.props
     const { fioRequestsSent, sentRequestPaging } = this.state
-    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
     let newRequests = []
     try {
@@ -390,8 +390,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const currencyWallet = currencyWallets[walletId]
     const exchangeDenomination = getExchangeDenomination(currencyWallet.currencyInfo.pluginId, pendingRequest.content.token_code.toUpperCase())
-    let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
-    nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+    let nativeAmount = mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
+    nativeAmount = toFixed(nativeAmount, 0, 0)
     const currencyCode = pendingRequest.content.token_code.toUpperCase()
 
     const parsedUri = await currencyWallet.parseUri(pendingRequest.content.payee_public_address, currencyCode)

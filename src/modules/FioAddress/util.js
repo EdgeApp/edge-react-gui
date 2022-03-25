@@ -1,11 +1,11 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div } from 'biggystring'
 import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, FIO_WALLET_TYPE, getPluginId } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
@@ -387,7 +387,8 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
         if (!tokenData) {
           tokenData = {
             currencyCode: enabledToken,
-            symbolImage: ''
+            symbolImage: '',
+            contractAddress: undefined
           }
         }
         const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
@@ -395,7 +396,7 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
           key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
           id: wallets[walletKey].id,
           publicAddress,
-          ...getCurrencyIcon(wallets[walletKey].currencyCode, tokenData.currencyCode),
+          ...getCurrencyIcon(getPluginId(wallets[walletKey].type), tokenData.contractAddress),
           name: wallets[walletKey].name,
           currencyCode: tokenData.currencyCode,
           chainCode: wallets[walletKey].currencyCode,
@@ -591,7 +592,7 @@ export const getRegInfo = async (
 
   try {
     feeValue = await selectedWallet.otherMethods.getFee('registerFioAddress')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
+    activationCost = parseFloat(truncateDecimals(div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
@@ -643,7 +644,7 @@ export const getDomainRegInfo = async (
 
   try {
     feeValue = await selectedWallet.otherMethods.getFee('registerFioDomain')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
+    activationCost = parseFloat(truncateDecimals(div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }

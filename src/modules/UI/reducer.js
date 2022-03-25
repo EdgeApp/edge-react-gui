@@ -9,8 +9,6 @@ import { type SettingsState, settings } from '../../reducers/scenes/SettingsRedu
 import { type WalletsState, wallets } from '../../reducers/scenes/WalletsReducer.js'
 import { type Action } from '../../types/reduxTypes.js'
 
-export { fio, passwordReminder, scenes, wallets, settings }
-
 export type UiState = {
   +fio: FioState,
   +passwordReminder: PasswordReminderState,

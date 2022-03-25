@@ -12,7 +12,7 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import { type ReturnAddressLink } from '../types/DeepLinkTypes.js'
@@ -115,7 +115,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
   let fioAddress
   if (account && account.currencyConfig) {
-    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig.fio
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
     try {
       const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
@@ -315,14 +315,14 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
   try {
     const state = getState()
     const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
-    const wallets = state.ui.wallets.byId
-    const wallet = wallets[selectedWalletId || state.ui.wallets.selectedWalletId]
+    const { currencyWallets } = state.core.account
+    const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
     // check if balance is zero
-    const balance = wallet.nativeBalances[currencyCode]
+    const balance = wallet.balances[currencyCode]
     if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal
-    const { displayBuyCrypto } = getSpecialCurrencyInfo(currencyCode)
+    const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
       threeButtonModal = await Airship.show(bridge => (

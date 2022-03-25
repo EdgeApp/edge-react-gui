@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import {
   type EdgeAccount,
   type EdgeCurrencyWallet,
@@ -23,12 +22,11 @@ import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo } from '../../types/types.js'
-import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
+import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
@@ -39,6 +37,7 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
+import { EditableAmountTile } from '../themed/EditableAmountTile'
 import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
@@ -52,7 +51,6 @@ type StateProps = {
   defaultSelectedWalletCurrencyCode: string,
   error: Error | null,
   exchangeRates: GuiExchangeRates,
-  lockInputs?: boolean,
   nativeAmount: string | null,
   pending: boolean,
   pin: string,
@@ -60,8 +58,6 @@ type StateProps = {
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
   transactionMetadata: EdgeMetadata | null,
-  uniqueIdentifier?: string,
-  wallets: { [walletId: string]: EdgeCurrencyWallet },
   isSendUsingFioAddress?: boolean,
   guiMakeSpendInfo: GuiMakeSpendInfo,
   maxSpendSet: boolean,
@@ -123,13 +119,13 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   setWallets(props: Props, selectedWalletId?: string, selectedCurrencyCode?: string): WalletStates {
-    const { account, defaultSelectedWalletId, defaultSelectedWalletCurrencyCode, wallets } = this.props
+    const { account, defaultSelectedWalletId, defaultSelectedWalletCurrencyCode, currencyWallets } = this.props
     const walletId = selectedWalletId || defaultSelectedWalletId
     const currencyCode = selectedCurrencyCode || defaultSelectedWalletCurrencyCode
     return {
       selectedWalletId: walletId,
       selectedCurrencyCode: currencyCode,
-      wallet: wallets[walletId],
+      wallet: currencyWallets[walletId],
       coreWallet: account && account.currencyWallets ? account.currencyWallets[walletId] : undefined
     }
   }
@@ -137,15 +133,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     const { route } = this.props
     const { guiMakeSpendInfo } = route.params
-    if (guiMakeSpendInfo) {
-      this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
-      const recipientAddress =
-        guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
-          ? guiMakeSpendInfo.publicAddress
-          : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
-          ? guiMakeSpendInfo.spendTargets[0].publicAddress
-          : ''
-      this.setState({ recipientAddress })
+    if (guiMakeSpendInfo != null) {
+      this.updateSendConfirmationTx(guiMakeSpendInfo)
     }
   }
 
@@ -159,6 +148,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props): void {
+    if (prevProps.route.params.guiMakeSpendInfo == null && this.props.route.params.guiMakeSpendInfo != null) {
+      this.updateSendConfirmationTx(this.props.route.params.guiMakeSpendInfo)
+    }
     if (prevProps.pending && !this.props.pending) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ resetSlider: true })
@@ -167,6 +159,17 @@ class SendComponent extends React.PureComponent<Props, State> {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ resetSlider: false })
     }
+  }
+
+  updateSendConfirmationTx = (guiMakeSpendInfo: GuiMakeSpendInfo) => {
+    this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    const recipientAddress =
+      guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
+        ? guiMakeSpendInfo.publicAddress
+        : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
+        ? guiMakeSpendInfo.spendTargets[0].publicAddress
+        : ''
+    this.setState({ recipientAddress })
   }
 
   resetSendTransaction = () => {
@@ -344,7 +347,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectedWallet() {
-    const { lockInputs, route } = this.props
+    const {
+      guiMakeSpendInfo: { lockInputs },
+      route
+    } = this.props
     const { lockTilesMap = {} } = route.params
 
     const { wallet, selectedCurrencyCode } = this.state
@@ -361,7 +367,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAddressTile() {
-    const { route, lockInputs } = this.props
+    const {
+      route,
+      guiMakeSpendInfo: { lockInputs }
+    } = this.props
     const { isCameraOpen, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { recipientAddress, coreWallet, selectedCurrencyCode } = this.state
 
@@ -385,44 +394,33 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, nativeAmount, theme, route, currencyWallets, getExchangeDenomination, getDisplayDenomination } = this.props
+    const {
+      exchangeRates,
+      guiMakeSpendInfo: { lockInputs },
+      nativeAmount,
+      route,
+      currencyWallets,
+      getExchangeDenomination,
+      getDisplayDenomination
+    } = this.props
     const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
-    const { wallet, selectedCurrencyCode, recipientAddress } = this.state
-    const { isoFiatCurrencyCode } = getWalletFiat(wallet)
-    const styles = getStyles(theme)
+    const { selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress && !hiddenTilesMap.amount) {
-      let cryptoAmountSyntax
-      let cryptoAmountStyle
-      let fiatAmountSyntax
       const cryptoDisplayDenomination = getDisplayDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
       const cryptoExchangeDenomination = getExchangeDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
-      const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
-      const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
-      if (nativeAmount === '') {
-        cryptoAmountSyntax = s.strings.string_tap_to_edit
-        cryptoAmountStyle = styles.amountTextMuted
-      } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
-        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
-        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
-        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, isoFiatCurrencyCode, exchangeAmount)
-        cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
-        if (fiatAmount) {
-          fiatAmountSyntax = `${fiatSymbol} ${bns.toFixed(fiatAmount, 2, 2) ?? '0'}`
-        }
-      } else {
-        cryptoAmountSyntax = `0 ${cryptoDisplayDenomination.name}`
-      }
 
       return (
-        <Tile
-          type={lockInputs || lockTilesMap.amount ? 'static' : 'touchable'}
-          title={s.strings.fio_request_amount}
-          onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipInputModal}
-        >
-          <EdgeText style={[styles.amountText, cryptoAmountStyle]}>{cryptoAmountSyntax}</EdgeText>
-          {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
-        </Tile>
+        <EditableAmountTile
+          exchangeRates={exchangeRates}
+          nativeAmount={nativeAmount ?? '0'}
+          currencyWallet={currencyWallets[this.state.selectedWalletId]}
+          currencyCode={selectedCurrencyCode}
+          exchangeDenomination={cryptoExchangeDenomination}
+          displayDenomination={cryptoDisplayDenomination}
+          lockInputs={lockInputs || (lockTilesMap.amount ?? false)}
+          onPress={this.handleFlipInputModal}
+        />
       )
     }
 
@@ -447,11 +445,11 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderFees() {
     const { exchangeRates, transaction, theme, currencyWallets, getDisplayDenomination, getExchangeDenomination } = this.props
-    const { selectedCurrencyCode, selectedWalletId, recipientAddress } = this.state
-    const { noChangeMiningFee } = getSpecialCurrencyInfo(selectedCurrencyCode)
+    const { selectedWalletId, recipientAddress } = this.state
 
     if (recipientAddress) {
       const wallet = currencyWallets[selectedWalletId]
+      const { noChangeMiningFee } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
       const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
       const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, transaction, feeDisplayDenomination, feeDefaultDenomination)
@@ -507,9 +505,13 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderUniqueIdentifier() {
-    const { uniqueIdentifier } = this.props
-    const { recipientAddress, selectedCurrencyCode } = this.state
-    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(selectedCurrencyCode)
+    const {
+      guiMakeSpendInfo: { uniqueIdentifier },
+      currencyWallets
+    } = this.props
+    const { recipientAddress, selectedWalletId } = this.state
+    const edgeWallet = currencyWallets[selectedWalletId]
+    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId)
 
     if (recipientAddress && uniqueIdentifierInfo != null) {
       const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
@@ -647,8 +649,6 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
       error,
       exchangeRates: state.exchangeRates,
-      lockInputs: guiMakeSpendInfo.lockInputs,
-      metadata: guiMakeSpendInfo && guiMakeSpendInfo.metadata ? guiMakeSpendInfo : undefined,
       nativeAmount,
       pending,
       pin: state.ui.scenes.sendConfirmation.pin,
@@ -656,8 +656,6 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       sliderDisabled: !transaction || !!error || !!pending,
       transaction,
       transactionMetadata,
-      uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
-      wallets: state.core.account.currencyWallets,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
       maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet,

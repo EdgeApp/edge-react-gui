@@ -39,7 +39,9 @@ import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
-const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(currencyCode => SPECIAL_CURRENCY_INFO[currencyCode].isPrivateKeySweepable)
+const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function ControlPanel(props: Props) {
   const { navigation } = props
@@ -56,7 +58,9 @@ export function ControlPanel(props: Props) {
   const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
   const selectedWallet = useSelector(state => state.core.account.currencyWallets[state.ui.wallets.selectedWalletId])
   const guiWallet = useSelector(getSelectedWallet)
-  const currencyLogo = guiWallet != null ? getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage : null
+  const metaTokens = guiWallet?.metaTokens ?? []
+  const contractAddress = metaTokens.find(token => token.currencyCode === selectedCurrencyCode)?.contractAddress
+  const currencyLogo = guiWallet != null ? getCurrencyIcon(selectedWallet.currencyInfo.pluginId, contractAddress).symbolImage : null
   const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
     guiWallet != null ? getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
   )

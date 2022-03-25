@@ -52,6 +52,10 @@ async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Respo
   return await fetchResponse.json()
 }
 
+const bitPaySupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isBitPayProtocolSupported ?? false)
+  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
+
 /**
  * Handles the BitPay scanned or deeplink URI.
  * 1. Get payment options
@@ -78,10 +82,11 @@ export async function launchBitPay(
   const isTestBp = uri.toLowerCase().includes('test.bitpay.com')
   const paymentCurrencies: string[] = options
     .map<any>(po => po.currency)
-    .filter(currency => {
-      // Omit 'BTC' if using BitPay testnet, since our testnet BTC has its own currency code.
-      return SPECIAL_CURRENCY_INFO[currency]?.isBitPayProtocolSupported && !(isTestBp && currency === 'BTC')
-    })
+    .filter(
+      currency =>
+        // Omit 'BTC' if using BitPay testnet, since our testnet BTC has its own currency code.
+        bitPaySupportedCurrencyCodes.includes(currency) && !(isTestBp && currency === 'BTC')
+    )
 
   // Add our test BTC currency code for BitPay testnet
   if (isTestBp) {
@@ -215,7 +220,6 @@ export async function launchBitPay(
       name: sprintf(s.strings.bitpay_metadata_name, paymentId),
       notes: sprintf(s.strings.bitpay_metadata_name, paymentId)
     },
-    dismissAlert: true,
     lockInputs: true,
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
@@ -224,11 +228,19 @@ export async function launchBitPay(
   }
 
   // Send confirmation scene
-  Actions.push('send', {
-    guiMakeSpendInfo,
-    selectedWalletId: selectedWallet.id,
-    selectedCurrencyCode
-  })
+  if (Actions.currentScene === 'send') {
+    Actions.refresh({
+      guiMakeSpendInfo,
+      selectedWalletId: selectedWallet?.id ?? '',
+      selectedCurrencyCode
+    })
+  } else {
+    Actions.push('send', {
+      guiMakeSpendInfo,
+      selectedWalletId: selectedWallet.id,
+      selectedCurrencyCode
+    })
+  }
 }
 
 /**

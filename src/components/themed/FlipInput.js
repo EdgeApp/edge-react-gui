@@ -1,7 +1,7 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import { bns } from 'biggystring'
+import { div, eq, mul } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -11,6 +11,7 @@ import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, with
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
@@ -116,7 +117,7 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
   const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
 
   // Converts to secondary value using exchange rate
-  let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
+  let secondaryDecimalAmount = mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
 
   // Truncate to however many decimals the secondary format should have
   secondaryDecimalAmount = truncateDecimalsUtils(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
@@ -133,7 +134,7 @@ const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Am
   const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
   const primaryAmountFull = zeroString(props.exchangeSecondaryToPrimaryRatio)
     ? '0'
-    : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, DECIMAL_PRECISION)
+    : div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, DECIMAL_PRECISION)
   const primaryDecimalAmount = truncateDecimalsUtils(primaryAmountFull, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
   return { primaryDisplayAmount, primaryDecimalAmount, secondaryDisplayAmount, secondaryDecimalAmount }
@@ -197,7 +198,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   componentDidMount() {
     this.props.flipInputRef(this)
     setTimeout(() => {
-      if (this.props.keyboardVisible && bns.eq(this.props.overridePrimaryDecimalAmount, '0') && this.textInputFront) {
+      if (this.props.keyboardVisible && eq(this.props.overridePrimaryDecimalAmount, '0') && this.textInputFront) {
         this.textInputFront.focus()
       }
     }, 400)
@@ -673,5 +674,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const FlipInputThemed = withTheme(FlipInputComponent)
 
-// $FlowFixMe - forwardRef is not recognize by flow?
-export const FlipInput = React.forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />) // eslint-disable-line
+export const FlipInput = forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />)

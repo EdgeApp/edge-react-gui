@@ -1,7 +1,7 @@
 /* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import { bns } from 'biggystring'
+import { abs, toFixed } from 'biggystring'
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
@@ -9,7 +9,7 @@ import { getTheme } from '../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
 import { formatNumber } from '../locales/intl.js'
 import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, isSentTransaction, truncateDecimals } from '../util/utils'
-import { IMAGE_SERVER_URL } from './../constants/WalletAndCurrencyConstants.js'
+import { EDGE_CONTENT_SERVER } from './../constants/WalletAndCurrencyConstants.js'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -30,8 +30,8 @@ describe('Transaction List Row', () => {
       enabledTokens: [],
       receiveAddress: { metadata: {}, nativeAmount: '0', publicAddress: '432hJPUp2C...' },
       blockHeight: 1688551,
-      symbolImage: `${IMAGE_SERVER_URL}/XMR/XMR.png`,
-      symbolImageDarkMono: `${IMAGE_SERVER_URL}/XMR/XMR_dark.png`,
+      symbolImage: `${EDGE_CONTENT_SERVER}/XMR/XMR.png`,
+      symbolImageDarkMono: `${EDGE_CONTENT_SERVER}/XMR/XMR_dark.png`,
       key: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA='
     }
     const transaction = {
@@ -60,11 +60,11 @@ describe('Transaction List Row', () => {
       symbol: '‎ɱ'
     }
     // CryptoAmount
-    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
+    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(abs(transaction.nativeAmount || ''))
     const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount), 6))
     // FiatAmount
-    const fiatAmount = bns.abs(transaction.metadata.amountFiat.toFixed(2))
-    const fiatAmountFormat = formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    const fiatAmount = abs(transaction.metadata.amountFiat.toFixed(2))
+    const fiatAmountFormat = formatNumber(toFixed(fiatAmount, 2, 2), { toFixed: 2 })
     const props = {
       cryptoAmount: cryptoAmountFormat,
       denominationSymbol: displayDenomination.symbol,

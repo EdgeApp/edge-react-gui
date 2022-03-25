@@ -4,11 +4,11 @@ import * as React from 'react'
 import Contacts from 'react-native-contacts'
 import RNPermissions from 'react-native-permissions'
 
+import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiContact } from '../../types/types.js'
 import { showError } from '../services/AirshipInstance.js'
-
 type StateProps = {
   contactsPermission: PermissionStatus
 }
@@ -21,7 +21,7 @@ const merchantPartners = [
   {
     givenName: 'ShapeShift',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/shapeshift.png',
+    thumbnailPath: 'shapeshift.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -33,7 +33,7 @@ const merchantPartners = [
   {
     givenName: 'Changelly',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/changelly.png',
+    thumbnailPath: 'changelly.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -45,7 +45,7 @@ const merchantPartners = [
   {
     givenName: 'EOS Network',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/eos-logo-solo-64.png',
+    thumbnailPath: 'eos-logo-solo-64.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -57,7 +57,7 @@ const merchantPartners = [
   {
     givenName: 'Change NOW',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/changenow.png',
+    thumbnailPath: 'changenow.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -69,7 +69,7 @@ const merchantPartners = [
   {
     givenName: 'Simplex',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/simplex.png',
+    thumbnailPath: 'simplex.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -81,7 +81,7 @@ const merchantPartners = [
   {
     givenName: 'Wyre',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/wyre.png',
+    thumbnailPath: 'wyre.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -93,7 +93,7 @@ const merchantPartners = [
   {
     givenName: 'Bitrefill',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/bitrefill.png',
+    thumbnailPath: 'bitrefill.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -105,7 +105,7 @@ const merchantPartners = [
   {
     givenName: 'Godex',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/godex.png',
+    thumbnailPath: 'godex.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -117,7 +117,7 @@ const merchantPartners = [
   {
     givenName: 'Fox Exchange',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/foxEchange.png',
+    thumbnailPath: 'foxEchange.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -129,7 +129,7 @@ const merchantPartners = [
   {
     givenName: 'Bits of Gold',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/bits-of-gold-logo.png',
+    thumbnailPath: 'bits-of-gold-logo.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -141,7 +141,7 @@ const merchantPartners = [
   {
     givenName: 'Totle',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/totle-logo.png',
+    thumbnailPath: 'totle-logo.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -153,7 +153,19 @@ const merchantPartners = [
   {
     givenName: 'Switchain',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/switchain.png',
+    thumbnailPath: 'switchain.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Exolix',
+    hasThumbnail: true,
+    thumbnailPath: 'exolix-logo.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -165,7 +177,7 @@ const merchantPartners = [
   {
     givenName: 'SideShift.ai',
     hasThumbnail: true,
-    thumbnailPath: 'https://developer.edge.app/content/sideshift-logo.png',
+    thumbnailPath: 'sideshift-logo.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -174,7 +186,7 @@ const merchantPartners = [
     familyName: '',
     recordID: ''
   }
-]
+].map(({ thumbnailPath, ...rest }) => ({ ...rest, thumbnailPath: `${EDGE_CONTENT_SERVER}/${thumbnailPath}` }))
 
 class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {

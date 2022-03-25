@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
-import { CURRENCY_PLUGIN_NAMES, ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants.js'
+import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -369,7 +369,7 @@ export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],
     userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({
     refreshAllFioAddresses() {

@@ -9,10 +9,10 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions.js'
 import { addressWarnings } from '../../actions/ScanActions.js'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
@@ -125,9 +125,17 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     } catch (e) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
-      if (ercTokenStandard === 'ERC20' && parseDeepLink(address).type === 'bitPay')
-        showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
-      else showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
+      const parsedLink = { ...parseDeepLink(address) }
+      if (parsedLink.type === 'bitPay') {
+        if (ercTokenStandard === 'ERC20') {
+          showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
+        } else {
+          await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
+        }
+      } else {
+        showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
+      }
+
       this.setState({ loading: false })
     }
   }
@@ -250,10 +258,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
-    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
 )(withTheme(AddressTileComponent))
 
-// $FlowFixMe - forwardRef is not recognize by flow?
-export const AddressTile = React.forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />) // eslint-disable-line
+export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)

@@ -34,7 +34,7 @@ export type GuiWallet = {
 }
 
 // FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
-export const asSafeDefaultGuiWallet = <T>(guiWallet: T): T => ({
+export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
   ...asOptional(
     asObject({
       name: asOptional(asString, ''),

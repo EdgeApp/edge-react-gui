@@ -5,6 +5,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
@@ -83,8 +84,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const WalletListEmptyRowInner = withTheme(WalletListEmptyRowComponent)
-// $FlowFixMe - forwardRef is not recognize by flow?
-const WalletListEmptyRow = React.forwardRef((props, ref) => <WalletListEmptyRowInner {...props} swipeRef={ref} />)
-// Lint error about component not having a displayName
-WalletListEmptyRow.displayName = 'WalletListEmptyRow'
-export { WalletListEmptyRow }
+
+export const WalletListEmptyRow = forwardRef((props, ref) => <WalletListEmptyRowInner {...props} swipeRef={ref} />)

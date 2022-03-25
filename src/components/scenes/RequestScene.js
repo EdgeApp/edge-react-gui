@@ -1,7 +1,7 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import { bns } from 'biggystring'
+import { gt, lt, lte } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
@@ -20,7 +20,8 @@ import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
-import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
+import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers.js'
+import { convertNativeToDenomination, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { QrModal } from '../modals/QrModal.js'
@@ -30,6 +31,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { Card } from '../themed/Card.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
+import { FiatText } from '../themed/FiatText.js'
 import { FlipInput } from '../themed/FlipInput.js'
 import { QrCode } from '../themed/QrCode'
 import { ShareButtons } from '../themed/ShareButtons.js'
@@ -61,7 +63,7 @@ type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
-type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
+type CurrencyMinimumPopupState = { [pluginId: string]: ModalState }
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -83,9 +85,9 @@ export class RequestComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
-    Object.keys(SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
-      if (getSpecialCurrencyInfo(currencyCode).minimumPopupModals) {
-        minimumPopupModalState[currencyCode] = 'NOT_YET_SHOWN'
+    Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
+      if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
+        minimumPopupModalState[pluginId] = 'NOT_YET_SHOWN'
       }
     })
     this.state = {
@@ -96,9 +98,9 @@ export class RequestComponent extends React.Component<Props, State> {
       isFioMode: false
     }
     if (this.shouldShowMinimumModal(props)) {
-      const { currencyCode } = props
-      if (currencyCode == null) return
-      this.state.minimumPopupModalState[currencyCode] = 'VISIBLE'
+      const { edgeWallet } = props
+      if (edgeWallet == null) return
+      this.state.minimumPopupModalState[edgeWallet.currencyInfo.pluginId] = 'VISIBLE'
       console.log('stop, in constructor')
       this.enqueueMinimumAmountModal()
     }
@@ -156,6 +158,7 @@ export class RequestComponent extends React.Component<Props, State> {
   async componentDidUpdate(prevProps: Props) {
     const { currencyCode, edgeWallet, guiWallet, useLegacyAddress } = this.props
     if (guiWallet == null || edgeWallet == null || currencyCode == null) return
+    const { pluginId } = edgeWallet.currencyInfo
 
     const didAddressChange = this.state.publicAddress !== guiWallet.receiveAddress.publicAddress
     const changeLegacyPublic = useLegacyAddress !== prevProps.useLegacyAddress
@@ -190,10 +193,10 @@ export class RequestComponent extends React.Component<Props, State> {
     if (didWalletChange || didAddressChange) {
       if (this.shouldShowMinimumModal(this.props)) {
         const minimumPopupModalState: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModalState)
-        if (minimumPopupModalState[currencyCode] === 'NOT_YET_SHOWN') {
+        if (minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
           this.enqueueMinimumAmountModal()
         }
-        minimumPopupModalState[currencyCode] = 'VISIBLE'
+        minimumPopupModalState[pluginId] = 'VISIBLE'
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ minimumPopupModalState })
       }
@@ -201,9 +204,10 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   enqueueMinimumAmountModal = async () => {
-    const { currencyCode } = this.props
-    if (currencyCode == null) return
-    const { minimumPopupModals } = getSpecialCurrencyInfo(currencyCode)
+    const { edgeWallet } = this.props
+    if (edgeWallet == null) return
+    const { pluginId } = edgeWallet.currencyInfo
+    const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
     if (minimumPopupModals == null) return
 
     await Airship.show(bridge => (
@@ -219,7 +223,7 @@ export class RequestComponent extends React.Component<Props, State> {
     this.setState(state => ({
       minimumPopupModalState: {
         ...state.minimumPopupModalState,
-        [currencyCode]: 'SHOWN'
+        [pluginId]: 'SHOWN'
       }
     }))
   }
@@ -274,22 +278,46 @@ export class RequestComponent extends React.Component<Props, State> {
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   render() {
-    const { currencyIcon, exchangeSecondaryToPrimaryRatio, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { currencyIcon, exchangeSecondaryToPrimaryRatio, edgeWallet, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
-    if (guiWallet == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null) {
+    if (guiWallet == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || edgeWallet == null) {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
-    const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
-    const { keysOnlyMode = false } = getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
+    const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(edgeWallet))
+    const { keysOnlyMode = false } = getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId)
+
+    // Balance
+    const nativeBalance = getAvailableBalance(edgeWallet, primaryCurrencyInfo.displayCurrencyCode)
+    const displayBalanceAmount = convertNativeToDenomination(primaryCurrencyInfo.displayDenomination.multiplier)(nativeBalance)
+    const displayBalanceString = sprintf(s.strings.request_balance, `${truncateDecimals(displayBalanceAmount)} ${primaryCurrencyInfo.displayDenomination.name}`)
+
+    // Selected denomination
+    const denomString = `1 ${primaryCurrencyInfo.displayDenomination.name}`
 
     return (
       <SceneWrapper background="header" hasTabs={false}>
         {keysOnlyMode !== true ? (
           <View style={styles.container}>
-            <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+            <View style={styles.requestContainer}>
+              <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+              <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
+            </View>
+            <View style={styles.balanceContainer}>
+              <EdgeText>{displayBalanceString}</EdgeText>
+              <EdgeText style={styles.exchangeRate}>
+                <FiatText
+                  nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
+                  cryptoCurrencyCode={primaryCurrencyInfo.displayCurrencyCode}
+                  isoFiatCurrencyCode={guiWallet.isoFiatCurrencyCode}
+                  autoPrecision
+                  appendFiatCurrencyCode
+                  cryptoExchangeMultiplier={primaryCurrencyInfo.exchangeDenomination.multiplier}
+                />
+              </EdgeText>
+            </View>
 
             {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
@@ -353,7 +381,7 @@ export class RequestComponent extends React.Component<Props, State> {
     if (!currencyCode) return
     const edgeEncodeUri: EdgeEncodeUri =
       this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
-    if (bns.gt(amounts.nativeAmount, '0')) {
+    if (gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
     let encodedURI
@@ -378,14 +406,15 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shouldShowMinimumModal = (props: Props): boolean => {
-    const { currencyCode, guiWallet } = props
-    if (currencyCode == null || guiWallet == null) return false
+    const { currencyCode, edgeWallet } = props
+    if (currencyCode == null || edgeWallet == null) return false
+    const { pluginId } = edgeWallet.currencyInfo
 
-    if (this.state.minimumPopupModalState[currencyCode]) {
-      if (this.state.minimumPopupModalState[currencyCode] === 'NOT_YET_SHOWN') {
-        const { minimumPopupModals } = getSpecialCurrencyInfo(currencyCode)
+    if (this.state.minimumPopupModalState[pluginId]) {
+      if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
+        const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
-        if (bns.lt(guiWallet.primaryNativeBalance, minBalance)) {
+        if (lt(edgeWallet.balances[currencyCode] ?? '0', minBalance)) {
           return true
         }
       }
@@ -403,7 +432,7 @@ export class RequestComponent extends React.Component<Props, State> {
     let edgePayUri = 'https://deep.edge.app/'
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
-    if (getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
+    if (getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId).isUriEncodedStructure) {
       sharedAddress = publicAddress
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
@@ -446,7 +475,7 @@ export class RequestComponent extends React.Component<Props, State> {
       showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (!this.amounts || bns.lte(this.amounts.nativeAmount, '0')) {
+    if (!this.amounts || lte(this.amounts.nativeAmount, '0')) {
       if (Platform.OS === 'android') {
         showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
         return
@@ -476,7 +505,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   nextFioMode = () => {
-    if (this.state.isFioMode && (!this.amounts || bns.lte(this.amounts.nativeAmount, '0'))) {
+    if (this.state.isFioMode && (!this.amounts || lte(this.amounts.nativeAmount, '0'))) {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
@@ -493,11 +522,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     paddingHorizontal: theme.rem(1)
   },
-
+  requestContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row'
+  },
+  balanceContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginBottom: theme.rem(0.5)
+  },
+  exchangeRate: {
+    textAlign: 'right',
+    alignSelf: 'flex-end',
+    fontFamily: theme.fontFaceBold
+  },
   title: {
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(2),
-    marginBottom: theme.rem(0.5)
+    fontSize: theme.rem(2)
   },
 
   rightChevronContainer: {
@@ -575,7 +616,9 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
     // Icon
-    const currencyIcon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
+    const { pluginId, metaTokens } = edgeWallet.currencyInfo
+    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    const currencyIcon = getCurrencyIcon(pluginId, contractAddress).symbolImage
 
     return {
       currencyCode,

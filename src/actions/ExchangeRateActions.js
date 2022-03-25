@@ -1,6 +1,6 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { div } from 'biggystring'
 
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../types/types.js'
@@ -72,7 +72,7 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
     if (rate != null && !isNaN(rate) && rate !== 0) {
       const rateStr = rate.toFixed(DECIMAL_PRECISION)
       finalExchangeRates[key] = rateStr
-      finalExchangeRates[reverseExchangeRateKey] = bns.div('1', rateStr, DECIMAL_PRECISION)
+      finalExchangeRates[reverseExchangeRateKey] = div('1', rateStr, DECIMAL_PRECISION)
     }
   }
 

@@ -1,6 +1,6 @@
 // @flow
 
-import { abs, bns, sub } from 'biggystring'
+import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
@@ -11,7 +11,6 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
@@ -407,22 +406,22 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
-    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount, 2, 2) : '0'
+    const amount = currentFiatAmount ? toFixed(currentFiatAmount, 2, 2) : '0'
     const fiatAmount = amountFiat.replace(',', '.')
-    const difference = amount ? bns.sub(amount, fiatAmount) : '0'
-    const percentageFloat = amount && bns.gt(fiatAmount, '0') ? bns.mul(bns.div(difference, fiatAmount, 4), '100') : '0'
-    const percentage = bns.toFixed(percentageFloat, 2, 2)
+    const difference = amount ? sub(amount, fiatAmount) : '0'
+    const percentageFloat = amount && gt(fiatAmount, '0') ? mul(div(difference, fiatAmount, 4), '100') : '0'
+    const percentage = toFixed(percentageFloat, 2, 2)
 
     return {
       amount: displayFiatAmount(parseFloat(currentFiatAmount.replace(',', '.'))),
       difference,
-      percentage: bns.abs(percentage)
+      percentage: abs(percentage)
     }
   }
 
   // Render
   render() {
-    const { guiWallet, theme, route } = this.props
+    const { currencyInfo, guiWallet, theme, route } = this.props
     const { edgeTransaction } = route.params
     const { direction, amountFiat, contactName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
@@ -446,11 +445,10 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       }
     }
 
-    const specialCurrencyInfo = edgeTransaction.wallet ? getSpecialCurrencyInfo(edgeTransaction.wallet.currencyInfo.currencyCode) : undefined
     // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
     const isAcceleratable = !!(
       edgeTransaction.spendTargets?.length &&
-      specialCurrencyInfo?.isRbfSupported &&
+      currencyInfo?.canReplaceByFee === true &&
       edgeTransaction.blockHeight === 0 &&
       edgeTransaction.otherParams?.nonceUsed
     )

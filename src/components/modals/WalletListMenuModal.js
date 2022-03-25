@@ -9,11 +9,11 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
-import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
+import { getPluginId, getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import { getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
+import { getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -25,11 +25,11 @@ type Option = {
 
 type Props = {
   bridge: AirshipBridge<null>,
+
+  // Wallet identity:
   currencyCode?: string,
-  image?: string,
   isToken?: boolean,
-  walletId: string,
-  walletName?: string
+  walletId: string
 }
 
 const icons = {
@@ -41,7 +41,6 @@ const icons = {
   manageTokens: 'plus',
   rename: 'edit',
   resync: 'sync',
-  split: 'arrowsalt',
   viewXPub: 'eye'
 }
 
@@ -78,11 +77,11 @@ const getWalletOptions = async (params: {
 
   const splittable = await account.listSplittableWalletTypes(walletId)
 
+  const currencyInfos = getCurrencyInfos(account)
   for (const splitWalletType of splittable) {
-    if (splitWalletType === 'wallet:bitcoingold') continue // TODO: Remove after fixing BTG splitting
-    const info = getCurrencyInfos(account).find(({ walletType }) => walletType === splitWalletType)
-
-    result.push({ label: sprintf(s.strings.string_split_wallet, info?.displayName), value: 'split' })
+    const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+    if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+    result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
   }
 
   for (const option of WALLET_LIST_MENU) {
@@ -96,22 +95,33 @@ const getWalletOptions = async (params: {
 }
 
 export function WalletListMenuModal(props: Props) {
-  const { bridge, walletName, walletId, image, currencyCode, isToken } = props
+  const { bridge, currencyCode, isToken, walletId } = props
 
   const [options, setOptions] = useState([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const wallets = useSelector(state => state.ui.wallets.byId)
+  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // Look up the image and name:
+  let image: string | void
+  let walletName: string | void
+  if (guiWallet != null) {
+    walletName = guiWallet.name
+
+    const { metaTokens } = guiWallet
+    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    image = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress).symbolImage
+  }
+
   const handleCancel = () => props.bridge.resolve(null)
 
   const optionAction = (option: WalletListMenuKey) => {
-    if (currencyCode == null && wallets[walletId] != null) {
-      dispatch(walletListMenuAction(walletId, option, wallets[walletId].currencyCode))
+    if (currencyCode == null && guiWallet != null) {
+      dispatch(walletListMenuAction(walletId, option, guiWallet.currencyCode))
     } else {
       dispatch(walletListMenuAction(walletId, option, currencyCode))
     }
@@ -133,7 +143,7 @@ export function WalletListMenuModal(props: Props) {
       {options.map((option: Option) => (
         <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.optionRow}>
           <AntDesignIcon
-            name={icons[option.value]}
+            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
             size={theme.rem(1)}
             style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
           />
