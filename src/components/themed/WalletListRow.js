@@ -38,7 +38,7 @@ type Props = OwnProps & StateProps & ThemeProps
 function WalletRow(props: { gradient?: boolean, children: React.Node }) {
   const { gradient, children } = props
   const styles = getStyles(useTheme())
-
+  const theme = useTheme()
   if (gradient === true) {
     return <Gradient style={styles.containerGradient}>{children}</Gradient>
   }

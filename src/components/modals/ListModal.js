@@ -36,6 +36,8 @@ type Props<T> = {
   rowsData?: T[], // Defaults to []
   rowComponent?: (props: T) => React.Node,
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean,
+  initialNumToRender?: number, // Defaults to 12
+  onEndReachedThreshold?: number,
   // Footer Props
   closeArrow?: boolean // Defaults to 'true'
 }
@@ -49,6 +51,8 @@ export function ListModal<T>(props: Props<T>) {
     rowsData = [],
     rowComponent,
     rowDataFilter,
+    initialNumToRender,
+    onEndReachedThreshold,
     closeArrow = true,
     onSubmitEditing,
     onCancel = () => bridge.resolve(),
@@ -87,11 +91,12 @@ export function ListModal<T>(props: Props<T>) {
       <FlatList
         style={{ flex: 1 }}
         data={filteredRows}
-        initialNumToRender={12}
+        initialNumToRender={initialNumToRender ?? 12}
         onScroll={() => Keyboard.dismiss()}
         keyboardShouldPersistTaps="handled"
         renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
+        onEndReachedThreshold={onEndReachedThreshold}
       />
       {closeArrow && <ModalCloseArrow onPress={onCancel} />}
     </ThemedModal>

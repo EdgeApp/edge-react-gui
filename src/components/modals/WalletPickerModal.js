@@ -10,6 +10,7 @@ import s from '../../locales/strings.js'
 import { useCallback, useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from '../themed/WalletListCreateRow.js'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
 import { ListModal } from './ListModal'
@@ -167,7 +168,7 @@ const toRowComponent =
 export const WalletPickerModal = (props: Props) => {
   const { bridge, headerTitle = s.strings.select_wallet, filterWallet, filterCreate } = props
   const account = useSelector(state => state.core.account)
-
+  const theme = useTheme()
   const { activeWalletIds, currencyWallets, currencyConfig } = account
   const searchText = useMemo(() => findWallet(activeWalletIds, currencyWallets), [activeWalletIds, currencyWallets])
   const getRowsPromise = useCallback(
@@ -195,11 +196,13 @@ export const WalletPickerModal = (props: Props) => {
       bridge={bridge}
       onCancel={onCancel}
       title={headerTitle}
+      getItemLayout={(data, index) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index })}
       label={s.strings.search_wallets}
       rowsData={rowsData.error != null || rowsData.pending ? [] : rowsData.value}
       onSubmitEditing={onSubmitEditing}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      onEndReachedThreshold={theme.rem(4.25) * 11}
     />
   )
 }
