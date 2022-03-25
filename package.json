@@ -168,6 +168,7 @@
     "sprintf-js": "^1.1.1",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
+    "tomb-finance": "https://github.com/samholmes/tomb-finance#v0.1.0",
     "url-parse": "^1.5.2"
   },
   "devDependencies": {

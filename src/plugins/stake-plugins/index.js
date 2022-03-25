@@ -4,6 +4,7 @@ import '@ethersproject/shims'
 import { add, gte, lte, mul, sub } from 'biggystring'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 import { ethers } from 'ethers'
+import TombFinance from 'tomb-finance'
 
 import { makeContract, makeSigner, multipass } from './contracts.js'
 import { pluginInfo } from './pluginInfo.js'
@@ -11,6 +12,7 @@ import { toStakePolicy } from './stakePolicy.js'
 import { makeTxBuilder } from './TxBuilder.js'
 import { type DetailAllocation } from './types'
 import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeDetailRequest, StakeDetails, StakePlugin, StakePolicy } from './types.js'
+import { makeCachedValue } from './util/CachedValue.js'
 import { getSeed } from './util/getSeed.js'
 import { fromHex, toHex } from './util/hex.js'
 
@@ -23,6 +25,10 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   // TODO: Replace the hardcode with a configuration from initOptions
   const poolContract = makeContract('TOMB_MASONRY')
   const treasuryContract = makeContract('TOMB_TREASURY')
+
+  // TODO: Make this a map of APY values for each implementation
+  const tomb = new TombFinance()
+  const masonryApr = makeCachedValue<number>(async () => await tomb.getMasonryAPR(), 30000, 0)
 
   /**
    * This method calculates and returns in a from to to format
@@ -87,7 +93,8 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   const instance: StakePlugin = {
     async getStakePolicies(): Promise<StakePolicy[]> {
       // TODO: Calculate APY form reading the blockchain
-      const policies = pluginInfo.policyInfo.map(toStakePolicy)
+      const apy = masonryApr.get()
+      const policies = pluginInfo.policyInfo.map(policyInfo => toStakePolicy(apy, policyInfo))
       return policies
     },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {

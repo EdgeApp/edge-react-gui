@@ -29,7 +29,7 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
   }
 }
 
-export const toStakePolicy = (policyInfo: StakePolicyInfo): StakePolicy => {
+export const toStakePolicy = (apy: number, policyInfo: StakePolicyInfo): StakePolicy => {
   const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
 
   const stakePart = stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
@@ -44,8 +44,6 @@ export const toStakePolicy = (policyInfo: StakePolicyInfo): StakePolicy => {
     (map, asset) => ({ ...map, [asset.pluginId]: { [asset.tokenId]: true } }),
     {}
   )
-  // TODO: Calculate the APY or use a parameter from the current function
-  const apy = 100
 
   return {
     stakePolicyId,
