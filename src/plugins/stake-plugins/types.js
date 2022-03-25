@@ -63,6 +63,7 @@ export type StakeDetailRequest = {
 
 export type DetailAllocation = {
   // The type of asset for this allocation
+  pluginId: string,
   tokenId: string,
   // The type of the allocation
   allocationType: 'staked' | 'unstaked' | 'earned',

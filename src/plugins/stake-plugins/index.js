@@ -300,6 +300,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       const balanceOfTxResponse = await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
       const stakedAllocations: DetailAllocation[] = [
         {
+          pluginId: policyInfo.stakeAssets[0].pluginId,
           tokenId: policyInfo.stakeAssets[0].tokenId,
           allocationType: 'staked',
           nativeAmount: fromHex(balanceOfTxResponse._hex),
@@ -311,6 +312,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       const earnedTxRresponse = await multipass(p => poolContract.connect(p).earned(signerAddress))
       const earnedAllocations: DetailAllocation[] = [
         {
+          pluginId: policyInfo.rewardAssets[0].pluginId,
           tokenId: policyInfo.rewardAssets[0].tokenId,
           allocationType: 'earned',
           nativeAmount: fromHex(earnedTxRresponse._hex),
