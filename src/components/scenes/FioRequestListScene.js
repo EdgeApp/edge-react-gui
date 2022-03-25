@@ -3,8 +3,7 @@
 import { mul, toFixed } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
@@ -12,7 +11,6 @@ import { FIO_REQUEST_APPROVED } from '../../constants/SceneKeys'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -27,7 +25,6 @@ import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FioRequestRow } from '../themed/FioRequestRow.js'
-import { HIDDEN_MENU_BUTTONS_WIDTH, HiddenMenuButtons } from '../themed/HiddenMenuButtons'
 import { SceneHeader } from '../themed/SceneHeader.js'
 
 const SCROLL_THRESHOLD = 0.5
@@ -514,49 +511,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   renderPending = (listItem: { item: FioRequest }) => {
     const { item } = listItem
-    return <FioRequestRow fioRequest={item} onSelect={this.selectPendingRequest} />
+
+    return <FioRequestRow fioRequest={item} isSent={false} onPress={this.selectPendingRequest} onSwipe={this.rejectRowConfirm} />
   }
 
   renderSent = (listItem: { item: FioRequest }) => {
     const { item } = listItem
-    return <FioRequestRow fioRequest={item} onSelect={this.selectSentRequest} isSent />
-  }
 
-  renderHiddenItem = (listItem: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
-    const { item } = listItem
-    return (
-      <HiddenMenuButtons
-        rightSwipable={{
-          label: s.strings.swap_terms_reject_button,
-          color: 'danger',
-          onPress: _ =>
-            this.rejectRowConfirm(item).finally(() => {
-              const id = item.fio_request_id.toString()
-              if (rowMap[id] != null) rowMap[id].closeRow()
-            })
-        }}
-      />
-    )
-  }
-
-  renderSentHiddenItem = (listItem: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
-    const { item } = listItem
-    if (isSentFioRequest(item.status) || isRejectedFioRequest(item.status)) {
-      return null
-    }
-    return (
-      <HiddenMenuButtons
-        rightSwipable={{
-          label: s.strings.string_cancel_cap,
-          color: 'danger',
-          onPress: _ =>
-            this.cancelRowConfirm(item).finally(() => {
-              const id = item.fio_request_id.toString()
-              if (rowMap[id] != null) rowMap[id].closeRow()
-            })
-        }}
-      />
-    )
+    return <FioRequestRow fioRequest={item} isSent onPress={this.selectSentRequest} onSwipe={this.cancelRowConfirm} />
   }
 
   render() {
@@ -573,18 +535,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
             {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
               {loadingPending && !fioRequestsPending.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
-              <SwipeListView
+              <SectionList
                 initialNumToRender={10}
-                useSectionList
-                sections={this.pendingRequestHeaders()}
-                renderItem={this.renderPending}
                 keyExtractor={this.listKeyExtractor}
-                renderHiddenItem={this.renderHiddenItem}
+                renderItem={this.renderPending}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
+                sections={this.pendingRequestHeaders()}
                 onEndReached={this.pendingLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
-                disableRightSwipe
               />
             </View>
           </View>
@@ -593,16 +551,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
             {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
               {loadingSent && !fioRequestsSent.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
-              <SwipeListView
+              <SectionList
                 initialNumToRender={10}
-                useSectionList
-                sections={this.sentRequestHeaders()}
-                renderItem={this.renderSent}
                 keyExtractor={item => item.fio_request_id.toString()}
-                renderHiddenItem={this.renderSentHiddenItem}
+                renderItem={this.renderSent}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
-                disableRightSwipe
+                sections={this.sentRequestHeaders()}
                 onEndReached={this.sentLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
               />

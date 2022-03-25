@@ -3,7 +3,8 @@
 import { mul } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { formatNumber, formatTime } from '../../locales/intl.js'
@@ -14,14 +15,18 @@ import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../types/types.js'
 import { getFiatSymbol } from '../../util/utils.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow.js'
 import { EdgeText } from './EdgeText.js'
+import { type SwipableRowRef, SwipeableRow } from './SwipeableRow.js'
 
 type OwnProps = {
+  // The request:
   fioRequest: FioRequest,
-  onSelect: FioRequest => void,
-  isSent?: boolean
+  isSent: boolean,
+
+  onPress: (request: FioRequest) => void,
+  onSwipe: (request: FioRequest) => Promise<void>
 }
 
 type StateProps = {
@@ -33,28 +38,21 @@ type StateProps = {
 type Props = OwnProps & StateProps & ThemeProps
 
 class FioRequestRowComponent extends React.PureComponent<Props> {
-  static defaultProps: OwnProps = {
-    fioRequest: {
-      fio_request_id: '',
-      content: {
-        payee_public_address: '',
-        amount: '',
-        token_code: '',
-        chain_code: '',
-        memo: ''
-      },
-      payee_fio_address: '',
-      payer_fio_address: '',
-      payer_fio_public_key: '',
-      status: '',
-      time_stamp: ''
-    },
-    onSelect: () => {},
-    isSent: false
+  rowRef: { current: SwipableRowRef | null } = React.createRef()
+
+  closeRow = () => {
+    if (this.rowRef.current != null) this.rowRef.current.close()
   }
 
-  onSelect = () => {
-    this.props.onSelect(this.props.fioRequest)
+  onPress = () => {
+    const { onPress, fioRequest } = this.props
+    onPress(fioRequest)
+    this.closeRow()
+  }
+
+  onSwipe = () => {
+    const { onSwipe, fioRequest } = this.props
+    onSwipe(fioRequest).finally(this.closeRow)
   }
 
   requestedField = () => {
@@ -67,7 +65,8 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
   }
 
   showStatus = (status: string) => {
-    const styles = getStyles(this.props.theme)
+    const { theme } = this.props
+    const styles = getStyles(theme)
 
     let statusStyle = styles.requestPartialConfirmation
     let label = s.strings.fragment_wallet_unconfirmed
@@ -83,35 +82,70 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { fioRequest, isSent, displayDenomination, theme } = this.props
+    const { displayDenomination, fiatAmount, fiatSymbol, fioRequest, isSent, theme } = this.props
     const styles = getStyles(theme)
-    if (!displayDenomination) return null
 
-    const fiatValue = `${this.props.fiatSymbol} ${this.props.fiatAmount}`
-    const currencyValue = `${this.props.displayDenomination.symbol || ''} ${fioRequest.content.amount}`
+    const fiatValue = `${fiatSymbol} ${fiatAmount}`
+    const currencyValue = `${displayDenomination.symbol || ''} ${fioRequest.content.amount}`
     const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
     return (
-      <ClickableRow onPress={this.onSelect} highlight gradient>
-        <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
+      <SwipeableRow
+        ref={this.rowRef}
+        renderRight={
+          // We are only swipeable if we aren't already cancelled or rejected:
+          isSentFioRequest(fioRequest.status) || isRejectedFioRequest(fioRequest.status)
+            ? undefined
+            : (isActive: SharedValue<boolean>) => (
+                <Underlay isActive={isActive} label={isSent ? s.strings.string_cancel_cap : s.strings.swap_terms_reject_button} onPress={this.onSwipe} />
+              )
+        }
+        rightDetent={theme.rem(7)}
+        rightThreshold={theme.rem(7)}
+        onRightSwipe={this.onSwipe}
+      >
+        <ClickableRow onPress={this.onPress} highlight gradient>
+          <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 
-        <View style={styles.requestRight}>
-          <View style={styles.requestDetailsRow}>
-            <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
-            <EdgeText style={styles.requestAmount}>{currencyValue}</EdgeText>
+          <View style={styles.requestRight}>
+            <View style={styles.requestDetailsRow}>
+              <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
+              <EdgeText style={styles.requestAmount}>{currencyValue}</EdgeText>
+            </View>
+            <View style={styles.requestDetailsRow}>
+              <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
+                {dateValue}
+              </EdgeText>
+              <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
+            </View>
+            <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
           </View>
-          <View style={styles.requestDetailsRow}>
-            <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
-              {dateValue}
-            </EdgeText>
-            <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
-          </View>
-          <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
-        </View>
-      </ClickableRow>
+        </ClickableRow>
+      </SwipeableRow>
     )
   }
 }
-const emptyDisplayDenomination = { name: '', multiplier: '0' }
+
+/**
+ * Helper component to render the expanding labels in the underlay.
+ * The only reason this needs to be a component is to get access
+ * to the `useAnimatedStyle` hook.
+ */
+function Underlay(props: { isActive: SharedValue<boolean>, label: string, onPress: () => void }) {
+  const { isActive, label, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: withTiming(isActive.value ? 1.5 : 1) }]
+  }))
+  return (
+    <TouchableOpacity style={styles.underlay} onPress={onPress}>
+      <Animated.View style={[styles.underlayText, style]}>
+        <EdgeText>{label}</EdgeText>
+      </Animated.View>
+    </TouchableOpacity>
+  )
+}
 
 const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
@@ -159,8 +193,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     fontSize: theme.rem(0.75),
     color: theme.deactivatedText
+  },
+  underlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: theme.sliderTabSend,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
+  underlayText: {
+    width: theme.rem(7),
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }))
+
+const emptyDisplayDenomination = { name: '', multiplier: '0' }
 
 export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
