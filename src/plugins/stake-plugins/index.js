@@ -5,12 +5,13 @@ import { add, gte, lte, mul, sub } from 'biggystring'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 import { ethers } from 'ethers'
 
-import { jsonRpcProvider, makeContract } from './contracts.js'
+import { makeContract, makeSigner, multipass } from './contracts.js'
 import { pluginInfo } from './pluginInfo.js'
 import { toStakePolicy } from './stakePolicy.js'
 import { makeTxBuilder } from './TxBuilder.js'
 import { type DetailAllocation } from './types'
 import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeDetailRequest, StakeDetails, StakePlugin, StakePolicy } from './types.js'
+import { getSeed } from './util/getSeed.js'
 import { fromHex, toHex } from './util/hex.js'
 
 export * from './types.js'
@@ -31,13 +32,13 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
    * @returns Promise<Date | void>
    */
   async function getUserClaimRewardTime(accountAddress: string): Promise<Date | void> {
-    const nextEpochTimestamp = await poolContract.nextEpochPoint() // in unix timestamp
-    const currentEpoch = await poolContract.epoch()
-    const mason = await poolContract.masons(accountAddress)
+    const nextEpochTimestamp = await multipass(p => poolContract.connect(p).nextEpochPoint()) // in unix timestamp
+    const currentEpoch = await multipass(p => poolContract.connect(p).epoch())
+    const mason = await multipass(p => poolContract.connect(p).masons(accountAddress))
     const startTimeEpoch = mason.epochTimerStart
-    const period = await treasuryContract.PERIOD()
+    const period = await multipass(p => treasuryContract.connect(p).PERIOD())
     const periodInHours = period / 60 / 60 // 6 hours, period is displayed in seconds which is 21600
-    const rewardLockupEpochs = await poolContract.rewardLockupEpochs()
+    const rewardLockupEpochs = await multipass(p => poolContract.connect(p).rewardLockupEpochs())
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(rewardLockupEpochs)
 
     if (targetEpochForClaimUnlock - currentEpoch <= 0) return
@@ -61,13 +62,13 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
    * @returns Promise<Date | void>
    */
   async function getUserUnstakeTime(accountAddress: string): Promise<Date | void> {
-    const nextEpochTimestamp = await poolContract.nextEpochPoint()
-    const currentEpoch = await poolContract.epoch()
-    const mason = await poolContract.masons(accountAddress)
+    const nextEpochTimestamp = await multipass(p => poolContract.connect(p).nextEpochPoint())
+    const currentEpoch = await multipass(p => poolContract.connect(p).epoch())
+    const mason = await multipass(p => poolContract.connect(p).masons(accountAddress))
     const startTimeEpoch = mason.epochTimerStart
-    const period = await treasuryContract.PERIOD()
+    const period = await multipass(p => treasuryContract.connect(p).PERIOD())
     const periodInHours = period / 60 / 60
-    const withdrawLockupEpochs = await poolContract.withdrawLockupEpochs()
+    const withdrawLockupEpochs = await multipass(p => poolContract.connect(p).withdrawLockupEpochs())
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(withdrawLockupEpochs)
 
     if (targetEpochForClaimUnlock - currentEpoch <= 0) return
@@ -95,8 +96,10 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
+      const signerSeed = getSeed(wallet)
+
       // Get the signer for the wallet
-      const signer = new ethers.Wallet(wallet.displayPrivateSeed, jsonRpcProvider)
+      const signerAddress = makeSigner(signerSeed).getAddress()
 
       // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
       if (policyInfo.stakeAssets.length > 1) throw new Error(`Multi-asset staking is not supported`)
@@ -146,9 +149,9 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       const checkTxResponse = await (async () => {
         switch (action) {
           case 'unstake':
-            return await poolContract.canWithdraw(signer.getAddress())
+            return await multipass(p => poolContract.connect(p).canWithdraw(signerAddress))
           case 'claim':
-            return await poolContract.canClaimReward(signer.getAddress())
+            return await multipass(p => poolContract.connect(p).canClaimReward(signerAddress))
           default:
             return true
         }
@@ -163,12 +166,12 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
             switch (allocation.allocationType) {
               case 'stake': {
                 const tokenContract = makeContract(allocation.tokenId)
-                return await tokenContract.balanceOf(signer.getAddress())
+                return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
               }
               case 'unstake':
-                return await poolContract.balanceOf(signer.getAddress())
+                return await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
               case 'claim':
-                return await poolContract.earned(signer.getAddress())
+                return await multipass(p => poolContract.connect(p).earned(signerAddress))
               case 'fee':
                 // Don't do anything with fee
                 break
@@ -209,10 +212,10 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
           // We don't need to approve the stake pool contract for the token earned token contract
           if (allocation.allocationType === 'claim') return
           const tokenContract = makeContract(allocation.tokenId)
-          const allowanceResponse = await tokenContract.allowance(signer.getAddress(), poolContract.address)
+          const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, poolContract.address))
           const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
           if (!isFullyAllowed) {
-            txBuilder.addCall(tokenContract, 'approve', [signer.getAddress(), ethers.constants.MaxUint256])
+            txBuilder.addCall(tokenContract, 'approve', [signerAddress, ethers.constants.MaxUint256])
           }
         })
       )
@@ -251,7 +254,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       // Calculate the fees:
       // 1. Get the gasPrice oracle data (from wallet)
       // 2. Calculate the sum(tx => gasLimit(txType) * gasPrice) as the networkFee in native token
-      const gasPrice = (await jsonRpcProvider.getGasPrice())._hex
+      const gasPrice = (await multipass(provider => provider.getGasPrice()))._hex
       const gasEstimates = await Promise.all(txBuilder.getCalls().map(({ estimateGas }) => estimateGas()))
       const networkFee = gasEstimates.reduce((sum, gasEstimate) => {
         return add(sum, mul(gasPrice, gasEstimate._hex, 10))
@@ -269,7 +272,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       // Construct an approve function which executes transaction workflow (txBuilder)
       const approve: () => Promise<void> = async () => {
         for (const { contract, method, args } of txBuilder.getCalls()) {
-          await contract.connect(signer)[method](...args)
+          await multipass(p => contract.connect(makeSigner(signerSeed, p))[method](...args))
           // NOTE: Don't wait for block confirmation because that's too slow
         }
       }
@@ -287,28 +290,27 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
       // Get the signer for the wallet
-      const signer = new ethers.Wallet(wallet.displayPrivateSeed, jsonRpcProvider)
-      const accountAddress = signer.getAddress()
+      const signerAddress = makeSigner(getSeed(wallet)).getAddress()
 
       // Get staked allocations
-      const balanceOfTxResponse = await poolContract.balanceOf(accountAddress)
+      const balanceOfTxResponse = await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
       const stakedAllocations: DetailAllocation[] = [
         {
           tokenId: policyInfo.stakeAssets[0].tokenId,
           allocationType: 'staked',
           nativeAmount: fromHex(balanceOfTxResponse._hex),
-          locktime: await getUserUnstakeTime(accountAddress)
+          locktime: await getUserUnstakeTime(signerAddress)
         }
       ]
 
       // Get earned allocations
-      const earnedTxRresponse = await poolContract.earned(accountAddress)
+      const earnedTxRresponse = await multipass(p => poolContract.connect(p).earned(signerAddress))
       const earnedAllocations: DetailAllocation[] = [
         {
           tokenId: policyInfo.rewardAssets[0].tokenId,
           allocationType: 'earned',
           nativeAmount: fromHex(earnedTxRresponse._hex),
-          locktime: await getUserClaimRewardTime(accountAddress)
+          locktime: await getUserClaimRewardTime(signerAddress)
         }
       ]
 
