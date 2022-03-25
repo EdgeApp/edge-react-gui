@@ -9,7 +9,7 @@ import { type CreateWalletType } from '../types/types.js'
  * Get currency icon URL
  */
 
-type CurrencyIcons = {
+export type CurrencyIcons = {
   symbolImage: string,
   symbolImageDarkMono: string
 }
