@@ -95,7 +95,7 @@ export const StakeModifyScene = (props: Props) => {
   }, [currencyWallet, modification, stakePolicyId])
 
   // Handlers
-  const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote>({ allocations: [], approve: () => {} })
+  const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote>({ allocations: [], approve: async () => {} })
   const [nativeModAmount, setNativeModAmount] = useState('0')
   const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
   const onAmountEdited = (flipNativeAmount: string, displayModAmount: string) => {
@@ -125,9 +125,9 @@ export const StakeModifyScene = (props: Props) => {
     } else {
       if (modification === 'unstake') {
         setNativeModAmount(allocationToMod?.nativeAmount ?? '0')
+      } else if (modification === 'stake') {
+        setNativeModAmount(currencyWallet.balances[stakeAssetsName])
       }
-      // TODO: Get token amounts from currencyWallet
-      // else if (modification === 'stake')
     }
   }
 
@@ -144,7 +144,7 @@ export const StakeModifyScene = (props: Props) => {
         currencyCode={stakeAssetsName}
         onAmountChanged={onAmountEdited}
         onMaxSet={onMaxButtonPress}
-        flipInputHeaderText={sprintf(header, currencyWallet.name)}
+        headerText={sprintf(header, currencyWallet.name)}
       />
     )).catch(error => console.log(error))
   }

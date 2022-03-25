@@ -375,7 +375,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={STAKE_OVERVIEW}
                 navTransparent
-                component={ifLoggedIn(StakeOverviewScene)}
+                component={withNavigation(ifLoggedIn(StakeOverviewScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />

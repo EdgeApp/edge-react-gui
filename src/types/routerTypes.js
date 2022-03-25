@@ -213,13 +213,7 @@ export type ParamList = {
   stakeModify: {|
     walletId: string,
     stakePolicy: StakePolicy,
-    // TODO: type this?
-    allocationToMod?: {
-      tokenId: string,
-      allocationType: $PropertyType<DetailAllocation, 'allocationType'>,
-      nativeAmount: string,
-      locktime?: Date
-    },
+    allocationToMod?: DetailAllocation,
     modification: $PropertyType<ChangeQuoteRequest, 'action'>
   |},
   stakeClaim: { walletId: string, stakePolicy: StakePolicy },
