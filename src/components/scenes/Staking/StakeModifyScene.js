@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
 import { type ChangeQuote, type StakeDetails, makeStakePlugin } from '../../../plugins/stake-plugins/index.js'
-import { type AllocationType } from '../../../plugins/stake-plugins/types'
+import { type QuoteAllocationType } from '../../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -150,7 +150,7 @@ export const StakeModifyScene = (props: Props) => {
   }
 
   const isClaim = modification === 'claim'
-  const renderEditableAmount = (allocationType: AllocationType, stakeDetails: StakeDetails) => {
+  const renderEditableAmount = (allocationType: QuoteAllocationType, stakeDetails: StakeDetails) => {
     if (stakeDetails !== null) {
       const titleMap = {
         stake: s.strings.stake_amount_stake,

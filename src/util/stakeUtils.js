@@ -3,9 +3,9 @@
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import type { DetailAllocation, StakeDetails, StakePlugin, StakePolicy } from '../plugins/stake-plugins'
 import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
+import type { DetailAllocation, StakeDetails, StakePlugin, StakePolicy } from '../plugins/stake-plugins'
 import { getCurrencyIcon } from './CurrencyInfoHelpers.js'
 
 export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
