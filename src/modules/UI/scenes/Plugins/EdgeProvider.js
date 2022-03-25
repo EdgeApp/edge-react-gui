@@ -12,7 +12,7 @@ import { Bridgeable, update } from 'yaob'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
-import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
+import { WalletPickerModal } from '../../../../components/modals/WalletPickerModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -119,12 +119,24 @@ export class EdgeProvider extends Bridgeable {
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
   async chooseCurrencyWallet(allowedCurrencyCodes: string[] = []): Promise<string> {
-    const selectedWallet: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
+    const filter = currencyCode => allowedCurrencyCodes.find(currency => currency === currencyCode) != null
+    const selectedWallet = await Airship.show(bridge => (
+      <WalletPickerModal
+        bridge={bridge}
+        headerTitle={s.strings.choose_your_wallet}
+        filterWallet={wallet => filter(wallet.currencyInfo.currencyCode)}
+        filterCreate={({ tokenId, pluginId }, { chainCode }) => {
+          if (tokenId === pluginId) return filter(chainCode)
+
+          const { builtinTokens, customTokens } = this._state.core.account.currencyConfig[pluginId]
+          const currencyCode = builtinTokens[tokenId]?.currencyCode ?? customTokens[tokenId]?.currencyCode
+          return filter(currencyCode)
+        }}
+      />
     ))
 
     const { walletId, currencyCode } = selectedWallet
-    if (walletId && currencyCode) {
+    if (walletId != null && currencyCode != null) {
       this._dispatch(selectWallet(walletId, currencyCode))
       return Promise.resolve(currencyCode)
     }

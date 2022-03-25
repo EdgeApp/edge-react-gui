@@ -22,8 +22,7 @@ import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { FullScreenLoader } from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { WalletPickerModal } from '../modals/WalletPickerModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -374,13 +373,20 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const chainCode = content.chain_code.toUpperCase()
     const tokenCode = content.token_code.toUpperCase()
     const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}-${tokenCode}`] : [chainCode]
-
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
-    ))
-    if (walletId && currencyCode) {
-      onSelectWallet(walletId, currencyCode)
-      this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
+    try {
+      const { walletId, currencyCode } = await Airship.show(bridge => (
+        <WalletPickerModal
+          bridge={bridge}
+          headerTitle={s.strings.fio_src_wallet}
+          filterWallet={wallet => allowedFullCurrencyCode.find(currency => currency === wallet.currencyInfo.currencyCode) != null}
+        />
+      ))
+      if (walletId && currencyCode) {
+        onSelectWallet(walletId, currencyCode)
+        this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
+      }
+    } catch (e) {
+      showError(e)
     }
   }
 

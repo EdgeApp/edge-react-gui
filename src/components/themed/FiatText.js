@@ -1,5 +1,5 @@
 // @flow
-import { div } from 'biggystring'
+import { div, toFixed } from 'biggystring'
 
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
@@ -43,9 +43,14 @@ export const FiatText = (props: Props) => {
     return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
-  return `${openParen}${fiatSymbolFmt} ${formatFiatString({
+  const formatedFiatString = formatFiatString({
     fiatAmount,
     autoPrecision,
     noGrouping
-  })}${fiatCurrencyCode}${closeParen}`
+  })
+
+  // Remove trailing zeros for 'fiatString'
+  const fiatAmountString = toFixed(formatedFiatString, 0, 2)
+
+  return `${openParen}${fiatSymbolFmt} ${fiatAmountString}${fiatCurrencyCode}${closeParen}`
 }

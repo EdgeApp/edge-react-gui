@@ -25,7 +25,7 @@ import { convertNativeToDenomination, getCurrencyInfo, getDenomFromIsoCode, getO
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { QrModal } from '../modals/QrModal.js'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from '../themed/Card.js'
@@ -264,11 +264,13 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
-      }
-    })
+    Airship.show(bridge => <WalletPickerModal bridge={bridge} />)
+      .then(({ walletId, currencyCode }) => {
+        if (walletId && currencyCode) {
+          this.props.onSelectWallet(walletId, currencyCode)
+        }
+      })
+      .catch(showError)
   }
 
   handleQrCodePress = () => {

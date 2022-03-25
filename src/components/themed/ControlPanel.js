@@ -18,7 +18,7 @@ import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../assets/vector'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useFiatText } from '../../hooks/useFiatText.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
@@ -30,18 +30,13 @@ import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
-import { FiatText } from './FiatText.js'
 import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
-
-const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function ControlPanel(props: Props) {
   const { navigation } = props
@@ -114,19 +109,26 @@ export function ControlPanel(props: Props) {
 
   const handleSweep = () => {
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={SweepableCurrencyCodes} showCreateWallet />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(walletId, currencyCode))
-        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
-          .then((result: string | void) => {
-            if (result) {
-              dispatch(qrCodeScanned(result))
-            }
-          })
-          .catch(showError)
-      }
-    })
+      <WalletPickerModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        filterWallet={(wallet, { isPrivateKeySweepable = false }) => isPrivateKeySweepable}
+        filterCreate={(_, { isPrivateKeySweepable = false }) => isPrivateKeySweepable}
+      />
+    ))
+      .then(({ walletId, currencyCode }) => {
+        if (walletId && currencyCode) {
+          dispatch(selectWalletFromModal(walletId, currencyCode))
+          Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
+            .then((result: string | void) => {
+              if (result) {
+                dispatch(qrCodeScanned(result))
+              }
+            })
+            .catch(showError)
+        }
+      })
+      .catch(showError)
   }
 
   const handleLoginQr = () => {
@@ -237,6 +239,15 @@ export function ControlPanel(props: Props) {
     }
   ]
 
+  const [{ fiatText }] = useFiatText({
+    nativeCryptoAmount: currencyDenomMult,
+    cryptoCurrencyCode: selectedCurrencyCode,
+    isoFiatCurrencyCode: isoFiatCurrencyCode ?? '',
+    autoPrecision: true,
+    appendFiatCurrencyCode: true,
+    cryptoExchangeMultiplier: selectedCurrencyCodeExchangeMultiplier
+  })
+
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       {/* ==== Top Panel Start ==== */}
@@ -252,14 +263,7 @@ export function ControlPanel(props: Props) {
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
                   {`1 ${currencyDenomName} = `}
-                  <FiatText
-                    nativeCryptoAmount={currencyDenomMult}
-                    cryptoCurrencyCode={selectedCurrencyCode}
-                    isoFiatCurrencyCode={isoFiatCurrencyCode}
-                    autoPrecision
-                    appendFiatCurrencyCode
-                    cryptoExchangeMultiplier={selectedCurrencyCodeExchangeMultiplier}
-                  />
+                  {fiatText}
                 </TitleText>
               </View>
             </>

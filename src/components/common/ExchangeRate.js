@@ -7,7 +7,7 @@ import { StyleSheet } from 'react-native'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { DECIMAL_PRECISION, getObjectDiff, isCompleteExchangeData } from '../../util/utils'
+import { DECIMAL_PRECISION, getObjectDiff } from '../../util/utils'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { FiatText } from '../themed/FiatText.js'
@@ -57,7 +57,9 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     }
     const formattedPrimaryAmount = formatNumber(primaryDisplayAmount || '1')
 
-    if (!isCompleteExchangeData(exchangeData)) {
+    const { primaryDisplayAmount: primaryAmount, secondaryDisplayAmount: secondaryAmount } = exchangeData
+
+    if (primaryAmount == null || primaryDisplayName == null || secondaryAmount == null || secondaryCurrencyCode) {
       return <EdgeText style={style}>{s.strings.drawer_exchange_rate_loading}</EdgeText>
     }
 

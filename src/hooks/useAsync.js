@@ -1,32 +1,24 @@
 import { useCallback, useEffect, useState } from '../types/reactHooks'
 
 export const useAsync = (asyncFunction, immediate = true) => {
-  const [pending, setPending] = useState(false)
-  const [value, setValue] = useState(null)
-  const [error, setError] = useState(null)
+  // Use an object to avoid multiple renders when setting multiple values
+  const [state, setState] = useState({ pending: false, value: null, error: null })
 
   // useCallback ensures useEffect is not called on every render, but only if asyncFunction changes.
-  const execute = useCallback(() => {
-    setError(null)
-    setPending(true)
-    setValue(null)
-
-    return asyncFunction()
-      .then(response => setValue(response))
-      .catch(err => setError(err))
-      .finally(() => setPending(false))
+  const execute = useCallback(async () => {
+    setState(prevState => ({ ...prevState, pending: true }))
+    const newState = { error: null, pending: false, value: null }
+    try {
+      newState.value = await asyncFunction()
+    } catch (e) {
+      newState.error = e
+    }
+    setState(newState)
   }, [asyncFunction])
 
   useEffect(() => {
-    if (immediate) {
-      execute()
-    }
-  }, [execute, immediate])
+    if (immediate && state.value == null) execute()
+  }, [execute, immediate, state.value])
 
-  return {
-    error,
-    execute,
-    pending,
-    value
-  }
+  return { ...state, execute }
 }

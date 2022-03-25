@@ -1,14 +1,12 @@
 // @flow
 
 import { mul } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIAT_PRECISION } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
 import { type RootState } from '../types/reduxTypes.js'
 import { type GuiWallet } from '../types/types.js'
-import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
-import { convertNativeToExchange, zeroString } from '../util/utils.js'
 
 export function getSelectedWallet(state: RootState): GuiWallet {
   return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
@@ -71,15 +69,24 @@ export const convertCurrencyFromExchangeRates = (
   return convertedAmount
 }
 
-export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [string]: string }): string => {
-  const currencyCode = exchangeDenomination.name
-  const nativeBalance = wallet.balances[currencyCode] ?? '0'
-  if (zeroString(nativeBalance)) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  const { isoFiatCurrencyCode } = getWalletFiat(wallet)
-  const fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
-  return formatNumber(fiatValue, { toFixed: FIAT_PRECISION }) || '0'
+export const calculateFiatBalance = (currencyWallet: EdgeCurrencyWallet, fullCurrencyCode: string, exchangeRates: { [string]: string }): string => {
+  // console.log('73. fullCurrencyCode', fullCurrencyCode)
+  if (fullCurrencyCode == null || fullCurrencyCode === '') {
+    fullCurrencyCode = currencyWallet.currencyInfo.currencyCode
+  }
+  const [currencyCode, tokenCode] = fullCurrencyCode.split('-')
+  const code = tokenCode ?? currencyCode
+  console.log('79. code', code)
+  const exchangeRate = exchangeRates[`${code}_${currencyWallet.fiatCurrencyCode}`] ?? '0'
+  console.log('81. exchangeRate', exchangeRate)
+  console.log('82. balances', currencyWallet.balances)
+  const cryptoAmount = currencyWallet.balances[code] ?? '0'
+  console.log('83. cryptoAmount', cryptoAmount)
+  const fiatBalance = mul(cryptoAmount, exchangeRate)
+  console.log('86. fullCurrencyCode', fullCurrencyCode)
+  console.log('86. fiatBalance', fiatBalance)
+  // console.log('82. fiatBalance', fiatBalance)
+  return formatNumber(fiatBalance, { toFixed: FIAT_PRECISION }) || '0'
 }
 
 export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {

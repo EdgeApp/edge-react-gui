@@ -14,9 +14,8 @@ import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
-import { truncateString } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
 import { FlashNotification } from '../navigation/FlashNotification.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -29,6 +28,25 @@ import { SelectableRow } from '../themed/SelectableRow'
 type Props = {
   navigation: NavigationProp<'wcConnect'>,
   route: RouteProp<'wcConnect'>
+}
+
+// Replaces extra chars with '...' either in the middle or end of the input string
+export const truncateString = (input: string | number, maxLength: number, isMidTrunc?: boolean = false) => {
+  const inputStr = typeof input !== 'string' ? String(input) : input
+  const strLen = inputStr.length
+  if (strLen >= maxLength) {
+    const delimStr = s.strings.util_truncate_delimeter
+    if (isMidTrunc) {
+      const segmentLen = Math.round(maxLength / 2)
+      const seg1 = inputStr.slice(0, segmentLen)
+      const seg2 = inputStr.slice(-1 * segmentLen)
+      return seg1 + delimStr + seg2
+    } else {
+      return inputStr.slice(0, maxLength) + delimStr
+    }
+  } else {
+    return inputStr
+  }
 }
 
 export const WcConnectScene = (props: Props) => {
@@ -87,11 +105,10 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const showWalletListModal = () => {
-    const allowedCurrencyWallets = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
-
-    const allowedCurrencyCodes = allowedCurrencyWallets.map(walletID => currencyWallets[walletID].currencyInfo.currencyCode)
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
+    Airship.show(bridge => (
+      <WalletPickerModal bridge={bridge} headerTitle={s.strings.select_wallet} filterWallet={wallet => wallet.otherMethods?.wcConnect != null} />
+    ))
+      .then(({ walletId, currencyCode }) => {
         if (walletId && currencyCode) {
           dispatch(selectWalletFromModal(walletId, currencyCode))
           setSelectedWallet({ walletId, currencyCode })
@@ -99,8 +116,8 @@ export const WcConnectScene = (props: Props) => {
             handleRequestDapp(walletId)
           }
         }
-      }
-    )
+      })
+      .catch(showError)
   }
 
   useEffect(() => {

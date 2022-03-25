@@ -12,6 +12,10 @@ import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   currencyCode: string,
+  exchangeData?: {
+    exchangeRateText: string,
+    exchangeRateType: 'neutral' | 'positive' | 'negative'
+  } | null,
   children?: React.Node,
   icon?: React.Node,
   editIcon?: React.Node,
@@ -44,7 +48,19 @@ function WalletRow(props: { gradient?: boolean, children: React.Node }) {
 
 class WalletListRowComponent extends React.PureComponent<Props> {
   render() {
-    const { currencyCode, children, gradient = false, icon, editIcon, loading = false, onPress, onLongPress, walletNameString, theme } = this.props
+    const {
+      exchangeData,
+      currencyCode,
+      children,
+      gradient = false,
+      icon,
+      editIcon,
+      loading = false,
+      onPress,
+      onLongPress,
+      walletNameString,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -58,12 +74,18 @@ class WalletListRowComponent extends React.PureComponent<Props> {
             <View style={styles.rowContainer}>
               <View style={styles.iconContainer}>{icon}</View>
               <View style={styles.detailsContainer}>
-                <View style={styles.detailsRow}>
+                <View style={styles.detailsLeft}>
                   <EdgeText style={styles.detailsCurrency} disableFontScaling>
                     {currencyCode}
                   </EdgeText>
-                  {editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}
+                  {exchangeData != null ? (
+                    <EdgeText style={styles[exchangeData.exchangeRateType]} disableFontScaling>
+                      {exchangeData.exchangeRateText}
+                    </EdgeText>
+                  ) : null}
                 </View>
+                <View style={styles.detailsRight}>{editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}</View>
+
                 <EdgeText style={styles.detailsName} disableFontScaling>
                   {walletNameString}
                 </EdgeText>
@@ -118,19 +140,32 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     marginRight: theme.rem(0.5)
   },
-  detailsRow: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-end'
-  },
   detailsCurrency: {
-    flex: 1,
-    fontFamily: theme.fontFaceMedium
+    fontFamily: theme.fontFaceMedium,
+    marginRight: theme.rem(0.75)
   },
   detailsName: {
     flex: 1,
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
+  },
+  detailsLeft: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  detailsRight: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
+  // Difference Percentage Styles
+  neutral: {
+    color: theme.secondaryText
+  },
+  positive: {
+    color: theme.positiveText
+  },
+  negative: {
+    color: theme.negativeText
   }
 }))
 

@@ -12,8 +12,7 @@ import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { WalletPickerModal } from '../modals/WalletPickerModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
@@ -183,17 +182,18 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  selectFioWallet = async () => {
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[FIO_STR]} />
-    ))
-    if (walletId && currencyCode) {
-      if (currencyCode === FIO_STR) {
-        this.handleFioWalletChange(walletId)
-      } else {
-        showError(`${s.strings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
-      }
-    }
+  selectFioWallet = () => {
+    Airship.show(bridge => <WalletPickerModal bridge={bridge} filterWallet={wallet => wallet.currencyInfo.currencyCode === FIO_STR} />)
+      .then(({ walletId, currencyCode }) => {
+        if (walletId != null && currencyCode != null) {
+          if (currencyCode === FIO_STR) {
+            this.handleFioWalletChange(walletId)
+          } else {
+            showError(`${s.strings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
+          }
+        }
+      })
+      .catch(showError)
   }
 
   setDomain = async () => {

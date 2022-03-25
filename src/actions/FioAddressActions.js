@@ -11,8 +11,13 @@ export const createFioWallet =
   () =>
   (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
     const state = getState()
-    const fiatCurrencyCode = state.ui.settings.defaultIsoFiat
-    return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, fiatCurrencyCode))
+    return dispatch(
+      createCurrencyWallet({
+        walletType: FIO_WALLET_TYPE,
+        walletName: s.strings.fio_address_register_default_fio_wallet_name,
+        fiatCurrencyCode: state.ui.settings.defaultIsoFiat
+      })
+    )
   }
 
 export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState: GetState) => {

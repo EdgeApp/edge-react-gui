@@ -7,8 +7,8 @@ import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
-import { Airship } from '../services/AirshipInstance.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
@@ -30,11 +30,13 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
-      }
-    })
+    Airship.show(bridge => <WalletPickerModal bridge={bridge} />)
+      .then(({ walletId, currencyCode }) => {
+        if (walletId != null && currencyCode != null) {
+          this.props.onSelectWallet(walletId, currencyCode)
+        }
+      })
+      .catch(showError)
   }
 
   renderWalletName = () => {
