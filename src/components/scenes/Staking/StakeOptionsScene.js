@@ -10,7 +10,7 @@ import { useEffect, useState } from '../../../types/reactHooks.js'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers'
-import { getRewardAssetsName, getStakeAssetsName } from '../../../util/stakeUtils.js'
+import { getAssetDisplayName, getRewardAssetsName, getStakeAssetsName } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -68,17 +68,18 @@ export const StakeOptionsScene = (props: Props) => {
 
   const renderOptions = () => {
     return stakePolicies.map(stakePolicy => {
-      const stakeAssetsName = getStakeAssetsName(stakePolicy)
-      const rewardAssetsName = getRewardAssetsName(stakePolicy)
-      const primaryText = stakeAssetsName
-      const secondaryText = `${stakeAssetsName} to Earn ${rewardAssetsName}`
+      const stakeAssetNames = getStakeAssetsName(stakePolicy)
+      const stakeDisplayName = getAssetDisplayName(stakeAssetNames)
+      const rewardDisplayName = getRewardAssetsName(getStakeAssetsName(stakePolicy))
+      const primaryText = stakeDisplayName
+      const secondaryText = `${stakeDisplayName} to Earn ${rewardDisplayName}`
       const key = [primaryText, secondaryText].join()
 
       // TODO: Populate currencyLogos with an array of logos
       return (
         <View key={key} style={styles.optionContainer}>
           <TouchableOpacity onPress={() => handleStakeOptionPress(stakePolicy)}>
-            <StakingOptionCard currencyLogos={[]} primaryText={primaryText} secondaryText={secondaryText} />
+            <StakingOptionCard currencyLogos={stakeAssetNames} primaryText={primaryText} secondaryText={secondaryText} />
           </TouchableOpacity>
         </View>
       )

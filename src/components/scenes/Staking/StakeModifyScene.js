@@ -13,7 +13,7 @@ import { useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import { getRewardAllocation, getRewardAssetsName, getStakeAssetsName, getStakeDetails } from '../../../util/stakeUtils.js'
+import { getRewardAllocation, getRewardAssetNames, getStakeAssetNames, getStakeDetails } from '../../../util/stakeUtils.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
 import { Airship } from '../../services/AirshipInstance.js'
@@ -37,8 +37,8 @@ export const StakeModifyScene = (props: Props) => {
   const { walletId, stakePolicy, allocationToMod, modification } = props.route.params
   const { stakePolicyId } = stakePolicy
   // TODO: Remove hard-coding for single asset to support multiple stake/reward assets
-  const stakeAssetsName = getStakeAssetsName(stakePolicy)
-  const rewardAssetsName = getRewardAssetsName(stakePolicy)
+  const stakeAssetsName = getStakeAssetNames(stakePolicy)[0]
+  const rewardAssetsName = getRewardAssetNames(stakePolicy)[0]
 
   // Hooks
   const {

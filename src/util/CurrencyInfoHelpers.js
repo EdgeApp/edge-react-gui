@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { EDGE_CONTENT_SERVER, SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
@@ -24,6 +24,14 @@ export function getCurrencyIcon(pluginId: string, contractAddress?: string = plu
     symbolImage: `${url}.png`,
     symbolImageDarkMono: `${url}_dark.png`
   }
+}
+
+export const getCurrencyIconById = (currencyWallet: EdgeCurrencyWallet, tokenId: string): CurrencyIcons => {
+  const metaTokens = currencyWallet.currencyInfo.metaTokens
+  const walletPluginId = currencyWallet.currencyInfo.pluginId
+  const contractAddress = metaTokens.find(token => token.currencyCode === tokenId)?.contractAddress
+  const currencyIcon = getCurrencyIcon(walletPluginId, contractAddress).symbolImage
+  return currencyIcon
 }
 
 /**

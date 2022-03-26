@@ -14,7 +14,7 @@ import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import { getAllocationLocktimeMessage, getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName } from '../../../util/stakeUtils.js'
+import { getAllocationLocktimeMessage, getRewardAllocation, getRewardAssetNames, getStakeAllocation, getStakeAssetNames } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -40,8 +40,8 @@ export const StakeOverviewScene = (props: Props) => {
   const styles = getStyles(theme)
 
   // TODO: Remove hard-coding for single asset to support multiple stake/reward assets
-  const stakeAssetsName = getStakeAssetsName(stakePolicy)
-  const rewardAssetsName = getRewardAssetsName(stakePolicy)
+  const stakeAssetsName = getStakeAssetNames(stakePolicy)[0]
+  const rewardAssetsName = getRewardAssetNames(stakePolicy)[0]
 
   const { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination, isoFiatCurrencyCode } = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account

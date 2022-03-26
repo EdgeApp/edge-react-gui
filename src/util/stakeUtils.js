@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
 import type { DetailAllocation, StakeDetails, StakePlugin, StakePolicy } from '../plugins/stake-plugins'
-import { getCurrencyIcon } from './CurrencyInfoHelpers.js'
+import { getCurrencyIconById } from './CurrencyInfoHelpers.js'
 
 export const getStakeDetails = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
   return stakePlugin.fetchStakeDetails({ stakePolicyId, wallet: currencyWallet })
@@ -41,27 +41,36 @@ export const getStakePolicyById = async (stakePlugin: StakePlugin, stakePolicyId
   return await stakePlugin.getStakePolicies().then(stakePolicies => stakePolicies.find(policy => policy.stakePolicyId === stakePolicyId))
 }
 
-export const getStakeAssetsName = (stakePolicy: StakePolicy) => {
+export const getStakeAssetNames = (stakePolicy: StakePolicy) => {
   const stakeChainsArr = Object.keys(stakePolicy.stakeAssets)
   const stakeTokensArr = stakeChainsArr.map(chain => Object.keys(stakePolicy.stakeAssets[chain]))[0]
   const stakeAssetsName = stakeTokensArr.length > 1 ? `${stakeTokensArr.join('-')}-LP` : stakeTokensArr[0]
   return stakeAssetsName
 }
 
-export const getRewardAssetsName = (stakePolicy: StakePolicy) => {
+export const getRewardAssetNames = (stakePolicy: StakePolicy) => {
   const rewardChainsArr = Object.keys(stakePolicy.rewardAssets)
   const rewardTokensArr = rewardChainsArr.map(chain => Object.keys(stakePolicy.rewardAssets[chain]))[0]
   const rewardAssetsName = rewardTokensArr.length > 1 ? `${rewardTokensArr.join(', ')}` : rewardTokensArr[0]
   return rewardAssetsName
 }
 
-export const getAllocationIconUris = (currencyWallet: EdgeCurrencyWallet, allocations: DetailAllocation[]): string[] => {
-  const metaTokens = currencyWallet.currencyInfo.metaTokens
-  const walletPluginId = currencyWallet.currencyInfo.pluginId
+export const getAssetDisplayName = (assetNames: string) => {
+  return assetNames.length > 1 ? `${assetNames.join('-')}-LP` : assetNames[0]
+}
 
+// TODO: consolidate icon getters
+export const getPolicyIconUris = (currencyWallet: EdgeCurrencyWallet, stakePolicy: StakePolicy): { stakeAssetUris: string[], rewardAssetUris: string[] } => {
+  const stakeAssetNames = getStakeAssetNames(stakePolicy)
+  const rewardAssetNames = getRewardAssetNames(stakePolicy)
+
+  const stakeAssetUris = stakeAssetNames.map(stakeAsset => getCurrencyIconById(currencyWallet, stakeAsset.tokenId))
+  const rewardAssetUris = rewardAssetNames.map(rewardAsset => getCurrencyIconById(currencyWallet, rewardAsset.tokenId))
+  return { stakeAssetUris, rewardAssetUris }
+}
+
+export const getAllocationIconUris = (currencyWallet: EdgeCurrencyWallet, allocations: DetailAllocation[]): string[] => {
   return allocations.map(allocation => {
-    const contractAddress = metaTokens.find(token => token.currencyCode === allocation.tokenId)?.contractAddress
-    const currencyIcon = getCurrencyIcon(walletPluginId, contractAddress).symbolImage
-    return currencyIcon
+    return getCurrencyIconById(currencyWallet, allocation.tokenId)
   })
 }
