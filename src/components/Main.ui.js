@@ -254,7 +254,6 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     const TestableScene = wrap(Scene)
-    // const generateTestHook = useCavy()
 
     return (
       <Drawer

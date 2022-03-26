@@ -1,11 +1,12 @@
+// Using components from Main.ui and ControlPanel
+
 import * as helpers from './helpers.js'
-// I am using components from Main.ui and ControlPanel
+
 export default function (spec) {
   spec.describe('ControlPanel', function () {
     spec.it('option navigation', async function () {
-      await spec.pause(500000)
-      // does switch account need to be added?
-      // await helpers.openSideMenu('Main.WalletList') // doesn't this still need to press the renderRightButton?
+      await spec.pause(10000)
+      await helpers.openSideMenu('Main.WalletList') // doesn't this still need to press the renderRightButton?
       const walletListScene = await spec.findComponent('Main.WalletList')
       await spec.press(walletListScene.props.renderRightButton)
       await spec.pause(200)
@@ -53,11 +54,6 @@ export default function (spec) {
       await spec.press(SettingsScene.props.renderRightButton)
       await spec.pause(500)
       await spec.press('SideMenu.logout')
-      await spec.pause(5000)
-      const login = await spec.findComponent('Login.Login')
-      console.log(login)
-      console.log(login.props.context)
-      await helpers.fastLogin(login)
     })
   })
 }

@@ -52,6 +52,7 @@ export function ControlPanel(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const generateTestHook = useCavy()
+  const TestablePress = wrap(Pressable)
 
   // ---- Redux State ----
 
@@ -270,7 +271,7 @@ export function ControlPanel(props: Props) {
           )}
         </View>
         {/* ==== Rate Display End ==== */}
-        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
+        <TestablePress onPress={handleToggleDropdown} style={styles.rowContainer} ref={generateTestHook('SideMenu.DropDown')}>
           <View style={styles.rowIconContainer}>
             <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
@@ -284,7 +285,7 @@ export function ControlPanel(props: Props) {
               </Animated.View>
             </View>
           ) : null}
-        </Pressable>
+        </TestablePress>
         <DividerLine marginRem={[0.25, -2, 2, 1]} />
       </View>
       {/* ==== Top Panel End ==== */}
@@ -317,7 +318,7 @@ export function ControlPanel(props: Props) {
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDownEnd')} />}
+        {!isDropped ? null : <TestablePress style={styles.invisibleTapper} onPress={handleToggleDropdown} ref={generateTestHook('SideMenu.DropDownEnd')} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
           <ScrollView>
