@@ -254,7 +254,7 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     const TestableScene = wrap(Scene)
-
+    console.log('this.props.generateTestHook', this.props)
     return (
       <Drawer
         hideTabBar

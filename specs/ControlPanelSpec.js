@@ -6,7 +6,7 @@ export default function (spec) {
   spec.describe('ControlPanel', function () {
     spec.it('option navigation', async function () {
       await spec.pause(10000)
-      await helpers.openSideMenu('Main.WalletList') // doesn't this still need to press the renderRightButton?
+      // await helpers.openSideMenu('Main.WalletList') // doesn't this still need to press the renderRightButton?
       const walletListScene = await spec.findComponent('Main.WalletList')
       await spec.press(walletListScene.props.renderRightButton)
       await spec.pause(200)
