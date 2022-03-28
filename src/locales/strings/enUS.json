@@ -865,6 +865,7 @@
   "gateway_agreement_modal_title": "%s Gatway Address Detected",
   "gateway_agreement_modal_body": "This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.",
   "util_truncate_delimeter": "...",
+  "stake_select_options": "Select staking options:",
   "currency_label_AFN": "Afghani",
   "currency_label_ALL": "Lek",
   "currency_label_DZD": "Algerian Dinar",

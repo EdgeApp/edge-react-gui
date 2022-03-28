@@ -98,6 +98,7 @@ import {
   SETTINGS_OVERVIEW,
   SETTINGS_OVERVIEW_TAB,
   SPENDING_LIMITS,
+  STAKE_OPTIONS,
   TERMS_OF_SERVICE,
   TRANSACTION_DETAILS,
   TRANSACTION_LIST,
@@ -150,6 +151,7 @@ import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { SpendingLimitsScene } from './scenes/SpendingLimitsScene.js'
+import { StakeOptionsScene } from './scenes/Staking/StakeOptionsScene'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
@@ -346,6 +348,14 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 navTransparent
                 renderTitle={<HeaderTitle title=" " />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key={STAKE_OPTIONS}
+                navTransparent
+                component={withNavigation(ifLoggedIn(StakeOptionsScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />

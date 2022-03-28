@@ -951,6 +951,9 @@ const strings = {
   // Util
   util_truncate_delimeter: '...',
 
+  // Stake
+  stake_select_options: 'Select staking options:',
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',
