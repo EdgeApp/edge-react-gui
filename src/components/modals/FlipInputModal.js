@@ -37,7 +37,8 @@ type OwnProps = {
   onFeesChange?: () => void,
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
-  overrideExchangeAmount?: string
+  overrideExchangeAmount?: string,
+  headerText?: string
 }
 
 type StateProps = {
@@ -168,12 +169,12 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
+    const { flipInputHeaderText, flipInputHeaderLogo, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
       <Card marginRem={0}>
         <ExchangedFlipInput
-          headerText={flipInputHeaderText}
+          headerText={headerText ?? flipInputHeaderText}
           headerLogo={flipInputHeaderLogo}
           primaryCurrencyInfo={{ ...primaryInfo }}
           secondaryCurrencyInfo={{ ...secondaryInfo }}
