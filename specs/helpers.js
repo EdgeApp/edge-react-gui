@@ -13,7 +13,7 @@ export const fastLogin = async (login, username = ENV.CAVY_USERNAME, password = 
 // create a function to fake that the modal is selected . simulate the modal behavior
 
 export const resolveModal = async (modal, returnValue) => {
-  return await modal.props.bridge.resolve(returnValue)
+  return await modal.props.bridge.returnValue
 }
 
 // export const openSideMenu = async sceneName => void

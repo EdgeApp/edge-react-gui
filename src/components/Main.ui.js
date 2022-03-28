@@ -1,5 +1,4 @@
 // @flow
-import { wrap } from 'cavy'
 import * as React from 'react'
 import { YellowBox } from 'react-native'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
@@ -253,8 +252,8 @@ export class MainComponent extends React.Component<Props> {
   }
 
   renderTabView = () => {
-    const TestableScene = wrap(Scene)
-    console.log('this.props.generateTestHook', this.props)
+    // const Scene = wrap(Scene)
+    // const TestableSideMenuButton = wrap(SideMenuButton)
     return (
       <Drawer
         hideTabBar
@@ -270,14 +269,13 @@ export class MainComponent extends React.Component<Props> {
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
             <Stack key={WALLET_LIST}>
-              <TestableScene
+              <Scene
                 key={WALLET_LIST_SCENE}
                 component={withNavigation(ifLoggedIn(WalletListScene))}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
-                ref={this.props.generateTestHook(`Main.WalletList`)}
+                renderRightButton={<SideMenuButton testId="WalletList.SideMenuButton" />}
               />
 
               <Scene
@@ -437,7 +435,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_BUY}>
-              <TestableScene
+              <Scene
                 key={PLUGIN_BUY}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -459,7 +457,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={PLUGIN_SELL}>
-              <TestableScene
+              <Scene
                 key={PLUGIN_SELL}
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
@@ -481,7 +479,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
             <Stack key={EXCHANGE}>
-              <TestableScene
+              <Scene
                 key={EXCHANGE_SCENE}
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
@@ -592,7 +590,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={SETTINGS_OVERVIEW_TAB} hideDrawerButton>
-            <TestableScene
+            <Scene
               key={SETTINGS_OVERVIEW}
               component={withNavigation(ifLoggedIn(SettingsScene))}
               navTransparent
@@ -706,7 +704,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={TERMS_OF_SERVICE}>
-            <TestableScene
+            <Scene
               key={TERMS_OF_SERVICE}
               component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
               navTransparent
@@ -719,14 +717,14 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_ADDRESS_LIST}>
-            <TestableScene
+            <Scene
               key={FIO_ADDRESS_LIST}
               component={withNavigation(ifLoggedIn(FioAddressListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
-              ref={this.props.generateTestHook('Main.FioNames')}
+              ref={this.props.generateTestHook('SideMenu.fio-names')}
             />
           </Stack>
           <Stack key={FIO_ADDRESS_REGISTER}>
@@ -849,7 +847,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key={FIO_REQUEST_LIST}>
-            <TestableScene
+            <Scene
               key={FIO_REQUEST_LIST}
               component={withNavigation(ifLoggedIn(FioRequestListScene))}
               navTransparent
@@ -883,7 +881,7 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
 
           <Stack key="wcConnections">
-            <TestableScene
+            <Scene
               key="wcConnections"
               component={withNavigation(ifLoggedIn(WcConnectionsScene))}
               navTransparent
@@ -893,7 +891,7 @@ export class MainComponent extends React.Component<Props> {
               ref={this.props.generateTestHook('Main.WcConnections')}
             />
 
-            <TestableScene
+            <Scene
               key="wcDisconnect"
               component={withNavigation(ifLoggedIn(WcDisconnectScene))}
               navTransparent

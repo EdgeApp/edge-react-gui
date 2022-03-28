@@ -53,6 +53,7 @@ export function ControlPanel(props: Props) {
   const styles = getStyles(theme)
   const generateTestHook = useCavy()
   const TestablePress = wrap(Pressable)
+  const TestableTouchableOpacity = wrap(TouchableOpacity)
 
   // ---- Redux State ----
 
@@ -121,7 +122,7 @@ export function ControlPanel(props: Props) {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
-        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput ref={generateTestHook('SideMenu.SweepScanModal')} />)
+        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
           .then((result: string | void) => {
             if (result) {
               dispatch(qrCodeScanned(result))
@@ -134,7 +135,7 @@ export function ControlPanel(props: Props) {
 
   const handleLoginQr = () => {
     Actions.drawerClose()
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} ref={generateTestHook('SideMenu.ScanModal')} />)
+    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} />)
       .then((result: string | void) => {
         if (result) {
           dispatch(parseScannedUri(result))
@@ -151,7 +152,7 @@ export function ControlPanel(props: Props) {
       url: Platform.OS === 'ios' ? EDGE_URL : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
-    // is share able to be wrapped?
+    // No button to close.
   }
 
   const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
@@ -248,7 +249,7 @@ export function ControlPanel(props: Props) {
         <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
 
-        <View style={styles.rowContainer} TestableTouchableOpacity>
+        <View style={styles.rowContainer}>
           {isoFiatCurrencyCode === null ? (
             <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
@@ -298,13 +299,13 @@ export function ControlPanel(props: Props) {
               <View key={username} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity
+                <TestableTouchableOpacity
                   style={styles.rowBodyContainer}
                   onPress={handleSwitchAccount(username)}
                   ref={generateTestHook('SideMenu.SwitchAccountButton')}
                 >
                   <TitleText style={styles.text}>{username}</TitleText>
-                </TouchableOpacity>
+                </TestableTouchableOpacity>
                 <TouchableOpacity
                   style={styles.rowIconContainer}
                   onPress={handleDeleteAccount(username)}
@@ -323,7 +324,7 @@ export function ControlPanel(props: Props) {
         <View style={styles.rowsContainer}>
           <ScrollView>
             {rowDatas.map(rowData => (
-              <TouchableOpacity
+              <TestableTouchableOpacity
                 onPress={rowData.pressHandler}
                 key={rowData.title}
                 style={styles.rowContainer}
@@ -335,7 +336,7 @@ export function ControlPanel(props: Props) {
                 <View style={styles.rowBodyContainer}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>
                 </View>
-              </TouchableOpacity>
+              </TestableTouchableOpacity>
             ))}
           </ScrollView>
           {/* === Navigation Rows End === */}

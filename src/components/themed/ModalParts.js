@@ -1,5 +1,6 @@
 // @flow
 
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -15,7 +16,7 @@ type ModalTitleProps = {
   icon?: React.Node
 }
 
-export function ModalTitle(props: ModalTitleProps) {
+export function Title(props: ModalTitleProps) {
   const { icon = null } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -28,14 +29,14 @@ export function ModalTitle(props: ModalTitleProps) {
   )
 }
 
-export function ModalMessage(props: { children: React.Node, paddingRem?: number[] | number, isWarning?: boolean }) {
+export function Message(props: { children: React.Node, paddingRem?: number[] | number, isWarning?: boolean }) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return <Text style={[styles.messageText, paddingStyles(props.paddingRem, theme), props.isWarning && styles.warningText]}>{props.children}</Text>
 }
 
-export function ModalCloseArrow(props: { onPress: () => void }) {
+export function CloseArrow(props: { onPress: () => void }) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -45,6 +46,10 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
     </TouchableOpacity>
   )
 }
+
+export const ModalCloseArrow = wrap(CloseArrow)
+export const ModalMessage = wrap(Message)
+export const ModalTitle = wrap(Title)
 
 function paddingStyles(paddingRem?: number[] | number, theme: Theme) {
   const padding = unpackEdges(paddingRem == null ? 0 : paddingRem)
