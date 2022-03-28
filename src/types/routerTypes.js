@@ -5,7 +5,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
-import { type StakePolicy } from '../plugins/stake-plugins'
+import { type ChangeQuoteRequest, type DetailAllocation, type StakeDetails, type StakePolicy } from '../plugins/stake-plugins'
 import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
 import {
   type CreateWalletType,
@@ -210,6 +210,13 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
+  stakeModify: {|
+    walletId: string,
+    stakePolicy: StakePolicy,
+    stakeDetails: StakeDetails,
+    allocationToMod?: DetailAllocation,
+    modification: $PropertyType<ChangeQuoteRequest, 'action'>
+  |},
   stakeOptions: { walletId: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   fioStakingChange: {
