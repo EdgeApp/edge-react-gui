@@ -108,7 +108,7 @@ import {
 import s from '../locales/strings.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
-import { connect } from '../types/reactRedux.js'
+import { type TestProps, connect } from '../types/reactRedux.js'
 import { Actions, withNavigation } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
@@ -171,7 +171,7 @@ const RouterWithRedux = connect<
   dispatch => ({})
 )(Router)
 
-type OwnProps = { generateTestHook: (id: string, ref: any) => void }
+// type OwnProps = { generateTestHook: (id: string, ref: any) => void }
 type DispatchProps = {
   registerDevice: () => void,
 
@@ -187,7 +187,7 @@ type DispatchProps = {
   showReEnableOtpModal: () => void
 }
 
-type Props = DispatchProps & OwnProps
+type Props = DispatchProps & TestProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -939,7 +939,7 @@ export class MainComponent extends React.Component<Props> {
   }
 }
 
-export const Main = connect<{}, DispatchProps, OwnProps>(
+export const Main = connect<{}, DispatchProps, TestProps>(
   state => ({}),
   dispatch => ({
     registerDevice() {

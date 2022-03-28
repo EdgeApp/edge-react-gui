@@ -8,16 +8,16 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import s from '../../locales/strings.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
-  navigation: NavigationProp<'edge'>,
-  generateTestHook: (id: string, ref: any) => void
+  navigation: NavigationProp<'edge'>
 }
 
-type Props = OwnProps & ThemeProps
+type Props = OwnProps & ThemeProps & TestProps
 
 const title: { [name: $Keys<ParamList>]: string } = {
   walletList: s.strings.title_wallets,
