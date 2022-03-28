@@ -217,6 +217,7 @@ export type ParamList = {
     allocationToMod?: DetailAllocation,
     modification: $PropertyType<ChangeQuoteRequest, 'action'>
   |},
+  stakeClaim: { walletId: string, stakePolicy: StakePolicy },
   stakeOptions: { walletId: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   fioStakingChange: {
