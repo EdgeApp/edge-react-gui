@@ -209,6 +209,7 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
+  stakeOptions: { walletId: string },
   fioStakingChange: {
     change: 'add' | 'remove',
     currencyCode: string,
