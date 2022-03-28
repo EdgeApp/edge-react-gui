@@ -3,14 +3,18 @@ import '@ethersproject/shims'
 
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 
+import { pluginInfo } from './pluginInfo.js'
+import { toStakePolicy } from './stakePolicy.js'
 import type { ChangeQuote, ChangeQuoteRequest, StakeDetailRequest, StakeDetails, StakePlugin, StakePolicy } from './types.js'
 
 export * from './types.js'
 
-export const makeStakePlugin = (opts: EdgeCorePluginOptions): StakePlugin => {
+export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   const instance: StakePlugin = {
     async getStakePolicies(): Promise<StakePolicy[]> {
-      return []
+      // TODO: Calculate APY form reading the blockchain
+      const policies = pluginInfo.policyInfo.map(toStakePolicy)
+      return policies
     },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const approve: () => Promise<void> = async () => {}
