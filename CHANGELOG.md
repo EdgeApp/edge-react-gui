@@ -1,5 +1,16 @@
 # edge-react-gui
 
+## 2.12.1 (2022-03-29)
+
+- Add Bitpay v2 to send scene
+- Add wallet balance to request scene
+- Fix flip input modal balance display
+- Disable font scaling
+- Remove Transak
+- Upgrade edge-login-ui-rn to v0.9.31
+  - rn: Remove allowFontScaling from text components
+  - rn: Update dependency of react-native-keyboard-aware-scroll-view to 0.9.5 to fix an issue with react-native >= 0.65
+
 ## 2.12.0 (2022-02-23)
 
 - Add BNB Smart Chain support

@@ -47,7 +47,7 @@ export class FormattedText extends React.Component<Props> {
   render() {
     const fontSize = this.props.fontSize ? scale(this.props.fontSize) : scale(14)
     return (
-      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref={this.handleRef} allowFontScaling={false}>
+      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref={this.handleRef}>
         {this.props.children}
       </Text>
     )

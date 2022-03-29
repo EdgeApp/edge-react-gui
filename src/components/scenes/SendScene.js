@@ -134,15 +134,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     const { route } = this.props
     const { guiMakeSpendInfo } = route.params
-    if (guiMakeSpendInfo) {
-      this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
-      const recipientAddress =
-        guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
-          ? guiMakeSpendInfo.publicAddress
-          : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
-          ? guiMakeSpendInfo.spendTargets[0].publicAddress
-          : ''
-      this.setState({ recipientAddress })
+    if (guiMakeSpendInfo != null) {
+      this.updateSendConfirmationTx(guiMakeSpendInfo)
     }
   }
 
@@ -156,6 +149,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props): void {
+    if (prevProps.route.params.guiMakeSpendInfo == null && this.props.route.params.guiMakeSpendInfo != null) {
+      this.updateSendConfirmationTx(this.props.route.params.guiMakeSpendInfo)
+    }
     if (prevProps.pending && !this.props.pending) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ resetSlider: true })
@@ -164,6 +160,17 @@ class SendComponent extends React.PureComponent<Props, State> {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ resetSlider: false })
     }
+  }
+
+  updateSendConfirmationTx = (guiMakeSpendInfo: GuiMakeSpendInfo) => {
+    this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    const recipientAddress =
+      guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
+        ? guiMakeSpendInfo.publicAddress
+        : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
+        ? guiMakeSpendInfo.spendTargets[0].publicAddress
+        : ''
+    this.setState({ recipientAddress })
   }
 
   resetSendTransaction = () => {

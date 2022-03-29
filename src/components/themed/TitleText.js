@@ -19,7 +19,6 @@ export function TitleText(props: Props) {
     <Text
       style={[text, style, Platform.OS === 'android' ? androidAdjust : null]}
       numberOfLines={1}
-      allowFontScaling
       adjustsFontSizeToFit
       minimumFontScale={0.65}
       {...otherProps}
