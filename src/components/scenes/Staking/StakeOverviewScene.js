@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
-import { type ChangeQuoteRequest, type DetailAllocation, type StakeDetails, type StakePolicy } from '../../../plugins/stake-plugins'
+import { type ChangeQuoteRequest, type PositionAllocation, type StakePolicy, type StakePosition } from '../../../plugins/stake-plugins'
 import type { RootState } from '../../../reducers/RootReducer.js'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
@@ -62,19 +62,19 @@ export const StakeOverviewScene = (props: Props) => {
   const stakeImages = [getCurrencyIcon(walletPluginId, stakeContractAddress).symbolImage]
   const rewardImages = [getCurrencyIcon(walletPluginId, rewardContractAddress).symbolImage]
 
-  const [stakeAllocation, setStakeAllocation] = useState<DetailAllocation | void>()
-  const [rewardAllocation, setRewardAllocation] = useState<DetailAllocation | void>()
-  const [stakeDetails, setStakeDetails] = useState<StakeDetails | void>()
+  const [stakeAllocation, setStakeAllocation] = useState<PositionAllocation | void>()
+  const [rewardAllocation, setRewardAllocation] = useState<PositionAllocation | void>()
+  const [stakePosition, setStakePosition] = useState<StakePosition | void>()
 
   useEffect(() => {
     stakePlugin
-      .fetchStakeDetails({ stakePolicyId, wallet: currencyWallet })
-      .then(async stakeDetails => {
-        const stakeAllocation = getStakeAllocation(stakeDetails)
-        const rewardAllocation = getRewardAllocation(stakeDetails)
+      .fetchStakePosition({ stakePolicyId, wallet: currencyWallet })
+      .then(async stakePosition => {
+        const stakeAllocation = getStakeAllocation(stakePosition)
+        const rewardAllocation = getRewardAllocation(stakePosition)
         setStakeAllocation(stakeAllocation)
         setRewardAllocation(rewardAllocation)
-        setStakeDetails(stakeDetails)
+        setStakePosition(stakePosition)
       })
       .catch(err => {
         console.error(err)
@@ -83,9 +83,9 @@ export const StakeOverviewScene = (props: Props) => {
 
   const handleModifyPress = (modification: $PropertyType<ChangeQuoteRequest, 'action'>) => () => {
     // TODO: (V2) Remove allocationToMod in route props
-    if (stakeDetails != null && stakeAllocation != null && rewardAllocation != null) {
+    if (stakePosition != null && stakeAllocation != null && rewardAllocation != null) {
       const allocationToMod = modification === 'claim' ? rewardAllocation : stakeAllocation
-      navigation.navigate('stakeModify', { walletId, stakePolicy, stakeDetails, allocationToMod, modification })
+      navigation.navigate('stakeModify', { walletId, stakePolicy, stakePosition, allocationToMod, modification })
     }
   }
 

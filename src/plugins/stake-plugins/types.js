@@ -53,15 +53,15 @@ export type ChangeQuote = {
 }
 
 // -----------------------------------------------------------------------------
-// Stake Details
+// Stake Position
 // -----------------------------------------------------------------------------
 
-export type StakeDetailRequest = {
+export type StakePositionRequest = {
   stakePolicyId: string,
   wallet: EdgeCurrencyWallet
 }
 
-export type DetailAllocation = {
+export type PositionAllocation = {
   // The type of asset for this allocation
   pluginId: string,
   tokenId: string,
@@ -79,8 +79,8 @@ export type DetailAllocation = {
   locktime?: Date
 }
 
-export type StakeDetails = {
-  allocations: DetailAllocation[]
+export type StakePosition = {
+  allocations: PositionAllocation[]
 }
 
 // -----------------------------------------------------------------------------
@@ -90,5 +90,5 @@ export type StakeDetails = {
 export type StakePlugin = {
   getStakePolicies: () => Promise<StakePolicy[]>,
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>,
-  fetchStakeDetails: (request: StakeDetailRequest) => Promise<StakeDetails>
+  fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }
