@@ -33,8 +33,3 @@ export default function (spec) {
     })
   })
 }
-
-// This is for tapping the back button in the control panel scenes.  Add this to each scene to go back ... will need to hook the renderRightButton?
-// or hook the button that goes back
-// const walletListScene = await spec.findComponent('Main.WalletList')
-//       await spec.press(walletListScene.props.renderRightButton)
