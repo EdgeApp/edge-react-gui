@@ -548,7 +548,6 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
   dispatch({
     type: 'CORE/WALLETS/UPDATE_WALLETS',
     data: {
-      activeWalletIds,
       currencyWallets,
       receiveAddresses
     }

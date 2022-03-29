@@ -111,7 +111,6 @@ export type Action =
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
-        activeWalletIds: string[],
         currencyWallets: { [id: string]: EdgeCurrencyWallet },
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }

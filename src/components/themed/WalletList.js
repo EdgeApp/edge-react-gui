@@ -7,6 +7,7 @@ import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
+import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
@@ -75,12 +76,15 @@ export function WalletList(props: Props) {
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
-  const activeWalletIds = useSelector(state => state.ui.wallets.activeWalletIds)
   const customTokens = useSelector(state => state.ui.settings.customTokens)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)
   const wallets = useSelector(state => state.ui.wallets.byId)
+
+  // Subscribe to the wallet list:
+  const [activeWalletIds, setActiveWalletIds] = useState(account.activeWalletIds)
+  useEffect(() => account.watch('activeWalletIds', setActiveWalletIds), [account])
 
   function sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
