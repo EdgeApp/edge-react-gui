@@ -4,7 +4,7 @@ import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Keyboard, View } from 'react-native'
 
-import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
+import { type CreateWalletOptions, createCurrencyWallet } from '../../actions/CreateWalletActions'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
@@ -24,7 +24,7 @@ type OwnProps = {
   route: RouteProp<'createWalletReview'>
 }
 type DispatchProps = {
-  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string) => Promise<void>
+  createWallet: (opts: CreateWalletOptions) => Promise<EdgeCurrencyWallet>
 }
 type Props = OwnProps & DispatchProps & ThemeProps
 
@@ -50,14 +50,14 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
   }
 
   async createWallet() {
-    const { createCurrencyWallet, navigation, route } = this.props
+    const { createWallet, navigation, route } = this.props
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey } = route.params
-    const createdWallet: EdgeCurrencyWallet | void = await createCurrencyWallet(
+    const createdWallet: EdgeCurrencyWallet | void = await createWallet({
       walletName,
-      selectedWalletType.walletType,
-      fixFiatCurrencyCode(selectedFiat.value),
-      cleanedPrivateKey
-    ).catch(showError)
+      walletType: selectedWalletType.walletType,
+      fiatCurrencyCode: fixFiatCurrencyCode(selectedFiat.value),
+      importText: cleanedPrivateKey
+    }).catch(showError)
     navigation.navigate('walletListScene')
 
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
@@ -143,8 +143,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const CreateWalletReviewScene = connect<{}, DispatchProps, OwnProps>(
   state => ({}),
   dispatch => ({
-    async createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
-      await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, importText))
-    }
+    createWallet: opts => dispatch(createCurrencyWallet(opts))
   })
 )(withTheme(CreateWalletReviewComponent))

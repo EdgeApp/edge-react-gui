@@ -6,7 +6,6 @@ import { Switch, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { noOp } from '../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletListRow } from './WalletListRow'
 
@@ -41,7 +40,7 @@ export function ManageTokensRow(props: Props) {
   const isEditable = metaTokens.every(token => token.currencyCode !== currencyCode)
 
   const onPress = () => {
-    isEditable ? goToEditTokenScene(currencyCode) : noOp()
+    isEditable ? goToEditTokenScene(currencyCode) : (() => {})()
   }
 
   return (

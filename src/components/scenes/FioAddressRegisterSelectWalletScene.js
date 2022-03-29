@@ -15,7 +15,7 @@ import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -117,18 +117,18 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
 
   selectWallet = async () => {
     const { supportedCurrencies } = this.state
-
-    const allowedCurrencyCodes = []
-    for (const currency of Object.keys(supportedCurrencies)) {
-      if (supportedCurrencies[currency]) {
-        allowedCurrencyCodes.push(currency)
+    try {
+      const { walletId, currencyCode } = await Airship.show(bridge => (
+        <WalletPickerModal
+          bridge={bridge}
+          filterWallet={wallet => Object.keys(supportedCurrencies).find(currency => currency === wallet.currencyInfo.currencyCode) != null}
+        />
+      ))
+      if (walletId && currencyCode) {
+        this.setState({ paymentWallet: { id: walletId, currencyCode } })
       }
-    }
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
-    ))
-    if (walletId && currencyCode) {
-      this.setState({ paymentWallet: { id: walletId, currencyCode } })
+    } catch (e) {
+      showError(e)
     }
   }
 

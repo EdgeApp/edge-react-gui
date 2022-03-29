@@ -12,11 +12,11 @@ import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/Wallet
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { type CustomTokenInfo, type GuiWallet, asSafeDefaultGuiWallet } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiWallet } from '../../types/types.js'
 import { mergeTokensRemoveInvisible } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { WalletListModal } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
+import { WalletPickerModal } from '../modals/WalletPickerModal'
+import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { MainButton } from '../themed/MainButton.js'
@@ -116,24 +116,24 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     }, [])
   }
 
-  getWalletIdsIfNotTokens(): string[] {
-    const { wallets } = this.props
-    return keys(wallets).filter((key: string) => wallets[key].metaTokens.length === 0)
-  }
-
   onSelectWallet = async () => {
     const { navigation } = this.props
-    const { walletId, currencyCode } = await Airship.show(bridge => (
-      <WalletListModal
-        allowedCurrencyCodes={this.getAllowedWalletCurrencyCodes()}
-        excludeWalletIds={this.getWalletIdsIfNotTokens()}
-        bridge={bridge}
-        headerTitle={s.strings.select_wallet}
-      />
-    ))
+    const allowedCodes = this.getAllowedWalletCurrencyCodes()
+    try {
+      const { walletId, currencyCode } = await Airship.show(bridge => (
+        <WalletPickerModal
+          filterWallet={({ currencyInfo }) =>
+            currencyInfo.metaTokens.length !== 0 && allowedCodes.find(currency => currency === currencyInfo.currencyCode) != null
+          }
+          bridge={bridge}
+        />
+      ))
 
-    if (walletId && currencyCode) {
-      navigation.setParams({ walletId })
+      if (walletId && currencyCode) {
+        navigation.setParams({ walletId })
+      }
+    } catch (e) {
+      showError(e)
     }
   }
 
@@ -270,7 +270,7 @@ export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
     settingsCustomTokens: state.ui.settings.customTokens,
     wallets: state.ui.wallets.byId,
     currencyWallets: state.core.account.currencyWallets,
-    enabledTokens: asSafeDefaultGuiWallet(state.ui.wallets.byId[params.walletId]).enabledTokens
+    enabledTokens: state.ui.wallets?.byId[params.walletId]?.enabledTokens ?? []
   }),
   dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {

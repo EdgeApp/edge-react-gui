@@ -12,7 +12,7 @@ import {
   fetchAccountActivationInfo,
   fetchWalletAccountActivationPaymentInfo
 } from '../../actions/CreateWalletActions.js'
-import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
+import { WalletPickerModal } from '../../components/modals/WalletPickerModal.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -27,7 +27,7 @@ import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
-import { Airship } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 
 export type AccountPaymentParams = {
   requestedAccountName: string,
@@ -115,13 +115,19 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
         allowedCurrencyCodes.push(currency)
       }
     }
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
+    Airship.show(bridge => (
+      <WalletPickerModal
+        bridge={bridge}
+        filterWallet={wallet => allowedCurrencyCodes.find(currency => currency === wallet.currencyInfo.currencyCode) != null}
+        filterCreate={({ tokenId }) => allowedCurrencyCodes.find(currency => currency === tokenId) != null}
+      />
+    ))
+      .then(({ walletId, currencyCode }) => {
+        if (walletId != null && currencyCode != null) {
           this.onSelectWallet(walletId, currencyCode)
         }
-      }
-    )
+      })
+      .catch(showError)
   }
 
   onPressSubmit = async () => {
@@ -440,7 +446,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
       dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet))
     },
     async createAccountBasedWallet(walletName: string, walletType: string, fiatCurrencyCode: string) {
-      return await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
+      return await dispatch(createCurrencyWallet({ walletName, walletType, fiatCurrencyCode }))
     },
     setWalletAccountActivationQuoteError(message) {
       dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: message })

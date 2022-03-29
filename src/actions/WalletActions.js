@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeReceiveAddress } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -15,7 +15,7 @@ import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
-import { getReceiveAddresses, getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
+import { getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
@@ -530,6 +530,21 @@ export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: stri
     if (!checkedToken) {
       dispatch(removeMostRecentWallet(walletId, oldToken))
     }
+  })
+}
+
+export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
+  const ids = Object.keys(currencyWallets)
+  const promises = ids.map(id => {
+    return currencyWallets[id].getReceiveAddress()
+  })
+  return Promise.all(promises).then(receiveAddresses => {
+    return ids.reduce((result, id, index) => {
+      return {
+        ...result,
+        [id]: receiveAddresses[index]
+      }
+    }, {})
   })
 }
 

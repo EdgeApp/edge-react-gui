@@ -6,12 +6,11 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { CREATE_WALLET_SELECT_CRYPTO, MANAGE_TOKENS } from '../../constants/SceneKeys.js'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type GuiWallet } from '../../types/types.js'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -23,13 +22,6 @@ type StateProps = {
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
-
-const TokenSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => {
-    const { isCustomTokensSupported = false, isAccountActivationRequired = false, keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId]
-    return isCustomTokensSupported && !isAccountActivationRequired && !keysOnlyMode
-  })
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps> {
   renderAddButton = (title: string, onPress: () => void) => {
@@ -60,10 +52,11 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
 
   addToken = () => {
     const { onSelectWallet } = this.props
-    Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={TokenSupportedCurrencyCodes} showCreateWallet />
-    ))
-      .then(({ walletId, currencyCode }: WalletListResult) => {
+    const filter = (_, { isCustomTokensSupported = false, isAccountActivationRequired, keysOnlyMode }) =>
+      isCustomTokensSupported && !isAccountActivationRequired && !keysOnlyMode
+
+    Airship.show(bridge => <WalletPickerModal bridge={bridge} filterWallet={filter} filterCreate={filter} />)
+      .then(({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
           onSelectWallet(walletId, currencyCode)
           Actions.push(MANAGE_TOKENS, { walletId })

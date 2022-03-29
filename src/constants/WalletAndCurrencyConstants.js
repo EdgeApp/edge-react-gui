@@ -101,7 +101,7 @@ export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 // Strip away 'wallet:' prefix and '-bip' suffix, if present
 export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
 
-type SpecialCurrencyInfo = {|
+export type SpecialCurrencyInfo = {|
   initWalletName: string,
   chainCode: string,
 

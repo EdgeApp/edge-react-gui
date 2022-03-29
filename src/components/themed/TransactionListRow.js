@@ -21,8 +21,7 @@ import {
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
   precisionAdjust,
-  truncateDecimals,
-  unspacedLowercase
+  truncateDecimals
 } from '../../util/utils'
 import { showError } from '../services/AirshipInstance.js'
 import { TransactionRow } from './TransactionRow.js'
@@ -100,10 +99,10 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     // Thumbnail
     let thumbnailPath
     const contacts = state.contacts || []
-    const transactionContactName = name != null ? unspacedLowercase(name) : null
+    const transactionContactName = name != null ? name.replace(' ', '').toLowerCase() : null
     for (const contact of contacts) {
       const { givenName, familyName } = contact
-      const fullName = unspacedLowercase(givenName + (familyName ?? ''))
+      const fullName = (givenName + (familyName ?? '')).replace(' ', '').toLowerCase()
       if (contact.thumbnailPath && fullName === transactionContactName) {
         thumbnailPath = contact.thumbnailPath
         break

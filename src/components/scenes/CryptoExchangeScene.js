@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { type SetNativeAmountInfo, exchangeMax, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
-import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -16,7 +16,7 @@ import { type GuiCurrencyInfo, emptyCurrencyInfo } from '../../types/types.js'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { WalletPickerModal } from '../modals/WalletPickerModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Alert } from '../themed/Alert'
@@ -78,11 +78,6 @@ type State = {
   fromAmountNative: string,
   toAmountNative: string
 }
-
-// Prevent currencies that are "watch only" from being allowed to exchange
-const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
@@ -239,23 +234,21 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     return null
   }
 
-  renderDropUp = (whichWallet: 'from' | 'to') => {
+  renderDropUp = (whichWallet: 'from' | 'to') =>
     Airship.show(bridge => (
-      <WalletListModal
+      <WalletPickerModal
         bridge={bridge}
-        label={s.strings.wallet_list_wallet_search}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
-        showCreateWallet={whichWallet === 'to'}
-        excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
-        filterActivation
+        filterWallet={(wallet, { keysOnlyMode, isAccountActivationRequired }) => !keysOnlyMode}
+        filterCreate={(_, { keysOnlyMode, isAccountActivationRequired }) => whichWallet === 'to' && !keysOnlyMode && !isAccountActivationRequired}
       />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId != null && currencyCode != null) {
-        return this.props.onSelectWallet(walletId, currencyCode, whichWallet)
-      }
-    })
-    return null
-  }
+    ))
+      .then(({ walletId, currencyCode }) => {
+        if (walletId != null && currencyCode != null) {
+          return this.props.onSelectWallet(walletId, currencyCode, whichWallet)
+        }
+      })
+      .catch(showError)
 
   render() {
     const { fromFiatCurrencyCode, fromIsoFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toIsoFiatCurrencyCode, toWalletName, theme } = this.props

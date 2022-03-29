@@ -1,42 +1,113 @@
 // @flow
 import { mul, toFixed } from 'biggystring'
-import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { SEND, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
-import { getPluginId } from '../constants/WalletAndCurrencyConstants.js'
+import { getPluginId, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
+import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
+import type { CreateTokenType } from '../types/types.js'
+import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import { logEvent } from '../util/tracking.js'
+import { approveTokenTerms } from './TokenTermsActions.js'
+import { refreshWallet, selectWallet } from './WalletActions.js'
 
-export const createCurrencyWallet =
-  (
-    walletName: string,
-    walletType: string,
-    fiatCurrencyCode: string,
-    importText?: string // for creating wallet from private seed / key
-  ) =>
-  async (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet> => {
+export type CreateWalletOptions = {
+  walletName?: string,
+  walletType: string,
+  fiatCurrencyCode?: string,
+  importText?: string // for creating wallet from private seed / key
+}
+
+const createWallet = async (account, { walletType, walletName, fiatCurrencyCode, importText }: CreateWalletOptions) => {
+  // Try and get the new format param from the legacy walletType if it's mentioned
+  const [type, format] = walletType.split('-')
+  const opts = {
+    name: walletName,
+    fiatCurrencyCode: fiatCurrencyCode,
+    keyOptions: format ? { format } : {},
+    importText
+  }
+  return await account.createCurrencyWallet(type, opts)
+}
+
+const getParentWallet = async (account: EdgeAccount, currencyCode: string, fiatCurrencyCode: string): Promise<EdgeCurrencyWallet> => {
+  const { currencyWallets } = account
+  const walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === currencyCode)
+  if (walletId != null) return currencyWallets[walletId]
+
+  const { walletType } = getCreateWalletType(account, currencyCode) ?? {}
+  if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
+  return await createWallet(account, { walletType, fiatCurrencyCode })
+}
+
+export const createAndSelectToken =
+  ({ currencyCode, parentCurrencyCode }: CreateTokenType) =>
+  async (dispatch: Dispatch, getState: GetState): Promise<void> => {
+    const state = getState()
+    const { account, disklet } = state.core
+    // const { wallets } = state.ui.wallets.byId
+    const { defaultIsoFiat } = state.ui.settings
+
+    try {
+      // Show the user the token terms modal only once
+      await approveTokenTerms(disklet, parentCurrencyCode)
+      // Find existing EdgeCurrencyWallet
+
+      const wallet = await getParentWallet(account, parentCurrencyCode, defaultIsoFiat)
+
+      const addToken = async () => {
+        const enabledTokens = (await wallet.getEnabledTokens()) ?? []
+        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet.currencyInfo.pluginId)
+        await setEnabledTokens(wallet, [...tokens, currencyCode], [])
+        return [...enabledTokens, currencyCode]
+      }
+
+      const enabledTokens = await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, addToken())
+
+      dispatch({
+        type: 'UPDATE_WALLET_ENABLED_TOKENS',
+        data: { walletId: wallet.id, tokens: enabledTokens }
+      })
+      dispatch(refreshWallet(wallet.id))
+      dispatch(selectWallet(wallet.id, currencyCode))
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+export const createCurrencyWallet = (opts: CreateWalletOptions) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { fiatCurrencyCode = state.ui.settings.defaultIsoFiat } = opts
+  return createWallet(state.core.account, { ...opts, fiatCurrencyCode })
+}
+
+export const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName }: CreateWalletOptions) => {
+  walletName = walletName ?? getSpecialCurrencyInfo(walletType).initWalletName
+  return async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
-
-    // Try and get the new format param from the legacy walletType if it's mentioned
-    const [type, format] = walletType.split('-')
-    const opts = {
-      name: walletName,
-      fiatCurrencyCode,
-      keyOptions: format ? { format } : {},
-      importText
+    try {
+      const wallet = await showFullScreenSpinner(
+        s.strings.wallet_list_modal_creating_wallet,
+        createWallet(account, { walletName, walletType, fiatCurrencyCode })
+      )
+      dispatch(selectWallet(wallet.id, wallet.currencyInfo.currencyCode))
+    } catch (error) {
+      showError(error)
     }
-    return await account.createCurrencyWallet(type, opts)
   }
+}
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
 export const fetchAccountActivationInfo = (walletType: string) => async (dispatch: Dispatch, getState: GetState) => {

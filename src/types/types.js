@@ -33,19 +33,6 @@ export type GuiWallet = {
   blockHeight: number | null
 }
 
-// FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
-export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
-  ...asOptional(
-    asObject({
-      name: asOptional(asString, ''),
-      currencyNames: asOptional(asObject(asString), {}),
-      currencyCode: asOptional(asString, ''),
-      enabledTokens: asOptional(asArray(asString), [])
-    })
-  )(guiWallet),
-  ...guiWallet
-})
-
 export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
   displayCurrencyCode: string,
@@ -128,7 +115,7 @@ export type CreateWalletType = {
 
 export type CreateTokenType = {
   currencyCode: string,
-  currencyName: string,
+  currencyName?: string,
   symbolImage?: string,
   parentCurrencyCode: string
 }

@@ -5,7 +5,7 @@ import { type EdgeCurrencyWallet, type EdgeSpendInfo, type EdgeTransaction } fro
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { WalletListModal } from '../components/modals/WalletListModal.js'
+import { WalletPickerModal } from '../components/modals/WalletPickerModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
@@ -110,16 +110,24 @@ export async function launchBitPay(
     if (matchingWallets.length === 0) {
       throw new BitPayError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     } else {
-      const walletListResult = await Airship.show(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
-      ))
-      const { walletId, currencyCode } = walletListResult
-      selectedCurrencyCode = currencyCode
-      if (!walletId || !currencyCode || !params.currencyWallets) {
-        // No wallet selected
-        return
-      } else {
-        selectedWallet = params.currencyWallets[walletId]
+      try {
+        const walletListResult = await Airship.show(bridge => (
+          <WalletPickerModal
+            bridge={bridge}
+            filterWallet={wallet => paymentCurrencies.find(currency => currency === wallet.currencyInfo.currencyCode) != null}
+            filterCreate={({ tokenId }) => paymentCurrencies.find(currency => currency === tokenId) != null}
+          />
+        ))
+        const { walletId, currencyCode } = walletListResult
+        selectedCurrencyCode = currencyCode
+        if (walletId == null || currencyCode == null || params.currencyWallets == null) {
+          // No wallet selected
+          return
+        } else {
+          selectedWallet = params.currencyWallets[walletId]
+        }
+      } catch (e) {
+        showError(e)
       }
     }
   }

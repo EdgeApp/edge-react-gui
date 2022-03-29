@@ -5,19 +5,13 @@ import { log10 } from 'biggystring'
 import { sanitizeDecimalAmount } from '../components/themed/FlipInput'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../selectors/DenominationSelectors.js'
 import {
-  autoCorrectDate,
-  convertDisplayToNative,
   convertNativeToDenomination,
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
   getNewArrayWithItem,
-  getNewArrayWithoutItem,
   getObjectDiff,
   getSupportedFiats,
-  isCompleteExchangeData,
-  isTooFarAhead,
-  isTooFarBehind,
   isValidInput,
   maxPrimaryCurrencyConversionDecimals,
   mergeTokens,
@@ -143,16 +137,6 @@ describe('convertNativeToExchange', function () {
   })
 })
 
-describe('convertDisplayToNative', function () {
-  test('100000000 => 1', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1'
-    const expected = '100000000'
-    const actual = convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-})
-
 describe('truncateDecimals', function () {
   test('1 => 1', function () {
     const input = '1'
@@ -235,118 +219,12 @@ describe('getNewArrayWithItem', function () {
   })
 })
 
-describe('getNewArrayWithoutItem', function () {
-  describe('returns new array', function () {
-    test('input !== output', function () {
-      const array = [1, 2, 3]
-      const input = 1
-      const expected = array
-      const actual = getNewArrayWithoutItem(array, input)
-      expect(actual).not.toBe(expected)
-    })
-  })
-
-  describe('when array includes item', function () {
-    test('[1, 2, 3] => [1, 2, 3]', function () {
-      const array = [1, 2, 3]
-      const input = 1
-      const expected = [2, 3]
-      const actual = getNewArrayWithoutItem(array, input)
-      expect(actual).toEqual(expected)
-    })
-  })
-
-  describe('when array does not include item', function () {
-    test('[1, 2, 3] => [1, 2, 3, 4]', function () {
-      const array = [1, 2, 3]
-      const input = 4
-      const expected = [1, 2, 3]
-      const actual = getNewArrayWithoutItem(array, input)
-      expect(actual).toEqual(expected)
-    })
-  })
-})
-
 describe('getSupportedFiats', function () {
   test('resolves to array of object {value, label}', function () {
     const supportedFiats = getSupportedFiats()
     supportedFiats.forEach(fiat => {
       expect(fiat).toEqual(expect.objectContaining({ label: expect.any(String), value: expect.any(String) }))
     })
-  })
-})
-
-describe('isCompleteExchangeData', function () {
-  describe('primaryDisplayAmount: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        primaryDisplayAmount: undefined,
-        primaryDisplayName: 'BTC',
-        secondaryDisplayAmount: '4000',
-        secondaryCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowExpectedError
-      const actual = isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('primaryDisplayName: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        primaryDisplayAmount: '1',
-        primaryDisplayName: undefined,
-        secondaryDisplayAmount: '4000',
-        secondaryCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowExpectedError
-      const actual = isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('secondaryDisplayAmount: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        primaryDisplayAmount: '1',
-        primaryDisplayName: 'BTC',
-        secondaryDisplayAmount: undefined,
-        secondaryCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowExpectedError
-      const actual = isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('secondaryCurrencyCode: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        primaryDisplayAmount: '1',
-        primaryDisplayName: 'BTC',
-        secondaryDisplayAmount: '4000',
-        secondaryCurrencyCode: undefined
-      }
-      const expected = false
-      // $FlowExpectedError
-      const actual = isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  test('complete => true', function () {
-    const completeExchangeData = {
-      primaryDisplayAmount: '1',
-      primaryDisplayName: 'BTC',
-      secondaryDisplayAmount: '4000',
-      secondaryCurrencyCode: 'USD'
-    }
-    const expected = true
-    const actual = isCompleteExchangeData(completeExchangeData)
-    expect(actual).toBe(expected)
   })
 })
 
@@ -566,59 +444,6 @@ describe('getObjectDiff', () => {
       }
     }
     expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('b')
-  })
-})
-
-describe('isTooFarAhead', () => {
-  const currentDateInSeconds = 1535739631.095 // 2018-08-31T18:20:31.095Z
-  const invalidFutureDateInSeconds = 1535739631.095 * 1000 // +050635-08-27T05:58:15.000Z
-  const validFutureDateInSeconds = 1535739631.095 + 1000 // 2018-08-31T18:20:32.095Z
-
-  test('if given invalid future date', () => {
-    expect(isTooFarAhead(invalidFutureDateInSeconds, currentDateInSeconds)).toBe(true)
-  })
-
-  test('if given valid future date', () => {
-    expect(isTooFarAhead(validFutureDateInSeconds, currentDateInSeconds)).toBe(false)
-  })
-})
-
-describe('isTooFarBehind', () => {
-  const invalidPastDateInSeconds = 1535739631.095 / 1000 // 1970-01-18T18:35:39.631Z
-  const validPastDateInSeconds = 1535739631.095 - 1000 // 2018-08-31T18:20:30.095Z
-
-  test('if given invalid past date', () => {
-    expect(isTooFarBehind(invalidPastDateInSeconds)).toBe(true)
-  })
-
-  test('if given valid past date', () => {
-    expect(isTooFarBehind(validPastDateInSeconds)).toBe(false)
-  })
-})
-
-describe('autoCorrectDate', () => {
-  const currentDateInSeconds = 1535739631.095 // 2018-08-31T18:20:31.095Z
-
-  const invalidFutureDateInSeconds = 1535739631.095 * 1000 // +050635-08-27T05:58:15.000Z
-  const validFutureDateInSeconds = 1535739631.095 + 1000 // 2018-08-31T18:20:32.095Z
-
-  const invalidPastDateInSeconds = 1535739631.095 / 1000 // 1970-01-18T18:35:39.631Z
-  const validPastDateInSeconds = 1535739631.095 - 1000 // 2018-08-31T18:20:30.095Z
-
-  test('if given invalid future date', () => {
-    expect(autoCorrectDate(invalidFutureDateInSeconds, currentDateInSeconds)).toEqual(currentDateInSeconds)
-  })
-
-  test('if given valid future date', () => {
-    expect(autoCorrectDate(validFutureDateInSeconds, currentDateInSeconds)).toEqual(validFutureDateInSeconds)
-  })
-
-  test('if given invalid past date', () => {
-    expect(autoCorrectDate(invalidPastDateInSeconds, currentDateInSeconds)).toEqual(currentDateInSeconds)
-  })
-
-  test('if given valid past date', () => {
-    expect(autoCorrectDate(validPastDateInSeconds, currentDateInSeconds)).toEqual(validPastDateInSeconds)
   })
 })
 

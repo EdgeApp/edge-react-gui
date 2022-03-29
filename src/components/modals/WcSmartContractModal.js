@@ -13,7 +13,7 @@ import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
+import { zeroString } from '../../util/utils.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { Alert } from '../themed/Alert'
@@ -33,6 +33,20 @@ type Props = {
   dApp: JsonObject,
   uri: string,
   payload: WcRpcPayload
+}
+
+export function hexToDecimal(num: string) {
+  return add(num, '0', 10)
+}
+
+export function removeHexPrefix(s: string) {
+  const noHexPrefix = s.replace('0x', '')
+  return noHexPrefix
+}
+
+export function isHex(h: string) {
+  const out = /^[0-9A-F]+$/i.test(h)
+  return out
 }
 
 export const WcSmartContractModal = (props: Props) => {

@@ -4,11 +4,11 @@ import { type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
+import { useFiatText } from '../../hooks/useFiatText.js'
 import { formatNumber } from '../../locales/intl.js'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
-import { FiatText } from './FiatText'
 import { Tile } from './Tile.js'
 
 type Props = {
@@ -38,21 +38,20 @@ export const CryptoFiatAmountTile = (props: Props) => {
 
   // Fiat amount is always positive for this specific tile
   const absCryptoAmount = abs(nativeCryptoAmount)
-  const fiatAmount = (
-    <FiatText
-      nativeCryptoAmount={absCryptoAmount}
-      cryptoCurrencyCode={cryptoCurrencyCode}
-      isoFiatCurrencyCode={isoFiatCurrencyCode}
-      cryptoExchangeMultiplier={cryptoDenomMult}
-      parenthesisEnclosed
-    />
-  )
+
+  const [{ fiatText }] = useFiatText({
+    nativeCryptoAmount: absCryptoAmount,
+    cryptoCurrencyCode: cryptoCurrencyCode,
+    isoFiatCurrencyCode: isoFiatCurrencyCode,
+    cryptoExchangeMultiplier: cryptoDenomMult,
+    parenthesisEnclosed: true
+  })
 
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
       <EdgeText>
         {cryptoAmountText}
-        {fiatAmount}
+        {fiatText}
       </EdgeText>
     </Tile>
   )

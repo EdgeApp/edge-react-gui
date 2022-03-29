@@ -31,8 +31,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { WalletPickerModal } from '../modals/WalletPickerModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
@@ -180,9 +179,16 @@ class SendComponent extends React.PureComponent<Props, State> {
   handleWalletPress = () => {
     const { selectWallet, route } = this.props
     const prevCurrencyCode = this.state.selectedCurrencyCode
+    const { allowedCurrencyCodes = [] } = route.params
 
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />)
-      .then(({ walletId, currencyCode }: WalletListResult) => {
+    Airship.show(bridge => (
+      <WalletPickerModal
+        bridge={bridge}
+        headerTitle={s.strings.fio_src_wallet}
+        filterWallet={wallet => allowedCurrencyCodes.find(currency => currency === wallet.currencyInfo.currencyCode) != null}
+      />
+    ))
+      .then(({ walletId, currencyCode }) => {
         if (walletId == null || currencyCode == null) return
         selectWallet(walletId, currencyCode)
         this.setState({
@@ -195,7 +201,7 @@ class SendComponent extends React.PureComponent<Props, State> {
         if (currencyCode !== prevCurrencyCode) return this.resetSendTransaction()
         this.addressTile.onChangeAddress(this.state.recipientAddress)
       })
-      .catch(error => console.log(error))
+      .catch(showError)
   }
 
   handleChangeAddress = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {

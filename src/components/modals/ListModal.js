@@ -11,7 +11,9 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type Props<T> = {
+  // Modal Props
   bridge: AirshipBridge<any>,
+  onCancel?: () => void, // Defaults to () => bridge.resolve()
   // Header Props
   title?: string,
   textInput?: boolean, // Defaults to 'true'
@@ -34,35 +36,41 @@ type Props<T> = {
   rowsData?: T[], // Defaults to []
   rowComponent?: (props: T) => React.Node,
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean,
+  initialNumToRender?: number, // Defaults to 12
+  onEndReachedThreshold?: number,
   // Footer Props
   closeArrow?: boolean // Defaults to 'true'
 }
 
-export function ListModal<T>({
-  bridge,
-  title,
-  textInput = true,
-  initialValue = '',
-  rowsData = [],
-  rowComponent,
-  rowDataFilter,
-  closeArrow = true,
-  onSubmitEditing,
-  ...textProps
-}: Props<T>) {
+export function ListModal<T>(props: Props<T>) {
+  const {
+    bridge,
+    title,
+    textInput = true,
+    initialValue = '',
+    rowsData = [],
+    rowComponent,
+    rowDataFilter,
+    initialNumToRender,
+    onEndReachedThreshold,
+    closeArrow = true,
+    onSubmitEditing,
+    onCancel = () => bridge.resolve(),
+    ...textProps
+  } = props
+
   const [text, setText] = useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
-  const renderItem = ({ item }) => (rowComponent ? rowComponent(item) : null)
-  const handleCancel = () => bridge.resolve()
+  const renderItem = ({ item }) => (rowComponent ?? ((item: any) => null))(item)
+
   const handleChangeText = (text: string) => {
     setText(text)
     setFilteredRows(text)
   }
 
   const handleSubmitEditing = () => (onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text))
-
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ThemedModal bridge={bridge} onCancel={onCancel}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {textInput && (
         <OutlinedTextInput
@@ -83,13 +91,14 @@ export function ListModal<T>({
       <FlatList
         style={{ flex: 1 }}
         data={filteredRows}
-        initialNumToRender={12}
+        initialNumToRender={initialNumToRender ?? 12}
         onScroll={() => Keyboard.dismiss()}
         keyboardShouldPersistTaps="handled"
         renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
+        onEndReachedThreshold={onEndReachedThreshold}
       />
-      {closeArrow && <ModalCloseArrow onPress={handleCancel} />}
+      {closeArrow && <ModalCloseArrow onPress={onCancel} />}
     </ThemedModal>
   )
 }
