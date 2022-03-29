@@ -152,7 +152,7 @@ export function ControlPanel(props: Props) {
       url: Platform.OS === 'ios' ? EDGE_URL : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
-    // No button to close.
+    // No button to close. is this a predefined modal? Like Ant?
   }
 
   const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
