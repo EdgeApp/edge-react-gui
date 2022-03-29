@@ -155,7 +155,10 @@ export async function launchBitPay(
   const instructionOutput = invoiceInstruction.outputs[0]
 
   // Make the spend to generate the tx hexes
-  const requiredFeeRate = invoiceInstruction.requiredFeeRate
+  let requiredFeeRate = invoiceInstruction.requiredFeeRate
+  // This is in addition to the 1.5x multiplier in edge-currency-bitcoin. It's an additional buffer
+  // because the protocol doesn't discount segwit transactions and we want to make sure the transaction succeeds.
+  if (typeof requiredFeeRate === 'number') requiredFeeRate *= 1.2
   const spendInfo: EdgeSpendInfo = {
     selectedCurrencyCode,
     spendTargets: [
