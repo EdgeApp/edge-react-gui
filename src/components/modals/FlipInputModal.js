@@ -145,7 +145,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalance = () => {
-    const { balanceCrypto, primaryInfo, secondaryInfo, theme } = this.props
+    const { balanceCrypto, primaryInfo, currencyCode, secondaryInfo, theme } = this.props
     const styles = getStyles(theme)
     const { multiplier, name } = primaryInfo.displayDenomination
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
@@ -156,7 +156,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
           {balance}
           <FiatText
             nativeCryptoAmount={balanceCrypto}
-            cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
+            cryptoCurrencyCode={currencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
             cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
             parenthesisEnclosed
@@ -357,7 +357,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       // Balances
-      balanceCrypto: getAvailableBalance(wallet),
+      balanceCrypto: getAvailableBalance(wallet, currencyCode),
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
