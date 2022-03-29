@@ -68,7 +68,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
   let accountInitObject: AccountInitPayload = {
     account,
     activeWalletIds: [],
-    archivedWalletIds: [],
     autoLogoutTimeInSeconds: 3600,
     countryCode: '',
     currencyCode: '',
@@ -109,10 +108,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds }
     })
-    const archivedWalletIds = account.archivedWalletIds
 
     accountInitObject.activeWalletIds = activeWalletIds
-    accountInitObject.archivedWalletIds = archivedWalletIds
 
     const syncedSettings = await getSyncedSettings(account)
     accountInitObject = { ...accountInitObject, ...syncedSettings }

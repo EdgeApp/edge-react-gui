@@ -22,7 +22,6 @@ export type PasswordReminderLevels = {
 export type AccountInitPayload = {|
   account: EdgeAccount,
   activeWalletIds: string[],
-  archivedWalletIds: string[],
   autoLogoutTimeInSeconds: number,
   countryCode: string,
   currencyCode: string,

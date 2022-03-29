@@ -11,7 +11,6 @@ import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
   activeWalletIds: string[],
-  archivedWalletIds: string[],
   selectedWalletId: string,
   selectedCurrencyCode: string,
   addTokenPending: boolean,
@@ -211,17 +210,6 @@ const activeWalletIds = (state = [], action: Action): string[] => {
   return state
 }
 
-const archivedWalletIds = (state = [], action: Action): string[] => {
-  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    return action.data.archivedWalletIds
-  }
-  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    return action.data.archivedWalletIds
-  }
-
-  return state
-}
-
 const selectedWalletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
@@ -383,7 +371,6 @@ const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fi
 export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   activeWalletIds,
-  archivedWalletIds,
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,
