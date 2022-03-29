@@ -13,6 +13,7 @@ import { EdgeText } from './EdgeText'
 import { Tile } from './Tile.js'
 
 type Props = {
+  title: string,
   exchangeRates: GuiExchangeRates,
   nativeAmount: string,
   currencyWallet: EdgeCurrencyWallet,
@@ -27,7 +28,7 @@ export const EditableAmountTile = (props: Props) => {
   let cryptoAmountSyntax
   let cryptoAmountStyle
   let fiatAmountSyntax
-  const { exchangeRates, nativeAmount, currencyWallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress } = props
+  const { title, exchangeRates, nativeAmount, currencyWallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress } = props
   const { isoFiatCurrencyCode } = getWalletFiat(currencyWallet)
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
   const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
@@ -49,7 +50,7 @@ export const EditableAmountTile = (props: Props) => {
   }
 
   return (
-    <Tile type={lockInputs ? 'static' : 'touchable'} title={s.strings.fio_request_amount} onPress={lockInputs ? undefined : onPress}>
+    <Tile type={lockInputs ? 'static' : 'touchable'} title={title} onPress={lockInputs ? undefined : onPress}>
       <EdgeText style={[styles.amountText, cryptoAmountStyle]}>{cryptoAmountSyntax}</EdgeText>
       {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
     </Tile>

@@ -9,14 +9,16 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
-import { REQUEST, SEND, STAKING_OVERVIEW } from '../../constants/SceneKeys.js'
+import { FIO_STAKING_OVERVIEW, REQUEST, SEND, STAKE_OPTIONS } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { type StakePolicy } from '../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
+import { stakePlugin } from '../../util/stakeUtils.js'
 import { convertNativeToDenomination, getFiatSymbol } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -58,7 +60,8 @@ type DispatchProps = {
 }
 
 type State = {
-  input: string
+  input: string,
+  stakePolicies: StakePolicy[]
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -69,7 +72,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      input: ''
+      input: '',
+      stakePolicies: []
     }
   }
 
@@ -77,6 +81,12 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
       this.textInput.current.focus()
     }
+  }
+
+  componentDidMount() {
+    stakePlugin.getStakePolicies().then(stakePolicies => {
+      this.setState({ stakePolicies })
+    })
   }
 
   handleOpenWalletListModal = () => {
@@ -121,9 +131,18 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
   renderStakingBox() {
     const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode, pluginId } = this.props
+    const { stakePolicies } = this.state
     const styles = getStyles(theme)
 
-    if (!SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) return null
+    const isStakingPolicyAvailable = stakePolicies.some(stakePolicy => {
+      return (
+        (stakePolicy.rewardAssets[pluginId] && stakePolicy.rewardAssets[pluginId][currencyCode]) ||
+        (stakePolicy.stakeAssets[pluginId] && stakePolicy.stakeAssets[pluginId][currencyCode])
+      )
+    })
+    // Special case for FIO because it uses it's own staking plugin
+    const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && (isStakingPolicyAvailable || currencyCode === 'FIO')
+    if (!isStakingSupported) return null
 
     const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
 
@@ -174,7 +193,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
   handleStakePress = () => {
     const { currencyCode, walletId } = this.props
-    Actions.push(STAKING_OVERVIEW, { currencyCode, walletId })
+    if (currencyCode === 'FIO') Actions.push(FIO_STAKING_OVERVIEW, { currencyCode, walletId })
+    else Actions.push(STAKE_OPTIONS, { walletId })
   }
 
   clearText = () => {

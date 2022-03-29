@@ -507,6 +507,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
+    isStakingSupported: true,
     isCustomTokensSupported: true
   },
   hedera: {
