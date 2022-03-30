@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FioAddressRegister should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+>
+  <WithTheme(SceneHeaderComponent)
+    style={
+      Object {
+        "flexDirection": "row-reverse",
+        "justifyContent": "flex-end",
+        "marginRight": 22,
+        "marginTop": 11,
+      }
+    }
+    title="Register FIO Address"
+  >
+    <Image
+      resizeMode="cover"
+      source={
+        Object {
+          "testUri": "../../../src/assets/images/details_fioAddress.png",
+        }
+      }
+      style={
+        Object {
+          "height": 34,
+          "marginRight": 11,
+          "width": 37,
+        }
+      }
+    />
+  </WithTheme(SceneHeaderComponent)>
+  <ScrollView>
+    <View
+      style={
+        Object {
+          "position": "relative",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "paddingBottom": 22,
+              "paddingHorizontal": 22,
+            },
+            Object {
+              "paddingTop": 34,
+            },
+          ]
+        }
+      >
+        <WithTheme(EdgeTextComponent)
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            }
+          }
+        >
+          Send and Receive with an easy to remember FIO Address!
+        </WithTheme(EdgeTextComponent)>
+      </View>
+      <View
+        style={
+          Object {
+            "paddingBottom": 22,
+            "paddingHorizontal": 22,
+          }
+        }
+      >
+        <WithTheme(EdgeTextComponent)
+          numberOfLines={3}
+          style={
+            Object {
+              "color": "#A4C7DF",
+              "fontSize": 22,
+              "textAlign": "left",
+            }
+          }
+        >
+          • Works across all tokens and coins
+• Secured from your wallet
+• Completely decentralized
+        </WithTheme(EdgeTextComponent)>
+      </View>
+      <View
+        style={
+          Object {
+            "paddingBottom": 22,
+            "paddingHorizontal": 22,
+          }
+        }
+      >
+        <WithTheme(EdgeTextComponent)
+          numberOfLines={5}
+          style={
+            Object {
+              "color": "#A4C7DF",
+              "fontSize": 22,
+              "textAlign": "left",
+            }
+          }
+        >
+          Similar to website names, your FIO Address can be used to send you tokens/coins without ever having to see or send your public key.
+        </WithTheme(EdgeTextComponent)>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <WithTheme(TileComponent)
+          onPress={[Function]}
+          title="Choose a FIO Address"
+          type="editable"
+        >
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+              }
+            }
+          >
+            <WithTheme(EdgeTextComponent)
+              style={
+                Object {
+                  "color": "#87939E",
+                }
+              }
+            >
+              Your address name here
+            </WithTheme(EdgeTextComponent)>
+          </View>
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
+          body="Loading…"
+          onPress={[Function]}
+          title="Choose FIO Domain for Your Address"
+          type="touchable"
+        />
+      </View>
+      <WithTheme(FormErrorComponent)
+        isVisible={false}
+        style={
+          Object {
+            "flex": 1,
+            "margin": 22,
+          }
+        }
+      >
+        
+      </WithTheme(FormErrorComponent)>
+      <View
+        style={
+          Object {
+            "paddingBottom": 674,
+          }
+        }
+      />
+    </View>
+  </ScrollView>
+</SceneWrapper>
+`;

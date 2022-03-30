@@ -47,7 +47,7 @@ type State = {
   accountHandle: string
 }
 
-class CreateWalletAccountSetup extends React.Component<Props, State> {
+export class CreateWalletAccountSetup extends React.Component<Props, State> {
   debouncedCheckHandleAvailability: () => void
 
   constructor(props: Props) {

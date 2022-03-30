@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EdgeLoginSceneComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="body"
+>
+  <View
+    style={
+      Object {
+        "flex": 3,
+        "flexDirection": "column",
+        "position": "relative",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 2,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 4,
+          "justifyContent": "space-around",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "flex": 2,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 3,
+          "justifyContent": "space-around",
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#4A5157",
+            "fontFamily": "SourceSansPro-Black",
+            "fontSize": 18,
+            "marginLeft": "5%",
+            "marginRight": "5%",
+            "textAlign": "center",
+          }
+        }
+      >
+        myAccount
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 4,
+        "position": "relative",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#4A5157",
+          "fontFamily": "SourceSansPro-Black",
+          "fontSize": 18,
+          "marginLeft": "5%",
+          "marginRight": "5%",
+          "textAlign": "center",
+        }
+      }
+    >
+      WARNING: The "myAccount" application is requesting full access to your account and all wallets. 
+
+Only accept this login request if you trust this application and where it was downloaded from.
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <ActivityIndicator
+      color="#66EDA8"
+    />
+  </View>
+</SceneWrapper>
+`;

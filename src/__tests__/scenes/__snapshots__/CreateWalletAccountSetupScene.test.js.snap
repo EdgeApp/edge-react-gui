@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateWalletAccountSelect should render with loading props 1`] = `
+<SafeAreaViewComponent>
+  <WithTheme(GradientComponent)
+    style={
+      Object {
+        "height": 44,
+      }
+    }
+  />
+  <ScrollView>
+    <View
+      style={
+        Object {
+          "paddingHorizontal": 20,
+          "position": "relative",
+        }
+      }
+    >
+      <FastImage
+        resizeMode="cover"
+        source={
+          Object {
+            "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+          }
+        }
+        style={
+          Object {
+            "alignSelf": "center",
+            "height": 89.89295774647887,
+            "marginTop": 33.709859154929575,
+            "width": 89.89295774647887,
+          }
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "paddingBottom": 11.236619718309859,
+              "paddingTop": 22.473239436619718,
+            },
+            Object {
+              "paddingBottom": 8,
+              "paddingTop": 24,
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 22.473239436619718,
+              "textAlign": "center",
+            }
+          }
+        >
+          Create a unique account handle, this will also be the name of your BTC wallet:
+        </FormattedText>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "paddingBottom": 11.236619718309859,
+              "paddingTop": 22.473239436619718,
+            },
+            Object {
+              "paddingBottom": 8,
+              "paddingTop": 8,
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 22.473239436619718,
+              "textAlign": "left",
+            }
+          }
+        >
+          • Must be exactly 12 characters
+• Must include only lowercase letters a-z or numbers 1-5
+
+        </FormattedText>
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={true}
+          baseColor="#0D2145"
+          containerStyle={
+            Object {
+              "height": 60,
+              "marginBottom": 33.709859154929575,
+              "marginTop": 22.473239436619718,
+              "position": "relative",
+              "width": 658.7024647887324,
+            }
+          }
+          error=""
+          errorColor="#E85466"
+          keyboardType="default"
+          label="Account Handle"
+          onChangeText={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="next"
+          textColor="#25292C"
+          tintColor="#0E4B75"
+          titleTextStyle={Object {}}
+          value=""
+        />
+        <View
+          style={
+            Object {
+              "height": 35.11443661971831,
+              "width": 35.11443661971831,
+            }
+          }
+        >
+          <ActivityIndicator
+            color="#66EDA8"
+            style={
+              Object {
+                "alignSelf": "flex-end",
+                "height": 35.11443661971831,
+                "marginTop": 60.3968309859155,
+                "width": 35.11443661971831,
+              }
+            }
+          />
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "paddingBottom": 400,
+          }
+        }
+      />
+    </View>
+  </ScrollView>
+</SafeAreaViewComponent>
+`;

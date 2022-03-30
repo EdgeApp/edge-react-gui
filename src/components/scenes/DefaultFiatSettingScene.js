@@ -33,7 +33,7 @@ type State = {
   searchTerm: string
 }
 
-class DefaultFiatSettingComponent extends React.Component<Props, State> {
+export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

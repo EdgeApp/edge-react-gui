@@ -46,7 +46,7 @@ type OwnProps = {
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-class FioAddressList extends React.Component<Props, LocalState> {
+export class FioAddressList extends React.Component<Props, LocalState> {
   willFocusSubscription: (() => void) | null = null
   state: LocalState = {
     initLoading: true,

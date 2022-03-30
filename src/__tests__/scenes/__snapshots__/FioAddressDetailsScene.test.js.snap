@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FioAddressDetails should render with loading props 1`] = `
+<SceneWrapper
+  background="header"
+>
+  <WithTheme(EdgeTextComponent)
+    style={
+      Object {
+        "color": "#FFFFFF",
+        "fontSize": 17,
+        "marginTop": -11,
+        "paddingBottom": 17,
+        "textAlign": "center",
+      }
+    }
+  >
+    Remaining bundled transactions: 100
+  </WithTheme(EdgeTextComponent)>
+  <WithTheme(SettingsTappableRowComponent)
+    label="Address Settings"
+    onPress={[Function]}
+  >
+    <Icon
+      allowFontScaling={false}
+      color="#FFFFFF"
+      name="ios-settings"
+      size={12}
+      style={
+        Object {
+          "fontSize": 34,
+          "paddingHorizontal": 11,
+        }
+      }
+    />
+  </WithTheme(SettingsTappableRowComponent)>
+  <WithTheme(SettingsHeaderRowComponent)
+    icon={
+      <Icon
+        allowFontScaling={false}
+        color="#FFFFFF"
+        name="ios-link"
+        size={34}
+      />
+    }
+    label="Choose wallets to connect to your FIO address"
+  />
+  <Memo(Connect(WithTheme(ConnectWallets)))
+    disabled={false}
+    fioAddressName="Fio@edge"
+    fioWallet={null}
+  />
+</SceneWrapper>
+`;
