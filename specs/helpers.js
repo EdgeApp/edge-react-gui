@@ -1,4 +1,4 @@
-i// @flow
+// @flow
 /* globals spec */
 
 // import ENV from '../env.json'
@@ -15,19 +15,18 @@ i// @flow
 
 // create a function to fake that the modal is selected . simulate the modal behavior
 export const helpers = spec => ({
-  //   resolveModal: async (modalName: string, returnValue: string) => {
-  //     const modal = await spec.findComponent(modalName)
-  //     return await modal.props.bridge.resolve(returnValue)
-  //   },
-    longPress: async (walletName: string) => {
-      const row = await spec.findComponent(walletName)
-      row.props.onLongPress()
-    },
+  resolveModal: async (modalName: string, returnValue: string) => {
+    const modal = await spec.findComponent(modalName)
+    return await modal.props.bridge.resolve(returnValue)
+  },
+  longPress: async (walletName: string) => {
+    const row = await spec.findComponent(walletName)
+    row.props.onLongPress()
+  },
   getWalletListRows: async (walletListName: string) => {
-    const modal = await spec.findComponent(walletListName)
+    const walletList = await spec.findComponent(walletListName)
     // call the componenet in order to return the list of rows
-    // walletList returns walletList.getWalletList
-    return walletList(walletList.getWalletList),
+    return walletList.getWalletList()
   },
 
   // TODOS:

@@ -5,9 +5,9 @@ export default function (spec) {
   spec.describe('ControlPanel', function () {
     spec.it('option navigation', async function () {
       await spec.pause(10000)
-      // await helpers.openSideMenu('Main.WalletList') // doesn't this still need to press the renderRightButton?
+      // await helpers.openSideMenu('Main.WalletList')
       await spec.press('WalletList.SideMenuButton')
-      await spec.pause(500)
+      await spec.pause(1000)
       await spec.press('SideMenu.fio-names')
       await spec.pause(1000)
       await spec.press('SideMenu.fio')
@@ -24,11 +24,11 @@ export default function (spec) {
       await spec.pause(1000)
       await spec.press('SideMenu.share')
       // need to close the share option
-      await spec.pause(500)
+      await spec.pause(1000)
       await spec.press('WalletList.SideMenuButton')
-      await spec.pause(500)
+      await spec.pause(1000)
       await spec.press('SideMenu.settings')
-      await spec.pause(500)
+      await spec.pause(1000)
       await spec.press('SideMenu.logout')
     })
   })

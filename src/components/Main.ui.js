@@ -275,7 +275,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton ref={this.props.generateTestHook('WalletList.SideMenuButton')} />} // testId="WalletList.SideMenuButton"
+                renderRightButton={<SideMenuButton testId="WalletList.SideMenuButton" />}
               />
 
               <Scene
