@@ -229,7 +229,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
         txBuilder.addCall(poolContract, 'stake', [
           toHex(request.nativeAmount),
           {
-            gasLimit: { _hex: toHex('120794'), _isBigNumber: true }
+            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
           }
         ])
       }
@@ -237,7 +237,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
         txBuilder.addCall(poolContract, 'withdraw', [
           toHex(request.nativeAmount),
           {
-            gasLimit: { _hex: toHex('178962'), _isBigNumber: true }
+            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
           }
         ])
       }
@@ -246,7 +246,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
         // Claiming withdraws all earned tokens, so we ignore the nativeAmount from the request
         txBuilder.addCall(poolContract, 'claimReward', [
           {
-            gasLimit: { _hex: toHex('120794'), _isBigNumber: true }
+            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
           }
         ])
       }
