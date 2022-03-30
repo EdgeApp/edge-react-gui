@@ -10,7 +10,7 @@ type EdgeTextFieldProps = {
   marginRem?: number | number[]
 }
 
-class EdgeTextFieldComponent extends React.PureComponent<EdgeTextFieldProps & ThemeProps & TextFieldProps> {
+export class EdgeTextFieldComponent extends React.PureComponent<EdgeTextFieldProps & ThemeProps & TextFieldProps> {
   render() {
     const { theme, marginRem = 0.5, ...rest } = this.props
     const margin = unpackEdges(marginRem)

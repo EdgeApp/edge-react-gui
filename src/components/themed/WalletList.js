@@ -73,7 +73,7 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class WalletListComponent extends React.PureComponent<Props> {
+export class WalletListComponent extends React.PureComponent<Props> {
   sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
       const { account, exchangeRates, getExchangeDenomination } = this.props

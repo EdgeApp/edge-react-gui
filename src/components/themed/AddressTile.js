@@ -44,7 +44,7 @@ type State = {
 }
 type Props = OwnProps & StateProps & ThemeProps
 
-class AddressTileComponent extends React.PureComponent<Props, State> {
+export class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -76,7 +76,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  handleAppStateChange = appState => {
+  handleAppStateChange = (appState: string) => {
     if (appState === 'active') this._setClipboard(this.props)
   }
 

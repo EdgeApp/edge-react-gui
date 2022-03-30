@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "paddingHorizontal": 22,
+    }
+  }
+>
+  <TouchableOpacity
+    activeOpacity={0.95}
+    underlayColor="#FFFFFF"
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flexDirection": "row",
+            "height": 96,
+            "justifyContent": "center",
+          },
+          Object {
+            "alignItems": "center",
+            "justifyContent": "center",
+          },
+        ]
+      }
+    >
+      <ActivityIndicator
+        color="#FFFFFF"
+        size="small"
+      />
+    </View>
+  </TouchableOpacity>
+</View>
+`;

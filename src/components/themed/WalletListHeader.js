@@ -25,7 +25,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-class WalletListHeaderComponent extends React.PureComponent<Props> {
+export class WalletListHeaderComponent extends React.PureComponent<Props> {
   textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   componentDidUpdate(prevProps: Props) {

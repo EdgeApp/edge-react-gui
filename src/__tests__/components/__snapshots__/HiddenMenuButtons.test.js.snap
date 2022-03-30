@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "flexDirection": "row",
+        "height": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "height": "100%",
+            "width": 70,
+          },
+          undefined,
+        ]
+      }
+    >
+      <SquareButton
+        color="success"
+        label="string"
+        onPress={[Function]}
+      >
+        string
+      </SquareButton>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "flex-start",
+            "flex": 1,
+            "height": "100%",
+            "justifyContent": "center",
+          },
+          Object {
+            "backgroundColor": "#77C513",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "height": "100%",
+              "width": 70,
+            },
+            false,
+          ]
+        }
+      >
+        <SquareButton
+          color="success"
+          label="string"
+          onPress={[Function]}
+        >
+          string
+        </SquareButton>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "flexDirection": "row",
+        "height": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "flex-start",
+            "flex": 1,
+            "height": "100%",
+            "justifyContent": "center",
+          },
+          Object {
+            "alignItems": "flex-end",
+          },
+          Object {
+            "backgroundColor": "#77C513",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "height": "100%",
+              "width": 70,
+            },
+            false,
+          ]
+        }
+      >
+        <SquareButton
+          color="success"
+          label="string"
+          onPress={[Function]}
+        >
+          string
+        </SquareButton>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "height": "100%",
+            "width": 70,
+          },
+          undefined,
+        ]
+      }
+    >
+      <SquareButton
+        color="success"
+        label="string"
+        onPress={[Function]}
+      >
+        string
+      </SquareButton>
+    </View>
+  </View>
+</View>
+`;

@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletListSwipeRow should render with loading props 1`] = `
+<WithTheme(WalletListSwipeRowComponent)
+  currencyCode="BTC"
+  guiWallet={
+    Object {
+      "currencyCode": "BTC",
+      "currencyNames": Array [
+        "Bitcoin",
+      ],
+      "id": "123123",
+      "isToken": true,
+      "isoFiatCurrencyCode": Object {
+        "blockHeight": 11,
+        "enabledTokens": Array [
+          "ETH",
+        ],
+        "fiatCurrencyCode": "USD",
+        "metaTokens": Object {
+          "contractAddress": "123123",
+          "currencyCode": "BTC",
+          "currencyName": "Bitcoin",
+          "denominations": Array [],
+          "symbolImage": "₿",
+        },
+        "receiveAddress": "123123",
+        "symbolImage": "₿",
+        "symbolImageDarkMono": "₿",
+        "wallet": Object {
+          "fiatCurrencyCode": "USD",
+        },
+      },
+      "leftRowOpened": true,
+      "name": "myWallet",
+      "nativeBalances": Array [
+        "123",
+      ],
+      "openRowLeft": true,
+      "primaryNativeBalance": "123",
+      "selectWallet": [Function],
+      "swipeDirection": "left",
+      "swipeRef": "swipeRow",
+      "swipeRow": true,
+      "type": "bitcoinWallet",
+    }
+  }
+  swipeRef={null}
+/>
+`;

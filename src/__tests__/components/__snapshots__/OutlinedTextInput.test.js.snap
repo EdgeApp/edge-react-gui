@@ -1,0 +1,243 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OutlinedTextInput should render with some props 1`] = `
+<TouchableWithoutFeedback
+  onPress={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "justifyContent": "center",
+          "minHeight": 67,
+          "paddingHorizontal": 22,
+        },
+        Object {
+          "flexGrow": 1,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+          "paddingLeft": 65,
+          "paddingRight": 65,
+          "paddingVertical": 14,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "left": 22,
+            "position": "absolute",
+            "right": 22,
+          },
+          [MockFunction],
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "borderBottomLeftRadius": 11,
+            "borderBottomWidth": 1,
+            "borderLeftWidth": 1,
+            "borderRightWidth": 0,
+            "borderTopLeftRadius": 11,
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "top": 0,
+            "width": 22,
+          },
+          [MockFunction],
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "borderBottomRightRadius": 11,
+            "borderBottomWidth": 1,
+            "borderLeftWidth": 0,
+            "borderRightWidth": 1,
+            "borderTopRightRadius": 11,
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "width": 22,
+          },
+          [MockFunction],
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "borderTopWidth": 1,
+            "left": 22,
+            "position": "absolute",
+            "right": 22,
+            "top": 0,
+          },
+          [MockFunction],
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "height": 67,
+            "justifyContent": "center",
+            "left": 0,
+            "paddingHorizontal": 22,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          Object {
+            "paddingLeft": 65,
+            "paddingRight": 65,
+          },
+        ]
+      }
+    >
+      <Text
+        numberOfLines={1}
+        onLayout={[Function]}
+        style={
+          Array [
+            Object {
+              "alignSelf": "flex-start",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "padding": 0,
+            },
+            [MockFunction],
+          ]
+        }
+      >
+        string
+      </Text>
+    </View>
+    <Text
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "bottom": -20,
+            "color": "#E85466",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "left": 17,
+            "position": "absolute",
+          },
+          [MockFunction],
+        ]
+      }
+    >
+      string
+    </Text>
+    <Text
+      numberOfLines={1}
+      onLayout={[Function]}
+      style={
+        Array [
+          Object {
+            "bottom": -10,
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "position": "absolute",
+            "right": 28,
+          },
+          [MockFunction],
+        ]
+      }
+    >
+      5
+    </Text>
+    <Icon
+      allowFontScaling={false}
+      name="search1"
+      size={12}
+      style={
+        Object {
+          "color": "rgba(255, 255, 255, .75)",
+          "fontSize": 22,
+          "left": 0,
+          "padding": 22,
+          "position": "absolute",
+          "top": 0,
+        }
+      }
+    />
+    <TouchableOpacity
+      onPress={[Function]}
+      style={
+        Object {
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <Icon
+        allowFontScaling={false}
+        name="close"
+        size={12}
+        style={
+          Object {
+            "color": "rgba(255, 255, 255, .75)",
+            "fontSize": 22,
+            "padding": 22,
+          }
+        }
+      />
+    </TouchableOpacity>
+    <TextInput
+      autoCapitalize="none"
+      autoCorrect={true}
+      autoFocus={true}
+      blurOnSubmit={true}
+      inputAccessoryViewID="string"
+      keyboardType="default"
+      maxLength={11}
+      multiline={true}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      returnKeyType="done"
+      secureTextEntry={false}
+      selectionColor="#E85466"
+      style={
+        Array [
+          Object {
+            "alignSelf": "stretch",
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "padding": 0,
+          },
+          Object {
+            "flexGrow": 1,
+          },
+        ]
+      }
+      testID="string"
+      textAlignVertical="top"
+      value="string"
+    />
+  </View>
+</TouchableWithoutFeedback>
+`;

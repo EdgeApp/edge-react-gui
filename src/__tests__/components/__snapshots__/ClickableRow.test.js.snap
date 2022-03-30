@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<TouchableHighlight
+  onLongPress={[Function]}
+  onPress={[Function]}
+  underlayColor="#0D2145"
+>
+  <WithTheme(GradientComponent)
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "height": 96,
+          "justifyContent": "center",
+          "paddingHorizontal": 22,
+        },
+        Object {
+          "marginBottom": 247,
+          "marginLeft": 247,
+          "marginRight": 247,
+          "marginTop": 247,
+          "paddingBottom": 247,
+          "paddingLeft": 247,
+          "paddingRight": 247,
+          "paddingTop": 247,
+        },
+        Object {
+          "borderBottomColor": "rgba(255, 255, 255, .1)",
+          "borderBottomWidth": 1,
+        },
+        Object {
+          "height": "auto",
+        },
+      ]
+    }
+  >
+    String
+  </WithTheme(GradientComponent)>
+</TouchableHighlight>
+`;

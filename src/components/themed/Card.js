@@ -15,7 +15,7 @@ type Props = {
   paddingRem?: number[] | number
 }
 
-class CardComponent extends React.PureComponent<Props & ThemeProps> {
+export class CardComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
     const { children, warning, theme } = this.props
     const styles = getStyles(theme)

@@ -35,7 +35,7 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
-class WalletListSortableRowComponent extends React.PureComponent<Props> {
+export class WalletListSortableRowComponent extends React.PureComponent<Props> {
   render() {
     const { wallet, walletFiatSymbol, exchangeRates, showBalance, theme, getDisplayDenomination, exchangeDenomination } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:

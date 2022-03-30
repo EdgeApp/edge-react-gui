@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<WalletRow
+  gradient={true}
+>
+  <TouchableOpacity
+    onLongPress={[Function]}
+    onPress={[Function]}
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "height": 96,
+          "justifyContent": "center",
+          "paddingHorizontal": 39,
+        }
+      }
+    >
+      <ActivityIndicator
+        color="#FFFFFF"
+        size="large"
+      />
+    </View>
+  </TouchableOpacity>
+</WalletRow>
+`;

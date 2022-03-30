@@ -20,7 +20,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-class WalletListEmptyRowComponent extends React.PureComponent<Props> {
+export class WalletListEmptyRowComponent extends React.PureComponent<Props> {
   closeRow = () => {
     const { swipeRow } = this.props
     if (swipeRow) {
