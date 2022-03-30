@@ -224,7 +224,7 @@ export const StakeModifyScene = (props: Props) => {
           currencyCode={amountCurrencyCodeMap[allocationType]}
           exchangeDenomination={exchangeDenomMap[allocationType]}
           displayDenomination={displayDenomMap[allocationType]}
-          lockInputs={allocationType === 'claim'}
+          lockInputs={allocationType === 'claim' || allocationType === 'unstake'}
           onPress={handleShowFlipInputModal}
         />
       )
