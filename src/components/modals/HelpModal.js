@@ -57,7 +57,7 @@ class HelpWebViewModal extends React.Component<Props & { uri: string, title: str
   }
 }
 
-class HelpModalComponent extends React.Component<Props & ThemeProps> {
+export class HelpModalComponent extends React.Component<Props & ThemeProps> {
   handleClose = () => this.props.bridge.resolve()
 
   componentDidMount() {

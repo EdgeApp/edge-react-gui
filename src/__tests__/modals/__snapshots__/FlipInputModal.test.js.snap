@@ -1,0 +1,264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FlipInputModalComponent should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <View
+    style={
+      Object {
+        "flex": 0,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "justifyContent": "flex-start",
+        }
+      }
+    >
+      <WithTheme(CardComponent)
+        marginRem={0}
+      >
+        <ExchangedFlipInput
+          exchangeSecondaryToPrimaryRatio="1000"
+          forceUpdateGuiCounter={0}
+          headerLogo="https://content.edge.app/bitcoin/bitcoin/exchange/bc1"
+          headerText="Exchange Header"
+          isEditable={true}
+          isFiatOnTop={true}
+          isFocus={true}
+          keyboardVisible={false}
+          onError={[Function]}
+          onExchangeAmountChanged={[Function]}
+          onNext={[Function]}
+          overridePrimaryExchangeAmount="0"
+          primaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "BTC",
+              "displayDenomination": Object {
+                "multiplier": "100000000000",
+                "name": "BTC",
+              },
+              "exchangeCurrencyCode": "BTC",
+              "exchangeDenomination": Object {
+                "multiplier": "100000000000",
+                "name": "BTC",
+              },
+            }
+          }
+          secondaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "BTC",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "Bitcoin",
+              },
+              "exchangeCurrencyCode": "BTC",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "Bitcoin",
+              },
+            }
+          }
+        />
+        <MiniButton
+          alignSelf="center"
+          label="MAX"
+          marginRem={
+            Array [
+              1.2,
+              0,
+              0,
+            ]
+          }
+          onPress={[Function]}
+        />
+      </WithTheme(CardComponent)>
+    </View>
+    <TouchableWithoutFeedback
+      onPress={[Function]}
+      style={
+        Object {
+          "justifyContent": "flex-end",
+        }
+      }
+    >
+      <View>
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "marginBottom": 22,
+              "marginTop": 11,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": 1,
+                "flexDirection": "row",
+              }
+            }
+          >
+            <WithTheme(EdgeTextComponent)
+              style={
+                Object {
+                  "color": "#A4C7DF",
+                }
+              }
+            >
+              Fee
+            </WithTheme(EdgeTextComponent)>
+            <Icon
+              allowFontScaling={false}
+              name="edit"
+              size={17}
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "marginLeft": 11,
+                }
+              }
+            />
+          </View>
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#FFFFFF",
+              }
+            }
+          >
+            1 BTC 
+            <FiatText
+              cryptoCurrencyCode="BTC"
+              cryptoExchangeMultiplier="100000000000"
+              isoFiatCurrencyCode="BTC"
+              nativeCryptoAmount="1"
+              parenthesisEnclosed={true}
+            />
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#A4C7DF",
+                "flex": 1,
+                "fontSize": 17,
+              }
+            }
+          >
+            Rate
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(ExchangeRateComponent)
+            primaryInfo={
+              Object {
+                "displayCurrencyCode": "BTC",
+                "displayDenomination": Object {
+                  "multiplier": "100000000000",
+                  "name": "BTC",
+                },
+                "exchangeCurrencyCode": "BTC",
+                "exchangeDenomination": Object {
+                  "multiplier": "100000000000",
+                  "name": "BTC",
+                },
+              }
+            }
+            secondaryDisplayAmount="1000"
+            secondaryInfo={
+              Object {
+                "displayCurrencyCode": "BTC",
+                "displayDenomination": Object {
+                  "multiplier": "1",
+                  "name": "Bitcoin",
+                },
+                "exchangeCurrencyCode": "BTC",
+                "exchangeDenomination": Object {
+                  "multiplier": "1",
+                  "name": "Bitcoin",
+                },
+              }
+            }
+            style={
+              Object {
+                "fontSize": 17,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#A4C7DF",
+                "flex": 1,
+                "fontSize": 17,
+              }
+            }
+          >
+            Balance
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontSize": 17,
+              }
+            }
+          >
+            0.0000001 BTC 
+            <FiatText
+              cryptoCurrencyCode="BTC"
+              cryptoExchangeMultiplier="100000000000"
+              isoFiatCurrencyCode="BTC"
+              nativeCryptoAmount="10000"
+              parenthesisEnclosed={true}
+            />
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <WithTheme(EdgeTextComponent)
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#E85466",
+                "fontSize": 17,
+              },
+              Object {
+                "opacity": 0,
+              },
+            ]
+          }
+        >
+           
+        </WithTheme(EdgeTextComponent)>
+      </View>
+    </TouchableWithoutFeedback>
+  </View>
+</ThemedModal>
+`;

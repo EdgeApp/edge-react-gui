@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DateModalIos should render with loading props 1`] = `
+<AirshipModal
+  backgroundColor="#FFFFFF"
+  borderRadius={0}
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <TouchableOpacity
+    onPress={[Function]}
+  >
+    <Text
+      style={
+        Object {
+          "color": "#0073D9",
+          "fontSize": 22,
+          "paddingHorizontal": 22,
+          "paddingVertical": 11,
+          "textAlign": "right",
+        }
+      }
+    >
+      Done
+    </Text>
+  </TouchableOpacity>
+  <Picker
+    display="spinner"
+    mode="date"
+    onChange={[Function]}
+    value={[Function]}
+  />
+</AirshipModal>
+`;

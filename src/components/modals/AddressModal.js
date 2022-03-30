@@ -56,7 +56,7 @@ type State = {
 
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
-class AddressModalComponent extends React.Component<Props, State> {
+export class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
 
   constructor(props: Props) {
@@ -76,7 +76,7 @@ class AddressModalComponent extends React.Component<Props, State> {
     this.getFioAddresses()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
       this.filterFioAddresses(this.state.uri)
     }

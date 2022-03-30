@@ -8,6 +8,12 @@ jest.mock('react-native-gesture-handler', () => ({
 }))
 jest.mock('edge-currency-bitcoin', () => () => ({}))
 
+jest.mock('rn-qr-generator', () => () => {
+  return Promise.detect({})
+})
+
+jest.mock('@react-native-community/async-storage', () => require('@react-native-community/async-storage/jest/async-storage-mock'))
+
 // force timezone to UTC
 jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
 

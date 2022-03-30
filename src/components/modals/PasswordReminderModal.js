@@ -12,10 +12,10 @@ import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextField } from './EdgeTextField.js'
-import { MainButton } from './MainButton.js'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from './ModalParts.js'
-import { ThemedModal } from './ThemedModal.js'
+import { EdgeTextField } from '../themed/EdgeTextField.js'
+import { MainButton } from '../themed/MainButton.js'
+import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
   bridge: AirshipBridge<void>
@@ -39,7 +39,7 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
+export class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = { spinning: false, password: '' }

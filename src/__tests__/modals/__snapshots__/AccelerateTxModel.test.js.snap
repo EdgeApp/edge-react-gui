@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccelerateTxModelComponent should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <View
+    style={
+      Object {
+        "height": 449,
+      }
+    }
+  >
+    <ActivityIndicator
+      color="#FFFFFF"
+      size="large"
+      style={
+        Object {
+          "alignSelf": "center",
+          "flex": 1,
+        }
+      }
+    />
+  </View>
+</ThemedModal>
+`;

@@ -26,7 +26,7 @@ type State = DisplayTime
 
 type Props = OwnProps & ThemeProps
 
-class AutoLogoutModalComponent extends React.Component<Props, State> {
+export class AutoLogoutModalComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { autoLogoutTimeInSeconds } = this.props

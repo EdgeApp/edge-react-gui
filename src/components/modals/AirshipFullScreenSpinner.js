@@ -30,7 +30,7 @@ type Props = {
   activity?: Promise<mixed>
 }
 
-class AirshipFullScreenSpinner extends React.Component<Props> {
+export class AirshipFullScreenSpinner extends React.Component<Props> {
   opacity: Animated.Value
 
   constructor(props: Props) {
