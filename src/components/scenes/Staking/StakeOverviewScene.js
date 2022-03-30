@@ -122,7 +122,7 @@ export const StakeOverviewScene = (props: Props) => {
       />
       <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
       <MainButton label={s.strings.stake_claim_rewards} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-      <MainButton label={s.strings.stake_unstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
+      <MainButton label={s.strings.stake_unstake_and_claim_rewards} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
     </SceneWrapper>
   )
 }

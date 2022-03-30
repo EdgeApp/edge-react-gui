@@ -960,6 +960,7 @@ const strings = {
   stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake: 'Unstake',
+  stake_unstake_and_claim_rewards: 'Unstake and Claim Rewards',
   stake_x_to_earn_y: 'Stake %1s to earn %2s',
   stake_claim_unstake: 'Claim Rewards and Unstake',
   stake_amount_stake: 'Amount to Stake',
