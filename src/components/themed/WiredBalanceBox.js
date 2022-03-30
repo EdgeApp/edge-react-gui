@@ -26,7 +26,7 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps & ThemeProps
 
-class BalanceBox extends React.PureComponent<Props> {
+export class BalanceBox extends React.PureComponent<Props> {
   render() {
     const { defaultIsoFiat, fiatAmount, showBalance, exchangeRates, theme } = this.props
     const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''

@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<View>
+  <WithTheme(TileComponent)
+    body="string"
+    title="Send from FIO address"
+    type="static"
+  />
+  <WithTheme(TileComponent)
+    onPress={[Function]}
+    title="FIO Memo Error"
+    type="touchable"
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "color": "#E85466",
+        }
+      }
+    >
+      memo error
+    </WithTheme(EdgeTextComponent)>
+  </WithTheme(TileComponent)>
+</View>
+`;

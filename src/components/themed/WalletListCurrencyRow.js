@@ -85,7 +85,7 @@ export const getRate = (getRateParams: GetRatesParams) => {
   return result(`-${percentageString}`, 'Negative')
 }
 
-class WalletListRowComponent extends React.PureComponent<Props> {
+export class WalletListRowComponent extends React.PureComponent<Props> {
   noOnPress = () => {}
   renderIcon() {
     return <WalletProgressIcon currencyCode={this.props.currencyCode} walletId={this.props.walletId} />

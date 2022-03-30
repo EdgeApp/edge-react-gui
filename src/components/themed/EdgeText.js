@@ -13,7 +13,7 @@ type OwnProps = {|
   disableFontScaling?: boolean
 |}
 
-class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
+export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
   render() {
     const { children, style, theme, disableFontScaling = false, ...props } = this.props
     const { text, androidAdjust } = getStyles(theme)

@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "stretch",
+      "borderTopColor": "rgba(255, 255, 255, .1)",
+      "borderTopWidth": 1,
+      "flex": 1,
+      "flexDirection": "row",
+      "marginLeft": 22,
+      "marginVertical": 22,
+      "paddingRight": 22,
+      "paddingTop": 17,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <TouchableOpacity
+      onPress={[Function]}
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flexDirection": "row",
+            "height": 73,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="md-add"
+          size={34}
+          style={
+            Object {
+              "color": "#66EDA8",
+              "fontFamily": "Quicksand-Medium",
+              "margin": 6,
+            }
+          }
+        />
+        <WithTheme(EdgeTextComponent)
+          style={
+            Array [
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Medium",
+                "margin": 6,
+              },
+              Object {
+                "flexShrink": 1,
+              },
+            ]
+          }
+        >
+          Add Wallet
+        </WithTheme(EdgeTextComponent)>
+      </View>
+    </TouchableOpacity>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <TouchableOpacity
+      onPress={[Function]}
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flexDirection": "row",
+            "height": 73,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="md-add"
+          size={34}
+          style={
+            Object {
+              "color": "#66EDA8",
+              "fontFamily": "Quicksand-Medium",
+              "margin": 6,
+            }
+          }
+        />
+        <WithTheme(EdgeTextComponent)
+          style={
+            Array [
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Medium",
+                "margin": 6,
+              },
+              Object {
+                "flexShrink": 1,
+              },
+            ]
+          }
+        >
+          Add Token
+        </WithTheme(EdgeTextComponent)>
+      </View>
+    </TouchableOpacity>
+  </View>
+</View>
+`;

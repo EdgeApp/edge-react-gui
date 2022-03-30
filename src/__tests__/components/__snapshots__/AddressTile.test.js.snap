@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddressTileComponent should render with loading props 1`] = `
+<View>
+  <WithTheme(TileComponent)
+    onPress={[Function]}
+    title="Title"
+    type="static"
+  >
+    <WithTheme(EdgeTextComponent)
+      disableFontScaling={true}
+      numberOfLines={3}
+    >
+      bc1
+    </WithTheme(EdgeTextComponent)>
+  </WithTheme(TileComponent)>
+</View>
+`;

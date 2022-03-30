@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "marginVertical": 22,
+      "paddingHorizontal": 22,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "borderBottomColor": "#A4C7DF",
+        "borderBottomWidth": 1,
+        "flex": 1,
+      }
+    }
+  />
+  <WithTheme(EdgeTextComponent)
+    style={
+      Array [
+        Object {
+          "color": "#A4C7DF",
+          "fontFamily": "Quicksand-Medium",
+          "fontSize": 22,
+          "paddingHorizontal": 17,
+        },
+        Object {
+          "textTransform": "lowercase",
+        },
+      ]
+    }
+  >
+    string
+  </WithTheme(EdgeTextComponent)>
+  hello
+  <View
+    style={
+      Object {
+        "borderBottomColor": "#A4C7DF",
+        "borderBottomWidth": 1,
+        "flex": 1,
+      }
+    }
+  />
+</View>
+`;

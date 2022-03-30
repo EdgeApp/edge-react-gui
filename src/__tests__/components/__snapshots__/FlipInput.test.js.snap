@@ -1,0 +1,320 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<React.Fragment>
+  <TouchableOpacity
+    onPress={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginBottom": 22,
+        "marginRight": 79,
+      }
+    }
+  >
+    <FastImage
+      source={
+        Object {
+          "uri": "string",
+        }
+      }
+      style={
+        Object {
+          "height": 34,
+          "marginRight": 22,
+          "width": 34,
+        }
+      }
+    />
+    <RightChevronButton
+      onPress={[Function]}
+      text="string"
+    />
+  </TouchableOpacity>
+  <View
+    style={
+      Object {
+        "alignItems": "flex-end",
+        "height": 0,
+        "top": 11,
+        "width": "8%",
+      }
+    }
+  >
+    <ForwardRef(enhanceContext-Context.Consumer(Menu))
+      onBackdropPress={[Function]}
+      onClose={[Function]}
+      onOpen={[Function]}
+      onSelect={[Function]}
+      renderer={[Function]}
+      rendererProps={
+        Object {
+          "placement": "top",
+        }
+      }
+    >
+      <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+        customStyles={Object {}}
+        disabled={false}
+      />
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+        customStyles={Object {}}
+      >
+        <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+          customStyles={Object {}}
+          disableTouchable={false}
+          disabled={false}
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#000000",
+                "padding": 6,
+              }
+            }
+          >
+            Paste
+          </WithTheme(EdgeTextComponent)>
+        </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
+    </ForwardRef(enhanceContext-Context.Consumer(Menu))>
+  </View>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "paddingRight": 11,
+        }
+      }
+    >
+      <ForwardRef(AnimatedComponentWrapper)
+        pointerEvents="auto"
+        style={
+          Array [
+            Object {
+              "backfaceVisibility": "hidden",
+            },
+            Object {
+              "transform": Array [
+                Object {
+                  "rotateX": "0deg",
+                },
+              ],
+            },
+            Object {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <TouchableWithoutFeedback
+          onPress={[Function]}
+        >
+          <WithTheme(EdgeTextComponent)>
+            0 undefined
+          </WithTheme(EdgeTextComponent)>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+                "marginRight": 34,
+                "minHeight": 45,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "flexDirection": "row",
+                  "marginRight": 11,
+                }
+              }
+            >
+              <BlinkingCursor
+                showCursor={false}
+              />
+              <WithTheme(EdgeTextComponent)
+                style={
+                  Object {
+                    "color": "#87939E",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 34,
+                    "marginLeft": -2,
+                  }
+                }
+              >
+                Amount
+              </WithTheme(EdgeTextComponent)>
+            </View>
+            <WithTheme(EdgeTextComponent)
+              style={
+                Object {
+                  "color": "#87939E",
+                  "paddingTop": 3,
+                }
+              }
+            />
+            <TextInput
+              autoCorrect={false}
+              editable={true}
+              inputAccessoryViewID="string"
+              keyboardType="numeric"
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              onKeyPress={[Function]}
+              onSubmitEditing={[Function]}
+              returnKeyType="string"
+              style={
+                Object {
+                  "height": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+              value=""
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </ForwardRef(AnimatedComponentWrapper)>
+      <ForwardRef(AnimatedComponentWrapper)
+        pointerEvents="none"
+        style={
+          Array [
+            Object {
+              "backfaceVisibility": "hidden",
+            },
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            Object {
+              "transform": Array [
+                Object {
+                  "rotateX": "180deg",
+                },
+              ],
+            },
+            Object {
+              "opacity": 0,
+            },
+          ]
+        }
+      >
+        <TouchableWithoutFeedback
+          onPress={[Function]}
+        >
+          <WithTheme(EdgeTextComponent)>
+            0 undefined
+          </WithTheme(EdgeTextComponent)>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+                "marginRight": 34,
+                "minHeight": 45,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "flexDirection": "row",
+                  "marginRight": 11,
+                }
+              }
+            >
+              <BlinkingCursor
+                showCursor={false}
+              />
+              <WithTheme(EdgeTextComponent)
+                style={
+                  Object {
+                    "color": "#87939E",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 34,
+                    "marginLeft": -2,
+                  }
+                }
+              >
+                Amount
+              </WithTheme(EdgeTextComponent)>
+            </View>
+            <WithTheme(EdgeTextComponent)
+              style={
+                Object {
+                  "color": "#87939E",
+                  "paddingTop": 3,
+                }
+              }
+            />
+            <TextInput
+              autoCorrect={false}
+              editable={true}
+              inputAccessoryViewID="string"
+              keyboardType="numeric"
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              onKeyPress={[Function]}
+              onSubmitEditing={[Function]}
+              returnKeyType="string"
+              style={
+                Object {
+                  "height": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+              value=""
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </ForwardRef(AnimatedComponentWrapper)>
+    </View>
+    <ButtonBox
+      onPress={[Function]}
+      paddingRem={
+        Array [
+          0.5,
+          0,
+          0.5,
+          1,
+        ]
+      }
+    >
+      <Icon
+        allowFontScaling={false}
+        color="#66EDA8"
+        name="exchange"
+        size={39}
+        style={
+          Object {
+            "marginRight": -3,
+          }
+        }
+      />
+    </ButtonBox>
+  </View>
+</React.Fragment>
+`;

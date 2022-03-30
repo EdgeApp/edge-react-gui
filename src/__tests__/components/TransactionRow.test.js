@@ -5,11 +5,11 @@ import { abs, toFixed } from 'biggystring'
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { getTheme } from '../components/services/ThemeContext.js'
-import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
-import { formatNumber } from '../locales/intl.js'
-import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, isSentTransaction, truncateDecimals } from '../util/utils'
-import { EDGE_CONTENT_SERVER } from './../constants/WalletAndCurrencyConstants.js'
+import { getTheme } from '../../components/services/ThemeContext.js'
+import { TransactionListRowComponent } from '../../components/themed/TransactionListRow.js'
+import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants.js'
+import { formatNumber } from '../../locales/intl.js'
+import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, isSentTransaction, truncateDecimals } from '../../util/utils'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -60,7 +60,7 @@ describe('Transaction List Row', () => {
       symbol: '‎ɱ'
     }
     // CryptoAmount
-    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(abs(transaction.nativeAmount || ''))
+    const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(abs(transaction.nativeAmount ?? ''))
     const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount), 6))
     // FiatAmount
     const fiatAmount = abs(transaction.metadata.amountFiat.toFixed(2))

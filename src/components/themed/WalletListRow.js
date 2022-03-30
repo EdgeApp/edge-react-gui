@@ -42,7 +42,7 @@ function WalletRow(props: { gradient?: boolean, children: React.Node }) {
   return <View style={styles.container}>{children}</View>
 }
 
-class WalletListRowComponent extends React.PureComponent<Props> {
+export class WalletListRowComponent extends React.PureComponent<Props> {
   render() {
     const { currencyCode, children, gradient = false, icon, editIcon, loading = false, onPress, onLongPress, walletNameString, theme } = this.props
     const styles = getStyles(theme)

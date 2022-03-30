@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loading props 1`] = `
+<FlatList
+  ListFooterComponent="hello"
+  ListHeaderComponent="string"
+  contentOffset={
+    Object {
+      "x": 0,
+      "y": 0,
+    }
+  }
+  data={Array []}
+  keyboardShouldPersistTaps="handled"
+  renderItem={[Function]}
+/>
+`;

@@ -13,7 +13,7 @@ type Props = {
   marginRem?: number[] | number
 }
 
-class DataRowComponent extends React.PureComponent<Props & ThemeProps> {
+export class DataRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
     const { label, value, theme } = this.props
     const styles = getStyles(theme)

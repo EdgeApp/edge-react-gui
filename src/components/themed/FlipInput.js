@@ -160,7 +160,7 @@ const getInitialState = (props: Props) => {
   return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
 }
 
-class FlipInputComponent extends React.PureComponent<Props, State> {
+export class FlipInputComponent extends React.PureComponent<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value

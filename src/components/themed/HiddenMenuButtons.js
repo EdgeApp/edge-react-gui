@@ -27,7 +27,7 @@ type Props = {
 
 export const HIDDEN_MENU_BUTTONS_WIDTH = 6.25
 
-class HiddenMenuButtonsComponent extends React.PureComponent<Props & ThemeProps> {
+export class HiddenMenuButtonsComponent extends React.PureComponent<Props & ThemeProps> {
   renderButton(button?: ButtonProps, fullWidth?: boolean) {
     if (!button || (!button.label && !button.children)) return null
 

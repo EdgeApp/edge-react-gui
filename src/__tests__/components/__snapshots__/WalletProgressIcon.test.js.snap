@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletProgressIconComponent should render with loading props 1`] = `
+<AnimatedCircularProgress
+  backgroundColor="rgba(255, 255, 255, 0)"
+  duration={500}
+  easing={[Function]}
+  fill={11}
+  prefill={0}
+  rotation={0}
+  size={17}
+  tintColor="#66EDA8"
+  useNativeDriver={false}
+  width={4}
+>
+  [Function]
+</AnimatedCircularProgress>
+`;

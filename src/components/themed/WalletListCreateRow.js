@@ -42,7 +42,7 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 // For some reason Flow complains if DispatchProps isn't added here too
-class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchProps> {
+export class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchProps> {
   createAndSelectWallet = async () => {
     const { createWalletType, onPress, defaultIsoFiat } = this.props
     try {

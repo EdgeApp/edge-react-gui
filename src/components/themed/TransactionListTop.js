@@ -66,7 +66,7 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class TransactionListTopComponent extends React.PureComponent<Props, State> {
+export class TransactionListTopComponent extends React.PureComponent<Props, State> {
   textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
