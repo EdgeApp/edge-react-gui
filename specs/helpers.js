@@ -1,5 +1,4 @@
 // @flow
-/* globals spec */
 
 // import ENV from '../env.json'
 
@@ -14,7 +13,7 @@
 // }
 
 // create a function to fake that the modal is selected . simulate the modal behavior
-export const helpers = spec => ({
+export const helpers = (spec: any) => ({
   resolveModal: async (modalName: string, returnValue: string) => {
     const modal = await spec.findComponent(modalName)
     return await modal.props.bridge.resolve(returnValue)

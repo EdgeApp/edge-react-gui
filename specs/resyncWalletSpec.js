@@ -11,6 +11,7 @@ export default function (spec) {
       await help.waitTransition()
       const rows = await help.getWalletListRows('WalletListScene.WalletList')
       for (const row of rows) {
+        console.log('pre-resync', row)
         // the type of the row is the walletListItem
         await help.longPress(row.onLongPress)
         await help.longPress(row)
@@ -19,6 +20,7 @@ export default function (spec) {
         await help.waitTransition()
         await help.resolveModal('ResyncWalletModal.ResyncButtons', 'confirm')
         setTimeout(() => {
+          console.log('post-resync', row)
           // verify that the row has synced
         }, MAX_SYNC_TIME)
       }
