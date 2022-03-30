@@ -1,5 +1,6 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import { type EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
@@ -105,6 +106,8 @@ export function WalletListMenuModal(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  const TestableTouchableOpacity = wrap(TouchableOpacity)
+  const generateTestHook = useCavy()
 
   // Look up the image and name:
   let image: string | void
@@ -141,14 +144,19 @@ export function WalletListMenuModal(props: Props) {
         {currencyCode ? <ModalTitle>{currencyCode}</ModalTitle> : null}
       </View>
       {options.map((option: Option) => (
-        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.optionRow}>
+        <TestableTouchableOpacity
+          key={option.value}
+          onPress={() => optionAction(option.value)}
+          style={styles.optionRow}
+          ref={generateTestHook(`WalletListMenuModal.${option.value}`)}
+        >
           <AntDesignIcon
             name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
             size={theme.rem(1)}
             style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
           />
           <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-        </TouchableOpacity>
+        </TestableTouchableOpacity>
       ))}
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>

@@ -1,23 +1,42 @@
-import ENV from '../env.json'
+i// @flow
+/* globals spec */
 
-const dummyTouchIdInfo = {
-  isTouchEnabled: false,
-  isTouchSupported: false
-}
+// import ENV from '../env.json'
 
-export const fastLogin = async (login, username = ENV.CAVY_USERNAME, password = ENV.CAVY_PASSWORD) => {
-  const account = await login.props.context.loginWithPassword(username, password)
-  await login.props.onLogin(account, dummyTouchIdInfo)
-}
+// const dummyTouchIdInfo = {
+//   isTouchEnabled: false,
+//   isTouchSupported: false
+// }
+
+// export const fastLogin = async (login, username = ENV.CAVY_USERNAME, password = ENV.CAVY_PASSWORD) => {
+//   const account = await login.props.context.loginWithPassword(username, password)
+//   await login.props.onLogin(account, dummyTouchIdInfo)
+// }
 
 // create a function to fake that the modal is selected . simulate the modal behavior
+export const helpers = spec => ({
+  //   resolveModal: async (modalName: string, returnValue: string) => {
+  //     const modal = await spec.findComponent(modalName)
+  //     return await modal.props.bridge.resolve(returnValue)
+  //   },
+    longPress: async (walletName: string) => {
+      const row = await spec.findComponent(walletName)
+      row.props.onLongPress()
+    },
+  getWalletListRows: async (walletListName: string) => {
+    const modal = await spec.findComponent(walletListName)
+    // call the componenet in order to return the list of rows
+    // walletList returns walletList.getWalletList
+    return walletList(walletList.getWalletList),
+  },
 
-export const resolveModal = async (modal, returnValue) => {
-  return await modal.props.bridge.returnValue
-}
+  // TODOS:
+  // finish getListRows and longPress
+
+  waitTransition: async () => await spec.pause(300)
+})
 
 // export const openSideMenu = async sceneName => void
-// does this actually open the sidemenu??
 // .. await spec.pause(200) the time should be added to the hepler so that
 
 // TODO

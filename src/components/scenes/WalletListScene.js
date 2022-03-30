@@ -8,7 +8,7 @@ import SortableListView from 'react-native-sortable-listview'
 
 import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -35,7 +35,7 @@ type DispatchProps = {
   updateActiveWalletsOrder: (walletIds: string[]) => void
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & TestProps
 
 type State = {
   sorting: boolean,
@@ -113,6 +113,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
             <WalletList
+              ref={this.props.generateTestHook('WalletListScene.WalletList')}
               key="fullList"
               header={
                 <WalletListHeader
@@ -186,7 +187,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListScene = connect<StateProps, DispatchProps, {}>(
+export const WalletListScene = connect<StateProps, DispatchProps, TestProps>(
   state => {
     let { activeWalletIds } = state.ui.wallets
     const { currencyWallets } = state.core.account

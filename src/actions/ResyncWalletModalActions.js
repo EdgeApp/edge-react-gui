@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
@@ -12,9 +12,11 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
   const state = getState()
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
+  const generateTestHook = useCavy()
 
   const resolveValue = await Airship.show(bridge => (
     <ButtonsModal
+      ref={generateTestHook('ResyncWalletModal.ResyncButtons')}
       bridge={bridge}
       title={s.strings.fragment_wallets_resync_wallet}
       message={`${s.strings.fragment_wallets_resync_wallet_first_confirm_message_mobile} ${getWalletName(currencyWallets[walletId])}?`}
