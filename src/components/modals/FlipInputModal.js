@@ -31,7 +31,7 @@ import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<void>,
+  bridge: AirshipBridge<{ nativeAmount: string, exchangeAmount: string }>,
   walletId: string,
   currencyCode: string,
   onFeesChange?: () => void,
@@ -73,6 +73,9 @@ type DispatchProps = {
 }
 
 type State = {
+  nativeAmount: string,
+  exchangeAmount: string,
+
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   errorMessage?: string
@@ -85,11 +88,16 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
     super(props)
     this.state = {
       overridePrimaryExchangeAmount: props.overrideExchangeAmount ?? props.overridePrimaryExchangeAmount,
-      forceUpdateGuiCounter: 0
+      forceUpdateGuiCounter: 0,
+      nativeAmount: '',
+      exchangeAmount: ''
     }
   }
 
-  handleCloseModal = () => this.props.bridge.resolve()
+  handleCloseModal = () => {
+    const { nativeAmount, exchangeAmount } = this.state
+    this.props.bridge.resolve(Promise.resolve({ nativeAmount, exchangeAmount }))
+  }
 
   handleFeesChange = () => {
     this.handleCloseModal()
@@ -99,6 +107,9 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     const { walletId, currencyCode, updateTransactionAmount, onAmountChanged } = this.props
+
+    this.setState({ nativeAmount, exchangeAmount })
+
     if (onAmountChanged != null) return onAmountChanged(nativeAmount, exchangeAmount)
     updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
   }
