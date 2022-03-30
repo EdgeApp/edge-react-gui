@@ -296,7 +296,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.25)
   },
   balanceBoxCurrency: {
-    fontSize: theme.rem(2),
     fontFamily: theme.fontFaceMedium
   },
   balanceFiatBalance: {
