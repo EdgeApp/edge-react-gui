@@ -247,7 +247,7 @@ export const StakeModifyScene = (props: Props) => {
   const displayAllocationTypesMap = {
     stake: ['stake'],
     claim: ['claim'],
-    unstake: ['claim', 'stake']
+    unstake: ['stake', 'claim']
   }
   const renderAmountTiles = (modAllocation, nativeAmount, modification) => {
     return (
