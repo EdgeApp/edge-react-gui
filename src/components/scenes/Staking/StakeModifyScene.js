@@ -270,7 +270,7 @@ export const StakeModifyScene = (props: Props) => {
   const sceneTitleMap = {
     stake: sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName),
     claim: s.strings.stake_claim_rewards,
-    unstake: s.strings.stake_claim_unstake
+    unstake: s.strings.stake_unstake_and_claim_rewards
   }
 
   if (stakeDetails.allocations.length === 0)
