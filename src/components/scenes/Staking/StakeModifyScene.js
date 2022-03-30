@@ -83,8 +83,9 @@ export const StakeModifyScene = (props: Props) => {
   const [nativeModAmount, setNativeModAmount] = useState('0')
   const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
 
-  // An Effect for
+  // Get pending change quote
   useEffect(() => {
+    let abort = false
     // Setup the request
     stakePlugin
       .fetchChangeQuote({
@@ -95,12 +96,17 @@ export const StakeModifyScene = (props: Props) => {
         wallet: currencyWallet
       })
       .then(changeQuote => {
+        if (abort) return
         setPendingChangeQuote(changeQuote)
         setNativeFeeAmount(changeQuote.allocations.find(allocation => allocation.allocationType === 'fee')?.nativeAmount ?? '0')
       })
       .catch(err => {
+        if (abort) return
         showError(err.message)
       })
+    return () => {
+      abort = true
+    }
   }, [modification, stakePolicyId, allocationToMod?.tokenId, nativeModAmount, currencyWallet])
 
   // Effect that initializes the allocation amount
@@ -162,11 +168,15 @@ export const StakeModifyScene = (props: Props) => {
         bridge={bridge}
         walletId={walletId}
         currencyCode={stakeAssetsName}
-        onAmountChanged={handleAmountEdited}
+        onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress}
         headerText={sprintf(header, currencyWallet.name)}
       />
-    )).catch(error => console.log(error))
+    ))
+      .then(({ nativeAmount, exchangeAmount }) => {
+        handleAmountEdited(nativeAmount, exchangeAmount)
+      })
+      .catch(error => console.log(error))
   }
 
   // Renderers
