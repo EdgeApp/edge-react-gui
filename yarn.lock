@@ -5932,10 +5932,10 @@ edge-currency-monero@^0.4.0:
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.12.14:
-  version "0.12.14"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.12.14.tgz#baf538d5d5f380e79ea88708de4774990e84023c"
-  integrity sha512-i/iBlMGjDLFcztytcpnsgEbZID0iA4M4UmLzGTd7cPqmk7iGAVC6xnSrHP5PjPVMnBNURRGo7k8cW7u2k2mRAQ==
+edge-exchange-plugins@^0.12.15:
+  version "0.12.15"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.12.15.tgz#27956c50c0f6bddf83f281aa3cabd04db8ba7c35"
+  integrity sha512-txjrT7zG9/FPuxodKP2XAUWeGBzUtJFV3INqYgZQqBz5xJM+KaYvx7FALoAiFidBrBWOCv3nuzv0JhObA1YQJQ==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
