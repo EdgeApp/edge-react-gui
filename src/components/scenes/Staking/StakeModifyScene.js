@@ -283,7 +283,7 @@ export const StakeModifyScene = (props: Props) => {
   const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper scroll background="theme">
       <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin />
       {renderAmountTiles(allocationToMod, nativeModAmount, modification)}
       {renderWarning()}

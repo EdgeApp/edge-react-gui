@@ -97,7 +97,7 @@ export const StakeOverviewScene = (props: Props) => {
     )
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper scroll background="theme">
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName)} underline withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard
