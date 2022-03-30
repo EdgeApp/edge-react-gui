@@ -17,7 +17,8 @@ import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeA
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
-import { Airship, showError, showToast } from '../../services/AirshipInstance.js'
+import { FlashNotification } from '../../navigation/FlashNotification.js'
+import { Airship, showError } from '../../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Alert } from '../../themed/Alert.js'
 import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
@@ -148,9 +149,7 @@ export const StakeModifyScene = (props: Props) => {
       pendingChangeQuote
         .approve()
         .then(success => {
-          if (modification === 'stake') showToast(s.strings.stake_change_stake_success)
-          if (modification === 'unstake') showToast(s.strings.stake_change_unstake_success)
-          if (modification === 'claim') showToast(s.strings.stake_change_claim_success)
+          Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings[`stake_change_${modification}_success`]} onPress={() => {}} />)
           navigation.pop()
         })
         .catch(err => {
