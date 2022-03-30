@@ -216,7 +216,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
           const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
           if (!isFullyAllowed) {
             txBuilder.addCall(tokenContract, 'approve', [
-              signerAddress,
+              poolContract.address,
               ethers.constants.MaxUint256,
               { gasLimit: { _hex: toHex('50000'), _isBigNumber: true } }
             ])
