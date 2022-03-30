@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
+<SceneWrapper
+  avoidKeyboard={true}
+  background="body"
+  hasTabs={false}
+>
+  [Function]
+</SceneWrapper>
+`;

@@ -31,7 +31,7 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps & OwnProps
 
-class EdgeLoginSceneComponent extends React.Component<Props> {
+export class EdgeLoginSceneComponent extends React.Component<Props> {
   renderBody() {
     let message = this.props.error
     if (!this.props.error) {

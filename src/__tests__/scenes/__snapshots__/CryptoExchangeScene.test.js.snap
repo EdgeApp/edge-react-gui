@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CryptoExchangeComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+>
+  <WithTheme(SceneHeaderComponent)
+    title="Exchange"
+    underline={true}
+    withTopMargin={true}
+  />
+  <KeyboardAwareScrollView
+    contentContainerStyle={
+      Object {
+        "alignItems": "center",
+      }
+    }
+    enableAutomaticScroll={true}
+    enableOnAndroid={false}
+    enableResetScrollToCoords={true}
+    extraHeight={75}
+    extraScrollHeight={0}
+    keyboardOpeningTime={250}
+    keyboardShouldPersistTaps="always"
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+    viewIsInsideTabBar={false}
+  >
+    <WithTheme(LineTextDividerComponent)
+      lowerCased={true}
+      title="From"
+    />
+    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+      buttonText="Select Source Wallet"
+      currencyLogo={
+        Object {
+          "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
+        }
+      }
+      fiatPerCrypto="500"
+      focusMe={[Function]}
+      forceUpdateGuiCounter={0}
+      headerText="Exchange from BTC Wallet"
+      isFocused={true}
+      launchWalletSelector={[Function]}
+      onCryptoExchangeAmountChanged={[Function]}
+      onNext={[Function]}
+      overridePrimaryExchangeAmount=""
+      primaryCurrencyInfo={
+        Object {
+          "displayCurrencyCode": "BTC",
+          "exchangeCurrencyCode": "BTC",
+        }
+      }
+      secondaryCurrencyInfo={
+        Object {
+          "displayCurrencyCode": "USD",
+          "displayDenomination": Object {
+            "multiplier": "100",
+            "name": "USD",
+            "symbol": "$",
+          },
+          "exchangeCurrencyCode": Object {
+            "wallet": Object {
+              "fiatCurrencyCode": "USD",
+            },
+          },
+          "exchangeDenomination": Object {
+            "multiplier": "100",
+            "name": "USD",
+            "symbol": "$",
+          },
+        }
+      }
+      walletId=""
+    >
+      <MiniButton
+        alignSelf="center"
+        label="MAX"
+        marginRem={
+          Array [
+            1.2,
+            0,
+            0,
+          ]
+        }
+        onPress={[Function]}
+      />
+    </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
+    <WithTheme(LineTextDividerComponent)
+      lowerCased={true}
+      title="To"
+    />
+    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+      buttonText="Select Receiving Wallet"
+      currencyLogo={
+        Object {
+          "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
+        }
+      }
+      fiatPerCrypto="500"
+      focusMe={[Function]}
+      forceUpdateGuiCounter={0}
+      headerText="Exchange to ETH Wallet"
+      isFocused={false}
+      launchWalletSelector={[Function]}
+      onCryptoExchangeAmountChanged={[Function]}
+      onNext={[Function]}
+      overridePrimaryExchangeAmount="1000"
+      primaryCurrencyInfo={
+        Object {
+          "displayCurrencyCode": "ETH",
+          "displayDenomination": Object {
+            "multiplier": "100000000",
+            "name": "Ethereum",
+          },
+          "exchangeCurrencyCode": "ETH",
+          "exchangeDenomination": Object {
+            "multiplier": "10000000",
+            "name": "Gwei",
+          },
+        }
+      }
+      secondaryCurrencyInfo={
+        Object {
+          "displayCurrencyCode": "USD",
+          "displayDenomination": Object {
+            "multiplier": "100",
+            "name": "USD",
+            "symbol": "$",
+          },
+          "exchangeCurrencyCode": Object {
+            "wallet": Object {
+              "fiatCurrencyCode": "USD",
+            },
+          },
+          "exchangeDenomination": Object {
+            "multiplier": "100",
+            "name": "USD",
+            "symbol": "$",
+          },
+        }
+      }
+      walletId=""
+    />
+    <ActivityIndicator
+      color="#66EDA8"
+      style={
+        Object {
+          "marginVertical": 34,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "height": 337,
+        }
+      }
+    />
+  </KeyboardAwareScrollView>
+</SceneWrapper>
+`;

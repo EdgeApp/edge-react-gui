@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FioAddressSettingsComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="header"
+>
+  <WithTheme(TileComponent)
+    body="MyFioAddress"
+    title="FIO Address"
+    type="static"
+  />
+  <React.Fragment>
+    <MainButton
+      label="Purchase more bundled transactions"
+      marginRem={
+        Array [
+          1.5,
+          1,
+          0.25,
+        ]
+      }
+      onPress={[Function]}
+    />
+    <MainButton
+      label="Transfer FIO Address"
+      marginRem={
+        Array [
+          0.25,
+          1,
+        ]
+      }
+      onPress={[Function]}
+    />
+  </React.Fragment>
+</SceneWrapper>
+`;

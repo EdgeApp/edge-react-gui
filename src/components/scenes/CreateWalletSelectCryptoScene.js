@@ -30,7 +30,7 @@ type State = {
   searchTerm: string
 }
 
-class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
+export class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

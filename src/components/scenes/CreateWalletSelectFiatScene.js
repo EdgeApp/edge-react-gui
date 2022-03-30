@@ -32,7 +32,7 @@ type State = {
   selectedFiat: string
 }
 
-class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
+export class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateWalletReviewComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "position": "relative",
+      }
+    }
+  >
+    <WithTheme(SceneHeaderComponent)
+      title="Create Wallet"
+      withTopMargin={true}
+    />
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={2}
+      style={
+        Object {
+          "color": "#FFFFFF",
+          "fontSize": 22,
+          "marginBottom": 45,
+          "marginTop": 11,
+          "paddingHorizontal": 22,
+        }
+      }
+    >
+      Please double-check wallet information and submit:
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(TileComponent)
+      body="bitcoin - BTC"
+      contentPadding={false}
+      title="Wallet Type:"
+      type="static"
+    />
+    <WithTheme(TileComponent)
+      body="USD"
+      contentPadding={false}
+      title="Wallet Fiat:"
+      type="static"
+    />
+    <WithTheme(TileComponent)
+      body="my bitcoin wallet"
+      contentPadding={false}
+      title="Wallet Name:"
+      type="static"
+    />
+    <MainButton
+      alignSelf="center"
+      label="Create Wallet"
+      marginRem={
+        Array [
+          2,
+          1,
+        ]
+      }
+      onPress={[Function]}
+      type="secondary"
+    />
+  </View>
+</SceneWrapper>
+`;

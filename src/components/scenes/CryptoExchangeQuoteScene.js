@@ -45,7 +45,7 @@ type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {}
 
-class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
+export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   calledApprove: true
 
   componentDidMount = () => {
