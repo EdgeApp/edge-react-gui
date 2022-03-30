@@ -162,11 +162,15 @@ export const StakeModifyScene = (props: Props) => {
         bridge={bridge}
         walletId={walletId}
         currencyCode={stakeAssetsName}
-        onAmountChanged={handleAmountEdited}
+        onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress}
         headerText={sprintf(header, currencyWallet.name)}
       />
-    )).catch(error => console.log(error))
+    ))
+      .then(({ nativeAmount, exchangeAmount }) => {
+        handleAmountEdited(nativeAmount, exchangeAmount)
+      })
+      .catch(error => console.log(error))
   }
 
   // Renderers

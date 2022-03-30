@@ -95,7 +95,9 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   handleCloseModal = () => {
-    const { nativeAmount, exchangeAmount } = this.state
+    let { nativeAmount, exchangeAmount } = this.state
+    nativeAmount = nativeAmount === '' ? '0' : nativeAmount
+    exchangeAmount = exchangeAmount === '' ? '0' : exchangeAmount
     this.props.bridge.resolve(Promise.resolve({ nativeAmount, exchangeAmount }))
   }
 
