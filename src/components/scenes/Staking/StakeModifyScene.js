@@ -14,6 +14,7 @@ import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName, stakePlugin } from '../../../util/stakeUtils.js'
+import { zeroString } from '../../../util/utils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
@@ -31,6 +32,8 @@ type Props = {
   navigation: NavigationProp<'stakeModify'>,
   route: RouteProp<'stakeModify'>
 }
+
+const DEFAULT = ''
 
 export const StakeModifyScene = (props: Props) => {
   // Constants
@@ -81,11 +84,12 @@ export const StakeModifyScene = (props: Props) => {
 
   // Handlers
   const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote | void>()
-  const [nativeModAmount, setNativeModAmount] = useState('0')
-  const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
+  const [nativeModAmount, setNativeModAmount] = useState(DEFAULT)
+  const [nativeFeeAmount, setNativeFeeAmount] = useState(DEFAULT)
 
   // Get pending change quote
   useEffect(() => {
+    if (zeroString(nativeModAmount)) return
     let abort = false
     // Setup the request
     stakePlugin
@@ -113,22 +117,33 @@ export const StakeModifyScene = (props: Props) => {
   // Effect that initializes the allocation amount
   useEffect(() => {
     const rewardAllocation = getRewardAllocation(stakeDetails)
-    const rewardAmountResult = rewardAllocation === null ? '0' : rewardAllocation.nativeAmount
+    const rewardAmountResult = rewardAllocation === null ? DEFAULT : rewardAllocation.nativeAmount
     const stakeAllocation = getStakeAllocation(stakeDetails)
-    const stakeAmountResult = stakeAllocation === null ? '0' : stakeAllocation.nativeAmount
+    const stakeAmountResult = stakeAllocation === null ? DEFAULT : stakeAllocation.nativeAmount
 
     setRewardAmount(rewardAmountResult)
 
-    if (modification === 'claim') setNativeModAmount(rewardAmountResult)
-    if (modification === 'unstake') setNativeModAmount(stakeAmountResult)
+    if (modification === 'claim') updateNativeModAmount(rewardAmountResult)
+    if (modification === 'unstake') updateNativeModAmount(stakeAmountResult)
   }, [currencyWallet, stakeDetails, modification])
+
+  const updateNativeModAmount = (nativeAmount: string) => {
+    if (!zeroString(nativeAmount)) {
+      setNativeModAmount(nativeAmount)
+    } else {
+      // Reset scene if nativeAmount is zero
+      if (nativeAmount !== DEFAULT) setNativeModAmount(DEFAULT) // restore placeholder text in amount tile
+      setNativeFeeAmount(DEFAULT) // show zero fee
+      setPendingChangeQuote(undefined) // reset the slider
+    }
+  }
 
   //
   // Handlers
   //
 
   const handleAmountEdited = (nativeAmount: string, exchangeAmount: string) => {
-    setNativeModAmount(nativeAmount)
+    updateNativeModAmount(nativeAmount)
   }
 
   const handleMaxButtonPress = () => {
@@ -137,9 +152,10 @@ export const StakeModifyScene = (props: Props) => {
       // TODO: (V2) Set max amount minus fees if specifying native asset amount
     } else {
       if (modification === 'unstake') {
-        setNativeModAmount(allocationToMod?.nativeAmount ?? '0')
+        updateNativeModAmount(allocationToMod?.nativeAmount ?? DEFAULT)
       } else if (modification === 'stake') {
-        setNativeModAmount(currencyWallet.balances[stakeAssetsName])
+        const amount = currencyWallet.balances[stakeAssetsName]
+        updateNativeModAmount(amount !== '0' ? amount : DEFAULT)
       }
     }
   }
@@ -153,7 +169,6 @@ export const StakeModifyScene = (props: Props) => {
           navigation.pop()
         })
         .catch(err => {
-          // TODO: Make the slider reset
           reset()
           showError(err.message)
         })
