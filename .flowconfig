@@ -8,7 +8,7 @@
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
 .*/node_modules/react-native/.*
-
+.*/node_modules/@react-native-community/async-storage/jest/.*
 ; We fork some components by platform
 .*/*[.]android.js
 

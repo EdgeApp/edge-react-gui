@@ -43,7 +43,7 @@ type State = {
   mounted: boolean
 }
 
-class AccelerateTxModelComponent extends PureComponent<Props, State> {
+export class AccelerateTxModelComponent extends PureComponent<Props, State> {
   constructor() {
     super()
 

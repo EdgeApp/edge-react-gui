@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
+<ForwardRef(AnimatedComponentWrapper)
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "bottom": 0,
+        "flexDirection": "column",
+        "justifyContent": "center",
+        "left": 0,
+        "padding": 18.25950704225352,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      },
+      Object {
+        "opacity": 0,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#000000",
+        "bottom": 0,
+        "left": 0,
+        "opacity": 0.7,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#D9E3ED",
+        "borderRadius": 27.389260563380283,
+        "flexDirection": "row",
+        "justifyContent": "flex-start",
+        "maxWidth": 584.3042253521127,
+        "padding": 18.25950704225352,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#25292C",
+          "flexShrink": 1,
+          "fontFamily": "SourceSansPro-Black",
+          "fontSize": 18.25950704225352,
+          "textAlign": "center",
+        }
+      }
+    >
+      string
+    </Text>
+  </View>
+</ForwardRef(AnimatedComponentWrapper)>
+`;

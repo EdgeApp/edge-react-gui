@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddressModalComponent should render with loaded props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+  paddingRem={1}
+>
+  <ModalTitle
+    center={true}
+    paddingRem={
+      Array [
+        0,
+        2,
+        1,
+      ]
+    }
+  >
+    string
+  </ModalTitle>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "flexDirection": "column",
+        "width": "100%",
+      }
+    }
+  >
+    <ForwardRef
+      autoCapitalize="none"
+      autoCorrect={false}
+      label="Address"
+      marginRem={
+        Array [
+          0,
+          1,
+        ]
+      }
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      returnKeyType="search"
+      value=""
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <ActivityIndicator
+        color="#66EDA8"
+      />
+    </View>
+    <MainButton
+      label="Submit"
+      marginRem={
+        Array [
+          0,
+          4,
+        ]
+      }
+      onPress={[Function]}
+      type="secondary"
+    />
+  </View>
+  <ModalCloseArrow
+    onPress={[Function]}
+  />
+</ThemedModal>
+`;

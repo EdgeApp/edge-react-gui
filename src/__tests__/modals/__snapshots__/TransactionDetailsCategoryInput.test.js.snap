@@ -1,0 +1,231 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionDetailsCategoryInput should render with loading props 1`] = `
+<AirshipModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <TouchableWithoutFeedback
+    onPress={[Function]}
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "padding": 18,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "alignSelf": "center",
+            "fontSize": 27,
+            "marginBottom": 22,
+          }
+        }
+      >
+        Category
+      </FormattedText>
+      <View
+        style={
+          Object {
+            "marginBottom": 18,
+          }
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#0E4B75",
+              "fontSize": 16,
+              "marginBottom": 7,
+            }
+          }
+        >
+          Choose a Category:
+        </FormattedText>
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#A4C7DF",
+                  "borderColor": "#A4C7DF",
+                  "borderRadius": 3,
+                  "borderWidth": 1,
+                  "marginRight": 13,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                Hello exchange
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "borderColor": "#A4C7DF",
+                  "borderRadius": 3,
+                  "borderWidth": 1,
+                  "marginRight": 13,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                Hello expense
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "borderColor": "#A4C7DF",
+                  "borderRadius": 3,
+                  "borderWidth": 1,
+                  "marginRight": 13,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                Hello transfer
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "borderColor": "#A4C7DF",
+                  "borderRadius": 3,
+                  "borderWidth": 1,
+                  "marginRight": 13,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                Hello income
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "marginTop": 18,
+          }
+        }
+      >
+        <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={true}
+          baseColor="#0D2145"
+          containerStyle={
+            Object {
+              "height": 77,
+              "position": "relative",
+              "width": "100%",
+            }
+          }
+          errorColor="#E85466"
+          fontSize={20}
+          keyboardType="default"
+          label="Choose a sub-category"
+          labelFontSize={15}
+          onChangeText={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="done"
+          textColor="#25292C"
+          tintColor="#0E4B75"
+          titleTextStyle={Object {}}
+          value=""
+        />
+      </View>
+      <SubCategorySelect
+        bottomGap={0}
+        categories={
+          Array [
+            "exchange",
+            "expense",
+            "transfer",
+            "income",
+          ]
+        }
+        enteredSubcategory=""
+        onPressFxn={[Function]}
+        subcategoriesList={
+          Array [
+            "exchange",
+            "income",
+            "expense",
+          ]
+        }
+      />
+    </View>
+  </TouchableWithoutFeedback>
+</AirshipModal>
+`;

@@ -41,7 +41,7 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps
 
-class AddToken extends React.Component<Props, State> {
+export class AddToken extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { route } = this.props

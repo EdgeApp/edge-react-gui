@@ -80,7 +80,7 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class FlipInputModalComponent extends React.PureComponent<Props, State> {
+export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
