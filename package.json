@@ -100,6 +100,7 @@
     "@react-native-picker/picker": "^2.4.0",
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
+    "cavy": "^4.0.2",
     "cleaners": "^0.3.12",
     "core-js": "^2.5.2",
     "csv-stringify": "^5.6.2",
