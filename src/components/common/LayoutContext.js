@@ -1,8 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import { Dimensions, Platform, StatusBar } from 'react-native'
+import { Platform, StatusBar } from 'react-native'
 import { getInset } from 'react-native-safe-area-view'
+
+import { useWindowSize } from '../../hooks/useWindowSize.js'
 
 export type SafeAreaGap = {
   bottom: number,
@@ -22,11 +24,6 @@ type Props = {
   children: (layout: LayoutMetrics) => React.ChildrenArray<React.Node>
 }
 
-type State = {
-  height: number,
-  width: number
-}
-
 /**
  * In the future, React Native will provide this component itself:
  * https://github.com/facebook/react-native/pull/20999
@@ -38,36 +35,24 @@ type State = {
  * Do not rely on the height being correct! Use flexbox to do layout
  * wherever possible, rather than relying on dimensions.
  */
-export class LayoutContext extends React.Component<Props, State> {
-  update: *
+export function LayoutContext(props: Props) {
+  const { children } = props
 
-  constructor(props: Props) {
-    super(props)
-    this.state = Dimensions.get('window')
-    this.update = ({ window }) => this.setState(window)
-    Dimensions.addEventListener('change', this.update)
-  }
+  // Subscribe to the window size:
+  const { height, width } = useWindowSize()
+  const isLandscape = height < width
 
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.update)
-  }
-
-  render() {
-    const { height, width } = this.state
-    const isLandscape = height < width
-
-    const metrics: LayoutMetrics = {
-      layout: { x: 0, y: 0, height, width },
-      safeAreaInsets: {
-        bottom: isIos ? getInset('bottom', isLandscape) : 0,
-        left: isIos ? getInset('left', isLandscape) : 0,
-        right: isIos ? getInset('right', isLandscape) : 0,
-        top: isIos ? getInset('top', isLandscape) : StatusBar.currentHeight
-      }
+  const metrics: LayoutMetrics = {
+    layout: { x: 0, y: 0, height, width },
+    safeAreaInsets: {
+      bottom: isIos ? getInset('bottom', isLandscape) : 0,
+      left: isIos ? getInset('left', isLandscape) : 0,
+      right: isIos ? getInset('right', isLandscape) : 0,
+      top: isIos ? getInset('top', isLandscape) : StatusBar.currentHeight
     }
-
-    return this.props.children(metrics)
   }
+
+  return children(metrics)
 }
 
 const isIos = Platform.OS === 'ios'
