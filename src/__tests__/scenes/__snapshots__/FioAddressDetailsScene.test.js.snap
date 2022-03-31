@@ -45,7 +45,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     }
     label="Choose wallets to connect to your FIO Crypto Handle"
   />
-  <Memo(Connect(WithTheme(ConnectWallets)))
+  <Memo(Connect(Hook(WithTheme(ConnectWallets))))
     disabled={false}
     fioAddressName="Fio@edge"
     fioWallet={null}
