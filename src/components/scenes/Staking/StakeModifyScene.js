@@ -247,12 +247,13 @@ export const StakeModifyScene = (props: Props) => {
   }
 
   const renderWarning = () => {
-    if (modification !== 'claim') return null
+    if (modification === 'unstake') return null
+
     return (
       <Alert
         marginRem={[0, 1, 1, 1]}
         title={s.strings.wc_smartcontract_warning_title}
-        message={s.strings.stake_warning_claim}
+        message={s.strings[`stake_warning_${modification}`]}
         numberOfLines={0}
         type="warning"
       />

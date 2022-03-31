@@ -883,6 +883,7 @@
   "stake_change_unstake_success": "Unstaked successfully",
   "stake_change_claim_success": "Claimed successfully",
   "stake_disabled_slider": "Enter Amount",
+  "stake_warning_stake": "Staking funds will lock withdrawals for 36 hours and rewards for 18 hours.\n\nEvery interaction (stake, unstake, or claim rewards) will reset both timers.",
   "stake_warning_claim": "Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose “Claim Rewards and Unstake” instead.",
   "stake_modal_modify_stake_title": "Stake from %s",
   "stake_modal_modify_unstake_title": "Unstake from %s",
