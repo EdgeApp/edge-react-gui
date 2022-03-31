@@ -91,7 +91,7 @@ export const getContractInfo = (index: string): ContractInfoEntry | void => {
 
 export const makeContract = (addressOrName: string) => {
   const contractInfo = getContractInfo(addressOrName)
-  if (contractInfo == null) throw new Error(`Unable to contract info for '${addressOrName}'`)
+  if (contractInfo == null) throw new Error(`Unable to get contract info for '${addressOrName}'`)
   const { abi, address } = contractInfo
   return new ethers.Contract(address, abi, providers[0])
 }
