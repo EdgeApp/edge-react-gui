@@ -3,10 +3,8 @@
 import type { Disklet } from 'disklet'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
-import SortableListView from 'react-native-sortable-listview'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
-import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -21,21 +19,16 @@ import { EdgeText } from '../themed/EdgeText.js'
 import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListHeader } from '../themed/WalletListHeader.js'
-import { WalletListSortableRow } from '../themed/WalletListSortableRow.js'
+import { WalletListSortable } from '../themed/WalletListSortable.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type StateProps = {
-  activeWalletIds: string[],
   wallets: { [walletId: string]: EdgeCurrencyWallet },
   disklet: Disklet,
   needsPasswordCheck: boolean
 }
 
-type DispatchProps = {
-  updateActiveWalletsOrder: (walletIds: string[]) => void
-}
-
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & ThemeProps
 
 type State = {
   sorting: boolean,
@@ -93,7 +86,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { activeWalletIds, theme, wallets } = this.props
+    const { theme, wallets } = this.props
     const { showSlidingTutorial, searching, searchText, sorting } = this.state
     const styles = getStyles(theme)
     const loading = Object.keys(wallets).length <= 0
@@ -130,32 +123,14 @@ class WalletListComponent extends React.PureComponent<Props, State> {
               activateSearch={this.handleActivateSearch}
               showSlidingTutorial={showSlidingTutorial}
             />
-            <SortableListView
-              key="sortList"
-              style={StyleSheet.absoltueFill}
-              data={wallets}
-              order={activeWalletIds}
-              onRowMoved={this.onActiveRowMoved}
-              renderRow={this.renderSortableRow}
-            />
+            <WalletListSortable key="sortList" />
           </CrossFade>
         </View>
       </SceneWrapper>
     )
   }
 
-  renderSortableRow = (wallet: EdgeCurrencyWallet | void) => {
-    return <WalletListSortableRow wallet={wallet} />
-  }
-
   disableSorting = () => this.setState({ sorting: false })
-
-  onActiveRowMoved = (action: { from: number, to: number }) => {
-    const newOrder = [...this.props.activeWalletIds]
-    newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
-    this.props.updateActiveWalletsOrder(newOrder)
-    this.forceUpdate()
-  }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -186,16 +161,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListScene = connect<StateProps, DispatchProps, {}>(
+export const WalletListScene = connect<StateProps, {}, {}>(
   state => ({
-    activeWalletIds: state.ui.wallets.activeWalletIds,
     wallets: state.core.account.currencyWallets,
     disklet: state.core.disklet,
     needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
   }),
-  dispatch => ({
-    updateActiveWalletsOrder(activeWalletIds) {
-      dispatch(updateActiveWalletsOrder(activeWalletIds))
-    }
-  })
+  dispatch => ({})
 )(withTheme(WalletListComponent))
