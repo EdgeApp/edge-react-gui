@@ -12,17 +12,13 @@ import { getBrand, getDeviceId } from 'react-native-device-info'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
+import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
 import { LoadingScene } from '../scenes/LoadingScene.js'
 import { Services } from './Services.js'
 
 type Props = {}
-
-type State = {
-  context: EdgeContext | null,
-  counter: number
-}
 
 const contextOptions: EdgeContextOptions = {
   apiKey: ENV.AIRBITZ_API_KEY,
@@ -40,8 +36,7 @@ const contextOptions: EdgeContextOptions = {
   plugins: allPlugins
 }
 
-const isReactNative = detectBundler.isReactNative
-const nativeIo = isReactNative
+const nativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
       'edge-currency-bitcoin': makeBitcoinIo(),
@@ -64,105 +59,86 @@ const crashReporter: EdgeCrashReporter = {
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
-export class EdgeCoreManager extends React.PureComponent<Props, State> {
-  splashHidden: boolean = false
-  paused: boolean = false
+export function EdgeCoreManager(props: Props) {
+  const [context, setContext] = useState<EdgeContext | null>(null)
 
-  constructor(props: Props) {
-    super(props)
-    this.state = { context: null, counter: 0 }
-  }
+  // Scratchpad values that should not trigger re-renders:
+  const counter = useRef<number>(0)
+  const splashHidden = useRef<boolean>(false)
 
-  componentDidMount() {
-    AppState.addEventListener('change', this.onAppStateChange)
-  }
+  // Subscribe to the application state:
+  const [paused, setPaused] = useState(false)
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', appState => setPaused(appState !== 'active'))
+    return () => listener.remove()
+  }, [])
 
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this.onAppStateChange)
-  }
+  // Keep the core in sync with the application state:
+  useEffect(() => {
+    if (context == null) return
 
-  onAppStateChange = (appState: string) => {
-    const paused = appState !== 'active'
-    if (this.paused !== paused) {
-      this.paused = paused
+    // TODO: Display a popdown error alert once we get that redux-free:
+    context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
+  }, [context, paused])
 
-      const { context } = this.state
-      if (context != null) {
-        // TODO: Display a popdown error alert once we get that redux-free:
-        context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
-      }
-    }
-  }
-
-  hideSplash() {
-    if (!this.splashHidden) {
-      this.splashHidden = true
+  function hideSplash() {
+    if (!splashHidden.current) {
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
         duration: 850,
         delay: 500
       })
+      splashHidden.current = true
     }
   }
 
-  onContext = (context: EdgeContext) => {
+  function handleContext(context: EdgeContext) {
     console.log('EdgeContext opened')
     context.on('close', () => {
       console.log('EdgeContext closed')
-      this.setState({ context: null })
+      setContext(null)
     })
-    this.setState(
-      state => ({ context, counter: state.counter + 1 }),
-      () => this.hideSplash()
-    )
+    ++counter.current
+    setContext(context)
+    hideSplash()
   }
 
-  onError = (error: Error) => {
+  function handleError(error: Error) {
     console.log('EdgeContext failed', error)
-    this.hideSplash()
+    hideSplash()
     Alert.alert('Edge core failed to load', String(error))
   }
 
-  onFakeEdgeWorld = (world: EdgeFakeWorld) => {
-    world.makeEdgeContext({ ...contextOptions }).then(this.onContext, this.onError)
+  function handleFakeEdgeWorld(world: EdgeFakeWorld) {
+    world.makeEdgeContext({ ...contextOptions }).then(handleContext, handleError)
   }
 
-  renderCore() {
-    const pluginUris = ENV.DEBUG_PLUGINS ? ['http://localhost:8101/plugin-bundle.js'] : ['edge-core/plugin-bundle.js']
-
-    return ENV.USE_FAKE_CORE ? (
-      <MakeFakeEdgeWorld
-        crashReporter={crashReporter}
-        debug={ENV.DEBUG_CORE}
-        nativeIo={nativeIo}
-        pluginUris={pluginUris}
-        users={[fakeUser]}
-        onLoad={this.onFakeEdgeWorld}
-        onError={this.onError}
-      />
-    ) : (
-      <MakeEdgeContext
-        {...contextOptions}
-        crashReporter={crashReporter}
-        debug={ENV.DEBUG_CORE}
-        allowDebugging={ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
-        nativeIo={nativeIo}
-        pluginUris={pluginUris}
-        onLoad={this.onContext}
-        onError={this.onError}
-      />
-    )
-  }
-
-  render(): React.Node {
-    const { context, counter } = this.state
-    const key = `redux${counter}`
-
-    return (
-      <>
-        {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
-        {this.renderCore()}
-      </>
-    )
-  }
+  const pluginUris = ENV.DEBUG_PLUGINS ? ['http://localhost:8101/plugin-bundle.js'] : ['edge-core/plugin-bundle.js']
+  return (
+    <>
+      {ENV.USE_FAKE_CORE ? (
+        <MakeFakeEdgeWorld
+          crashReporter={crashReporter}
+          debug={ENV.DEBUG_CORE}
+          nativeIo={nativeIo}
+          pluginUris={pluginUris}
+          users={[fakeUser]}
+          onLoad={handleFakeEdgeWorld}
+          onError={handleError}
+        />
+      ) : (
+        <MakeEdgeContext
+          {...contextOptions}
+          crashReporter={crashReporter}
+          debug={ENV.DEBUG_CORE}
+          allowDebugging={ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
+          nativeIo={nativeIo}
+          pluginUris={pluginUris}
+          onLoad={handleContext}
+          onError={handleError}
+        />
+      )}
+      {context == null ? <LoadingScene /> : <Services key={`redux${counter.current}`} context={context} />}
+    </>
+  )
 }
