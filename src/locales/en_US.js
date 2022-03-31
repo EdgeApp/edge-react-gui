@@ -955,8 +955,8 @@ const strings = {
 
   // Stake
   stake_estimated_return: 'Estimated Return: %s APR',
-  stake_currently_staked: 'Currently Staked',
-  stake_earned: '%s Earned',
+  stake_s_staked: '%s Staked',
+  stake_s_earned: '%s Earned',
   stake_lock_message: 'locked until %s',
   stake_select_options: 'Select staking options:',
   stake_stake_more_funds: 'Stake More Funds',
