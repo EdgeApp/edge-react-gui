@@ -218,7 +218,7 @@ export type ParamList = {
     modification: $PropertyType<ChangeQuoteRequest, 'action'>
   |},
   stakeClaim: { walletId: string, stakePolicy: StakePolicy },
-  stakeOptions: { walletId: string },
+  stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   fioStakingChange: {
     change: 'add' | 'remove',
