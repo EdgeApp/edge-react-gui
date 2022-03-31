@@ -191,7 +191,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   handleStakePress = () => {
     const { currencyCode, walletId } = this.props
     if (currencyCode === 'FIO') Actions.push(FIO_STAKING_OVERVIEW, { currencyCode, walletId })
-    else Actions.push(STAKE_OPTIONS, { walletId })
+    else Actions.push(STAKE_OPTIONS, { walletId, currencyCode })
   }
 
   clearText = () => {
