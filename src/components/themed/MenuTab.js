@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import s from '../../locales/strings.js'
+import { TouchableOpacity, View } from '../../types/reactNative.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { DividerLine } from './DividerLine.js'
@@ -17,7 +17,7 @@ type OwnProps = {
   navigation: NavigationProp<'edge'>
 }
 
-type Props = OwnProps & ThemeProps
+type Props = OwnProps & ThemeProps & TestProps
 
 const title: { [name: $Keys<ParamList>]: string } = {
   walletList: s.strings.title_wallets,
