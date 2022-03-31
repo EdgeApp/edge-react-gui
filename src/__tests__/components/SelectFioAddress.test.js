@@ -7,7 +7,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { SelectFioAddressComponent } from '../../components/themed/SelectFioAddress.js'
 
-describe('Request', () => {
+describe('SelectFioAddress', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 

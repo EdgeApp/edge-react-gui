@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Request should render with loading props 1`] = `
+exports[`WalletListFooter should render with loading props 1`] = `
 <View
   style={
     Object {

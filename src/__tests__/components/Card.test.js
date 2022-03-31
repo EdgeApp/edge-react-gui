@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { CardComponent as Request } from '../../components/themed/Card.js'
+import { CardComponent } from '../../components/themed/Card.js'
 
-describe('Request', () => {
+describe('Card', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -20,7 +20,7 @@ describe('Request', () => {
       paddingRem: 11,
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<CardComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

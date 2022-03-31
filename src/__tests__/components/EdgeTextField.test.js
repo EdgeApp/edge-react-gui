@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { EdgeTextFieldComponent as Request } from '../../components/themed/EdgeTextField.js'
+import { EdgeTextFieldComponent } from '../../components/themed/EdgeTextField.js'
 
-describe('Request', () => {
+describe('EdgeTextField', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -16,7 +16,7 @@ describe('Request', () => {
 
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<EdgeTextFieldComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

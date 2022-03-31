@@ -7,7 +7,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { ProgressBarComponent } from '../../components/themed/WiredProgressBar.js'
 
-describe('Request', () => {
+describe('ProgressBar', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 

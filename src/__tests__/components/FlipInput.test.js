@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { FlipInputComponent as Request } from '../../components/themed/FlipInput.js'
+import { FlipInputComponent } from '../../components/themed/FlipInput.js'
 
-describe('Request', () => {
+describe('FlipInputComponent', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -45,7 +45,7 @@ describe('Request', () => {
       theme: getTheme()
     }
 
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<FlipInputComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

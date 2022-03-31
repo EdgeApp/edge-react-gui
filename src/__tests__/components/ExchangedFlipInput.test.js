@@ -7,7 +7,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { ExchangedFlipInput } from '../../components/themed/ExchangedFlipInput.js'
 
-describe('Request', () => {
+describe('ExchangedFlipInput', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 

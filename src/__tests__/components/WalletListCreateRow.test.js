@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { WalletListCreateRowComponent as Request } from '../../components/themed/WalletListCreateRow.js'
+import { WalletListCreateRowComponent } from '../../components/themed/WalletListCreateRow.js'
 
-describe('Request', () => {
+describe('WalletListCreateRow', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -23,7 +23,7 @@ describe('Request', () => {
       createWallet: async (walletName, walletType, fiatCurrencyCode) => 'EdgeCurrencyWallet',
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<WalletListCreateRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Request should render with loading props 1`] = `
+exports[`ExchangedFlipInput should render with loading props 1`] = `
 <ForwardRef
   exchangeSecondaryToPrimaryRatio="0"
   forceUpdateGuiCounter={11}

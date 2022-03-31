@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Request should render with loading props 1`] = `
+exports[`Tile should render with loading props 1`] = `
 <TouchableWithoutFeedback
   disabled={false}
   onPress={[Function]}

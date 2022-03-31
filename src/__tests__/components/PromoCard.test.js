@@ -7,7 +7,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { PromoCardComponent } from '../../components/themed/PromoCard.js'
 
-describe('Request', () => {
+describe('PromoCard', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 

@@ -4,12 +4,12 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { PasswordReminderModalComponent as Request } from '../../components/modals/PasswordReminderModal.js'
+import { PasswordReminderModalComponent } from '../../components/modals/PasswordReminderModal.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge.js'
 import { fakeUser } from '../../util/fake-user.js'
 
-describe('Request', () => {
+describe('PasswordReminderModal', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -30,7 +30,7 @@ describe('Request', () => {
       spinning: true,
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<PasswordReminderModalComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

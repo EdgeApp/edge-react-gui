@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Request should render with loading props 1`] = `
+exports[`SelectFioAddress should render with loading props 1`] = `
 <View>
   <WithTheme(TileComponent)
     body="string"

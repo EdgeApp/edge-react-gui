@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { ClickableRowComponent as Request } from '../../components/themed/ClickableRow.js'
+import { ClickableRowComponent } from '../../components/themed/ClickableRow.js'
 
-describe('Request', () => {
+describe('ClickableRow', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -25,7 +25,7 @@ describe('Request', () => {
       paddingRem: 11,
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<ClickableRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

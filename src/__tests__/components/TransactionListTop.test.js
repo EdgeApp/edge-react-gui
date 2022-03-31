@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { TransactionListTopComponent as Request } from '../../components/themed/TransactionListTop.js'
+import { TransactionListTopComponent } from '../../components/themed/TransactionListTop.js'
 
-describe('Request', () => {
+describe('TransactionListTop', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -30,7 +30,7 @@ describe('Request', () => {
       theme: getTheme()
     }
 
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<TransactionListTopComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

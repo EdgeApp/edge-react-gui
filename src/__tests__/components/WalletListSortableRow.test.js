@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { WalletListSortableRowComponent as Request } from '../../components/themed/WalletListSortableRow.js'
+import { WalletListSortableRowComponent } from '../../components/themed/WalletListSortableRow.js'
 
-describe('Request', () => {
+describe('WalletListSortableRow', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -25,7 +25,7 @@ describe('Request', () => {
       }),
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<WalletListSortableRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

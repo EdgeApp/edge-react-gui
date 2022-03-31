@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { WalletListHeaderComponent as Request } from '../../components/themed/WalletListHeader.js'
+import { WalletListHeaderComponent } from '../../components/themed/WalletListHeader.js'
 
-describe('Request', () => {
+describe('WalletListHeader', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -20,7 +20,7 @@ describe('Request', () => {
       onChangeSearchingState: searching => undefined,
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<WalletListHeaderComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

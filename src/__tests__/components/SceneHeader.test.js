@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { SceneHeaderComponent as Request } from '../../components/themed/SceneHeader.js'
+import { SceneHeaderComponent } from '../../components/themed/SceneHeader.js'
 
-describe('Request', () => {
+describe('SceneHeader', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -18,7 +18,7 @@ describe('Request', () => {
       withTopMargin: true,
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<SceneHeaderComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

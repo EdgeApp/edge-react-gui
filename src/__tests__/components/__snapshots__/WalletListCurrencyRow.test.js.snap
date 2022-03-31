@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Request should render with loading props 1`] = `
+exports[`WalletListRow should render with loading props 1`] = `
 <WithTheme(ClickableRowComponent)
   gradient={true}
   highlight={true}

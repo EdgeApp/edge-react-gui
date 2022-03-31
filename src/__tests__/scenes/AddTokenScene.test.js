@@ -7,7 +7,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { AddToken } from '../../components/scenes/AddTokenScene.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
 
-describe('Request', () => {
+describe('AddTokenScene', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 

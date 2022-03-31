@@ -5,9 +5,9 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { TileComponent as Request } from '../../components/themed/Tile.js'
+import { TileComponent } from '../../components/themed/Tile.js'
 
-describe('Request', () => {
+describe('Tile', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -22,7 +22,7 @@ describe('Request', () => {
       maximumHeight: 'small',
       theme: getTheme()
     }
-    const actual = renderer.render(<Request {...props} />)
+    const actual = renderer.render(<TileComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

@@ -7,7 +7,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { BalanceBox } from '../../components/themed/WiredBalanceBox.js'
 
-describe('Request', () => {
+describe('BalanceBox', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
