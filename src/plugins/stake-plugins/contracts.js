@@ -12,12 +12,12 @@ import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
 import { promiseAny } from './util/promiseAny'
 
 export const rpcProviderUrls = [
-  'https://rpc.ftm.tools',
-  'https://rpc.fantom.network',
-  'https://rpc2.fantom.network',
-  'https://rpc3.fantom.network',
-  'https://rpcapi.fantom.network',
-  'https://rpc.ankr.com/fantom'
+  'https://rpc.ftm.tools'
+  // 'https://rpc.fantom.network',
+  // 'https://rpc2.fantom.network',
+  // 'https://rpc3.fantom.network',
+  // 'https://rpcapi.fantom.network',
+  // 'https://rpc.ankr.com/fantom'
 ]
 export const providers = rpcProviderUrls.map<ethers.Provider>(url => new ethers.providers.JsonRpcProvider(url))
 
