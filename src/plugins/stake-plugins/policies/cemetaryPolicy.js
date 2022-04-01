@@ -86,48 +86,6 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
       }
 
       //
-      // Checks balances
-      //
-
-      // TODO: Change this algorithm to check the balance of every token in the stakeAllocations array when multiple assets are supported
-      await Promise.all(
-        allocations.map(async allocation => {
-          // Assert if enough token balance is available
-          const balanceResponse = await (async () => {
-            switch (allocation.allocationType) {
-              case 'stake': {
-                const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
-                if (isNativeToken) {
-                  return await multipass(p => p.getBalance(signerAddress))
-                }
-                const tokenContract = makeContract(allocation.tokenId)
-                return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
-              }
-              case 'unstake': {
-                const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
-                return userInfo.amount
-              }
-              case 'claim': {
-                const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
-                return userInfo.rewardDebt
-              }
-              case 'fee':
-                // Don't do anything with fee
-                break
-              default:
-                throw new Error('Unkown allocation type')
-            }
-          })()
-          if (balanceResponse == null) return
-          const balanceAmount = fromHex(balanceResponse._hex)
-          const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
-          if (!isBalanceEnough) {
-            throw new Error(`Cannot withdraw '${allocation.nativeAmount}' with '${allocation.tokenId}' token balance ${balanceAmount}`)
-          }
-        })
-      )
-
-      //
       // Build transaction workflow
       //
 
@@ -139,13 +97,14 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
         /*
         LP Liquidity Providing:
 
-          1. Approve SpookySwap Router contract on TOMB token contract 
+          1. Check balance of staked assets
+          2. Approve SpookySwap Router contract on TOMB token contract 
             example: 0xa14903af7d58dbd2f205b45371b36e8afa1e942e791c0e77cce2b613c71bfda6
             ```
             tokenContract.approve(lpRouter.address, MAX_UINT256)
             tokenContract.approve(0xF491e7B69E4244ad4002BC14e878a34207E38c29, MAX_UINT256)
             ```
-          2. Add liquidity to to SpookySwap Router contract
+          3. Add liquidity to to SpookySwap Router contract
             example: 0xf2c133e1548d86aaefe9078d7ea5bbf4f6acd7eae8d7c0e17c9e2ba43bf1911d
 
             If one asset is native:
@@ -159,7 +118,29 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
             lpRouter.addLiquidity(...)
             ```
         */
-        // 1. Approve Router contract for every stake token contract (excluding native token)
+
+        // 1. Check balance of staked assets
+        await Promise.all(
+          allocations
+            .filter(allocation => allocation.allocationType === 'stake')
+            .map(async allocation => {
+              const balanceResponse = await (async () => {
+                const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
+                if (isNativeToken) {
+                  return await multipass(p => p.getBalance(signerAddress))
+                }
+                const tokenContract = makeContract(allocation.tokenId)
+                return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
+              })()
+              const balanceAmount = fromHex(balanceResponse._hex)
+              const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
+              if (!isBalanceEnough) {
+                throw new Error(`Cannot withdraw '${allocation.nativeAmount}' with '${allocation.tokenId}' token balance ${balanceAmount}`)
+              }
+            })
+        )
+
+        // 2. Approve Router contract for every stake token contract (excluding native token)
         await Promise.all(
           allocations.map(async allocation => {
             // We don't need to approve the stake pool contract for the token earned token contract
@@ -183,14 +164,14 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
           })
         )
 
-        // 2. Add liquidity to to SpookySwap Router contract
+        // 3. Add liquidity to to SpookySwap Router contract
         txs.build(
           (gasLimit =>
             async function addLiquidity({ provider }) {
               // Assume only one non-native token
               const contractTokenSymbol = await tokenContract.symbol()
-              const tokenAllocation = allocations.find(allocation => allocation.allocationType === 'stake' && allocation.tokenId === contractTokenSymbol)
-              const nativeAllocation = allocations.find(allocation => allocation.allocationType === 'stake' && allocation.tokenId === policyInfo.parentTokenId)
+              const tokenAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === contractTokenSymbol)
+              const nativeAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === policyInfo.parentTokenId)
 
               if (tokenAllocation == null) throw new Error(`Contract token ${contractTokenSymbol} not found in asset pair`)
               if (nativeAllocation == null) throw new Error(`Native token ${policyInfo.parentTokenId} not found in asset pair`)
@@ -268,20 +249,43 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
       Unstaking for LP tokens:
         1. Calculate the liquidity amount (LP-Pair token amount) from the unstake-allocations
            
-        2. Withdraw the amount of LP-Pair token from Pool Contract
+        2. Check liquidity amount balance
+
+        3. Withdraw the amount of LP-Pair token from Pool Contract
           ```
           poolContract.withdraw(uint256 _pid, uint256 _amount)
           poolContract.withdraw(POOL_ID, 100000000000000)
           ```
-        3. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
+        4. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
           ```
           lpRouter.removeLiquidityETH(address token, uint256 amountTokenDesired, uint256 amountTokenMin, uint256 amountETHMin, address to, uint256 deadline)
           ```
       */
       if (action === 'unstake') {
+        const contractTokenSymbol = await tokenContract.symbol()
+        const tokenAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === contractTokenSymbol)
+        const nativeAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === policyInfo.parentTokenId)
+
+        if (tokenAllocation == null) throw new Error(`Contract token ${contractTokenSymbol} not found in asset pair`)
+        if (nativeAllocation == null) throw new Error(`Native token ${policyInfo.parentTokenId} not found in asset pair`)
+
         // 1. Calculate the liquidity amount (LP-Pair token amount) from the unstake-allocations
-        const liquidity = 10000
-        // 2. Withdraw the amount of LP-Pair token from Pool Contract
+        const lpTokenSupply = await multipass(p => pairContract.connect(p).totalSupply())
+        const reservesResponse = await multipass(p => pairContract.connect(p).getReserves())
+        const { _reserve0 } = reservesResponse
+        const tokenSupplyInReserve = _reserve0
+        const liquidity = round(mul(div(tokenAllocation.nativeAmount, fromHex(tokenSupplyInReserve._hex), DECIMALS), fromHex(lpTokenSupply._hex)))
+
+        // 2. Check liquidity amount balance
+        const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+        const balanceAmount = fromHex(userInfo.amount._hex)
+        const isBalanceEnough = lte(liquidity, balanceAmount)
+        if (!isBalanceEnough) {
+          const lpSymbol = await pairContract.symbol()
+          throw new Error(`Cannot withdraw ${liquidity} ${lpSymbol} with liquidity balance ${balanceAmount}`)
+        }
+
+        // 3. Withdraw the amount of LP-Pair token from Pool Contract
         txs.build(
           (gasLimit =>
             async function unstakeLiquidity({ provider }) {
@@ -290,7 +294,34 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
               })
             })(gasLimitAcc('240000'))
         )
-        // 3. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
+
+        // 4. Allow LP-Router on the LP-Pair token contract
+        const spenderAddress = lpRouter.address
+        const allowanceResponse = await multipass(p => pairContract.connect(p).allowance(signerAddress, spenderAddress))
+        const isAllowed = allowanceResponse.sub(liquidity).gte(0)
+        if (!isAllowed) {
+          txs.build(
+            (gasLimit =>
+              async function approveRouter({ provider }) {
+                await pairContract.connect(provider).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
+              })(gasLimitAcc('50000'))
+          )
+        }
+        // txs.build(buildApproveCall(pairContract, signerAddress, lpRouter.address, liquidity, gasLimitAcc))
+
+        // 4. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
+        txs.build(
+          (gasLimit =>
+            async function unstakeLiquidity({ provider }) {
+              const amountTokenMin = round(mul(tokenAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const amountNativeMin = round(mul(nativeAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
+
+              await lpRouter.connect(provider).removeLiquidityETH(tokenContract.address, liquidity, amountTokenMin, amountNativeMin, signerAddress, deadline, {
+                gasLimit
+              })
+            })(gasLimitAcc('500000'))
+        )
       }
 
       /*
