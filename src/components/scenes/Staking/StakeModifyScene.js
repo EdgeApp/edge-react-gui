@@ -35,6 +35,8 @@ type Props = {
 
 const DEFAULT = ''
 
+let sliderLocked = false
+
 export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
@@ -162,6 +164,7 @@ export const StakeModifyScene = (props: Props) => {
 
   const handleSlideComplete = reset => {
     if (pendingChangeQuote != null) {
+      sliderLocked = true
       pendingChangeQuote
         .approve()
         .then(success => {
@@ -171,6 +174,9 @@ export const StakeModifyScene = (props: Props) => {
         .catch(err => {
           reset()
           showError(err.message)
+        })
+        .finally(() => {
+          sliderLocked = false
         })
     }
   }
@@ -296,7 +302,8 @@ export const StakeModifyScene = (props: Props) => {
       </SceneWrapper>
     )
 
-  const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
+  const isSliderDisabled =
+    sliderLocked || pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
   return (
     <SceneWrapper scroll background="theme">
