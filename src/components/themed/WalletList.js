@@ -357,28 +357,15 @@ export class WalletListComponent extends React.PureComponent<Props> {
 }
 
 export const WalletList = connect<StateProps, DispatchProps, OwnProps>(
-  state => {
-    let { activeWalletIds } = state.ui.wallets
-
-    // FIO disable changes below
-    if (global.isFioDisabled) {
-      const { currencyWallets } = state.core.account
-      activeWalletIds = activeWalletIds.filter(id => {
-        const wallet = currencyWallets[id]
-        return wallet == null || wallet.type !== 'wallet:fio'
-      })
-    }
-
-    return {
-      activeWalletIds,
-      account: state.core.account,
-      customTokens: state.ui.settings.customTokens,
-      exchangeRates: state.exchangeRates,
-      mostRecentWallets: state.ui.settings.mostRecentWallets,
-      walletsSort: state.ui.settings.walletsSort,
-      wallets: state.ui.wallets.byId
-    }
-  },
+  state => ({
+    activeWalletIds: state.ui.wallets.activeWalletIds,
+    account: state.core.account,
+    customTokens: state.ui.settings.customTokens,
+    exchangeRates: state.exchangeRates,
+    mostRecentWallets: state.ui.settings.mostRecentWallets,
+    walletsSort: state.ui.settings.walletsSort,
+    wallets: state.ui.wallets.byId
+  }),
   dispatch => ({
     getExchangeDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))

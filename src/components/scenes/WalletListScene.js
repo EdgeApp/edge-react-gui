@@ -187,26 +187,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const WalletListScene = connect<StateProps, DispatchProps, {}>(
-  state => {
-    let { activeWalletIds } = state.ui.wallets
-    const { currencyWallets } = state.core.account
-
-    // FIO disable changes below
-    if (global.isFioDisabled) {
-      const { currencyWallets } = state.core.account
-      activeWalletIds = activeWalletIds.filter(id => {
-        const wallet = currencyWallets[id]
-        return wallet == null || wallet.type !== 'wallet:fio'
-      })
-    }
-
-    return {
-      activeWalletIds,
-      wallets: currencyWallets,
-      disklet: state.core.disklet,
-      needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
-    }
-  },
+  state => ({
+    activeWalletIds: state.ui.wallets.activeWalletIds,
+    wallets: state.core.account.currencyWallets,
+    disklet: state.core.disklet,
+    needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
+  }),
   dispatch => ({
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))

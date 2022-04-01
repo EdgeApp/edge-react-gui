@@ -82,7 +82,6 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
     // FIO disable changes
-    if (pluginId === 'fio' && global.isFioDisabled) continue
     if (pluginId === 'bitcoin') {
       out.push({
         currencyName: 'Bitcoin (Segwit)',
