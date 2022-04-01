@@ -21,8 +21,8 @@ import {
   getPolicyIconUris,
   getPolicyTitleName,
   getPositionAllocations,
-  stakePlugin,
-} from "../../../util/stakeUtils.js";
+  stakePlugin
+} from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -67,14 +67,15 @@ export const StakeOverviewScene = (props: Props) => {
   const [rewardAllocations, setRewardAllocations] = useState<PositionAllocation[] | void>()
   const [stakePosition, setStakePosition] = useState<StakePosition | void>()
   useEffect(() => {
-    (stakePlugin.fetchStakePosition({ stakePolicyId, wallet: currencyWallet }).then(
-  async stakePosition => {
-    const guiAllocations = getPositionAllocations(stakePosition)
-    setStakeAllocations(guiAllocations.staked)
-    setRewardAllocations(guiAllocations.earned)
-    setStakePosition(stakePosition)
-  },
-).catch)(err => {
+    stakePlugin
+      .fetchStakePosition({ stakePolicyId, wallet: currencyWallet })
+      .then(async stakePosition => {
+        const guiAllocations = getPositionAllocations(stakePosition)
+        setStakeAllocations(guiAllocations.staked)
+        setRewardAllocations(guiAllocations.earned)
+        setStakePosition(stakePosition)
+      })
+      .catch(err => {
         console.error(err)
       })
   }, [currencyWallet, stakePolicyId])
@@ -87,17 +88,21 @@ export const StakeOverviewScene = (props: Props) => {
   }
 
   // Renderers
-  const renderCFAT = ({item}) => {
-    const {allocationType, tokenId, nativeAmount} = item
+  const renderCFAT = ({ item }) => {
+    const { allocationType, tokenId, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
     const title = `${sprintf(titleBase, tokenId)} ${getAllocationLocktimeMessage(item)}`
     const denomination = getDisplayDenomination(state, walletPluginId, tokenId)
 
-    return <CryptoFiatAmountTile title={title}
+    return (
+      <CryptoFiatAmountTile
+        title={title}
         nativeCryptoAmount={nativeAmount ?? '0'}
         cryptoCurrencyCode={stakeAssetsName}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
-        denomination={denomination}/>
+        denomination={denomination}
+      />
+    )
   }
 
   if (stakeAllocations == null || rewardAllocations == null)
@@ -117,7 +122,11 @@ export const StakeOverviewScene = (props: Props) => {
           text={sprintf(s.strings.stake_estimated_return, toFixed(stakePolicy.apy.toString(), 1, 1) + '%')}
         />
       </View>
-      <FlatList data={[...stakeAllocations, ...rewardAllocations]} renderItem={renderCFAT} keyExtractor={(allocation: PositionAllocation) => allocation.tokenId + allocation.allocationType} />
+      <FlatList
+        data={[...stakeAllocations, ...rewardAllocations]}
+        renderItem={renderCFAT}
+        keyExtractor={(allocation: PositionAllocation) => allocation.tokenId + allocation.allocationType}
+      />
       <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
       <MainButton label={s.strings.stake_claim_rewards} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
       <MainButton label={s.strings.stake_unstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
