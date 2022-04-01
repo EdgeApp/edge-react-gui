@@ -6,14 +6,14 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
-import { type ChangeQuote, type QuoteAllocation, type StakePosition } from '../../../plugins/stake-plugins'
+import { type ChangeQuote, type ChangeQuoteRequest, type PositionAllocation, type QuoteAllocation } from '../../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName, stakePlugin } from '../../../util/stakeUtils.js'
+import { getPolicyAssetName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
@@ -31,14 +31,16 @@ type Props = {
   route: RouteProp<'stakeModify'>
 }
 
+// type QuoteAllocationType = $PropertyType<QuoteAllocation, 'allocationType'>
+
 export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
-  const { walletId, stakePolicy, stakePosition, allocationToMod, modification } = props.route.params
+  const { walletId, stakePolicy, stakePosition, modification } = props.route.params
   const { stakePolicyId } = stakePolicy
   // TODO: Remove hard-coding for single asset to support multiple stake/reward assets
-  const stakeAssetsName = getStakeAssetsName(stakePolicy)
-  const rewardAssetsName = getRewardAssetsName(stakePolicy)
+  const stakeAssetsName = getPolicyAssetName(stakePolicy, 'stakeAssets')
+  const rewardAssetsName = getPolicyAssetName(stakePolicy, 'rewardAssets')
 
   // Hooks
   const {
@@ -76,69 +78,103 @@ export const StakeModifyScene = (props: Props) => {
   })
 
   // Current Allocation Info
-  const [rewardAmount, setRewardAmount] = useState<string>('0')
+  const [existingAllocations, setExistingAllocations] = useState<{ staked: PositionAllocation[], earned: PositionAllocation[] } | void>()
 
   // Handlers
+
+  // ChangeQuote that gets rendered in the rows
   const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote | void>()
-  const [nativeModAmount, setNativeModAmount] = useState('0')
+
+  // Request that the user will modify, triggering a ChangeQuote recalculation
+  const [changeQuoteRequest, setChangeQuoteRequest] = useState<ChangeQuoteRequest>({
+    action: modification,
+    stakePolicyId: stakePolicy.stakePolicyId,
+    tokenId: '',
+    nativeAmount: '0',
+    wallet: currencyWallet
+  })
+
   const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
 
-  // Get pending change quote
+  // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
   useEffect(() => {
-    let abort = false
-    // Setup the request
-    stakePlugin
-      .fetchChangeQuote({
-        action: modification,
-        stakePolicyId: stakePolicyId,
-        tokenId: allocationToMod?.tokenId ?? '',
-        nativeAmount: nativeModAmount,
-        wallet: currencyWallet
+    const existingAllocations = getPositionAllocations(stakePosition)
+    setExistingAllocations(existingAllocations)
+  }, [currencyWallet, stakePosition])
+
+  // An Effect for updating the ChangeQuote triggered by changes to changeQuoteRequest
+  useEffect(() => {
+    if (changeQuoteRequest == null || changeQuoteRequest.tokenId === '' || changeQuoteRequest.nativeAmount === '0') {
+      // Setup a default ChangeQuote for rendering based on policy if no position changes have been requested or scene just mounted
+
+      const stakeChangeQuotes = stakePolicy.stakeAssets.map(({ pluginId, tokenId }) => {
+        return {
+          allocationType: 'stake',
+          tokenId: tokenId,
+          nativeAmount: '0'
+        }
       })
-      .then(changeQuote => {
-        if (abort) return
-        setPendingChangeQuote(changeQuote)
-        setNativeFeeAmount(changeQuote.allocations.find(allocation => allocation.allocationType === 'fee')?.nativeAmount ?? '0')
+      const rewardChangeQuotes = stakePolicy.rewardAssets.map(({ pluginId, tokenId }) => {
+        return {
+          allocationType: 'claim',
+          tokenId: tokenId,
+          nativeAmount: existingAllocations?.earned[0].nativeAmount || '0'
+        }
       })
-      .catch(err => {
-        if (abort) return
-        showError(err.message)
+      setPendingChangeQuote({
+        allocations: [...stakeChangeQuotes, ...rewardChangeQuotes],
+        approve: async () => {}
       })
-    return () => {
-      abort = true
+    } else {
+      // Setup the request
+      stakePlugin
+        .fetchChangeQuote(
+          {
+            action: modification,
+            stakePolicyId: changeQuoteRequest.stakePolicyId,
+            tokenId: changeQuoteRequest.tokenId,
+            nativeAmount: changeQuoteRequest.nativeAmount,
+            wallet: currencyWallet
+          }
+          // changeQuoteRequest // TODO: Manage only values being changed instead of the whole object?
+        )
+        .then((changeQuote: ChangeQuote) => {
+          setPendingChangeQuote(changeQuote)
+          setNativeFeeAmount(changeQuote.allocations.find(allocation => allocation.allocationType === 'fee')?.nativeAmount ?? '0')
+        })
+        .catch(err => {
+          showError(err.message)
+        })
     }
-  }, [modification, stakePolicyId, allocationToMod?.tokenId, nativeModAmount, currencyWallet])
-
-  // Effect that initializes the allocation amount
-  useEffect(() => {
-    const rewardAllocation = getRewardAllocation(stakePosition)
-    const rewardAmountResult = rewardAllocation === null ? '0' : rewardAllocation.nativeAmount
-    const stakeAllocation = getStakeAllocation(stakePosition)
-    const stakeAmountResult = stakeAllocation === null ? '0' : stakeAllocation.nativeAmount
-
-    setRewardAmount(rewardAmountResult)
-
-    if (modification === 'claim') setNativeModAmount(rewardAmountResult)
-    if (modification === 'unstake') setNativeModAmount(stakeAmountResult)
-  }, [currencyWallet, stakePosition, modification])
+  }, [modification, stakePolicyId, changeQuoteRequest, currencyWallet, existingAllocations, stakePolicy.stakeAssets])
 
   //
   // Handlers
   //
 
+  // HACK: FlipInputModal is soon getting updates to not be trash.
+  // In the meantime, split out the modification calls to the different assets into separate methods.
   const handleAmountEdited = (nativeAmount: string, exchangeAmount: string) => {
-    setNativeModAmount(nativeAmount)
+    // TODO: NOT NEEDED? Set which allocation to modify
+    console.log('handleAmountEdited: ' + nativeAmount)
   }
 
-  const handleMaxButtonPress = () => {
-    // Allocation to modify is in native currency
-    if (currencyWallet.currencyInfo.currencyCode === allocationToMod?.tokenId) {
-      // TODO: (V2) Set max amount minus fees if specifying native asset amount
-    } else {
+  const handleMaxButtonPress = (modCurrencyCode: string) => () => {
+    // TODO: Set which allocation to modify
+
+    if (changeQuoteRequest != null) {
       if (modification === 'unstake') {
-        setNativeModAmount(allocationToMod?.nativeAmount ?? '0')
+        console.log('max unstaking ' + modCurrencyCode)
+        const allocationToMod = existingAllocations?.staked.find(positionAllocation => positionAllocation.tokenId === modCurrencyCode)
+        setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: allocationToMod?.nativeAmount })
       } else if (modification === 'stake') {
-        setNativeModAmount(currencyWallet.balances[stakeAssetsName])
+        if (currencyWallet.currencyInfo.currencyCode === changeQuoteRequest?.tokenId) {
+          // TODO: (V2) Set max amount minus fees if specifying native asset amount
+          console.log('max staking NATIVE')
+        } else {
+          console.log('max staking TOKEN ' + modCurrencyCode + currencyWallet.balances[modCurrencyCode])
+          setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: currencyWallet.balances[modCurrencyCode] })
+        }
       }
     }
   }
@@ -161,20 +197,21 @@ export const StakeModifyScene = (props: Props) => {
     }
   }
 
-  const handleShowFlipInputModal = () => {
+  const handleShowFlipInputModal = (currencyCode: string) => () => {
     const header = modification === 'stake' ? s.strings.stake_modal_modify_stake_title : s.strings.stake_modal_modify_unstake_title
     Airship.show(bridge => (
       <FlipInputModal
         bridge={bridge}
         walletId={walletId}
-        currencyCode={stakeAssetsName}
-        onAmountChanged={() => {}}
-        onMaxSet={handleMaxButtonPress}
+        currencyCode={currencyCode}
+        onAmountChanged={handleAmountEdited}
+        onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, currencyWallet.name)}
       />
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
-        handleAmountEdited(nativeAmount, exchangeAmount)
+        // set the appropriate amount
+        setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: currencyCode, nativeAmount: nativeAmount })
       })
       .catch(error => console.log(error))
   }
@@ -183,53 +220,43 @@ export const StakeModifyScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderEditableAmount = (allocationType: $PropertyType<QuoteAllocation, 'allocationType'>, stakePosition: StakePosition) => {
-    if (stakePosition !== null) {
-      const nativeAmountMap = {
-        stake: nativeModAmount,
-        claim: rewardAmount,
-        unstake: nativeModAmount,
-        fee: ''
-      }
-
-      const amountCurrencyCodeMap = {
-        stake: stakeAssetsName,
-        claim: rewardAssetsName,
-        unstake: stakeAssetsName,
-        fee: ''
-      }
-
-      const exchangeDenomMap = {
-        stake: stakeExchangeDenom,
-        claim: rewardExchangeDenom,
-        unstake: stakeExchangeDenom,
-        fee: stakeExchangeDenom
-      }
-
-      const displayDenomMap = {
-        stake: stakeDisplayDenom,
-        claim: rewardDisplayDenom,
-        unstake: stakeDisplayDenom,
-        fee: stakeDisplayDenom
-      }
-
-      const title =
-        allocationType === 'stake' ? (modification === 'stake' ? s.strings.stake_amount_stake : s.strings.stake_amount_unstake) : s.strings.stake_amount_claim
-
-      return (
-        <EditableAmountTile
-          title={title}
-          exchangeRates={guiExchangeRates}
-          nativeAmount={nativeAmountMap[allocationType]}
-          currencyWallet={currencyWallet}
-          currencyCode={amountCurrencyCodeMap[allocationType]}
-          exchangeDenomination={exchangeDenomMap[allocationType]}
-          displayDenomination={displayDenomMap[allocationType]}
-          lockInputs={allocationType === 'claim'}
-          onPress={handleShowFlipInputModal}
-        />
-      )
+  const renderEditableQuoteAmountRow = (quoteAllocation: QuoteAllocation) => {
+    console.log('\x1b[34m\x1b[43m' + `quoteAllocation.allocationType: ${JSON.stringify(quoteAllocation.allocationType, null, 2)}` + '\x1b[0m')
+    const exchangeDenomMap = {
+      stake: stakeExchangeDenom,
+      claim: rewardExchangeDenom,
+      unstake: stakeExchangeDenom,
+      fee: stakeExchangeDenom
     }
+
+    const displayDenomMap = {
+      stake: stakeDisplayDenom,
+      claim: rewardDisplayDenom,
+      unstake: stakeDisplayDenom,
+      fee: stakeDisplayDenom
+    }
+
+    const quoteAllocationType = quoteAllocation.allocationType
+    const title =
+      quoteAllocationType === 'stake'
+        ? modification === 'stake'
+          ? sprintf(s.strings.stake_amount_stake, quoteAllocation.tokenId)
+          : sprintf(s.strings.stake_amount_unstake, quoteAllocation.tokenId)
+        : sprintf(s.strings.stake_amount_claim, quoteAllocation.tokenId)
+
+    return (
+      <EditableAmountTile
+        title={title}
+        exchangeRates={guiExchangeRates}
+        nativeAmount={quoteAllocation.nativeAmount}
+        currencyWallet={currencyWallet}
+        currencyCode={quoteAllocation.tokenId}
+        exchangeDenomination={exchangeDenomMap[quoteAllocationType]}
+        displayDenomination={displayDenomMap[quoteAllocationType]}
+        lockInputs={quoteAllocationType === 'claim'}
+        onPress={handleShowFlipInputModal(quoteAllocation.tokenId)}
+      />
+    )
   }
 
   const renderWarning = () => {
@@ -245,18 +272,28 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  const displayAllocationTypesMap = {
+  // Mapping for filtering the array of QuoteAllocations in the pending ChangeQuote based on the
+  // modification action of the scene.
+  // We only display certain allocationTypes from the ChangeQuote allocations:QuoteAllocation[]
+  // depending on the modification being done in the scene.
+  const displayChangeQuoteMap = {
     stake: ['stake'],
     claim: ['claim'],
-    unstake: ['claim', 'stake']
+    unstake: ['stake', 'claim']
   }
-  const renderAmountTiles = (modAllocation, nativeAmount, modification) => {
+
+  const renderChangeQuoteAmountTiles = modification => {
     return (
       <View style={styles.amountTilesContainer}>
         <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIcon(currencyWallet.currencyInfo.pluginId).symbolImage}>
           <EdgeText>{currencyWallet.name}</EdgeText>
         </IconTile>
-        {displayAllocationTypesMap[modification].map(allocationType => renderEditableAmount(allocationType, stakePosition))}
+        {displayChangeQuoteMap[modification].map(displayAllocationType => {
+          if (pendingChangeQuote == null) return null
+
+          const quoteAllocationsToDisplay = pendingChangeQuote?.allocations.filter(quoteAllocation => quoteAllocation.allocationType === displayAllocationType)
+          return quoteAllocationsToDisplay?.map(quoteAllocation => renderEditableQuoteAmountRow(quoteAllocation))
+        })}
         <CryptoFiatAmountTile
           title={s.strings.wc_smartcontract_network_fee}
           nativeCryptoAmount={nativeFeeAmount}
@@ -268,25 +305,26 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  if (stakePosition.allocations.length === 0) {
+    return (
+      <SceneWrapper background="theme">
+        <FillLoader />
+      </SceneWrapper>
+    )
+  }
+
+  const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
+
   const sceneTitleMap = {
     stake: sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName),
     claim: s.strings.stake_claim_rewards,
     unstake: s.strings.stake_claim_unstake
   }
 
-  if (stakePosition.allocations.length === 0)
-    return (
-      <SceneWrapper background="theme">
-        <FillLoader />
-      </SceneWrapper>
-    )
-
-  const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
-
   return (
     <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin />
-      {renderAmountTiles(allocationToMod, nativeModAmount, modification)}
+      {renderChangeQuoteAmountTiles(modification)}
       {renderWarning()}
       <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={null} disabledText={s.strings.stake_disabled_slider} />
     </SceneWrapper>

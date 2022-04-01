@@ -1,25 +1,24 @@
 // @flow
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { type StakePolicy } from '../../../plugins/stake-plugins'
+import { type RootState } from '../../../reducers/RootReducer'
 import { useEffect, useState } from '../../../types/reactHooks.js'
+import { useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers'
-import {getPolicyAssetName, getPolicyIconUris, getPolicyTitleName, stakePlugin} from "../../../util/stakeUtils.js";
+import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName, stakePlugin } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 import { StakingOptionCard } from '../../themed/StakingOptionCard.js'
-
-import { type RootState } from "../../../reducers/RootReducer";
-import { useSelector } from '../../../types/reactRedux'
 
 type Props = {
   route: RouteProp<'stakeOptions'>,
@@ -48,10 +47,12 @@ export const StakeOptionsScene = (props: Props) => {
           navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
           return
         }
-        setStakePolicies(stakePolicies.filter(stakePolicy => {
-          // TODO: finish policy filter
-          return true
-        }))
+        setStakePolicies(
+          stakePolicies.filter(stakePolicy => {
+            // TODO: finish policy filter
+            return true
+          })
+        )
       })
       .catch(err => console.error(err))
   }, [walletId])
@@ -73,19 +74,19 @@ export const StakeOptionsScene = (props: Props) => {
   // Renders
   //
 
-  const renderOptions = ({item}) => {
-      const primaryText = getPolicyAssetName(item, 'stakeAssets')
-      const secondaryText = getPolicyTitleName(item)
-      const key = [primaryText, secondaryText].join()
-      const policyIcons = getPolicyIconUris(currencyWallet, item)
-      return (
-        <View key={key} style={styles.optionContainer}>
-          <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>
-            <StakingOptionCard currencyLogos={policyIcons.stakeAssetUris} primaryText={primaryText} secondaryText={secondaryText} />
-          </TouchableOpacity>
-        </View>
-      )
-    }
+  const renderOptions = ({ item }) => {
+    const primaryText = getPolicyAssetName(item, 'stakeAssets')
+    const secondaryText = getPolicyTitleName(item)
+    const key = [primaryText, secondaryText].join()
+    const policyIcons = getPolicyIconUris(currencyWallet, item)
+    return (
+      <View key={key} style={styles.optionContainer}>
+        <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>
+          <StakingOptionCard currencyLogos={policyIcons.stakeAssetUris} primaryText={primaryText} secondaryText={secondaryText} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   if (stakePolicies.length === 0)
     return (

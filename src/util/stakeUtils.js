@@ -47,7 +47,7 @@ const getAssetCurrencyCodes = (stakePolicy: StakePolicy, assetType: 'stakeAssets
  */
 export const getPositionAllocations = (stakePosition: StakePosition) => {
   return {
-    staked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'staked'), 
+    staked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'staked'),
     earned: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'earned')
   }
 }
@@ -91,10 +91,16 @@ export const getPolicyIconUris = (currencyWallet: EdgeCurrencyWallet, stakePolic
 
   const metaTokens = currencyWallet.currencyInfo.metaTokens
   const stakeContractAddresses = stakeAssetNames.map(stakeAssetName => metaTokens.find(metaToken => metaToken.currencyCode === stakeAssetName)?.contractAddress)
-  const rewardContractAddresses = rewardAssetNames.map(rewardAssetName => metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress)
+  const rewardContractAddresses = rewardAssetNames.map(
+    rewardAssetName => metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
+  )
 
-  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIcon(currencyWallet.currencyInfo.pluginId, stakeContractAddress).symbolImage)
-  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIcon(currencyWallet.currencyInfo.pluginId, rewardContractAddress).symbolImage)
-  
+  const stakeAssetUris = stakeContractAddresses.map(
+    stakeContractAddress => getCurrencyIcon(currencyWallet.currencyInfo.pluginId, stakeContractAddress).symbolImage
+  )
+  const rewardAssetUris = rewardContractAddresses.map(
+    rewardContractAddress => getCurrencyIcon(currencyWallet.currencyInfo.pluginId, rewardContractAddress).symbolImage
+  )
+
   return { stakeAssetUris, rewardAssetUris }
 }
