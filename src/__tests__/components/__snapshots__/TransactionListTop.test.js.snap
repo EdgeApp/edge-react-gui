@@ -111,6 +111,7 @@ exports[`Request should render with loading props 1`] = `
                   style={
                     Object {
                       "fontFamily": "Quicksand-Medium",
+                      "fontSize": 45,
                     }
                   }
                 >
