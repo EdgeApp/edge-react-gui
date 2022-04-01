@@ -2,7 +2,7 @@
 import '@ethersproject/shims'
 
 import { div, lte, mul } from 'biggystring'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 import { makeContract, makeSigner, multipass } from '../contracts.js'
 import { pluginInfo } from '../pluginInfo.js'
@@ -28,6 +28,7 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
   const POOL_ID = 0
   // TODO: Replace DECIMAL hardcode with a configuration for each asset from `options`
   const DECIMALS = 18
+  const DECIMAL_FACTOR = BigNumber.from((10 ** DECIMALS).toString())
   const SLIPPAGE = 0.008 // 0.8%
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 24 // 24 hours
@@ -71,13 +72,14 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
         )
       }
       // Calculate the claim asset native amounts:
-      if (action === 'claim') {
+      if (action === 'claim' || action === 'unstake') {
+        const rewardNativeAmount = (await multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId }) => {
             return {
               allocationType: 'claim',
               tokenId,
-              nativeAmount: request.nativeAmount
+              nativeAmount: rewardNativeAmount
             }
           })
         )
