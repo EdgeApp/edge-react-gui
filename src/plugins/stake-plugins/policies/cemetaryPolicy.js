@@ -45,7 +45,7 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
       // Get the signer for the wallet
       const signerAddress = makeSigner(signerSeed).getAddress()
 
-      // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
+      // TODO: Infer this policy from the `options`
       if (policyInfo.stakeAssets.length > 2) throw new Error(`Staking more than two assets is not supported`)
 
       //
@@ -382,26 +382,38 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
       // Get the signer for the wallet
       const signerAddress = makeSigner(getSeed(wallet)).getAddress()
 
-      // Get staked allocations
-      const balanceOfTxResponse = await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
-      const stakedAllocations: PositionAllocation[] = [
-        {
-          pluginId: policyInfo.stakeAssets[0].pluginId,
-          tokenId: policyInfo.stakeAssets[0].tokenId,
+      // Get staked allocations:
+      // 1. Get the amount of LP-Pair tokens staked in the pool contract
+      const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+      const lpTokenBalance = userInfo.amount
+      // 2. Get the total supply of LP-Pair tokens in the LP-Pair pool contract
+      const lpTokenSupply = await multipass(p => pairContract.connect(p).totalSupply())
+      // 3. Get the amount of each token reserve in the LP-Pair pool contract
+      const reservesResponse = await multipass(p => pairContract.connect(p).getReserves())
+      const { _reserve0, _reserve1 } = reservesResponse
+      const reserves = [_reserve0, _reserve1]
+      // 4. Do the conversion calculation between LP-Pair token to each of the tokens in the pool
+      const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((asset, index) => {
+        const reserve = reserves[index]
+        if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${asset.tokenId}`)
+        const nativeAmount = round(mul(div(lpTokenBalance.toString(), lpTokenSupply.toString(), DECIMALS), reserve.toString()))
+        return {
+          pluginId: asset.pluginId,
+          tokenId: asset.tokenId,
           allocationType: 'staked',
-          nativeAmount: fromHex(balanceOfTxResponse._hex),
+          nativeAmount,
           locktime: undefined
         }
-      ]
+      })
 
-      // Get earned allocations
-      const earnedTxRresponse = await multipass(p => poolContract.connect(p).earned(signerAddress))
+      // Get earned allocations:
+      const rewardNativeAmount = (await multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
           tokenId: policyInfo.rewardAssets[0].tokenId,
           allocationType: 'earned',
-          nativeAmount: fromHex(earnedTxRresponse._hex),
+          nativeAmount: rewardNativeAmount,
           locktime: undefined
         }
       ]
