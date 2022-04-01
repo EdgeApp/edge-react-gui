@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -147,3 +148,5 @@ export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeToken
   }
   return out
 }
+
+export const WalletListModal = hook(WalletListModalComponent)

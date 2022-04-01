@@ -1,4 +1,5 @@
 // @flow
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { Linking, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -12,14 +13,13 @@ import RNQRGenerator from 'rn-qr-generator'
 import { useLayout } from '../../hooks/useLayout.js'
 import { useWindowSize } from '../../hooks/useWindowSize.js'
 import s from '../../locales/strings.js'
-import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import { useEffect } from '../../types/reactHooks.js'
-import { connect } from '../../types/reactRedux.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { QrPeephole } from '../common/QrPeephole.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { requestPermission } from '../services/PermissionsManager'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage } from '../themed/ModalParts'
@@ -46,17 +46,29 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 const Component = (props: Props) => {
   const { bridge, theme, title, enableScan, disableScan, scanEnabled, toggleEnableTorch, torchEnabled, cameraPermission } = props
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const { width: windowWidth, height: windowHeight } = useWindowSize()
   const isLandscape = windowWidth > windowHeight
 
+  const cameraPermission = useSelector(state => state.permissions.camera)
+  const torchEnabled = useSelector(state => state.ui.scenes.scan.torchEnabled)
+  const scanEnabled = useSelector(state => state.ui.scenes.scan.scanEnabled)
+
+  const generateTestHook = useCavy()
+  const handleFlash = () => {
+    dispatch({ type: 'TOGGLE_ENABLE_TORCH' })
+  }
+
   // Mount effects
   useEffect(() => {
-    enableScan()
+    dispatch({ type: 'ENABLE_SCAN' })
     requestPermission('camera')
 
-    return disableScan
-  }, [disableScan, enableScan])
+    return () => {
+      dispatch({ type: 'DISABLE_SCAN' })
+    }
+  }, [dispatch])
 
   const handleBarCodeRead = (result: { data: string }) => {
     bridge.resolve(result.data)
@@ -64,10 +76,6 @@ const Component = (props: Props) => {
 
   const handleSettings = () => {
     Linking.openSettings()
-  }
-
-  const handleFlash = () => {
-    toggleEnableTorch()
   }
 
   const handleTextInput = async () => {
@@ -210,7 +218,7 @@ const Component = (props: Props) => {
       maxWidth={windowWidth}
     >
       {renderModalContent()}
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('ScanModal.Close')} />
     </AirshipModal>
   )
 }
@@ -265,22 +273,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(2.5)
   }
 }))
-
-export const ScanModal = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    cameraPermission: state.permissions.camera,
-    torchEnabled: state.ui.scenes.scan.torchEnabled,
-    scanEnabled: state.ui.scenes.scan.scanEnabled
-  }),
-  dispatch => ({
-    toggleEnableTorch() {
-      dispatch({ type: 'TOGGLE_ENABLE_TORCH' })
-    },
-    disableScan() {
-      dispatch({ type: 'DISABLE_SCAN' })
-    },
-    enableScan() {
-      dispatch({ type: 'ENABLE_SCAN' })
-    }
-  })
-)(withTheme(Component))
