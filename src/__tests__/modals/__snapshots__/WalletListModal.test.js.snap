@@ -35,11 +35,7 @@ exports[`WalletListModal should render with loading props 1`] = `
     searchIcon={true}
     value=""
   />
-<<<<<<< HEAD
-  <WalletList
-=======
   <Memo(Connect(Hook(WithTheme(WalletListComponent))))
->>>>>>> 8858a455e (Cavy setup)
     isModal={true}
     onPress={[Function]}
     searchText=""
