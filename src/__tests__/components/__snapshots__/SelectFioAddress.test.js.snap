@@ -4,7 +4,7 @@ exports[`Request should render with loading props 1`] = `
 <View>
   <WithTheme(TileComponent)
     body="string"
-    title="Send from FIO address"
+    title="Send from FIO Crypto Handle"
     type="static"
   />
   <WithTheme(TileComponent)

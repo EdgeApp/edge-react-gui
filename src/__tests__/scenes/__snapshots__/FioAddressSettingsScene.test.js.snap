@@ -6,7 +6,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
 >
   <WithTheme(TileComponent)
     body="MyFioAddress"
-    title="FIO Address"
+    title="FIO Crypto Handle"
     type="static"
   />
   <React.Fragment>

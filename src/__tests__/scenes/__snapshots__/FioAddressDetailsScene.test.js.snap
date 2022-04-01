@@ -18,7 +18,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     Remaining bundled transactions: 100
   </WithTheme(EdgeTextComponent)>
   <WithTheme(SettingsTappableRowComponent)
-    label="Address Settings"
+    label="Crypto Handle Settings"
     onPress={[Function]}
   >
     <Icon
@@ -43,7 +43,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         size={34}
       />
     }
-    label="Choose wallets to connect to your FIO address"
+    label="Choose wallets to connect to your FIO Crypto Handle"
   />
   <Memo(Connect(WithTheme(ConnectWallets)))
     disabled={false}

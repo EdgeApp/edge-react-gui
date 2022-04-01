@@ -47,7 +47,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         ]
       }
     >
-      Note that you need to use FIO to register an address on a custom domain.
+      Note that you need to use FIO to register a Crypto Handle on a custom domain.
     </WithTheme(EdgeTextComponent)>
     <WithTheme(EdgeTextComponent)
       numberOfLines={8}
@@ -64,7 +64,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         ]
       }
     >
-      FIO Addresses consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Addresses on it. FIO Address registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
+      FIO Crypto Handle consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Crypto Handle on it. FIO Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
     </WithTheme(EdgeTextComponent)>
     <View
       onLayout={[Function]}

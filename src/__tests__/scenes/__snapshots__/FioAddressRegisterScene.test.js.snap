@@ -13,7 +13,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         "marginTop": 11,
       }
     }
-    title="Register FIO Address"
+    title="Register FIO Crypto Handle"
   >
     <Image
       resizeMode="cover"
@@ -61,7 +61,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
             }
           }
         >
-          Send and Receive with an easy to remember FIO Address!
+          Send and Receive with an easy to remember FIO Crypto Handle!
         </WithTheme(EdgeTextComponent)>
       </View>
       <View
@@ -105,7 +105,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
             }
           }
         >
-          Similar to website names, your FIO Address can be used to send you tokens/coins without ever having to see or send your public key.
+          Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
         </WithTheme(EdgeTextComponent)>
       </View>
       <View
@@ -113,7 +113,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       >
         <WithTheme(TileComponent)
           onPress={[Function]}
-          title="Choose a FIO Address"
+          title="Choose a FIO Crypto Handle"
           type="editable"
         >
           <View
@@ -130,14 +130,14 @@ exports[`FioAddressRegister should render with loading props 1`] = `
                 }
               }
             >
-              Your address name here
+              Your Crypto Handle name here
             </WithTheme(EdgeTextComponent)>
           </View>
         </WithTheme(TileComponent)>
         <WithTheme(TileComponent)
           body="Loading…"
           onPress={[Function]}
-          title="Choose FIO Domain for Your Address"
+          title="Choose FIO Domain for Your Crypto Handle"
           type="touchable"
         />
       </View>

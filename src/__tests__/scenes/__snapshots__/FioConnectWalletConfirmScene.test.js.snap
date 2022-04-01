@@ -7,7 +7,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
   <ScrollView>
     <WithTheme(TileComponent)
       body="MyFioAddress"
-      title="FIO Address"
+      title="FIO Crypto Handle"
       type="static"
     />
     <Radio

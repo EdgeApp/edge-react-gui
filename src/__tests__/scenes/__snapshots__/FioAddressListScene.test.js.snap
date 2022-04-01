@@ -13,7 +13,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       }
     >
       <WithTheme(SceneHeaderComponent)
-        title="FIO Addresses"
+        title="FIO Crypto Handles"
         underline={true}
       />
       <View
@@ -497,7 +497,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               }
             }
           >
-            Register New FIO Address
+            Register New FIO Crypto Handle
           </WithTheme(EdgeTextComponent)>
         </View>
       </ClickableText>
