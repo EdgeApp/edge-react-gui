@@ -16,7 +16,7 @@
   "drawer_fio_requests": "Richieste FIO",
   "network_alert_title": "Nessuna connessione Internet",
   "fio_network_alert_text": "La funzionalità FIO richiede la connessione internet.",
-  "fio_address_choose_label": "Choose a FIO Crypto Handle",
+  "fio_address_choose_label": "Scegli un FIO Crypto Handle",
   "fio_domain_choose_label": "Scegli un dominio FIO",
   "fio_address_choose_domain_label": "Choose FIO Domain for Your Crypto Handle",
   "fio_address_ran_out_bundled_txs": "Il tuo indirizzo FIO ha esaurito le transazioni in bundle",
