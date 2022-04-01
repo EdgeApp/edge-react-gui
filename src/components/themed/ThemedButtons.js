@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -35,26 +35,7 @@ type Props = {
   disabled?: boolean
 }
 
-type ColorProps = {
-  color: 'success' | 'danger' | 'default'
-}
-
-type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
-
-export function SquareButton(props: SquareButtonProps) {
-  const { children, label, color, onPress } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-  const colorStyleName = `${color}Button`
-
-  return (
-    <TouchableOpacity style={[styles.squareButton, spacingStyles(props, theme), styles[colorStyleName]]} onPress={onPress}>
-      {label != null ? <Text style={styles.squareText}>{label}</Text> : null}
-      {children}
-    </TouchableOpacity>
-  )
-}
 
 export function ButtonBox(props: Props) {
   const { children, onPress } = props
@@ -141,25 +122,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     primaryText: {
       ...commonText,
       color: theme.primaryButtonText
-    },
-    squareButton: {
-      height: '100%',
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    squareText: {
-      ...commonText,
-      color: theme.primaryText
-    },
-    dangerButton: {
-      backgroundColor: theme.sliderTabSend
-    },
-    defaultButton: {
-      backgroundColor: theme.sliderTabMore
-    },
-    successButton: {
-      backgroundColor: theme.sliderTabRequest
     },
     radio: {
       flexDirection: 'row',

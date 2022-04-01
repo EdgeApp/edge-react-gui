@@ -3,8 +3,7 @@
 import { mul, toFixed } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
@@ -12,8 +11,6 @@ import { FIO_REQUEST_APPROVED } from '../../constants/SceneKeys'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
-import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -27,7 +24,7 @@ import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { HIDDEN_MENU_BUTTONS_WIDTH, HiddenMenuButtons } from '../themed/HiddenMenuButtons'
+import { FioRequestRow } from '../themed/FioRequestRow.js'
 import { SceneHeader } from '../themed/SceneHeader.js'
 
 const SCROLL_THRESHOLD = 0.5
@@ -212,13 +209,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fioRequestsSent: fioRequestsSent.filter(item => parseInt(item.fio_request_id) !== parseInt(requestId)) })
   }
 
-  closeRow = (rowMap: { [string]: SwipeRow }, rowKey: string) => {
-    if (rowMap[rowKey]) {
-      rowMap[rowKey].closeRow()
-    }
-  }
-
-  rejectFioRequest = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payerFioAddress: string) => {
+  rejectFioRequest = async (request: FioRequest) => {
+    const payerFioAddress = request.payer_fio_address
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -236,7 +228,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
         } else {
           await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
           this.removeFioPendingRequest(request.fio_request_id)
-          this.closeRow(rowMap, rowKey)
           showToast(s.strings.fio_reject_status)
         }
       } catch (e) {
@@ -248,7 +239,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fullScreenLoader: false })
   }
 
-  cancelFioRequest = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payeeFioAddress: string) => {
+  cancelFioRequest = async (request: FioRequest) => {
+    const payeeFioAddress = request.payee_fio_address
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -261,7 +253,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
       try {
         await cancelFioRequest(fioWallet, parseInt(request.fio_request_id), payeeFioAddress)
         this.removeFioSentRequest(request.fio_request_id)
-        this.closeRow(rowMap, rowKey)
         showToast(s.strings.fio_cancel_status)
       } catch (e) {
         this.setState({ fullScreenLoader: false })
@@ -277,7 +268,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fullScreenLoader: false })
   }
 
-  rejectRowConfirm = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payerFioAddress: string) => {
+  rejectRowConfirm = async (request: FioRequest) => {
     const answer = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -290,14 +281,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return this.rejectFioRequest(rowMap, rowKey, request, payerFioAddress)
-    }
-    if (answer === 'cancel') {
-      return this.closeRow(rowMap, rowKey)
+      return this.rejectFioRequest(request)
     }
   }
 
-  cancelRowConfirm = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payeeFioAddress: string) => {
+  cancelRowConfirm = async (request: FioRequest) => {
     const answer = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -310,10 +298,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return this.cancelFioRequest(rowMap, rowKey, request, payeeFioAddress)
-    }
-    if (answer === 'no') {
-      return this.closeRow(rowMap, rowKey)
+      return this.cancelFioRequest(request)
     }
   }
 
@@ -524,41 +509,16 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
   }
 
-  renderPending = (itemObj: { item: FioRequest }) => {
-    const { item: fioRequest } = itemObj
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectPendingRequest} />
+  renderPending = (listItem: { item: FioRequest }) => {
+    const { item } = listItem
+
+    return <FioRequestRow fioRequest={item} isSent={false} onPress={this.selectPendingRequest} onSwipe={this.rejectRowConfirm} />
   }
 
-  renderSent = (itemObj: { item: FioRequest }) => {
-    const { item: fioRequest } = itemObj
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent />
-  }
+  renderSent = (listItem: { item: FioRequest }) => {
+    const { item } = listItem
 
-  renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
-    return (
-      <HiddenMenuButtons
-        rightSwipable={{
-          label: s.strings.swap_terms_reject_button,
-          color: 'danger',
-          onPress: _ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)
-        }}
-      />
-    )
-  }
-
-  renderSentHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
-    if (isSentFioRequest(rowObj.item.status) || isRejectedFioRequest(rowObj.item.status)) {
-      return null
-    }
-    return (
-      <HiddenMenuButtons
-        rightSwipable={{
-          label: s.strings.string_cancel_cap,
-          color: 'danger',
-          onPress: _ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)
-        }}
-      />
-    )
+    return <FioRequestRow fioRequest={item} isSent onPress={this.selectSentRequest} onSwipe={this.cancelRowConfirm} />
   }
 
   render() {
@@ -575,18 +535,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
             {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
               {loadingPending && !fioRequestsPending.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
-              <SwipeListView
+              <SectionList
                 initialNumToRender={10}
-                useSectionList
-                sections={this.pendingRequestHeaders()}
-                renderItem={this.renderPending}
                 keyExtractor={this.listKeyExtractor}
-                renderHiddenItem={this.renderHiddenItem}
+                renderItem={this.renderPending}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
+                sections={this.pendingRequestHeaders()}
                 onEndReached={this.pendingLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
-                disableRightSwipe
               />
             </View>
           </View>
@@ -595,16 +551,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
             {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
               {loadingSent && !fioRequestsSent.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
-              <SwipeListView
+              <SectionList
                 initialNumToRender={10}
-                useSectionList
-                sections={this.sentRequestHeaders()}
-                renderItem={this.renderSent}
                 keyExtractor={item => item.fio_request_id.toString()}
-                renderHiddenItem={this.renderSentHiddenItem}
+                renderItem={this.renderSent}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
-                disableRightSwipe
+                sections={this.sentRequestHeaders()}
                 onEndReached={this.sentLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
               />

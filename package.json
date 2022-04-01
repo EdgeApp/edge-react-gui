@@ -152,7 +152,6 @@
     "react-native-sound": "^0.11.0",
     "react-native-store-review": "^0.1.5",
     "react-native-svg": "^12.1.0",
-    "react-native-swipe-list-view": "^3.2.5",
     "react-native-tcp": "https://github.com/EdgeApp/react-native-tcp.git#rn62",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.2.3",
