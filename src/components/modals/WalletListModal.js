@@ -1,9 +1,11 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -29,9 +31,9 @@ type State = {
   searching: boolean
 }
 
-type Props = OwnProps
+type Props = OwnProps & TestProps
 
-export class WalletListModal extends React.PureComponent<Props, State> {
+export class WalletListModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = { search: '', searching: false }
@@ -75,8 +77,10 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           filterActivation={filterActivation}
           isModal
         />
-        <ModalCloseArrow onPress={() => bridge.resolve({})} />
+        <ModalCloseArrow onPress={() => bridge.resolve({})} ref={this.props.generateTestHook('WalletListModal.Close')} />
       </ThemedModal>
     )
   }
 }
+
+export const WalletListModal = hook(WalletListModalComponent)
