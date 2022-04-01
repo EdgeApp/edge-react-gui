@@ -1,16 +1,18 @@
 // @flow
 import '@ethersproject/shims'
 
-import { add, div, gte, lte, mul, sub } from 'biggystring'
+import { div, lte, mul } from 'biggystring'
 import { ethers } from 'ethers'
 
 import { makeContract, makeSigner, multipass } from '../contracts.js'
 import { pluginInfo } from '../pluginInfo.js'
-import { makeTxBuilder } from '../TxBuilder.js'
 import { type PositionAllocation } from '../types'
 import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, StakePositionRequest } from '../types.js'
+import { makeBigAccumulator } from '../util/accumulator.js'
+import { round } from '../util/biggystringplus.js'
+import { makeBuilder } from '../util/builder.js'
 import { getSeed } from '../util/getSeed.js'
-import { fromHex, toHex } from '../util/hex.js'
+import { fromHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
 
 export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
@@ -19,12 +21,16 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
   const poolContract = makeContract('TSHARE_REWARD_POOL')
   const lpRouter = makeContract('SPOOKY_SWAP_ROUTER')
   const pairContract = makeContract('TOMB_WFTM_LP')
+  const tokenContract = makeContract('TOMB')
 
   // Constants:
+  // TODO: Replace the hardcode with a configuration from `options`
+  const POOL_ID = 0
   // TODO: Replace DECIMAL hardcode with a configuration for each asset from `options`
   const DECIMALS = 18
   const SLIPPAGE = 0.008 // 0.8%
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
+  const DEADLINE_OFFSET = 60 * 60 * 24 // 24 hours
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
@@ -55,10 +61,11 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
 
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId }, index) => {
+            const ratio = tokenId === request.tokenId ? '1' : ratios[index]
             return {
               allocationType: action,
               tokenId: tokenId,
-              nativeAmount: mul(request.nativeAmount, tokenId === request.tokenId ? '1' : ratios[index])
+              nativeAmount: round(mul(request.nativeAmount, ratio))
             }
           })
         )
@@ -94,10 +101,14 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
                 const tokenContract = makeContract(allocation.tokenId)
                 return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
               }
-              case 'unstake':
-                return await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
-              case 'claim':
-                return await multipass(p => poolContract.connect(p).earned(signerAddress))
+              case 'unstake': {
+                const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+                return userInfo.amount
+              }
+              case 'claim': {
+                const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+                return userInfo.rewardDebt
+              }
               case 'fee':
                 // Don't do anything with fee
                 break
@@ -119,7 +130,8 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
       //
 
       // An array of all the transactions to dispatch upon approval
-      const txBuilder = makeTxBuilder()
+      const txs = makeBuilder(async fn => await multipass(p => fn({ provider: makeSigner(signerSeed, p), p })))
+      const gasLimitAcc = makeBigAccumulator('0')
 
       if (action === 'stake') {
         /*
@@ -140,7 +152,7 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
             lpRouter.addLiquidityETH(0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7, 1000000000000000, 992000000000000, 987214927033744, 0x3616b4903e4Ebf7671129BdD540fBc58dc63e67e, 1648675557)
             lpRouter.addLiquidityETH(TOMB TOKEN, 1000000000000000, 992000000000000, 987214927033744, signerAddress, 1648675557)
             ```
-            If both assets are tokens
+            TODO: If both assets are tokens
             ```
             lpRouter.addLiquidity(...)
             ```
@@ -157,33 +169,61 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
             const tokenContract = makeContract(allocation.tokenId)
             const spenderAddress = lpRouter.address
             const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, spenderAddress))
-            const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
+            const isFullyAllowed = allowanceResponse.sub(allocation.nativeAmount).gte(0)
             if (!isFullyAllowed) {
-              txBuilder.addCall(tokenContract, 'approve', [
-                spenderAddress,
-                ethers.constants.MaxUint256,
-                { gasLimit: { _hex: toHex('50000'), _isBigNumber: true } }
-              ])
+              txs.build(
+                (gasLimit =>
+                  async function approveLiquidityPool({ provider }) {
+                    await tokenContract.connect(provider).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
+                  })(gasLimitAcc('50000'))
+              )
             }
           })
         )
 
         // 2. Add liquidity to to SpookySwap Router contract
-        const lpTokenAmount = '0'
-        const addLiquidityEthResponse = lpRouter.addLiquidityETH()
-        txBuilder.addCall(lpRouter, 'addLiquidityETH', [
-          address token, 
-          uint256 amountTokenDesired, 
-          uint256 amountTokenMin,
-          uint256 amountETHMin, 
-          address to, 
-          uint256 deadline
-        ])
+        txs.build(
+          (gasLimit =>
+            async function addLiquidity({ provider }) {
+              // Assume only one non-native token
+              const contractTokenSymbol = await tokenContract.symbol()
+              const tokenAllocation = allocations.find(allocation => allocation.allocationType === 'stake' && allocation.tokenId === contractTokenSymbol)
+              const nativeAllocation = allocations.find(allocation => allocation.allocationType === 'stake' && allocation.tokenId === policyInfo.parentTokenId)
 
+              if (tokenAllocation == null) throw new Error(`Contract token ${contractTokenSymbol} not found in asset pair`)
+              if (nativeAllocation == null) throw new Error(`Native token ${policyInfo.parentTokenId} not found in asset pair`)
+
+              const amountTokenDesired = tokenAllocation.nativeAmount
+              const amountTokenMin = round(mul(tokenAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const amountNative = nativeAllocation.nativeAmount
+              const amountNativeMin = round(mul(nativeAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
+
+              const result = await lpRouter
+                .connect(provider)
+                .addLiquidityETH(tokenContract.address, amountTokenDesired, amountTokenMin, amountNativeMin, signerAddress, deadline, {
+                  gasLimit,
+                  value: amountNative
+                })
+              const receipt = await result.wait(1)
+
+              //
+              // Decode the log data in the receipt to get the liquidity token transfer amount
+              //
+              const transferTopicHash = ethers.utils.id('Transfer(address,address,uint256)')
+              const transferTopics = receipt.logs.filter(log => log.topics[0] === transferTopicHash)
+              // The last token transfer log is the LP-Pair token transfer
+              const lpTokenTransfer = transferTopics.slice(-1)[0]
+              const decodedData = ethers.utils.defaultAbiCoder.decode(['uint256'], lpTokenTransfer.data)
+              const [liquidity] = decodedData
+
+              return { liquidity }
+            })(gasLimitAcc('450000'))
+        )
 
         /*
         Staking for LP tokens:
-          1. Approve TSHARE Reward Pool (0xcc0a87f7e7c693042a9cc703661f5060c80acb43) on LP-token contract (TOMB-WFTM-LP)
+          1. Approve Pool Contract on LP-Pair Contract:
             ```
             lpToken.approve(address _spender, uint256 _value)
             lpToken.approve(TSHARE Reward Pool, max)
@@ -194,84 +234,78 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
             Call deposit on TSHARE Reward Pool (0xcc0a87f7e7c693042a9cc703661f5060c80acb43)
             ```
             poolContract.deposit(uint256 _pid, uint256 _amount)
-            poolContract.deposit(0, 100000000000000)
+            poolContract.deposit(POOL_ID, 100000000000000)
             ```
         */
 
         // 1. Approve Pool Contract on LP-Pair Contract:
-        // const spenderAddress = poolContract.address
-        // const allowanceResponse = await multipass(p => pairContract.connect(p).allowance(signerAddress, spenderAddress))
-        // const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
-        // if (!isFullyAllowed) {
-        //   txBuilder.addCall(pairContract, 'approve', [
-        //     spenderAddress,
-        //     ethers.constants.MaxUint256,
-        //     { gasLimit: { _hex: toHex('50000'), _isBigNumber: true } }
-        //   ])
-        // }
+        txs.build(
+          (gasLimit =>
+            async function approveStakingPool({ provider, liquidity }) {
+              const spenderAddress = poolContract.address
+              const allowanceResponse = await multipass(p => pairContract.connect(p).allowance(signerAddress, spenderAddress))
+              const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
+              if (!isFullyAllowed) {
+                await pairContract.approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
+              }
+            })(gasLimitAcc('50000'))
+        )
 
         // 2. Stake LP token
-        txBuilder.addCall(poolContract, 'deposit', [
-          toHex('0'),
-          toHex(lpTokenAmount),
-          {
-            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
-          }
-        ])
+        txs.build(
+          (gasLimit =>
+            async function stakeLiquidity({ provider, liquidity }) {
+              await poolContract.connect(provider).deposit(POOL_ID, liquidity, {
+                gasLimit
+              })
+            })(gasLimitAcc('240000'))
+        )
       }
 
       /*
       Unstaking for LP tokens:
-        1. Approve TSHARE Reward Pool on LP-token contract (TOMB-WFTM-LP)
-          ```
-          lpToken.approve(address _spender, uint256 _value)
-          lpToken.approve(TSHARE Reward Pool, max)
-          lpToken.approve(0xcc0a87F7e7c693042a9Cc703661F5060c80ACb43, max)
-          ```
-        2. Withdraw LP token from Pool Contract
+        1. Calculate the liquidity amount (LP-Pair token amount) from the unstake-allocations
+           
+        2. Withdraw the amount of LP-Pair token from Pool Contract
           ```
           poolContract.withdraw(uint256 _pid, uint256 _amount)
-          poolContract.deposit(0, 100000000000000)
+          poolContract.withdraw(POOL_ID, 100000000000000)
           ```
-        3. Remove liquidity from SpookySwap Router contract
+        3. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
           ```
           lpRouter.removeLiquidityETH(address token, uint256 amountTokenDesired, uint256 amountTokenMin, uint256 amountETHMin, address to, uint256 deadline)
           ```
       */
       if (action === 'unstake') {
-        // 2. Unstake LP token
-        txBuilder.addCall(poolContract, 'withdraw', [
-          toHex(request.nativeAmount),
-          {
-            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
-          }
-        ])
+        // 1. Calculate the liquidity amount (LP-Pair token amount) from the unstake-allocations
+        const liquidity = 10000
+        // 2. Withdraw the amount of LP-Pair token from Pool Contract
+        txs.build(
+          (gasLimit =>
+            async function unstakeLiquidity({ provider }) {
+              await poolContract.connect(provider).withdraw(0, liquidity, {
+                gasLimit
+              })
+            })(gasLimitAcc('240000'))
+        )
+        // 3. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
       }
 
       /*
       Claiming for LP tokens:
-        1. Approve TSHARE Reward Pool on LP-token contract (TOMB-WFTM-LP)
-          ```
-          lpToken.approve(address _spender, uint256 _value)
-          lpToken.approve(TSHARE Reward Pool, max)
-          lpToken.approve(0xcc0a87F7e7c693042a9Cc703661F5060c80ACb43, max)
-          ```
-        2. Unstake LP token
-          example: 0x798f29d4cd23878a564f9f68993b8a8978b632fb9138be77bf9353df37381a6b
-          ```
-          poolContract.deposit(uint256 _pid, uint256 _amount)
-          poolContract.deposit(0, 100000000000000)
-          ```
-        3. Remove liquidity from SpookySwap Router contract??
+        1. Withdraw reward by removing 0 liquidity from SpookySwap Router contract
       */
       if (action === 'claim') {
-        // 2. Claim LP token
-        // Claiming withdraws all earned tokens, so we ignore the nativeAmount from the request
-        txBuilder.addCall(poolContract, 'claimReward', [
-          {
-            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
-          }
-        ])
+        // 1. Withdraw reward by removing 0 liquidity from SpookySwap Router contract
+        // Claiming withdraws all earned tokens
+        txs.build(
+          (gasLimit =>
+            async function claimReward({ provider }) {
+              await poolContract.connect(provider).withdraw(0, 0, {
+                gasLimit
+              })
+            })(gasLimitAcc('240000'))
+        )
       }
 
       //
@@ -280,12 +314,9 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
 
       // Calculate the fees:
       // 1. Get the gasPrice oracle data (from wallet)
-      // 2. Calculate the sum(tx => gasLimit(txType) * gasPrice) as the networkFee in native token
+      // 2. Calculate the networkFee as the gasLimit * gasPrice in the native token
       const gasPrice = (await multipass(provider => provider.getGasPrice()))._hex
-      const gasEstimates = await Promise.all(txBuilder.getCalls().map(({ estimateGas }) => estimateGas()))
-      const networkFee = gasEstimates.reduce((sum, gasEstimate) => {
-        return add(sum, mul(gasPrice, gasEstimate._hex, 10))
-      }, '0')
+      const networkFee = gasLimitAcc().mul(gasPrice).toString()
       allocations.push({
         allocationType: 'fee',
         tokenId: policyInfo.parentTokenId,
@@ -298,11 +329,10 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
 
       // Construct an approve function which executes transaction workflow (txBuilder)
       const approve: () => Promise<void> = async () => {
-        for (const { contract, method, args } of txBuilder.getCalls()) {
-          await multipass(p => contract.connect(makeSigner(signerSeed, p))[method](...args))
-          // NOTE: Don't wait for block confirmation because that's too slow
-        }
+        await txs.run()
       }
+
+      console.log(txs.inspect())
 
       return {
         allocations,
