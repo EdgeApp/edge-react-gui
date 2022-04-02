@@ -39,8 +39,9 @@ export const WcConnectScene = (props: Props) => {
   const styles = getStyles(theme)
   const { uri } = props.route.params
   const [dappDetails, setDappDetails] = useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
+  const [walletAddress, setWalletAddress] = useState('')
 
-  const { walletAddress, walletImageUri, walletName, wallet, currencyWallets } = useSelector(state => {
+  const { walletImageUri, walletName, wallet, currencyWallets } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const guiWallet = getSelectedWallet(state)
     const wallet = currencyWallets[guiWallet.id]
@@ -49,15 +50,18 @@ export const WcConnectScene = (props: Props) => {
     const contractAddress = metaTokens.find(token => token.currencyCode === walletCurrencyCode)?.contractAddress
     const walletImageUri = getCurrencyIcon(pluginId, contractAddress).symbolImage
     const walletName = guiWallet.name
-    const walletAddress = guiWallet.receiveAddress.publicAddress
     return {
-      walletAddress,
       walletImageUri,
       walletName,
       wallet,
       currencyWallets
     }
   })
+
+  useEffect(() => {
+    wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
+  }, [])
+
   const dispatch = useDispatch()
 
   const handleConnect = async () => {
