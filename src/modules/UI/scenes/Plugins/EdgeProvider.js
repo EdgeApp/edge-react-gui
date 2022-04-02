@@ -1,6 +1,6 @@
 // @flow
 
-import { abs } from 'biggystring'
+import { abs, div, mul } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
@@ -16,6 +16,7 @@ import { type WalletListResult, WalletListModal } from '../../../../components/m
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
+import { getExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
@@ -287,7 +288,7 @@ export class EdgeProvider extends Bridgeable {
       if (spendTarget.nativeAmount != null) {
         nativeAmount = spendTarget.nativeAmount
       } else if (spendTarget.exchangeAmount != null) {
-        nativeAmount = await coreWallet.denominationToNative(spendTarget.exchangeAmount, currencyCode)
+        nativeAmount = mul(spendTarget.exchangeAmount, getExchangeDenomination(this._state, coreWallet.currencyInfo.pluginId, currencyCode).multiplier)
       }
 
       const spendTargetObj: EdgeSpendTarget = { ...spendTarget, nativeAmount }
@@ -374,7 +375,10 @@ export class EdgeProvider extends Bridgeable {
 
       Actions.pop()
 
-      const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
+      const exchangeAmount = div(
+        transaction.nativeAmount,
+        getExchangeDenomination(this._state, coreWallet.currencyInfo.pluginId, selectedCurrencyCode).multiplier
+      )
       this._dispatch(
         trackConversion('EdgeProviderConversion', {
           pluginId: this._plugin.storeId,
