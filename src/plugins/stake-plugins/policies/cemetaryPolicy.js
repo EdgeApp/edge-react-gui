@@ -232,7 +232,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
           (gasLimit =>
             async function approveStakingPool({ provider, liquidity }) {
               const spenderAddress = poolContract.address
-              const allowanceResponse = await multipass(p => lpTokenContract.connect(p).allowance(signerAddress, spenderAddress))
+              const allowanceResponse = await lpTokenContract.connect(provider).allowance(signerAddress, spenderAddress)
               const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
               if (!isFullyAllowed) {
                 await lpTokenContract.approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
