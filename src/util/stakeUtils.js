@@ -5,7 +5,8 @@ import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
-import { makeStakePlugin, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins'
+import { makeStakePlugin } from '../plugins/stake-plugins'
+import { type PositionAllocation, type StakePlugin, type StakePolicy, type StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIcon } from './CurrencyInfoHelpers'
 
 export const getStakePosition = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
