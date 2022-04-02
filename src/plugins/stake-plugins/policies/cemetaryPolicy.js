@@ -28,7 +28,7 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
   const POOL_ID = 0
   // TODO: Replace DECIMAL hardcode with a configuration for each asset from `options`
   const DECIMALS = 18
-  const SLIPPAGE = 0.008 // 0.8%
+  const SLIPPAGE = 0.01 // 1%
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 24 // 24 hours
 
@@ -57,7 +57,7 @@ export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
       if (action === 'stake' || action === 'unstake') {
         const reservesResponse = await multipass(p => pairContract.connect(p).getReserves())
         const { _reserve0, _reserve1 } = reservesResponse
-        const ratios = [div(fromHex(_reserve0._hex), fromHex(_reserve1._hex), DECIMALS), div(fromHex(_reserve1._hex), fromHex(_reserve0._hex), DECIMALS)]
+        const ratios = [div(fromHex(_reserve1._hex), fromHex(_reserve0._hex), DECIMALS), div(fromHex(_reserve0._hex), fromHex(_reserve1._hex), DECIMALS)]
 
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId }, index) => {
