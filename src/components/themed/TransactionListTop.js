@@ -135,10 +135,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const styles = getStyles(theme)
 
     const isStakingPolicyAvailable = stakePolicies.some(stakePolicy => {
-      return (
-        (stakePolicy.rewardAssets[pluginId] && stakePolicy.rewardAssets[pluginId][currencyCode]) ||
-        (stakePolicy.stakeAssets[pluginId] && stakePolicy.stakeAssets[pluginId][currencyCode])
-      )
+      return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.tokenId === currencyCode)
     })
     // Special case for FIO because it uses it's own staking plugin
     const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && (isStakingPolicyAvailable || currencyCode === 'FIO')
