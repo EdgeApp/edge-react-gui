@@ -7,7 +7,7 @@ import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
-import { memo, useEffect, useRef } from '../../types/reactHooks.js'
+import { memo, useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -37,7 +37,9 @@ function WalletListSwipeRowComponent(props: Props) {
 
   const dispatch = useDispatch()
   const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
+  const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
   const rowRef = useRef<SwipableRowRef>(null)
+  const [walletAddress, setWalletAddress] = useState('')
 
   // Tutorial mode:
   const isEmpty = guiWallet == null
@@ -46,6 +48,10 @@ function WalletListSwipeRowComponent(props: Props) {
       rowRef.current.openRight()
     }
   }, [openTutorial, isEmpty])
+
+  useEffect(() => {
+    if (edgeWallet != null) edgeWallet.getReceiveAddress().then(receiveAddress => setWalletAddress(receiveAddress.publicAddress))
+  }, [])
 
   // Helper methods:
   const closeRow = () =>
@@ -70,7 +76,7 @@ function WalletListSwipeRowComponent(props: Props) {
       guiWallet != null &&
       // Some wallets launch an activation screen when selected,
       // so avoid going to the transaction list in that case:
-      (isToken || !getSpecialCurrencyInfo(guiWallet.type).isAccountActivationRequired || guiWallet.receiveAddress.publicAddress)
+      (isToken || !getSpecialCurrencyInfo(edgeWallet.type).isAccountActivationRequired || walletAddress !== '')
     ) {
       Actions.push('transactionList')
     }
