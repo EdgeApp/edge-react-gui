@@ -125,26 +125,26 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
             ```
         */
 
-        // 1. Check balance of staked assets
-        await Promise.all(
-          allocations
-            .filter(allocation => allocation.allocationType === 'stake')
-            .map(async allocation => {
-              const balanceResponse = await (async () => {
-                const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
-                if (isNativeToken) {
-                  return await multipass(p => p.getBalance(signerAddress))
-                }
-                const tokenAContract = makeContract(allocation.tokenId)
-                return await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
-              })()
-              const balanceAmount = fromHex(balanceResponse._hex)
-              const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
-              if (!isBalanceEnough) {
-                throw new Error(`Cannot withdraw '${allocation.nativeAmount}' with '${allocation.tokenId}' token balance ${balanceAmount}`)
-              }
-            })
-        )
+        // // 1. Check balance of staked assets
+        // await Promise.all(
+        //   allocations
+        //     .filter(allocation => allocation.allocationType === 'stake')
+        //     .map(async allocation => {
+        //       const balanceResponse = await (async () => {
+        //         const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
+        //         if (isNativeToken) {
+        //           return await multipass(p => p.getBalance(signerAddress))
+        //         }
+        //         const tokenAContract = makeContract(allocation.tokenId)
+        //         return await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
+        //       })()
+        //       const balanceAmount = fromHex(balanceResponse._hex)
+        //       const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
+        //       if (!isBalanceEnough) {
+        //         throw new Error(`Cannot withdraw '${allocation.nativeAmount}' with '${allocation.tokenId}' token balance ${balanceAmount}`)
+        //       }
+        //     })
+        // )
 
         // 2. Approve Router contract for every stake token contract (excluding native token)
         await Promise.all(
