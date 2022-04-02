@@ -229,7 +229,7 @@ export const StakeModifyScene = (props: Props) => {
 
     const quoteAllocationType = quoteAllocation.allocationType
     const title =
-      quoteAllocationType === 'stake'
+      quoteAllocationType === 'stake' || quoteAllocationType === 'unstake'
         ? modification === 'stake'
           ? sprintf(s.strings.stake_amount_s_stake, quoteCurrencyCode)
           : sprintf(s.strings.stake_amount_s_unstake, quoteCurrencyCode)
@@ -283,7 +283,7 @@ export const StakeModifyScene = (props: Props) => {
   const displayChangeQuoteMap = {
     stake: ['stake'],
     claim: ['claim'],
-    unstake: ['stake', 'claim']
+    unstake: ['stake', 'unstake', 'claim']
   }
 
   const renderChangeQuoteAmountTiles = modification => {
