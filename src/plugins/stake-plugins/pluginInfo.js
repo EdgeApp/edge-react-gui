@@ -60,7 +60,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: '',
       parentTokenId: 'FTM',
       policy: makeCemetaryPolicy({
-        poolId: 0,
+        poolId: 1,
         lpTokenContract: makeContract('TSHARE_WFTM_LP'),
         tokenAContract: makeContract('TSHARE')
       }),
