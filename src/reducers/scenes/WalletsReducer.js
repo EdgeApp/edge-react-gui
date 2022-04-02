@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeReceiveAddress } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
 import { FIO_WALLET_TYPE, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
@@ -24,7 +24,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
+        const tempWallet = schema(wallets[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -129,7 +129,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
         if (!state || !state[wallet.id]) {
           continue
         }
-        const guiWallet = schema(wallet, state[wallet.id].receiveAddress)
+        const guiWallet = schema(wallet)
         const enabledTokensOnWallet = state[wallet.id].enabledTokens
         guiWallet.enabledTokens = enabledTokensOnWallet
         enabledTokensOnWallet.forEach(customToken => {
@@ -261,7 +261,7 @@ const manageTokensPending = (state = false, action: Action): boolean => {
   }
 }
 
-function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
+function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -329,7 +329,6 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     allDenominations,
     metaTokens,
     enabledTokens,
-    receiveAddress,
     blockHeight,
     ...getCurrencyIcon(pluginId)
   }

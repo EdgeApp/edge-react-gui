@@ -111,8 +111,7 @@ export type Action =
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
-        currencyWallets: { [id: string]: EdgeCurrencyWallet },
-        receiveAddresses: { [id: string]: EdgeReceiveAddress }
+        currencyWallets: { [id: string]: EdgeCurrencyWallet }
       }
     }
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }

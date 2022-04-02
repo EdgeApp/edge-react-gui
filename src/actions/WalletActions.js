@@ -15,7 +15,7 @@ import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
-import { getReceiveAddresses, getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
+import { getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
@@ -543,13 +543,11 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
   }
 
   const incomingWalletIds = activeWalletIds.filter(id => state.ui.wallets.byId[id] == null)
-  const receiveAddresses = await getReceiveAddresses(currencyWallets)
 
   dispatch({
     type: 'CORE/WALLETS/UPDATE_WALLETS',
     data: {
-      currencyWallets,
-      receiveAddresses
+      currencyWallets
     }
   })
   const newState = getState()
