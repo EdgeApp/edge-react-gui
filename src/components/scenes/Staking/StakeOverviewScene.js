@@ -13,7 +13,6 @@ import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
-import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import {
   getAllocationLocktimeMessage,
@@ -46,20 +45,14 @@ export const StakeOverviewScene = (props: Props) => {
 
   // TODO: Update for denoms
   const stakeAssetsName = getPolicyAssetName(stakePolicy, 'stakeAssets')
-  const rewardAssetsName = getPolicyAssetName(stakePolicy, 'rewardAssets')
 
-  const { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination, isoFiatCurrencyCode, state } = useSelector((state: RootState) => {
+  const { currencyWallet, walletPluginId, isoFiatCurrencyCode, state } = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[walletId]
     const walletPluginId = currencyWallet.currencyInfo.pluginId
-    const stakeAssetsDenomination = getDisplayDenomination(state, walletPluginId, stakeAssetsName)
-    const rewardAssetsDenomination = getDisplayDenomination(state, walletPluginId, rewardAssetsName)
     const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
-    return { currencyWallet, walletPluginId, stakeAssetsDenomination, rewardAssetDenomination: rewardAssetsDenomination, isoFiatCurrencyCode, state }
+    return { currencyWallet, walletPluginId, isoFiatCurrencyCode, state }
   })
-  const metaTokens = currencyWallet.currencyInfo.metaTokens
-  const stakeContractAddress = metaTokens.find(token => token.currencyCode === stakeAssetsName)?.contractAddress
-  const rewardContractAddress = metaTokens.find(token => token.currencyCode === rewardAssetsName)?.contractAddress
   const policyIcons = getPolicyIconUris(currencyWallet, stakePolicy)
 
   // Hooks
