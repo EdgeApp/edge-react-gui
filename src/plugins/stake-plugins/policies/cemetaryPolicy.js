@@ -15,22 +15,29 @@ import { getSeed } from '../util/getSeed.js'
 import { fromHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
 
-export const makeCemetaryPolicy = (options?: any): StakePluginPolicy => {
+export type CemetaryPolicyOptions = {
+  poolId: number,
+  lpTokenContract: ethers.Contract,
+  tokenAContract: ethers.Contract,
+  // TODO: Implement this to support TOMB-MAI-LP pool
+  // An undefined token B contract means that the pool pair is the wrapped-native token
+  tokenBContract?: ethers.Contract
+}
+
+export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginPolicy => {
   // Declare contracts:
   // TODO: Replace the hardcode with a configuration from `options`
   const poolContract = makeContract('TSHARE_REWARD_POOL')
   const lpRouter = makeContract('SPOOKY_SWAP_ROUTER')
-  const pairContract = makeContract('TOMB_WFTM_LP')
-  const tokenContract = makeContract('TOMB')
+  const { lpTokenContract: pairContract, tokenAContract: tokenContract } = options
 
   // Constants:
-  // TODO: Replace the hardcode with a configuration from `options`
-  const POOL_ID = 0
+  const { poolId: POOL_ID } = options
   // TODO: Replace DECIMAL hardcode with a configuration for each asset from `options`
   const DECIMALS = 18
   const SLIPPAGE = 0.01 // 1%
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
-  const DEADLINE_OFFSET = 60 * 60 * 24 // 24 hours
+  const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
