@@ -26,7 +26,7 @@ type Props = {
 }
 
 export const StakeOptionsScene = (props: Props) => {
-  const { walletId } = props.route.params
+  const { walletId, currencyCode } = props.route.params
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -42,20 +42,21 @@ export const StakeOptionsScene = (props: Props) => {
     stakePlugin
       .getStakePolicies()
       .then(stakePolicies => {
-        if (stakePolicies.length === 1) {
+        console.log('\x1b[34m\x1b[43m' + `currencyCode: ${JSON.stringify(currencyCode, null, 2)}` + '\x1b[0m')
+        const availableStakePolicies = stakePolicies.filter(stakePolicy => {
+          return (
+            stakePolicy.stakeAssets.some(stakeAsset => stakeAsset.tokenId === currencyCode) ||
+            stakePolicy.rewardAssets.some(rewardAssets => rewardAssets.tokenId === currencyCode)
+          )
+        })
+
+        if (availableStakePolicies.length === 1) {
           // Transition to next scene immediately
           navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
-          return
-        }
-        setStakePolicies(
-          stakePolicies.filter(stakePolicy => {
-            // TODO: finish policy filter
-            return true
-          })
-        )
+        } else setStakePolicies(availableStakePolicies)
       })
       .catch(err => console.error(err))
-  }, [walletId])
+  }, [currencyCode, navigation, walletId])
 
   const currencyWallet = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
