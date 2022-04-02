@@ -15,18 +15,16 @@ export type StakePolicy = {
   apy: number,
 
   // The assets which must be staked
-  stakeAssets: {
-    [pluginId: string]: {
-      [tokenId: string]: boolean
-    }
-  },
+  stakeAssets: Array<{
+    pluginId: string,
+    tokenId: string
+  }>,
 
   // The assets which can be earned
-  rewardAssets: {
-    [pluginId: string]: {
-      [tokenId: string]: boolean
-    }
-  },
+  rewardAssets: Array<{
+    pluginId: string,
+    tokenId: string
+  }>,
 
   // Whether claim action is required to obtain reward
   mustClaimRewards: boolean
@@ -55,16 +53,17 @@ export type ChangeQuote = {
 }
 
 // -----------------------------------------------------------------------------
-// Stake Details
+// Stake Position
 // -----------------------------------------------------------------------------
 
-export type StakeDetailRequest = {
+export type StakePositionRequest = {
   stakePolicyId: string,
   wallet: EdgeCurrencyWallet
 }
 
-export type DetailAllocation = {
+export type PositionAllocation = {
   // The type of asset for this allocation
+  pluginId: string,
   tokenId: string,
   // The type of the allocation
   allocationType: 'staked' | 'unstaked' | 'earned',
@@ -80,8 +79,8 @@ export type DetailAllocation = {
   locktime?: Date
 }
 
-export type StakeDetails = {
-  allocations: DetailAllocation[]
+export type StakePosition = {
+  allocations: PositionAllocation[]
 }
 
 // -----------------------------------------------------------------------------
@@ -91,5 +90,5 @@ export type StakeDetails = {
 export type StakePlugin = {
   getStakePolicies: () => Promise<StakePolicy[]>,
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>,
-  fetchStakeDetails: (request: StakeDetailRequest) => Promise<StakeDetails>
+  fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }

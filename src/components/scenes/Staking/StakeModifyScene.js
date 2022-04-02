@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
-import { type ChangeQuote, type QuoteAllocation, type StakeDetails } from '../../../plugins/stake-plugins'
+import { type ChangeQuote, type QuoteAllocation, type StakePosition } from '../../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -34,7 +34,7 @@ type Props = {
 export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
-  const { walletId, stakePolicy, stakeDetails, allocationToMod, modification } = props.route.params
+  const { walletId, stakePolicy, stakePosition, allocationToMod, modification } = props.route.params
   const { stakePolicyId } = stakePolicy
   // TODO: Remove hard-coding for single asset to support multiple stake/reward assets
   const stakeAssetsName = getStakeAssetsName(stakePolicy)
@@ -111,16 +111,16 @@ export const StakeModifyScene = (props: Props) => {
 
   // Effect that initializes the allocation amount
   useEffect(() => {
-    const rewardAllocation = getRewardAllocation(stakeDetails)
+    const rewardAllocation = getRewardAllocation(stakePosition)
     const rewardAmountResult = rewardAllocation === null ? '0' : rewardAllocation.nativeAmount
-    const stakeAllocation = getStakeAllocation(stakeDetails)
+    const stakeAllocation = getStakeAllocation(stakePosition)
     const stakeAmountResult = stakeAllocation === null ? '0' : stakeAllocation.nativeAmount
 
     setRewardAmount(rewardAmountResult)
 
     if (modification === 'claim') setNativeModAmount(rewardAmountResult)
     if (modification === 'unstake') setNativeModAmount(stakeAmountResult)
-  }, [currencyWallet, stakeDetails, modification])
+  }, [currencyWallet, stakePosition, modification])
 
   //
   // Handlers
@@ -183,8 +183,8 @@ export const StakeModifyScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderEditableAmount = (allocationType: $PropertyType<QuoteAllocation, 'allocationType'>, stakeDetails: StakeDetails) => {
-    if (stakeDetails !== null) {
+  const renderEditableAmount = (allocationType: $PropertyType<QuoteAllocation, 'allocationType'>, stakePosition: StakePosition) => {
+    if (stakePosition !== null) {
       const nativeAmountMap = {
         stake: nativeModAmount,
         claim: rewardAmount,
@@ -256,7 +256,7 @@ export const StakeModifyScene = (props: Props) => {
         <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIcon(currencyWallet.currencyInfo.pluginId).symbolImage}>
           <EdgeText>{currencyWallet.name}</EdgeText>
         </IconTile>
-        {displayAllocationTypesMap[modification].map(allocationType => renderEditableAmount(allocationType, stakeDetails))}
+        {displayAllocationTypesMap[modification].map(allocationType => renderEditableAmount(allocationType, stakePosition))}
         <CryptoFiatAmountTile
           title={s.strings.wc_smartcontract_network_fee}
           nativeCryptoAmount={nativeFeeAmount}
@@ -274,7 +274,7 @@ export const StakeModifyScene = (props: Props) => {
     unstake: s.strings.stake_claim_unstake
   }
 
-  if (stakeDetails.allocations.length === 0)
+  if (stakePosition.allocations.length === 0)
     return (
       <SceneWrapper background="theme">
         <FillLoader />
