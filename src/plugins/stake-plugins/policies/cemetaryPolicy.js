@@ -29,7 +29,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
   // TODO: Replace the hardcode with a configuration from `options`
   const poolContract = makeContract('TSHARE_REWARD_POOL')
   const lpRouter = makeContract('SPOOKY_SWAP_ROUTER')
-  const { lpTokenContract: pairContract, tokenAContract: tokenContract } = options
+  const { lpTokenContract, tokenAContract } = options
 
   // Constants:
   const { poolId: POOL_ID } = options
@@ -62,7 +62,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
 
       // Calculate the stake asset native amounts:
       if (action === 'stake' || action === 'unstake') {
-        const reservesResponse = await multipass(p => pairContract.connect(p).getReserves())
+        const reservesResponse = await multipass(p => lpTokenContract.connect(p).getReserves())
         const { _reserve0, _reserve1 } = reservesResponse
         const ratios = [div(fromHex(_reserve1._hex), fromHex(_reserve0._hex), DECIMALS), div(fromHex(_reserve0._hex), fromHex(_reserve1._hex), DECIMALS)]
 
@@ -104,13 +104,13 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
         LP Liquidity Providing:
 
           1. Check balance of staked assets
-          2. Approve SpookySwap Router contract on TOMB token contract 
+          2. Approve LP-Router contract on non-native token contract 
             example: 0xa14903af7d58dbd2f205b45371b36e8afa1e942e791c0e77cce2b613c71bfda6
             ```
-            tokenContract.approve(lpRouter.address, MAX_UINT256)
-            tokenContract.approve(0xF491e7B69E4244ad4002BC14e878a34207E38c29, MAX_UINT256)
+            tokenAContract.approve(lpRouter.address, MAX_UINT256)
+            tokenAContract.approve(0xF491e7B69E4244ad4002BC14e878a34207E38c29, MAX_UINT256)
             ```
-          3. Add liquidity to to SpookySwap Router contract
+          3. Add liquidity to to LP-Router contract
             example: 0xf2c133e1548d86aaefe9078d7ea5bbf4f6acd7eae8d7c0e17c9e2ba43bf1911d
 
             If one asset is native:
@@ -135,8 +135,8 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
                 if (isNativeToken) {
                   return await multipass(p => p.getBalance(signerAddress))
                 }
-                const tokenContract = makeContract(allocation.tokenId)
-                return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
+                const tokenAContract = makeContract(allocation.tokenId)
+                return await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
               })()
               const balanceAmount = fromHex(balanceResponse._hex)
               const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
@@ -155,27 +155,27 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
             const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
             if (isNativeToken) return
 
-            const tokenContract = makeContract(allocation.tokenId)
+            const tokenAContract = makeContract(allocation.tokenId)
             const spenderAddress = lpRouter.address
-            const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, spenderAddress))
+            const allowanceResponse = await multipass(p => tokenAContract.connect(p).allowance(signerAddress, spenderAddress))
             const isFullyAllowed = allowanceResponse.sub(allocation.nativeAmount).gte(0)
             if (!isFullyAllowed) {
               txs.build(
                 (gasLimit =>
                   async function approveLiquidityPool({ provider }) {
-                    await tokenContract.connect(provider).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
+                    await tokenAContract.connect(provider).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
                   })(gasLimitAcc('50000'))
               )
             }
           })
         )
 
-        // 3. Add liquidity to to SpookySwap Router contract
+        // 3. Add liquidity to to LP-Router contract
         txs.build(
           (gasLimit =>
             async function addLiquidity({ provider }) {
               // Assume only one non-native token
-              const contractTokenSymbol = await tokenContract.symbol()
+              const contractTokenSymbol = await tokenAContract.symbol()
               const tokenAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === contractTokenSymbol)
               const nativeAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === policyInfo.parentTokenId)
 
@@ -190,7 +190,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
 
               const result = await lpRouter
                 .connect(provider)
-                .addLiquidityETH(tokenContract.address, amountTokenDesired, amountTokenMin, amountNativeMin, signerAddress, deadline, {
+                .addLiquidityETH(tokenAContract.address, amountTokenDesired, amountTokenMin, amountNativeMin, signerAddress, deadline, {
                   gasLimit,
                   value: amountNative
                 })
@@ -201,7 +201,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
               //
               const transferTopicHash = ethers.utils.id('Transfer(address,address,uint256)')
               const transferTopics = receipt.logs.filter(log => log.topics[0] === transferTopicHash)
-              // The last token transfer log is the LP-Pair token transfer
+              // The last token transfer log is the LP- token transfer
               const lpTokenTransfer = transferTopics.slice(-1)[0]
               const decodedData = ethers.utils.defaultAbiCoder.decode(['uint256'], lpTokenTransfer.data)
               const [liquidity] = decodedData
@@ -212,7 +212,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
 
         /*
         Staking for LP tokens:
-          1. Approve Pool Contract on LP-Pair Contract:
+          1. Approve Pool Contract on LP- Contract:
             ```
             lpToken.approve(address _spender, uint256 _value)
             lpToken.approve(TSHARE Reward Pool, max)
@@ -227,15 +227,15 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
             ```
         */
 
-        // 1. Approve Pool Contract on LP-Pair Contract:
+        // 1. Approve Pool Contract on LP- Contract:
         txs.build(
           (gasLimit =>
             async function approveStakingPool({ provider, liquidity }) {
               const spenderAddress = poolContract.address
-              const allowanceResponse = await multipass(p => pairContract.connect(p).allowance(signerAddress, spenderAddress))
+              const allowanceResponse = await multipass(p => lpTokenContract.connect(p).allowance(signerAddress, spenderAddress))
               const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
               if (!isFullyAllowed) {
-                await pairContract.approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
+                await lpTokenContract.approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
               }
             })(gasLimitAcc('50000'))
         )
@@ -253,31 +253,31 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
 
       /*
       Unstaking for LP tokens:
-        1. Calculate the liquidity amount (LP-Pair token amount) from the unstake-allocations
+        1. Calculate the liquidity amount (LP- token amount) from the unstake-allocations
            
         2. Check liquidity amount balance
 
-        3. Withdraw the amount of LP-Pair token from Pool Contract
+        3. Withdraw the amount of LP- token from Pool Contract
           ```
           poolContract.withdraw(uint256 _pid, uint256 _amount)
           poolContract.withdraw(POOL_ID, 100000000000000)
           ```
-        4. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
+        4. Remove the liquidity from LP-Router contract (using the amount of LP- token withdrawn)
           ```
           lpRouter.removeLiquidityETH(address token, uint256 amountTokenDesired, uint256 amountTokenMin, uint256 amountETHMin, address to, uint256 deadline)
           ```
       */
       if (action === 'unstake') {
-        const contractTokenSymbol = await tokenContract.symbol()
+        const contractTokenSymbol = await tokenAContract.symbol()
         const tokenAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === contractTokenSymbol)
         const nativeAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === policyInfo.parentTokenId)
 
         if (tokenAllocation == null) throw new Error(`Contract token ${contractTokenSymbol} not found in asset pair`)
         if (nativeAllocation == null) throw new Error(`Native token ${policyInfo.parentTokenId} not found in asset pair`)
 
-        // 1. Calculate the liquidity amount (LP-Pair token amount) from the unstake-allocations
-        const lpTokenSupply = await multipass(p => pairContract.connect(p).totalSupply())
-        const reservesResponse = await multipass(p => pairContract.connect(p).getReserves())
+        // 1. Calculate the liquidity amount (LP- token amount) from the unstake-allocations
+        const lpTokenSupply = await multipass(p => lpTokenContract.connect(p).totalSupply())
+        const reservesResponse = await multipass(p => lpTokenContract.connect(p).getReserves())
         const { _reserve0 } = reservesResponse
         const tokenSupplyInReserve = _reserve0
         const liquidity = round(mul(div(tokenAllocation.nativeAmount, fromHex(tokenSupplyInReserve._hex), DECIMALS), fromHex(lpTokenSupply._hex)))
@@ -287,11 +287,11 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
         const balanceAmount = fromHex(userInfo.amount._hex)
         const isBalanceEnough = lte(liquidity, balanceAmount)
         if (!isBalanceEnough) {
-          const lpSymbol = await pairContract.symbol()
+          const lpSymbol = await lpTokenContract.symbol()
           throw new Error(`Cannot withdraw ${liquidity} ${lpSymbol} with liquidity balance ${balanceAmount}`)
         }
 
-        // 3. Withdraw the amount of LP-Pair token from Pool Contract
+        // 3. Withdraw the amount of LP- token from Pool Contract
         txs.build(
           (gasLimit =>
             async function unstakeLiquidity({ provider }) {
@@ -301,21 +301,21 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
             })(gasLimitAcc('240000'))
         )
 
-        // 4. Allow LP-Router on the LP-Pair token contract
+        // 4. Allow LP-Router on the LP- token contract
         const spenderAddress = lpRouter.address
-        const allowanceResponse = await multipass(p => pairContract.connect(p).allowance(signerAddress, spenderAddress))
+        const allowanceResponse = await multipass(p => lpTokenContract.connect(p).allowance(signerAddress, spenderAddress))
         const isAllowed = allowanceResponse.sub(liquidity).gte(0)
         if (!isAllowed) {
           txs.build(
             (gasLimit =>
               async function approveRouter({ provider }) {
-                await pairContract.connect(provider).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
+                await lpTokenContract.connect(provider).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit })
               })(gasLimitAcc('50000'))
           )
         }
-        // txs.build(buildApproveCall(pairContract, signerAddress, lpRouter.address, liquidity, gasLimitAcc))
+        // txs.build(buildApproveCall(lpTokenContract, signerAddress, lpRouter.address, liquidity, gasLimitAcc))
 
-        // 4. Remove the liquidity from SpookySwap Router contract (using the amount of LP-Pair token withdrawn)
+        // 4. Remove the liquidity from LP-Router contract (using the amount of LP- token withdrawn)
         txs.build(
           (gasLimit =>
             async function unstakeLiquidity({ provider }) {
@@ -323,7 +323,7 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
               const amountNativeMin = round(mul(nativeAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
-              await lpRouter.connect(provider).removeLiquidityETH(tokenContract.address, liquidity, amountTokenMin, amountNativeMin, signerAddress, deadline, {
+              await lpRouter.connect(provider).removeLiquidityETH(tokenAContract.address, liquidity, amountTokenMin, amountNativeMin, signerAddress, deadline, {
                 gasLimit
               })
             })(gasLimitAcc('500000'))
@@ -332,10 +332,10 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
 
       /*
       Claiming for LP tokens:
-        1. Withdraw reward by removing 0 liquidity from SpookySwap Router contract
+        1. Withdraw reward by removing 0 liquidity from LP-Router contract
       */
       if (action === 'claim') {
-        // 1. Withdraw reward by removing 0 liquidity from SpookySwap Router contract
+        // 1. Withdraw reward by removing 0 liquidity from LP-Router contract
         // Claiming withdraws all earned tokens
         txs.build(
           (gasLimit =>
@@ -378,7 +378,6 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
         approve
       }
     },
-    // TODO: Implement support for multi-asset staking
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       const { stakePolicyId, wallet } = request
 
@@ -389,16 +388,16 @@ export const makeCemetaryPolicy = (options: CemetaryPolicyOptions): StakePluginP
       const signerAddress = makeSigner(getSeed(wallet)).getAddress()
 
       // Get staked allocations:
-      // 1. Get the amount of LP-Pair tokens staked in the pool contract
+      // 1. Get the amount of LP- tokens staked in the pool contract
       const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
       const lpTokenBalance = userInfo.amount
-      // 2. Get the total supply of LP-Pair tokens in the LP-Pair pool contract
-      const lpTokenSupply = await multipass(p => pairContract.connect(p).totalSupply())
-      // 3. Get the amount of each token reserve in the LP-Pair pool contract
-      const reservesResponse = await multipass(p => pairContract.connect(p).getReserves())
+      // 2. Get the total supply of LP- tokens in the LP- pool contract
+      const lpTokenSupply = await multipass(p => lpTokenContract.connect(p).totalSupply())
+      // 3. Get the amount of each token reserve in the LP- pool contract
+      const reservesResponse = await multipass(p => lpTokenContract.connect(p).getReserves())
       const { _reserve0, _reserve1 } = reservesResponse
       const reserves = [_reserve0, _reserve1]
-      // 4. Do the conversion calculation between LP-Pair token to each of the tokens in the pool
+      // 4. Do the conversion calculation between LP- token to each of the tokens in the pool
       const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((asset, index) => {
         const reserve = reserves[index]
         if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${asset.tokenId}`)
