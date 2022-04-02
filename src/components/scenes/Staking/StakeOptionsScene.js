@@ -42,7 +42,6 @@ export const StakeOptionsScene = (props: Props) => {
     stakePlugin
       .getStakePolicies()
       .then(stakePolicies => {
-        console.log('\x1b[34m\x1b[43m' + `currencyCode: ${JSON.stringify(currencyCode, null, 2)}` + '\x1b[0m')
         const availableStakePolicies = stakePolicies.filter(stakePolicy => {
           return (
             stakePolicy.stakeAssets.some(stakeAsset => stakeAsset.tokenId === currencyCode) ||
