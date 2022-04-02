@@ -81,10 +81,8 @@ export const StakeOverviewScene = (props: Props) => {
 
   // Handlers
   const handleModifyPress = (modification: $PropertyType<ChangeQuoteRequest, 'action'>) => () => {
-    // TODO: (V2) Remove allocationToMod in route props
     if (stakePosition != null && stakeAllocations != null && rewardAllocations != null) {
-      const allocationToMod = modification === 'claim' ? rewardAllocations[0] : stakeAllocations[0]
-      navigation.navigate('stakeModify', { walletId, stakePolicy, stakePosition, allocationToMod, modification })
+      navigation.navigate('stakeModify', { walletId, stakePolicy, stakePosition, modification })
     }
   }
 
