@@ -364,16 +364,19 @@ export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], f
   return null
 }
 
-export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, ccWalletMap: CcWalletMap): { [key: string]: FioConnectionWalletItem } => {
+export const makeConnectWallets = (
+  edgeWallets: { [walletId: string]: EdgeCurrencyWallet },
+  wallets: { [walletId: string]: GuiWallet },
+  ccWalletMap: CcWalletMap
+): { [key: string]: FioConnectionWalletItem } => {
   const walletItems = {}
   for (const walletKey of Object.keys(wallets)) {
     if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
-    const publicAddress = wallets[walletKey].receiveAddress.publicAddress
     const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
     walletItems[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
       key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
       id: wallets[walletKey].id,
-      publicAddress,
+      edgeWallet: edgeWallets[wallets[walletKey].id],
       symbolImage: wallets[walletKey].symbolImage,
       name: wallets[walletKey].name,
       currencyCode: wallets[walletKey].currencyCode,
@@ -395,7 +398,7 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
         walletItems[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
           key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
           id: wallets[walletKey].id,
-          publicAddress,
+          edgeWallet: edgeWallets[wallets[walletKey].id],
           ...getCurrencyIcon(getPluginId(wallets[walletKey].type), tokenData.contractAddress),
           name: wallets[walletKey].name,
           currencyCode: tokenData.currencyCode,
