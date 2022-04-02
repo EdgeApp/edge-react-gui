@@ -63,7 +63,7 @@ export const getPolicyAssetName = (stakePolicy: StakePolicy, assetType: 'stakeAs
 }
 
 /**
- * Returns the asset display name. Converts multiple assets into their LP name
+ * Returns the policy title
  */
 export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
   const stakeCurrencyCodes = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
