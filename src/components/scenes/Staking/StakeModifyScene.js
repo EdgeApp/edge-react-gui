@@ -1,19 +1,20 @@
 // @flow
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
 import { type ChangeQuote, type ChangeQuoteRequest, type PositionAllocation, type QuoteAllocation } from '../../../plugins/stake-plugins'
-import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors.js'
+import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import { getPolicyAssetName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
+import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
@@ -38,41 +39,19 @@ export const StakeModifyScene = (props: Props) => {
   const { navigation } = props
   const { walletId, stakePolicy, stakePosition, modification } = props.route.params
   const { stakePolicyId } = stakePolicy
-  // TODO: Remove hard-coding for single asset to support multiple stake/reward assets
-  const stakeAssetsName = getPolicyAssetName(stakePolicy, 'stakeAssets')
-  const rewardAssetsName = getPolicyAssetName(stakePolicy, 'rewardAssets')
 
   // Hooks
-  const {
-    currencyWallet,
-    guiExchangeRates,
-    isoFiatCurrencyCode,
-    stakeDisplayDenom,
-    stakeExchangeDenom,
-    rewardDisplayDenom,
-    rewardExchangeDenom,
-    nativeAssetDenomination
-  } = useSelector(state => {
+  const { currencyWallet, guiExchangeRates, isoFiatCurrencyCode, nativeAssetDenomination } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[walletId]
     const guiExchangeRates = state.exchangeRates
 
-    const walletPluginId = currencyWallet.currencyInfo.pluginId
-    const stakeDisplayDenom = getDisplayDenomination(state, walletPluginId, stakeAssetsName)
-    const stakeExchangeDenom = getExchangeDenomination(state, walletPluginId, stakeAssetsName)
-    const rewardDisplayDenom = getDisplayDenomination(state, walletPluginId, rewardAssetsName)
-    const rewardExchangeDenom = getExchangeDenomination(state, walletPluginId, rewardAssetsName)
-
-    const nativeAssetDenomination = getDisplayDenomination(state, walletPluginId, currencyWallet.currencyInfo.currencyCode)
+    const nativeAssetDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyWallet.currencyInfo.currencyCode)
     const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
     return {
       currencyWallet,
       guiExchangeRates,
       isoFiatCurrencyCode,
-      stakeDisplayDenom,
-      stakeExchangeDenom,
-      rewardDisplayDenom,
-      rewardExchangeDenom,
       nativeAssetDenomination
     }
   })
@@ -94,8 +73,6 @@ export const StakeModifyScene = (props: Props) => {
     wallet: currencyWallet
   })
 
-  const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
-
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
   useEffect(() => {
     const existingAllocations = getPositionAllocations(stakePosition)
@@ -106,9 +83,10 @@ export const StakeModifyScene = (props: Props) => {
   useEffect(() => {
     if (changeQuoteRequest == null || changeQuoteRequest.tokenId === '' || changeQuoteRequest.nativeAmount === '0') {
       // Setup a default ChangeQuote for rendering based on policy if no position changes have been requested or scene just mounted
-
       const stakeChangeQuotes = stakePolicy.stakeAssets.map(({ pluginId, tokenId }) => {
         return {
+          action: modification,
+          stakePolicyId: stakePolicy.stakePolicyId,
           allocationType: 'stake',
           tokenId: tokenId,
           nativeAmount: '0'
@@ -116,6 +94,8 @@ export const StakeModifyScene = (props: Props) => {
       })
       const rewardChangeQuotes = stakePolicy.rewardAssets.map(({ pluginId, tokenId }) => {
         return {
+          action: modification,
+          stakePolicyId: stakePolicy.stakePolicyId,
           allocationType: 'claim',
           tokenId: tokenId,
           nativeAmount: existingAllocations?.earned[0].nativeAmount || '0'
@@ -126,55 +106,78 @@ export const StakeModifyScene = (props: Props) => {
         approve: async () => {}
       })
     } else {
-      // Setup the request
+      // Setup the request and get calculated values
       stakePlugin
-        .fetchChangeQuote(
-          {
-            action: modification,
-            stakePolicyId: changeQuoteRequest.stakePolicyId,
-            tokenId: changeQuoteRequest.tokenId,
-            nativeAmount: changeQuoteRequest.nativeAmount,
-            wallet: currencyWallet
-          }
-          // changeQuoteRequest // TODO: Manage only values being changed instead of the whole object?
-        )
+        .fetchChangeQuote(changeQuoteRequest)
         .then((changeQuote: ChangeQuote) => {
           setPendingChangeQuote(changeQuote)
-          setNativeFeeAmount(changeQuote.allocations.find(allocation => allocation.allocationType === 'fee')?.nativeAmount ?? '0')
         })
         .catch(err => {
           showError(err.message)
         })
     }
-  }, [modification, stakePolicyId, changeQuoteRequest, currencyWallet, existingAllocations, stakePolicy.stakeAssets])
+  }, [modification, stakePolicyId, changeQuoteRequest, currencyWallet, existingAllocations, stakePolicy])
 
   //
   // Handlers
   //
 
-  // HACK: FlipInputModal is soon getting updates to not be trash.
-  // In the meantime, split out the modification calls to the different assets into separate methods.
-  const handleAmountEdited = (nativeAmount: string, exchangeAmount: string) => {
-    // TODO: NOT NEEDED? Set which allocation to modify
-    console.log('handleAmountEdited: ' + nativeAmount)
-  }
-
   const handleMaxButtonPress = (modCurrencyCode: string) => () => {
-    // TODO: Set which allocation to modify
-
     if (changeQuoteRequest != null) {
       if (modification === 'unstake') {
-        console.log('max unstaking ' + modCurrencyCode)
         const allocationToMod = existingAllocations?.staked.find(positionAllocation => positionAllocation.tokenId === modCurrencyCode)
-        setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: allocationToMod?.nativeAmount })
+        const modChangeQuoteRequest = { ...changeQuoteRequest, tokenId: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
+        setChangeQuoteRequest(modChangeQuoteRequest)
       } else if (modification === 'stake') {
-        if (currencyWallet.currencyInfo.currencyCode === changeQuoteRequest?.tokenId) {
-          // TODO: (V2) Set max amount minus fees if specifying native asset amount
-          console.log('max staking NATIVE')
-        } else {
-          console.log('max staking TOKEN ' + modCurrencyCode + currencyWallet.balances[modCurrencyCode])
-          setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: currencyWallet.balances[modCurrencyCode] })
-        }
+        // Save all max amounts to find the limiting amount
+
+        // Set an arbitrary amount in the changeQuoteRequest to ensure a fee is
+        // generated
+        stakePlugin.fetchChangeQuote({ ...changeQuoteRequest, nativeAmount: '1' }).then((tempQuote: ChangeQuote) => {
+          // Save the max stake amount for each currency according to available
+          // wallet balances
+          const maxAmountsMap: Array<{ currencyCode: string, maxAmount: string }> = tempQuote.allocations.map(tempQuoteAllocation => {
+            const quoteCurrencyCode = tempQuoteAllocation.tokenId
+            const balanceAmount = currencyWallet.balances[modCurrencyCode]
+            let maxAmount = '0'
+
+            // Native currency
+            if (currencyWallet.currencyInfo.currencyCode === modCurrencyCode) {
+              // Subtract network fees from the ChangeQuote from the max amount of native currency
+              const feeAllocation = tempQuote.allocations.find(allocation => allocation.allocationType === 'fee')
+              maxAmount = bns.sub(balanceAmount, feeAllocation?.nativeAmount || '0')
+            }
+            // Token currency
+            else {
+              maxAmount = balanceAmount
+            }
+            return { currencyCode: quoteCurrencyCode, maxAmount }
+          })
+
+          // Get the change quote for the actual user modification amount
+          const walletBalance = maxAmountsMap.find(({ currencyCode, maxAmount }) => currencyCode === modCurrencyCode)?.maxAmount
+
+          stakePlugin.fetchChangeQuote({ ...changeQuoteRequest, nativeAmount: walletBalance }).then(tempModChangeQuote => {
+            // Check if the max amount for this currency requires a higher max amount of
+            // another currency than is available
+            const filteredMaxAmountsMap = maxAmountsMap.filter(({ currencyCode, maxAmount }) => currencyCode !== modCurrencyCode)
+
+            const limitingMaxAmountPair = filteredMaxAmountsMap.find(({ currencyCode, maxAmount }) => {
+              const comparisonMaxAmount =
+                tempModChangeQuote.allocations.find(tempModAllocation => tempModAllocation.tokenId === currencyCode)?.nativeAmount || '0'
+              return bns.lt(maxAmount, comparisonMaxAmount)
+            })
+
+            if (limitingMaxAmountPair != null) {
+              // Return the max amount held in the wallet for the limiting currency
+              // TODO: This only works with 2 staked assets
+              setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: limitingMaxAmountPair.currencyCode, nativeAmount: limitingMaxAmountPair.maxAmount })
+            } else {
+              // Return the max amount held in the wallet for the requested currency
+              setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: walletBalance })
+            }
+          })
+        })
       }
     }
   }
@@ -191,7 +194,7 @@ export const StakeModifyScene = (props: Props) => {
         })
         .catch(err => {
           // TODO: Make the slider reset
-          reset()
+          // reset()
           showError(err.message)
         })
     }
@@ -204,14 +207,14 @@ export const StakeModifyScene = (props: Props) => {
         bridge={bridge}
         walletId={walletId}
         currencyCode={currencyCode}
-        onAmountChanged={handleAmountEdited}
+        onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, currencyWallet.name)}
       />
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
-        // set the appropriate amount
-        setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: currencyCode, nativeAmount: nativeAmount })
+        // set the modified amount
+        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: currencyCode, nativeAmount: nativeAmount })
       })
       .catch(error => console.log(error))
   }
@@ -221,28 +224,16 @@ export const StakeModifyScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const renderEditableQuoteAmountRow = (quoteAllocation: QuoteAllocation) => {
-    console.log('\x1b[34m\x1b[43m' + `quoteAllocation.allocationType: ${JSON.stringify(quoteAllocation.allocationType, null, 2)}` + '\x1b[0m')
-    const exchangeDenomMap = {
-      stake: stakeExchangeDenom,
-      claim: rewardExchangeDenom,
-      unstake: stakeExchangeDenom,
-      fee: stakeExchangeDenom
-    }
-
-    const displayDenomMap = {
-      stake: stakeDisplayDenom,
-      claim: rewardDisplayDenom,
-      unstake: stakeDisplayDenom,
-      fee: stakeDisplayDenom
-    }
+    const quoteCurrencyCode = quoteAllocation.tokenId
+    const quoteDenom = getDenominationFromCurrencyInfo(currencyWallet.currencyInfo, quoteCurrencyCode)
 
     const quoteAllocationType = quoteAllocation.allocationType
     const title =
       quoteAllocationType === 'stake'
         ? modification === 'stake'
-          ? sprintf(s.strings.stake_amount_stake, quoteAllocation.tokenId)
-          : sprintf(s.strings.stake_amount_unstake, quoteAllocation.tokenId)
-        : sprintf(s.strings.stake_amount_claim, quoteAllocation.tokenId)
+          ? sprintf(s.strings.stake_amount_s_stake, quoteCurrencyCode)
+          : sprintf(s.strings.stake_amount_s_unstake, quoteCurrencyCode)
+        : sprintf(s.strings.stake_amount_claim, quoteCurrencyCode)
 
     return (
       <EditableAmountTile
@@ -250,18 +241,31 @@ export const StakeModifyScene = (props: Props) => {
         exchangeRates={guiExchangeRates}
         nativeAmount={quoteAllocation.nativeAmount}
         currencyWallet={currencyWallet}
-        currencyCode={quoteAllocation.tokenId}
-        exchangeDenomination={exchangeDenomMap[quoteAllocationType]}
-        displayDenomination={displayDenomMap[quoteAllocationType]}
+        currencyCode={quoteCurrencyCode}
+        exchangeDenomination={quoteDenom}
+        displayDenomination={quoteDenom}
         lockInputs={quoteAllocationType === 'claim'}
-        onPress={handleShowFlipInputModal(quoteAllocation.tokenId)}
+        onPress={handleShowFlipInputModal(quoteCurrencyCode)}
       />
     )
   }
 
   const renderWarning = () => {
-    if (modification !== 'claim') return null
-    return (
+    // Warnings are only shown for single asset staking
+    let warningMessage = null
+    if (existingAllocations?.staked.length === 1 && pendingChangeQuote !== null) {
+      const modStakedAmount =
+        pendingChangeQuote?.allocations.find(allocation => allocation.allocationType === 'stake' && bns.gt(allocation.nativeAmount, '0'))?.nativeAmount || '0'
+      const stakedAmount = existingAllocations?.staked[0].nativeAmount ?? '0'
+
+      const isRemainingStakedAmount = bns.gt(stakedAmount, modStakedAmount)
+      const isUnclaimedRewards = existingAllocations?.earned.some(earnedAllocation => bns.gt(earnedAllocation.nativeAmount, '0'))
+
+      if (modification === 'stake') warningMessage = isRemainingStakedAmount || isUnclaimedRewards ? s.strings.stake_warning_stake : null
+      if (modification === 'claim') warningMessage = s.strings.stake_warning_claim
+      if (modification === 'unstake') warningMessage = isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
+    }
+    return warningMessage == null ? null : (
       <Alert
         marginRem={[0, 1, 1, 1]}
         title={s.strings.wc_smartcontract_warning_title}
@@ -272,9 +276,9 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  // Mapping for filtering the array of QuoteAllocations in the pending ChangeQuote based on the
-  // modification action of the scene.
-  // We only display certain allocationTypes from the ChangeQuote allocations:QuoteAllocation[]
+  // Mapping for filtering the array of QuoteAllocations in the pending
+  // ChangeQuote based on the modification action of the scene.
+  // We only display certain allocationTypes from ChangeQuote.allocations
   // depending on the modification being done in the scene.
   const displayChangeQuoteMap = {
     stake: ['stake'],
@@ -296,7 +300,7 @@ export const StakeModifyScene = (props: Props) => {
         })}
         <CryptoFiatAmountTile
           title={s.strings.wc_smartcontract_network_fee}
-          nativeCryptoAmount={nativeFeeAmount}
+          nativeCryptoAmount={pendingChangeQuote?.allocations.find(allocation => allocation.allocationType === 'fee')?.nativeAmount ?? '0'}
           cryptoCurrencyCode={currencyWallet.currencyInfo.currencyCode}
           isoFiatCurrencyCode={isoFiatCurrencyCode}
           denomination={nativeAssetDenomination}
@@ -316,17 +320,24 @@ export const StakeModifyScene = (props: Props) => {
   const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
   const sceneTitleMap = {
-    stake: sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName),
+    stake: getPolicyTitleName(stakePolicy),
     claim: s.strings.stake_claim_rewards,
     unstake: s.strings.stake_claim_unstake
   }
 
+  const policyIcons = getPolicyIconUris(currencyWallet, stakePolicy)
+  const icon = modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />
+
   return (
     <SceneWrapper background="theme">
-      <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin />
-      {renderChangeQuoteAmountTiles(modification)}
-      {renderWarning()}
-      <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={null} disabledText={s.strings.stake_disabled_slider} />
+      <ScrollView>
+        <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
+          {icon}
+        </SceneHeader>
+        {renderChangeQuoteAmountTiles(modification)}
+        {renderWarning()}
+        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={null} disabledText={s.strings.stake_disabled_slider} />
+      </ScrollView>
     </SceneWrapper>
   )
 }
@@ -345,6 +356,7 @@ const getStyles = cacheStyles(theme => ({
     height: theme.rem(1.5),
     width: theme.rem(1.5),
     marginRight: theme.rem(0.5),
+    marginLeft: theme.rem(0.5),
     resizeMode: 'contain'
   },
   sceneHeader: {
