@@ -18,12 +18,12 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { type ReturnAddressLink } from '../types/DeepLinkTypes.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
+import { type GuiMakeSpendInfo } from '../types/types.js'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
 import { denominationToDecimalPlaces, zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
-export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
+export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
   dispatch({ type: 'DISABLE_SCAN' })
   if (currencyName !== edgeWallet.currencyInfo.pluginId) {
@@ -56,11 +56,11 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
           }}
         />
       ))
-        .then(resolveValue => {
+        .then(async resolveValue => {
           dispatch({ type: 'ENABLE_SCAN' })
           if (resolveValue === 'confirm') {
             // Build the URL
-            const addr = guiWallet.receiveAddress.publicAddress
+            const addr = (await edgeWallet.getReceiveAddress()).publicAddress
             const url = decodeURIComponent(successUri)
             const finalUrl = url + '?address=' + encodeURIComponent(addr)
             Linking.openURL(finalUrl)
@@ -107,18 +107,14 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const edgeWallet = currencyWallets[selectedWalletId]
-  const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
-
-  const walletId: string = state.ui.wallets.selectedWalletId
-  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
 
   let fioAddress
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig.fio
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
     try {
-      const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
+      const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
       fioAddress = data.toLowerCase()
       data = publicAddress
     } catch (e) {
@@ -136,7 +132,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         break
       case 'returnAddress':
         try {
-          return doRequestAddress(dispatch, edgeWallet, guiWallet, deepLink)
+          return doRequestAddress(dispatch, edgeWallet, deepLink)
         } catch (e) {
           console.log(e)
         }
@@ -201,7 +197,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
     if (parsedUri.paymentProtocolURL != null && parsedUri.publicAddress == null) {
       // BIP70 URI
-      const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
+      const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
 
       if (guiMakeSpendInfo != null) {
         Actions.push(SEND, {
