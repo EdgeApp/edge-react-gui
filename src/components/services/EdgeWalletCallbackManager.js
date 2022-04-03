@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions.js'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions.js'
-import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../actions/WalletActions.js'
+import { refreshWallet, updateWalletLoadingProgress } from '../../actions/WalletActions.js'
 import { connect } from '../../types/reactRedux.js'
 import { isReceivedTransaction, logPrefix } from '../../util/utils.js'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal.js'
@@ -20,7 +20,6 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  refreshReceiveAddressRequest: (id: string) => void,
   refreshTransactionsRequest: (id: string, transactions: EdgeTransaction[]) => void,
   refreshWallet: (id: string) => void,
   checkPasswordRecovery: () => void,
@@ -49,7 +48,6 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
         console.log(`${prefix} - onNewTransactions: No transactions`)
       }
 
-      this.props.refreshReceiveAddressRequest(this.props.id)
       this.props.refreshTransactionsRequest(this.props.id, transactions)
       this.props.refreshWallet(this.props.id)
       this.props.newTransactionsRequest(this.props.id, transactions)
@@ -68,13 +66,8 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
         console.log(`${prefix} - onTransactionsChanged: No transactions`)
       }
 
-      this.props.refreshReceiveAddressRequest(this.props.id)
       this.props.refreshTransactionsRequest(this.props.id, transactions)
       this.props.refreshWallet(this.props.id)
-    })
-
-    wallet.on('addressChanged', () => {
-      this.props.refreshReceiveAddressRequest(this.props.id)
     })
 
     wallet.watch('syncRatio', transactionCount => {
@@ -114,9 +107,6 @@ export const EdgeWalletCallbackManager = connect<StateProps, DispatchProps, OwnP
     wallet: state.core.account.currencyWallets[ownProps.id]
   }),
   dispatch => ({
-    refreshReceiveAddressRequest(id) {
-      dispatch(refreshReceiveAddressRequest(id))
-    },
     refreshTransactionsRequest(transactions, id) {
       dispatch(refreshTransactionsRequest(transactions, id))
     },

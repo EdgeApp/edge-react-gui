@@ -11,7 +11,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletFromModal } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -36,8 +36,6 @@ import { FlipInput } from '../themed/FlipInput.js'
 import { QrCode } from '../themed/QrCode'
 import { ShareButtons } from '../themed/ShareButtons.js'
 
-const PUBLIC_ADDRESS_REFRESH_MS = 2000
-
 type OwnProps = {
   navigation: NavigationProp<'request'>
 }
@@ -55,7 +53,6 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  refreshReceiveAddressRequest: (walletId: string) => void,
   refreshAllFioAddresses: () => void,
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
@@ -78,6 +75,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 export class RequestComponent extends React.Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: React.ElementRef<typeof FlipInput> | null = null
+  unsubscribeAddressChanged: Function | null
 
   constructor(props: Props) {
     super(props)
@@ -106,6 +104,13 @@ export class RequestComponent extends React.Component<Props, State> {
   componentDidMount() {
     this.generateEncodedUri()
     this.props.refreshAllFioAddresses()
+    if (this.props.edgeWallet != null) {
+      this.unsubscribeAddressChanged = this.props.edgeWallet.on('addressChanged', () => this.generateEncodedUri())
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribeAddressChanged != null) this.unsubscribeAddressChanged()
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -154,11 +159,6 @@ export class RequestComponent extends React.Component<Props, State> {
         publicAddress,
         legacyAddress
       })
-      setTimeout(() => {
-        if (edgeWallet && edgeWallet.id) {
-          this.props.refreshReceiveAddressRequest(edgeWallet.id)
-        }
-      }, PUBLIC_ADDRESS_REFRESH_MS)
     }
   }
 
@@ -183,9 +183,6 @@ export class RequestComponent extends React.Component<Props, State> {
         console.log(err)
         publicAddress = s.strings.loading
         legacyAddress = s.strings.loading
-        setTimeout(() => {
-          refreshReceiveAddressRequest(edgeWallet.id)
-        }, PUBLIC_ADDRESS_REFRESH_MS)
       }
 
       // eslint-disable-next-line react/no-did-update-set-state
@@ -396,11 +393,6 @@ export class RequestComponent extends React.Component<Props, State> {
       encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : undefined
     } catch (e) {
       console.log(e)
-      setTimeout(() => {
-        if (this.props.edgeWallet && this.props.edgeWallet.id) {
-          this.props.refreshReceiveAddressRequest(this.props.edgeWallet.id)
-        }
-      }, PUBLIC_ADDRESS_REFRESH_MS)
     }
 
     this.setState({ encodedURI })
@@ -641,9 +633,6 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    refreshReceiveAddressRequest(walletId: string) {
-      dispatch(refreshReceiveAddressRequest(walletId))
-    },
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     },
