@@ -188,7 +188,9 @@ exports[`Request should render with loaded props 1`] = `
             "fontSize": 17,
           }
         }
-      />
+      >
+        
+      </WithTheme(EdgeTextComponent)>
     </TouchableOpacity>
   </View>
   <ShareButtons
