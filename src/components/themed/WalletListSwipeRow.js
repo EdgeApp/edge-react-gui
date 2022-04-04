@@ -97,6 +97,18 @@ function WalletListSwipeRowComponent(props: Props) {
   }
   const renderRequestUnderlay = (isActive: SharedValue<boolean>) => (
     <>
+      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
+        <Text style={styles.menuIcon}>…</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
+        <SwipeIcon isActive={isActive}>
+          <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
+        </SwipeIcon>
+      </TouchableOpacity>
+    </>
+  )
+  const renderSendUnderlay = (isActive: SharedValue<boolean>) => (
+    <>
       <TouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
         <SwipeIcon isActive={isActive}>
           <Fontello name="send" color={theme.icon} size={theme.rem(1)} />
@@ -104,18 +116,6 @@ function WalletListSwipeRowComponent(props: Props) {
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
-      </TouchableOpacity>
-    </>
-  )
-  const renderSendUnderlay = (isActive: SharedValue<boolean>) => (
-    <>
-      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
-        <Text style={styles.menuIcon}>…</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.requestUnderlay} onPress={handleSend}>
-        <SwipeIcon isActive={isActive}>
-          <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
-        </SwipeIcon>
       </TouchableOpacity>
     </>
   )
@@ -135,8 +135,8 @@ function WalletListSwipeRowComponent(props: Props) {
       ref={rowRef}
       leftDetent={theme.rem(5)}
       leftThreshold={theme.rem(7.5)}
-      renderLeft={renderSendUnderlay}
-      renderRight={renderRequestUnderlay}
+      renderLeft={renderRequestUnderlay}
+      renderRight={renderSendUnderlay}
       rightDetent={theme.rem(5)}
       rightThreshold={theme.rem(7.5)}
       onLeftSwipe={handleRequest}
