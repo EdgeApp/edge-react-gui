@@ -15,6 +15,7 @@ import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
+import { zeroString } from '../../../util/utils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
@@ -211,7 +212,7 @@ export const StakeModifyScene = (props: Props) => {
       <EditableAmountTile
         title={title}
         exchangeRates={guiExchangeRates}
-        nativeAmount={quoteAllocation.nativeAmount}
+        nativeAmount={zeroString(quoteAllocation.nativeAmount) ? '' : quoteAllocation.nativeAmount}
         currencyWallet={currencyWallet}
         currencyCode={quoteCurrencyCode}
         exchangeDenomination={quoteDenom}
