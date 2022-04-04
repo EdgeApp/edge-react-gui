@@ -1,5 +1,5 @@
 // @flow
-import { add, gte, lte, mul, sub } from 'biggystring'
+import { add, gt, gte, lte, mul, sub } from 'biggystring'
 import { ethers } from 'ethers'
 
 import { makeContract, makeSigner, multipass } from '../contracts.js'
@@ -304,8 +304,22 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         }
       ]
 
+      //
+      // Action flags
+      //
+
+      const tokenContract = makeContract(policyInfo.stakeAssets[0].tokenId)
+      const tokenBalance = (await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))).toString()
+
+      const canStake = gt(tokenBalance, '0')
+      const canUnstake = gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
+      const canClaim = gt(earnedAllocations[0].nativeAmount, '0') && earnedAllocations[0].locktime == null
+
       return {
-        allocations: [...stakedAllocations, ...earnedAllocations]
+        allocations: [...stakedAllocations, ...earnedAllocations],
+        canStake,
+        canUnstake,
+        canClaim
       }
     }
   }
