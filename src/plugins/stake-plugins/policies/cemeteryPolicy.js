@@ -392,8 +392,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
       // Get staked allocations:
       // 1. Get the amount of LP-tokens staked in the pool contract
-      const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
-      const lpTokenBalance = userInfo.amount
+      const userStakePoolInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+      const stakedLpTokenBalance = userStakePoolInfo.amount
       // 2. Get the total supply of LP-tokens in the LP- pool contract
       const lpTokenSupply = await multipass(p => lpTokenContract.connect(p).totalSupply())
       // 3. Get the amount of each token reserve in the LP- pool contract
@@ -404,7 +404,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((asset, index) => {
         const reserve = reserves[index]
         if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${asset.tokenId}`)
-        const nativeAmount = round(mul(div(lpTokenBalance.toString(), lpTokenSupply.toString(), DECIMALS), reserve.toString()))
+        const nativeAmount = round(mul(div(stakedLpTokenBalance.toString(), lpTokenSupply.toString(), DECIMALS), reserve.toString()))
         return {
           pluginId: asset.pluginId,
           tokenId: asset.tokenId,
@@ -426,8 +426,27 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         }
       ]
 
+      //
+      // Actions available for the user:
+      //
+
+      const nativeTokenBalance = (await multipass(p => p.getBalance(signerAddress))).toString()
+      const tokenABalance = (await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))).toString()
+      const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
+      // You can stake if you have balances in the paired assets, or some unstaked LP-Token balance
+      const canStake = (gt(tokenABalance, '0') && gt(nativeTokenBalance, '0')) || gt(lpTokenBalance, '0')
+
+      // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
+      const canUnstake = stakedLpTokenBalance.gt(0)
+
+      // You can claim so long as there is some reward balance (there are no timelocks)
+      const canClaim = gt(rewardNativeAmount, '0')
+
       return {
-        allocations: [...stakedAllocations, ...earnedAllocations]
+        allocations: [...stakedAllocations, ...earnedAllocations],
+        canStake,
+        canUnstake,
+        canClaim
       }
     }
   }
