@@ -235,3 +235,19 @@ export function toLocaleTime(date: Date): string {
 export function toLocaleDateTime(date: Date): string {
   return toLocaleDate(date) + ' ' + toLocaleTime(date)
 }
+
+// Remove starting and trailing zeros and separator
+export const trimEnd = (val: string): string => {
+  const _ = locale.decimalSeparator
+  if (!val.includes(_)) return val
+  const [int, decimal] = val.split(_)
+
+  let out = int
+  for (let i = decimal.length - 1; i >= 0; i--) {
+    if (decimal[i] !== '0') {
+      out += _ + decimal.substring(0, i + 1)
+      break
+    }
+  }
+  return out
+}

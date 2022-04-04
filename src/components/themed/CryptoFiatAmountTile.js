@@ -4,7 +4,7 @@ import { type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
-import { formatNumber } from '../../locales/intl.js'
+import { formatNumber, trimEnd } from '../../locales/intl.js'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
@@ -32,7 +32,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const cryptoAmountDenom = div(nativeCryptoAmount, cryptoDenomMult, DECIMAL_PRECISION)
 
   // Default to 10 displayed chars for crypto amount
-  const fmtCryptoAmount = formatNumber(cryptoAmountDenom, { toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars })
+  const fmtCryptoAmount = trimEnd(formatNumber(cryptoAmountDenom, { toFixed: maxCryptoChars === undefined ? MAX_CRYPTO_AMOUNT_CHARACTERS : maxCryptoChars }))
 
   const cryptoAmountText = `${fmtCryptoAmount} ${cryptoName} `
 
