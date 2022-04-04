@@ -9,8 +9,8 @@ import { makeContract, makeSigner, multipass } from './contracts.js'
 import { pluginInfo } from './pluginInfo.js'
 import { toStakePolicy } from './stakePolicy.js'
 import { makeTxBuilder } from './TxBuilder.js'
-import { type DetailAllocation } from './types'
-import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeDetailRequest, StakeDetails, StakePlugin, StakePolicy } from './types.js'
+import { type PositionAllocation } from './types'
+import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePlugin, StakePolicy, StakePosition, StakePositionRequest } from './types.js'
 import { getSeed } from './util/getSeed.js'
 import { fromHex, toHex } from './util/hex.js'
 
@@ -287,7 +287,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
       }
     },
     // TODO: Implement support for multi-asset staking
-    async fetchStakeDetails(request: StakeDetailRequest): Promise<StakeDetails> {
+    async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       const { stakePolicyId, wallet } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
@@ -298,8 +298,9 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
 
       // Get staked allocations
       const balanceOfTxResponse = await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
-      const stakedAllocations: DetailAllocation[] = [
+      const stakedAllocations: PositionAllocation[] = [
         {
+          pluginId: policyInfo.stakeAssets[0].pluginId,
           tokenId: policyInfo.stakeAssets[0].tokenId,
           allocationType: 'staked',
           nativeAmount: fromHex(balanceOfTxResponse._hex),
@@ -309,8 +310,9 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
 
       // Get earned allocations
       const earnedTxRresponse = await multipass(p => poolContract.connect(p).earned(signerAddress))
-      const earnedAllocations: DetailAllocation[] = [
+      const earnedAllocations: PositionAllocation[] = [
         {
+          pluginId: policyInfo.rewardAssets[0].pluginId,
           tokenId: policyInfo.rewardAssets[0].tokenId,
           allocationType: 'earned',
           nativeAmount: fromHex(earnedTxRresponse._hex),
