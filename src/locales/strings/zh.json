@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Archive Wallet",
   "fragment_wallets_resync_wallet": "钱包重新同步",
   "fragment_wallets_split_wallet": "分拆钱包",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "获取种子",
   "fragment_wallets_view_xpub": "查看XPub地址",
   "fragment_wallets_no_xpub": "此钱包类型没有公钥",
