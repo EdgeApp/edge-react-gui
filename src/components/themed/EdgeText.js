@@ -10,7 +10,8 @@ type OwnProps = {|
   ellipsizeMode?: string,
   numberOfLines?: number,
   style?: StyleSheet.Styles,
-  disableFontScaling?: boolean
+  disableFontScaling?: boolean,
+  minimumFontScale?: number
 |}
 
 export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {

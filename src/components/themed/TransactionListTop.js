@@ -116,7 +116,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
                 <>
-                  <EdgeText style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + denominationName}</EdgeText>
+                  <EdgeText style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
+                    {cryptoAmount + ' ' + denominationName}
+                  </EdgeText>
                   <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
                 </>
               ) : (
@@ -293,6 +295,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.25)
   },
   balanceBoxCurrency: {
+    fontSize: theme.rem(2),
     fontFamily: theme.fontFaceMedium
   },
   balanceFiatBalance: {
