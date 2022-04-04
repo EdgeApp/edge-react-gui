@@ -241,13 +241,7 @@ export const StakeModifyScene = (props: Props) => {
       if (modification === 'unstake') warningMessage = isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
     }
     return warningMessage == null ? null : (
-      <Alert
-        marginRem={[0, 1, 1, 1]}
-        title={s.strings.wc_smartcontract_warning_title}
-        message={s.strings.stake_warning_claim}
-        numberOfLines={0}
-        type="warning"
-      />
+      <Alert marginRem={[0, 1, 1, 1]} title={s.strings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
     )
   }
 
