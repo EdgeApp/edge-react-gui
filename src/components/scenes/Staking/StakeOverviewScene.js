@@ -111,7 +111,7 @@ export const StakeOverviewScene = (props: Props) => {
   const isAvailableToUnstake = stakeAllocations.some(stakeAllocation => bns.gt(stakeAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper scroll background="theme">
       <SceneHeader style={styles.sceneHeader} title={getPolicyTitleName(stakePolicy)} withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard

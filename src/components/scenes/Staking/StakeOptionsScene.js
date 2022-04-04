@@ -96,7 +96,7 @@ export const StakeOptionsScene = (props: Props) => {
     )
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper scroll background="theme">
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
         {icon}
       </SceneHeader>

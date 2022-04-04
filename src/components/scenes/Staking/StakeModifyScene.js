@@ -304,7 +304,7 @@ export const StakeModifyScene = (props: Props) => {
   const icon = modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper scroll background="theme">
       <ScrollView>
         <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
           {icon}
