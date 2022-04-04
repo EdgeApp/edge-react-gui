@@ -5,7 +5,6 @@ import { ethers } from 'ethers'
 import MASONRY_ABI from './abi/MASONRY_ABI.json'
 import TOMB_TREASURY_ABI from './abi/TOMB_TREASURY_ABI.json'
 import TSHARE_ABI from './abi/TSHARE_ABI.json'
-import { promiseAny } from './util/promiseAny'
 
 export const rpcProviderUrls = [
   'https://rpc.ftm.tools',
@@ -62,8 +61,16 @@ export const makeContract = (addressOrName: string) => {
   return new ethers.Contract(address, abi, providers[0])
 }
 
-export const multipass = (fn: (provider: ethers.Provider) => Promise<any>) => {
-  return promiseAny(providers.map(provider => fn(provider)))
+let lastServerIndex = 0
+export const multipass = async (fn: (provider: ethers.Provider) => Promise<any>) => {
+  const provider = providers[lastServerIndex % providers.length]
+  try {
+    return await fn(provider)
+  } catch (error) {
+    // Move index forward if an error is thrown
+    ++lastServerIndex
+    throw error
+  }
 }
 
 export const makeSigner = (seed: string, provider: ethers.Provider = providers[0]) => new ethers.Wallet(seed, provider)
