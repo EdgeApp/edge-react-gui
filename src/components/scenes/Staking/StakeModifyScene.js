@@ -14,12 +14,10 @@ import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getRewardAllocation, getRewardAssetsName, getStakeAllocation, getStakeAssetsName, stakePlugin } from '../../../util/stakeUtils.js'
-import { zeroString } from '../../../util/utils.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
-import { FlashNotification } from '../../navigation/FlashNotification.js'
-import { Airship, showError } from '../../services/AirshipInstance.js'
+import { Airship, showError, showToast } from '../../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Alert } from '../../themed/Alert.js'
 import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
@@ -32,8 +30,6 @@ type Props = {
   navigation: NavigationProp<'stakeModify'>,
   route: RouteProp<'stakeModify'>
 }
-
-const DEFAULT = ''
 
 export const StakeModifyScene = (props: Props) => {
   // Constants
@@ -84,13 +80,11 @@ export const StakeModifyScene = (props: Props) => {
 
   // Handlers
   const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote | void>()
-  const [nativeModAmount, setNativeModAmount] = useState(DEFAULT)
-  const [nativeFeeAmount, setNativeFeeAmount] = useState(DEFAULT)
-  const [sliderLocked, setSliderLocked] = useState(false)
+  const [nativeModAmount, setNativeModAmount] = useState('0')
+  const [nativeFeeAmount, setNativeFeeAmount] = useState('0')
 
   // Get pending change quote
   useEffect(() => {
-    if (zeroString(nativeModAmount)) return
     let abort = false
     // Setup the request
     stakePlugin
@@ -118,33 +112,22 @@ export const StakeModifyScene = (props: Props) => {
   // Effect that initializes the allocation amount
   useEffect(() => {
     const rewardAllocation = getRewardAllocation(stakeDetails)
-    const rewardAmountResult = rewardAllocation === null ? DEFAULT : rewardAllocation.nativeAmount
+    const rewardAmountResult = rewardAllocation === null ? '0' : rewardAllocation.nativeAmount
     const stakeAllocation = getStakeAllocation(stakeDetails)
-    const stakeAmountResult = stakeAllocation === null ? DEFAULT : stakeAllocation.nativeAmount
+    const stakeAmountResult = stakeAllocation === null ? '0' : stakeAllocation.nativeAmount
 
     setRewardAmount(rewardAmountResult)
 
-    if (modification === 'claim') updateNativeModAmount(rewardAmountResult)
-    if (modification === 'unstake') updateNativeModAmount(stakeAmountResult)
+    if (modification === 'claim') setNativeModAmount(rewardAmountResult)
+    if (modification === 'unstake') setNativeModAmount(stakeAmountResult)
   }, [currencyWallet, stakeDetails, modification])
-
-  const updateNativeModAmount = (nativeAmount: string) => {
-    if (!zeroString(nativeAmount)) {
-      setNativeModAmount(nativeAmount)
-    } else {
-      // Reset scene if nativeAmount is zero
-      if (nativeAmount !== DEFAULT) setNativeModAmount(DEFAULT) // restore placeholder text in amount tile
-      setNativeFeeAmount(DEFAULT) // show zero fee
-      setPendingChangeQuote(undefined) // reset the slider
-    }
-  }
 
   //
   // Handlers
   //
 
   const handleAmountEdited = (nativeAmount: string, exchangeAmount: string) => {
-    updateNativeModAmount(nativeAmount)
+    setNativeModAmount(nativeAmount)
   }
 
   const handleMaxButtonPress = () => {
@@ -153,29 +136,27 @@ export const StakeModifyScene = (props: Props) => {
       // TODO: (V2) Set max amount minus fees if specifying native asset amount
     } else {
       if (modification === 'unstake') {
-        updateNativeModAmount(allocationToMod?.nativeAmount ?? DEFAULT)
+        setNativeModAmount(allocationToMod?.nativeAmount ?? '0')
       } else if (modification === 'stake') {
-        const amount = currencyWallet.balances[stakeAssetsName]
-        updateNativeModAmount(amount !== '0' ? amount : DEFAULT)
+        setNativeModAmount(currencyWallet.balances[stakeAssetsName])
       }
     }
   }
 
   const handleSlideComplete = reset => {
     if (pendingChangeQuote != null) {
-      setSliderLocked(true)
       pendingChangeQuote
         .approve()
         .then(success => {
-          Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings[`stake_change_${modification}_success`]} onPress={() => {}} />)
+          if (modification === 'stake') showToast(s.strings.stake_change_stake_success)
+          if (modification === 'unstake') showToast(s.strings.stake_change_unstake_success)
+          if (modification === 'claim') showToast(s.strings.stake_change_claim_success)
           navigation.pop()
         })
         .catch(err => {
+          // TODO: Make the slider reset
           reset()
           showError(err.message)
-        })
-        .finally(() => {
-          setSliderLocked(false)
         })
     }
   }
@@ -244,7 +225,7 @@ export const StakeModifyScene = (props: Props) => {
           currencyCode={amountCurrencyCodeMap[allocationType]}
           exchangeDenomination={exchangeDenomMap[allocationType]}
           displayDenomination={displayDenomMap[allocationType]}
-          lockInputs={allocationType === 'claim' || allocationType === 'unstake'}
+          lockInputs={allocationType === 'claim'}
           onPress={handleShowFlipInputModal}
         />
       )
@@ -252,13 +233,12 @@ export const StakeModifyScene = (props: Props) => {
   }
 
   const renderWarning = () => {
-    if (modification === 'unstake') return null
-
+    if (modification !== 'claim') return null
     return (
       <Alert
         marginRem={[0, 1, 1, 1]}
         title={s.strings.wc_smartcontract_warning_title}
-        message={s.strings[`stake_warning_${modification}`]}
+        message={s.strings.stake_warning_claim}
         numberOfLines={0}
         type="warning"
       />
@@ -268,7 +248,7 @@ export const StakeModifyScene = (props: Props) => {
   const displayAllocationTypesMap = {
     stake: ['stake'],
     claim: ['claim'],
-    unstake: ['stake', 'claim']
+    unstake: ['claim', 'stake']
   }
   const renderAmountTiles = (modAllocation, nativeAmount, modification) => {
     return (
@@ -291,7 +271,7 @@ export const StakeModifyScene = (props: Props) => {
   const sceneTitleMap = {
     stake: sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName),
     claim: s.strings.stake_claim_rewards,
-    unstake: s.strings.stake_unstake_and_claim_rewards
+    unstake: s.strings.stake_claim_unstake
   }
 
   if (stakeDetails.allocations.length === 0)
@@ -301,15 +281,14 @@ export const StakeModifyScene = (props: Props) => {
       </SceneWrapper>
     )
 
-  const isSliderDisabled =
-    sliderLocked || pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
+  const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin />
       {renderAmountTiles(allocationToMod, nativeModAmount, modification)}
       {renderWarning()}
-      <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={s.strings.stake_disabled_slider} />
+      <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={null} disabledText={s.strings.stake_disabled_slider} />
     </SceneWrapper>
   )
 }
