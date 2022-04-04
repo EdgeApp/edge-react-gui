@@ -59,6 +59,17 @@ export const StakeOverviewScene = (props: Props) => {
   const [stakeAllocations, setStakeAllocations] = useState<PositionAllocation[] | void>()
   const [rewardAllocations, setRewardAllocations] = useState<PositionAllocation[] | void>()
   const [stakePosition, setStakePosition] = useState<StakePosition | void>()
+
+  // Background loop to force fetchStakePosition updates
+  const [updateCounter, setUpdateCounter] = useState<number>(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUpdateCounter(updateCounter => updateCounter + 1)
+    }, 10 * 1000) // ten seconds
+    return () => clearInterval(interval)
+  }, [])
+
   useEffect(() => {
     stakePlugin
       .fetchStakePosition({ stakePolicyId, wallet: currencyWallet })
@@ -71,7 +82,7 @@ export const StakeOverviewScene = (props: Props) => {
       .catch(err => {
         console.error(err)
       })
-  }, [currencyWallet, stakePolicyId])
+  }, [currencyWallet, stakePolicyId, updateCounter])
 
   // Handlers
   const handleModifyPress = (modification: $PropertyType<ChangeQuoteRequest, 'action'>) => () => {
