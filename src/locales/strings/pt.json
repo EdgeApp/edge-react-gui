@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Archive Wallet",
   "fragment_wallets_resync_wallet": "Re-sincronizar carteira",
   "fragment_wallets_split_wallet": "Dividir Carteira",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "Obter seed",
   "fragment_wallets_view_xpub": "Ver endereço XPub",
   "fragment_wallets_no_xpub": "Este tipo de carteira não tem uma chave pública",
