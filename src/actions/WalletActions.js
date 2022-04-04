@@ -536,7 +536,7 @@ export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: stri
 export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const { activeWalletIds, archivedWalletIds, currencyWallets } = account
+  const { activeWalletIds, currencyWallets } = account
 
   if (activeWalletIds.length === Object.keys(currencyWallets).length) {
     dispatch(registerNotifications())
@@ -548,8 +548,6 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
   dispatch({
     type: 'CORE/WALLETS/UPDATE_WALLETS',
     data: {
-      activeWalletIds,
-      archivedWalletIds,
       currencyWallets,
       receiveAddresses
     }

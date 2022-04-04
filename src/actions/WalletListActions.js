@@ -13,18 +13,6 @@ import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Acc
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
-export const updateActiveWalletsOrder = (activeWalletIds: string[]) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-
-  const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
-    keyStates[id] = { sortIndex: index }
-    return keyStates
-  }, {})
-
-  return account.changeWalletStates(newKeyStates).catch(showError)
-}
-
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
