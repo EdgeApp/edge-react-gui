@@ -22,7 +22,6 @@ import {
   getStakeAssetsName,
   stakePlugin
 } from '../../../util/stakeUtils.js'
-import { zeroString } from '../../../util/utils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -97,10 +96,8 @@ export const StakeOverviewScene = (props: Props) => {
       </SceneWrapper>
     )
 
-  const zeroStakedAmount = zeroString(stakeAllocation.nativeAmount)
-
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.stake_x_to_earn_y, stakeAssetsName, rewardAssetsName)} underline withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard
@@ -124,14 +121,8 @@ export const StakeOverviewScene = (props: Props) => {
         denomination={rewardAssetDenomination}
       />
       <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
-      <MainButton disabled={zeroStakedAmount} label={s.strings.stake_claim_rewards} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-      <MainButton
-        disabled={zeroStakedAmount}
-        label={s.strings.stake_unstake_and_claim_rewards}
-        type="escape"
-        onPress={handleModifyPress('unstake')}
-        marginRem={0.5}
-      />
+      <MainButton label={s.strings.stake_claim_rewards} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
+      <MainButton label={s.strings.stake_unstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
     </SceneWrapper>
   )
 }
