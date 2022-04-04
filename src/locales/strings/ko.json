@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Archive Wallet",
   "fragment_wallets_resync_wallet": "월렛을 재동기화",
   "fragment_wallets_split_wallet": "분할 월렛",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "시드를 취득",
   "fragment_wallets_view_xpub": "확장 공개 키 (XPub) 주소를 표시",
   "fragment_wallets_no_xpub": "이 종류의 월렛은 공용 키가 없습니다.",
