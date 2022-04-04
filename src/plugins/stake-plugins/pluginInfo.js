@@ -1,4 +1,5 @@
 // @flow
+import { makeMasonryPolicy } from './policies/masonryPolicy.js'
 import { type StakePolicyInfo, withGeneratedStakePolicyId } from './stakePolicy.js'
 
 export type StakePluginInfo = {
@@ -12,6 +13,7 @@ export const pluginInfo: StakePluginInfo = {
     {
       stakePolicyId: '',
       parentTokenId: 'FTM',
+      policy: makeMasonryPolicy(),
       stakeAssets: [
         {
           pluginId: 'fantom',

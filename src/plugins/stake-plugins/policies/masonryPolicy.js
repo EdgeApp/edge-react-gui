@@ -1,22 +1,19 @@
 // @flow
 import { add, gte, lte, mul, sub } from 'biggystring'
-import type { EdgeCorePluginOptions } from 'edge-core-js'
 import { ethers } from 'ethers'
 
 import { makeContract, makeSigner, multipass } from '../contracts.js'
 import { pluginInfo } from '../pluginInfo.js'
-import { toStakePolicy } from '../stakePolicy.js'
 import { makeTxBuilder } from '../TxBuilder.js'
 import { type PositionAllocation } from '../types'
-import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePlugin, StakePolicy, StakePosition, StakePositionRequest } from '../types.js'
+import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, StakePositionRequest } from '../types.js'
 import { getSeed } from '../util/getSeed.js'
 import { fromHex, toHex } from '../util/hex.js'
-
-export * from '../types.js'
+import { type StakePluginPolicy } from './types'
 
 const HOUR = 1000 * 60 * 60
 
-export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
+export const makeMasonryPolicy = (): StakePluginPolicy => {
   // Get the pool contract necessary for the staking
   // TODO: Replace the hardcode with a configuration from initOptions
   const poolContract = makeContract('TOMB_MASONRY')
@@ -82,12 +79,7 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
     }
   }
 
-  const instance: StakePlugin = {
-    async getStakePolicies(): Promise<StakePolicy[]> {
-      // TODO: Calculate APY form reading the blockchain
-      const policies = pluginInfo.policyInfo.map(toStakePolicy)
-      return policies
-    },
+  const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, wallet } = request
 
@@ -192,12 +184,6 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
 
       // An array of all the transactions to dispatch upon approval
       const txBuilder = makeTxBuilder()
-
-      // Supply token-pair to Liquidity-Pool-Contract Workflow:
-      // 1. Send Approve TX on Liquidity-Pool-Contract
-      // 2. Send supply TX on Liquidity-Pool-Contract
-      // 3. Use the LP-token as the Stake-Token
-      // TODO: Implement this workflow for multiple assets
 
       // Stake the Stake-Token Workflow:
       // 1. Send approve() TX on Stake-Token-Contract if allowance is not MaxUint256
