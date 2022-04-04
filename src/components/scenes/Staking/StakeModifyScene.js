@@ -35,6 +35,8 @@ type Props = {
 
 const DEFAULT = ''
 
+let sliderLocked = false
+
 export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
@@ -86,7 +88,6 @@ export const StakeModifyScene = (props: Props) => {
   const [pendingChangeQuote, setPendingChangeQuote] = useState<ChangeQuote | void>()
   const [nativeModAmount, setNativeModAmount] = useState(DEFAULT)
   const [nativeFeeAmount, setNativeFeeAmount] = useState(DEFAULT)
-  const [sliderLocked, setSliderLocked] = useState(false)
 
   // Get pending change quote
   useEffect(() => {
@@ -163,7 +164,7 @@ export const StakeModifyScene = (props: Props) => {
 
   const handleSlideComplete = reset => {
     if (pendingChangeQuote != null) {
-      setSliderLocked(true)
+      sliderLocked = true
       pendingChangeQuote
         .approve()
         .then(success => {
@@ -175,7 +176,7 @@ export const StakeModifyScene = (props: Props) => {
           showError(err.message)
         })
         .finally(() => {
-          setSliderLocked(false)
+          sliderLocked = false
         })
     }
   }
@@ -309,7 +310,7 @@ export const StakeModifyScene = (props: Props) => {
       <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin />
       {renderAmountTiles(allocationToMod, nativeModAmount, modification)}
       {renderWarning()}
-      <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={s.strings.stake_disabled_slider} />
+      <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={null} disabledText={s.strings.stake_disabled_slider} />
     </SceneWrapper>
   )
 }
