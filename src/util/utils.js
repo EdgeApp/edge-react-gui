@@ -749,7 +749,7 @@ export function getCryptoAmount(
   exchangeDenomination: EdgeDenomination,
   fiatDenomination: EdgeDenomination,
   exchangeRate?: string,
-  guiWallet: GuiWallet
+  currencyCode: string
 ): string {
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate) {
@@ -766,7 +766,7 @@ export function getCryptoAmount(
     return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
     if (error.message === 'Cannot operate on base16 float values') {
-      const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
+      const errorMessage = `${error.message}: GuiWallet currency code - ${currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
       throw new Error(errorMessage)
     }
     throw new Error(error)
