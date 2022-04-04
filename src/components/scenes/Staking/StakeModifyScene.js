@@ -73,6 +73,9 @@ export const StakeModifyScene = (props: Props) => {
     wallet: currencyWallet
   })
 
+  // Slider state
+  const [sliderLocked, setSliderLocked] = useState(false)
+
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
   useEffect(() => {
     const existingAllocations = getPositionAllocations(stakePosition)
@@ -159,6 +162,7 @@ export const StakeModifyScene = (props: Props) => {
 
   const handleSlideComplete = reset => {
     if (pendingChangeQuote != null) {
+      setSliderLocked(true)
       pendingChangeQuote
         .approve()
         .then(success => {
@@ -169,6 +173,9 @@ export const StakeModifyScene = (props: Props) => {
           // TODO: Make the slider reset
           // reset()
           showError(err.message)
+        })
+        .finally(() => {
+          setSliderLocked(false)
         })
     }
   }
@@ -287,7 +294,8 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  const isSliderDisabled = pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
+  const isSliderDisabled =
+    sliderLocked || pendingChangeQuote == null || !pendingChangeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
   const sceneTitleMap = {
     stake: getPolicyTitleName(stakePolicy),
@@ -306,7 +314,7 @@ export const StakeModifyScene = (props: Props) => {
         </SceneHeader>
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
-        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={null} disabledText={s.strings.stake_disabled_slider} />
+        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={s.strings.stake_disabled_slider} />
       </ScrollView>
     </SceneWrapper>
   )
