@@ -1,7 +1,7 @@
 // @flow
 
 import { abs, add, div, eq, gt, gte, log10, lt, mul, toFixed } from 'biggystring'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
@@ -359,21 +359,6 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
 
 export const noOp = (optionalArgument: any = null) => {
   return optionalArgument
-}
-
-export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
-  const ids = Object.keys(currencyWallets)
-  const promises = ids.map(id => {
-    return currencyWallets[id].getReceiveAddress()
-  })
-  return Promise.all(promises).then(receiveAddresses => {
-    return ids.reduce((result, id, index) => {
-      return {
-        ...result,
-        [id]: receiveAddresses[index]
-      }
-    }, {})
-  })
 }
 
 export const MILLISECONDS_PER_DAY = 86400000

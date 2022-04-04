@@ -15,27 +15,11 @@ import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
-import { getReceiveAddresses, getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
+import { getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
 import { registerNotifications } from './NotificationActions.js'
-
-export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyWallets } = state.core.account
-  const currentWalletId = state.ui.wallets.selectedWalletId
-
-  if (walletId === currentWalletId) {
-    const wallet = currencyWallets[walletId]
-    wallet.getReceiveAddress().then(receiveAddress => {
-      dispatch({
-        type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
-        data: { walletId, receiveAddress }
-      })
-    })
-  }
-}
 
 export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -136,7 +120,6 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
-  dispatch(refreshReceiveAddressRequest(walletId))
 }
 
 function dispatchUpsertWallets(dispatch, wallets: EdgeCurrencyWallet[]) {
@@ -543,13 +526,11 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
   }
 
   const incomingWalletIds = activeWalletIds.filter(id => state.ui.wallets.byId[id] == null)
-  const receiveAddresses = await getReceiveAddresses(currencyWallets)
 
   dispatch({
     type: 'CORE/WALLETS/UPDATE_WALLETS',
     data: {
-      currencyWallets,
-      receiveAddresses
+      currencyWallets
     }
   })
   const newState = getState()

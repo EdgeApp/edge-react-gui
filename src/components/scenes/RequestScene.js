@@ -11,14 +11,14 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletFromModal } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
+import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
+import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertNativeToDenomination, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
@@ -36,8 +36,6 @@ import { FlipInput } from '../themed/FlipInput.js'
 import { QrCode } from '../themed/QrCode'
 import { ShareButtons } from '../themed/ShareButtons.js'
 
-const PUBLIC_ADDRESS_REFRESH_MS = 2000
-
 type OwnProps = {
   navigation: NavigationProp<'request'>
 }
@@ -48,17 +46,13 @@ type StateProps = {
   edgeWallet?: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio?: string,
   fioAddressesExist?: boolean,
-  guiWallet?: GuiWallet,
   isConnected: boolean,
-  legacyAddress: string,
   primaryCurrencyInfo?: GuiCurrencyInfo,
-  publicAddress: string,
   secondaryCurrencyInfo?: GuiCurrencyInfo,
   useLegacyAddress?: boolean
 }
 
 type DispatchProps = {
-  refreshReceiveAddressRequest: (walletId: string) => void,
   refreshAllFioAddresses: () => void,
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
@@ -81,6 +75,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 export class RequestComponent extends React.Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: React.ElementRef<typeof FlipInput> | null = null
+  unsubscribeAddressChanged: Function | null
 
   constructor(props: Props) {
     super(props)
@@ -91,8 +86,8 @@ export class RequestComponent extends React.Component<Props, State> {
       }
     })
     this.state = {
-      publicAddress: props.publicAddress,
-      legacyAddress: props.legacyAddress,
+      publicAddress: '',
+      legacyAddress: '',
       encodedURI: undefined,
       minimumPopupModalState,
       isFioMode: false
@@ -109,6 +104,13 @@ export class RequestComponent extends React.Component<Props, State> {
   componentDidMount() {
     this.generateEncodedUri()
     this.props.refreshAllFioAddresses()
+    if (this.props.edgeWallet != null) {
+      this.unsubscribeAddressChanged = this.props.edgeWallet.on('addressChanged', () => this.generateEncodedUri())
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribeAddressChanged != null) this.unsubscribeAddressChanged()
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -127,10 +129,20 @@ export class RequestComponent extends React.Component<Props, State> {
 
   async generateEncodedUri() {
     const { edgeWallet, useLegacyAddress, currencyCode } = this.props
+    let legacyAddress = ''
+    let publicAddress = ''
+    if (edgeWallet != null) {
+      const receiveAddress = await edgeWallet.getReceiveAddress()
+      legacyAddress = receiveAddress.legacyAddress
+      publicAddress = receiveAddress.publicAddress
+    }
+    this.setState({
+      publicAddress,
+      legacyAddress
+    })
     if (!currencyCode) return
-    let { publicAddress, legacyAddress } = this.props
     const abcEncodeUri = {
-      publicAddress: useLegacyAddress ? legacyAddress : publicAddress,
+      publicAddress: useLegacyAddress && legacyAddress != null ? legacyAddress : publicAddress,
       currencyCode
     }
     let encodedURI
@@ -147,26 +159,21 @@ export class RequestComponent extends React.Component<Props, State> {
         publicAddress,
         legacyAddress
       })
-      setTimeout(() => {
-        if (edgeWallet && edgeWallet.id) {
-          this.props.refreshReceiveAddressRequest(edgeWallet.id)
-        }
-      }, PUBLIC_ADDRESS_REFRESH_MS)
     }
   }
 
   async componentDidUpdate(prevProps: Props) {
-    const { currencyCode, edgeWallet, guiWallet, useLegacyAddress } = this.props
-    if (guiWallet == null || edgeWallet == null || currencyCode == null) return
+    const { currencyCode, edgeWallet, useLegacyAddress } = this.props
+    if (edgeWallet == null || currencyCode == null) return
     const { pluginId } = edgeWallet.currencyInfo
+    const receiveAddress = await edgeWallet.getReceiveAddress()
 
-    const didAddressChange = this.state.publicAddress !== guiWallet.receiveAddress.publicAddress
+    const didAddressChange = this.state.publicAddress !== receiveAddress.publicAddress
     const changeLegacyPublic = useLegacyAddress !== prevProps.useLegacyAddress
     const didWalletChange = prevProps.edgeWallet && edgeWallet.id !== prevProps.edgeWallet.id
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
-      let publicAddress = guiWallet.receiveAddress.publicAddress
-      let legacyAddress = guiWallet.receiveAddress.legacyAddress
+      let { publicAddress, legacyAddress } = receiveAddress
 
       const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
       let encodedURI
@@ -176,9 +183,6 @@ export class RequestComponent extends React.Component<Props, State> {
         console.log(err)
         publicAddress = s.strings.loading
         legacyAddress = s.strings.loading
-        setTimeout(() => {
-          refreshReceiveAddressRequest(edgeWallet.id)
-        }, PUBLIC_ADDRESS_REFRESH_MS)
       }
 
       // eslint-disable-next-line react/no-did-update-set-state
@@ -278,10 +282,10 @@ export class RequestComponent extends React.Component<Props, State> {
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   render() {
-    const { currencyIcon, exchangeSecondaryToPrimaryRatio, edgeWallet, guiWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { currencyIcon, exchangeSecondaryToPrimaryRatio, edgeWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
-    if (guiWallet == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || edgeWallet == null) {
+    if (primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || edgeWallet == null) {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
@@ -311,7 +315,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 <FiatText
                   nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
                   cryptoCurrencyCode={primaryCurrencyInfo.displayCurrencyCode}
-                  isoFiatCurrencyCode={guiWallet.isoFiatCurrencyCode}
+                  isoFiatCurrencyCode={edgeWallet.fiatCurrencyCode}
                   autoPrecision
                   appendFiatCurrencyCode
                   cryptoExchangeMultiplier={primaryCurrencyInfo.exchangeDenomination.multiplier}
@@ -389,11 +393,6 @@ export class RequestComponent extends React.Component<Props, State> {
       encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : undefined
     } catch (e) {
       console.log(e)
-      setTimeout(() => {
-        if (this.props.edgeWallet && this.props.edgeWallet.id) {
-          this.props.refreshReceiveAddressRequest(this.props.edgeWallet.id)
-        }
-      }, PUBLIC_ADDRESS_REFRESH_MS)
     }
 
     this.setState({ encodedURI })
@@ -423,8 +422,8 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shareMessage = async () => {
-    const { currencyCode, publicAddress, edgeWallet, currencyInfo, useLegacyAddress } = this.props
-    const { legacyAddress } = this.state
+    const { currencyCode, edgeWallet, currencyInfo, useLegacyAddress } = this.props
+    const { legacyAddress, publicAddress } = this.state
     if (!currencyCode || !edgeWallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
     }
@@ -576,13 +575,13 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
-    const guiWallet: GuiWallet = getSelectedWallet(state)
+    const walletId = state.ui.wallets.selectedWalletId
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
     const { allCurrencyInfos } = state.ui.settings.plugins
     const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
 
-    if (guiWallet == null || currencyCode == null) {
+    if (currencyCode == null) {
       return {
         publicAddress: '',
         legacyAddress: '',
@@ -591,10 +590,10 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       }
     }
 
-    const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
+    const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(edgeWallet.fiatCurrencyCode.replace('iso:', ''))
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
@@ -606,12 +605,12 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       exchangeDenomination: primaryExchangeDenomination
     }
     const secondaryCurrencyInfo: GuiCurrencyInfo = {
-      displayCurrencyCode: guiWallet.fiatCurrencyCode,
+      displayCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
       displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: secondaryExchangeCurrencyCode,
       exchangeDenomination: secondaryExchangeDenomination
     }
-    const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
+    const isoFiatCurrencyCode: string = edgeWallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
@@ -626,9 +625,6 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       currencyIcon,
       edgeWallet,
       exchangeSecondaryToPrimaryRatio,
-      guiWallet,
-      publicAddress: guiWallet?.receiveAddress?.publicAddress ?? '',
-      legacyAddress: guiWallet?.receiveAddress?.legacyAddress ?? '',
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
       useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
@@ -637,9 +633,6 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    refreshReceiveAddressRequest(walletId: string) {
-      dispatch(refreshReceiveAddressRequest(walletId))
-    },
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     },
