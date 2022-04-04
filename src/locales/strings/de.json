@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Wallet archivieren",
   "fragment_wallets_resync_wallet": "Wallet resynchronisieren",
   "fragment_wallets_split_wallet": "Wallet aufsplitten",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "Phrase bekommen",
   "fragment_wallets_view_xpub": "XPub Adresse anzeigen",
   "fragment_wallets_no_xpub": "Diese Art Wallet besitzt keinen Public Key",
