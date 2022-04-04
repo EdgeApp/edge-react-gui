@@ -3,8 +3,12 @@
 import { ethers } from 'ethers'
 
 import MASONRY_ABI from './abi/MASONRY_ABI.json'
+import TOMB_ABI from './abi/TOMB_ABI.json'
 import TOMB_TREASURY_ABI from './abi/TOMB_TREASURY_ABI.json'
 import TSHARE_ABI from './abi/TSHARE_ABI.json'
+import TSHARE_REWARD_POOL_ABI from './abi/TSHARE_REWARD_POOL_ABI.json'
+import UNISWAP_V2_PAIR from './abi/UNISWAP_V2_PAIR.json'
+import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
 
 export const rpcProviderUrls = [
   'https://rpc.ftm.tools',
@@ -23,6 +27,11 @@ type ContractInfoEntry = {
 }
 const contractInfoEntries: ContractInfoEntry[] = [
   {
+    name: 'SPOOKY_SWAP_ROUTER',
+    abi: UNISWAP_V2_ROUTER_02,
+    address: '0xF491e7B69E4244ad4002BC14e878a34207E38c29'
+  },
+  {
     name: 'TOMB_MASONRY',
     abi: MASONRY_ABI,
     address: '0x8764de60236c5843d9faeb1b638fbce962773b67'
@@ -33,9 +42,29 @@ const contractInfoEntries: ContractInfoEntry[] = [
     address: '0xF50c6dAAAEC271B56FCddFBC38F0b56cA45E6f0d'
   },
   {
+    name: 'TOMB',
+    abi: TOMB_ABI,
+    address: '0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7'
+  },
+  {
+    name: 'TOMB_WFTM_LP',
+    abi: UNISWAP_V2_PAIR,
+    address: '0x2A651563C9d3Af67aE0388a5c8F89b867038089e'
+  },
+  {
+    name: 'TSHARE_WFTM_LP',
+    abi: UNISWAP_V2_PAIR,
+    address: '0x4733bc45eF91cF7CcEcaeeDb794727075fB209F2'
+  },
+  {
     name: 'TSHARE',
     abi: TSHARE_ABI,
     address: '0x4cdF39285D7Ca8eB3f090fDA0C069ba5F4145B37'
+  },
+  {
+    name: 'TSHARE_REWARD_POOL',
+    abi: TSHARE_REWARD_POOL_ABI,
+    address: '0xcc0a87F7e7c693042a9Cc703661F5060c80ACb43'
   }
 ]
 
