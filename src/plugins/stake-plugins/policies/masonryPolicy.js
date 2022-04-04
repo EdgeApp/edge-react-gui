@@ -103,12 +103,13 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       // Calculate the stake asset native amounts:
       if (action === 'stake' || action === 'unstake') {
         allocations.push(
-          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId }) => {
+          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
             // TODO: Replace this assertion with an algorithm to calculate each asset amount using the LP-pool ratio
             if (tokenId !== request.tokenId) throw new Error(`Token '${tokenId}' to ${action} not found in policy`)
 
             return {
               allocationType: action,
+              pluginId,
               tokenId,
               nativeAmount: request.nativeAmount
             }
@@ -118,12 +119,13 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       // Calculate the claim asset native amounts:
       if (action === 'claim') {
         allocations.push(
-          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId }) => {
+          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
             // TODO: Replace this assertion with an algorithm to calculate each asset amount using the LP-pool ratio
             if (tokenId !== request.tokenId) throw new Error(`Token '${tokenId}' to ${action} not found in policy`)
 
             return {
               allocationType: 'claim',
+              pluginId,
               tokenId,
               nativeAmount: request.nativeAmount
             }
@@ -249,6 +251,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       }, '0')
       allocations.push({
         allocationType: 'fee',
+        pluginId: policyInfo.parentPluginId,
         tokenId: policyInfo.parentTokenId,
         nativeAmount: networkFee
       })
