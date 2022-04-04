@@ -43,6 +43,7 @@ export type ChangeQuoteRequest = {
 
 export type QuoteAllocation = {
   allocationType: 'stake' | 'unstake' | 'claim' | 'fee',
+  pluginId: string,
   tokenId: string,
   nativeAmount: string
 }

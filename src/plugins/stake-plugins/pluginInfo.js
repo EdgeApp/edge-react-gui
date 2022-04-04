@@ -12,6 +12,7 @@ export const pluginInfo: StakePluginInfo = {
   policyInfo: [
     {
       stakePolicyId: '',
+      parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeMasonryPolicy(),
       stakeAssets: [

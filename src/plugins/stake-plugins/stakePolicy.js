@@ -4,6 +4,7 @@ import type { StakePolicy } from './types.js'
 
 export type StakePolicyInfo = {
   stakePolicyId: string,
+  parentPluginId: string,
   parentTokenId: string,
   policy: StakePluginPolicy,
   stakeAssets: Array<{
