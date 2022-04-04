@@ -170,8 +170,7 @@ export const StakeModifyScene = (props: Props) => {
           navigation.pop()
         })
         .catch(err => {
-          // TODO: Make the slider reset
-          // reset()
+          reset()
           showError(err.message)
         })
         .finally(() => {
