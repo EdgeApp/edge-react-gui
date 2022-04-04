@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Archive Wallet",
   "fragment_wallets_resync_wallet": "ウォレットを再同期",
   "fragment_wallets_split_wallet": "ウォレットをスプリットさせる",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "シードを取得",
   "fragment_wallets_view_xpub": "拡張公開鍵(Xpub) アドレスを表示",
   "fragment_wallets_no_xpub": "このタイプのウォレットにはパブリックキーがありません",
