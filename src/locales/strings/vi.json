@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Archive Wallet",
   "fragment_wallets_resync_wallet": "Đồng bộ hoá ví",
   "fragment_wallets_split_wallet": "Chia ví",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "Lấy chuỗi giá trị",
   "fragment_wallets_view_xpub": "Xem địa chỉ XPub",
   "fragment_wallets_no_xpub": "Đây là loại ví không có mã công khai",
