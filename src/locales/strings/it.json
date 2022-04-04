@@ -113,6 +113,8 @@
   "fragment_wallets_delete_wallet": "Archivia il portafoglio",
   "fragment_wallets_resync_wallet": "Sincronizza il portafoglio",
   "fragment_wallets_split_wallet": "Dividi il portafoglio",
+  "fragment_wallets_copy_seed": "Copy Seed",
+  "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "Ottieni i seed",
   "fragment_wallets_view_xpub": "Vedi l'indirizzo XPub",
   "fragment_wallets_no_xpub": "Questo tipo di portafoglio non ha una chiave pubblica",
