@@ -17,25 +17,25 @@ export const rpcProviderUrls = [
 export const providers = rpcProviderUrls.map<ethers.Provider>(url => new ethers.providers.JsonRpcProvider(url))
 
 type ContractInfoEntry = {
+  name: string,
   abi: mixed,
-  address: string,
-  name: string
+  address: string
 }
 const contractInfoEntries: ContractInfoEntry[] = [
   {
+    name: 'TOMB_MASONRY',
     abi: MASONRY_ABI,
-    address: '0x8764de60236c5843d9faeb1b638fbce962773b67',
-    name: 'TOMB_MASONRY'
+    address: '0x8764de60236c5843d9faeb1b638fbce962773b67'
   },
   {
+    name: 'TOMB_TREASURY',
     abi: TOMB_TREASURY_ABI,
-    address: '0xF50c6dAAAEC271B56FCddFBC38F0b56cA45E6f0d',
-    name: 'TOMB_TREASURY'
+    address: '0xF50c6dAAAEC271B56FCddFBC38F0b56cA45E6f0d'
   },
   {
+    name: 'TSHARE',
     abi: TSHARE_ABI,
-    address: '0x4cdF39285D7Ca8eB3f090fDA0C069ba5F4145B37',
-    name: 'TSHARE'
+    address: '0x4cdF39285D7Ca8eB3f090fDA0C069ba5F4145B37'
   }
 ]
 
@@ -56,7 +56,7 @@ export const getContractInfo = (index: string): ContractInfoEntry | void => {
 
 export const makeContract = (addressOrName: string) => {
   const contractInfo = getContractInfo(addressOrName)
-  if (contractInfo == null) throw new Error(`Unable to contract info for '${addressOrName}'`)
+  if (contractInfo == null) throw new Error(`Unable to get contract info for '${addressOrName}'`)
   const { abi, address } = contractInfo
   return new ethers.Contract(address, abi, providers[0])
 }

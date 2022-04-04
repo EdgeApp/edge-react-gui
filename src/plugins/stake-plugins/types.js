@@ -80,7 +80,10 @@ export type PositionAllocation = {
 }
 
 export type StakePosition = {
-  allocations: PositionAllocation[]
+  allocations: PositionAllocation[],
+  canStake: boolean,
+  canUnstake: boolean,
+  canClaim: boolean
 }
 
 // -----------------------------------------------------------------------------
