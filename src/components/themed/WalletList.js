@@ -257,7 +257,7 @@ export function WalletList(props: Props) {
     // Create Wallet/Token
     if (data.item.id == null) {
       const { createWalletType, createTokenType } = data.item
-      return <WalletListCreateRow createWalletType={createWalletType} createTokenType={createTokenType} onPress={onPress} />
+      return <WalletListCreateRow {...{ ...createWalletType, ...createTokenType }} onPress={onPress} />
     }
 
     const walletId = data.item.id.replace(/:.*/, '')

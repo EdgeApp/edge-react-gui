@@ -1,6 +1,6 @@
 // @flow
 import { mul, toFixed } from 'biggystring'
-import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -16,26 +16,30 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
 
-export const createCurrencyWallet =
-  (
-    walletName: string,
-    walletType: string,
-    fiatCurrencyCode: string,
-    importText?: string // for creating wallet from private seed / key
-  ) =>
-  async (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet> => {
-    const state = getState()
-    const { account } = state.core
+export type CreateWalletOptions = {
+  walletName?: string,
+  walletType: string,
+  fiatCurrencyCode?: string,
+  importText?: string // for creating wallet from private seed / key
+}
 
-    // Try and get the new format param from the legacy walletType if it's mentioned
-    const [type, format] = walletType.split('-')
-    const opts = {
-      name: walletName,
-      fiatCurrencyCode,
-      keyOptions: format ? { format } : {},
-      importText
-    }
-    return await account.createCurrencyWallet(type, opts)
+export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText }: CreateWalletOptions) => {
+  // Try and get the new format param from the legacy walletType if it's mentioned
+  const [type, format] = walletType.split('-')
+  const opts = {
+    name: walletName,
+    fiatCurrencyCode,
+    keyOptions: format ? { format } : {},
+    importText
+  }
+  return await account.createCurrencyWallet(type, opts)
+}
+
+export const createCurrencyWallet =
+  (walletName: string, walletType: string, fiatCurrencyCode?: string, importText?: string) => async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    fiatCurrencyCode = fiatCurrencyCode ?? state.ui.settings.defaultIsoFiat
+    return createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
   }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
