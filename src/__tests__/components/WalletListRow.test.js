@@ -4,10 +4,9 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { getTheme } from '../../components/services/ThemeContext.js'
-import { WalletListRowComponent } from '../../components/themed/WalletListRow.js'
+import { WalletListRow } from '../../components/themed/WalletListRow.js'
 
-describe('WalletListRowComponent', () => {
+describe('WalletListRow', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -19,15 +18,9 @@ describe('WalletListRowComponent', () => {
       gradient: true,
       onPress: () => undefined,
       onLongPress: () => undefined,
-      // eslint-disable-next-line react/no-unused-prop-types
-      walletId: 'string',
-      // eslint-disable-next-line react/no-unused-prop-types
-      walletName: 'string',
-      loading: true,
-      walletNameString: 'string',
-      theme: getTheme()
+      walletName: 'My bitcoin wallet'
     }
-    const actual = renderer.render(<WalletListRowComponent {...props} />)
+    const actual = renderer.render(<WalletListRow {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

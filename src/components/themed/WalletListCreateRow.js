@@ -1,185 +1,134 @@
 // @flow
 
-import type { Disklet } from 'disklet'
-import { type EdgeAccount, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
-import { createCurrencyWallet } from '../../actions/CreateWalletActions'
+import { type CreateWalletOptions, createWallet } from '../../actions/CreateWalletActions.js'
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
-import { refreshWallet, selectWallet } from '../../actions/WalletActions.js'
-import { getPluginId, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { refreshWallet } from '../../actions/WalletActions.js'
+import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner.js'
+import { showError } from '../../components/services/AirshipInstance.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
-import { connect } from '../../types/reactRedux.js'
-import type { CreateTokenType, CreateWalletType, GuiWallet } from '../../types/types.js'
+import { memo, useCallback, useMemo } from '../../types/reactHooks.js'
+import { useDispatch } from '../../types/reactRedux.js'
+import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
-import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner.js'
-import { showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
-type OwnProps = {
-  createWalletType?: CreateWalletType,
-  createTokenType?: CreateTokenType,
-  onPress: (walletId: string, currencyCode: string) => void
+export type WalletListCreateRowProps = {
+  onPress?: (walletId: string, currencyCode: string) => void,
+  currencyCode: string,
+  currencyName: string,
+  walletType?: string,
+  symbolImage?: string,
+  symbolImageDarkMono?: string,
+  parentCurrencyCode?: string
 }
 
-type StateProps = {
-  account: EdgeAccount,
-  defaultIsoFiat: string,
-  disklet: Disklet,
-  wallets: { [string]: GuiWallet }
-}
-
-type DispatchProps = {
-  tokenCreated: (walletId: string, tokens: string[]) => void,
-  createWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>
-}
-
-type Props = OwnProps & StateProps & ThemeProps & DispatchProps
-
-// For some reason Flow complains if DispatchProps isn't added here too
-export class WalletListCreateRowComponent extends React.PureComponent<Props & DispatchProps> {
-  createAndSelectWallet = async () => {
-    const { createWalletType, onPress, defaultIsoFiat } = this.props
-    try {
-      if (createWalletType == null) throw new Error('Invalid Create Wallet Type')
-      const { walletType } = createWalletType
-      const wallet = await showFullScreenSpinner(
-        s.strings.wallet_list_modal_creating_wallet,
-        this.props.createWallet(SPECIAL_CURRENCY_INFO[getPluginId(walletType)].initWalletName, walletType, defaultIsoFiat)
-      )
-      onPress(wallet.id, wallet.currencyInfo.currencyCode)
-    } catch (error) {
-      showError(error)
-    }
-  }
-
-  createAndSelectToken = async () => {
-    const { account, createTokenType, defaultIsoFiat, disklet, onPress, tokenCreated, wallets } = this.props
-    const { currencyWallets } = account
+export const createAndSelectToken =
+  ({ currencyCode, parentCurrencyCode }: { currencyCode: string, parentCurrencyCode: string }) =>
+  async (dispatch: Dispatch, getState: GetState): Promise<string> => {
+    const state = getState()
+    const { account, disklet } = state.core
+    // const { wallets } = state.ui.wallets.byId
+    const { defaultIsoFiat } = state.ui.settings
 
     try {
-      if (createTokenType == null) throw new Error('Invalid Create Token Type')
-      const { currencyCode, parentCurrencyCode } = createTokenType
       // Show the user the token terms modal only once
       await approveTokenTerms(disklet, parentCurrencyCode)
-      // Find existing EdgeCurrencyWallet
-      let wallet
-      for (const walletId of Object.keys(currencyWallets)) {
-        const currencyWallet = currencyWallets[walletId]
-        if (currencyWallet.currencyInfo.currencyCode === parentCurrencyCode) {
-          wallet = currencyWallet
-          break
-        }
+      // Try to find existing Parent Edge Wallet
+      const { currencyWallets } = account
+      let walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === currencyCode)
+      let wallet = walletId != null ? currencyWallets[walletId] : null
+      // If no parent chain wallet exists, create it
+      if (wallet == null) {
+        const { walletType } = getCreateWalletType(account, currencyCode) ?? {}
+        if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
+        wallet = await createWallet(account, { walletType, fiatCurrencyCode: defaultIsoFiat })
+      }
+      // Reassign walletId just in case we created a new wallet
+      walletId = wallet.id
+
+      const addToken = async () => {
+        if (wallet == null) throw new Error(s.strings.create_wallet_failed_message)
+        const enabledTokens = (await wallet.getEnabledTokens()) ?? []
+        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.pluginId)
+        await setEnabledTokens(wallet, [...tokens, currencyCode], [])
+        return [...enabledTokens, currencyCode]
       }
 
-      if (!wallet) {
-        const walletType = getCreateWalletType(account, parentCurrencyCode)
-        if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await this.props.createWallet(walletType.currencyCode, walletType.walletType, defaultIsoFiat)
-      }
+      const enabledTokens = await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, addToken())
 
-      const guiWalletEnabledTokens = wallets[wallet.id]?.enabledTokens ?? []
-      const enabledTokens = await showFullScreenSpinner(
-        s.strings.wallet_list_modal_enabling_token,
-        // Should use EdgeCurrencyWallet.getEnabledTokens() but function seems to return parent currency code as part of the array
-        setEnabledTokens(wallet, [...guiWalletEnabledTokens, currencyCode], [])
-      )
+      dispatch({
+        type: 'UPDATE_WALLET_ENABLED_TOKENS',
+        data: { walletId, tokens: enabledTokens }
+      })
+      dispatch(refreshWallet(walletId))
 
-      tokenCreated(wallet.id, enabledTokens)
-      onPress(wallet.id, currencyCode)
+      return walletId
     } catch (error) {
       showError(error)
     }
+    return ''
   }
 
-  handlePress = () => {
-    if (this.props.createWalletType) {
-      this.createAndSelectWallet().catch(showError)
-    } else {
-      this.createAndSelectToken().catch(showError)
+export const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName }: CreateWalletOptions) => {
+  walletName = walletName ?? getSpecialCurrencyInfo(walletType).initWalletName
+  return async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
+    try {
+      const wallet = await showFullScreenSpinner(
+        s.strings.wallet_list_modal_creating_wallet,
+        createWallet(account, { walletName, walletType, fiatCurrencyCode })
+      )
+      return wallet.id
+    } catch (error) {
+      showError(error)
     }
+    return ''
   }
+}
 
-  renderIcon() {
-    const { createWalletType, createTokenType } = this.props
-    const styles = getStyles(this.props.theme)
-    return (
-      <View style={styles.iconContainer}>
-        <FastImage style={styles.iconSize} source={{ uri: createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? '' }} />
-      </View>
-    )
-  }
+export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const { currencyCode = '', currencyName = '', walletType, symbolImage = '', symbolImageDarkMono = '', parentCurrencyCode, onPress } = props
 
-  renderChildren() {
-    const { createWalletType } = this.props
-    const styles = getStyles(this.props.theme)
-    return (
+  const handlePress = useCallback(() => {
+    const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)
+    if (walletType != null) {
+      dispatch(createAndSelectWallet({ walletType })).then(handleRes)
+    } else if (parentCurrencyCode != null) {
+      dispatch(createAndSelectToken({ currencyCode, parentCurrencyCode })).then(handleRes)
+    }
+  }, [walletType, parentCurrencyCode, onPress, currencyCode, dispatch])
+
+  const children = useMemo(
+    () => (
       <View style={styles.labelContainer}>
-        <EdgeText style={styles.labelText}>{createWalletType ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</EdgeText>
+        <EdgeText style={styles.labelText}>{walletType != null ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</EdgeText>
       </View>
-    )
-  }
+    ),
+    [styles.labelContainer, styles.labelText, walletType]
+  )
 
-  render() {
-    const { createWalletType, createTokenType } = this.props
-
-    return (
-      <WalletListRow
-        currencyCode={createWalletType?.currencyCode ?? createTokenType?.currencyCode ?? ''}
-        icon={this.renderIcon()}
-        onPress={this.handlePress}
-        walletName={createWalletType?.currencyName ?? createTokenType?.currencyName ?? ''}
-      >
-        {this.renderChildren()}
-      </WalletListRow>
-    )
-  }
+  return (
+    <WalletListRow currencyCode={currencyCode} iconUri={symbolImage ?? symbolImageDarkMono} onPress={handlePress} walletName={currencyName}>
+      {children}
+    </WalletListRow>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // Icons
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  iconSize: {
-    width: theme.rem(2),
-    height: theme.rem(2)
-  },
-
   // Label
-  labelContainer: {
-    justifyContent: 'center'
-  },
-  labelText: {
-    fontFamily: theme.fontFaceMedium
-  }
+  labelContainer: { justifyContent: 'center' },
+  labelText: { fontFamily: theme.fontFaceMedium }
 }))
 
-export const WalletListCreateRow = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    wallets: state.ui.wallets.byId,
-    account: state.core.account,
-    disklet: state.core.disklet,
-    defaultIsoFiat: state.ui.settings.defaultIsoFiat
-  }),
-  dispatch => ({
-    tokenCreated(walletId: string, tokens: string[]) {
-      dispatch({
-        type: 'UPDATE_WALLET_ENABLED_TOKENS',
-        data: { walletId, tokens }
-      })
-      dispatch(refreshWallet(walletId))
-    },
-    async createWallet(walletName: string, walletType: string, fiatCurrencyCode: string) {
-      const wallet = await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
-      dispatch(selectWallet(wallet.id, wallet.currencyInfo.currencyCode))
-      return wallet
-    }
-  })
-)(withTheme(WalletListCreateRowComponent))
+export const WalletListCreateRow = memo(WalletListCreateRowComponent)

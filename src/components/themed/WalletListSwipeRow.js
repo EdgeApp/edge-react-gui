@@ -7,7 +7,7 @@ import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
-import { memo, useEffect, useRef, useState } from '../../types/reactHooks.js'
+import { memo, useCallback, useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -36,13 +36,12 @@ function WalletListSwipeRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   const dispatch = useDispatch()
-  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
   const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
   const rowRef = useRef<SwipableRowRef>(null)
   const [walletAddress, setWalletAddress] = useState('')
 
   // Tutorial mode:
-  const isEmpty = guiWallet == null
+  const isEmpty = edgeWallet == null
   useEffect(() => {
     if (openTutorial && !isEmpty && rowRef.current != null) {
       rowRef.current.openRight()
@@ -51,7 +50,7 @@ function WalletListSwipeRowComponent(props: Props) {
 
   useEffect(() => {
     if (edgeWallet != null) edgeWallet.getReceiveAddress().then(receiveAddress => setWalletAddress(receiveAddress.publicAddress))
-  }, [])
+  }, [edgeWallet])
 
   // Helper methods:
   const closeRow = () =>
@@ -60,27 +59,29 @@ function WalletListSwipeRowComponent(props: Props) {
     }, 150)
 
   // Action callbacks:
-  const handleMenu = () => {
+  const handleMenu = useCallback(() => {
     closeRow()
     Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={isToken} walletId={walletId} />)
-  }
+  }, [currencyCode, isToken, walletId])
+
   const handleRequest = () => {
     closeRow()
     dispatch(selectWallet(walletId, currencyCode, true))
     Actions.jump('request')
   }
-  const handleSelect = () => {
+  const handleSelect = useCallback(() => {
     closeRow()
     dispatch(selectWallet(walletId, currencyCode, true))
     if (
-      guiWallet != null &&
+      edgeWallet != null &&
       // Some wallets launch an activation screen when selected,
       // so avoid going to the transaction list in that case:
       (isToken || !getSpecialCurrencyInfo(edgeWallet.type).isAccountActivationRequired || walletAddress !== '')
     ) {
       Actions.push('transactionList')
     }
-  }
+  }, [currencyCode, dispatch, edgeWallet, isToken, walletAddress, walletId])
+
   const handleSend = () => {
     closeRow()
     dispatch(selectWallet(walletId, currencyCode, true))
@@ -127,10 +128,10 @@ function WalletListSwipeRowComponent(props: Props) {
   )
 
   // Render as an empty spinner row:
-  if (guiWallet == null) {
+  if (edgeWallet == null) {
     return (
       <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
-        <WalletListRow currencyCode="" gradient walletId={walletId} walletName="" onLongPress={handleMenu} />
+        <WalletListRow currencyCode="" gradient walletName="" onLongPress={handleMenu} />
       </SwipeableRow>
     )
   }
