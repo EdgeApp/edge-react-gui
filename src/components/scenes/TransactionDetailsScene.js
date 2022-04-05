@@ -24,8 +24,7 @@ import {
   convertNativeToExchange,
   displayFiatAmount,
   getFiatSymbol,
-  isCryptoParentCurrency,
-  isNotEmptyNumber,
+  isValidInput,
   splitTransactionCategory,
   truncateDecimals
 } from '../../util/utils.js'
@@ -180,7 +179,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       />
     )).then(fiatAmount => {
       const amount = fiatAmount != null ? fiatAmount.replace(',', '.') : ''
-      if (isNotEmptyNumber(amount)) {
+      if (amount != null && amount !== '' && isValidInput(amount)) {
         const amountFiat = displayFiatAmount(parseFloat(amount))
         this.onSaveTxDetails({ amountFiat })
       }
@@ -358,7 +357,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
-    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString = guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
     return {
       amountString: convertedAmount,
@@ -373,7 +372,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString = guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
 
     if (edgeTransaction.networkFee) {
@@ -568,9 +567,10 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
     const currencyCode = edgeTransaction.currencyCode
-    const walletDefaultDenomProps: EdgeDenomination = isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
-      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
-      : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+    const walletDefaultDenomProps: EdgeDenomination =
+      wallet.currencyCode === edgeTransaction.currencyCode
+        ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+        : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
     const exchangeDenom = getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)

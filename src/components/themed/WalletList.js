@@ -12,13 +12,15 @@ import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
-import { alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils.js'
+import { checkCurrencyCodes, checkFilterWallet } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
 import { WalletListRow } from './WalletListRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
 import { WalletListSwipeRow } from './WalletListSwipeRow.js'
+
+export const alphabeticalSort = (itemA: string, itemB: string) => (itemA < itemB ? -1 : itemA > itemB ? 1 : 0)
 
 type WalletListItem = {
   id: string | null,
