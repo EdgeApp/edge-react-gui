@@ -15,7 +15,7 @@ import {
 import { type RootState } from './reduxTypes.js'
 import { type Theme } from './Theme.js'
 
-export type GuiWallet = {
+export type GuiWallet = {|
   id: string,
   type: string,
   name: string,
@@ -29,7 +29,7 @@ export type GuiWallet = {
   enabledTokens: string[],
   addressLoadingProgress?: number,
   blockHeight: number | null
-}
+|}
 
 // FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
 export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
@@ -181,28 +181,6 @@ export type SubcategorySearchResultData = {
 
 export type CurrencyConverter = {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
-}
-
-export const emptyGuiWallet: GuiWallet = {
-  id: '',
-  type: '',
-  name: '',
-  primaryNativeBalance: '',
-  nativeBalances: {},
-  currencyNames: {},
-  currencyCode: '',
-  isoFiatCurrencyCode: '',
-  fiatCurrencyCode: '',
-  metaTokens: [],
-  enabledTokens: [],
-  receiveAddress: {
-    nativeAmount: '',
-    metadata: {},
-    publicAddress: '',
-    legacyAddress: ''
-  },
-  addressLoadingProgress: 0,
-  blockHeight: null
 }
 
 export const emptyGuiDenomination: GuiDenomination = {
