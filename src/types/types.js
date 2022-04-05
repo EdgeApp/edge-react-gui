@@ -14,7 +14,7 @@ import {
 
 import { type RootState } from './reduxTypes.js'
 
-export type GuiWallet = {
+export type GuiWallet = {|
   id: string,
   type: string,
   name: string,
@@ -30,7 +30,7 @@ export type GuiWallet = {
   enabledTokens: string[],
   addressLoadingProgress?: number,
   blockHeight: number | null
-}
+|}
 
 // FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
 export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
@@ -200,12 +200,6 @@ export const emptyGuiWallet: GuiWallet = {
   symbolImageDarkMono: '',
   metaTokens: [],
   enabledTokens: [],
-  receiveAddress: {
-    nativeAmount: '',
-    metadata: {},
-    publicAddress: '',
-    legacyAddress: ''
-  },
   addressLoadingProgress: 0,
   blockHeight: null
 }

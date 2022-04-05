@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
 import { FIO_WALLET_TYPE, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
@@ -266,27 +266,12 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
 
-  const { currencyCode, metaTokens, denominations, pluginId } = wallet.currencyInfo
+  const { currencyCode, metaTokens, pluginId } = wallet.currencyInfo
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const blockHeight: number = wallet.blockHeight
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: string[] = []
-
-  const allDenominations: {
-    [currencyCode: string]: { [denomination: string]: EdgeDenomination }
-  } = {}
-
-  // Add all parent currency denominations to allDenominations
-  const parentDenominations = denominations.reduce(
-    (denominations, denomination) => ({
-      ...denominations,
-      [denomination.multiplier]: denomination
-    }),
-    {}
-  )
-
-  allDenominations[currencyCode] = parentDenominations
 
   const nativeBalances: { [currencyCode: string]: string } = {}
   // Add parent currency balance to balances
@@ -300,17 +285,10 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
     const balance: string = wallet.balances[currencyCode] ?? '0'
-    const denominations: EdgeDenomination[] = metaToken.denominations
 
     // Add token balance to allBalances
     nativeBalances[currencyCode] = balance
     currencyNames[currencyCode] = currencyName
-
-    // Add all token denominations to allDenominations
-    const tokenDenominations: {
-      [denomination: string]: EdgeDenomination
-    } = denominations.reduce((denominations, denomination) => ({ ...denominations, [denomination.multiplier]: denomination }), {})
-    allDenominations[currencyCode] = tokenDenominations
   })
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
@@ -325,8 +303,6 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
     currencyCode,
     isoFiatCurrencyCode,
     fiatCurrencyCode,
-    denominations,
-    allDenominations,
     metaTokens,
     enabledTokens,
     blockHeight,
