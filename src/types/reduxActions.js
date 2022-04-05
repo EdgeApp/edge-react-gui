@@ -202,13 +202,6 @@ export type Action =
   | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED', data: { pinLoginEnabled: boolean } }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS', data: { settings: SettingsState } }
   | {
-      type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
-      data: {
-        walletId: string,
-        receiveAddress: EdgeReceiveAddress
-      }
-    }
-  | {
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { currencyCode: string, walletId: string }
     }
