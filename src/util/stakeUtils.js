@@ -6,34 +6,8 @@ import { sprintf } from 'sprintf-js'
 import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
 import { makeStakePlugin } from '../plugins/stake-plugins'
-import { type PositionAllocation, type StakePlugin, type StakePolicy, type StakePosition } from '../plugins/stake-plugins/types'
+import { type PositionAllocation, type StakePolicy, type StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIcon } from './CurrencyInfoHelpers'
-
-export const getStakePosition = async (stakePlugin: StakePlugin, stakePolicyId: string, currencyWallet: EdgeCurrencyWallet) => {
-  return stakePlugin.fetchStakePosition({ stakePolicyId, wallet: currencyWallet })
-}
-
-export const getRewardAllocation = (stakePosition: StakePosition) => {
-  return stakePosition.allocations.filter(stakeDetail => stakeDetail.allocationType === 'earned')[0]
-}
-
-export const getStakeAllocation = (stakePosition: StakePosition) => {
-  return stakePosition.allocations.filter(stakeDetail => stakeDetail.allocationType === 'staked')[0]
-}
-
-export const getStakeAssetsName = (stakePolicy: StakePolicy): string => {
-  const stakeAssetCurrencyCodes = stakePolicy.stakeAssets.map(asset => asset.tokenId)
-  const stakeAssetsName = stakeAssetCurrencyCodes.length > 1 ? `${stakeAssetCurrencyCodes.join('-')}-LP` : stakeAssetCurrencyCodes[0]
-  return stakeAssetsName
-}
-
-export const getRewardAssetsName = (stakePolicy: StakePolicy): string => {
-  const rewardAssetCurrencyCodes = stakePolicy.rewardAssets.map(asset => asset.tokenId)
-  const rewardAssetsName = rewardAssetCurrencyCodes.length > 1 ? `${rewardAssetCurrencyCodes.join('-')}-LP` : rewardAssetCurrencyCodes[0]
-  return rewardAssetsName
-}
-
-// TODO: Deprecate above
 
 // TODO: Get the plugin instance from the core context when the plugin is loaded into the core
 export const stakePlugin = makeStakePlugin()
@@ -58,7 +32,6 @@ export const getPositionAllocations = (stakePosition: StakePosition) => {
  */
 export const getPolicyAssetName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets'): string => {
   const assetCurrencyCodes = getAssetCurrencyCodes(stakePolicy, assetType)
-  // TODO: Ensure LP asset order
   const lpOrAssetCode = assetCurrencyCodes.length > 1 ? `${assetCurrencyCodes.join(' - ')} - LP` : assetCurrencyCodes[0]
   return lpOrAssetCode
 }
