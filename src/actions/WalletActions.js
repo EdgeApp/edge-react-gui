@@ -417,34 +417,6 @@ export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: 
     .catch(showError)
 }
 
-export const removeMostRecentWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const { mostRecentWallets } = state.ui.settings
-  const currentMostRecentWallets = mostRecentWallets.filter(wallet => wallet.id !== walletId || wallet.currencyCode !== currencyCode)
-  setMostRecentWalletsSelected(account, currentMostRecentWallets)
-    .then(() => {
-      dispatch({
-        type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
-        data: { mostRecentWallets: currentMostRecentWallets }
-      })
-    })
-    .catch(showError)
-}
-
-export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = state.ui.wallets.byId[walletId]
-  const oldEnabledTokens = wallet.enabledTokens
-
-  oldEnabledTokens.forEach(oldToken => {
-    const checkedToken = newEnabledTokens.find(newToken => newToken === oldToken)
-    if (!checkedToken) {
-      dispatch(removeMostRecentWallet(walletId, oldToken))
-    }
-  })
-}
-
 export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core

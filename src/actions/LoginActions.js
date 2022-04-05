@@ -27,7 +27,7 @@ import { loadAccountReferral, refreshAccountReferral } from './AccountReferralAc
 import { attachToUser } from './DeviceIdActions.js'
 import { expiredFioNamesCheckDates } from './FioActions.js'
 import { trackAccountEvent } from './TrackingActions.js'
-import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens, updateWalletsEnabledTokens, updateWalletsRequest } from './WalletActions.js'
+import { getEnabledTokens, setWalletEnabledTokens, updateWalletsEnabledTokens, updateWalletsRequest } from './WalletActions.js'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:
@@ -313,7 +313,6 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
       if (parent === currencyInfo.currencyCode && child != null) tokenCodes.push(child)
       if (tokenCodes.length > 0) {
         dispatch(setWalletEnabledTokens(wallet.id, tokenCodes, []))
-        dispatch(checkEnabledTokensArray(wallet.id, tokenCodes))
       }
     }
   }
