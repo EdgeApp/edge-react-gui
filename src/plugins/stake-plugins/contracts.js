@@ -11,12 +11,13 @@ import UNISWAP_V2_PAIR from './abi/UNISWAP_V2_PAIR.json'
 import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
 
 export const rpcProviderUrls = [
-  'https://rpc.ftm.tools',
-  'https://rpc.fantom.network',
-  'https://rpc2.fantom.network',
-  'https://rpc3.fantom.network',
-  'https://rpcapi.fantom.network',
-  'https://rpc.ankr.com/fantom'
+  'https://polished-empty-cloud.fantom.quiknode.pro/1c86703ec1eb3d515877a16a9823508a612c035d',
+  'https://rpc.ftm.tools'
+  // 'https://rpc.fantom.network',
+  // 'https://rpc2.fantom.network',
+  // 'https://rpc3.fantom.network',
+  // 'https://rpcapi.fantom.network',
+  // 'https://rpc.ankr.com/fantom'
 ]
 export const providers = rpcProviderUrls.map<ethers.Provider>(url => new ethers.providers.JsonRpcProvider(url))
 
