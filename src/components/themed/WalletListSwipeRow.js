@@ -130,7 +130,7 @@ function WalletListSwipeRowComponent(props: Props) {
   if (guiWallet == null) {
     return (
       <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
-        <WalletListRow currencyCode="" gradient walletId={walletId} walletName="" onLongPress={handleMenu} />
+        <WalletListRow currencyCode="" gradient walletName="" onLongPress={handleMenu} />
       </SwipeableRow>
     )
   }

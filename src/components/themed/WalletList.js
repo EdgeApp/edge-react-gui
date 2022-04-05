@@ -265,7 +265,7 @@ export function WalletList(props: Props) {
 
     if (guiWallet == null || account.currencyWallets[walletId] == null) {
       if (isModal) {
-        return <WalletListRow currencyCode="" walletName="" walletId={walletId} />
+        return <WalletListRow currencyCode="" walletName="" />
       }
       return <WalletListSwipeRow currencyCode="" isToken={false} walletId={walletId} />
     } else {

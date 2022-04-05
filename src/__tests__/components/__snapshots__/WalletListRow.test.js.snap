@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WalletListRowComponent should render with loading props 1`] = `
+exports[`WalletListRow should render with loading props 1`] = `
 <WalletRow
   gradient={true}
 >
@@ -11,19 +11,84 @@ exports[`WalletListRowComponent should render with loading props 1`] = `
     <View
       style={
         Object {
-          "alignItems": "center",
           "flex": 1,
           "flexDirection": "row",
-          "height": 96,
-          "justifyContent": "center",
-          "paddingHorizontal": 39,
+          "marginVertical": 22,
         }
       }
     >
-      <ActivityIndicator
-        color="#FFFFFF"
-        size="large"
-      />
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "justifyContent": "center",
+            "marginRight": 22,
+          }
+        }
+      >
+        btc
+      </View>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "flexDirection": "column",
+            "marginRight": 11,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            disableFontScaling={true}
+            style={
+              Object {
+                "fontFamily": "Quicksand-Medium",
+                "marginRight": 17,
+              }
+            }
+          >
+            string
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "justifyContent": "flex-end",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "marginLeft": 17,
+              }
+            }
+          >
+            btc
+          </View>
+        </View>
+        <WithTheme(EdgeTextComponent)
+          disableFontScaling={true}
+          style={
+            Object {
+              "color": "#A4C7DF",
+              "flex": 1,
+              "fontSize": 17,
+            }
+          }
+        >
+          My bitcoin wallet
+        </WithTheme(EdgeTextComponent)>
+      </View>
+      Hello
     </View>
   </TouchableOpacity>
 </WalletRow>
