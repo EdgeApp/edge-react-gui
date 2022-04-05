@@ -17,7 +17,6 @@ import {
   isTooFarBehind,
   isValidInput,
   maxPrimaryCurrencyConversionDecimals,
-  mergeTokens,
   MILLISECONDS_PER_DAY,
   precisionAdjust,
   roundedFee,
@@ -228,54 +227,6 @@ describe('getSupportedFiats', function () {
     supportedFiats.forEach(fiat => {
       expect(fiat).toEqual(expect.objectContaining({ label: expect.any(String), value: expect.any(String) }))
     })
-  })
-})
-
-describe('mergeTokens', function () {
-  test('Preferred tokens take precendence', function () {
-    const preferredTokenA = { currencyCode: 'TA', currencyName: 'TA', preferred: true }
-    const preferredTokenB = { currencyCode: 'TB', currencyName: 'TB', preferred: true }
-
-    const tokenA = { currencyCode: 'TA', currencyName: 'TA' }
-    const tokenD = { currencyCode: 'TD', currencyName: 'TD' }
-
-    const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
-    const edgeMetaTokens = [tokenA, tokenD]
-
-    const expected = [
-      preferredTokenA, // from preferredEdgeTokens
-      preferredTokenB, // from preferredEdgeTokens
-      tokenD
-    ]
-    // $FlowExpectedError
-    const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
-    expect(actual).toEqual(expected)
-  })
-
-  test('Empty preferredTokens', function () {
-    const tokenA = { currencyCode: 'TA', currencyName: 'TA' }
-    const tokenD = { currencyCode: 'TD', currencyName: 'TD' }
-
-    const preferredEdgeMetaTokens = []
-    const edgeMetaTokens = [tokenA, tokenD]
-
-    const expected = [tokenA, tokenD]
-    // $FlowExpectedError
-    const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
-    expect(actual).toEqual(expected)
-  })
-
-  test('Empty tokens', function () {
-    const preferredTokenA = { currencyCode: 'TA', currencyName: 'TA', preferred: true }
-    const preferredTokenB = { currencyCode: 'TB', currencyName: 'TB', preferred: true }
-
-    const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
-    const edgeMetaTokens = []
-
-    const expected = [preferredTokenA, preferredTokenB]
-    // $FlowExpectedError
-    const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
-    expect(actual).toEqual(expected)
   })
 })
 

@@ -124,7 +124,6 @@ import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
-import { AddTokenScene } from './scenes/AddTokenScene.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
@@ -134,7 +133,6 @@ import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
 import { EdgeLoginScene } from './scenes/EdgeLoginScene.js'
-import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
 import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
@@ -142,8 +140,8 @@ import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
+import { LoadingScene } from './scenes/LoadingScene'
 import { LoginScene } from './scenes/LoginScene.js'
-import { ManageTokensScene } from './scenes/ManageTokensScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
@@ -164,6 +162,10 @@ import { WcConnectScene } from './scenes/WcConnectScene'
 import { WcDisconnectScene } from './scenes/WcDisconnectScene'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
+
+const ManageTokensScene = LoadingScene
+const EditTokenScene = LoadingScene
+const AddTokenScene = LoadingScene
 
 const RouterWithRedux = connect<
   {},

@@ -119,6 +119,7 @@ export function AccountCallbackManager(props: Props) {
       // These ones defer their work until later:
       wallet.watch('balances', () => addWallet(wallet)),
       wallet.watch('blockHeight', () => addWallet(wallet)),
+      wallet.watch('enabledTokenIds', () => addWallet(wallet)),
       wallet.watch('name', () => addWallet(wallet))
     ]
 

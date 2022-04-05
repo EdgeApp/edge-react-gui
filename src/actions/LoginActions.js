@@ -21,13 +21,13 @@ import { initialState as passwordReminderInitialState } from '../reducers/Passwo
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import { type CustomTokenInfo, type GuiTouchIdInfo } from '../types/types.js'
+import { type GuiTouchIdInfo } from '../types/types.js'
 import { runWithTimeout } from '../util/utils.js'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions.js'
 import { attachToUser } from './DeviceIdActions.js'
 import { expiredFioNamesCheckDates } from './FioActions.js'
 import { trackAccountEvent } from './TrackingActions.js'
-import { getEnabledTokens, setWalletEnabledTokens, updateWalletsEnabledTokens, updateWalletsRequest } from './WalletActions.js'
+import { updateWalletsRequest } from './WalletActions.js'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:
@@ -70,7 +70,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     autoLogoutTimeInSeconds: 3600,
     countryCode: '',
     currencyCode: '',
-    customTokens: [],
     defaultFiat: '',
     defaultIsoFiat: '',
     denominationSettings: {},
@@ -141,19 +140,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     }
     accountInitObject.denominationSettings = { ...mergedDenominationSettings }
 
-    accountInitObject.customTokens.forEach(token => {
-      if (token.walletType != null) {
-        const pluginId = token.walletType.replace('wallet:', '')
-        const denom = token.denominations.find(denom => denom.name === token.currencyCode)
-        if (denom != null) {
-          if (accountInitObject.denominationSettings[pluginId] == null) {
-            accountInitObject.denominationSettings[pluginId] = {}
-          }
-          accountInitObject.denominationSettings[pluginId][token.currencyCode] = denom
-        }
-      }
-    })
-
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject }
@@ -177,10 +163,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
 
     dispatch(expiredFioNamesCheckDates())
     await updateWalletsRequest()(dispatch, getState)
-    for (const wId of activeWalletIds) {
-      await getEnabledTokens(wId)(dispatch, getState)
-    }
-    updateWalletsEnabledTokens(getState)
   } catch (error) {
     showError(error)
   }
@@ -224,18 +206,6 @@ export const mergeSettings = (
     } else {
       finalSettings[key] = loadedSettings[key]
     }
-  }
-
-  // Filter conflicting tokens out of synced settings:
-  if (finalSettings.customTokens && account != null) {
-    const { currencyConfig } = account
-    finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
-      for (const pluginId of Object.keys(currencyConfig)) {
-        const { currencyInfo } = currencyConfig[pluginId]
-        if (customToken.currencyCode === currencyInfo.currencyCode) return false
-      }
-      return true
-    })
   }
 
   return {
@@ -314,7 +284,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
       const [parent, child] = code.split(':')
       if (parent === currencyInfo.currencyCode && child != null) tokenCodes.push(child)
       if (tokenCodes.length > 0) {
-        dispatch(setWalletEnabledTokens(wallet.id, tokenCodes, []))
+        await wallet.changeEnabledTokens(tokenCodes)
       }
     }
   }
