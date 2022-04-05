@@ -150,17 +150,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       return out
     }
 
-    case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
-      const { walletId, receiveAddress } = action.data
-      return {
-        ...state,
-        [walletId]: {
-          ...state[walletId],
-          receiveAddress
-        }
-      }
-    }
-
     default:
       return state
   }
