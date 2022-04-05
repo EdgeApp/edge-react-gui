@@ -31,11 +31,11 @@ import { WalletProgressIcon } from './WalletProgressIcon.js'
 type Props = {
   currencyCode: string,
   gradient?: boolean,
-  onPress?: () => void,
+  onPress?: (walletId: string, currencyCode: string) => void,
   onLongPress?: () => void,
   showRate?: boolean,
   walletId: string,
-  // eslint-disable-next-line react/no-unused-prop-types
+  tokenCode?: string,
   walletName?: string
 }
 
@@ -111,7 +111,7 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
 }
 
 export const WalletListCurrencyRowComponent = (props: Props) => {
-  const { currencyCode, showRate = false, onPress, onLongPress, gradient, walletId, walletName } = props
+  const { currencyCode, showRate = false, onPress, onLongPress, gradient, walletId, walletName, tokenCode } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -160,6 +160,10 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     exchangeRateType = differencePercentageStyle
   }
 
+  const handlePress = useMemo(
+    () => (onPress != null ? () => onPress(walletId, tokenCode ?? currencyCode) : () => {}),
+    [currencyCode, onPress, tokenCode, walletId]
+  )
   const icon = useMemo(() => <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />, [currencyCode, walletId])
   const children = useMemo(
     () => (
@@ -177,7 +181,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
       exchangeRateText={showRate ? exchangeRateText : undefined}
       exchangeRateType={showRate ? exchangeRateType : undefined}
       icon={icon}
-      onPress={onPress}
+      onPress={handlePress}
       onLongPress={onLongPress}
       walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
       gradient={gradient}

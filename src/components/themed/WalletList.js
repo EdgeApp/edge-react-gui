@@ -7,7 +7,7 @@ import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
@@ -27,8 +27,7 @@ type WalletListItem = {
   fullCurrencyCode?: string,
   key: string,
   createWalletType?: CreateWalletType,
-  createTokenType?: CreateTokenType,
-  onPress?: () => void
+  createTokenType?: CreateTokenType
 }
 
 type Section = {
@@ -72,11 +71,14 @@ export function WalletList(props: Props) {
     showSlidingTutorial,
     filterActivation,
     isModal,
-    onPress = (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
+    onPress
   } = props
 
   const theme = useTheme()
-
+  const handlePress = useMemo(
+    () => onPress ?? ((walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))),
+    [dispatch, onPress]
+  )
   const account = useSelector(state => state.core.account)
   const customTokens = useSelector(state => state.ui.settings.customTokens)
   const exchangeRates = useSelector(state => state.exchangeRates)
@@ -162,8 +164,7 @@ export function WalletList(props: Props) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: currencyCode,
-            key: `${walletId}-${currencyCode}`,
-            onPress: () => onPress(walletId, currencyCode)
+            key: `${walletId}-${currencyCode}`
           })
         }
 
@@ -193,7 +194,7 @@ export function WalletList(props: Props) {
               id: walletId,
               fullCurrencyCode,
               key: `${walletId}-${fullCurrencyCode}`,
-              onPress: () => onPress(walletId, tokenCode)
+              tokenCode
             })
           }
         }
@@ -257,7 +258,7 @@ export function WalletList(props: Props) {
     // Create Wallet/Token
     if (data.item.id == null) {
       const { createWalletType, createTokenType } = data.item
-      return <WalletListCreateRow {...{ ...createWalletType, ...createTokenType }} onPress={onPress} />
+      return <WalletListCreateRow {...{ ...createWalletType, ...createTokenType }} onPress={handlePress} />
     }
 
     const walletId = data.item.id.replace(/:.*/, '')
@@ -274,7 +275,7 @@ export function WalletList(props: Props) {
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
 
       if (isModal) {
-        return <WalletListCurrencyRow currencyCode={currencyCode} onPress={data.item.onPress} walletId={walletId} paddingRem={0} />
+        return <WalletListCurrencyRow currencyCode={currencyCode} onPress={handlePress} walletId={walletId} paddingRem={0} />
       }
 
       return <WalletListSwipeRow currencyCode={currencyCode} isToken={isToken} openTutorial={data.index === 0 && showSlidingTutorial} walletId={walletId} />
