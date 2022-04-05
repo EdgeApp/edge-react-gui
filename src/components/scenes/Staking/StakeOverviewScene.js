@@ -1,5 +1,5 @@
 // @flow
-import { bns, toFixed } from 'biggystring'
+import { toFixed } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -105,10 +105,8 @@ export const StakeOverviewScene = (props: Props) => {
       </SceneWrapper>
     )
 
-  const walletBalances = currencyWallet.balances
-  const isAvailableToStake = stakePolicy.stakeAssets.every(stakeInputAsset => bns.gt(walletBalances[stakeInputAsset.tokenId], '0'))
-  const isAvilableToClaim = rewardAllocations.some(rewardAllocation => bns.gt(rewardAllocation.nativeAmount, '0'))
-  const isAvailableToUnstake = stakeAllocations.some(stakeAllocation => bns.gt(stakeAllocation.nativeAmount, '0'))
+  const isClaimLocked = rewardAllocations.some(rewardAllocation => rewardAllocation.locktime && rewardAllocation.locktime > new Date())
+  const isUnstakeLocked = stakeAllocations.some(stakeAllocation => stakeAllocation.locktime && stakeAllocation.locktime > new Date())
 
   return (
     <SceneWrapper scroll background="theme">
@@ -125,9 +123,19 @@ export const StakeOverviewScene = (props: Props) => {
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) => allocation.tokenId + allocation.allocationType}
       />
-      <MainButton label={s.strings.stake_stake_more_funds} disabled={!isAvailableToStake} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
-      <MainButton label={s.strings.stake_claim_rewards} disabled={!isAvilableToClaim} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-      <MainButton label={s.strings.stake_unstake} disabled={!isAvailableToUnstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
+      <MainButton
+        label={s.strings.stake_stake_more_funds}
+        disabled={!stakePosition?.canStake}
+        type="primary"
+        onPress={handleModifyPress('stake')}
+        marginRem={0.5}
+      />
+      {stakePosition?.canClaim ? (
+        <MainButton label={s.strings.stake_claim_rewards} disabled={isClaimLocked} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
+      ) : null}
+      {stakePosition?.canUnstake ? (
+        <MainButton label={s.strings.stake_unstake} disabled={isUnstakeLocked} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
+      ) : null}
     </SceneWrapper>
   )
 }
