@@ -9,164 +9,109 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { connect } from '../../types/reactRedux.js'
+import { useState } from '../../types/reactHooks.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
-import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { decimalPlacesToDenomination } from '../../util/utils.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-type OwnProps = {
+type Props = {
   route: RouteProp<'addToken'>
 }
 
-type DispatchProps = {
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, type: string) => void
-}
+export function AddTokenScene(props: Props) {
+  const { route } = props
+  const { walletId } = route.params
+  const dispatch = useDispatch()
 
-type StateProps = {
-  addTokenPending: boolean,
-  currentCustomTokens: CustomTokenInfo[],
-  wallet: GuiWallet
-}
+  let [currencyCode, setCurrencyCode] = useState(route.params.currencyCode ?? '')
+  const [currencyName, setCurrencyName] = useState(route.params.currencyName ?? '')
+  const [contractAddress, setContractAddress] = useState(route.params.contractAddress ?? '')
+  const [decimalPlaces, setDecimalPlaces] = useState(route.params.decimalPlaces ?? '')
 
-type State = {
-  currencyName: string,
-  currencyCode: string,
-  contractAddress: string,
-  decimalPlaces: string,
-  enabled?: boolean
-}
+  const addTokenPending = useSelector(state => state.ui.wallets.addTokenPending)
+  const currentCustomTokens = useSelector(state => state.ui.settings.customTokens)
+  const wallet = useSelector(state => state.ui.wallets.byId[walletId])
 
-type Props = OwnProps & StateProps & DispatchProps
+  const handleSave = () => {
+    currencyCode = currencyCode.toUpperCase()
+    setCurrencyCode(currencyCode)
 
-export class AddToken extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const { route } = this.props
-    const { currencyName = '', currencyCode = '', contractAddress = '', decimalPlaces = '' } = route.params
-    this.state = {
-      currencyName,
-      currencyCode,
-      contractAddress,
-      decimalPlaces
+    const currentCustomTokenIndex = currentCustomTokens.findIndex(item => item.currencyCode === currencyCode)
+    const metaTokensIndex = wallet.metaTokens.findIndex(item => item.currencyCode === currencyCode)
+    // if token is hard-coded into wallets of this type
+    if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
+    // if that token already exists and is visible (ie not deleted)
+    if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible !== false) {
+      Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
+    } else {
+      if (currencyName && currencyCode && decimalPlaces && contractAddress) {
+        const denomination = decimalPlacesToDenomination(decimalPlaces)
+        dispatch(addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type))
+      } else {
+        Alert.alert(s.strings.addtoken_invalid_information)
+      }
     }
   }
 
-  render() {
-    const { addTokenPending } = this.props
-    return (
-      <SceneWrapper background="body">
-        <ScrollView style={styles.container}>
-          <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
-          </View>
-          <View style={styles.nameArea}>
-            <FormField
-              value={this.state.currencyName}
-              onChangeText={this.onChangeName}
-              autoCapitalize="words"
-              autoFocus
-              label={s.strings.addtoken_name_input_text}
-              returnKeyType="done"
-              autoCorrect={false}
-            />
-          </View>
-          <View style={styles.currencyCodeArea}>
-            <FormField
-              value={this.state.currencyCode}
-              onChangeText={this.onChangeCurrencyCode}
-              autoCapitalize="characters"
-              label={s.strings.addtoken_currency_code_input_text}
-              returnKeyType="done"
-              autoCorrect={false}
-              maxLength={MAX_TOKEN_CODE_CHARACTERS}
-            />
-          </View>
-          <View style={styles.contractAddressArea}>
-            <FormField
-              value={this.state.contractAddress}
-              onChangeText={this.onChangeContractAddress}
-              label={s.strings.addtoken_contract_address_input_text}
-              returnKeyType="done"
-              autoCorrect={false}
-            />
-          </View>
-          <View style={styles.decimalPlacesArea}>
-            <FormField
-              value={this.state.decimalPlaces}
-              onChangeText={this.onChangeDecimalPlaces}
-              label={s.strings.addtoken_denomination_input_text}
-              returnKeyType="done"
-              autoCorrect={false}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.buttonsArea}>
-            <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
-              {addTokenPending ? <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
-            </PrimaryButton>
-          </View>
-          <View style={styles.bottomPaddingForKeyboard} />
-        </ScrollView>
-      </SceneWrapper>
-    )
-  }
-
-  onChangeName = (input: string) => {
-    this.setState({
-      currencyName: input
-    })
-  }
-
-  onChangeCurrencyCode = (input: string) => {
-    this.setState({
-      currencyCode: input
-    })
-  }
-
-  onChangeDecimalPlaces = (input: string) => {
-    this.setState({
-      decimalPlaces: input
-    })
-  }
-
-  onChangeContractAddress = (input: string) => {
-    this.setState({
-      contractAddress: input.trim()
-    })
-  }
-
-  _onSave = () => {
-    const currencyCode = this.state.currencyCode.toUpperCase()
-    this.setState(
-      {
-        currencyCode
-      },
-      () => {
-        const { route, currentCustomTokens, wallet, addNewToken } = this.props
-        const { currencyName, decimalPlaces, contractAddress } = this.state
-        const { walletId } = route.params
-
-        const currentCustomTokenIndex = currentCustomTokens.findIndex(item => item.currencyCode === currencyCode)
-        const metaTokensIndex = wallet.metaTokens.findIndex(item => item.currencyCode === currencyCode)
-        // if token is hard-coded into wallets of this type
-        if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
-        // if that token already exists and is visible (ie not deleted)
-        if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible !== false) {
-          Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
-        } else {
-          if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-            const denomination = decimalPlacesToDenomination(decimalPlaces)
-            addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type)
-          } else {
-            Alert.alert(s.strings.addtoken_invalid_information)
-          }
-        }
-      }
-    )
-  }
+  return (
+    <SceneWrapper background="body">
+      <ScrollView style={styles.container}>
+        <View style={styles.instructionalArea}>
+          <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
+        </View>
+        <View style={styles.nameArea}>
+          <FormField
+            value={currencyName}
+            onChangeText={setCurrencyName}
+            autoCapitalize="words"
+            autoFocus
+            label={s.strings.addtoken_name_input_text}
+            returnKeyType="done"
+            autoCorrect={false}
+          />
+        </View>
+        <View style={styles.currencyCodeArea}>
+          <FormField
+            value={currencyCode}
+            onChangeText={setCurrencyCode}
+            autoCapitalize="characters"
+            label={s.strings.addtoken_currency_code_input_text}
+            returnKeyType="done"
+            autoCorrect={false}
+            maxLength={MAX_TOKEN_CODE_CHARACTERS}
+          />
+        </View>
+        <View style={styles.contractAddressArea}>
+          <FormField
+            value={contractAddress}
+            onChangeText={setContractAddress}
+            label={s.strings.addtoken_contract_address_input_text}
+            returnKeyType="done"
+            autoCorrect={false}
+          />
+        </View>
+        <View style={styles.decimalPlacesArea}>
+          <FormField
+            value={decimalPlaces}
+            onChangeText={setDecimalPlaces}
+            label={s.strings.addtoken_denomination_input_text}
+            returnKeyType="done"
+            autoCorrect={false}
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.buttonsArea}>
+          <PrimaryButton style={styles.saveButton} onPress={handleSave}>
+            {addTokenPending ? <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+          </PrimaryButton>
+        </View>
+        <View style={styles.bottomPaddingForKeyboard} />
+      </ScrollView>
+    </SceneWrapper>
+  )
 }
 
 const rawStyles = {
@@ -216,16 +161,3 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export const AddTokenScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => ({
-    addTokenPending: state.ui.wallets.addTokenPending,
-    currentCustomTokens: state.ui.settings.customTokens,
-    wallet: state.ui.wallets.byId[params.walletId]
-  }),
-  dispatch => ({
-    addNewToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) {
-      dispatch(addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, walletType))
-    }
-  })
-)(AddToken)
