@@ -103,7 +103,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         rightThreshold={theme.rem(7)}
         onRightSwipe={this.onSwipe}
       >
-        <ClickableRow onPress={this.onPress} highlight gradient>
+        <ClickableRow gradient highlight paddingRem={[0, 1]} onPress={this.onPress}>
           <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 
           <View style={styles.requestRight}>

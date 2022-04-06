@@ -120,15 +120,16 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
         <Card marginRem={[0, 1]} paddingRem={0}>
           <View style={styles.containerSelectedWalletNotFocus}>
             <SelectableRow
-              autoWidth
               arrowTappable
-              onPress={this.focusMe}
+              autoWidth
               icon={this.renderLogo()}
+              paddingRem={[0, 1]}
               title={
                 <EdgeText style={styles.iconText} numberOfLines={1}>
                   {guiWalletName + ': ' + displayDenomination}
                 </EdgeText>
               }
+              onPress={this.focusMe}
             />
           </View>
         </Card>

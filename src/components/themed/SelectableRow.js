@@ -41,7 +41,7 @@ export class SelectableRowComponent extends React.PureComponent<Props & ThemePro
     const styles = getStyles(theme)
 
     return (
-      <ClickableRow onPress={onPress} underline={underline} marginRem={marginRem} paddingRem={paddingRem}>
+      <ClickableRow marginRem={marginRem} paddingRem={paddingRem} underline={underline} onPress={onPress}>
         <View style={[styles.rowContainer, autoWidth ? styles.autoWidth : null]}>
           <View style={autoWidthContent ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
             {icon}
