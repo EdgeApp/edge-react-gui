@@ -27,9 +27,7 @@ import { ThemedModal } from '../themed/ThemedModal.js'
 
 type Props = {
   bridge: AirshipBridge<string | null>,
-  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
-  // eslint-disable-next-line react/no-unused-prop-types
   dApp: JsonObject,
   uri: string,
   payload: WcRpcPayload

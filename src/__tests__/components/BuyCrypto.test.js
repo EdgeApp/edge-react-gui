@@ -11,7 +11,6 @@ describe('BuyCrypto', () => {
   it('should render with some props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      // eslint-disable-next-line react/no-unused-prop-types
       walletId: 'my wallet',
       currencyCode: 'BTC',
       theme: getTheme(),

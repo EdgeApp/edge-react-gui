@@ -14,7 +14,6 @@ describe('AddressModalComponent', () => {
 
     const props = {
       bridge: fakeAirshipBridge,
-      // eslint-disable-next-line react/no-unused-prop-types
       walletId: 'string',
       currencyCode: 'string',
       title: 'string',
