@@ -106,7 +106,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         allocations.push(
           ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
             // TODO: Replace this assertion with an algorithm to calculate each asset amount using the LP-pool ratio
-            if (tokenId !== request.tokenId) throw new Error(`Token '${tokenId}' to ${action} not found in policy`)
+            if (tokenId !== request.tokenId) throw new Error(`Requested token '${request.tokenId}' to ${action} not found in policy`)
 
             return {
               allocationType: action,
@@ -122,7 +122,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
             // TODO: Replace this assertion with an algorithm to calculate each asset amount using the LP-pool ratio
-            if (tokenId !== request.tokenId) throw new Error(`Token '${tokenId}' to ${action} not found in policy`)
+            if (tokenId !== request.tokenId) throw new Error(`Requested token '${request.tokenId}' to ${action} not found in policy`)
 
             return {
               allocationType: 'claim',
