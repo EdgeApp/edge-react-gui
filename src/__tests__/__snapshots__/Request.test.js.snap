@@ -73,9 +73,7 @@ exports[`Request should render with loaded props 1`] = `
         />
       </WithTheme(EdgeTextComponent)>
     </View>
-    <WithTheme(CardComponent)
-      marginRem={0}
-    >
+    <WithTheme(CardComponent)>
       <ExchangedFlipInput
         exchangeSecondaryToPrimaryRatio={Object {}}
         forceUpdateGuiCounter={0}

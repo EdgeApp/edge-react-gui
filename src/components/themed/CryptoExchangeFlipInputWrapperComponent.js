@@ -117,7 +117,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
 
     if (!this.props.isFocused) {
       return (
-        <Card paddingRem={0}>
+        <Card marginRem={[0, 1]} paddingRem={0}>
           <View style={styles.containerSelectedWalletNotFocus}>
             <SelectableRow
               autoWidth
@@ -139,7 +139,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       <>
         {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
-        <Card>
+        <Card marginRem={[0, 1]}>
           <ExchangedFlipInput
             onNext={onNext}
             onFocus={this.props.onFocus}

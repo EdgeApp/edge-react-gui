@@ -324,7 +324,7 @@ export class RequestComponent extends React.Component<Props, State> {
 
             {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-            <Card marginRem={0}>
+            <Card>
               <ExchangedFlipInput
                 ref={this.flipInputRef}
                 headerText={flipInputHeaderText}

@@ -24,6 +24,8 @@ exports[`Card should render with loading props 1`] = `
           "marginLeft": 247,
           "marginRight": 247,
           "marginTop": 247,
+        },
+        Object {
           "paddingBottom": 247,
           "paddingLeft": 247,
           "paddingRight": 247,

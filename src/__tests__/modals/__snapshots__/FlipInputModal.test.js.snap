@@ -27,9 +27,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(CardComponent)
-        marginRem={0}
-      >
+      <WithTheme(CardComponent)>
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio="1000"
           forceUpdateGuiCounter={0}

@@ -184,7 +184,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const { flipInputHeaderText, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
-      <Card marginRem={0}>
+      <Card>
         <ExchangedFlipInput
           headerText={headerText ?? flipInputHeaderText}
           primaryCurrencyInfo={{ ...primaryInfo }}

@@ -47,7 +47,7 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
 
   render() {
     return (
-      <Card>
+      <Card marginRem={[0, 1]}>
         <CardContent
           image={<CurrencyIcon currencyCode={this.props.currencyCode} sizeRem={1.5} />}
           title={this.props.currency}
