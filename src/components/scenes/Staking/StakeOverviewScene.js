@@ -118,6 +118,7 @@ export const StakeOverviewScene = (props: Props) => {
 
   const isClaimLocked = rewardAllocations.some(rewardAllocation => rewardAllocation.locktime && rewardAllocation.locktime > new Date())
   const isUnstakeLocked = stakeAllocations.some(stakeAllocation => stakeAllocation.locktime && stakeAllocation.locktime > new Date())
+  const estimatedReturnMsg = stakePolicy.apy > 0 ? toFixed(stakePolicy.apy.toString(), 1, 1) + '% APR' : 'N/A'
 
   return (
     <SceneWrapper scroll background="theme">
@@ -126,7 +127,7 @@ export const StakeOverviewScene = (props: Props) => {
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}
           toCurrencyLogos={policyIcons.rewardAssetUris}
-          text={sprintf(s.strings.stake_estimated_return, toFixed(stakePolicy.apy.toString(), 1, 1) + '%')}
+          text={sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}
         />
       </View>
       <FlatList

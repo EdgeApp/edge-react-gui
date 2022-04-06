@@ -85,21 +85,22 @@ export const StakeModifyScene = (props: Props) => {
 
   // An Effect for updating the ChangeQuote triggered by changes to changeQuoteRequest
   useEffect(() => {
-    if (changeQuoteRequest.nativeAmount === '0') return
-    setChangeQuote(null)
-    setSliderLocked(true)
-    // Setup the request and get calculated values
-    stakePlugin
-      .fetchChangeQuote(changeQuoteRequest)
-      .then((changeQuote: ChangeQuote) => {
-        setChangeQuote(changeQuote)
-      })
-      .catch(err => {
-        showError(err.message)
-      })
-      .finally(() => {
-        setSliderLocked(false)
-      })
+    if (changeQuoteRequest.nativeAmount !== '0' || changeQuoteRequest.action === 'claim') {
+      setChangeQuote(null)
+      setSliderLocked(true)
+      // Setup the request and get calculated values
+      stakePlugin
+        .fetchChangeQuote(changeQuoteRequest)
+        .then((changeQuote: ChangeQuote) => {
+          setChangeQuote(changeQuote)
+        })
+        .catch(err => {
+          showError(err.message)
+        })
+        .finally(() => {
+          setSliderLocked(false)
+        })
+    }
   }, [modification, stakePolicyId, changeQuoteRequest, currencyWallet, existingAllocations, stakePolicy])
 
   //
@@ -222,9 +223,9 @@ export const StakeModifyScene = (props: Props) => {
 
     const title =
       allocationType === 'stake'
-        ? sprintf(s.strings.stake_amount_stake, quoteCurrencyCode)
+        ? sprintf(s.strings.stake_amount_s_stake, quoteCurrencyCode)
         : allocationType === 'unstake'
-        ? sprintf(s.strings.stake_amount_unstake, quoteCurrencyCode)
+        ? sprintf(s.strings.stake_amount_s_unstake, quoteCurrencyCode)
         : sprintf(s.strings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
