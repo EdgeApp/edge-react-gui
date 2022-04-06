@@ -1,12 +1,13 @@
 // @flow
-import { add, gt, gte, lte, mul, sub } from 'biggystring'
+import { gt, gte, lte, sub } from 'biggystring'
 import { ethers } from 'ethers'
 
 import { makeContract, makeSigner, multipass } from '../contracts.js'
 import { pluginInfo } from '../pluginInfo.js'
-import { makeTxBuilder } from '../TxBuilder.js'
 import { type PositionAllocation } from '../types'
 import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, StakePositionRequest } from '../types.js'
+import { makeBigAccumulator } from '../util/accumulator.js'
+import { makeBuilder } from '../util/builder.js'
 import { getSeed } from '../util/getSeed.js'
 import { fromHex, toHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
@@ -184,8 +185,16 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       // Build transaction workflow
       //
 
-      // An array of all the transactions to dispatch upon approval
-      const txBuilder = makeTxBuilder()
+      // Signer
+      const signer = makeSigner(signerSeed)
+
+      // Accumulators
+      const gasLimitAcc = makeBigAccumulator('0')
+      let txCount: number = await signer.getTransactionCount()
+      const nextNonce = (): number => txCount++
+
+      // Transaction builder
+      const txs = makeBuilder(async fn => await multipass(provider => fn({ signer: signer.connect(provider) })))
 
       // Stake the Stake-Token Workflow:
       // 1. Send approve() TX on Stake-Token-Contract if allowance is not MaxUint256
@@ -201,40 +210,54 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, poolContract.address))
           const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
           if (!isFullyAllowed) {
-            txBuilder.addCall(tokenContract, 'approve', [
-              poolContract.address,
-              ethers.constants.MaxUint256,
-              { gasLimit: { _hex: toHex('50000'), _isBigNumber: true } }
-            ])
+            txs.build(
+              (gasLimit =>
+                async function approvePoolContract({ signer }) {
+                  await tokenContract.connect(signer).approve(poolContract.address, ethers.constants.MaxUint256, {
+                    nonce: nextNonce(),
+                    gasLimit
+                  })
+                })(gasLimitAcc('50000'))
+            )
           }
         })
       )
 
       // Action transaction (Stake/Unstake/Claim)
       if (action === 'stake') {
-        txBuilder.addCall(poolContract, 'stake', [
-          toHex(request.nativeAmount),
-          {
-            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
-          }
-        ])
+        txs.build(
+          (gasLimit =>
+            async function name({ signer }) {
+              await poolContract.connect(signer).stake(request.nativeAmount, {
+                nonce: nextNonce(),
+                gasLimit
+              })
+            })(gasLimitAcc('240000'))
+        )
       }
       if (action === 'unstake') {
-        txBuilder.addCall(poolContract, 'withdraw', [
-          toHex(request.nativeAmount),
-          {
-            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
-          }
-        ])
+        txs.build(
+          (gasLimit =>
+            async function name({ signer }) {
+              await poolContract.connect(signer).withdraw(request.nativeAmount, {
+                nonce: nextNonce(),
+                gasLimit
+              })
+            })(gasLimitAcc('240000'))
+        )
       }
 
       if (action === 'claim') {
         // Claiming withdraws all earned tokens, so we ignore the nativeAmount from the request
-        txBuilder.addCall(poolContract, 'claimReward', [
-          {
-            gasLimit: { _hex: toHex('240000'), _isBigNumber: true }
-          }
-        ])
+        txs.build(
+          (gasLimit =>
+            async function name({ signer }) {
+              await poolContract.connect(signer).claimReward({
+                nonce: nextNonce(),
+                gasLimit
+              })
+            })(gasLimitAcc('240000'))
+        )
       }
 
       //
@@ -243,12 +266,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Calculate the fees:
       // 1. Get the gasPrice oracle data (from wallet)
-      // 2. Calculate the sum(tx => gasLimit(txType) * gasPrice) as the networkFee in native token
-      const gasPrice = (await multipass(provider => provider.getGasPrice()))._hex
-      const gasEstimates = await Promise.all(txBuilder.getCalls().map(({ estimateGas }) => estimateGas()))
-      const networkFee = gasEstimates.reduce((sum, gasEstimate) => {
-        return add(sum, mul(gasPrice, gasEstimate._hex, 10))
-      }, '0')
+      // 2. Calculate the networkFee as the gasLimit * gasPrice in the native token
+      const gasPrice = await multipass(p => p.getGasPrice())
+      const networkFee = gasLimitAcc().mul(gasPrice).toString()
       allocations.push({
         allocationType: 'fee',
         pluginId: policyInfo.parentPluginId,
@@ -262,10 +282,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Construct an approve function which executes transaction workflow (txBuilder)
       const approve: () => Promise<void> = async () => {
-        for (const { contract, method, args } of txBuilder.getCalls()) {
-          await multipass(p => contract.connect(makeSigner(signerSeed, p))[method](...args))
-          // NOTE: Don't wait for block confirmation because that's too slow
-        }
+        await txs.run()
       }
 
       return {
