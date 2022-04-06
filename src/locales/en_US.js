@@ -954,7 +954,7 @@ const strings = {
   util_truncate_delimeter: '...',
 
   // Stake
-  stake_estimated_return: 'Estimated Return: %s APR',
+  stake_estimated_return: 'Estimated Return: %s',
   stake_s_staked: '%s Staked',
   stake_s_earned: '%s Earned',
   stake_lock_message: 'locked until %s',
