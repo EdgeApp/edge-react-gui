@@ -81,11 +81,16 @@ export const StakeModifyScene = (props: Props) => {
   useEffect(() => {
     const existingAllocations = getPositionAllocations(stakePosition)
     setExistingAllocations(existingAllocations)
-  }, [currencyWallet, stakePosition])
+
+    // Initialize the claim row since the user would never modify the amount
+    if (modification === 'claim' && changeQuoteRequest.nativeAmount === '0')
+      setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: existingAllocations.earned[0].nativeAmount })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // An Effect for updating the ChangeQuote triggered by changes to changeQuoteRequest
   useEffect(() => {
-    if (changeQuoteRequest.nativeAmount !== '0' || changeQuoteRequest.action === 'claim') {
+    if (changeQuoteRequest.nativeAmount !== '0') {
       setChangeQuote(null)
       setSliderLocked(true)
       // Setup the request and get calculated values
