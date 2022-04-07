@@ -60,7 +60,7 @@ export const WcConnectScene = (props: Props) => {
 
   useEffect(() => {
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
-  }, [])
+  }, [wallet])
 
   const dispatch = useDispatch()
 
