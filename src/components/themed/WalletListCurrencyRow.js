@@ -132,7 +132,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const exchangeRate = !zeroString(exchangeRates[rateKey]) ? exchangeRates[rateKey] : '1'
   const cryptoExchangeMultiplier = exchangeDenomination.multiplier
 
-  const nativeCryptoAmount = showBalance ? getCryptoAmount({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode }) : ''
+  const nativeCryptoAmount = getCryptoAmount({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode })
 
   const [{ fiatText: fiatBalanceText }] = useFiatText({
     nativeCryptoAmount: balance,
@@ -186,7 +186,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
       walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
       gradient={gradient}
     >
-      {children}
+      {showBalance ? children : null}
     </WalletListRow>
   )
 }
