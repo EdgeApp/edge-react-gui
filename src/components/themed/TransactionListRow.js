@@ -20,6 +20,7 @@ import {
   getDenomFromIsoCode,
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
+  normalizeForSearch,
   precisionAdjust,
   truncateDecimals
 } from '../../util/utils'
@@ -99,10 +100,10 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     // Thumbnail
     let thumbnailPath
     const contacts = state.contacts || []
-    const transactionContactName = name != null ? name.replace(/\s/g, '') : null
+    const transactionContactName = name != null ? normalizeForSearch(name) : null
     for (const contact of contacts) {
       const { givenName, familyName } = contact
-      const fullName = `${givenName}${familyName ?? ''}`.replace(/\s/g, '')
+      const fullName = normalizeForSearch(`${givenName}${familyName ?? ''}`)
       if (contact.thumbnailPath && fullName === transactionContactName) {
         thumbnailPath = contact.thumbnailPath
         break
