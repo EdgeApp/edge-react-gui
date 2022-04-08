@@ -4,7 +4,6 @@ import { div } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
@@ -13,10 +12,10 @@ import { getDisplayDenominationFromState, getExchangeDenomination } from '../../
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
@@ -60,7 +59,6 @@ export class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const multiplier = displayDenomination.multiplier
     const name = getWalletName(wallet)
     const symbol = displayDenomination.symbol
-    const { symbolImageDarkMono } = getCurrencyIcon(pluginId)
 
     const balance = wallet.balances[currencyCode] ?? '0'
     const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
@@ -79,7 +77,7 @@ export class WalletListSortableRowComponent extends React.PureComponent<Props> {
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
             </View>
             <View style={styles.iconContainer}>
-              {symbolImageDarkMono && <FastImage style={styles.icon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              <CurrencyIcon currencyCode={currencyCode} walletId={pluginId} />
             </View>
             <View style={styles.detailsContainer}>
               <View style={styles.detailsRow}>

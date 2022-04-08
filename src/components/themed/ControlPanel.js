@@ -16,6 +16,7 @@ import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../assets/vector'
+import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
@@ -25,7 +26,6 @@ import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { useEffect, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -60,7 +60,6 @@ export function ControlPanel(props: Props) {
   const guiWallet = useSelector(getSelectedWallet)
   const metaTokens = guiWallet?.metaTokens ?? []
   const contractAddress = metaTokens.find(token => token.currencyCode === selectedCurrencyCode)?.contractAddress
-  const currencyLogo = guiWallet != null ? getCurrencyIcon(selectedWallet.currencyInfo.pluginId, contractAddress).symbolImage : null
   const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
     guiWallet != null ? getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
   )
@@ -248,7 +247,9 @@ export function ControlPanel(props: Props) {
             <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
             <>
-              <View style={styles.rowIconContainer}>{!!currencyLogo && <Image style={styles.icon} source={{ uri: currencyLogo }} />}</View>
+              <View style={styles.rowIconContainer}>
+                {guiWallet != null ? <CurrencyIcon pluginId={selectedWallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={contractAddress} /> : null}
+              </View>
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
                   {`1 ${currencyDenomName} = `}

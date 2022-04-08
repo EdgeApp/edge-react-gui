@@ -63,12 +63,11 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
  * so make that.
  */
 export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
-  const { currencyCode, walletType, displayName: currencyName, pluginId } = currencyInfo
+  const { currencyCode, walletType, displayName: currencyName } = currencyInfo
   return {
     currencyName,
     walletType,
-    currencyCode,
-    ...getCurrencyIcon(pluginId)
+    currencyCode
   }
 }
 
@@ -88,14 +87,12 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
       out.push({
         currencyName: 'Bitcoin (Segwit)',
         walletType: 'wallet:bitcoin-bip49',
-        currencyCode,
-        ...getCurrencyIcon(pluginId)
+        currencyCode
       })
       out.push({
         currencyName: 'Bitcoin (no Segwit)',
         walletType: 'wallet:bitcoin-bip44',
-        currencyCode,
-        ...getCurrencyIcon(pluginId)
+        currencyCode
       })
     } else {
       out.push(makeCreateWalletType(currencyInfo))
