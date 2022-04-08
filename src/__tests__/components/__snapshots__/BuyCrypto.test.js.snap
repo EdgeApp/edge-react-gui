@@ -25,20 +25,15 @@ exports[`BuyCrypto should render with some props 1`] = `
           }
         }
       >
-        <FastImage
-          resizeMode="cover"
-          source={
-            Object {
-              "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
-            }
+        <Memo(CurrencyIconComponent)
+          currencyCode="BTC"
+          marginRem={
+            Array [
+              0.25,
+              0,
+            ]
           }
-          style={
-            Object {
-              "height": 51,
-              "marginVertical": 6,
-              "width": 51,
-            }
-          }
+          sizeRem={2.25}
         />
         <WithTheme(EdgeTextComponent)
           style={

@@ -5,11 +5,10 @@ import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR, FIO_WALLET_TYPE, getPluginId } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -377,7 +376,6 @@ export const makeConnectWallets = (
       key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
       id: wallets[walletKey].id,
       edgeWallet: edgeWallets[wallets[walletKey].id],
-      symbolImage: wallets[walletKey].symbolImage,
       name: wallets[walletKey].name,
       currencyCode: wallets[walletKey].currencyCode,
       chainCode: wallets[walletKey].currencyCode,
@@ -390,7 +388,6 @@ export const makeConnectWallets = (
         if (!tokenData) {
           tokenData = {
             currencyCode: enabledToken,
-            symbolImage: '',
             contractAddress: undefined
           }
         }
@@ -399,7 +396,6 @@ export const makeConnectWallets = (
           key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
           id: wallets[walletKey].id,
           edgeWallet: edgeWallets[wallets[walletKey].id],
-          ...getCurrencyIcon(getPluginId(wallets[walletKey].type), tokenData.contractAddress),
           name: wallets[walletKey].name,
           currencyCode: tokenData.currencyCode,
           chainCode: wallets[walletKey].currencyCode,
