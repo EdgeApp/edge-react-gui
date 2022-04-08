@@ -4,6 +4,7 @@ import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
 import { EDGE_CONTENT_SERVER, SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
+import { removeHexPrefix } from './utils.js'
 
 /**
  * Get currency icon URL
@@ -19,7 +20,8 @@ const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function getCurrencyIcon(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
-  const url = `${EDGE_CONTENT_SERVER}/currencyIcons/${pluginId.toLowerCase()}/${contractAddress.toLowerCase().replace('0x', '')}`
+  const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
+  const url = `${EDGE_CONTENT_SERVER}/currencyIcons/${currencyPath}`
   return {
     symbolImage: `${url}.png`,
     symbolImageDarkMono: `${url}_dark.png`
@@ -111,4 +113,10 @@ export function getCreateWalletType(account: EdgeAccount, currencyCode: string):
   const currencyCodeFormatted = currencyCode.toUpperCase()
   const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
   return currencyInfo ? makeCreateWalletType(currencyInfo) : null
+}
+
+export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string) => {
+  const { builtinTokens = {}, customTokens = {} } = account.currencyConfig[pluginId]
+  const allTokens = { ...customTokens, ...builtinTokens }
+  return Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
 }

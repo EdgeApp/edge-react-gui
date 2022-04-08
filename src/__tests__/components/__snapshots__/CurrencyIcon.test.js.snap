@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CurrencyIcon should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "height": 45,
+      "marginBottom": 22,
+      "marginLeft": 22,
+      "marginRight": 22,
+      "marginTop": 22,
+      "width": 45,
+    }
+  }
+>
+  <WalletSyncCircle
+    edgeWallet={
+      Object {
+        "pluginId": "bitcoin",
+        "watch": [Function],
+      }
+    }
+    size={45}
+  />
+  <FastImage
+    source={
+      Object {
+        "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+      }
+    }
+    style={
+      Object {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+</View>
+`;
