@@ -24,8 +24,6 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  symbolImage: string | void,
-  symbolImageDarkMono: string | void,
   metaTokens: EdgeMetaToken[],
   enabledTokens: string[],
   addressLoadingProgress?: number,
@@ -193,8 +191,6 @@ export const emptyGuiWallet: GuiWallet = {
   currencyCode: '',
   isoFiatCurrencyCode: '',
   fiatCurrencyCode: '',
-  symbolImage: '',
-  symbolImageDarkMono: '',
   metaTokens: [],
   enabledTokens: [],
   receiveAddress: {
