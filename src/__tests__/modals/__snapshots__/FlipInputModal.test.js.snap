@@ -33,7 +33,6 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio="1000"
           forceUpdateGuiCounter={0}
-          headerLogo="https://content.edge.app/bitcoin/bitcoin/exchange/bc1"
           headerText="Exchange Header"
           isEditable={true}
           isFiatOnTop={true}

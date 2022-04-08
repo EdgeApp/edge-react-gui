@@ -13,19 +13,16 @@ exports[`FlipInputComponent should render with loading props 1`] = `
       }
     }
   >
-    <FastImage
-      source={
-        Object {
-          "uri": "string",
-        }
+    <Memo(CurrencyIconComponent)
+      marginRem={
+        Array [
+          0,
+          1,
+          0,
+          0,
+        ]
       }
-      style={
-        Object {
-          "height": 34,
-          "marginRight": 22,
-          "width": 34,
-        }
-      }
+      sizeRem={1.5}
     />
     <RightChevronButton
       onPress={[Function]}

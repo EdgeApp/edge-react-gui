@@ -4,7 +4,6 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
 import { CryptoExchangeComponent } from '../../components/scenes/CryptoExchangeScene.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
 
@@ -60,8 +59,6 @@ describe('CryptoExchangeComponent', () => {
       toFiatToCrypto: '500',
       pluginId: 'ChangeNow',
       fromCurrencyCode: 'BTC',
-      fromCurrencyIcon: WalletIcon,
-      toCurrencyIcon: WalletIcon,
       toCurrencyCode: 'ETH',
       forceUpdateGuiCounter: 0,
       calculatingMax: true,

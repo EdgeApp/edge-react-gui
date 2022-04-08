@@ -11,8 +11,6 @@ export type CryptoExchangeState = {
   fromNativeAmount: string,
   fromDisplayAmount: string,
   fromWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
-  fromCurrencyIcon: string | null,
-  fromCurrencyIconDark: string | null,
   fromBalanceMessage: string,
 
   toWalletId: string | null,
@@ -20,8 +18,6 @@ export type CryptoExchangeState = {
   toNativeAmount: string,
   toDisplayAmount: string,
   toWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
-  toCurrencyIcon: string | null,
-  toCurrencyIconDark: string | null,
   toBalanceMessage: string,
 
   // Errors:
@@ -53,8 +49,6 @@ const initialState: CryptoExchangeState = {
   fromNativeAmount: '0',
   fromDisplayAmount: '0',
   fromWalletPrimaryInfo: dummyCurrencyInfo,
-  fromCurrencyIcon: null,
-  fromCurrencyIconDark: null,
   fromBalanceMessage: '',
 
   toWalletId: null,
@@ -62,8 +56,6 @@ const initialState: CryptoExchangeState = {
   toNativeAmount: '0',
   toDisplayAmount: '0',
   toWalletPrimaryInfo: dummyCurrencyInfo,
-  toCurrencyIcon: null,
-  toCurrencyIconDark: null,
   toBalanceMessage: '',
 
   insufficientError: false,
@@ -82,8 +74,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         fromWalletId: action.data.walletId,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
-        fromCurrencyIcon: action.data.symbolImage,
-        fromCurrencyIconDark: action.data.symbolImageDarkMono,
         fromBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -101,8 +91,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toWalletId: action.data.walletId,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
-        toCurrencyIcon: action.data.symbolImage,
-        toCurrencyIconDark: action.data.symbolImageDarkMono,
         toBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',

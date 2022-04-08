@@ -49,12 +49,6 @@ describe('ExchangedFlipInput', () => {
       isFiatOnTop: true,
       isFocus: true,
       headerText: '123',
-      headerLogo: {
-        alignSelf: 'center',
-        marginTop: 123,
-        height: 123,
-        width: 123
-      },
       theme: getTheme()
     }
     const actual = renderer.render(<ExchangedFlipInput {...props} />)
