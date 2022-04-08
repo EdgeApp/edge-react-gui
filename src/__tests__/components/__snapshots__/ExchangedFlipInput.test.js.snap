@@ -4,14 +4,6 @@ exports[`ExchangedFlipInput should render with loading props 1`] = `
 <ForwardRef
   exchangeSecondaryToPrimaryRatio="0"
   forceUpdateGuiCounter={11}
-  headerLogo={
-    Object {
-      "alignSelf": "center",
-      "height": 123,
-      "marginTop": 123,
-      "width": 123,
-    }
-  }
   headerText="123"
   isEditable={true}
   isFiatOnTop={false}

@@ -35,11 +35,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     />
     <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
       buttonText="Select Source Wallet"
-      currencyLogo={
-        Object {
-          "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
-        }
-      }
       fiatPerCrypto="500"
       focusMe={[Function]}
       forceUpdateGuiCounter={0}
@@ -96,11 +91,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     />
     <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
       buttonText="Select Receiving Wallet"
-      currencyLogo={
-        Object {
-          "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
-        }
-      }
       fiatPerCrypto="500"
       focusMe={[Function]}
       forceUpdateGuiCounter={0}

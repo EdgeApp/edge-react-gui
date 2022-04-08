@@ -39,7 +39,6 @@ export type ExchangedFlipInputOwnProps = {
   topReturnKeyType?: string,
   inputAccessoryViewID?: string,
   headerText: string,
-  headerLogo: string | void,
   headerCallback?: () => void,
   onError?: (error: string | void) => void
 }
@@ -173,7 +172,6 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}
         exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
         headerText={this.props.headerText}
-        headerLogo={this.props.headerLogo}
         headerCallback={this.props.headerCallback}
         primaryInfo={this.state.primaryInfo}
         secondaryInfo={this.state.secondaryInfo}

@@ -19,7 +19,6 @@ describe('FlipInputModalComponent', () => {
       onFeesChange: () => undefined,
       balanceCrypto: '10000',
       flipInputHeaderText: 'Exchange Header',
-      flipInputHeaderLogo: 'https://content.edge.app/bitcoin/bitcoin/exchange/bc1',
       primaryInfo: {
         displayCurrencyCode: 'BTC',
         exchangeCurrencyCode: 'BTC',
