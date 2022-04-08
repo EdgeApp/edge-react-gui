@@ -234,8 +234,6 @@ export const edgeLight: Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
-  walletProgressIconFillDone: palette.transparent,
-  walletProgressIconBackground: palette.transparent,
 
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
