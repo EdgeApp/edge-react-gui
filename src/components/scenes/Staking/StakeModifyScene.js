@@ -90,6 +90,7 @@ export const StakeModifyScene = (props: Props) => {
 
   // An Effect for updating the ChangeQuote triggered by changes to changeQuoteRequest
   useEffect(() => {
+    let abort = false
     if (changeQuoteRequest.nativeAmount !== '0') {
       setChangeQuote(null)
       setSliderLocked(true)
@@ -97,14 +98,20 @@ export const StakeModifyScene = (props: Props) => {
       stakePlugin
         .fetchChangeQuote(changeQuoteRequest)
         .then((changeQuote: ChangeQuote) => {
+          if (abort) return
           setChangeQuote(changeQuote)
         })
         .catch(err => {
+          if (abort) return
           showError(err.message)
         })
         .finally(() => {
+          if (abort) return
           setSliderLocked(false)
         })
+    }
+    return () => {
+      abort = true
     }
   }, [modification, stakePolicyId, changeQuoteRequest, currencyWallet, existingAllocations, stakePolicy])
 

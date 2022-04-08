@@ -71,9 +71,11 @@ export const StakeOverviewScene = (props: Props) => {
   }, [])
 
   useEffect(() => {
+    let abort = false
     stakePlugin
       .fetchStakePosition({ stakePolicyId, wallet: currencyWallet })
       .then(async stakePosition => {
+        if (abort) return
         const guiAllocations = getPositionAllocations(stakePosition)
         setStakeAllocations(guiAllocations.staked)
         setRewardAllocations(guiAllocations.earned)
@@ -82,6 +84,10 @@ export const StakeOverviewScene = (props: Props) => {
       .catch(err => {
         console.error(err)
       })
+
+    return () => {
+      abort = true
+    }
   }, [currencyWallet, stakePolicyId, updateCounter])
 
   // Handlers

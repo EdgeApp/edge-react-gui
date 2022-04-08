@@ -39,22 +39,28 @@ export const StakeOptionsScene = (props: Props) => {
 
   const [stakePolicies, setStakePolicies] = useState<StakePolicy[]>([])
   useEffect(() => {
+    let abort = false
+
     stakePlugin
       .getStakePolicies()
       .then(stakePolicies => {
+        if (abort) return
         const availableStakePolicies = stakePolicies.filter(stakePolicy => {
           return (
             stakePolicy.stakeAssets.some(stakeAsset => stakeAsset.tokenId === currencyCode) ||
             stakePolicy.rewardAssets.some(rewardAssets => rewardAssets.tokenId === currencyCode)
           )
         })
-
         if (availableStakePolicies.length === 1) {
           // Transition to next scene immediately
           navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
         } else setStakePolicies(availableStakePolicies)
       })
       .catch(err => console.error(err))
+
+    return () => {
+      abort = true
+    }
   }, [currencyCode, navigation, walletId])
 
   const currencyWallet = useSelector((state: RootState) => {
