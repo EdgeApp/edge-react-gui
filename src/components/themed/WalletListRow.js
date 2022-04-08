@@ -17,7 +17,6 @@ type Props = {
   icon?: React.Node,
   iconUri?: string,
   iconSizeRem?: number,
-  editIcon?: React.Node,
   gradient?: boolean,
   onPress?: () => void,
   onLongPress?: () => void,
@@ -25,7 +24,7 @@ type Props = {
 }
 
 export const WalletListRowComponent = (props: Props) => {
-  const { currencyCode, children, gradient = false, icon, iconUri = '', iconSizeRem, editIcon, onPress, onLongPress, walletName = '' } = props
+  const { currencyCode, children, gradient = false, icon, iconUri = '', iconSizeRem, onPress, onLongPress, walletName = '' } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -56,7 +55,6 @@ export const WalletListRowComponent = (props: Props) => {
                   </EdgeText>
                 ) : null}
               </View>
-              <View style={styles.detailsRight}>{editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}</View>
 
               <EdgeText style={styles.detailsName} disableFontScaling>
                 {walletName}
@@ -104,9 +102,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   iconSize: {
     width: theme.rem(2),
     height: theme.rem(2)
-  },
-  editIcon: {
-    marginLeft: theme.rem(0.75)
   },
 
   // Details

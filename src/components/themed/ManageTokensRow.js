@@ -26,8 +26,6 @@ export function ManageTokensRow(props: Props) {
   const { currencyCode, currencyName } = props.metaToken.item
   const { enabledList, toggleToken, goToEditTokenScene, metaTokens, symbolImage } = props
 
-  const EditIcon = () => (isEditable ? <FontAwesomeIcon name="edit" size={theme.rem(0.95)} color={theme.iconTappable} /> : null)
-
   const enabled = enabledList.indexOf(currencyCode) >= 0
   // disable editing if token is native to the app
   const isEditable = metaTokens.every(token => token.currencyCode !== currencyCode)
@@ -37,8 +35,13 @@ export function ManageTokensRow(props: Props) {
   }
 
   return (
-    <WalletListRow onPress={onPress} gradient iconUri={symbolImage} editIcon={<EditIcon />} currencyCode={currencyCode} walletName={currencyName}>
+    <WalletListRow onPress={onPress} gradient iconUri={symbolImage} currencyCode={currencyCode} walletName={currencyName}>
       <View style={styles.touchableCheckboxInterior}>
+        {isEditable ? (
+          <View style={styles.editIcon}>
+            <FontAwesomeIcon name="edit" size={theme.rem(0.95)} color={theme.iconTappable} />
+          </View>
+        ) : null}
         <Switch
           onChange={event => toggleToken(currencyCode, event.nativeEvent.value)}
           value={enabled}
@@ -56,9 +59,15 @@ export function ManageTokensRow(props: Props) {
 const getStyles = cacheStyles((theme: Theme) => ({
   touchableCheckboxInterior: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   checkBox: {
     alignSelf: 'center'
+  },
+  editIcon: {
+    paddingTop: theme.rem(0.375),
+    paddingRight: theme.rem(0.75),
+    alignSelf: 'flex-start'
   }
 }))
