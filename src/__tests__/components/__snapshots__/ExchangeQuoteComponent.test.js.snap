@@ -4,19 +4,9 @@ exports[`ExchangeQuote should render with loading props 1`] = `
 <WithTheme(CardComponent)>
   <WithTheme(CardContentComponent)
     image={
-      <FastImage
-        source={
-          Object {
-            "uri": "/assets/images/createWallet/wallet_icon_lg.png",
-          }
-        }
-        style={
-          Object {
-            "height": 34,
-            "resizeMode": "contain",
-            "width": 34,
-          }
-        }
+      <Memo(CurrencyIconComponent)
+        currencyCode="BTC"
+        sizeRem={1.5}
       />
     }
     subTitle="myWallet"

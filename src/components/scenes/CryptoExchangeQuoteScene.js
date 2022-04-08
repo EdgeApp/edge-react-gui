@@ -29,11 +29,9 @@ type OwnProps = {
 }
 type StateProps = {
   account: EdgeAccount,
-  fromCurrencyIcon: string,
   fromDenomination: string,
   fromWalletCurrencyName: string,
   pending: boolean,
-  toCurrencyIcon: string,
   toDenomination: string,
   toWalletCurrencyName: string
 }
@@ -96,8 +94,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   }
 
   render() {
-    const { account, fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, toCurrencyIcon, toDenomination, toWalletCurrencyName, pending, theme, route } =
-      this.props
+    const { account, fromDenomination, fromWalletCurrencyName, toDenomination, toWalletCurrencyName, pending, theme, route } = this.props
     const { swapInfo } = route.params
     const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat, quote, request } = swapInfo
     const { fiatCurrencyCode } = request.fromWallet
@@ -120,7 +117,6 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             isTop
             miningFee={fee}
             total={fromTotalFiat}
-            walletIcon={fromCurrencyIcon}
             walletName={request.fromWallet.name || ''}
           />
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
@@ -130,7 +126,6 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             currencyCode={toDenomination}
             fiatCurrencyAmount={toFiat}
             fiatCurrencyCode={request.toWallet.fiatCurrencyCode.replace('iso:', '')}
-            walletIcon={toCurrencyIcon}
             walletName={request.toWallet.name || ''}
           />
           <View style={styles.pluginRowPoweredByRow}>
@@ -185,12 +180,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
     account: state.core.account,
-    fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon ?? '',
     fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
     fromWalletCurrencyName:
       state.cryptoExchange.fromWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.fromWalletId].currencyInfo.displayName : '',
     pending: state.cryptoExchange.shiftPendingTransaction,
-    toCurrencyIcon: state.cryptoExchange.toCurrencyIcon ?? '',
     toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
     toWalletCurrencyName:
       state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
