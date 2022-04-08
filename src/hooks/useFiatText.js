@@ -1,9 +1,9 @@
 // @flow
-import { div, toFixed } from 'biggystring'
+import { div } from 'biggystring'
 
 import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
+import { trimEnd } from '../locales/intl.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
-import { useState } from '../types/reactHooks.js'
 import { useSelector } from '../types/reactRedux.js'
 import { DECIMAL_PRECISION, formatFiatString } from '../util/utils'
 
@@ -33,32 +33,29 @@ export const useFiatText = (props: Props) => {
     noGrouping = false
   } = props
 
-  const [fiatCode, setFiatCode] = useState(isoFiatCurrencyCode)
-
-  const [cryptoCode, setCryptoCode] = useState(cryptoCurrencyCode)
-
   // Convert native to fiat amount.
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
   const fiatAmount = useSelector(state => {
     const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, cryptoCode, fiatCode, cryptoAmount)
+    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
-  const formatedFiatString = formatFiatString({
+  // Convert the amount to an internationalized string
+  const formattedFiatString = formatFiatString({
     fiatAmount,
     autoPrecision,
     noGrouping
   })
   // Remove trailing zeros for 'fiatString'
-  const fiatString = toFixed(formatedFiatString, 0, 2)
+  const fiatString = trimEnd(formattedFiatString)
   // Create FiatText' prefix
-  const fiatSymbol = getSymbolFromCurrency(fiatCode)
+  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
   const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
-  const prefix = `${parenthesisEnclosed ? '(' : ''}${fiatSymbolFmt}`
+  const prefix = `${parenthesisEnclosed ? '(' : ''}${fiatSymbolFmt} `
   // Create FiatText' suffix
-  const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${fiatCode.replace('iso:', '')}` : ''
+  const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
   const suffix = `${fiatCurrencyCode}${parenthesisEnclosed ? ')' : ''}`
 
-  const fiatText = `${prefix} ${fiatString}${fiatCurrencyCode}${suffix}`
-  return [{ fiatAmount, fiatString, fiatText }, setFiatCode, setCryptoCode]
+  const fiatText = `${prefix}${fiatString}${fiatCurrencyCode}${suffix}`
+  return { fiatAmount, fiatString, fiatText }
 }

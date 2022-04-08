@@ -6,7 +6,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText.js'
-import { formatNumber } from '../../locales/intl.js'
+import { formatNumber, truncateDecimals } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { memo, useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
@@ -20,7 +20,6 @@ import {
   getYesterdayDateRoundDownHour,
   maxPrimaryCurrencyConversionDecimals,
   precisionAdjust,
-  truncateDecimals,
   zeroString
 } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -56,9 +55,9 @@ type GetCryptoAmountParams = {
 }
 
 export const getCryptoAmount = ({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode }: GetCryptoAmountParams) => {
-  if (zeroString(balance)) return '0'
-  let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   const { multiplier, symbol } = denomination
+  if (zeroString(balance)) return `${symbol ? symbol + ' ' : ''}0`
+  let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
 
   if (exchangeRate) {
     const precisionAdjustValue = precisionAdjust({
@@ -134,19 +133,23 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
 
   const nativeCryptoAmount = getCryptoAmount({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode })
 
-  const [{ fiatText: fiatBalanceText }] = useFiatText({
+  const { fiatText: fiatBalanceText } = useFiatText({
     nativeCryptoAmount: balance,
     cryptoCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
     cryptoExchangeMultiplier
   })
 
-  let [{ fiatText: exchangeRateText }] = useFiatText({
+  let { fiatText: exchangeRateText } = useFiatText({
     nativeCryptoAmount: cryptoExchangeMultiplier,
     cryptoCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
+    autoPrecision: true,
     cryptoExchangeMultiplier
   })
+  // No need for decimals if over '1000' of what ever fiat currency
+  if (Math.log10(parseFloat(exchangeRate)) >= 3) exchangeRateText = truncateDecimals(exchangeRateText, 0)
+
   let exchangeRateType = 'neutral'
 
   if (showRate) {
