@@ -120,15 +120,12 @@ export type CustomTokenInfo = {
 export type CreateWalletType = {
   currencyName: string,
   walletType: string,
-  symbolImage?: string,
-  symbolImageDarkMono?: string,
   currencyCode: string
 }
 
 export type CreateTokenType = {
   currencyCode: string,
   currencyName: string,
-  symbolImage?: string,
   parentCurrencyCode: string
 }
 

@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
-import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
+import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { checkCurrencyCodes, checkFilterWallet } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
@@ -230,7 +230,7 @@ export function WalletList(props: Props) {
       const currencyInfos = getCurrencyInfos(account)
       for (const currencyInfo of currencyInfos) {
         for (const metaToken of currencyInfo.metaTokens) {
-          const { currencyCode, currencyName, contractAddress } = metaToken
+          const { currencyCode, currencyName } = metaToken
           // Fix for when the token code and chain code are the same (like EOS/TLOS)
           if (currencyCode === currencyInfo.currencyCode) continue
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
@@ -246,7 +246,6 @@ export function WalletList(props: Props) {
               createTokenType: {
                 currencyCode,
                 currencyName,
-                ...getCurrencyIcon(currencyInfo.pluginId, contractAddress),
                 parentCurrencyCode: currencyInfo.currencyCode
               }
             })

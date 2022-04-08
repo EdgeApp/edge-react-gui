@@ -26,7 +26,6 @@ import {
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
-import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type Props = {
   currencyCode: string,
@@ -182,7 +181,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     () => (onPress != null ? () => onPress(walletId, tokenCode ?? currencyCode) : () => {}),
     [currencyCode, onPress, tokenCode, walletId]
   )
-  const icon = useMemo(() => <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />, [currencyCode, walletId])
+
   const children = useMemo(
     () => (
       <View style={styles.balance}>
@@ -196,9 +195,9 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   return (
     <WalletListRow
       currencyCode={currencyCode}
+      walletId={walletId}
       exchangeRateText={showRate ? exchangeRateText : undefined}
       exchangeRateType={showRate ? exchangeRateType : undefined}
-      icon={icon}
       onPress={handlePress}
       onLongPress={onLongPress}
       walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
