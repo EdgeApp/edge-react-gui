@@ -6,10 +6,10 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { OutlinedTextInput } from './OutlinedTextInput.js'
 import { Title } from './Title'
-import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type Props = {
   walletId: string,
@@ -25,7 +25,7 @@ export function ManageTokensHeader(props: Props) {
 
   const theme = useTheme()
 
-  const LeftIcon = <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
+  const LeftIcon = <CurrencyIcon currencyCode={currencyCode} sizeRem={1.5} walletId={walletId} />
   const RightIcon = <FontAwesomeIcon name="angle-right" color={theme.iconTappable} size={theme.rem(2)} />
 
   const styles = getStyles(theme)
