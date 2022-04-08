@@ -11,7 +11,6 @@ exports[`WalletListRow should render with loading props 1`] = `
     <View
       style={
         Object {
-          "flex": 1,
           "flexDirection": "row",
           "marginVertical": 22,
         }
@@ -40,17 +39,18 @@ exports[`WalletListRow should render with loading props 1`] = `
         <View
           style={
             Object {
+              "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "flex-start",
             }
           }
         >
           <WithTheme(EdgeTextComponent)
-            disableFontScaling={true}
             style={
               Object {
+                "flexBasis": "auto",
+                "flexShrink": 1,
                 "fontFamily": "Quicksand-Medium",
-                "marginRight": 17,
               }
             }
           >
@@ -60,35 +60,33 @@ exports[`WalletListRow should render with loading props 1`] = `
         <View
           style={
             Object {
+              "alignItems": "center",
               "flexDirection": "row",
-              "justifyContent": "flex-end",
+              "justifyContent": "flex-start",
             }
           }
         >
-          <View
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "marginLeft": 17,
+                "color": "#A4C7DF",
+                "fontSize": 17,
               }
             }
           >
-            btc
-          </View>
+            My bitcoin wallet
+          </WithTheme(EdgeTextComponent)>
         </View>
-        <WithTheme(EdgeTextComponent)
-          disableFontScaling={true}
-          style={
-            Object {
-              "color": "#A4C7DF",
-              "flex": 1,
-              "fontSize": 17,
-            }
-          }
-        >
-          My bitcoin wallet
-        </WithTheme(EdgeTextComponent)>
       </View>
-      Hello
+      <View
+        style={
+          Object {
+            "flex": 0,
+          }
+        }
+      >
+        Hello
+      </View>
     </View>
   </TouchableOpacity>
 </WalletRow>
