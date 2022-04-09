@@ -6,13 +6,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { TextField } from 'react-native-material-textfield'
 
 import { setSpendingLimits } from '../../actions/SpendingLimitsActions.js'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type SpendingLimits } from '../../types/types.js'
-import { getFiatSymbol } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {
@@ -142,7 +142,7 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(
   state => ({
-    currencySymbol: getFiatSymbol(state.ui.settings.defaultFiat),
+    currencySymbol: getSymbolFromCurrency(state.ui.settings.defaultFiat),
     transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
   }),
   dispatch => ({

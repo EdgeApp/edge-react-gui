@@ -1,11 +1,11 @@
 // @flow
 import { div, toFixed } from 'biggystring'
 
-import { USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
+import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { useState } from '../types/reactHooks.js'
 import { useSelector } from '../types/reactRedux.js'
-import { DECIMAL_PRECISION, formatFiatString, getFiatSymbol } from '../util/utils'
+import { DECIMAL_PRECISION, formatFiatString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 type Props = {
@@ -52,7 +52,7 @@ export const useFiatText = (props: Props) => {
   // Remove trailing zeros for 'fiatString'
   const fiatString = toFixed(formatedFiatString, 0, 2)
   // Create FiatText' prefix
-  const fiatSymbol = getFiatSymbol(fiatCode)
+  const fiatSymbol = getSymbolFromCurrency(fiatCode)
   const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
   const prefix = `${parenthesisEnclosed ? '(' : ''}${fiatSymbolFmt}`
   // Create FiatText' suffix

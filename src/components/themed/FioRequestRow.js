@@ -7,6 +7,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber, formatTime } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util.js'
@@ -14,7 +15,6 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../types/types.js'
-import { getFiatSymbol } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow.js'
 import { EdgeText } from './EdgeText.js'
@@ -235,7 +235,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     } catch (e) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
-    const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
+    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
     const exchangeRates = state.exchangeRates
 

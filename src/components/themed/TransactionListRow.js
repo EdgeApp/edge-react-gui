@@ -5,6 +5,7 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -17,7 +18,6 @@ import {
   DEFAULT_TRUNCATE_PRECISION,
   displayFiatAmount,
   getDenomFromIsoCode,
-  getFiatSymbol,
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
   precisionAdjust,
@@ -128,7 +128,7 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
       isSentTransaction: isSentTransaction(transaction),
       cryptoAmount: cryptoAmountFormat,
       fiatAmount: displayFiatAmount(amountFiat),
-      fiatSymbol: getFiatSymbol(fiatCurrencyCode),
+      fiatSymbol: getSymbolFromCurrency(fiatCurrencyCode),
       walletBlockHeight: guiWallet.blockHeight || 0,
       denominationSymbol: displayDenomination.symbol,
       requiredConfirmations,

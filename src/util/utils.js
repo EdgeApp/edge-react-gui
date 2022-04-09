@@ -43,10 +43,6 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
     return inputStr
   }
 }
-export const getFiatSymbol = (code: string) => {
-  code = code.replace('iso:', '')
-  return getSymbolFromCurrency(code)
-}
 
 export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
   if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'

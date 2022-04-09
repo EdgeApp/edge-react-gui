@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
-import { STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { getSymbolFromCurrency, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTimeDate } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -17,7 +17,7 @@ import { useEffect, useState } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux'
 import type { RouteProp } from '../../types/routerTypes'
 import { Actions } from '../../types/routerTypes.js'
-import { convertNativeToDenomination, getFiatSymbol } from '../../util/utils'
+import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableText } from '../themed/ClickableText.js'
@@ -189,7 +189,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       stakingFiatBalanceFormat,
       currencyDenomination,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,
-      fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode)
+      fiatSymbol: getSymbolFromCurrency(guiWallet.isoFiatCurrencyCode)
     }
   },
   dispatch => ({
