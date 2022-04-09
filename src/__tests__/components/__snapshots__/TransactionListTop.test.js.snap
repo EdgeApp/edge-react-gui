@@ -108,9 +108,11 @@ exports[`TransactionListTop should render with loading props 1`] = `
             >
               <React.Fragment>
                 <WithTheme(EdgeTextComponent)
+                  minimumFontScale={0.3}
                   style={
                     Object {
                       "fontFamily": "Quicksand-Medium",
+                      "fontSize": 45,
                     }
                   }
                 >

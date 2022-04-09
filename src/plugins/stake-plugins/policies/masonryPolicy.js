@@ -118,17 +118,16 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         )
       }
       // Calculate the claim asset native amounts:
-      if (action === 'claim') {
+      if (action === 'claim' || action === 'unstake') {
+        const earnedAmount = (await multipass(p => poolContract.connect(p).earned(signerAddress))).toString()
+
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
-            // TODO: Replace this assertion with an algorithm to calculate each asset amount using the LP-pool ratio
-            if (tokenId !== request.tokenId) throw new Error(`Requested token '${request.tokenId}' to ${action} not found in policy`)
-
             return {
               allocationType: 'claim',
               pluginId,
               tokenId,
-              nativeAmount: request.nativeAmount
+              nativeAmount: earnedAmount
             }
           })
         )
