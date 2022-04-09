@@ -1,5 +1,6 @@
 // @flow
 
+import { useCavy } from 'cavy'
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
@@ -30,6 +31,7 @@ export function SwapPreferredModal(props: Props) {
   const { bridge, exchanges, selected } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   const sortedIds = Object.keys(exchanges)
     .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
@@ -67,7 +69,7 @@ export function SwapPreferredModal(props: Props) {
 
   // ScrollView maxHeight is computed by how many plugins
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ThemedModal bridge={bridge} onCancel={handleCancel} ref={generateTestHook('SwapPreferredModal.Close')}>
       <ModalTitle>{s.strings.swap_preferred_header}</ModalTitle>
       <ScrollView style={{ maxHeight: (sortedIds.length + 1) * theme.rem(2.25) }}>
         {renderRow(undefined)}

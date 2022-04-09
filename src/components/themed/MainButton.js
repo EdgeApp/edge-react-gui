@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -45,7 +45,7 @@ type Props = {|
 /**
  * A stand-alone button to perform the primary action in a modal or scene.
  */
-export function MainButton(props: Props) {
+export function MainButtonComponent(props: Props) {
   const { alignSelf = 'auto', children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, spinner = false } = props
 
   // `onPress` promise logic:
@@ -102,6 +102,8 @@ export function MainButton(props: Props) {
     </TouchableOpacity>
   )
 }
+
+export const MainButton = wrap(MainButtonComponent)
 
 const getStyles = cacheStyles((theme: Theme) => {
   const commonButton = {

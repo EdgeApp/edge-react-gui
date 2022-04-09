@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
@@ -21,6 +21,7 @@ type Props = {
 export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   const rowComponent = ({ filename, name, 'alpha-2': alpha }: CountryData) => {
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
@@ -71,6 +72,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
       onSubmitEditing={handleSubmitEditing}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      ref={generateTestHook('CounrtyListModal.Close')}
     />
   )
 }

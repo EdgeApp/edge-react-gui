@@ -1,5 +1,4 @@
 // @flow
-
 import { wrap } from 'cavy'
 import * as React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
@@ -46,7 +45,6 @@ export function ModalCloseArrowComponent(props: { onPress: () => void }) {
     </TouchableOpacity>
   )
 }
-
 export const ModalCloseArrow = wrap(ModalCloseArrowComponent)
 
 function paddingStyles(paddingRem?: number[] | number, theme: Theme) {
