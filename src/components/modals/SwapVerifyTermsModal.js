@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import { type EdgeSwapConfig, type EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, Linking, Text, View } from 'react-native'
@@ -71,6 +71,7 @@ function SwapVerifyTermsModal(props: Props) {
   const { termsUri, privacyUri, kycUri } = uris
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
@@ -79,8 +80,19 @@ function SwapVerifyTermsModal(props: Props) {
         <ModalTitle>{displayName}</ModalTitle>
       </View>
       <ModalMessage>{s.strings.swap_terms_statement}</ModalMessage>
-      <MainButton label={s.strings.swap_terms_accept_button} marginRem={0.5} onPress={() => bridge.resolve(true)} />
-      <MainButton label={s.strings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
+      <MainButton
+        label={s.strings.swap_terms_accept_button}
+        marginRem={0.5}
+        onPress={() => bridge.resolve(true)}
+        ref={generateTestHook('SwapVerifyTermsModal.AcceptClose')}
+      />
+      <MainButton
+        label={s.strings.swap_terms_reject_button}
+        marginRem={0.5}
+        type="secondary"
+        onPress={() => bridge.resolve(false)}
+        ref={generateTestHook('SwapVerifyTermsModal.RejectClose')}
+      />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
           <Text style={styles.linkText} onPress={() => Linking.openURL(termsUri)}>

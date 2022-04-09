@@ -82,5 +82,4 @@ export class WalletListModalComponent extends React.PureComponent<Props, State> 
     )
   }
 }
-
 export const WalletListModal = hook(WalletListModalComponent)

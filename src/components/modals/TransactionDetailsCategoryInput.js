@@ -1,12 +1,13 @@
 // @flow
-
+import { hook } from 'cavy'
 import * as React from 'react'
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { TouchableWithoutFeedback } from '../../types/reactNative.js'
 import { splitTransactionCategory } from '../../util/utils.js'
 import { AirshipModal } from '../common/AirshipModal.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
@@ -23,7 +24,8 @@ type Props = {
   subCategories: string[],
   category: string,
   subCategory: string,
-  setNewSubcategory: (string, string[]) => void
+  setNewSubcategory: (string, string[]) => void,
+  generateTestHook: (id: string, ref: any) => void
 }
 
 type State = {
@@ -32,7 +34,7 @@ type State = {
   subCategory: string
 }
 
-export class TransactionDetailsCategoryInput extends React.Component<Props, State> {
+export class TransactionDetailsCategoryInputComponenet extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { category, subCategory } = props
@@ -73,7 +75,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
     const { categories, category, subCategory } = this.state
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve()}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve()} ref={this.props.generateTestHook('TransactionDetailsCategoryInput.Close')}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
             <View style={styles.inputCategoryMainContainter}>
@@ -195,3 +197,4 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+export const TransactionDetailsCategoryInput = hook(TransactionDetailsCategoryInputComponenet)

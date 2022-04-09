@@ -1,6 +1,6 @@
 // @flow
-
 import { BlurView } from '@react-native-community/blur'
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { type ViewStyle, StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -25,7 +25,7 @@ type Props<T> = {
 /**
  * The Airship modal, but connected to our theming system.
  */
-export function ThemedModal<T>(props: Props<T>) {
+export function ThemedModalComponent<T>(props: Props<T>) {
   const { bridge, children = null, flexDirection, iconRem = 0, justifyContent, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()
@@ -48,3 +48,4 @@ export function ThemedModal<T>(props: Props<T>) {
     </AirshipModal>
   )
 }
+export const ThemedModal = wrap(ThemedModalComponent)

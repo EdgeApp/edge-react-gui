@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { FlatList, Keyboard } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -38,7 +38,7 @@ type Props<T> = {
   closeArrow?: boolean // Defaults to 'true'
 }
 
-export function ListModal<T>({
+export function ListModalComponent<T>({
   bridge,
   title,
   textInput = true,
@@ -93,3 +93,4 @@ export function ListModal<T>({
     </ThemedModal>
   )
 }
+export const ListModal = wrap(ListModalComponent)

@@ -98,6 +98,7 @@ export function DateModalAndroid(props: Props) {
         bridge.remove()
       }}
       value={initialValue}
+      // ref for android?
     />
   )
 }

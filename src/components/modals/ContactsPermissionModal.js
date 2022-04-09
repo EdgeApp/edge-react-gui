@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -16,6 +16,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   const { bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   return (
     <ButtonsModal
@@ -26,6 +27,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
         deny: { label: s.strings.string_deny }
       }}
       fullScreen
+      ref={generateTestHook('ContactPermissionModal.Close')}
     >
       <View style={styles.headerContainer}>
         <View style={styles.iconCircle}>
