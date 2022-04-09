@@ -17,7 +17,6 @@ type Props = {
   icon?: React.Node,
   iconUri?: string,
   iconSizeRem?: number,
-  editIcon?: React.Node,
   gradient?: boolean,
   onPress?: () => void,
   onLongPress?: () => void,
@@ -25,7 +24,7 @@ type Props = {
 }
 
 export const WalletListRowComponent = (props: Props) => {
-  const { currencyCode, children, gradient = false, icon, iconUri = '', iconSizeRem, editIcon, onPress, onLongPress, walletName = '' } = props
+  const { currencyCode, children, gradient = false, icon, iconUri = '', iconSizeRem, onPress, onLongPress, walletName = '' } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -43,26 +42,20 @@ export const WalletListRowComponent = (props: Props) => {
             <ActivityIndicator color={theme.primaryText} size="large" />
           </View>
         ) : (
-          <View style={styles.rowContainer}>
+          <View style={styles.contentContainer}>
             <View style={styles.iconContainer}>{iconComponent}</View>
             <View style={styles.detailsContainer}>
-              <View style={styles.detailsLeft}>
-                <EdgeText style={styles.detailsCurrency} disableFontScaling>
-                  {currencyCode}
-                </EdgeText>
+              <View style={styles.detailsTop}>
+                <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
                 {props.exchangeRateText != null ? (
-                  <EdgeText style={styles[props.exchangeRateType ?? 'neutral']} disableFontScaling>
-                    {props.exchangeRateText}
-                  </EdgeText>
+                  <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
                 ) : null}
               </View>
-              <View style={styles.detailsRight}>{editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}</View>
-
-              <EdgeText style={styles.detailsName} disableFontScaling>
-                {walletName}
-              </EdgeText>
+              <View style={styles.detailsBottom}>
+                <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
+              </View>
             </View>
-            {children}
+            <View style={styles.childrenContainer}>{children}</View>
           </View>
         )}
       </TouchableOpacity>
@@ -71,7 +64,7 @@ export const WalletListRowComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // Row Component
+  // Background
   containerGradient: {
     flex: 1,
     paddingHorizontal: theme.rem(1)
@@ -79,58 +72,64 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.modal
   },
-
-  // Row Containers
-  rowContainer: {
-    flex: 1,
+  // Top level Containers
+  contentContainer: {
     flexDirection: 'row',
     marginVertical: theme.rem(1)
   },
   loaderContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     height: theme.rem(4.25),
     paddingHorizontal: theme.rem(1.75)
   },
-
-  // Icons
+  // Data containers //
+  // Icon Container
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: theme.rem(1)
   },
-  iconSize: {
-    width: theme.rem(2),
-    height: theme.rem(2)
-  },
-  editIcon: {
-    marginLeft: theme.rem(0.75)
-  },
-
-  // Details
+  // Details Container
   detailsContainer: {
     flex: 1,
     flexDirection: 'column',
     marginRight: theme.rem(0.5)
   },
-  detailsCurrency: {
-    fontFamily: theme.fontFaceMedium,
-    marginRight: theme.rem(0.75)
+  // Children (Right part) Container
+  childrenContainer: {
+    flex: 0
   },
-  detailsName: {
-    flex: 1,
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
+  // Other styles
+  iconSize: {
+    width: theme.rem(2),
+    height: theme.rem(2)
   },
-  detailsLeft: {
+  detailsTop: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start'
   },
-  detailsRight: {
+  detailsBottom: {
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  detailsCurrency: {
+    flexBasis: 'auto',
+    flexShrink: 1,
+    fontFamily: theme.fontFaceMedium
+  },
+  exchangeRateStyle: {
+    textAlign: 'left',
+    flexBasis: 'auto',
+    flexShrink: 1,
+    marginLeft: theme.rem(0.75)
+  },
+  detailsName: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   },
   // Difference Percentage Styles
   neutral: {

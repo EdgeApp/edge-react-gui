@@ -1,9 +1,10 @@
 // @flow
 import { div } from 'biggystring'
 
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { DECIMAL_PRECISION, formatFiatString, getFiatSymbol } from '../../util/utils'
+import { DECIMAL_PRECISION, formatFiatString } from '../../util/utils'
 
 type Props = {
   appendFiatCurrencyCode?: boolean,
@@ -30,7 +31,7 @@ export const FiatText = (props: Props) => {
     cryptoExchangeMultiplier
   } = props
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
+  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
   const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
   const openParen = parenthesisEnclosed ? '(' : ''
   const closeParen = parenthesisEnclosed ? ')' : ''

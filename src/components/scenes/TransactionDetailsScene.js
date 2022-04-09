@@ -11,6 +11,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
@@ -23,7 +24,6 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   displayFiatAmount,
-  getFiatSymbol,
   isValidInput,
   splitTransactionCategory,
   truncateDecimals
@@ -427,7 +427,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
-    const fiatSymbol = getFiatSymbol(guiWallet.fiatCurrencyCode)
+    const fiatSymbol = getSymbolFromCurrency(guiWallet.fiatCurrencyCode)
     const fiatValue = displayFiatAmount(parseFloat(amountFiat.replace(',', '.')))
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient

@@ -7,9 +7,9 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../../components/themed/TransactionListRow.js'
-import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants.js'
+import { EDGE_CONTENT_SERVER, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
-import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, isSentTransaction, truncateDecimals } from '../../util/utils'
+import { convertNativeToDisplay, decimalOrZero, isSentTransaction, truncateDecimals } from '../../util/utils'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -69,7 +69,7 @@ describe('Transaction List Row', () => {
       cryptoAmount: cryptoAmountFormat,
       denominationSymbol: displayDenomination.symbol,
       fiatAmount: fiatAmountFormat,
-      fiatSymbol: getFiatSymbol(guiWallet.fiatCurrencyCode),
+      fiatSymbol: getSymbolFromCurrency(guiWallet.fiatCurrencyCode),
       isSentTransaction: isSentTransaction(transaction),
       requiredConfirmations: 15,
       selectedCurrencyName: guiWallet.currencyNames[guiWallet.currencyCode],

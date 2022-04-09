@@ -162,7 +162,7 @@ export function truncateDecimals(input: string, precision?: number, allowBlank?:
     return input
   }
   const [integers, decimals] = input.split(decimalSeparator)
-  return `${integers}${decimalSeparator}${decimals.slice(0, precision)}`
+  return `${integers}${precision !== 0 ? decimalSeparator : ''}${decimals.slice(0, precision)}`
 }
 
 /**

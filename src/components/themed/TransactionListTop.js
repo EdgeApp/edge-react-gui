@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { FIO_STAKING_OVERVIEW, REQUEST, SEND, STAKE_OPTIONS } from '../../constants/SceneKeys.js'
-import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type StakePolicy } from '../../plugins/stake-plugins'
@@ -19,7 +19,7 @@ import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { stakePlugin } from '../../util/stakeUtils.js'
-import { convertNativeToDenomination, getFiatSymbol } from '../../util/utils'
+import { convertNativeToDenomination } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -414,7 +414,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
       denominationName: currencyDenomination.name,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,
       fiatBalance: fiatBalanceFormat,
-      fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode),
+      fiatSymbol: getSymbolFromCurrency(guiWallet.isoFiatCurrencyCode),
       walletName: guiWallet.name,
       isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible,
       stakingBalances
