@@ -2,7 +2,7 @@
 
 export const categories = [
   'Exchange:Buy Bitcoin',
-  'Income:Sell Bitcoin',
+  'Exchange:Sell Bitcoin',
   'Expense:Air Travel',
   'Expense:Alcohol & Bars',
   'Expense:Allowance',
@@ -30,7 +30,7 @@ export const categories = [
   'Expense:Education',
   'Expense:Electronics & Software',
   'Expense:Entertainment',
-  'Expense:Eyecare',
+  'Expense:Eye Care',
   'Expense:Fast Food',
   'Expense:Fees & Charges',
   'Expense:Financial',
@@ -68,6 +68,7 @@ export const categories = [
   'Expense:Mortgage Interest',
   'Expense:Movies & DVDs',
   'Expense:Music',
+  'Expense:Network Fee',
   'Expense:Newspaper & Magazines',
   'Expense:Not Sure',
   'Expense:Parking',
@@ -107,7 +108,12 @@ export const categories = [
   'Transfer:Airbitz',
   'Transfer:Bitcoin Core',
   'Transfer:Blockchain',
+  'Transfer:Cash App',
+  'Transfer:Coinbase',
+  'Transfer:Gemini',
+  'Transfer:Edge',
   'Transfer:Electrum',
+  'Transfer:Exodus',
   'Transfer:Multibit',
   'Transfer:Mycelium',
   'Transfer:Dark Wallet'
