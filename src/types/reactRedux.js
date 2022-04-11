@@ -1,5 +1,4 @@
 // @flow
-
 import { hook } from 'cavy'
 import * as React from 'react'
 import * as ReactRedux from 'react-redux'
