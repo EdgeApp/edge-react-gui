@@ -14,14 +14,7 @@ import { useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import {
-  getAllocationLocktimeMessage,
-  getPolicyAssetName,
-  getPolicyIconUris,
-  getPolicyTitleName,
-  getPositionAllocations,
-  stakePlugin
-} from '../../../util/stakeUtils.js'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -42,9 +35,6 @@ export const StakeOverviewScene = (props: Props) => {
   const { stakePolicyId } = stakePolicy
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  // TODO: Update for denoms
-  const stakeAssetsName = getPolicyAssetName(stakePolicy, 'stakeAssets')
 
   const { currencyWallet, walletPluginId, isoFiatCurrencyCode, state } = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
@@ -108,7 +98,7 @@ export const StakeOverviewScene = (props: Props) => {
       <CryptoFiatAmountTile
         title={title}
         nativeCryptoAmount={nativeAmount ?? '0'}
-        cryptoCurrencyCode={stakeAssetsName}
+        cryptoCurrencyCode={tokenId}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={denomination}
       />
