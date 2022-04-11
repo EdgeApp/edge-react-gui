@@ -27,7 +27,7 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps & ThemeProps
 
-class PromoCardComponent extends React.PureComponent<Props> {
+export class PromoCardComponent extends React.PureComponent<Props> {
   handlePress = () => {
     const { accountMessages, accountReferral, linkReferralWithCurrencies } = this.props
     const messageSummary = bestOfMessages(accountMessages, accountReferral)

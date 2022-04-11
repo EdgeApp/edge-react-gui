@@ -11,7 +11,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
@@ -24,9 +24,7 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   displayFiatAmount,
-  getFiatSymbol,
-  isCryptoParentCurrency,
-  isNotEmptyNumber,
+  isValidInput,
   splitTransactionCategory,
   truncateDecimals
 } from '../../util/utils.js'
@@ -181,7 +179,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       />
     )).then(fiatAmount => {
       const amount = fiatAmount != null ? fiatAmount.replace(',', '.') : ''
-      if (isNotEmptyNumber(amount)) {
+      if (amount != null && amount !== '' && isValidInput(amount)) {
         const amountFiat = displayFiatAmount(parseFloat(amount))
         this.onSaveTxDetails({ amountFiat })
       }
@@ -359,7 +357,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
-    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString = guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
     return {
       amountString: convertedAmount,
@@ -374,7 +372,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString = guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
 
     if (edgeTransaction.networkFee) {
@@ -422,14 +420,14 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { guiWallet, theme, route } = this.props
+    const { currencyInfo, guiWallet, theme, route } = this.props
     const { edgeTransaction } = route.params
     const { direction, amountFiat, contactName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
-    const fiatSymbol = getFiatSymbol(guiWallet.fiatCurrencyCode)
+    const fiatSymbol = getSymbolFromCurrency(guiWallet.fiatCurrencyCode)
     const fiatValue = displayFiatAmount(parseFloat(amountFiat.replace(',', '.')))
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
@@ -446,11 +444,10 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       }
     }
 
-    const specialCurrencyInfo = edgeTransaction.wallet ? getSpecialCurrencyInfo(edgeTransaction.wallet.currencyInfo.pluginId) : undefined
     // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
     const isAcceleratable = !!(
       edgeTransaction.spendTargets?.length &&
-      specialCurrencyInfo?.isRbfSupported &&
+      currencyInfo?.canReplaceByFee === true &&
       edgeTransaction.blockHeight === 0 &&
       edgeTransaction.otherParams?.nonceUsed
     )
@@ -570,9 +567,10 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
     const currencyCode = edgeTransaction.currencyCode
-    const walletDefaultDenomProps: EdgeDenomination = isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
-      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
-      : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+    const walletDefaultDenomProps: EdgeDenomination =
+      wallet.currencyCode === edgeTransaction.currencyCode
+        ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+        : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
     const exchangeDenom = getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)

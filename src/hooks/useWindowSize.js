@@ -17,8 +17,8 @@ export function useWindowSize(): ScaledSize {
 
   useEffect(() => {
     const handleChange = ({ window }) => setWindowSize(window)
-    Dimensions.addEventListener('change', handleChange)
-    return () => Dimensions.removeEventListener('change', handleChange)
+    const listener = Dimensions.addEventListener('change', handleChange)
+    return () => listener.remove()
   }, [])
 
   return windowSize

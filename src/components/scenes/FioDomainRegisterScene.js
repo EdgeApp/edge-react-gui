@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { type LayoutChangeEvent, ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
@@ -49,7 +49,7 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-class FioDomainRegister extends React.PureComponent<Props, LocalState> {
+export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   fioCheckQueue: number = 0
 
   state = {
@@ -173,7 +173,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
-  fieldViewOnLayout = ({ nativeEvent: { layout: { y } } = { layout: { y: this.state.fieldPos } } }) => {
+  fieldViewOnLayout = ({ nativeEvent: { layout: { y } } = { layout: { y: this.state.fieldPos } } }: LayoutChangeEvent) => {
     this.setState({ fieldPos: y })
   }
 

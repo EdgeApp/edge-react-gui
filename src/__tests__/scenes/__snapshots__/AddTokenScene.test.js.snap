@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddTokenScene should render with loading props 1`] = `
+<SceneWrapper
+  background="body"
+>
+  <ScrollView
+    style={
+      Object {
+        "flex": 1,
+        "paddingHorizontal": 28.091549295774648,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "paddingHorizontal": 28.091549295774648,
+          "paddingVertical": 22.473239436619718,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "fontSize": 22.473239436619718,
+            "textAlign": "center",
+          }
+        }
+      >
+        To add a token, please fill out the following form and press "Save" 
+      </FormattedText>
+    </View>
+    <View
+      style={
+        Object {
+          "height": 98.32042253521126,
+        }
+      }
+    >
+      <FormField
+        autoCapitalize="words"
+        autoCorrect={false}
+        autoFocus={true}
+        keyboardType="default"
+        label="Token Name"
+        onChangeText={[Function]}
+        returnKeyType="done"
+        value=""
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 98.32042253521126,
+        }
+      }
+    >
+      <FormField
+        autoCapitalize="characters"
+        autoCorrect={false}
+        keyboardType="default"
+        label="Token Code"
+        maxLength={7}
+        onChangeText={[Function]}
+        returnKeyType="done"
+        value=""
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 98.32042253521126,
+        }
+      }
+    >
+      <FormField
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="default"
+        label="Contract Address"
+        onChangeText={[Function]}
+        returnKeyType="done"
+        value=""
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "height": 98.32042253521126,
+        }
+      }
+    >
+      <FormField
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="numeric"
+        label="Number of Decimal Places"
+        onChangeText={[Function]}
+        returnKeyType="done"
+        value=""
+      />
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "alignSelf": "flex-end",
+          "flexDirection": "row",
+          "height": 73.03802816901408,
+          "justifyContent": "space-between",
+          "marginTop": 22.473239436619718,
+          "paddingVertical": 5.618309859154929,
+        }
+      }
+    >
+      <PrimaryButton
+        onPress={[Function]}
+        style={
+          Object {
+            "backgroundColor": "#0E4B75",
+            "borderRadius": 3,
+            "flex": 1,
+            "marginLeft": 2.8091549295774647,
+          }
+        }
+      >
+        <ActivityIndicator
+          color="#66EDA8"
+        />
+      </PrimaryButton>
+    </View>
+    <View
+      style={
+        Object {
+          "height": 421.3732394366197,
+        }
+      }
+    />
+  </ScrollView>
+</SceneWrapper>
+`;

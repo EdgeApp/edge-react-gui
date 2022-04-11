@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState } from '../../../../types/reactHooks.j
 const COMPLETE_POINT: number = 3
 
 type OwnProps = {
-  onSlidingComplete(): mixed,
+  onSlidingComplete(reset: () => void): mixed,
   parentStyle?: any,
   showSpinner?: boolean,
   completePoint?: number,
@@ -66,7 +66,7 @@ export const SliderComponent = (props: Props) => {
     setCompleted(false)
   }, [translateX, setCompleted, upperBound])
   const complete = () => {
-    onSlidingComplete()
+    onSlidingComplete(() => resetSlider())
     setCompleted(true)
   }
 

@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionAdvanceDetailsComponent should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+  paddingRem={0}
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "height": 84,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "color": "#FFFFFF",
+          "fontSize": 22,
+        }
+      }
+    >
+      Advanced Details
+    </WithTheme(EdgeTextComponent)>
+  </View>
+  <View
+    style={
+      Object {
+        "maxHeight": 449,
+      }
+    }
+  >
+    <ScrollView>
+      <WithTheme(TileComponent)
+        body=""
+        title="Transaction ID"
+        type="copy"
+      />
+    </ScrollView>
+  </View>
+  <ModalCloseArrow
+    onPress={[Function]}
+  />
+</ThemedModal>
+`;

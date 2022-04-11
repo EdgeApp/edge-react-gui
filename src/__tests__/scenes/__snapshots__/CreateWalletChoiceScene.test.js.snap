@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateWalletChoiceComponent should render with loading props 1`] = `
+<SafeAreaViewComponent>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "flex": 1,
+      }
+    }
+  >
+    <WithTheme(GradientComponent)
+      style={
+        Object {
+          "height": 44,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <ScrollView>
+      <View
+        style={
+          Object {
+            "height": 1221,
+            "paddingHorizontal": 20,
+            "position": "relative",
+            "top": 44,
+          }
+        }
+      >
+        <Image
+          resizeMode="cover"
+          source={
+            Object {
+              "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
+            }
+          }
+          style={
+            Object {
+              "alignSelf": "center",
+              "height": 89.89295774647887,
+              "marginTop": 33.709859154929575,
+              "width": 89.89295774647887,
+            }
+          }
+        />
+        <View
+          style={
+            Object {
+              "paddingBottom": 11.236619718309859,
+              "paddingTop": 22.473239436619718,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 22.473239436619718,
+                "textAlign": "center",
+              }
+            }
+          >
+            Create a new wallet, or restore an existing wallet using the private seed?
+          </FormattedText>
+        </View>
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "marginTop": 33.709859154929575,
+            }
+          }
+        >
+          <PrimaryButton
+            onPress={[Function]}
+            style={
+              Object {
+                "flex": 1,
+                "marginLeft": 1.4045774647887324,
+              }
+            }
+          >
+            <Text>
+              Create New Wallet
+            </Text>
+          </PrimaryButton>
+        </View>
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "marginTop": 33.709859154929575,
+            }
+          }
+        >
+          <SecondaryButton
+            onPress={[Function]}
+            style={
+              Object {
+                "flex": 1,
+                "marginLeft": 1.4045774647887324,
+              }
+            }
+          >
+            <Text>
+              Import Wallet
+            </Text>
+          </SecondaryButton>
+        </View>
+      </View>
+    </ScrollView>
+  </View>
+</SafeAreaViewComponent>
+`;

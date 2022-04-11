@@ -3,10 +3,8 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import * as React from 'react'
 import { Switch, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { noOp } from '../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletListRow } from './WalletListRow'
 
@@ -28,25 +26,22 @@ export function ManageTokensRow(props: Props) {
   const { currencyCode, currencyName } = props.metaToken.item
   const { enabledList, toggleToken, goToEditTokenScene, metaTokens, symbolImage } = props
 
-  const Icon = () => (
-    <View style={styles.iconContainer}>
-      <FastImage style={styles.iconSize} source={{ uri: symbolImage }} />
-    </View>
-  )
-
-  const EditIcon = () => (isEditable ? <FontAwesomeIcon name="edit" size={theme.rem(0.95)} color={theme.iconTappable} /> : null)
-
   const enabled = enabledList.indexOf(currencyCode) >= 0
   // disable editing if token is native to the app
   const isEditable = metaTokens.every(token => token.currencyCode !== currencyCode)
 
   const onPress = () => {
-    isEditable ? goToEditTokenScene(currencyCode) : noOp()
+    if (isEditable) goToEditTokenScene(currencyCode)
   }
 
   return (
-    <WalletListRow onPress={onPress} gradient icon={<Icon />} editIcon={<EditIcon />} currencyCode={currencyCode} walletName={currencyName}>
+    <WalletListRow onPress={onPress} gradient iconUri={symbolImage} currencyCode={currencyCode} walletName={currencyName}>
       <View style={styles.touchableCheckboxInterior}>
+        {isEditable ? (
+          <View style={styles.editIcon}>
+            <FontAwesomeIcon name="edit" size={theme.rem(0.95)} color={theme.iconTappable} />
+          </View>
+        ) : null}
         <Switch
           onChange={event => toggleToken(currencyCode, event.nativeEvent.value)}
           value={enabled}
@@ -62,19 +57,17 @@ export function ManageTokensRow(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  iconSize: {
-    width: theme.rem(2),
-    height: theme.rem(2)
-  },
   touchableCheckboxInterior: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   checkBox: {
     alignSelf: 'center'
+  },
+  editIcon: {
+    paddingTop: theme.rem(0.375),
+    paddingRight: theme.rem(0.75),
+    alignSelf: 'flex-start'
   }
 }))

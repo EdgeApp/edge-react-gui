@@ -118,7 +118,7 @@ const defaultState = {
   toAmountNative: ''
 }
 
-class CryptoExchangeComponent extends React.Component<Props, State> {
+export class CryptoExchangeComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const newState: State = defaultState

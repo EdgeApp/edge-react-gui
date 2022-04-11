@@ -10,10 +10,11 @@ type OwnProps = {|
   ellipsizeMode?: string,
   numberOfLines?: number,
   style?: StyleSheet.Styles,
-  disableFontScaling?: boolean
+  disableFontScaling?: boolean,
+  minimumFontScale?: number
 |}
 
-class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
+export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
   render() {
     const { children, style, theme, disableFontScaling = false, ...props } = this.props
     const { text, androidAdjust } = getStyles(theme)

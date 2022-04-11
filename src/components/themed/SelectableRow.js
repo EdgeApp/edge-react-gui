@@ -23,7 +23,7 @@ type Props = {|
   paddingRem?: number[] | number
 |}
 
-class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
+export class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
     const {
       icon,

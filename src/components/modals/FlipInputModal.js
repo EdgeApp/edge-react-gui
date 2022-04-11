@@ -31,13 +31,14 @@ import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<void>,
+  bridge: AirshipBridge<{ nativeAmount: string, exchangeAmount: string }>,
   walletId: string,
   currencyCode: string,
-  onFeesChange: () => void,
+  onFeesChange?: () => void,
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
-  overrideExchangeAmount?: string
+  overrideExchangeAmount?: string,
+  headerText?: string
 }
 
 type StateProps = {
@@ -72,6 +73,9 @@ type DispatchProps = {
 }
 
 type State = {
+  nativeAmount: string,
+  exchangeAmount: string,
+
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   errorMessage?: string
@@ -79,24 +83,35 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class FlipInputModalComponent extends React.PureComponent<Props, State> {
+export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
       overridePrimaryExchangeAmount: props.overrideExchangeAmount ?? props.overridePrimaryExchangeAmount,
-      forceUpdateGuiCounter: 0
+      forceUpdateGuiCounter: 0,
+      nativeAmount: '',
+      exchangeAmount: ''
     }
   }
 
-  handleCloseModal = () => this.props.bridge.resolve()
+  handleCloseModal = () => {
+    let { nativeAmount, exchangeAmount } = this.state
+    nativeAmount = nativeAmount === '' ? '0' : nativeAmount
+    exchangeAmount = exchangeAmount === '' ? '0' : exchangeAmount
+    this.props.bridge.resolve(Promise.resolve({ nativeAmount, exchangeAmount }))
+  }
 
   handleFeesChange = () => {
     this.handleCloseModal()
-    this.props.onFeesChange()
+    const { onFeesChange = () => {} } = this.props
+    onFeesChange()
   }
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     const { walletId, currencyCode, updateTransactionAmount, onAmountChanged } = this.props
+
+    this.setState({ nativeAmount, exchangeAmount })
+
     if (onAmountChanged != null) return onAmountChanged(nativeAmount, exchangeAmount)
     updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
   }
@@ -167,12 +182,12 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
+    const { flipInputHeaderText, flipInputHeaderLogo, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
       <Card marginRem={0}>
         <ExchangedFlipInput
-          headerText={flipInputHeaderText}
+          headerText={headerText ?? flipInputHeaderText}
           headerLogo={flipInputHeaderLogo}
           primaryCurrencyInfo={{ ...primaryInfo }}
           secondaryCurrencyInfo={{ ...secondaryInfo }}
@@ -203,7 +218,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
           <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
-          <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} />
+          {this.props.onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}

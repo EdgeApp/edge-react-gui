@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionListTop should render with loading props 1`] = `
+<React.Fragment>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "marginBottom": 11,
+        "paddingLeft": 22,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "marginRight": 22,
+          "marginTop": 11,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "flexDirection": "column",
+          }
+        }
+      >
+        <ForwardRef
+          label="Search Transactions"
+          marginRem={0}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          returnKeyType="search"
+          searchIcon={true}
+          value=""
+        />
+      </View>
+    </View>
+    <React.Fragment>
+      <View
+        style={
+          Object {
+            "height": 118,
+            "marginRight": 22,
+            "marginVertical": 22,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <TouchableOpacity
+                onPress={[Function]}
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flex": 1,
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <WithTheme(EdgeTextComponent)
+                  style={
+                    Object {
+                      "fontSize": 28,
+                      "marginRight": 6,
+                    }
+                  }
+                >
+                  string
+                </WithTheme(EdgeTextComponent)>
+                <Icon
+                  allowFontScaling={false}
+                  color="#66EDA8"
+                  name="chevron-forward"
+                  size={34}
+                />
+              </TouchableOpacity>
+              <Memo(Connect(WithTheme(WalletProgressIconComponent)))
+                currencyCode="string"
+                size={34}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={[Function]}
+            >
+              <React.Fragment>
+                <WithTheme(EdgeTextComponent)
+                  minimumFontScale={0.3}
+                  style={
+                    Object {
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 45,
+                    }
+                  }
+                >
+                  string string
+                </WithTheme(EdgeTextComponent)>
+                <WithTheme(EdgeTextComponent)
+                  style={
+                    Object {
+                      "fontSize": 28,
+                    }
+                  }
+                >
+                  stringstring string
+                </WithTheme(EdgeTextComponent)>
+              </React.Fragment>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "marginBottom": 22,
+          }
+        }
+      >
+        <TouchableOpacity
+          onPress={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "height": 67,
+              "justifyContent": "center",
+              "width": 135,
+            }
+          }
+        >
+          <Icon
+            allowFontScaling={false}
+            color="#66EDA8"
+            name="arrow-down"
+            size={34}
+          />
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "marginLeft": 6,
+              }
+            }
+          >
+            Request
+          </WithTheme(EdgeTextComponent)>
+        </TouchableOpacity>
+        <View
+          style={
+            Object {
+              "width": 45,
+            }
+          }
+        />
+        <TouchableOpacity
+          onPress={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "height": 67,
+              "justifyContent": "center",
+              "width": 135,
+            }
+          }
+        >
+          <Icon
+            allowFontScaling={false}
+            color="#66EDA8"
+            name="arrow-up"
+            size={34}
+          />
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "marginLeft": 6,
+              }
+            }
+          >
+            Send
+          </WithTheme(EdgeTextComponent)>
+        </TouchableOpacity>
+      </View>
+    </React.Fragment>
+  </View>
+  <WithTheme(SceneHeaderComponent)
+    underline={true}
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "fontFamily": "Quicksand-Medium",
+        }
+      }
+    >
+      Transactions
+    </WithTheme(EdgeTextComponent)>
+  </WithTheme(SceneHeaderComponent)>
+</React.Fragment>
+`;

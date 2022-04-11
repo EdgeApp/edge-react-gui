@@ -12,6 +12,7 @@ import { addressWarnings } from '../../actions/ScanActions.js'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
@@ -43,7 +44,7 @@ type State = {
 }
 type Props = OwnProps & StateProps & ThemeProps
 
-class AddressTileComponent extends React.PureComponent<Props, State> {
+export class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -75,7 +76,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  handleAppStateChange = appState => {
+  handleAppStateChange = (appState: string) => {
     if (appState === 'active') this._setClipboard(this.props)
   }
 
@@ -262,5 +263,4 @@ const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   dispatch => ({})
 )(withTheme(AddressTileComponent))
 
-// $FlowFixMe - forwardRef is not recognize by flow?
-export const AddressTile = React.forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />) // eslint-disable-line
+export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)

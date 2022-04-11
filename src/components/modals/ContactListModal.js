@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { type GuiContact } from '../../types/types.js'
+import { normalizeForSearch } from '../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal.js'
@@ -41,11 +42,9 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
   }
 
   const rowDataFilter = (searchText, contact) => {
-    const formattedSearchText = searchText.toLowerCase().replace(/\s+/g, '') // Remove all whitepsaces
+    const formattedSearchText = normalizeForSearch(searchText)
     const { givenName, familyName } = contact
-    const givenNameLowerCase = givenName ? givenName.toLowerCase().replace(/\s+/g, '') : ''
-    const familyNameLowerCase = familyName ? familyName.toLowerCase().replace(/\s+/g, '') : ''
-    const fullName = givenNameLowerCase + familyNameLowerCase
+    const fullName = normalizeForSearch(`${givenName ?? ''}${familyName ?? ''} `)
     return fullName.includes(formattedSearchText)
   }
 

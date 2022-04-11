@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "borderColor": "rgba(255, 255, 255, .1)",
+          "borderRadius": 4,
+          "borderWidth": 1,
+        },
+        Object {
+          "borderColor": "#F1AA19",
+        },
+        Object {
+          "marginBottom": 247,
+          "marginLeft": 247,
+          "marginRight": 247,
+          "marginTop": 247,
+          "paddingBottom": 247,
+          "paddingLeft": 247,
+          "paddingRight": 247,
+          "paddingTop": 247,
+        },
+      ]
+    }
+  >
+    string
+  </View>
+</View>
+`;

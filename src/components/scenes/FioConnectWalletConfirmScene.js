@@ -54,16 +54,16 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
       try {
-        const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(
-          fioWallet,
-          fioAddressName,
-          walletsToConnect.map((wallet: FioConnectionWalletItem) => ({
-            walletId: wallet.id,
-            tokenCode: wallet.currencyCode,
-            chainCode: wallet.chainCode,
-            publicAddress: wallet.publicAddress
-          }))
-        )
+        let promiseArray = walletsToConnect.map(async (wallet: FioConnectionWalletItem) => ({
+          walletId: wallet.id,
+          tokenCode: wallet.currencyCode,
+          chainCode: wallet.chainCode,
+          publicAddress: (await wallet.edgeWallet.getReceiveAddress()).publicAddress
+        }))
+
+        let publicAddresses = await Promise.all(promiseArray)
+
+        const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(fioWallet, fioAddressName, publicAddresses)
         if (updatedCcWallets.length) {
           for (const { fullCurrencyCode, walletId } of updatedCcWallets) {
             newCcWalletMap[fullCurrencyCode] = walletId
@@ -71,15 +71,19 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           updateConnectedWallets(fioAddressName, newCcWalletMap)
         }
 
+        promiseArray = walletsToDisconnect.map(async (wallet: FioConnectionWalletItem) => ({
+          walletId: wallet.id,
+          tokenCode: wallet.currencyCode,
+          chainCode: wallet.chainCode,
+          publicAddress: (await wallet.edgeWallet.getReceiveAddress()).publicAddress
+        }))
+
+        publicAddresses = await Promise.all(promiseArray)
+
         const { updatedCcWallets: removedCcWallets, error: removedError } = await updatePubAddressesForFioAddress(
           fioWallet,
           fioAddressName,
-          walletsToDisconnect.map((wallet: FioConnectionWalletItem) => ({
-            walletId: wallet.id,
-            tokenCode: wallet.currencyCode,
-            chainCode: wallet.chainCode,
-            publicAddress: wallet.publicAddress
-          })),
+          publicAddresses,
           false
         )
         if (removedCcWallets.length) {

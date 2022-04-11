@@ -1,0 +1,217 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HelpModal should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+  paddingRem={
+    Array [
+      1,
+      0,
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "center",
+        "marginTop": 11,
+      }
+    }
+  >
+    <Image
+      resizeMode="contain"
+      source={
+        Object {
+          "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+        }
+      }
+      style={
+        Object {
+          "height": 51,
+        }
+      }
+    />
+    <ModalTitle
+      center={true}
+      paddingRem={
+        Array [
+          0,
+          1,
+          1,
+        ]
+      }
+    >
+      Thanks for using Edge!
+    </ModalTitle>
+  </View>
+  <WithTheme(SelectableRowComponent)
+    arrowTappable={true}
+    icon={
+      <Icon
+        allowFontScaling={false}
+        color="#66EDA8"
+        name="help_idea"
+        size={34}
+      />
+    }
+    marginRem={
+      Array [
+        0.75,
+        0,
+        0.5,
+        1,
+      ]
+    }
+    onPress={[Function]}
+    paddingRem={
+      Array [
+        0,
+        1,
+        1,
+        0,
+      ]
+    }
+    subTitle="Commonly asked questions and FAQ"
+    title="Knowledge Base"
+    underline={true}
+  />
+  <WithTheme(SelectableRowComponent)
+    arrowTappable={true}
+    icon={
+      <Icon
+        allowFontScaling={false}
+        color="#66EDA8"
+        name="help_headset"
+        size={34}
+      />
+    }
+    marginRem={
+      Array [
+        0.75,
+        0,
+        0.5,
+        1,
+      ]
+    }
+    onPress={[Function]}
+    paddingRem={
+      Array [
+        0,
+        1,
+        1,
+        0,
+      ]
+    }
+    subTitle="Troubleshooting and technical support"
+    title="Submit a Support Ticket"
+    underline={true}
+  />
+  <WithTheme(SelectableRowComponent)
+    arrowTappable={true}
+    icon={
+      <Icon
+        allowFontScaling={false}
+        color="#66EDA8"
+        name="help_call"
+        size={34}
+      />
+    }
+    marginRem={
+      Array [
+        0.75,
+        0,
+        0.5,
+        1,
+      ]
+    }
+    onPress={[Function]}
+    paddingRem={
+      Array [
+        0,
+        1,
+        1,
+        0,
+      ]
+    }
+    subTitle="Get in touch by phone"
+    title="Call for Assistance"
+    underline={true}
+  />
+  <WithTheme(SelectableRowComponent)
+    arrowTappable={true}
+    icon={
+      <Icon
+        allowFontScaling={false}
+        color="#66EDA8"
+        name="globe"
+        size={34}
+      />
+    }
+    marginRem={
+      Array [
+        0.75,
+        0,
+        0.5,
+        1,
+      ]
+    }
+    onPress={[Function]}
+    paddingRem={
+      Array [
+        0,
+        1,
+        1,
+        0,
+      ]
+    }
+    subTitle="More info on Edge and Developer API/SDK"
+    title="Visit the Edge App site"
+  />
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "center",
+        "marginTop": 34,
+        "paddingVertical": 11,
+      }
+    }
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "color": "#A4C7DF",
+          "fontSize": 17,
+        }
+      }
+    >
+      Version 1.2.3
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "color": "#A4C7DF",
+          "fontSize": 17,
+        }
+      }
+    >
+      Build 2019010101
+    </WithTheme(EdgeTextComponent)>
+  </View>
+  <ModalCloseArrow
+    onPress={[Function]}
+  />
+</ThemedModal>
+`;

@@ -74,6 +74,7 @@ build/
 .gradle
 local.properties
 *.iml
+*.hprof
 
 # node.js
 #
@@ -85,6 +86,7 @@ yarn-error.log
 buck-out/
 \.buckd/
 *.keystore
+!debug.keystore
 
 # fastlane
 #
@@ -102,6 +104,3 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-
-# Detox Test Artifacts
-artifacts/

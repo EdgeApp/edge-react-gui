@@ -71,7 +71,7 @@ type State = {
   createdWallet: Promise<EdgeCurrencyWallet>
 }
 
-class CreateWalletAccountSelect extends React.Component<Props, State> {
+export class CreateWalletAccountSelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { createAccountBasedWallet, route } = this.props

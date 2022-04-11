@@ -167,14 +167,23 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         )
 
         if (passwordValid) {
+          // Add a copy button only for development
+          let devButtons = {}
+          if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
+
           await Airship.show(bridge => (
             <ButtonsModal
               title={s.strings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
               message={wallet.displayPrivateSeed ?? ''}
-              buttons={{ ok: { label: s.strings.string_ok_cap } }}
+              buttons={{ ok: { label: s.strings.string_ok_cap }, ...devButtons }}
             />
-          ))
+          )).then(buttonPressed => {
+            if (global.__DEV__ && buttonPressed === 'copy') {
+              Clipboard.setString(wallet.displayPrivateSeed)
+              showToast(s.strings.fragment_wallets_copied_seed)
+            }
+          })
         }
       }
     }

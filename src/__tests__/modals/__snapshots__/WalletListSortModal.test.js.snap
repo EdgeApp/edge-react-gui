@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletListSortModalComponent should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <ModalTitle>
+    Sort Wallets
+  </ModalTitle>
+  <WithTheme(SettingsTappableRowComponent)
+    label="Manual sort"
+    onPress={[Function]}
+  />
+  <WithTheme(SettingsRadioRowComponent)
+    label="Sort by name"
+    onPress={[Function]}
+    value={false}
+  />
+  <WithTheme(SettingsRadioRowComponent)
+    label="Sort by currency code"
+    onPress={[Function]}
+    value={false}
+  />
+  <WithTheme(SettingsRadioRowComponent)
+    label="Sort by currency name"
+    onPress={[Function]}
+    value={false}
+  />
+  <WithTheme(SettingsRadioRowComponent)
+    label="Sort by highest value"
+    onPress={[Function]}
+    value={false}
+  />
+  <WithTheme(SettingsRadioRowComponent)
+    label="Sort by lowest value"
+    onPress={[Function]}
+    value={false}
+  />
+  <ModalCloseArrow
+    onPress={[Function]}
+  />
+</ThemedModal>
+`;

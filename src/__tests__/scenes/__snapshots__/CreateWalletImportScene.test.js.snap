@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateWalletImportComponent should render with loading props 1`] = `
+<SafeAreaViewComponent>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "flex": 1,
+      }
+    }
+  >
+    <WithTheme(GradientComponent)
+      style={
+        Object {
+          "height": 44,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "height": 1221,
+          "paddingHorizontal": 20,
+          "position": "relative",
+          "top": 44,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "paddingBottom": 11.236619718309859,
+            "paddingTop": 22.473239436619718,
+          }
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 22.473239436619718,
+              "textAlign": "center",
+            }
+          }
+        >
+          Enter your private seed or private key to verify and restore the associated wallet
+        </FormattedText>
+      </View>
+      <FormField
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoFocus={true}
+        error=""
+        keyboardType="default"
+        label="Private Key or Private Seed"
+        multiline={true}
+        onChangeText={[Function]}
+        onSubmitEditing={[Function]}
+        returnKeyType="next"
+        value=""
+      />
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "marginTop": 33.709859154929575,
+          }
+        }
+      >
+        <PrimaryButton
+          disabled={false}
+          onPress={[Function]}
+          style={
+            Object {
+              "flex": 1,
+              "marginLeft": 1.4045774647887324,
+            }
+          }
+        >
+          <Text>
+            Next
+          </Text>
+        </PrimaryButton>
+      </View>
+    </View>
+  </View>
+</SafeAreaViewComponent>
+`;

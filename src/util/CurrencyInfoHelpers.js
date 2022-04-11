@@ -9,7 +9,7 @@ import { type CreateWalletType } from '../types/types.js'
  * Get currency icon URL
  */
 
-type CurrencyIcons = {
+export type CurrencyIcons = {
   symbolImage: string,
   symbolImageDarkMono: string
 }
@@ -82,7 +82,6 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
     // FIO disable changes
-    if (pluginId === 'fio' && global.isFioDisabled) continue
     if (pluginId === 'bitcoin') {
       out.push({
         currencyName: 'Bitcoin (Segwit)',

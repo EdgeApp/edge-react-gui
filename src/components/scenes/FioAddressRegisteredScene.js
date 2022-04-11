@@ -18,7 +18,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-class FioAddressRegistered extends React.Component<Props> {
+export class FioAddressRegistered extends React.Component<Props> {
   renderExpDate() {
     const { theme, route } = this.props
     const { expiration } = route.params

@@ -50,7 +50,7 @@ type State = {
 
 type Props = OwnProps & StateProps & ThemeProps
 
-class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
+export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     this.props.onCryptoExchangeAmountChanged(amounts)
   }

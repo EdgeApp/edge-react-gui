@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletListModal should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <ModalTitle
+    center={true}
+  >
+    Wallet List
+  </ModalTitle>
+  <ForwardRef
+    label="Search Wallets"
+    marginRem={
+      Array [
+        0.5,
+        0.75,
+        1.25,
+      ]
+    }
+    onBlur={[Function]}
+    onChangeText={[Function]}
+    onClear={[Function]}
+    onFocus={[Function]}
+    returnKeyType="search"
+    searchIcon={true}
+    value=""
+  />
+  <WalletList
+    isModal={true}
+    onPress={[Function]}
+    searchText=""
+    searching={false}
+  />
+  <ModalCloseArrow
+    onPress={[Function]}
+  />
+</ThemedModal>
+`;

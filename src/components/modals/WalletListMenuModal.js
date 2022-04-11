@@ -9,11 +9,11 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
-import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
+import { getPluginId, getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import { getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
+import { getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -25,11 +25,11 @@ type Option = {
 
 type Props = {
   bridge: AirshipBridge<null>,
+
+  // Wallet identity:
   currencyCode?: string,
-  image?: string,
   isToken?: boolean,
-  walletId: string,
-  walletName?: string
+  walletId: string
 }
 
 const icons = {
@@ -95,22 +95,33 @@ const getWalletOptions = async (params: {
 }
 
 export function WalletListMenuModal(props: Props) {
-  const { bridge, walletName, walletId, image, currencyCode, isToken } = props
+  const { bridge, currencyCode, isToken, walletId } = props
 
   const [options, setOptions] = useState([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const wallets = useSelector(state => state.ui.wallets.byId)
+  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // Look up the image and name:
+  let image: string | void
+  let walletName: string | void
+  if (guiWallet != null) {
+    walletName = guiWallet.name
+
+    const { metaTokens } = guiWallet
+    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    image = getCurrencyIcon(getPluginId(guiWallet.type), contractAddress).symbolImage
+  }
+
   const handleCancel = () => props.bridge.resolve(null)
 
   const optionAction = (option: WalletListMenuKey) => {
-    if (currencyCode == null && wallets[walletId] != null) {
-      dispatch(walletListMenuAction(walletId, option, wallets[walletId].currencyCode))
+    if (currencyCode == null && guiWallet != null) {
+      dispatch(walletListMenuAction(walletId, option, guiWallet.currencyCode))
     } else {
       dispatch(walletListMenuAction(walletId, option, currencyCode))
     }

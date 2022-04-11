@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectableRowComponent should render with loading props 1`] = `
+<WithTheme(ClickableRowComponent)
+  onPress={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "width": "100%",
+        },
+        null,
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "flexDirection": "column",
+              "marginLeft": 28,
+              "width": "100%",
+            },
+            null,
+          ]
+        }
+      >
+        <WithTheme(EdgeTextComponent)>
+          title
+        </WithTheme(EdgeTextComponent)>
+      </View>
+    </View>
+    <Icon
+      allowFontScaling={false}
+      color="#FFFFFF"
+      name="chevron-forward-outline"
+      size={34}
+      style={
+        Object {
+          "marginRight": -11,
+        }
+      }
+    />
+  </View>
+</WithTheme(ClickableRowComponent)>
+`;

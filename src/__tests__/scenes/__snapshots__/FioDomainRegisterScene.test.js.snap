@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FioDomainRegister should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+  bodySplit={34}
+>
+  <WithTheme(SceneHeaderComponent)
+    style={
+      Object {
+        "flexDirection": "row-reverse",
+        "justifyContent": "flex-end",
+        "marginRight": 22,
+        "marginTop": 11,
+      }
+    }
+    title="Register FIO Domain"
+  >
+    <Icon
+      allowFontScaling={false}
+      color="#FFFFFF"
+      name="ios-at"
+      size={34}
+      style={
+        Object {
+          "marginRight": 11,
+        }
+      }
+    />
+  </WithTheme(SceneHeaderComponent)>
+  <ScrollView>
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={3}
+      style={
+        Array [
+          Object {
+            "paddingBottom": 22,
+            "paddingHorizontal": 28,
+          },
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 22,
+          },
+          Object {
+            "paddingTop": 34,
+          },
+        ]
+      }
+    >
+      Note that you need to use FIO to register a Crypto Handle on a custom domain.
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={8}
+      style={
+        Array [
+          Object {
+            "paddingBottom": 22,
+            "paddingHorizontal": 28,
+          },
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 22,
+          },
+        ]
+      }
+    >
+      FIO Crypto Handle consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Crypto Handle on it. FIO Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
+    </WithTheme(EdgeTextComponent)>
+    <View
+      onLayout={[Function]}
+    >
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Choose a FIO Domain"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "marginRight": 11,
+              }
+            }
+          >
+            
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#87939E",
+              }
+            }
+          >
+            
+          </WithTheme(EdgeTextComponent)>
+        </View>
+      </WithTheme(TileComponent)>
+    </View>
+    <WithTheme(FormErrorComponent)
+      isVisible={false}
+      style={
+        Object {
+          "flex": 1,
+          "margin": 22,
+        }
+      }
+    >
+      
+    </WithTheme(FormErrorComponent)>
+    <View
+      style={
+        Object {
+          "paddingBottom": 674,
+        }
+      }
+    />
+  </ScrollView>
+</SceneWrapper>
+`;

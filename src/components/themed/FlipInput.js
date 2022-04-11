@@ -11,6 +11,7 @@ import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, with
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
@@ -159,7 +160,7 @@ const getInitialState = (props: Props) => {
   return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
 }
 
-class FlipInputComponent extends React.PureComponent<Props, State> {
+export class FlipInputComponent extends React.PureComponent<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value
@@ -673,5 +674,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const FlipInputThemed = withTheme(FlipInputComponent)
 
-// $FlowFixMe - forwardRef is not recognize by flow?
-export const FlipInput = React.forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />) // eslint-disable-line
+export const FlipInput = forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />)

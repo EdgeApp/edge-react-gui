@@ -50,7 +50,7 @@ type State = {
   enabled?: boolean
 }
 
-class EditTokenComponent extends React.Component<Props, State> {
+export class EditTokenComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { customTokens, route } = props

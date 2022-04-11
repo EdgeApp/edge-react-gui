@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createWalletName should render with loading props 1`] = `
+<SceneWrapper
+  avoidKeyboard={true}
+  background="theme"
+>
+  <WithTheme(SceneHeaderComponent)
+    title="Create Wallet"
+    withTopMargin={true}
+  />
+  <ForwardRef
+    autoCorrect={false}
+    label="New Wallet Name"
+    marginRem={
+      Array [
+        0,
+        1.75,
+      ]
+    }
+    onChangeText={[Function]}
+    onSubmitEditing={[Function]}
+    returnKeyType="next"
+    value="My bitcoin"
+  />
+  <MainButton
+    alignSelf="center"
+    label="Next"
+    marginRem={
+      Array [
+        3,
+        1,
+      ]
+    }
+    onPress={[Function]}
+    type="secondary"
+  />
+</SceneWrapper>
+`;

@@ -14,7 +14,7 @@ type Props = {
   style?: StyleSheet.Styles
 }
 
-class SceneHeaderComponent extends React.PureComponent<Props & ThemeProps> {
+export class SceneHeaderComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
     const { title, underline, withTopMargin, children, theme, style } = this.props
     const styles = getStyles(theme)

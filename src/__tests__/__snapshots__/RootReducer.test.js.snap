@@ -237,9 +237,7 @@ Object {
       "walletsSort": "default",
     },
     "wallets": Object {
-      "activeWalletIds": Array [],
       "addTokenPending": false,
-      "archivedWalletIds": Array [],
       "byId": Object {},
       "fioWallets": Array [],
       "manageTokensPending": false,

@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "fontSize": 28,
+          "fontWeight": "600",
+          "marginBottom": 28,
+          "textAlign": "center",
+          "width": "100%",
+        }
+      }
+    >
+      Congratulations!
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={2}
+      style={
+        Object {
+          "fontSize": 17,
+          "fontWeight": "600",
+          "marginBottom": 34,
+          "maxWidth": 225,
+          "textAlign": "center",
+        }
+      }
+    >
+      Your exchange has been successfully completed!
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={3}
+      style={
+        Array [
+          Object {
+            "fontSize": 17,
+            "fontWeight": "600",
+            "marginBottom": 34,
+            "maxWidth": 225,
+            "textAlign": "center",
+          },
+          Object {
+            "maxWidth": 213,
+          },
+        ]
+      }
+    >
+      Exchanges may take a few minutes and up to 24 hours to process.
+    </WithTheme(EdgeTextComponent)>
+    <Fade
+      visible={false}
+    >
+      <MainButton
+        label="Done"
+        onPress={[Function]}
+        type="secondary"
+      />
+    </Fade>
+  </View>
+</SceneWrapper>
+`;

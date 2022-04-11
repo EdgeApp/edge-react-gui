@@ -1,11 +1,20 @@
 diff --git a/node_modules/@react-native-community/blur/android/build.gradle b/node_modules/@react-native-community/blur/android/build.gradle
-index 8177235..45a9534 100644
+index 8177235..fcdeb1c 100644
 --- a/node_modules/@react-native-community/blur/android/build.gradle
 +++ b/node_modules/@react-native-community/blur/android/build.gradle
-@@ -38,10 +38,12 @@ android {
+@@ -9,7 +9,6 @@ buildscript {
+     if (project == rootProject) {
+         repositories {
+             google()
+-            jcenter()
+         }
+ 
+         dependencies {
+@@ -37,11 +36,12 @@ android {
+ 
  repositories {
      google()
-     jcenter()
+-    jcenter()
 +    maven { url 'https://jitpack.io' }
  }
  
@@ -13,7 +22,7 @@ index 8177235..45a9534 100644
      //noinspection GradleDynamicVersion
      implementation 'com.facebook.react:react-native:+'
 -    implementation 'com.eightbitlab:blurview:1.6.3'
-+    implementation 'com.eightbitlab:blurview:1.6.6'
++    implementation 'com.github.Dimezis:BlurView:version-1.6.6'
 +    implementation 'com.github.android:renderscript-intrinsics-replacement-toolkit:b6363490c3'
  }
 diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java

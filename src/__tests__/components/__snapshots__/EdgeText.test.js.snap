@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EdgeText should render with some props 1`] = `
+<Text
+  adjustsFontSizeToFit={true}
+  ellipsizeMode="tail"
+  minimumFontScale={0.65}
+  numberOfLines={2}
+  style={
+    Array [
+      Object {
+        "color": "#FFFFFF",
+        "fontFamily": "Quicksand-Regular",
+        "fontSize": 22,
+        "includeFontPadding": false,
+      },
+      Object {},
+      null,
+    ]
+  }
+>
+  Hello world
+</Text>
+`;
