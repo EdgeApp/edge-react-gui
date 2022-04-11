@@ -246,7 +246,7 @@ export class MainComponent extends React.Component<Props> {
         clone
         renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
         renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('TransactionDetailsScene.Back')} />}
-        renderRightButton={<SideMenuButton />}
+        renderRightButton={<SideMenuButton testId="TransactionDetailsScene.SideMenuButton" />}
       />
     )
   }
@@ -353,7 +353,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<HeaderTitle title=" " />}
                 renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('TransactionList.Back')} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="TransactionList.SideMenuButton" />}
               />
 
               <Scene
@@ -361,7 +361,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={withNavigation(ifLoggedIn(StakeModifyScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('StakeModifyScene.Back')} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="StakeModifyScene.SideMenuButton" />}
               />
 
               <Scene
@@ -369,7 +369,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={withNavigation(ifLoggedIn(StakeOptionsScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('StakeOptionsScene.Back')} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="StakeOptionsScene.SideMenuButton" />}
               />
 
               <Scene
@@ -377,7 +377,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={withNavigation(ifLoggedIn(StakeOverviewScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('StakeOverviewScene.Back')} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="StakeOverviewScene.SideMenuButton" />}
               />
 
               <Scene
@@ -385,7 +385,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(FioStakingOverviewScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioStakingOverviewScene.Back')} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="FioStakingOverviewScene.SideMenuButton" />}
               />
 
               <Scene
@@ -393,7 +393,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(FioStakingChangeScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioStakingChangeScene.Back')} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="FioStakingChangeScene.SideMenuButton" />}
               />
 
               <Scene
@@ -438,7 +438,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="GuiPluginBuyScene.SideMenuButton" />}
                 onLeft={Actions.pop}
                 route={{ params: { direction: 'buy' } }}
               />
@@ -458,7 +458,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="GuiPluginSellScene.SideMenuButton" />}
                 onLeft={Actions.pop}
                 route={{ params: { direction: 'sell' } }}
               />
@@ -478,7 +478,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="CryptoExchangeScene.SideMenuButton" />}
                 onEnter={() => this.props.checkEnabledExchanges()}
               />
               <Scene
@@ -519,7 +519,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioRequestConfirmationScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioRequestConfirmationScene.SideMenuButton" />}
             />
           </Stack>
 
@@ -589,7 +589,7 @@ export class MainComponent extends React.Component<Props> {
               onEnter={() => this.props.showReEnableOtpModal()}
               renderTitle={<HeaderTitle title={s.strings.title_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('SettingsScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="SettingsScene.SideMenuButton" />}
             />
             <Scene
               key={CHANGE_PASSWORD}
@@ -701,7 +701,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('TermsOfServiceScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="TermsOfServiceScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -712,7 +712,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(FioAddressListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioAddressListScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioAddressListScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -724,7 +724,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioAddressRegisterScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioAddressRegisterScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -748,7 +748,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioAddressRegisterSelectWalletScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioDomainRegisterScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
             <Scene
@@ -788,7 +788,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioAddressDetailsScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioAddressDetailsScene.SideMenuButton" />}
             />
             <Scene
               key={FIO_CONNECT_TO_WALLETS_CONFIRM}
@@ -796,7 +796,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioConnectWalletConfirmScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioConnectWalletConfirmScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -808,7 +808,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioAddressSettingsScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioAddressSettingsScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -819,7 +819,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioDomainSettingsScene.SideMenuButton" />}
               renderLeftButton={this.renderEmptyButton()}
             />
           </Stack>
@@ -831,7 +831,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioDomainSettingsScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioDomainSettingsScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -842,7 +842,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(FioRequestListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioRequestList.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioRequestList.SideMenuButton" />}
               onLeft={Actions.pop}
             />
             <Scene
@@ -853,7 +853,7 @@ export class MainComponent extends React.Component<Props> {
               clone
               renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('FioRequestApproved.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="FioRequestApproved.SideMenuButton" />}
             />
           </Stack>
 
@@ -874,7 +874,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(WcConnectionsScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('WcConnectionsScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="WcConnectionsScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
             <Scene
@@ -882,7 +882,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(WcDisconnectScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('WcDisconnectScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="WcDisconnectScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
             <Scene
@@ -890,7 +890,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(WcConnectScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('wcConnectScene.Back')} />}
-              renderRightButton={<SideMenuButton />}
+              renderRightButton={<SideMenuButton testId="WcConnectScene.SideMenuButton" />}
               onLeft={Actions.pop}
             />
           </Stack>
