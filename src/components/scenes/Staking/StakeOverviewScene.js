@@ -8,20 +8,13 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings.js'
 import { type ChangeQuoteRequest, type PositionAllocation, type StakePolicy, type StakePosition } from '../../../plugins/stake-plugins'
 import type { RootState } from '../../../reducers/RootReducer.js'
-import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
+import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
-import { useSelector } from '../../../types/reactRedux'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
-import {
-  getAllocationLocktimeMessage,
-  getPolicyAssetName,
-  getPolicyIconUris,
-  getPolicyTitleName,
-  getPositionAllocations,
-  stakePlugin
-} from '../../../util/stakeUtils.js'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -40,19 +33,16 @@ export const StakeOverviewScene = (props: Props) => {
   const { walletId } = props.route.params
   const stakePolicy: StakePolicy = props.route.params.stakePolicy
   const { stakePolicyId } = stakePolicy
+  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // TODO: Update for denoms
-  const stakeAssetsName = getPolicyAssetName(stakePolicy, 'stakeAssets')
-
-  const { currencyWallet, walletPluginId, isoFiatCurrencyCode, state } = useSelector((state: RootState) => {
-    const { currencyWallets } = state.core.account
-    const currencyWallet = currencyWallets[walletId]
-    const walletPluginId = currencyWallet.currencyInfo.pluginId
-    const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
-    return { currencyWallet, walletPluginId, isoFiatCurrencyCode, state }
-  })
+  const currencyWallet = useSelector((state: RootState) => state.core.account.currencyWallets[walletId])
+  const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
+  const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
+    denomMap[asset.tokenId] = dispatch(getDisplayDenominationFromState(currencyWallet.currencyInfo.pluginId, asset.tokenId))
+    return denomMap
+  }, {})
   const policyIcons = getPolicyIconUris(currencyWallet, stakePolicy)
 
   // Hooks
@@ -102,13 +92,13 @@ export const StakeOverviewScene = (props: Props) => {
     const { allocationType, tokenId, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
     const title = `${sprintf(titleBase, tokenId)} ${getAllocationLocktimeMessage(item)}`
-    const denomination = getDisplayDenomination(state, walletPluginId, tokenId)
+    const denomination = displayDenomMap[tokenId]
 
     return (
       <CryptoFiatAmountTile
         title={title}
         nativeCryptoAmount={nativeAmount ?? '0'}
-        cryptoCurrencyCode={stakeAssetsName}
+        cryptoCurrencyCode={tokenId}
         isoFiatCurrencyCode={isoFiatCurrencyCode}
         denomination={denomination}
       />
