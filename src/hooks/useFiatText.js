@@ -2,10 +2,9 @@
 import { div } from 'biggystring'
 
 import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
-import { trimEnd } from '../locales/intl.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { useSelector } from '../types/reactRedux.js'
-import { DECIMAL_PRECISION, formatFiatString } from '../util/utils'
+import { DECIMAL_PRECISION, formatFiatString, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 type Props = {
@@ -41,13 +40,12 @@ export const useFiatText = (props: Props) => {
     return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
   // Convert the amount to an internationalized string
-  const formattedFiatString = formatFiatString({
+  let fiatString = formatFiatString({
     fiatAmount,
     autoPrecision,
     noGrouping
   })
-  // Remove trailing zeros for 'fiatString'
-  const fiatString = trimEnd(formattedFiatString)
+  if (!autoPrecision && zeroString(fiatString)) fiatString = '0'
   // Create FiatText' prefix
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
   const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
