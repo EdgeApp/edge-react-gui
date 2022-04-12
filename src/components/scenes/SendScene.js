@@ -38,6 +38,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
 import { EditableAmountTile } from '../themed/EditableAmountTile'
+import { ErrorTile } from '../themed/ErrorTile'
 import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
@@ -429,17 +430,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderError() {
-    const { error, theme } = this.props
-    const styles = getStyles(theme)
-
+    const { error } = this.props
     if (error && asMaybeNoAmountSpecifiedError(error) == null) {
-      return (
-        <Tile type="static" title={s.strings.send_scene_error_title}>
-          <EdgeText style={styles.errorMessage} numberOfLines={3}>
-            {error.message}
-          </EdgeText>
-        </Tile>
-      )
+      return <ErrorTile message={error.message} />
     }
     return null
   }
@@ -628,9 +621,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: 0,
     height: 0
   },
-  errorMessage: {
-    color: theme.dangerText
-  },
+
   amountText: {
     fontSize: theme.rem(2)
   },
