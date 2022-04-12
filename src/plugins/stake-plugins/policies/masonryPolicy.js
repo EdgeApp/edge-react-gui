@@ -1,7 +1,9 @@
 // @flow
 import { gt, gte, lte, sub } from 'biggystring'
 import { ethers } from 'ethers'
+import { sprintf } from 'sprintf-js'
 
+import s from '../../../locales/strings'
 import { makeContract, makeSigner, multipass } from '../contracts.js'
 import { pluginInfo } from '../pluginInfo.js'
 import { type PositionAllocation } from '../types'
@@ -175,7 +177,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           const balanceAmount = fromHex(balanceResponse._hex)
           const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
           if (!isBalanceEnough) {
-            throw new Error(`Cannot withdraw '${allocation.nativeAmount}' with '${allocation.tokenId}' token balance ${balanceAmount}`)
+            throw new Error(sprintf(s.strings.stake_error_insufficient_s, request.tokenId))
           }
         })
       )

@@ -3,7 +3,9 @@ import '@ethersproject/shims'
 
 import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
 import { ethers } from 'ethers'
+import { sprintf } from 'sprintf-js'
 
+import s from '../../../locales/strings'
 import { getContractInfo, makeContract, makeSigner, multipass } from '../contracts.js'
 import { pluginInfo } from '../pluginInfo.js'
 import { type StakePolicyInfo } from '../stakePolicy'
@@ -193,7 +195,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const totalBalance = add(balanceAmount, fromLpToken)
               const isBalanceEnough = lte(allocation.nativeAmount, totalBalance)
               if (!isBalanceEnough) {
-                throw new Error(`Cannot withdraw '${allocation.nativeAmount}' with '${allocation.tokenId}' token balance ${balanceAmount}`)
+                throw new Error(sprintf(s.strings.stake_error_insufficient_s, allocation.tokenId))
               }
             })
         )
@@ -334,8 +336,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
         if (!isBalanceEnough) {
-          const lpSymbol = await lpTokenContract.symbol()
-          throw new Error(`Cannot withdraw ${expectedLiquidityAmount} ${lpSymbol} with liquidity balance ${stakedLpTokenBalance}`)
+          throw new Error(sprintf(s.strings.stake_error_insufficient_s, contractTokenSymbol))
         }
 
         // 3. Withdraw LP-token from Pool Contract
