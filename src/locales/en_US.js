@@ -893,7 +893,7 @@ const strings = {
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
-  send_scene_error_title: 'Error',
+  send_scene_error_title: 'Error:',
   send_scene_metadata_name_title: 'Payee',
   send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
@@ -977,6 +977,7 @@ const strings = {
   stake_warning_unstake: 'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
+  stake_error_insufficient_s: 'Insufficient %s',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

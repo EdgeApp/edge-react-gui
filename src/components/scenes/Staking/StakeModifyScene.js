@@ -20,12 +20,13 @@ import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
 import { FlashNotification } from '../../navigation/FlashNotification.js'
-import { Airship, showError } from '../../services/AirshipInstance.js'
+import { Airship } from '../../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Alert } from '../../themed/Alert.js'
 import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { EditableAmountTile } from '../../themed/EditableAmountTile.js'
+import { ErrorTile } from '../../themed/ErrorTile.js'
 import { IconTile } from '../../themed/IconTile'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 
@@ -59,8 +60,6 @@ export const StakeModifyScene = (props: Props) => {
   // Current Allocation Info
   const [existingAllocations, setExistingAllocations] = useState<{ staked: PositionAllocation[], earned: PositionAllocation[] } | void>()
 
-  // Handlers
-
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = useState<ChangeQuote | null>(null)
   const changeQuoteAllocations = changeQuote?.allocations ?? []
@@ -76,6 +75,9 @@ export const StakeModifyScene = (props: Props) => {
 
   // Slider state
   const [sliderLocked, setSliderLocked] = useState(false)
+
+  // Error message tile contents
+  const [errorMessage, setErrorMessage] = useState('')
 
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
   useEffect(() => {
@@ -99,11 +101,14 @@ export const StakeModifyScene = (props: Props) => {
         .fetchChangeQuote(changeQuoteRequest)
         .then((changeQuote: ChangeQuote) => {
           if (abort) return
+          // Success, clear error msg and set change quote to trigger re-render
+          setErrorMessage('')
           setChangeQuote(changeQuote)
         })
         .catch(err => {
           if (abort) return
-          showError(err.message)
+          // Display error msg tile
+          setErrorMessage(err.message)
         })
         .finally(() => {
           if (abort) return
@@ -191,7 +196,7 @@ export const StakeModifyScene = (props: Props) => {
         })
         .catch(err => {
           reset()
-          showError(err.message)
+          setErrorMessage(err.message)
         })
         .finally(() => {
           setSliderLocked(false)
@@ -311,6 +316,7 @@ export const StakeModifyScene = (props: Props) => {
             denomination={nativeAssetDenomination}
           />
         }
+        {errorMessage === '' || sliderLocked === true ? null : <ErrorTile message={errorMessage} />}
       </View>
     )
   }
