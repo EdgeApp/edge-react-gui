@@ -20,6 +20,7 @@ import {
   getYesterdayDateRoundDownHour,
   maxPrimaryCurrencyConversionDecimals,
   precisionAdjust,
+  truncateDecimals as nonLocalTruncateDecimals,
   zeroString
 } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -69,9 +70,9 @@ export const getCryptoAmount = ({ balance, exchangeRate, exchangeDenomination, f
   }
 
   try {
-    const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION), maxConversionDecimals)
+    const preliminaryCryptoAmount = nonLocalTruncateDecimals(div(balance, multiplier, DECIMAL_PRECISION), maxConversionDecimals)
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    return `${symbol ? symbol + ' ' : ''}${finalCryptoAmount}`
+    return `${symbol != null ? symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
     if (error.message === 'Cannot operate on base16 float values') {
       const errorMessage = `${error.message}: Currency code - ${currencyCode}, balance - ${balance}, demonination multiplier: ${multiplier}`
