@@ -127,55 +127,8 @@ export const StakeModifyScene = (props: Props) => {
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.tokenId === modCurrencyCode)
         const modChangeQuoteRequest = { ...changeQuoteRequest, tokenId: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
         setChangeQuoteRequest(modChangeQuoteRequest)
-      } else if (modification === 'stake') {
-        // Save all max amounts to find the limiting amount
-
-        // Set an arbitrary amount in the changeQuoteRequest to ensure a fee is
-        // generated
-        stakePlugin.fetchChangeQuote({ ...changeQuoteRequest, nativeAmount: '1' }).then((tempQuote: ChangeQuote) => {
-          // Save the max stake amount for each currency according to available
-          // wallet balances
-          const maxAmountsMap: Array<{ currencyCode: string, maxAmount: string }> = tempQuote.allocations.map(tempQuoteAllocation => {
-            const quoteCurrencyCode = tempQuoteAllocation.tokenId
-            const balanceAmount = currencyWallet.balances[modCurrencyCode]
-            let maxAmount = '0'
-
-            // Native currency
-            if (currencyWallet.currencyInfo.currencyCode === modCurrencyCode) {
-              // Subtract network fees from the ChangeQuote from the max amount of native currency
-              const feeAllocation = tempQuote.allocations.find(allocation => allocation.allocationType === 'fee')
-              maxAmount = bns.sub(balanceAmount, feeAllocation?.nativeAmount || '0')
-            }
-            // Token currency
-            else {
-              maxAmount = balanceAmount
-            }
-            return { currencyCode: quoteCurrencyCode, maxAmount }
-          })
-
-          // Get the change quote for the actual user modification amount
-          const walletBalance = maxAmountsMap.find(({ currencyCode, maxAmount }) => currencyCode === modCurrencyCode)?.maxAmount
-
-          stakePlugin.fetchChangeQuote({ ...changeQuoteRequest, nativeAmount: walletBalance }).then(tempModChangeQuote => {
-            // Check if the max amount for this currency requires a higher max amount of
-            // another currency than is available
-            const filteredMaxAmountsMap = maxAmountsMap.filter(({ currencyCode, maxAmount }) => currencyCode !== modCurrencyCode)
-
-            const limitingMaxAmountPair = filteredMaxAmountsMap.find(({ currencyCode, maxAmount }) => {
-              const comparisonMaxAmount =
-                tempModChangeQuote.allocations.find(tempModAllocation => tempModAllocation.tokenId === currencyCode)?.nativeAmount || '0'
-              return bns.lt(maxAmount, comparisonMaxAmount)
-            })
-
-            if (limitingMaxAmountPair != null) {
-              // Return the max amount held in the wallet for the limiting currency
-              setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: limitingMaxAmountPair.currencyCode, nativeAmount: limitingMaxAmountPair.maxAmount })
-            } else {
-              // Return the max amount held in the wallet for the requested currency
-              setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: walletBalance })
-            }
-          })
-        })
+      } else if (modification === 'stake' && existingStaked.length === 1) {
+        setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: modCurrencyCode, nativeAmount: currencyWallet.balances[modCurrencyCode] })
       }
     }
   }
