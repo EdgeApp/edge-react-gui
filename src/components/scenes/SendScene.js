@@ -100,7 +100,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    const { route } = this.props
+    const { route } = props
     const { selectedWalletId, selectedCurrencyCode, guiMakeSpendInfo } = route.params
     const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
     this.state = {
