@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
@@ -57,4 +58,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const HeaderTextButton = withTheme(HeaderTextButtonComponent)
+export const HeaderTextButton = hook(withTheme(HeaderTextButtonComponent))
