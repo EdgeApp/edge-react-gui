@@ -137,7 +137,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   }, [edgeWallet])
 
   // Crypto Amount And Exchange Rate
-  const balance = balances[currencyCode]
+  const balance = balances[currencyCode] ?? '0'
   const denomination = dispatch(getDisplayDenominationFromState(currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyInfo.pluginId, currencyCode))
   const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
