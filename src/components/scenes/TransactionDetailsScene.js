@@ -316,9 +316,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
           </View>
         </Tile>
         {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
-        {swapData.plugin.supportEmail && (
+        {swapData.plugin.supportEmail ? (
           <Tile type="touchable" title={s.strings.transaction_details_exchange_support} onPress={openEmail} body={swapData.plugin.supportEmail} />
-        )}
+        ) : null}
       </>
     )
   }
