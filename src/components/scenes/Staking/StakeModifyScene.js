@@ -241,17 +241,19 @@ export const StakeModifyScene = (props: Props) => {
         : sprintf(s.strings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
+    const earnedAmount = existingAllocations?.earned[0].nativeAmount ?? '0'
 
+    const isClaim = allocationType === 'claim'
     return (
       <EditableAmountTile
         title={title}
         exchangeRates={guiExchangeRates}
-        nativeAmount={nativeAmount}
+        nativeAmount={isClaim ? earnedAmount : nativeAmount}
         currencyWallet={currencyWallet}
         currencyCode={quoteCurrencyCode}
         exchangeDenomination={quoteDenom}
         displayDenomination={quoteDenom}
-        lockInputs={allocationType === 'claim'}
+        lockInputs={isClaim}
         onPress={handleShowFlipInputModal(quoteCurrencyCode)}
       />
     )
