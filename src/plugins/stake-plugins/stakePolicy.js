@@ -1,5 +1,6 @@
 // @flow
 import { type StakePluginPolicy } from './policies/types'
+import { type InfoServerResponse } from './types'
 import type { StakePolicy } from './types.js'
 
 export type StakePolicyInfo = {
@@ -32,21 +33,24 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
   }
 }
 
-export const toStakePolicy = (policyInfo: StakePolicyInfo): StakePolicy => {
-  const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
+export const toStakePolicy =
+  (infoResponse: InfoServerResponse | void) =>
+  (policyInfo: StakePolicyInfo): StakePolicy => {
+    const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
+    const stakePart = stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
+    const rewardPart = rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
+    const stakePolicyId = `${stakePart}=${rewardPart}`
 
-  const stakePart = stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const rewardPart = rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const stakePolicyId = `${stakePart}=${rewardPart}`
+    let apy = 0
+    if (Object.keys(infoResponse?.policies ?? {}).includes(stakePolicyId.toLowerCase())) {
+      apy = infoResponse?.policies[stakePolicyId.toLowerCase()] ?? 0
+    }
 
-  // TODO: Calculate the APY or use a parameter from the current function
-  const apy = 100
-
-  return {
-    stakePolicyId,
-    apy,
-    stakeAssets,
-    rewardAssets,
-    mustClaimRewards
+    return {
+      stakePolicyId,
+      apy,
+      stakeAssets,
+      rewardAssets,
+      mustClaimRewards
+    }
   }
-}
