@@ -977,6 +977,7 @@ const strings = {
   stake_warning_unstake: 'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
+  stake_error_insufficient_s: 'Insufficient %s',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
