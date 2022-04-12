@@ -20,12 +20,13 @@ import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FlipInputModal } from '../../modals/FlipInputModal.js'
 import { FlashNotification } from '../../navigation/FlashNotification.js'
-import { Airship, showError } from '../../services/AirshipInstance.js'
+import { Airship } from '../../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Alert } from '../../themed/Alert.js'
 import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { EditableAmountTile } from '../../themed/EditableAmountTile.js'
+import { ErrorTile } from '../../themed/ErrorTile.js'
 import { IconTile } from '../../themed/IconTile'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 
@@ -315,10 +316,7 @@ export const StakeModifyScene = (props: Props) => {
             denomination={nativeAssetDenomination}
           />
         }
-        {
-          // TODO: post-fixup: Render error tile
-          errorMessage === '' ? null : <EdgeText>{errorMessage}</EdgeText>
-        }
+        {errorMessage === '' || sliderLocked === true ? null : <ErrorTile message={errorMessage} />}
       </View>
     )
   }
