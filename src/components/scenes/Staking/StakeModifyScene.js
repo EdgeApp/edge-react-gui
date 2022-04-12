@@ -59,8 +59,6 @@ export const StakeModifyScene = (props: Props) => {
   // Current Allocation Info
   const [existingAllocations, setExistingAllocations] = useState<{ staked: PositionAllocation[], earned: PositionAllocation[] } | void>()
 
-  // Handlers
-
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = useState<ChangeQuote | null>(null)
   const changeQuoteAllocations = changeQuote?.allocations ?? []
@@ -76,6 +74,9 @@ export const StakeModifyScene = (props: Props) => {
 
   // Slider state
   const [sliderLocked, setSliderLocked] = useState(false)
+
+  // Error message tile contents
+  const [errorMessage, setErrorMessage] = useState('')
 
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
   useEffect(() => {
@@ -99,11 +100,14 @@ export const StakeModifyScene = (props: Props) => {
         .fetchChangeQuote(changeQuoteRequest)
         .then((changeQuote: ChangeQuote) => {
           if (abort) return
+          // Success, clear error msg and set change quote to trigger re-render
+          setErrorMessage('')
           setChangeQuote(changeQuote)
         })
         .catch(err => {
           if (abort) return
-          showError(err.message)
+          // Display error msg tile
+          setErrorMessage(err.message)
         })
         .finally(() => {
           if (abort) return
@@ -191,7 +195,7 @@ export const StakeModifyScene = (props: Props) => {
         })
         .catch(err => {
           reset()
-          showError(err.message)
+          setErrorMessage(err.message)
         })
         .finally(() => {
           setSliderLocked(false)
@@ -310,6 +314,10 @@ export const StakeModifyScene = (props: Props) => {
             isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={nativeAssetDenomination}
           />
+        }
+        {
+          // TODO: post-fixup: Render error tile
+          errorMessage === '' ? null : <EdgeText>{errorMessage}</EdgeText>
         }
       </View>
     )
