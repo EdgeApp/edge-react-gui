@@ -76,7 +76,11 @@ export function WalletList(props: Props) {
 
   const theme = useTheme()
   const handlePress = useMemo(
-    () => onPress ?? ((walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))),
+    () =>
+      onPress ??
+      ((walletId: string, currencyCode: string) => {
+        dispatch(selectWallet(walletId, currencyCode))
+      }),
     [dispatch, onPress]
   )
   const account = useSelector(state => state.core.account)
