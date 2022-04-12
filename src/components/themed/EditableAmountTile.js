@@ -51,7 +51,9 @@ export const EditableAmountTile = (props: Props) => {
 
   return (
     <Tile type={lockInputs ? 'static' : 'touchable'} title={title} onPress={lockInputs ? undefined : onPress}>
-      <EdgeText style={[styles.amountText, cryptoAmountStyle]}>{cryptoAmountSyntax}</EdgeText>
+      <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
+        {cryptoAmountSyntax}
+      </EdgeText>
       {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
     </Tile>
   )
