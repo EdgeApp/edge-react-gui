@@ -34,7 +34,7 @@ export const EditableAmountTile = (props: Props) => {
   const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
   const theme = useTheme()
   const styles = getStyles(theme)
-  if (nativeAmount === '') {
+  if (nativeAmount === '' && !lockInputs) {
     cryptoAmountSyntax = s.strings.string_tap_to_edit
     cryptoAmountStyle = styles.amountTextMuted
   } else if (!zeroString(nativeAmount)) {
