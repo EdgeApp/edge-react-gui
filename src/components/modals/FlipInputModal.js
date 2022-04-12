@@ -38,7 +38,8 @@ type OwnProps = {
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
   overrideExchangeAmount?: string,
-  headerText?: string
+  headerText?: string,
+  hideMaxButton?: boolean
 }
 
 type StateProps = {
@@ -201,7 +202,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFocus
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
-        {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true ? (
+        {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
           <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
         ) : null}
       </Card>

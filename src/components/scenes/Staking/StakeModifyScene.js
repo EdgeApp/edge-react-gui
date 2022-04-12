@@ -119,11 +119,11 @@ export const StakeModifyScene = (props: Props) => {
   // Handlers
   //
 
+  const existingStaked = existingAllocations?.staked ?? []
   const handleMaxButtonPress = (modCurrencyCode: string) => () => {
     // TODO: Move max amountlogic into stake plugin
     if (changeQuoteRequest != null) {
       if (modification === 'unstake') {
-        const existingStaked = existingAllocations?.staked ?? []
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.tokenId === modCurrencyCode)
         const modChangeQuoteRequest = { ...changeQuoteRequest, tokenId: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
         setChangeQuoteRequest(modChangeQuoteRequest)
@@ -209,6 +209,11 @@ export const StakeModifyScene = (props: Props) => {
         onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, currencyWallet.name)}
+        hideMaxButton={
+          /* TODO: Max button needs to be enabled after max calculation for 
+          multi-asset staking is fully implemented and working in plugin */
+          existingStaked.length > 1
+        }
       />
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
