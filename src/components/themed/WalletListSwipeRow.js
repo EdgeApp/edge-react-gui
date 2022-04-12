@@ -7,7 +7,7 @@ import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
-import { memo, useCallback, useEffect, useRef, useState } from '../../types/reactHooks.js'
+import { memo, useCallback, useEffect, useRef } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -38,7 +38,6 @@ function WalletListSwipeRowComponent(props: Props) {
   const dispatch = useDispatch()
   const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
   const rowRef = useRef<SwipableRowRef>(null)
-  const [walletAddress, setWalletAddress] = useState('')
 
   // Tutorial mode:
   const isEmpty = edgeWallet == null
@@ -47,10 +46,6 @@ function WalletListSwipeRowComponent(props: Props) {
       rowRef.current.openRight()
     }
   }, [openTutorial, isEmpty])
-
-  useEffect(() => {
-    if (edgeWallet != null) edgeWallet.getReceiveAddress().then(receiveAddress => setWalletAddress(receiveAddress.publicAddress))
-  }, [edgeWallet])
 
   // Helper methods:
   const closeRow = () =>
@@ -71,16 +66,22 @@ function WalletListSwipeRowComponent(props: Props) {
   }
   const handleSelect = useCallback(() => {
     closeRow()
-    dispatch(selectWallet(walletId, currencyCode, true))
-    if (
-      edgeWallet != null &&
-      // Some wallets launch an activation screen when selected,
-      // so avoid going to the transaction list in that case:
-      (isToken || !getSpecialCurrencyInfo(edgeWallet.type).isAccountActivationRequired || walletAddress !== '')
-    ) {
-      Actions.push('transactionList')
-    }
-  }, [currencyCode, dispatch, edgeWallet, isToken, walletAddress, walletId])
+    dispatch(selectWallet(walletId, currencyCode, true)).then(async () => {
+      // Go to the transaction list, but only if the wallet exists
+      // and does not need activation:
+      if (
+        edgeWallet != null &&
+        // It won't need activation if its a token:
+        (isToken ||
+          // Or because it doesn't need activation in the first place:
+          !getSpecialCurrencyInfo(edgeWallet.type).isAccountActivationRequired ||
+          // Or because it is already activated:
+          (await edgeWallet.getReceiveAddress()).publicAddress !== '')
+      ) {
+        Actions.push('transactionList')
+      }
+    })
+  }, [currencyCode, dispatch, edgeWallet, isToken, walletId])
 
   const handleSend = () => {
     closeRow()
