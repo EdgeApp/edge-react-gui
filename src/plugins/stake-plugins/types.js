@@ -96,3 +96,13 @@ export type StakePlugin = {
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>,
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }
+
+// -----------------------------------------------------------------------------
+// Info Server Response
+// -----------------------------------------------------------------------------
+
+export type InfoServerResponse = {
+  _id: string,
+  _rev: string,
+  policies: { [string]: number }
+}
