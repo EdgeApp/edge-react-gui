@@ -231,10 +231,8 @@ export const StakeModifyScene = (props: Props) => {
       const stakedAmount = existingAllocations?.staked[0].nativeAmount ?? '0'
 
       const isRemainingStakedAmount = bns.gt(stakedAmount, modStakedAmount)
-      const existingEarnedAllocations = existingAllocations?.earned ?? []
-      const isUnclaimedRewards = existingEarnedAllocations.some(earnedAllocation => bns.gt(earnedAllocation.nativeAmount, '0'))
 
-      if (modification === 'stake') warningMessage = isRemainingStakedAmount || isUnclaimedRewards ? s.strings.stake_warning_stake : null
+      if (modification === 'stake') warningMessage = s.strings.stake_warning_stake
       if (modification === 'claim') warningMessage = s.strings.stake_warning_claim
       if (modification === 'unstake') warningMessage = isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
     }
@@ -301,7 +299,14 @@ export const StakeModifyScene = (props: Props) => {
         </SceneHeader>
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
-        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={s.strings.stake_disabled_slider} />
+        <View style={styles.footer}>
+          <Slider
+            onSlidingComplete={handleSlideComplete}
+            disabled={isSliderDisabled}
+            showSpinner={sliderLocked}
+            disabledText={s.strings.stake_disabled_slider}
+          />
+        </View>
       </ScrollView>
     </SceneWrapper>
   )
@@ -331,5 +336,8 @@ const getStyles = cacheStyles(theme => ({
   },
   amountTilesContainer: {
     marginBottom: theme.rem(1)
+  },
+  footer: {
+    marginBottom: theme.rem(2)
   }
 }))
