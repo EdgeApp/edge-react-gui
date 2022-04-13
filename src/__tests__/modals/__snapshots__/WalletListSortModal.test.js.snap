@@ -45,7 +45,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
     onPress={[Function]}
     value={false}
   />
-  <ModalCloseArrow
+  <ForwardRef
     onPress={[Function]}
   />
 </WithTheme(ThemedModalComponent)>
