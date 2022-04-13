@@ -21,7 +21,7 @@ import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
 import { registerNotifications } from './NotificationActions.js'
 
-export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => (dispatch: Dispatch, getState: GetState) => {
+export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets } = state.core.account
 
@@ -36,7 +36,7 @@ export const selectWallet = (walletId: string, currencyCode: string, alwaysActiv
     const currentWalletId = state.ui.wallets.selectedWalletId
     const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
     if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-      dispatch(selectEOSWallet(walletId, currencyCode))
+      await dispatch(selectEOSWallet(walletId, currencyCode))
     }
     return
   }
@@ -48,12 +48,8 @@ export const selectWallet = (walletId: string, currencyCode: string, alwaysActiv
       data: { walletId, currencyCode }
     })
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    wallet
-      .getReceiveAddress({ currencyCode })
-      .then(receiveAddress => {
-        dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
-      })
-      .catch(showError)
+    const receiveAddress = await wallet.getReceiveAddress({ currencyCode })
+    dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
   }
 }
 

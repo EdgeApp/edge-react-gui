@@ -1,8 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListRow should render with loading props 1`] = `
-<WalletRow
-  gradient={true}
+<WithTheme(GradientComponent)
+  style={
+    Object {
+      "flex": 1,
+      "paddingHorizontal": 22,
+    }
+  }
 >
   <TouchableOpacity
     onLongPress={[Function]}
@@ -89,5 +94,5 @@ exports[`WalletListRow should render with loading props 1`] = `
       </View>
     </View>
   </TouchableOpacity>
-</WalletRow>
+</WithTheme(GradientComponent)>
 `;

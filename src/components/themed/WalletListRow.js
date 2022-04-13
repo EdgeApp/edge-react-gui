@@ -27,40 +27,35 @@ export const WalletListRowComponent = (props: Props) => {
   const { currencyCode, children, gradient = false, icon, iconUri = '', iconSizeRem, onPress, onLongPress, walletName = '' } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-
   const iconSizeStyle = iconSizeRem != null ? { width: theme.rem(iconSizeRem), height: theme.rem(iconSizeRem) } : styles.iconSize
   const iconComponent = icon == null ? <FastImage style={iconSizeStyle} source={{ uri: iconUri }} /> : icon
 
-  const WalletRow = ({ children }) =>
-    gradient ? <Gradient style={styles.containerGradient}>{children}</Gradient> : <View style={styles.container}>{children}</View>
-
-  return (
-    <WalletRow gradient={gradient}>
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-        {currencyCode === '' ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator color={theme.primaryText} size="large" />
-          </View>
-        ) : (
-          <View style={styles.contentContainer}>
-            <View style={styles.iconContainer}>{iconComponent}</View>
-            <View style={styles.detailsContainer}>
-              <View style={styles.detailsTop}>
-                <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-                {props.exchangeRateText != null ? (
-                  <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
-                ) : null}
-              </View>
-              <View style={styles.detailsBottom}>
-                <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-              </View>
+  const contents = (
+    <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+      {currencyCode === '' ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator color={theme.primaryText} size="large" />
+        </View>
+      ) : (
+        <View style={styles.contentContainer}>
+          <View style={styles.iconContainer}>{iconComponent}</View>
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailsTop}>
+              <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+              {props.exchangeRateText != null ? (
+                <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
+              ) : null}
             </View>
-            <View style={styles.childrenContainer}>{children}</View>
+            <View style={styles.detailsBottom}>
+              <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
+            </View>
           </View>
-        )}
-      </TouchableOpacity>
-    </WalletRow>
+          <View style={styles.childrenContainer}>{children}</View>
+        </View>
+      )}
+    </TouchableOpacity>
   )
+  return gradient ? <Gradient style={styles.containerGradient}>{contents}</Gradient> : <View style={styles.container}>{contents}</View>
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
