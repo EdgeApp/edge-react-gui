@@ -12,7 +12,7 @@ import UNISWAP_V2_PAIR from './abi/UNISWAP_V2_PAIR.json'
 import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
 
 export const rpcProviderUrls = [
-  `https://polished-empty-cloud.fantom.quiknode.pro/${ENV.FANTOM_INIT.quiknodeApiKey ?? ''}/`,
+  `https://polished-empty-cloud.fantom.quiknode.pro/${ENV.FANTOM_INIT?.quiknodeApiKey ?? ''}/`,
   'https://rpc.ftm.tools'
   // 'https://rpc.fantom.network',
   // 'https://rpc2.fantom.network',
