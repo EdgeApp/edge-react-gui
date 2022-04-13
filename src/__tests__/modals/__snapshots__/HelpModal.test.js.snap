@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HelpModal should render with loading props 1`] = `
-<ThemedModal
+<ForwardRef
   bridge={
     Object {
       "on": [Function],
@@ -55,7 +55,7 @@ exports[`HelpModal should render with loading props 1`] = `
       Thanks for using Edge!
     </ModalTitle>
   </View>
-  <WithTheme(SelectableRowComponent)
+  <Hook(WithTheme(SelectableRowComponent))
     arrowTappable={true}
     icon={
       <Icon
@@ -86,7 +86,7 @@ exports[`HelpModal should render with loading props 1`] = `
     title="Knowledge Base"
     underline={true}
   />
-  <WithTheme(SelectableRowComponent)
+  <Hook(WithTheme(SelectableRowComponent))
     arrowTappable={true}
     icon={
       <Icon
@@ -117,7 +117,7 @@ exports[`HelpModal should render with loading props 1`] = `
     title="Submit a Support Ticket"
     underline={true}
   />
-  <WithTheme(SelectableRowComponent)
+  <Hook(WithTheme(SelectableRowComponent))
     arrowTappable={true}
     icon={
       <Icon
@@ -148,7 +148,7 @@ exports[`HelpModal should render with loading props 1`] = `
     title="Call for Assistance"
     underline={true}
   />
-  <WithTheme(SelectableRowComponent)
+  <Hook(WithTheme(SelectableRowComponent))
     arrowTappable={true}
     icon={
       <Icon
@@ -210,8 +210,8 @@ exports[`HelpModal should render with loading props 1`] = `
       Build 2019010101
     </WithTheme(EdgeTextComponent)>
   </View>
-  <ModalCloseArrow
+  <ForwardRef
     onPress={[Function]}
   />
-</ThemedModal>
+</ForwardRef>
 `;

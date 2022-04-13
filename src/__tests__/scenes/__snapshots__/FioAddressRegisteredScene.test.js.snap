@@ -64,7 +64,7 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
         myFio@edge
       </FormattedText>
     </View>
-    <MainButton
+    <ForwardRef
       label="FIO Names"
       marginRem={2}
       onPress={[Function]}

@@ -23,7 +23,7 @@ exports[`createWalletName should render with loading props 1`] = `
     returnKeyType="next"
     value="My bitcoin"
   />
-  <MainButton
+  <ForwardRef
     alignSelf="center"
     label="Next"
     marginRem={
