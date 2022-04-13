@@ -14,6 +14,7 @@ describe('PasswordReminderModal', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       bridge: fakeAirshipBridge,
       account: () => fakeUser,
       onSuccess: () => undefined,

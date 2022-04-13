@@ -84,7 +84,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         }
       />
     </WithTheme(SettingsRadioRowComponent)>
-    <MainButton
+    <ForwardRef
       alignSelf="center"
       label="Done"
       marginRem={2}
@@ -179,7 +179,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         }
       />
     </WithTheme(SettingsRadioRowComponent)>
-    <MainButton
+    <ForwardRef
       alignSelf="center"
       label="Done"
       marginRem={2}
@@ -274,7 +274,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         }
       />
     </WithTheme(SettingsRadioRowComponent)>
-    <MainButton
+    <ForwardRef
       alignSelf="center"
       label="Done"
       marginRem={2}
@@ -369,7 +369,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         }
       />
     </WithTheme(SettingsRadioRowComponent)>
-    <MainButton
+    <ForwardRef
       alignSelf="center"
       label="Done"
       marginRem={2}

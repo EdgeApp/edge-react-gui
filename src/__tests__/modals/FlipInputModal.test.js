@@ -13,6 +13,7 @@ describe('FlipInputModalComponent', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       bridge: fakeAirshipBridge,
       walletId: 'myWallet',
       currencyCode: 'BTC',

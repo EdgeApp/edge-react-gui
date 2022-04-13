@@ -13,6 +13,7 @@ describe('WalletListSortModalComponent', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       bridge: fakeAirshipBridge,
       sortOption: [{ key: 'manual' }, { key: 'name' }, { key: 'currencyCode' }, { key: 'currencyName' }, { key: 'highest' }, { key: 'lowest' }],
       updateWalletsSort: sortOption => undefined,
