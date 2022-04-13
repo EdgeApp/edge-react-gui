@@ -299,7 +299,14 @@ export const StakeModifyScene = (props: Props) => {
         </SceneHeader>
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
-        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={s.strings.stake_disabled_slider} />
+        <View style={styles.footer}>
+          <Slider
+            onSlidingComplete={handleSlideComplete}
+            disabled={isSliderDisabled}
+            showSpinner={sliderLocked}
+            disabledText={s.strings.stake_disabled_slider}
+          />
+        </View>
       </ScrollView>
     </SceneWrapper>
   )
@@ -329,5 +336,8 @@ const getStyles = cacheStyles(theme => ({
   },
   amountTilesContainer: {
     marginBottom: theme.rem(1)
+  },
+  footer: {
+    marginBottom: theme.rem(2)
   }
 }))
