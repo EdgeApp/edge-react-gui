@@ -112,10 +112,7 @@ export const StakeOverviewScene = (props: Props) => {
       </SceneWrapper>
     )
 
-  const isClaimLocked = rewardAllocations.some(rewardAllocation => rewardAllocation.locktime && rewardAllocation.locktime > new Date())
-  const isUnstakeLocked = stakeAllocations.some(stakeAllocation => stakeAllocation.locktime && stakeAllocation.locktime > new Date())
   const estimatedReturnMsg = stakePolicy.apy > 0 ? toFixed(stakePolicy.apy.toString(), 1, 1) + '% APR' : 'N/A'
-
   return (
     <SceneWrapper scroll background="theme">
       <SceneHeader style={styles.sceneHeader} title={getPolicyTitleName(stakePolicy)} withTopMargin />
@@ -131,19 +128,15 @@ export const StakeOverviewScene = (props: Props) => {
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) => allocation.tokenId + allocation.allocationType}
       />
+      <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
       <MainButton
-        label={s.strings.stake_stake_more_funds}
-        disabled={!stakePosition?.canStake}
-        type="primary"
-        onPress={handleModifyPress('stake')}
+        label={s.strings.stake_claim_rewards}
+        disabled={!stakePosition?.canClaim}
+        type="secondary"
+        onPress={handleModifyPress('claim')}
         marginRem={0.5}
       />
-      {stakePosition?.canClaim ? (
-        <MainButton label={s.strings.stake_claim_rewards} disabled={isClaimLocked} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
-      ) : null}
-      {stakePosition?.canUnstake ? (
-        <MainButton label={s.strings.stake_unstake} disabled={isUnstakeLocked} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
-      ) : null}
+      <MainButton label={s.strings.stake_unstake} disabled={!stakePosition?.canUnstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
     </SceneWrapper>
   )
 }
