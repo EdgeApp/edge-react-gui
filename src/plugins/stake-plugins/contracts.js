@@ -2,6 +2,7 @@
 
 import { ethers } from 'ethers'
 
+import ENV from '../../../env.json'
 import MASONRY_ABI from './abi/MASONRY_ABI.json'
 import TOMB_ABI from './abi/TOMB_ABI.json'
 import TOMB_TREASURY_ABI from './abi/TOMB_TREASURY_ABI.json'
@@ -11,7 +12,7 @@ import UNISWAP_V2_PAIR from './abi/UNISWAP_V2_PAIR.json'
 import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
 
 export const rpcProviderUrls = [
-  'https://polished-empty-cloud.fantom.quiknode.pro/1c86703ec1eb3d515877a16a9823508a612c035d',
+  `https://polished-empty-cloud.fantom.quiknode.pro/${ENV.FANTOM_INIT.quiknodeApiKey ?? ''}/`,
   'https://rpc.ftm.tools'
   // 'https://rpc.fantom.network',
   // 'https://rpc2.fantom.network',
