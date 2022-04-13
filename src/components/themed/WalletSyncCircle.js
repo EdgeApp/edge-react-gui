@@ -65,7 +65,7 @@ export const WalletSyncCircle = (props: Props) => {
   // Animated Params
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - syncRatio.value),
-    opacity: withTiming(syncRatio.value === 1 ? 0 : 1, { duration: 2000 }),
+    opacity: withTiming(syncRatio.value === 1 ? 0 : 1, { duration: 500 }),
     stroke: withTiming(stroke.value)
   }))
 
