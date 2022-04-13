@@ -287,7 +287,7 @@ export const StakeModifyScene = (props: Props) => {
   const sceneTitleMap = {
     stake: getPolicyTitleName(stakePolicy),
     claim: s.strings.stake_claim_rewards,
-    unstake: s.strings.stake_claim_unstake
+    unstake: s.strings.stake_unstake_claim
   }
 
   const policyIcons = getPolicyIconUris(currencyWallet, stakePolicy)
