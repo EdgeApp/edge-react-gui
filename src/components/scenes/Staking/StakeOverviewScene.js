@@ -136,7 +136,13 @@ export const StakeOverviewScene = (props: Props) => {
         onPress={handleModifyPress('claim')}
         marginRem={0.5}
       />
-      <MainButton label={s.strings.stake_unstake} disabled={!stakePosition?.canUnstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
+      <MainButton
+        label={s.strings.stake_unstake_claim}
+        disabled={!stakePosition?.canUnstake}
+        type="escape"
+        onPress={handleModifyPress('unstake')}
+        marginRem={0.5}
+      />
     </SceneWrapper>
   )
 }
