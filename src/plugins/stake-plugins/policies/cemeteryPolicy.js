@@ -437,12 +437,25 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       // Get the signer for the wallet
       const signerAddress = makeSigner(getSeed(wallet)).getAddress()
 
-      // Get staked allocations:
-      // 1. Get the amount of LP-tokens staked in the pool contract
-      const userStakePoolInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
-      const stakedLpTokenBalance = userStakePoolInfo.amount.toString()
-      // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
-      const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
+      const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, nativeTokenBalance, tokenABalance, lpTokenBalance] = await Promise.all([
+        // Get staked allocations:
+        // 1. Get the amount of LP-tokens staked in the pool contract
+        multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress)).then(async userStakePoolInfo => {
+          const stakedLpTokenBalance = userStakePoolInfo.amount.toString()
+          // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
+          const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
+          return { stakedLpTokenBalance, assetAmountsFromLp }
+        }),
+        // Get reward amount:
+        multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress)).then(String),
+        // Get native token balance:
+        multipass(p => p.getBalance(signerAddress)).then(String),
+        // Get token A balance:
+        multipass(p => tokenAContract.connect(p).balanceOf(signerAddress)).then(String),
+        // Get LP token balance:
+        multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress)).then(String)
+      ])
+
       // 3. Use the conversion amounts to create the staked allocations
       const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((asset, index) => {
         const assetId = toAssetId(asset)
@@ -459,7 +472,6 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       })
 
       // Get earned allocations:
-      const rewardNativeAmount = (await multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
@@ -474,9 +486,6 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       // Actions available for the user:
       //
 
-      const nativeTokenBalance = (await multipass(p => p.getBalance(signerAddress))).toString()
-      const tokenABalance = (await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))).toString()
-      const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
       // You can stake if you have balances in the paired assets, or some unstaked LP-Token balance
       const canStake = (gt(tokenABalance, '0') && gt(nativeTokenBalance, '0')) || gt(lpTokenBalance, '0')
 
