@@ -300,39 +300,47 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Get the signer for the wallet
       const signerAddress = makeSigner(getSeed(wallet)).getAddress()
+      const tokenContract = makeContract(policyInfo.stakeAssets[0].tokenId)
+
+      const [stakedAmount, stakeAllocationLockTime, earnedAmount, earnedAllocationsLockTime, tokenBalance] = await Promise.all([
+        // Get the amount of staked tokens:
+        multipass(p => poolContract.connect(p).balanceOf(signerAddress)),
+        // Get the stake allocation lock time:
+        getUserUnstakeTime(signerAddress),
+        // Get the earned token balance:
+        multipass(p => poolContract.connect(p).earned(signerAddress)),
+        // Get the earned allocations lock time:
+        getUserClaimRewardTime(signerAddress),
+        // Get the token balance:
+        multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
+      ])
 
       // Get staked allocations
-      const balanceOfTxResponse = await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
       const stakedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.stakeAssets[0].pluginId,
           tokenId: policyInfo.stakeAssets[0].tokenId,
           allocationType: 'staked',
-          nativeAmount: fromHex(balanceOfTxResponse._hex),
-          locktime: await getUserUnstakeTime(signerAddress)
+          nativeAmount: fromHex(stakedAmount._hex),
+          locktime: stakeAllocationLockTime
         }
       ]
 
       // Get earned allocations
-      const earnedTxRresponse = await multipass(p => poolContract.connect(p).earned(signerAddress))
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
           tokenId: policyInfo.rewardAssets[0].tokenId,
           allocationType: 'earned',
-          nativeAmount: fromHex(earnedTxRresponse._hex),
-          locktime: await getUserClaimRewardTime(signerAddress)
+          nativeAmount: fromHex(earnedAmount._hex),
+          locktime: earnedAllocationsLockTime
         }
       ]
 
       //
       // Action flags
       //
-
-      const tokenContract = makeContract(policyInfo.stakeAssets[0].tokenId)
-      const tokenBalance = (await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))).toString()
-
-      const canStake = gt(tokenBalance, '0')
+      const canStake = gt(tokenBalance.toString(), '0')
       const canUnstake = gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
       const canClaim = gt(earnedAllocations[0].nativeAmount, '0') && earnedAllocations[0].locktime == null
 
