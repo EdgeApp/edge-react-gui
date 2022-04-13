@@ -75,7 +75,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       type="secondary"
     />
   </View>
-  <ModalCloseArrow
+  <ForwardRef
     onPress={[Function]}
   />
 </ThemedModal>
