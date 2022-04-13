@@ -24,8 +24,6 @@ export type WalletListCreateRowProps = {
   currencyCode: string,
   currencyName: string,
   walletType?: string,
-  symbolImage?: string,
-  symbolImageDarkMono?: string,
   parentCurrencyCode?: string
 }
 
@@ -98,7 +96,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { currencyCode = '', currencyName = '', walletType, symbolImage = '', symbolImageDarkMono = '', parentCurrencyCode, onPress } = props
+  const { currencyCode = '', currencyName = '', walletType, parentCurrencyCode, onPress } = props
 
   const handlePress = useCallback(() => {
     const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)
@@ -119,7 +117,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   )
 
   return (
-    <WalletListRow currencyCode={currencyCode} iconUri={symbolImage ?? symbolImageDarkMono} onPress={handlePress} walletName={currencyName}>
+    <WalletListRow currencyCode={currencyCode} onPress={handlePress} walletName={currencyName}>
       {children}
     </WalletListRow>
   )

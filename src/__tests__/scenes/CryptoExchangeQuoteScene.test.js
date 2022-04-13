@@ -4,7 +4,6 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
 
@@ -116,11 +115,9 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
           }
         }
       },
-      fromCurrencyIcon: WalletIcon,
       fromDenomination: 'BTC',
       fromWalletCurrencyName: { fromDenomination: '' },
       pending: true,
-      toCurrencyIcon: WalletIcon,
       toDenomination: 'ETH',
       toWalletCurrencyName: { fromDenomination: '' },
 

@@ -38,7 +38,6 @@ describe('FlipInputComponent', () => {
       topReturnKeyType: 'string',
       inputAccessoryViewID: 'string',
       headerText: 'string',
-      headerLogo: 'string',
       headerCallback: () => undefined,
       keyboardVisible: true,
       flipInputRef: () => undefined,

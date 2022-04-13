@@ -3,12 +3,12 @@
 import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
+import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -19,7 +19,6 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { debounce } from '../../util/utils'
@@ -106,7 +105,6 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const { selectedWalletType } = route.params
     const { currencyCode } = selectedWalletType
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
-    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.pluginId)
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
 
@@ -125,7 +123,12 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={styles.scrollableView}>
-            <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
+            <CurrencyIcon
+              currencyCode={currencyCode}
+              marginRem={[1.5, 0, 0, 0]}
+              pluginId={currencyConfigs[walletTypeValue].currencyInfo.pluginId}
+              sizeRem={4}
+            />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>
@@ -197,12 +200,6 @@ const rawStyles = {
   next: {
     marginLeft: scale(1),
     flex: 1
-  },
-  currencyLogo: {
-    alignSelf: 'center',
-    marginTop: scale(24),
-    height: scale(64),
-    width: scale(64)
   },
   feedbackIcon: {
     alignSelf: 'flex-end',

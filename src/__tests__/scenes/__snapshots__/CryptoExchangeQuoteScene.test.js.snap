@@ -23,11 +23,6 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       currencyCode="BTC"
       fiatCurrencyCode="USD"
       isTop={true}
-      walletIcon={
-        Object {
-          "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
-        }
-      }
       walletName=""
     />
     <WithTheme(LineTextDividerComponent)
@@ -42,11 +37,6 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       }
       currencyCode="ETH"
       fiatCurrencyCode="USD"
-      walletIcon={
-        Object {
-          "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
-        }
-      }
       walletName=""
     />
     <View

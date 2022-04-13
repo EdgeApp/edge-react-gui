@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { PLUGIN_BUY } from '../../constants/SceneKeys.js'
@@ -11,6 +10,7 @@ import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
@@ -24,10 +24,7 @@ type OwnProps = {
   currencyCode: string
 }
 
-type StateProps = {
-  currencyName: string,
-  currencyImage?: string
-}
+type StateProps = { currencyName: string }
 
 type Props = OwnProps & StateProps & ThemeProps
 
@@ -37,7 +34,7 @@ export class BuyCryptoComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { currencyCode, currencyImage, currencyName, theme } = this.props
+    const { currencyCode, currencyName, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -46,7 +43,8 @@ export class BuyCryptoComponent extends React.PureComponent<Props> {
           <ButtonBox onPress={this.handlePress} paddingRem={1}>
             <View style={styles.container}>
               <View style={styles.buyCrypto}>
-                <FastImage style={styles.buyCryptoImage} source={{ uri: currencyImage }} resizeMode="cover" />
+                <CurrencyIcon currencyCode={currencyCode} marginRem={[0.25, 0]} sizeRem={2.25} />
+
                 <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, currencyName)}</EdgeText>
               </View>
             </View>
@@ -72,11 +70,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  buyCryptoImage: {
-    width: theme.rem(2.25),
-    height: theme.rem(2.25),
-    marginVertical: theme.rem(0.25)
-  },
+
   buyCryptoText: {
     fontFamily: theme.fontFaceMedium,
     marginVertical: theme.rem(0.25)
@@ -93,13 +87,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const BuyCrypto = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => {
-    const guiWallet = state.ui.wallets.byId[ownProps.walletId]
-
-    return {
-      currencyName: guiWallet.currencyNames[ownProps.currencyCode],
-      currencyImage: guiWallet.symbolImage
-    }
+  (state, { walletId, currencyCode }) => {
+    const guiWallet = state.ui.wallets.byId[walletId]
+    return { currencyName: guiWallet.currencyNames[currencyCode] }
   },
   dispatch => ({})
 )(withTheme(BuyCryptoComponent))

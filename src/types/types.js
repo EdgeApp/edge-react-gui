@@ -24,8 +24,6 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  symbolImage: string | void,
-  symbolImageDarkMono: string | void,
   metaTokens: EdgeMetaToken[],
   enabledTokens: string[],
   addressLoadingProgress?: number,
@@ -120,15 +118,12 @@ export type CustomTokenInfo = {
 export type CreateWalletType = {
   currencyName: string,
   walletType: string,
-  symbolImage?: string,
-  symbolImageDarkMono?: string,
   currencyCode: string
 }
 
 export type CreateTokenType = {
   currencyCode: string,
   currencyName: string,
-  symbolImage?: string,
   parentCurrencyCode: string
 }
 
@@ -196,8 +191,6 @@ export const emptyGuiWallet: GuiWallet = {
   currencyCode: '',
   isoFiatCurrencyCode: '',
   fiatCurrencyCode: '',
-  symbolImage: '',
-  symbolImageDarkMono: '',
   metaTokens: [],
   enabledTokens: [],
   receiveAddress: {

@@ -18,21 +18,18 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
         }
       }
     >
-      <FastImage
-        resizeMode="cover"
-        source={
-          Object {
-            "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
-          }
+      <Memo(CurrencyIconComponent)
+        currencyCode="BTC"
+        marginRem={
+          Array [
+            1.5,
+            0,
+            0,
+            0,
+          ]
         }
-        style={
-          Object {
-            "alignSelf": "center",
-            "height": 89.89295774647887,
-            "marginTop": 33.709859154929575,
-            "width": 89.89295774647887,
-          }
-        }
+        pluginId="bitcoin"
+        sizeRem={4}
       />
       <View
         style={

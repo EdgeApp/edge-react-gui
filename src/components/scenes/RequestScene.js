@@ -19,7 +19,6 @@ import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertNativeToDenomination, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -41,7 +40,6 @@ type OwnProps = {
 }
 type StateProps = {
   currencyCode?: string,
-  currencyIcon?: string,
   currencyInfo?: EdgeCurrencyInfo,
   edgeWallet?: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio?: string,
@@ -282,7 +280,7 @@ export class RequestComponent extends React.Component<Props, State> {
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   render() {
-    const { currencyIcon, exchangeSecondaryToPrimaryRatio, edgeWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { exchangeSecondaryToPrimaryRatio, edgeWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
     if (primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || edgeWallet == null) {
@@ -329,7 +327,6 @@ export class RequestComponent extends React.Component<Props, State> {
               <ExchangedFlipInput
                 ref={this.flipInputRef}
                 headerText={flipInputHeaderText}
-                headerLogo={currencyIcon}
                 primaryCurrencyInfo={primaryCurrencyInfo}
                 secondaryCurrencyInfo={secondaryCurrencyInfo}
                 exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
@@ -614,15 +611,9 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
-    // Icon
-    const { pluginId, metaTokens } = edgeWallet.currencyInfo
-    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-    const currencyIcon = getCurrencyIcon(pluginId, contractAddress).symbolImage
-
     return {
       currencyCode,
       currencyInfo,
-      currencyIcon,
       edgeWallet,
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,

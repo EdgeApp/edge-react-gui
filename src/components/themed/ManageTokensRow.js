@@ -15,7 +15,6 @@ export type Props = {
   },
   enabledList: string[],
   goToEditTokenScene: string => void,
-  symbolImage: string,
   metaTokens: EdgeMetaToken[]
 }
 
@@ -24,8 +23,7 @@ export function ManageTokensRow(props: Props) {
   const styles = getStyles(theme)
 
   const { currencyCode, currencyName } = props.metaToken.item
-  const { enabledList, toggleToken, goToEditTokenScene, metaTokens, symbolImage } = props
-
+  const { enabledList, toggleToken, goToEditTokenScene, metaTokens } = props
   const enabled = enabledList.indexOf(currencyCode) >= 0
   // disable editing if token is native to the app
   const isEditable = metaTokens.every(token => token.currencyCode !== currencyCode)
@@ -35,7 +33,7 @@ export function ManageTokensRow(props: Props) {
   }
 
   return (
-    <WalletListRow onPress={onPress} gradient iconUri={symbolImage} currencyCode={currencyCode} walletName={currencyName}>
+    <WalletListRow onPress={onPress} gradient currencyCode={currencyCode} walletName={currencyName}>
       <View style={styles.touchableCheckboxInterior}>
         {isEditable ? (
           <View style={styles.editIcon}>

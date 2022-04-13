@@ -2,20 +2,20 @@
 
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo } from '../../types/reactHooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {
   currencyCode: string,
+  walletId?: string,
   exchangeRateText?: string,
   exchangeRateType?: 'neutral' | 'positive' | 'negative',
   children?: React.Node,
   icon?: React.Node,
-  iconUri?: string,
   iconSizeRem?: number,
   gradient?: boolean,
   onPress?: () => void,
@@ -24,11 +24,9 @@ type Props = {
 }
 
 export const WalletListRowComponent = (props: Props) => {
-  const { currencyCode, children, gradient = false, icon, iconUri = '', iconSizeRem, onPress, onLongPress, walletName = '' } = props
+  const { currencyCode, children, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const iconSizeStyle = iconSizeRem != null ? { width: theme.rem(iconSizeRem), height: theme.rem(iconSizeRem) } : styles.iconSize
-  const iconComponent = icon == null ? <FastImage style={iconSizeStyle} source={{ uri: iconUri }} /> : icon
 
   const contents = (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
@@ -38,7 +36,9 @@ export const WalletListRowComponent = (props: Props) => {
         </View>
       ) : (
         <View style={styles.contentContainer}>
-          <View style={styles.iconContainer}>{iconComponent}</View>
+          <View style={styles.iconContainer}>
+            {icon == null ? <CurrencyIcon sizeRem={iconSizeRem} walletId={walletId} currencyCode={currencyCode} /> : icon}
+          </View>
           <View style={styles.detailsContainer}>
             <View style={styles.detailsTop}>
               <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>

@@ -4,7 +4,6 @@ import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -24,12 +23,12 @@ import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import { type ThemeProps, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
@@ -209,7 +208,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   render() {
     const { account, theme, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
-    const styles = getStyles(theme)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
@@ -253,7 +251,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName } = currencyInfo
-            const { symbolImage } = getCurrencyIcon(pluginId)
             const onPress = () =>
               navigation.navigate('currencySettings', {
                 currencyInfo
@@ -261,7 +258,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
             return (
               <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-                <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} />
+                <CurrencyIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
               </SettingsTappableRow>
             )
           })}
@@ -290,18 +287,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     )
   }
 }
-
-const getStyles = cacheStyles((theme: Theme) => {
-  const iconSize = theme.rem(1.25)
-  return {
-    currencyLogo: {
-      height: iconSize,
-      width: iconSize,
-      marginHorizontal: theme.rem(0.5),
-      resizeMode: 'contain'
-    }
-  }
-})
 
 export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
