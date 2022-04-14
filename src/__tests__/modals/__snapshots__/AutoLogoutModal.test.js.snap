@@ -158,6 +158,9 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "settingsSideshiftLogo": Object {
         "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
       },
+      "settingsSpookySwapLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
+      },
       "settingsSwitchainLogo": Object {
         "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
       },

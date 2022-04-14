@@ -189,6 +189,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "settingsSideshiftLogo": Object {
                 "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
               },
+              "settingsSpookySwapLogo": Object {
+                "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
+              },
               "settingsSwitchainLogo": Object {
                 "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
               },
@@ -401,6 +404,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
               "settingsSideshiftLogo": Object {
                 "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
+              },
+              "settingsSpookySwapLogo": Object {
+                "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
               },
               "settingsSwitchainLogo": Object {
                 "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
