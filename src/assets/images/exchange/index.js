@@ -45,5 +45,6 @@ export const swapPluginIcons = {
   godex: godexLogo,
   sideshift: sideshiftLogo,
   spookySwap: spookySwapLogo,
-  switchain: switchainLogo
+  switchain: switchainLogo,
+  transfer: defaultLogo
 }
