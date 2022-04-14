@@ -144,7 +144,7 @@ const getInitialState = (props: Props) => {
     isToggled: false,
     textInputFrontFocus: false,
     textInputBackFocus: false,
-    overridePrimaryDecimalAmount: '',
+    overridePrimaryDecimalAmount: '0',
     primaryDisplayAmount: '',
     forceUpdateGuiCounter: 0,
     secondaryDisplayAmount: '',
