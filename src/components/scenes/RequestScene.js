@@ -5,7 +5,7 @@ import { gt, lt, lte } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, View } from 'react-native'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -16,6 +16,7 @@ import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/W
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
@@ -360,7 +361,7 @@ export class RequestComponent extends React.Component<Props, State> {
               </InputAccessoryView>
             ) : null}
             <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} ref={this.props.generateTestHook('RequestScene.OpenQr')} />
-            <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
+            <TouchableOpacity onPress={this.handleAddressBlockExplorer} ref={this.props.generateTestHook('RequestScene.AddressExplorer')}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
                 <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
