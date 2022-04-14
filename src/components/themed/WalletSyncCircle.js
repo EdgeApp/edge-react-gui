@@ -24,7 +24,7 @@ export const WalletSyncCircle = (props: Props) => {
   const theme = useTheme()
   const { size = theme.rem(2), edgeWallet } = props
   // Animation shared state
-  const syncRatio = useSharedValue(edgeWallet.syncRatio)
+  const syncRatio = useSharedValue(edgeWallet.syncRatio < 0.05 ? 0.05 : edgeWallet.syncRatio)
   const isDone = useSharedValue(false)
   const stroke = useSharedValue(theme.walletProgressIconFill)
 
