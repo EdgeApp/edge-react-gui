@@ -8,6 +8,7 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from './Card'
@@ -24,6 +25,7 @@ type OwnProps = {
   headerText: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
+  tokenId?: string,
   fiatPerCrypto: string,
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
@@ -58,7 +60,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <CurrencyIcon sizeRem={1.75} walletId={this.props.walletId} />
+        <CurrencyIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />
       </View>
     )
   }
@@ -236,7 +238,9 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
     const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
     const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
 
-    return { name: name ?? '', cryptoAmount: cryptoAmount }
+    const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
+
+    return { name: name ?? '', cryptoAmount: cryptoAmount, tokenId }
   },
   dispatch => ({})
 )(withTheme(CryptoExchangeFlipInputWrapperComponent))
