@@ -12,6 +12,8 @@ import { EdgeText } from './EdgeText.js'
 type Props = {
   currencyCode: string,
   walletId?: string,
+  pluginId?: string,
+  tokenId?: string,
   exchangeRateText?: string,
   exchangeRateType?: 'neutral' | 'positive' | 'negative',
   children?: React.Node,
@@ -24,7 +26,7 @@ type Props = {
 }
 
 export const WalletListRowComponent = (props: Props) => {
-  const { currencyCode, children, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
+  const { currencyCode, children, pluginId, tokenId, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -37,7 +39,7 @@ export const WalletListRowComponent = (props: Props) => {
       ) : (
         <View style={styles.contentContainer}>
           <View style={styles.iconContainer}>
-            {icon == null ? <CurrencyIcon sizeRem={iconSizeRem} walletId={walletId} currencyCode={currencyCode} /> : icon}
+            {icon == null ? <CurrencyIcon sizeRem={iconSizeRem} pluginId={pluginId} tokenId={tokenId} walletId={walletId} currencyCode={currencyCode} /> : icon}
           </View>
           <View style={styles.detailsContainer}>
             <View style={styles.detailsTop}>
