@@ -213,6 +213,7 @@ export type Theme = {
   settingsExolixLogo: string,
   settingsFoxExchangeLogo: string,
   settingsGodexLogo: string,
+  settingsSpookySwapLogo: string,
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
   settingsTotleLogo: string,
