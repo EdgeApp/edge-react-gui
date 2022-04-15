@@ -46,15 +46,11 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
 }
 
 export const toStakePolicy =
-  (infoResponse: InfoServerResponse | void) =>
+  (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
     const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
     const stakePolicyId = deriveStakePolicyId(policyInfo)
-
-    let apy = 0
-    if (Object.keys(infoResponse?.policies ?? {}).includes(stakePolicyId.toLowerCase())) {
-      apy = infoResponse?.policies[stakePolicyId.toLowerCase()] ?? 0
-    }
+    const apy = infoResponse.policies[stakePolicyId]
 
     return {
       stakePolicyId,
