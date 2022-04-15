@@ -5,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { makeContract, makeSigner, multipass } from '../contracts.js'
+import { cacheTxMetadata } from '../metadataCache'
 import { pluginInfo } from '../pluginInfo.js'
 import { type PositionAllocation } from '../types'
 import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, StakePositionRequest } from '../types.js'
@@ -88,6 +89,12 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
+
+      // Metadata constants:
+      const metadataName = 'Tomb Finance'
+      const nativeCurrencyCode = policyInfo.parentTokenId
+      const metadataStakeCurrencyCode = policyInfo.stakeAssets.map(asset => asset.tokenId)[0]
+      const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.tokenId)[0]
 
       const signerSeed = getSeed(wallet)
 
@@ -203,6 +210,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Make sure the allowance >= nativeAmount for the selected allocation
       // TODO: Change condition to check the `allowance >= nativeAmount` for each stake-asset
+
       await Promise.all(
         allocations.map(async allocation => {
           // We don't need to approve the stake pool contract for the token earned token contract
@@ -214,9 +222,14 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
             txs.build(
               (gasLimit =>
                 async function approvePoolContract({ signer }) {
-                  await tokenContract.connect(signer).approve(poolContract.address, ethers.constants.MaxUint256, {
+                  const result = await tokenContract.connect(signer).approve(poolContract.address, ethers.constants.MaxUint256, {
                     nonce: nextNonce(),
                     gasLimit
+                  })
+                  cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: 'Approve staking rewards pool contract'
                   })
                 })(gasLimitAcc('50000'))
             )
@@ -229,21 +242,55 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         txs.build(
           (gasLimit =>
             async function name({ signer }) {
-              await poolContract.connect(signer).stake(request.nativeAmount, {
+              const result = await poolContract.connect(signer).stake(request.nativeAmount, {
                 nonce: nextNonce(),
                 gasLimit
               })
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: 'Stake funds'
+              })
+              cacheTxMetadata(
+                result.hash,
+                metadataStakeCurrencyCode,
+                { name: metadataName, category: 'Transfer:Staking', notes: 'Stake funds' },
+                request.nativeAmount
+              )
             })(gasLimitAcc('240000'))
         )
       }
+
+      const earnedAmount = allocations.find(allocation => allocation.allocationType === 'earned')?.nativeAmount
       if (action === 'unstake') {
         txs.build(
           (gasLimit =>
             async function name({ signer }) {
-              await poolContract.connect(signer).withdraw(request.nativeAmount, {
+              const result = await poolContract.connect(signer).withdraw(request.nativeAmount, {
                 nonce: nextNonce(),
                 gasLimit
               })
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: 'Unstake funds'
+              })
+              cacheTxMetadata(
+                result.hash,
+                metadataStakeCurrencyCode,
+                { name: metadataName, category: 'Transfer:Staking', notes: 'Unstake funds' },
+                request.nativeAmount
+              )
+              cacheTxMetadata(
+                result.hash,
+                metadataRewardCurrencyCode,
+                {
+                  name: metadataName,
+                  category: 'Income:Staking',
+                  notes: 'Reward for staked funds'
+                },
+                earnedAmount
+              )
             })(gasLimitAcc('240000'))
         )
       }
@@ -253,10 +300,25 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         txs.build(
           (gasLimit =>
             async function name({ signer }) {
-              await poolContract.connect(signer).claimReward({
+              const result = await poolContract.connect(signer).claimReward({
                 nonce: nextNonce(),
                 gasLimit
               })
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: 'Claiming reward'
+              })
+              cacheTxMetadata(
+                result.hash,
+                metadataRewardCurrencyCode,
+                {
+                  name: metadataName,
+                  category: 'Income:Staking',
+                  notes: 'Reward for staked funds'
+                },
+                earnedAmount
+              )
             })(gasLimitAcc('240000'))
         )
       }
