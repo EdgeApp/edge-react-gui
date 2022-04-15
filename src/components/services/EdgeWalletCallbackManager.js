@@ -56,14 +56,19 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
             const exchangeAmount = {}
             exchangeAmount[currencyCode] = tokenFiat ?? null
 
-            const newTx = {
-              ...tx,
-              currencyCode,
-              nativeAmount,
-              metadata: tokenFiat != null ? { ...metadata, exchangeAmount } : metadata
-            }
+            const newMetadata = tokenFiat != null ? { ...metadata, exchangeAmount } : metadata
 
-            wallet.saveTx(newTx)
+            if (nativeAmount != null) {
+              const newTx = {
+                ...tx,
+                currencyCode,
+                nativeAmount,
+                metadata: newMetadata
+              }
+              wallet.saveTx(newTx)
+            } else {
+              wallet.saveTxMetadata(tx.txid, currencyCode, newMetadata)
+            }
           })
 
           delete stakeMetadataCache[txid]
