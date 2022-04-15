@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 2.13.1 (2022-04-15)
+
+- Disabled SpookySwap
+
 ## 2.13.0 (2022-04-11)
 
 - Add Tomb Finance's Masonry and Cemetery platforms
