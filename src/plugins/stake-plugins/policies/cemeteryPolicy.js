@@ -7,6 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { getContractInfo, makeContract, makeSigner, multipass } from '../contracts.js'
+import { cacheTxMetadata } from '../metadataCache'
 import { pluginInfo } from '../pluginInfo.js'
 import { type StakePolicyInfo } from '../stakePolicy'
 import { type PositionAllocation } from '../types'
@@ -163,6 +164,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       let txCount: number = await signer.getTransactionCount()
       const nextNonce = (): number => txCount++
 
+      // Metadata constants:
+      const metadataName = 'Tomb Finance'
+      const nativeCurrencyCode = policyInfo.parentTokenId
+      const metadataTokenCurrencyCode = policyInfo.stakeAssets[0].tokenId
+      const metadataLpName = `${metadataTokenCurrencyCode} - ${nativeCurrencyCode}`
+
       // Transaction builder
       const txs = makeBuilder(async fn => await multipass(provider => fn({ signer: signer.connect(provider) })))
 
@@ -217,7 +224,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               txs.build(
                 (gasLimit =>
                   async function approveLiquidityPool({ signer }) {
-                    await tokenAContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit, nonce: nextNonce() })
+                    const result = await tokenAContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit, nonce: nextNonce() })
+                    cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                      name: metadataName,
+                      category: 'Expense:Fees',
+                      notes: `Approve ${metadataLpName} rewards pool contract`
+                    })
                   })(gasLimitAcc('50000'))
               )
             }
@@ -266,6 +278,20 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                   gasLimit,
                   value: amountNative
                 })
+
+              // Cache metadata
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: 'Stake into ' + metadataLpName + ' LP'
+              })
+              cacheTxMetadata(
+                result.hash,
+                metadataTokenCurrencyCode,
+                { name: metadataName, category: 'Transfer:Staking', notes: 'Stake into ' + metadataLpName + ' LP' },
+                amountTokenDesired
+              )
+
               const receipt = await result.wait(1)
 
               //
@@ -296,7 +322,13 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const allowanceResponse = await lpTokenContract.connect(signer).allowance(signerAddress, spenderAddress)
               const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
               if (!isFullyAllowed) {
-                await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { nonce: nextNonce(), gasLimit })
+                const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { nonce: nextNonce(), gasLimit })
+
+                cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${metadataLpName} rewards pool contract`
+                })
               }
             })(gasLimitAcc('50000'))
         )
@@ -305,7 +337,19 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           (gasLimit =>
             async function stakeLiquidity({ signer, liquidity }) {
-              await poolContract.connect(signer).deposit(POOL_ID, liquidity, { nonce: nextNonce(), gasLimit })
+              const result = await poolContract.connect(signer).deposit(POOL_ID, liquidity, { nonce: nextNonce(), gasLimit })
+
+              // Amounts need to be calculated here
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Stake into ${metadataLpName} Reward Pool`
+              })
+              cacheTxMetadata(result.hash, metadataTokenCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Stake into ${metadataLpName} Reward Pool`
+              })
             })(gasLimitAcc('240000'))
         )
       }
@@ -348,7 +392,17 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               // We don't need to unstake liquidity from the pool
               if (lte(amountToUnstake, '0')) return
 
-              await poolContract.connect(signer).withdraw(POOL_ID, amountToUnstake, { nonce: nextNonce(), gasLimit })
+              const result = await poolContract.connect(signer).withdraw(POOL_ID, amountToUnstake, { nonce: nextNonce(), gasLimit })
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Income:Staking',
+                notes: `Unstake from ${metadataLpName} Reward Pool`
+              })
+              cacheTxMetadata(result.hash, metadataTokenCurrencyCode, {
+                name: metadataName,
+                category: 'Income:Staking',
+                notes: `Unstake from ${metadataLpName} Reward Pool`
+              })
             })(gasLimitAcc('240000'), lpTokenBalance)
         )
 
@@ -360,7 +414,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           txs.build(
             (gasLimit =>
               async function approveRouter({ signer }) {
-                await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { nonce: nextNonce(), gasLimit })
+                const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { nonce: nextNonce(), gasLimit })
+                cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Approve ${metadataLpName} rewards pool contract`
+                })
               })(gasLimitAcc('50000'))
           )
         }
@@ -373,12 +432,23 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const amountNativeMin = round(mul(nativeAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
-              await lpRouter
+              const result = await lpRouter
                 .connect(signer)
                 .removeLiquidityETH(tokenAContract.address, expectedLiquidityAmount, amountTokenMin, amountNativeMin, signerAddress, deadline, {
                   nonce: nextNonce(),
                   gasLimit
                 })
+
+              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                name: metadataName,
+                category: 'Income:Staking',
+                notes: 'Unstake from ' + metadataLpName + ' LP'
+              })
+              cacheTxMetadata(result.hash, metadataTokenCurrencyCode, {
+                name: metadataName,
+                category: 'Income:Staking',
+                notes: 'Unstake from ' + metadataLpName + ' LP'
+              })
             })(gasLimitAcc('500000'))
         )
       }
@@ -393,7 +463,18 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           (gasLimit =>
             async function claimReward({ signer }) {
-              await poolContract.connect(signer).withdraw(POOL_ID, 0, { nonce: nextNonce(), gasLimit })
+              const result = await poolContract.connect(signer).withdraw(POOL_ID, 0, { nonce: nextNonce(), gasLimit })
+
+              policyInfo.rewardAssets
+                .map(asset => asset.tokenId)
+                .forEach(currencyCode => {
+                  cacheTxMetadata(result.hash, currencyCode, { name: 'Tomb Finance', notes: `Claimed ${currencyCode} rewards from ${metadataLpName}` })
+                })
+              cacheTxMetadata(result.hash, policyInfo.parentTokenId, {
+                name: 'Tomb Finance',
+                category: 'Expense:Fees',
+                notes: `Fees for claim reward`
+              })
             })(gasLimitAcc('240000'))
         )
       }
