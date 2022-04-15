@@ -92,7 +92,6 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       return '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
     }
     const contractInfo = getContractInfo(asset.tokenId)
-    if (contractInfo == null) throw new Error(`Could not find contract info for ${asset.tokenId}`)
     const { address } = contractInfo
     return address
   }
