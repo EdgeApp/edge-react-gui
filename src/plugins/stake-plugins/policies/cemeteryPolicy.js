@@ -32,7 +32,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   // Declare contracts:
   // TODO: Replace the hardcode with a configuration from `options`
   const poolContract = makeContract('TSHARE_REWARD_POOL')
-  const lpRouter = makeContract('SPOOKY_SWAP_ROUTER')
+  const swapRouterContract = makeContract('SPOOKY_SWAP_ROUTER')
   const { lpTokenContract, tokenAContract } = options
 
   // Constants:
@@ -49,9 +49,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     policyInfo: StakePolicyInfo,
     lpTokenAmount: string
   ): Promise<{ [assetId: string]: { pluginId: string, tokenId: string, nativeAmount: string } }> {
-    // 1. Get the total supply of LP-tokens in the LP- pool contract
+    // 1. Get the total supply of LP-tokens in the LP-pool contract
     const lpTokenSupply = (await multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
-    // 2. Get the amount of each token reserve in the LP- pool contract
+    // 2. Get the amount of each token reserve in the LP-pool contract
     const reservesMap = await getTokenReservesMap()
     // 3. Get the amount of each token in for the policy
     return policyInfo.stakeAssets.reduce((acc, asset, index) => {
@@ -177,8 +177,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         /*
         LP Liquidity Providing:
           1. Check balance of staked assets and unstaked LP-token to determine if the user can stake
-          2. Approve LP-Router contract on non-native token contract
-          3. Add liquidity to to LP-Router contract
+          2. Approve Swap Router contract on non-native token contract
+          3. Add liquidity to to Swap Router contract
         */
 
         // 1. Check balance of staked assets and unstaked LP-token to determine if the user can stake
@@ -207,7 +207,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             })
         )
 
-        // 2. Approve Router contract for every stake token contract (excluding native token)
+        // 2. Approve Swap Router contract for every stake token contract (excluding native token)
         await Promise.all(
           allocations.map(async allocation => {
             // We don't need to approve the stake pool contract for the token earned token contract
@@ -217,7 +217,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             if (isNativeToken) return
 
             const tokenAContract = makeContract(allocation.tokenId)
-            const spenderAddress = lpRouter.address
+            const spenderAddress = swapRouterContract.address
             const allowanceResponse = await multipass(p => tokenAContract.connect(p).allowance(signerAddress, spenderAddress))
             const isFullyAllowed = allowanceResponse.sub(allocation.nativeAmount).gte(0)
             if (!isFullyAllowed) {
@@ -236,7 +236,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           })
         )
 
-        // 3. Add liquidity to to LP-Router contract
+        // 3. Add liquidity to to Swap Router contract
         txs.build(
           ((gasLimit, lpTokenBalance) =>
             async function addLiquidity({ signer }) {
@@ -271,7 +271,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
               // Call the contract
               // TODO: Use 'addLiquidity' If both assets are tokens
-              const result = await lpRouter
+              const result = await swapRouterContract
                 .connect(signer)
                 .addLiquidityETH(tokenAContract.address, amountTokenDesired, amountTokenMin, amountNativeMin, signerAddress, deadline, {
                   nonce: nextNonce(),
@@ -310,11 +310,11 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
         /*
         Staking for LP tokens:
-          1. Approve Pool Contract on LP- Contract:
+          1. Approve Pool Contract on LP-Contract:
           2. Stake LP token
         */
 
-        // 1. Approve Pool Contract on LP- Contract:
+        // 1. Approve Pool Contract on LP-Contract:
         txs.build(
           (gasLimit =>
             async function approveStakingPool({ signer, liquidity }) {
@@ -359,7 +359,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
         2. Check liquidity amount balance
         3. Withdraw LP-token from Pool Contract
-        4. Remove the liquidity from LP-Router contract (using the amount of LP-token withdrawn)
+        4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
       */
       if (action === 'unstake') {
         const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
@@ -406,8 +406,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             })(gasLimitAcc('240000'), lpTokenBalance)
         )
 
-        // 4. Allow LP-Router on the LP-token contract
-        const spenderAddress = lpRouter.address
+        // 4. Allow Swap on the LP-token contract
+        const spenderAddress = swapRouterContract.address
         const allowanceResponse = await multipass(p => lpTokenContract.connect(p).allowance(signerAddress, spenderAddress))
         const isAllowed = allowanceResponse.sub(expectedLiquidityAmount).gte(0)
         if (!isAllowed) {
@@ -424,7 +424,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           )
         }
 
-        // 4. Remove the liquidity from LP-Router contract (using the amount of LP-token withdrawn)
+        // 4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
         txs.build(
           (gasLimit =>
             async function removeLiquidity({ signer }) {
@@ -432,7 +432,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const amountNativeMin = round(mul(nativeAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
-              const result = await lpRouter
+              const result = await swapRouterContract
                 .connect(signer)
                 .removeLiquidityETH(tokenAContract.address, expectedLiquidityAmount, amountTokenMin, amountNativeMin, signerAddress, deadline, {
                   nonce: nextNonce(),
@@ -455,10 +455,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
       /*
       Claiming for LP tokens:
-        1. Withdraw reward by removing 0 liquidity from LP-Router contract
+        1. Withdraw reward by removing 0 liquidity from Swap Router contract
       */
       if (action === 'claim') {
-        // 1. Withdraw reward by removing 0 liquidity from LP-Router contract
+        // 1. Withdraw reward by removing 0 liquidity from Swap Router contract
         // Claiming withdraws all earned tokens
         txs.build(
           (gasLimit =>
