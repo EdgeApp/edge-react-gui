@@ -95,6 +95,7 @@ export function WalletListScene(props: Props) {
                 openSortModal={handleSort}
                 onChangeSearchText={setSearchText}
                 onChangeSearchingState={setSearching}
+                testId="WalletListScene.SortModal"
               />
             }
             footer={searching ? null : <WalletListFooter />}

@@ -1,12 +1,13 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
+import { TouchableOpacity, View } from '../../types/reactNative.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -23,9 +24,14 @@ type OwnProps = {
   onChangeSearchingState: (searching: boolean) => void
 }
 
+type TestProps = {
+  generateTestHook: (id: string, ref: any) => void,
+  testId?: string
+}
+
 type Props = OwnProps & ThemeProps
 
-export class WalletListHeaderComponent extends React.PureComponent<Props> {
+export class WalletListHeaderComponent extends React.PureComponent<Props & TestProps> {
   textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   componentDidUpdate(prevProps: Props) {
@@ -80,7 +86,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
               <TouchableOpacity style={styles.addButton} onPress={() => Actions.push(CREATE_WALLET_SELECT_CRYPTO)}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.props.openSortModal}>
+              <TouchableOpacity onPress={this.props.openSortModal} ref={this.props.generateTestHook(this.props.testId ?? '')}>
                 <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
             </View>
@@ -123,4 +129,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListHeader = withTheme(WalletListHeaderComponent)
+export const WalletListHeader = hook(withTheme(WalletListHeaderComponent))
