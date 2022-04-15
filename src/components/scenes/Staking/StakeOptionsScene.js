@@ -25,6 +25,11 @@ type Props = {
   navigation: NavigationProp<'stakeOptions'>
 }
 
+const ListHeader = () => {
+  const theme = useTheme()
+  return <EdgeText style={{ marginTop: theme.rem(1) }}>{s.strings.stake_select_options}</EdgeText>
+}
+
 export const StakeOptionsScene = (props: Props) => {
   const { walletId, currencyCode } = props.route.params
   const { navigation } = props
@@ -101,13 +106,18 @@ export const StakeOptionsScene = (props: Props) => {
     )
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper background="theme">
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
         {icon}
       </SceneHeader>
       <View style={styles.optionsContainer}>
-        <EdgeText>{s.strings.stake_select_options}</EdgeText>
-        <FlatList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
+        <FlatList
+          style={styles.listStyle}
+          data={stakePolicies}
+          ListHeaderComponent={ListHeader}
+          renderItem={renderOptions}
+          keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
+        />
       </View>
     </SceneWrapper>
   )
@@ -116,12 +126,15 @@ export const StakeOptionsScene = (props: Props) => {
 const getStyles = cacheStyles(theme => ({
   optionsContainer: {
     alignItems: 'stretch',
-    margin: theme.rem(1),
+    marginHorizontal: theme.rem(1),
     marginBottom: theme.rem(6)
   },
   optionContainer: {
     margin: theme.rem(1),
     marginBottom: 0
+  },
+  listStyle: {
+    height: '100%'
   },
   sceneHeader: {
     flexDirection: 'row',

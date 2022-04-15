@@ -12,7 +12,6 @@ import { type GuiExchangeRates } from '../../types/types.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { SceneHeader } from './SceneHeader.js'
 
 type StateProps = {
   showBalance: boolean,
@@ -44,20 +43,18 @@ export class BalanceBox extends React.PureComponent<Props> {
     const noExchangeRates = !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (
-      <SceneHeader underline>
-        <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.balanceBoxContainer}>
-          {showBalance && !noExchangeRates ? (
-            <>
-              <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
-              <EdgeText style={styles.balanceBody}>
-                {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
-              </EdgeText>
-            </>
-          ) : (
-            <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
-          )}
-        </TouchableOpacity>
-      </SceneHeader>
+      <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.balanceBoxContainer}>
+        {showBalance && !noExchangeRates ? (
+          <>
+            <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
+            <EdgeText style={styles.balanceBody}>
+              {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
+            </EdgeText>
+          </>
+        ) : (
+          <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
+        )}
+      </TouchableOpacity>
     )
   }
 }

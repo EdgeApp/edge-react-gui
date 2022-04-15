@@ -168,7 +168,7 @@ export const StakeModifyScene = (props: Props) => {
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, currencyWallet.name)}
         hideMaxButton={
-          /* TODO: Max button needs to be enabled after max calculation for 
+          /* TODO: Max button needs to be enabled after max calculation for
           multi-asset staking is fully implemented and working in plugin */
           existingStaked.length > 1
         }
@@ -294,11 +294,11 @@ export const StakeModifyScene = (props: Props) => {
   const icon = modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper background="theme">
+      <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
+        {icon}
+      </SceneHeader>
       <ScrollView>
-        <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
-          {icon}
-        </SceneHeader>
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
         <View style={styles.footer}>

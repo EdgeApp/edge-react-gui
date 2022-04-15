@@ -356,7 +356,6 @@ export function WalletList(props: Props) {
 
   return (
     <FlatList
-      contentOffset={{ x: 0, y: !searching && !isModal ? theme.rem(4.5) : 0 }}
       data={walletList}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}

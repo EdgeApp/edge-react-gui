@@ -90,7 +90,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
+      <SceneWrapper background="theme" padding={theme.rem(0.5)}>
         <AntDesignIcon name="lock" style={styles.icon} />
         <Text style={styles.titleText}>{otpKey != null ? s.strings.title_otp_enabled : s.strings.title_otp_disabled}</Text>
 

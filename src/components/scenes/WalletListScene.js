@@ -2,10 +2,14 @@
 
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import { Fontello } from '../../assets/vector/index.js'
+import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -15,12 +19,14 @@ import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { PromoCard } from '../themed/PromoCard.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
 import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListHeader } from '../themed/WalletListHeader.js'
 import { WalletListSortable } from '../themed/WalletListSortable.js'
+import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
-
 type Props = {}
 
 export function WalletListScene(props: Props) {
@@ -71,32 +77,47 @@ export function WalletListScene(props: Props) {
     []
   )
 
+  const header = !sorting && !searching && (
+    <View style={styles.headerContainer}>
+      <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+      <View key="defaultButtons" style={styles.headerButtonsContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={() => Actions.push(CREATE_WALLET_SELECT_CRYPTO)}>
+          <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleSort}>
+          <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+
   return (
     <SceneWrapper>
-      <WiredProgressBar />
-      {sorting && (
-        <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
-            <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
-          </TouchableOpacity>
+      <SceneHeader underline>
+        <WiredProgressBar />
+        <View style={styles.balance}>
+          {sorting && (
+            <View style={styles.headerContainer}>
+              <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+              <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
+                <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {searching && (
+            <WalletListHeader searching={searching} searchText={searchText} onChangeSearchText={setSearchText} onChangeSearchingState={setSearching} />
+          )}
+          {!searching && !sorting && <WiredBalanceBox />}
         </View>
-      )}
+      </SceneHeader>
+
       <View style={styles.listStack}>
         <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
           <WalletList
             key="fullList"
-            header={
-              <WalletListHeader
-                sorting={sorting}
-                searching={searching}
-                searchText={searchText}
-                openSortModal={handleSort}
-                onChangeSearchText={setSearchText}
-                onChangeSearchingState={setSearching}
-              />
-            }
+            header={header}
             footer={searching ? null : <WalletListFooter />}
             searching={searching}
             searchText={searchText}
@@ -106,11 +127,16 @@ export function WalletListScene(props: Props) {
           <WalletListSortable key="sortList" />
         </CrossFade>
       </View>
+
+      {!searching && <PromoCard />}
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  balance: {
+    marginTop: theme.rem(1)
+  },
   // The sort & add buttons are stacked on top of the header component:
   // Header Stack style
   headerContainer: {
@@ -127,6 +153,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   doneButton: {
     color: theme.textLink
+  },
+  addButton: {
+    marginRight: theme.rem(0.5)
   },
   // The two lists are stacked vertically on top of each other:
   listStack: {

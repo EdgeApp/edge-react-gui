@@ -134,7 +134,7 @@ export const WcConnectScene = (props: Props) => {
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.wc_confirm_title} />
+      <SceneHeader underline title={s.strings.wc_confirm_title} withTopMargin />
       <ScrollView style={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}

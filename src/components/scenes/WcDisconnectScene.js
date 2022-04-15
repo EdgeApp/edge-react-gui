@@ -46,7 +46,7 @@ export const WcDisconnectScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
+      <SceneHeader underline title={s.strings.wc_walletconnect_title} withTopMargin />
       <View style={styles.container}>
         <Card paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
