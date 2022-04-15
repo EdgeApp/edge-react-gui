@@ -38,7 +38,7 @@ export function ManageTokensRow(props: Props) {
   }
 
   return (
-    <WalletListRow pluginId={pluginId} tokenId={tokenId} onPress={onPress} gradient walletName={currencyName}>
+    <WalletListRow currencyCode={currencyCode} pluginId={pluginId} tokenId={tokenId} onPress={onPress} gradient walletName={currencyName}>
       <View style={styles.touchableCheckboxInterior}>
         {isEditable ? (
           <View style={styles.editIcon}>
