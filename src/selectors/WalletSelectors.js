@@ -5,7 +5,7 @@ import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 
 import { FIAT_PRECISION } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
-import { type RootState } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes'
 import { type GuiWallet } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 import { convertNativeToExchange, zeroString } from '../util/utils.js'
@@ -58,6 +58,15 @@ export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCu
   const convertedAmount = mul(amount, exchangeRate)
   return convertedAmount
 }
+
+export const convertCurrencyFromState =
+  (fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1') =>
+  (dispatch: Dispatch, getState: GetState): string => {
+    const state = getState()
+    const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
+    const convertedAmount = mul(amount, exchangeRate)
+    return convertedAmount
+  }
 
 export const convertCurrencyFromExchangeRates = (
   exchangeRates: { [string]: string },
