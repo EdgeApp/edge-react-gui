@@ -41,7 +41,8 @@ export const pluginInfo: StakePluginInfo = {
         lpTokenContract: makeContract('TOMB_WFTM_LP'),
         poolContract: makeContract('TSHARE_REWARD_POOL'),
         swapRouterContract: makeContract('SPOOKY_SWAP_ROUTER'),
-        tokenAContract: makeContract('TOMB')
+        tokenAContract: makeContract('TOMB'),
+        tokenBContract: makeContract('FTM')
       }),
       stakeAssets: [
         {
@@ -71,7 +72,8 @@ export const pluginInfo: StakePluginInfo = {
         lpTokenContract: makeContract('TSHARE_WFTM_LP'),
         poolContract: makeContract('TSHARE_REWARD_POOL'),
         swapRouterContract: makeContract('SPOOKY_SWAP_ROUTER'),
-        tokenAContract: makeContract('TSHARE')
+        tokenAContract: makeContract('TSHARE'),
+        tokenBContract: makeContract('FTM')
       }),
       stakeAssets: [
         {

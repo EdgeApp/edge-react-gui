@@ -25,14 +25,12 @@ export type CemeteryPolicyOptions = {
   poolContract: ethers.Contract,
   swapRouterContract: ethers.Contract,
   tokenAContract: ethers.Contract,
-  // TODO: Implement this to support TOMB-MAI-LP pool
-  // An undefined token B contract means that the pool pair is the wrapped-native token
-  tokenBContract?: ethers.Contract
+  tokenBContract: ethers.Contract
 }
 
 export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginPolicy => {
   // Declare contracts:
-  const { lpTokenContract, poolContract, swapRouterContract, tokenAContract } = options
+  const { lpTokenContract, poolContract, swapRouterContract, tokenAContract, tokenBContract } = options
 
   // Constants:
   const { poolId: POOL_ID } = options
@@ -84,12 +82,6 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   }
 
   function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: AssetId): string {
-    // If the asset is the native token
-    if (assetId.tokenId === policyInfo.parentTokenId) {
-      // Return the WFTM contract address
-      // TODO: replace hard-code with a map from pluginId to contract address
-      return '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
-    }
     const contractInfo = getContractInfo(assetId.tokenId)
     const { address } = contractInfo
     return address.toLowerCase()
@@ -102,12 +94,19 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
+      const requestAsset = policyInfo.stakeAssets.find(asset => asset.tokenId === request.tokenId)
+      if (requestAsset == null) throw new Error(`Asset '${request.tokenId}' not found in policy '${stakePolicyId}'`)
+
+      const tokenACurrencyCode = policyInfo.stakeAssets[0].tokenId
+      const tokenBCurrencyCode = policyInfo.stakeAssets[1].tokenId
+      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentTokenId
+
       const signerSeed = getSeed(wallet)
 
       // Get the signer for the wallet
       const signerAddress = await makeSigner(signerSeed).getAddress()
 
-      // TODO: Infer this policy from the `options`
+      // TODO: Infer this policy from the `options` if/when we support more than two stake assets
       if (policyInfo.stakeAssets.length > 2) throw new Error(`Staking more than two assets is not supported`)
 
       //
@@ -118,18 +117,20 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
       // Calculate the stake asset native amounts:
       if (action === 'stake' || action === 'unstake') {
-        const reservesResponse = await multipass(p => lpTokenContract.connect(p).getReserves())
-        const { _reserve0, _reserve1 } = reservesResponse
-        const ratios = [div(fromHex(_reserve1._hex), fromHex(_reserve0._hex), DECIMALS), div(fromHex(_reserve0._hex), fromHex(_reserve1._hex), DECIMALS)]
+        const reservesMap = await getTokenReservesMap()
+        const requestTokenContractAddress = assetToContractAddress(policyInfo, requestAsset)
+        const requestTokenReserves = reservesMap[requestTokenContractAddress]
 
         allocations.push(
-          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId, pluginId }, index) => {
-            const ratio = tokenId === request.tokenId ? '1' : ratios[index]
+          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ pluginId, tokenId }, index) => {
+            const tokenContractAddress = assetToContractAddress(policyInfo, { pluginId, tokenId })
+            const tokenReserves = reservesMap[tokenContractAddress]
+            const nativeAmount = div(mul(tokenReserves, request.nativeAmount), requestTokenReserves)
             return {
               allocationType: action,
               pluginId,
               tokenId,
-              nativeAmount: round(mul(request.nativeAmount, ratio))
+              nativeAmount
             }
           })
         )
@@ -236,16 +237,14 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           ((gasLimit, lpTokenBalance) =>
             async function addLiquidity({ signer }) {
-              // Assume only one non-native token
-              const contractTokenSymbol = await tokenAContract.symbol()
-              const tokenAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === contractTokenSymbol)
-              const nativeAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === policyInfo.parentTokenId)
+              const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenACurrencyCode)
+              const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenBCurrencyCode)
 
-              if (tokenAllocation == null) throw new Error(`Contract token ${contractTokenSymbol} not found in asset pair`)
-              if (nativeAllocation == null) throw new Error(`Native token ${policyInfo.parentTokenId} not found in asset pair`)
+              if (tokenAAllocation == null) throw new Error(`Contract token ${tokenACurrencyCode} not found in asset pair`)
+              if (tokenBAllocation == null) throw new Error(`Contract token ${tokenBCurrencyCode} not found in asset pair`)
 
               // Existing liquidity that may be unstaked due to a previous failed attempt to stake, or some other reason
-              const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAllocation)
+              const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
 
               // Already have enough LP-tokens to cover needed amount
               if (gte(lpTokenBalance, expectedLiquidityAmount)) {
@@ -255,44 +254,72 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               // Figure out how much LP-tokens we need to add
               const liquidityDiffAmount = sub(expectedLiquidityAmount, lpTokenBalance)
               const assetAmountsFromLpDifference = await lpTokenToAssetPairAmounts(policyInfo, liquidityDiffAmount)
-              const tokenAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenAllocation)].nativeAmount
-              const nativeAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(nativeAllocation)].nativeAmount
+              const tokenAAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenAAllocation)].nativeAmount
+              const tokenBAmountFromLpDifference = assetAmountsFromLpDifference[serializeAssetId(tokenBAllocation)].nativeAmount
 
               // Prepare the contract parameters
-              const amountTokenDesired = tokenAmountFromLpDifference
-              const amountTokenMin = round(mul(tokenAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
-              const amountNative = nativeAmountFromLpDifference
-              const amountNativeMin = round(mul(nativeAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
+              const amountTokenADesired = tokenAAmountFromLpDifference
+              const amountTokenAMin = round(mul(tokenAAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
+              const amountTokenBDesired = tokenBAmountFromLpDifference
+              const amountTokenBMin = round(mul(tokenBAmountFromLpDifference, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
-              // Call the contract
-              // TODO: Use 'addLiquidity' If both assets are tokens
-              const result = await swapRouterContract
-                .connect(signer)
-                .addLiquidityETH(tokenAContract.address, amountTokenDesired, amountTokenMin, amountNativeMin, signerAddress, deadline, {
-                  nonce: nextNonce(),
-                  gasLimit,
-                  value: amountNative
-                })
+              let result
+              if (isTokenBNative) {
+                // Call the contract
+                result = await swapRouterContract
+                  .connect(signer)
+                  .addLiquidityETH(tokenAContract.address, amountTokenADesired, amountTokenAMin, amountTokenBMin, signerAddress, deadline, {
+                    nonce: nextNonce(),
+                    gasLimit,
+                    value: amountTokenBDesired
+                  })
+              } else {
+                // Call the contract
+                result = await swapRouterContract
+                  .connect(signer)
+                  .addLiquidity(
+                    tokenAContract.address,
+                    tokenBContract.address,
+                    amountTokenADesired,
+                    amountTokenBDesired,
+                    amountTokenAMin,
+                    amountTokenBMin,
+                    signerAddress,
+                    deadline,
+                    {
+                      nonce: nextNonce(),
+                      gasLimit
+                    }
+                  )
+              }
 
               // Cache metadata
-              cacheTxMetadata(result.hash, nativeCurrencyCode, {
-                name: metadataName,
-                category: 'Transfer:Staking',
-                notes: 'Stake into ' + metadataLpName + ' LP'
-              })
               cacheTxMetadata(
                 result.hash,
-                metadataTokenCurrencyCode,
-                { name: metadataName, category: 'Transfer:Staking', notes: 'Stake into ' + metadataLpName + ' LP' },
-                amountTokenDesired
+                tokenACurrencyCode,
+                {
+                  name: metadataName,
+                  category: 'Transfer:Staking',
+                  notes: 'Stake into ' + metadataLpName + ' LP'
+                },
+                amountTokenADesired
               )
-
-              const receipt = await result.wait(1)
+              cacheTxMetadata(
+                result.hash,
+                tokenBCurrencyCode,
+                {
+                  name: metadataName,
+                  category: 'Transfer:Staking',
+                  notes: 'Stake into ' + metadataLpName + ' LP'
+                },
+                amountTokenBDesired
+              )
 
               //
               // Decode the log data in the receipt to get the liquidity token transfer amount
               //
+              const receipt = await result.wait(1)
               const transferTopicHash = ethers.utils.id('Transfer(address,address,uint256)')
               const transferTopics = receipt.logs.filter(log => log.topics[0] === transferTopicHash)
               // The last token transfer log is the LP-token transfer
@@ -360,15 +387,14 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       if (action === 'unstake') {
         const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
 
-        const contractTokenSymbol = await tokenAContract.symbol()
-        const tokenAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === contractTokenSymbol)
-        const nativeAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === policyInfo.parentTokenId)
+        const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenACurrencyCode)
+        const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenBCurrencyCode)
 
-        if (tokenAllocation == null) throw new Error(`Contract token ${contractTokenSymbol} not found in asset pair`)
-        if (nativeAllocation == null) throw new Error(`Native token ${policyInfo.parentTokenId} not found in asset pair`)
+        if (tokenAAllocation == null) throw new Error(`Contract token ${tokenACurrencyCode} not found in asset pair`)
+        if (tokenBAllocation == null) throw new Error(`Contract token ${tokenBCurrencyCode} not found in asset pair`)
 
         // 1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
-        const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAllocation)
+        const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
 
         // 2. Check liquidity amount balances
         const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
@@ -376,7 +402,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
         if (!isBalanceEnough) {
-          throw new Error(sprintf(s.strings.stake_error_insufficient_s, contractTokenSymbol))
+          throw new Error(sprintf(s.strings.stake_error_insufficient_s, tokenACurrencyCode))
         }
 
         // 3. Withdraw LP-token from Pool Contract
@@ -424,23 +450,42 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           (gasLimit =>
             async function removeLiquidity({ signer }) {
-              const amountTokenMin = round(mul(tokenAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
-              const amountNativeMin = round(mul(nativeAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const amountTokenAMin = round(mul(tokenAAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
+              const amountTokenBMin = round(mul(tokenBAllocation.nativeAmount, SLIPPAGE_FACTOR.toString()))
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
-              const result = await swapRouterContract
-                .connect(signer)
-                .removeLiquidityETH(tokenAContract.address, expectedLiquidityAmount, amountTokenMin, amountNativeMin, signerAddress, deadline, {
-                  nonce: nextNonce(),
-                  gasLimit
-                })
+              let result
+              if (isTokenBNative) {
+                result = await swapRouterContract
+                  .connect(signer)
+                  .removeLiquidityETH(tokenAContract.address, expectedLiquidityAmount, amountTokenAMin, amountTokenBMin, signerAddress, deadline, {
+                    nonce: nextNonce(),
+                    gasLimit
+                  })
+              } else {
+                result = await swapRouterContract
+                  .connect(signer)
+                  .removeLiquidity(
+                    tokenAContract.address,
+                    tokenBContract.address,
+                    expectedLiquidityAmount,
+                    amountTokenAMin,
+                    amountTokenBMin,
+                    signerAddress,
+                    deadline,
+                    {
+                      nonce: nextNonce(),
+                      gasLimit
+                    }
+                  )
+              }
 
-              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+              cacheTxMetadata(result.hash, tokenACurrencyCode, {
                 name: metadataName,
                 category: 'Income:Staking',
                 notes: 'Unstake from ' + metadataLpName + ' LP'
               })
-              cacheTxMetadata(result.hash, metadataTokenCurrencyCode, {
+              cacheTxMetadata(result.hash, tokenBCurrencyCode, {
                 name: metadataName,
                 category: 'Income:Staking',
                 notes: 'Unstake from ' + metadataLpName + ' LP'
@@ -511,10 +556,13 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
+      const tokenBCurrencyCode = policyInfo.stakeAssets[1].tokenId
+      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentTokenId
+
       // Get the signer for the wallet
       const signerAddress = makeSigner(getSeed(wallet)).getAddress()
 
-      const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, nativeTokenBalance, tokenABalance, lpTokenBalance] = await Promise.all([
+      const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, tokenABalance, tokenBBalance, lpTokenBalance] = await Promise.all([
         // Get staked allocations:
         // 1. Get the amount of LP-tokens staked in the pool contract
         multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress)).then(async userStakePoolInfo => {
@@ -525,10 +573,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         }),
         // Get reward amount:
         multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress)).then(String),
-        // Get native token balance:
-        multipass(p => p.getBalance(signerAddress)).then(String),
         // Get token A balance:
         multipass(p => tokenAContract.connect(p).balanceOf(signerAddress)).then(String),
+        // Get token B balance:
+        multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
         // Get LP token balance:
         multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress)).then(String)
       ])
@@ -563,7 +611,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       //
 
       // You can stake if you have balances in the paired assets, or some unstaked LP-Token balance
-      const canStake = (gt(tokenABalance, '0') && gt(nativeTokenBalance, '0')) || gt(lpTokenBalance, '0')
+      const canStake = (gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0')
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
       const canUnstake = gt(stakedLpTokenBalance, '0')

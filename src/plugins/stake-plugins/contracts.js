@@ -10,6 +10,7 @@ import TSHARE_ABI from './abi/TSHARE_ABI.json'
 import TSHARE_REWARD_POOL_ABI from './abi/TSHARE_REWARD_POOL_ABI.json'
 import UNISWAP_V2_PAIR from './abi/UNISWAP_V2_PAIR.json'
 import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
+import WRAPPED_FTM_ABI from './abi/WRAPPED_FTM_ABI.json'
 
 export const rpcProviderUrls = [
   `https://polished-empty-cloud.fantom.quiknode.pro/${ENV.FANTOM_INIT?.quiknodeApiKey ?? ''}/`,
@@ -27,6 +28,10 @@ type ContractInfo = {
   address: string
 }
 const contractInfoMap: { [key: string]: ContractInfo } = {
+  FTM: {
+    abi: WRAPPED_FTM_ABI,
+    address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+  },
   SPOOKY_SWAP_ROUTER: {
     abi: UNISWAP_V2_ROUTER_02,
     address: '0xF491e7B69E4244ad4002BC14e878a34207E38c29'
