@@ -186,14 +186,15 @@ export const StakeModifyScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string, tokenId: string }) => {
+    const { pluginId, tokenId } = asset
     const quoteAllocation: QuoteAllocation | void =
       changeQuote != null
         ? changeQuote.allocations.find(
-            allocation => allocationType === allocation.allocationType && allocation.pluginId === asset.pluginId && allocation.tokenId === asset.tokenId
+            allocation => allocationType === allocation.allocationType && allocation.pluginId === pluginId && allocation.tokenId === tokenId
           )
         : undefined
 
-    const quoteCurrencyCode = asset.tokenId
+    const quoteCurrencyCode = tokenId
     const quoteDenom = getDenominationFromCurrencyInfo(currencyWallet.currencyInfo, quoteCurrencyCode)
 
     const title =
@@ -210,6 +211,7 @@ export const StakeModifyScene = (props: Props) => {
     return (
       <EditableAmountTile
         title={title}
+        key={allocationType + pluginId + tokenId}
         exchangeRates={guiExchangeRates}
         nativeAmount={isClaim ? earnedAmount : nativeAmount}
         currencyWallet={currencyWallet}
