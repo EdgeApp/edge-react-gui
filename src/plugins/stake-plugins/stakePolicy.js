@@ -19,11 +19,15 @@ export type StakePolicyInfo = {
   mustClaimRewards: boolean
 }
 
-export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePolicyInfo => {
-  // Generate a unique deterministic ID for the policy
+// Generate a unique deterministic ID for the policy
+const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
   const stakePart = policyInfo.stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
   const rewardPart = policyInfo.rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const stakePolicyId = `${stakePart}=${rewardPart}`
+  return `${stakePart}=${rewardPart}`.toLowerCase()
+}
+
+export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePolicyInfo => {
+  const stakePolicyId = deriveStakePolicyId(policyInfo)
   // Include all fields except for the policy ID
   const { stakePolicyId: _exclude, ...rest } = policyInfo
 
@@ -37,9 +41,7 @@ export const toStakePolicy =
   (infoResponse: InfoServerResponse | void) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
     const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
-    const stakePart = stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-    const rewardPart = rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-    const stakePolicyId = `${stakePart}=${rewardPart}`
+    const stakePolicyId = deriveStakePolicyId(policyInfo)
 
     let apy = 0
     if (Object.keys(infoResponse?.policies ?? {}).includes(stakePolicyId.toLowerCase())) {
