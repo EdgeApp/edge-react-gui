@@ -48,9 +48,14 @@ type State = {
   errorMessage?: string
 }
 
+type TestProps = {
+  generateTestHook: (id: string, ref: any) => void,
+  testId?: string
+}
+
 type Props = OwnProps & StateProps & ThemeProps
 
-export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
+export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & TestProps, State> {
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     this.props.onCryptoExchangeAmountChanged(amounts)
   }
@@ -109,7 +114,9 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
     }
 
     if (this.props.walletId === '' || primaryCurrencyInfo == null || secondaryCurrencyInfo == null) {
-      return <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} />
+      return (
+        <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} ref={this.props.generateTestHook(this.props.testId ?? '')} />
+      )
     }
     const guiWalletName = name ?? ''
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode

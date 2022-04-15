@@ -308,7 +308,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
             onNext={this.getQuote}
-            ref={this.props.generateTestHook('CryptoExchangeScene.WalletList')}
+            testId="CryptoExchangeScene.FromWalletList"
           >
             {this.props.hasMaxSpend && (
               <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
