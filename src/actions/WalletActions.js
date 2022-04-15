@@ -15,7 +15,7 @@ import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
-import { getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
+import { getSupportedFiats, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
@@ -136,22 +136,17 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (wallet) {
-    const prefix = logPrefix(wallet)
-
     if (!refreshDetails.delayUpsert) {
       const now = Date.now()
       if (now - refreshDetails.lastUpsert > upsertFrequency) {
         dispatchUpsertWallets(dispatch, [wallet])
         refreshDetails.lastUpsert = Date.now()
       } else {
-        console.log(`${prefix}: refreshWallets setTimeout delay upsert`)
         refreshDetails.delayUpsert = true
         refreshDetails.walletIds[walletId] = wallet
         setTimeout(() => {
           const wallets = []
           for (const wid of Object.keys(refreshDetails.walletIds)) {
-            const w = refreshDetails.walletIds[wid]
-            console.log(`${logPrefix(w)}: refreshWallets upserting now`)
             wallets.push(refreshDetails.walletIds[wid])
           }
           dispatchUpsertWallets(dispatch, wallets)
@@ -163,10 +158,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
     } else {
       // Add wallet to the queue to upsert
       refreshDetails.walletIds[walletId] = wallet
-      console.log(`${prefix}: refreshWallets delayUpsert`)
     }
-  } else {
-    console.log(`${walletId.slice(0, 2)} refreshWallets no wallet`)
   }
 }
 
