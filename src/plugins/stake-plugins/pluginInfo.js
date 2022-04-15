@@ -38,6 +38,8 @@ export const pluginInfo: StakePluginInfo = {
       policy: makeCemeteryPolicy({
         poolId: 0,
         lpTokenContract: makeContract('TOMB_WFTM_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('SPOOKY_SWAP_ROUTER'),
         tokenAContract: makeContract('TOMB')
       }),
       stakeAssets: [
@@ -65,6 +67,8 @@ export const pluginInfo: StakePluginInfo = {
       policy: makeCemeteryPolicy({
         poolId: 1,
         lpTokenContract: makeContract('TSHARE_WFTM_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('SPOOKY_SWAP_ROUTER'),
         tokenAContract: makeContract('TSHARE')
       }),
       stakeAssets: [

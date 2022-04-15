@@ -22,6 +22,8 @@ import { type StakePluginPolicy } from './types'
 export type CemeteryPolicyOptions = {
   poolId: number,
   lpTokenContract: ethers.Contract,
+  poolContract: ethers.Contract,
+  swapRouterContract: ethers.Contract,
   tokenAContract: ethers.Contract,
   // TODO: Implement this to support TOMB-MAI-LP pool
   // An undefined token B contract means that the pool pair is the wrapped-native token
@@ -30,10 +32,7 @@ export type CemeteryPolicyOptions = {
 
 export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginPolicy => {
   // Declare contracts:
-  // TODO: Replace the hardcode with a configuration from `options`
-  const poolContract = makeContract('TSHARE_REWARD_POOL')
-  const swapRouterContract = makeContract('SPOOKY_SWAP_ROUTER')
-  const { lpTokenContract, tokenAContract } = options
+  const { lpTokenContract, poolContract, swapRouterContract, tokenAContract } = options
 
   // Constants:
   const { poolId: POOL_ID } = options
