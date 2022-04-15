@@ -8,6 +8,7 @@ import exolixLogo from './settingsExchangeExolix.png'
 import foxExchangeLogo from './settingsExchangeFoxExchange.png'
 import godexLogo from './settingsExchangeGodex.png'
 import sideshiftLogo from './settingsExchangeSideShiftAI.png'
+import spookySwapLogo from './settingsExchangeSpookySwap.png'
 import switchainLogo from './settingsExchangeSwitchain.png'
 
 export function getSwapPluginIcon(pluginId: string, theme?: Theme) {
@@ -27,6 +28,7 @@ export const swapThemePluginIcons = (pluginId: string, theme: Theme) => {
     foxExchange: theme.settingsFoxExchangeLogo,
     godex: theme.settingsGodexLogo,
     switchain: theme.settingsSwitchainLogo,
+    spookySwap: theme.settingsSpookySwapLogo,
     sideshift: theme.settingsSideshiftLogo,
     default: theme.settingsDefaultLogo
   }
@@ -42,5 +44,7 @@ export const swapPluginIcons = {
   foxExchange: foxExchangeLogo,
   godex: godexLogo,
   sideshift: sideshiftLogo,
-  switchain: switchainLogo
+  spookySwap: spookySwapLogo,
+  switchain: switchainLogo,
+  transfer: defaultLogo
 }

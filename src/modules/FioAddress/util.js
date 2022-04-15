@@ -5,11 +5,10 @@ import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR, FIO_WALLET_TYPE, getPluginId } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -364,17 +363,19 @@ export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], f
   return null
 }
 
-export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, ccWalletMap: CcWalletMap): { [key: string]: FioConnectionWalletItem } => {
+export const makeConnectWallets = (
+  edgeWallets: { [walletId: string]: EdgeCurrencyWallet },
+  wallets: { [walletId: string]: GuiWallet },
+  ccWalletMap: CcWalletMap
+): { [key: string]: FioConnectionWalletItem } => {
   const walletItems = {}
   for (const walletKey of Object.keys(wallets)) {
     if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
-    const publicAddress = wallets[walletKey].receiveAddress.publicAddress
     const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
     walletItems[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
       key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
       id: wallets[walletKey].id,
-      publicAddress,
-      symbolImage: wallets[walletKey].symbolImage,
+      edgeWallet: edgeWallets[wallets[walletKey].id],
       name: wallets[walletKey].name,
       currencyCode: wallets[walletKey].currencyCode,
       chainCode: wallets[walletKey].currencyCode,
@@ -387,7 +388,6 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
         if (!tokenData) {
           tokenData = {
             currencyCode: enabledToken,
-            symbolImage: '',
             contractAddress: undefined
           }
         }
@@ -395,8 +395,7 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
         walletItems[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
           key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
           id: wallets[walletKey].id,
-          publicAddress,
-          ...getCurrencyIcon(getPluginId(wallets[walletKey].type), tokenData.contractAddress),
+          edgeWallet: edgeWallets[wallets[walletKey].id],
           name: wallets[walletKey].name,
           currencyCode: tokenData.currencyCode,
           chainCode: wallets[walletKey].currencyCode,

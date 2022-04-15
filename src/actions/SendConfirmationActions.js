@@ -85,7 +85,16 @@ export const sendConfirmationUpdateTx =
     })
 
     const amountRequired = getAmountRequired(spendInfo)
-    if (amountRequired && guiMakeSpendInfo.nativeAmount === '') return
+    if (amountRequired && guiMakeSpendInfo.nativeAmount === '')
+      return dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+        data: {
+          error: null,
+          forceUpdateGui,
+          guiMakeSpendInfo: guiMakeSpendInfoClone,
+          transaction: null
+        }
+      })
 
     if (maxSpendSet && isFeeChanged) {
       return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
@@ -161,10 +170,8 @@ export const updateMaxSpend =
         const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
         const authRequired = getAuthRequired(state, spendInfo, walletId)
 
-        const wallets = state.ui.wallets.byId
-        const guiWallet = wallets[walletId]
         const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
-        const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+        const isoFiatCurrencyCode = state.core.account.currencyWallets[walletId].fiatCurrencyCode
         const exchangeDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
 
         const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
@@ -196,10 +203,10 @@ export const signBroadcastAndSave =
     const wallet = currencyWallets[selectedWalletId]
     const edgeUnsignedTransaction: EdgeTransaction = getTransaction(state)
 
-    const wallets = state.ui.wallets.byId
-    const guiWallet = wallets[walletId || state.ui.wallets.selectedWalletId]
+    const useWalletId = walletId ?? state.ui.wallets.selectedWalletId
+    const edgeWallet = state.core.account.currencyWallets[useWalletId]
     const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
-    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+    const isoFiatCurrencyCode = edgeWallet.fiatCurrencyCode
     const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
     const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(edgeUnsignedTransaction.nativeAmount)
@@ -240,10 +247,10 @@ export const signBroadcastAndSave =
     const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
     if (parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD) {
       const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
-      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+      const fiatDenomination = getDenomFromIsoCode(edgeWallet.fiatCurrencyCode.replace('iso:', ''))
       const fiatSymbol = fiatDenomination.symbol ? `${fiatDenomination.symbol} ` : ''
       const feeString = `${fiatSymbol}${toFixed(feeAmountInWalletFiat.toString(), 2, 2)}`
-      const feeAlertResponse = await displayFeeAlert(guiWallet.currencyCode, feeString)
+      const feeAlertResponse = await displayFeeAlert(edgeWallet.currencyInfo.currencyCode, feeString)
       if (!feeAlertResponse) {
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
@@ -338,7 +345,7 @@ export const signBroadcastAndSave =
                 payeePublicAddress: guiMakeSpendInfo.publicAddress ?? publicAddress ?? '',
                 amount: amount && div(amount, exchangeDenomination.multiplier, DECIMAL_PRECISION),
                 currencyCode: edgeSignedTransaction.currencyCode,
-                chainCode: chainCode || guiWallet.currencyCode,
+                chainCode: chainCode || edgeWallet.currencyInfo.currencyCode,
                 txid: edgeSignedTransaction.txid,
                 memo
               })
@@ -431,11 +438,9 @@ let lastUpdateTransactionAmountNonce = 0
 export const updateTransactionAmount =
   (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
-    const guiWallet = state.ui.wallets.byId[walletId]
+    const edgeWallet = state.core.account.currencyWallets[walletId]
     const sceneState = state.ui.scenes.sendConfirmation
-    const { isoFiatCurrencyCode } = guiWallet
-    const { currencyWallets } = state.core.account
-    const coreWallet = currencyWallets[guiWallet.id]
+    const isoFiatCurrencyCode = edgeWallet.fiatCurrencyCode
 
     // Spend Info
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -464,7 +469,7 @@ export const updateTransactionAmount =
     // key stroke from user input
     const nonce = ++lastUpdateTransactionAmountNonce
 
-    coreWallet
+    edgeWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
         if (nonce < lastUpdateTransactionAmountNonce) return
@@ -482,7 +487,7 @@ export const updateTransactionAmount =
         if (nonce < lastUpdateTransactionAmountNonce) return
         let customError
 
-        if (error.labelCode && coreWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {
+        if (error.labelCode && edgeWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {
           customError = new Error(XRP_DESTINATION_TAG_ERRORS[error.labelCode])
         }
 

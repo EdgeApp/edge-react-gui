@@ -37,7 +37,7 @@ type OwnProps = {
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
-class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
+export class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   state: LocalState = {
     showAddBundledTxs: false,
     showTransfer: false

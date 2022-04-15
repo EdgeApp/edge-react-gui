@@ -1,9 +1,8 @@
 // @flow
 
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -13,6 +12,7 @@ import {
   fetchWalletAccountActivationPaymentInfo
 } from '../../actions/CreateWalletActions.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
+import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -23,7 +23,6 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
@@ -49,8 +48,7 @@ type StateProps = {
   activationCost: string,
   paymentDenominationSymbol: string,
   existingCoreWallet?: EdgeCurrencyWallet,
-  walletAccountActivationQuoteError: string,
-  currencyConfigs: { [key: string]: EdgeCurrencyConfig }
+  walletAccountActivationQuoteError: string
 }
 
 type DispatchProps = {
@@ -71,7 +69,7 @@ type State = {
   createdWallet: Promise<EdgeCurrencyWallet>
 }
 
-class CreateWalletAccountSelect extends React.Component<Props, State> {
+export class CreateWalletAccountSelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { createAccountBasedWallet, route } = this.props
@@ -189,7 +187,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
 
     const wallet = wallets[walletId]
     if (!wallet) return null
-    const { name, symbolImageDarkMono } = wallet
+    const { name } = wallet
 
     const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
 
@@ -203,7 +201,7 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
           </View>
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
-              {symbolImageDarkMono && <FastImage style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              <CurrencyIcon currencyCode={wallet.currencyCode} sizeRem={1.5} />
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
@@ -244,11 +242,10 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, currencyConfigs, supportedCurrencies, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const { route, supportedCurrencies, activationCost, wallets, walletAccountActivationQuoteError } = this.props
     const { selectedWalletType } = route.params
     const { walletId } = this.state
-    const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
-    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.pluginId)
+
     const instructionSyntax = sprintf(
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
@@ -278,7 +275,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
+              <CurrencyIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
+
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>
@@ -303,12 +301,6 @@ const rawStyles = {
   scrollableView: {
     position: 'relative',
     paddingHorizontal: 20
-  },
-  currencyLogo: {
-    alignSelf: 'center',
-    marginTop: scale(24),
-    height: scale(64),
-    width: scale(64)
   },
   createWalletPromptArea: {
     paddingTop: scale(16),
@@ -350,10 +342,7 @@ const rawStyles = {
     paddingVertical: scale(12),
     marginRight: 6
   },
-  paymentLeftIcon: {
-    width: scale(22),
-    height: scale(22)
-  },
+
   paymentRight: {
     fontFamily: THEME.FONTS.BOLD,
     fontSize: scale(16),
@@ -425,8 +414,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
       wallets,
       paymentDenominationSymbol,
       existingCoreWallet,
-      walletAccountActivationQuoteError,
-      currencyConfigs: state.core.account.currencyConfig
+      walletAccountActivationQuoteError
     }
   },
   dispatch => ({

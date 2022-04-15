@@ -4,11 +4,12 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
-import { getFiatSymbol, getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
+import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { SceneHeader } from './SceneHeader.js'
@@ -26,10 +27,10 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps & ThemeProps
 
-class BalanceBox extends React.PureComponent<Props> {
+export class BalanceBox extends React.PureComponent<Props> {
   render() {
     const { defaultIsoFiat, fiatAmount, showBalance, exchangeRates, theme } = this.props
-    const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
+    const fiatSymbol = defaultIsoFiat ? getSymbolFromCurrency(defaultIsoFiat) : ''
     const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
     const formattedFiat = formatNumber(fiatAmount, { toFixed: 2 })
     const styles = getStyles(theme)

@@ -36,7 +36,7 @@ const confettiProps = {
   fallSpeed: 4000
 }
 
-class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalState> {
+export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalState> {
   constructor() {
     super()
     this.state = { showButton: false, showConfetti: false }

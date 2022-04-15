@@ -29,7 +29,7 @@ type OwnProps = {
 }
 type Props = OwnProps & ThemeProps
 
-class TileComponent extends React.PureComponent<Props> {
+export class TileComponent extends React.PureComponent<Props> {
   copy = () => {
     if (!this.props.body) return
     Clipboard.setString(this.props.body)

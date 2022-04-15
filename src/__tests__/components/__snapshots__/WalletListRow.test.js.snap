@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletListRow should render with loading props 1`] = `
+<WithTheme(GradientComponent)
+  style={
+    Object {
+      "flex": 1,
+      "paddingHorizontal": 22,
+    }
+  }
+>
+  <TouchableOpacity
+    onLongPress={[Function]}
+    onPress={[Function]}
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "marginVertical": 22,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "justifyContent": "center",
+            "marginRight": 22,
+          }
+        }
+      >
+        btc
+      </View>
+      <View
+        style={
+          Object {
+            "flex": 1,
+            "flexDirection": "column",
+            "marginRight": 11,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "flexBasis": "auto",
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+              }
+            }
+          >
+            string
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#A4C7DF",
+                "fontSize": 17,
+              }
+            }
+          >
+            My bitcoin wallet
+          </WithTheme(EdgeTextComponent)>
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "flex": 0,
+          }
+        }
+      >
+        Hello
+      </View>
+    </View>
+  </TouchableOpacity>
+</WithTheme(GradientComponent)>
+`;

@@ -9,6 +9,7 @@ import exolixLogo from '../../assets/images/exchange/settingsExchangeExolix.png'
 import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
+import spookySwapLogo from '../../assets/images/exchange/settingsExchangeSpookySwap.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
@@ -234,8 +235,6 @@ export const edgeLight: Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
-  walletProgressIconFillDone: palette.transparent,
-  walletProgressIconBackground: palette.transparent,
 
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
@@ -278,6 +277,7 @@ export const edgeLight: Theme = {
   settingsFoxExchangeLogo: foxExchangeLogo,
   settingsGodexLogo: godexLogo,
   settingsSideshiftLogo: sideshiftLogo,
+  settingsSpookySwapLogo: spookySwapLogo,
   settingsSwitchainLogo: switchainLogo,
   settingsTotleLogo: totleLogo,
   settingsExolixLogo: exolixLogo,

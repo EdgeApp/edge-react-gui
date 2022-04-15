@@ -111,10 +111,7 @@ export type Action =
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
-        activeWalletIds: string[],
-        archivedWalletIds: string[],
-        currencyWallets: { [id: string]: EdgeCurrencyWallet },
-        receiveAddresses: { [id: string]: EdgeReceiveAddress }
+        currencyWallets: { [id: string]: EdgeCurrencyWallet }
       }
     }
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
@@ -147,9 +144,7 @@ export type Action =
         balanceMessage: string,
         currencyCode: string,
         primaryInfo: GuiCurrencyInfo,
-        walletId: string,
-        symbolImage: string,
-        symbolImageDarkMono: string
+        walletId: string
       }
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }

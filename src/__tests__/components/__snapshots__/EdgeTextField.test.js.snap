@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EdgeTextField should render with loading props 1`] = `
+<TextField
+  activeLineWidth={2}
+  animationDuration={225}
+  autoCapitalize="sentences"
+  baseColor="#FFFFFF"
+  containerStyle={
+    Object {
+      "marginBottom": 247,
+      "marginLeft": 247,
+      "marginRight": 247,
+      "marginTop": 247,
+    }
+  }
+  disableFullscreenUI={true}
+  disabled={false}
+  disabledLineType="dotted"
+  disabledLineWidth={1}
+  editable={true}
+  errorColor="#E85466"
+  fontSize={16}
+  labelFontSize={12}
+  lineType="solid"
+  lineWidth={1}
+  textColor="#FFFFFF"
+  tintColor="#FFFFFF"
+  underlineColorAndroid="transparent"
+/>
+`;

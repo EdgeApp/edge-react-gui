@@ -35,7 +35,7 @@ type State = {
   cleanedPrivateKey: string
 }
 
-class CreateWalletImportComponent extends React.Component<Props, State> {
+export class CreateWalletImportComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

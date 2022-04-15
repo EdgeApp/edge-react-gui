@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tile should render with loading props 1`] = `
+<TouchableWithoutFeedback
+  disabled={false}
+  onPress={[Function]}
+>
+  <View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+          "marginTop": 22,
+          "paddingBottom": 22,
+          "paddingHorizontal": 22,
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "flex": 1,
+            },
+            Object {
+              "paddingLeft": 6,
+            },
+          ]
+        }
+      >
+        <Icon
+          allowFontScaling={false}
+          name="copy"
+          size={12}
+          style={
+            Object {
+              "color": "#66EDA8",
+              "height": 17,
+              "position": "absolute",
+              "right": 0,
+              "top": 6,
+              "width": 17,
+            }
+          }
+        />
+        <WithTheme(EdgeTextComponent)
+          style={
+            Object {
+              "color": "#A4C7DF",
+              "fontSize": 17,
+              "paddingBottom": 6,
+            }
+          }
+        >
+          string
+        </WithTheme(EdgeTextComponent)>
+        <WithTheme(EdgeTextComponent)
+          ellipsizeMode="tail"
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            }
+          }
+        >
+          string
+        </WithTheme(EdgeTextComponent)>
+        11
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "borderBottomColor": "rgba(255, 255, 255, .1)",
+          "borderBottomWidth": 1,
+          "height": 1,
+          "marginLeft": 22,
+        }
+      }
+    />
+  </View>
+</TouchableWithoutFeedback>
+`;

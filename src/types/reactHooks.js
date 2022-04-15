@@ -2,6 +2,10 @@
 
 import * as React from 'react'
 
+type Memo = <T>(component: T) => T
+
+type ForwardRef = (body: (props: any, ref: any) => React.Node) => any
+
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
 type UseCallback = <T: (...args: any[]) => any>(callback: T, deps: any[]) => T
@@ -39,6 +43,10 @@ type UseRef = {
 
 type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
 
+// $FlowFixMe
+export const forwardRef: ForwardRef = React.forwardRef
+// $FlowFixMe
+export const memo: Memo = React.memo
 // $FlowFixMe
 export const useCallback: UseCallback = React.useCallback
 // $FlowFixMe

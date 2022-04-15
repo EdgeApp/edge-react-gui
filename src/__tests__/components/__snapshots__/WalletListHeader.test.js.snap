@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletListHeader should render with loading props 1`] = `
+<React.Fragment>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginHorizontal": 22,
+        "marginTop": 11,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+        }
+      }
+    >
+      <ForwardRef
+        label="Search Wallets"
+        marginRem={
+          Array [
+            0,
+            0,
+            1,
+          ]
+        }
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        returnKeyType="search"
+        searchIcon={true}
+        value="string"
+      />
+    </View>
+    <TouchableOpacity
+      onPress={[Function]}
+      style={
+        Object {
+          "justifyContent": "center",
+          "paddingBottom": 22,
+          "paddingLeft": 17,
+        }
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "color": "#66EDA8",
+          }
+        }
+      >
+        Done
+      </WithTheme(EdgeTextComponent)>
+    </TouchableOpacity>
+  </View>
+</React.Fragment>
+`;

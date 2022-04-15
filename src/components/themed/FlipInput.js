@@ -4,16 +4,17 @@ import Clipboard from '@react-native-community/clipboard'
 import { div, eq, mul } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { forwardRef } from '../../types/reactHooks.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
@@ -71,7 +72,6 @@ export type FlipInputOwnProps = {
   topReturnKeyType?: string,
   inputAccessoryViewID?: string,
   headerText: string,
-  headerLogo: string | void,
   headerCallback?: () => void,
   keyboardVisible: boolean,
   flipInputRef: (FlipInput: any) => void,
@@ -144,7 +144,7 @@ const getInitialState = (props: Props) => {
     isToggled: false,
     textInputFrontFocus: false,
     textInputBackFocus: false,
-    overridePrimaryDecimalAmount: '',
+    overridePrimaryDecimalAmount: '0',
     primaryDisplayAmount: '',
     forceUpdateGuiCounter: 0,
     secondaryDisplayAmount: '',
@@ -159,7 +159,7 @@ const getInitialState = (props: Props) => {
   return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
 }
 
-class FlipInputComponent extends React.PureComponent<Props, State> {
+export class FlipInputComponent extends React.PureComponent<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value
@@ -513,7 +513,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   clipboardRef = (ref: any) => (this.clipboardMenu = ref)
 
   render() {
-    const { primaryInfo, secondaryInfo, headerText, headerLogo, headerCallback, theme } = this.props
+    const { primaryInfo, secondaryInfo, headerText, headerCallback, theme } = this.props
     const { isToggled } = this.state
     const frontAnimatedStyle = { transform: [{ rotateX: this.frontInterpolate }] }
     const backAnimatedStyle = { transform: [{ rotateX: this.backInterpolate }] }
@@ -522,7 +522,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <>
         <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
-          {headerLogo ? <FastImage style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
+          <CurrencyIcon currencyCode={primaryInfo.currencyCode} marginRem={[0, 1, 0, 0]} sizeRem={1.5} />
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
         <View style={styles.clipboardContainer}>
@@ -583,11 +583,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: theme.rem(1)
-  },
-  headerIcon: {
-    width: theme.rem(1.5),
-    height: theme.rem(1.5),
-    marginRight: theme.rem(1)
   },
   headerText: {
     fontWeight: '600',
@@ -673,5 +668,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const FlipInputThemed = withTheme(FlipInputComponent)
 
-// $FlowFixMe - forwardRef is not recognize by flow?
-export const FlipInput = React.forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />) // eslint-disable-line
+export const FlipInput = forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />)

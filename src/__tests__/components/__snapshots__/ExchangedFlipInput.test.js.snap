@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExchangedFlipInput should render with loading props 1`] = `
+<ForwardRef
+  exchangeSecondaryToPrimaryRatio="0"
+  forceUpdateGuiCounter={11}
+  headerText="123"
+  isEditable={true}
+  isFiatOnTop={false}
+  isFocus={true}
+  keyboardVisible={true}
+  onAmountChanged={[Function]}
+  overridePrimaryDecimalAmount="3119046"
+  primaryInfo={
+    Object {
+      "currencyCode": "BTC",
+      "currencyName": "BTC",
+      "currencySymbol": "₿",
+      "maxConversionDecimals": 0,
+      "maxEntryDecimals": 10,
+    }
+  }
+  secondaryInfo={
+    Object {
+      "currencyCode": "BTC",
+      "currencyName": "Bitcoin",
+      "currencySymbol": "₿",
+      "maxConversionDecimals": 10,
+      "maxEntryDecimals": 10,
+    }
+  }
+/>
+`;

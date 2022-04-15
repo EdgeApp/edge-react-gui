@@ -33,7 +33,7 @@ type LocalState = {
 
 type Props = StateProps & ThemeProps & OwnProps
 
-class FioAddressDetails extends React.Component<Props, LocalState> {
+export class FioAddressDetails extends React.Component<Props, LocalState> {
   state: LocalState = {
     fioWalletLoading: false,
     fioWallet: null

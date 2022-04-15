@@ -55,7 +55,7 @@ type LocalState = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> {
+export class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> {
   state: LocalState = {
     loading: false,
     activationCost: 40,

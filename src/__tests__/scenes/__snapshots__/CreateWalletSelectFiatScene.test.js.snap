@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = `
+<SceneWrapper
+  avoidKeyboard={true}
+  background="theme"
+>
+  [Function]
+</SceneWrapper>
+`;

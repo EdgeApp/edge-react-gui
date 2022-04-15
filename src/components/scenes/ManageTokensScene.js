@@ -23,7 +23,6 @@ import { MainButton } from '../themed/MainButton.js'
 import { ManageTokensHeader } from '../themed/ManageTokensHeader'
 import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { SceneHeader } from '../themed/SceneHeader'
-import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
 type OwnProps = {
   navigation: NavigationProp<'manageTokens'>,
@@ -198,9 +197,10 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     const { route, manageTokensPending, theme, wallets, enabledTokens, currencyWallets } = this.props
     const { searchValue } = this.state
     const { walletId } = route.params
+    const { pluginId } = currencyWallets[walletId].currencyInfo
     if (wallets[walletId] == null || currencyWallets[walletId] == null) return null
     const { name, currencyCode } = wallets[walletId]
-    const { pluginId, metaTokens } = currencyWallets[walletId].currencyInfo
+    const { metaTokens } = currencyWallets[walletId].currencyInfo
     const styles = getStyles(theme)
     const tempEnabledTokens = difference(union(this.state.tokensToEnable, enabledTokens), this.state.tokensToDisable)
 
@@ -221,10 +221,9 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
           data={this.getFilteredTokens()}
           renderItem={metaToken => (
             <ManageTokensRow
+              pluginId={pluginId}
               goToEditTokenScene={this.goToEditTokenScene}
               metaToken={metaToken}
-              walletId={walletId}
-              symbolImage={getCurrencyIcon(pluginId, metaToken.item.contractAddress).symbolImage}
               toggleToken={this.toggleToken}
               enabledList={tempEnabledTokens}
               metaTokens={metaTokens}

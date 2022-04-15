@@ -1,5 +1,58 @@
 # edge-react-gui
 
+## 2.13.0 (2022-04-11)
+
+- Add Tomb Finance's Masonry and Cemetery platforms
+- New swap provider SpookySwap
+- Upgrade React Native to v0.67.2
+- Convert wallet list scenes and components to use React hooks
+- Overlay parent currency icon on top of token icons
+- New animated sync circle
+- New animated wallet swipe list/row/buttons
+- Refactor wallet list components to remove `GuiWallet` and unnecessary renders
+- Fix wallet list swipe button navigation
+- Split transfer transactions into two (QBO export)
+- Anypay: Add support for multiple outputs and payment submission
+- Fix crash related to wallet files and logout race condition
+- Update FIO strings
+- Development: Edge can now be built natively on M1 Macs without Rosetta
+- Development: Add copy button to seed modals
+- EdgeCoreWebView: Fix compiler errors on older Java versions
+- EdgeCoreWebView: Unify the iOS & Andriod WebView message passing with `dispatchViewManagerCommand`
+- EdgeCoreWebView: Move string manipulation off the main UI thread
+- Removed unused util functions
+- Address various deprecation warnings
+- Various visual fixes
+- Update translations
+- Upgrade edge-core-js to v0.19.12
+  - fixed: Avoid an internal crash on logout while reloading addresses.
+  - fixed: Make our code compatible with older Java versions again.
+  - fixed: Use the correct React dependency in the iOS podspec.
+  - changed: Allow individual log sources to be set to silent.
+  - changed: Move some string manipulations off of the main Java thread.
+  - changed: Perform React Native disk accesses on their own threads.
+- Upgrade edge-currency-accountbased to v0.15.3
+  - Add etherscan fee sources across EVM chains
+  - FTM: Add new tokens WFTM, TSHARE, TOMB, TBOND, and xBOO
+  - FTM: Add additional rpc servers
+  - Add blockbook broadcast method
+  - Fix networkFees object initialization on resync
+  - Fix checkTxsBlockbook so it doesn't break on unused addresses
+  - Reduce some duplicate blockbook code
+  - EOS/TLOS/WAX: Remove parent currency from metaTokens array
+  - Add backwards-compatible apikey helper function
+  - Update ZEC checkpoints
+  - added: EdgeCurrencyInfo.canReplaceByFee
+- Upgrade edge-exchange-plugins to v0.12.17
+  - Add SpookySwap exchange plugin
+  - Coingecko: Add TSHARE, TOMB, and MAI exchange rates
+  - Transfer: Don't allow transfers if the currency code doesn't match
+- Upgrade edge-currency-monero to v0.4.0
+  - added: Move the forked code out of mymonero-core-js directly into this repo.
+  - changed: Require react-native-mymonero-core ^0.1.2
+- Upgrade react-native-fast-crypto to v2.2.0
+  - changed: Compile secp256k1 as an XCFramework, making it compatible with the iOS simulator on M1 Macs.
+
 ## 2.12.1 (2022-03-29)
 
 - Add Bitpay v2 to send scene

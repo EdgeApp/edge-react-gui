@@ -48,8 +48,6 @@ type StateProps = {
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
-  fromCurrencyIcon: string,
-  toCurrencyIcon: string,
   toCurrencyCode: string,
 
   // Number of times To and From wallets were flipped
@@ -118,7 +116,7 @@ const defaultState = {
   toAmountNative: ''
 }
 
-class CryptoExchangeComponent extends React.Component<Props, State> {
+export class CryptoExchangeComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const newState: State = defaultState
@@ -296,7 +294,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.fromWalletId}
             buttonText={s.strings.select_src_wallet}
-            currencyLogo={this.props.fromCurrencyIcon}
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
             secondaryCurrencyInfo={fromSecondaryInfo}
@@ -317,7 +314,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.toWalletId}
             buttonText={s.strings.select_recv_wallet}
-            currencyLogo={this.props.toCurrencyIcon}
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
             secondaryCurrencyInfo={toSecondaryInfo}
@@ -419,8 +415,6 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
 
     return {
       ...result,
-      fromCurrencyIcon: cryptoExchange.fromCurrencyIcon ?? '',
-      toCurrencyIcon: cryptoExchange.toCurrencyIcon ?? '',
       forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: cryptoExchange.calculatingMax,
       insufficient: state.cryptoExchange.insufficientError,

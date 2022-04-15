@@ -95,6 +95,7 @@ export const swapPlugins = {
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
+  spookySwap: ENV.SPOOKY_SWAP_INIT,
   switchain: ENV.SWITCHAIN_INIT,
   transfer: true
 }

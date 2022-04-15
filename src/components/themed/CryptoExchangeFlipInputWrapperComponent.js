@@ -3,15 +3,16 @@
 import { add } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from './Card'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
 import { ExchangedFlipInput } from './ExchangedFlipInput.js'
@@ -21,10 +22,10 @@ import { SelectableRow } from './SelectableRow'
 type OwnProps = {
   walletId: string,
   buttonText: string,
-  currencyLogo: string,
   headerText: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
+  tokenId?: string,
   fiatPerCrypto: string,
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
@@ -50,16 +51,16 @@ type State = {
 
 type Props = OwnProps & StateProps & ThemeProps
 
-class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
+export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     this.props.onCryptoExchangeAmountChanged(amounts)
   }
 
-  renderLogo = (logo: string) => {
+  renderLogo = () => {
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <FastImage style={styles.currencyIcon} source={{ uri: logo || '' }} />
+        <CurrencyIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />
       </View>
     )
   }
@@ -122,7 +123,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
               autoWidth
               arrowTappable
               onPress={this.focusMe}
-              icon={this.renderLogo(this.props.currencyLogo)}
+              icon={this.renderLogo()}
               title={
                 <EdgeText style={styles.iconText} numberOfLines={1}>
                   {guiWalletName + ': ' + displayDenomination}
@@ -144,7 +145,6 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, Sta
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
             headerText={this.props.headerText}
-            headerLogo={this.props.currencyLogo}
             headerCallback={this.launchSelector}
             primaryCurrencyInfo={primaryCurrencyInfo}
             secondaryCurrencyInfo={secondaryCurrencyInfo}
@@ -191,8 +191,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   iconContainer: {
     top: theme.rem(0.125),
-    height: theme.rem(1.75),
-    width: theme.rem(1.75),
     borderRadius: theme.rem(1)
   },
   currencyIcon: {
@@ -240,7 +238,9 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
     const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
     const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
 
-    return { name: name ?? '', cryptoAmount: cryptoAmount }
+    const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
+
+    return { name: name ?? '', cryptoAmount: cryptoAmount, tokenId }
   },
   dispatch => ({})
 )(withTheme(CryptoExchangeFlipInputWrapperComponent))

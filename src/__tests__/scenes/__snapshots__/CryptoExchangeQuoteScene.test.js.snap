@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+>
+  <WithTheme(SceneHeaderComponent)
+    title="Exchange"
+    underline={true}
+    withTopMargin={true}
+  />
+  <ScrollView>
+    <WithTheme(LineTextDividerComponent)
+      lowerCased={true}
+      title="From"
+    />
+    <WithTheme(ExchangeQuoteComponent)
+      currency={
+        Object {
+          "fromDenomination": "",
+        }
+      }
+      currencyCode="BTC"
+      fiatCurrencyCode="USD"
+      isTop={true}
+      walletName=""
+    />
+    <WithTheme(LineTextDividerComponent)
+      lowerCased={true}
+      title="To"
+    />
+    <WithTheme(ExchangeQuoteComponent)
+      currency={
+        Object {
+          "fromDenomination": "",
+        }
+      }
+      currencyCode="ETH"
+      fiatCurrencyCode="USD"
+      walletName=""
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "flex-end",
+          "marginTop": 22,
+          "paddingRight": 22,
+        }
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 17,
+          }
+        }
+      >
+        Powered by 
+      </WithTheme(EdgeTextComponent)>
+      <Image
+        resizeMode="contain"
+        style={
+          Object {
+            "aspectRatio": 1,
+            "height": 17,
+            "width": 17,
+          }
+        }
+      />
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 17,
+          }
+        }
+      >
+         ChangeNow
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <Alert
+      marginRem={
+        Array [
+          1.5,
+          1,
+        ]
+      }
+      message="The amount above is an estimate. This exchange may result in less funds received than quoted."
+      onPress={[Function]}
+      title="Estimated Quote"
+      type="warning"
+    />
+    <WithTheme(SliderComponent)
+      disabled={true}
+      onSlidingComplete={[Function]}
+      parentStyle={
+        Object {
+          "marginTop": 56,
+        }
+      }
+      showSpinner={true}
+    />
+    <View
+      style={
+        Object {
+          "height": 180,
+        }
+      }
+    />
+  </ScrollView>
+</SceneWrapper>
+`;

@@ -171,8 +171,6 @@ export type Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: string,
-  walletProgressIconFillDone: string,
-  walletProgressIconBackground: string,
 
   // Misc
   // pressedOpacity: number,
@@ -215,6 +213,7 @@ export type Theme = {
   settingsExolixLogo: string,
   settingsFoxExchangeLogo: string,
   settingsGodexLogo: string,
+  settingsSpookySwapLogo: string,
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
   settingsTotleLogo: string,

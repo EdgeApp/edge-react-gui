@@ -11,7 +11,7 @@ import { ThemedModal } from '../themed/ThemedModal.js'
 
 export type ButtonInfo = {
   label: string,
-  type?: 'primary' | 'secondary',
+  type?: 'primary' | 'secondary' | 'escape',
 
   // The modal will show a spinner as long as this promise is pending.
   // Returning true will dismiss the modal,

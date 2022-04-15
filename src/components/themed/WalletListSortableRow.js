@@ -4,18 +4,18 @@ import { div } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumberInput } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
-import { DECIMAL_PRECISION, decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
+import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
@@ -35,7 +35,7 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
-class WalletListSortableRowComponent extends React.PureComponent<Props> {
+export class WalletListSortableRowComponent extends React.PureComponent<Props> {
   render() {
     const { wallet, walletFiatSymbol, exchangeRates, showBalance, theme, getDisplayDenomination, exchangeDenomination } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:
@@ -59,7 +59,6 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const multiplier = displayDenomination.multiplier
     const name = getWalletName(wallet)
     const symbol = displayDenomination.symbol
-    const { symbolImageDarkMono } = getCurrencyIcon(pluginId)
 
     const balance = wallet.balances[currencyCode] ?? '0'
     const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
@@ -78,7 +77,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
             </View>
             <View style={styles.iconContainer}>
-              {symbolImageDarkMono && <FastImage style={styles.icon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              <CurrencyIcon currencyCode={currencyCode} walletId={pluginId} />
             </View>
             <View style={styles.detailsContainer}>
               <View style={styles.detailsRow}>
@@ -169,7 +168,7 @@ export const WalletListSortableRow = connect<StateProps, DispatchProps, OwnProps
   (state, ownProps) => ({
     showBalance: state.ui.settings.isAccountBalanceVisible,
     exchangeRates: state.exchangeRates,
-    walletFiatSymbol: ownProps.wallet ? getFiatSymbol(ownProps.wallet.fiatCurrencyCode) : null,
+    walletFiatSymbol: ownProps.wallet ? getSymbolFromCurrency(ownProps.wallet.fiatCurrencyCode) : null,
     exchangeDenomination: ownProps.wallet
       ? getExchangeDenomination(state, ownProps.wallet.currencyInfo.pluginId, ownProps.wallet.currencyInfo.currencyCode)
       : null

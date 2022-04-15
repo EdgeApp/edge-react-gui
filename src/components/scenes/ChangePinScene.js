@@ -17,7 +17,7 @@ type StateProps = {
 }
 type Props = StateProps & OwnProps
 
-class ChangePinComponent extends React.Component<Props> {
+export class ChangePinComponent extends React.Component<Props> {
   render() {
     const { context, account, navigation } = this.props
     const handleComplete = () => navigation.goBack()

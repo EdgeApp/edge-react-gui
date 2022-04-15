@@ -33,7 +33,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
+export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
 
   openUrl = () => {

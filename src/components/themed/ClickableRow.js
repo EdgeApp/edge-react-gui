@@ -22,7 +22,7 @@ type Props = {
   paddingRem?: number[] | number
 }
 
-class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
+export class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
   renderContent() {
     const { gradient, children, underline, autoHeight, theme } = this.props
     const styles = getStyles(theme)

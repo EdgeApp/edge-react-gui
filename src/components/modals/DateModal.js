@@ -21,7 +21,7 @@ type State = {
 /**
  * Shows the native iOS date picker inside a modal.
  */
-class DateModalIos extends React.Component<Props & ThemeProps, State> {
+export class DateModalIos extends React.Component<Props & ThemeProps, State> {
   subscription: { remove(): void } | void
 
   constructor(props: Props & ThemeProps) {

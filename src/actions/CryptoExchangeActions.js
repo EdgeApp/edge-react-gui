@@ -32,7 +32,6 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/typ
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
-import { getCurrencyIcon } from './../util/CurrencyInfoHelpers'
 import { updateSwapCount } from './RequestReviewActions.js'
 
 export type SetNativeAmountInfo = {
@@ -372,7 +371,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction: 'from' | 'to') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.core.account.currencyWallets[walletId]
-  const { currencyCode: chainCc, pluginId, metaTokens } = wallet.currencyInfo
+  const { currencyCode: chainCc } = wallet.currencyInfo
   const cc = currencyCode || chainCc
   const balanceMessage = await getBalanceMessage(state, walletId, cc)
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
@@ -383,14 +382,12 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
     displayDenomination: primaryDisplayDenomination,
     exchangeDenomination: primaryExchangeDenomination
   }
-  const contractAddress = metaTokens.find(token => token.currencyCode === cc)?.contractAddress
 
   const data = {
     walletId,
     balanceMessage,
     currencyCode: cc,
-    primaryInfo,
-    ...getCurrencyIcon(pluginId, contractAddress)
+    primaryInfo
   }
 
   if (direction === 'from') {

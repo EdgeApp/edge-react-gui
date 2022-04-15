@@ -3,14 +3,13 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ScrollView } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
+import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -98,7 +97,6 @@ class NotificationComponent extends React.Component<Props, State> {
             <SettingsSwitchRow label={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
               const { displayName, pluginId } = currencyInfo
-              const { symbolImage } = getCurrencyIcon(pluginId)
               const onPress = () =>
                 enabled
                   ? navigation.navigate('currencyNotificationSettings', {
@@ -108,7 +106,7 @@ class NotificationComponent extends React.Component<Props, State> {
 
               return (
                 <SettingsTappableRow disabled={!enabled} key={pluginId} label={displayName} onPress={onPress}>
-                  <FastImage style={styles.currencyLogo} source={{ uri: symbolImage }} />
+                  <CurrencyIcon pluginId={pluginId} />
                 </SettingsTappableRow>
               )
             })}

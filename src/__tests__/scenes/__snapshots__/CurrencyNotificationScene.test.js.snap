@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CurrencyNotificationComponent should render with loading props 1`] = `
+<SceneWrapper
+  background="theme"
+  hasTabs={false}
+>
+  <ScrollView />
+</SceneWrapper>
+`;

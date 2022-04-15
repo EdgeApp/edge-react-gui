@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BalanceBox should render with loading props 1`] = `
+<WithTheme(SceneHeaderComponent)
+  underline={true}
+>
+  <TouchableOpacity
+    onPress={[Function]}
+    style={
+      Object {
+        "height": 73,
+      }
+    }
+  >
+    <React.Fragment>
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 22,
+          }
+        }
+      >
+        Total Balance
+      </WithTheme(EdgeTextComponent)>
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "fontFamily": "Quicksand-Medium",
+            "fontSize": 34,
+          }
+        }
+      >
+        11.00 string
+      </WithTheme(EdgeTextComponent)>
+    </React.Fragment>
+  </TouchableOpacity>
+</WithTheme(SceneHeaderComponent)>
+`;

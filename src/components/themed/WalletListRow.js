@@ -1,84 +1,67 @@
 // @flow
 
-import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { connect } from '../../types/reactRedux.js'
-import { getCurrencyInfo } from '../../util/utils'
-import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
-type OwnProps = {
+type Props = {
   currencyCode: string,
+  walletId?: string,
+  pluginId?: string,
+  tokenId?: string,
+  exchangeRateText?: string,
+  exchangeRateType?: 'neutral' | 'positive' | 'negative',
   children?: React.Node,
   icon?: React.Node,
-  editIcon?: React.Node,
+  iconSizeRem?: number,
   gradient?: boolean,
   onPress?: () => void,
   onLongPress?: () => void,
-  // eslint-disable-next-line react/no-unused-prop-types
-  walletId?: string,
-  // eslint-disable-next-line react/no-unused-prop-types
   walletName?: string
 }
 
-type StateProps = {
-  loading: boolean,
-  walletNameString: string
-}
+export const WalletListRowComponent = (props: Props) => {
+  const { currencyCode, children, pluginId, tokenId, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-type Props = OwnProps & StateProps & ThemeProps
-
-function WalletRow(props: { gradient?: boolean, children: React.Node }) {
-  const { gradient, children } = props
-  const styles = getStyles(useTheme())
-
-  if (gradient === true) {
-    return <Gradient style={styles.containerGradient}>{children}</Gradient>
-  }
-
-  return <View style={styles.container}>{children}</View>
-}
-
-class WalletListRowComponent extends React.PureComponent<Props> {
-  render() {
-    const { currencyCode, children, gradient = false, icon, editIcon, loading = false, onPress, onLongPress, walletNameString, theme } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <WalletRow gradient={gradient}>
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-          {loading === true ? (
-            <View style={styles.loaderContainer}>
-              <ActivityIndicator color={theme.primaryText} size="large" />
+  const contents = (
+    <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+      {currencyCode === '' ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator color={theme.primaryText} size="large" />
+        </View>
+      ) : (
+        <View style={styles.contentContainer}>
+          <View style={styles.iconContainer}>
+            {icon == null ? <CurrencyIcon sizeRem={iconSizeRem} pluginId={pluginId} tokenId={tokenId} walletId={walletId} currencyCode={currencyCode} /> : icon}
+          </View>
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailsTop}>
+              <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+              {props.exchangeRateText != null ? (
+                <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
+              ) : null}
             </View>
-          ) : (
-            <View style={styles.rowContainer}>
-              <View style={styles.iconContainer}>{icon}</View>
-              <View style={styles.detailsContainer}>
-                <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsCurrency} disableFontScaling>
-                    {currencyCode}
-                  </EdgeText>
-                  {editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}
-                </View>
-                <EdgeText style={styles.detailsName} disableFontScaling>
-                  {walletNameString}
-                </EdgeText>
-              </View>
-              {children}
+            <View style={styles.detailsBottom}>
+              <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
             </View>
-          )}
-        </TouchableOpacity>
-      </WalletRow>
-    )
-  }
+          </View>
+          <View style={styles.childrenContainer}>{children}</View>
+        </View>
+      )}
+    </TouchableOpacity>
+  )
+  return gradient ? <Gradient style={styles.containerGradient}>{contents}</Gradient> : <View style={styles.container}>{contents}</View>
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // Row Component
+  // Background
   containerGradient: {
     flex: 1,
     paddingHorizontal: theme.rem(1)
@@ -86,73 +69,75 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.modal
   },
-
-  // Row Containers
-  rowContainer: {
-    flex: 1,
+  // Top level Containers
+  contentContainer: {
     flexDirection: 'row',
     marginVertical: theme.rem(1)
   },
   loaderContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     height: theme.rem(4.25),
     paddingHorizontal: theme.rem(1.75)
   },
-
-  // Icons
+  // Data containers //
+  // Icon Container
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: theme.rem(1)
   },
-  editIcon: {
-    marginLeft: theme.rem(0.75)
-  },
-
-  // Details
+  // Details Container
   detailsContainer: {
     flex: 1,
     flexDirection: 'column',
     marginRight: theme.rem(0.5)
   },
-  detailsRow: {
-    flex: 1,
+  // Children (Right part) Container
+  childrenContainer: {
+    flex: 0
+  },
+  // Other styles
+  iconSize: {
+    width: theme.rem(2),
+    height: theme.rem(2)
+  },
+  detailsTop: {
     flexDirection: 'row',
-    alignItems: 'flex-end'
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  detailsBottom: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   },
   detailsCurrency: {
-    flex: 1,
+    flexBasis: 'auto',
+    flexShrink: 1,
     fontFamily: theme.fontFaceMedium
   },
+  exchangeRateStyle: {
+    textAlign: 'left',
+    flexBasis: 'auto',
+    flexShrink: 1,
+    marginLeft: theme.rem(0.75)
+  },
   detailsName: {
-    flex: 1,
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
+  },
+  // Difference Percentage Styles
+  neutral: {
+    color: theme.secondaryText
+  },
+  positive: {
+    color: theme.positiveText
+  },
+  negative: {
+    color: theme.negativeText
   }
 }))
 
-export const WalletListRow = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => {
-    const { currencyCode, walletId, walletName } = ownProps
-    const guiWallet = walletId ? state.ui.wallets.byId[walletId] : null
-    let walletNameString = walletName
-    if (walletNameString == null) {
-      if (guiWallet != null) {
-        walletNameString = guiWallet.name
-      } else {
-        const { allCurrencyInfos } = state.ui.settings.plugins
-        const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
-        walletNameString = `My ${currencyInfo?.displayName ?? ''}`
-      }
-    }
-
-    return {
-      loading: walletId != null && guiWallet == null,
-      walletNameString
-    }
-  },
-  dispatch => ({})
-)(withTheme(WalletListRowComponent))
+export const WalletListRow = memo(WalletListRowComponent)

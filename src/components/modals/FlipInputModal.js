@@ -18,7 +18,6 @@ import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
@@ -31,13 +30,15 @@ import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<void>,
+  bridge: AirshipBridge<{ nativeAmount: string, exchangeAmount: string }>,
   walletId: string,
   currencyCode: string,
-  onFeesChange: () => void,
+  onFeesChange?: () => void,
   onMaxSet?: () => void,
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
-  overrideExchangeAmount?: string
+  overrideExchangeAmount?: string,
+  headerText?: string,
+  hideMaxButton?: boolean
 }
 
 type StateProps = {
@@ -46,7 +47,6 @@ type StateProps = {
 
   // FlipInput
   flipInputHeaderText: string,
-  flipInputHeaderLogo: string,
   primaryInfo: GuiCurrencyInfo,
   secondaryInfo: GuiCurrencyInfo,
   fiatPerCrypto: string,
@@ -72,6 +72,9 @@ type DispatchProps = {
 }
 
 type State = {
+  nativeAmount: string,
+  exchangeAmount: string,
+
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   errorMessage?: string
@@ -79,24 +82,35 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class FlipInputModalComponent extends React.PureComponent<Props, State> {
+export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
       overridePrimaryExchangeAmount: props.overrideExchangeAmount ?? props.overridePrimaryExchangeAmount,
-      forceUpdateGuiCounter: 0
+      forceUpdateGuiCounter: 0,
+      nativeAmount: '',
+      exchangeAmount: ''
     }
   }
 
-  handleCloseModal = () => this.props.bridge.resolve()
+  handleCloseModal = () => {
+    let { nativeAmount, exchangeAmount } = this.state
+    nativeAmount = nativeAmount === '' ? '0' : nativeAmount
+    exchangeAmount = exchangeAmount === '' ? '0' : exchangeAmount
+    this.props.bridge.resolve(Promise.resolve({ nativeAmount, exchangeAmount }))
+  }
 
   handleFeesChange = () => {
     this.handleCloseModal()
-    this.props.onFeesChange()
+    const { onFeesChange = () => {} } = this.props
+    onFeesChange()
   }
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     const { walletId, currencyCode, updateTransactionAmount, onAmountChanged } = this.props
+
+    this.setState({ nativeAmount, exchangeAmount })
+
     if (onAmountChanged != null) return onAmountChanged(nativeAmount, exchangeAmount)
     updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
   }
@@ -167,13 +181,12 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
+    const { flipInputHeaderText, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
       <Card marginRem={0}>
         <ExchangedFlipInput
-          headerText={flipInputHeaderText}
-          headerLogo={flipInputHeaderLogo}
+          headerText={headerText ?? flipInputHeaderText}
           primaryCurrencyInfo={{ ...primaryInfo }}
           secondaryCurrencyInfo={{ ...secondaryInfo }}
           exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
@@ -186,7 +199,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFocus
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
-        {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true ? (
+        {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
           <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
         ) : null}
       </Card>
@@ -203,7 +216,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
           <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
-          <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} />
+          {this.props.onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
@@ -308,9 +321,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const wallet = state.core.account.currencyWallets[walletId]
     const name = getWalletName(wallet)
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
-    const { pluginId, metaTokens } = wallet.currencyInfo
-    const contractAddress = metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-    const { symbolImageDarkMono } = getCurrencyIcon(pluginId, contractAddress)
+    const { pluginId } = wallet.currencyInfo
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, pluginId, currencyCode)
@@ -361,7 +372,6 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
-      flipInputHeaderLogo: symbolImageDarkMono,
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto: fiatPerCrypto ?? '0',

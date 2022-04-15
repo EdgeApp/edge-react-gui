@@ -13,7 +13,7 @@ import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { truncateString } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
@@ -21,6 +21,7 @@ import { FlashNotification } from '../navigation/FlashNotification.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
+import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -39,25 +40,25 @@ export const WcConnectScene = (props: Props) => {
   const styles = getStyles(theme)
   const { uri } = props.route.params
   const [dappDetails, setDappDetails] = useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
+  const [walletAddress, setWalletAddress] = useState('')
 
-  const { walletAddress, walletImageUri, walletName, wallet, currencyWallets } = useSelector(state => {
+  const account = useSelector(state => state.core.account)
+  const { walletName, wallet, currencyWallets } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const guiWallet = getSelectedWallet(state)
     const wallet = currencyWallets[guiWallet.id]
-    const { pluginId, metaTokens } = wallet.currencyInfo
-    const walletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-    const contractAddress = metaTokens.find(token => token.currencyCode === walletCurrencyCode)?.contractAddress
-    const walletImageUri = getCurrencyIcon(pluginId, contractAddress).symbolImage
     const walletName = guiWallet.name
-    const walletAddress = guiWallet.receiveAddress.publicAddress
     return {
-      walletAddress,
-      walletImageUri,
       walletName,
       wallet,
       currencyWallets
     }
   })
+
+  useEffect(() => {
+    wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
+  }, [wallet])
+
   const dispatch = useDispatch()
 
   const handleConnect = async () => {
@@ -122,7 +123,9 @@ export const WcConnectScene = (props: Props) => {
       return <SelectableRow onPress={showWalletListModal} title={s.strings.wc_confirm_select_wallet} arrowTappable />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
-      const walletImage = <FastImage style={styles.currencyLogo} source={{ uri: walletImageUri }} />
+      const walletImage = (
+        <CurrencyIcon tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} walletId={selectedWallet.walletId} />
+      )
       const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
       return <SelectableRow onPress={showWalletListModal} icon={walletImage} title={walletNameStr} subTitle={walletAddressStr} arrowTappable />
     }
@@ -156,8 +159,7 @@ export const WcConnectScene = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
     height: theme.rem(2),
-    width: theme.rem(2),
-    resizeMode: 'contain'
+    width: theme.rem(2)
   },
   container: {
     padding: theme.rem(0.5)

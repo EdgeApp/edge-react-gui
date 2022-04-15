@@ -13,18 +13,6 @@ import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Acc
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
-export const updateActiveWalletsOrder = (activeWalletIds: string[]) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-
-  const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
-    keyStates[id] = { sortIndex: index }
-    return keyStates
-  }, {})
-
-  return account.changeWalletStates(newKeyStates).catch(showError)
-}
-
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -56,7 +44,7 @@ export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Disp
     try {
       for (const match of currencyCodeMatches) {
         const currencyCode = match.toUpperCase().replace(/%/g, '')
-        const address = await getCurrencyAddress(currencyCode, getState)
+        const address = await getFirstCurrencyAddress(currencyCode, getState)
         if (!address) continue
         uri = uri.replace(match, address)
       }
@@ -69,20 +57,20 @@ export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Disp
   }
 }
 
-const getCurrencyAddress = async (currencyCode, getState) => {
+const getFirstCurrencyAddress = async (currencyCode, getState) => {
   // Wallet Check
   const state = getState()
   const { account } = state.core
-  const wallets = state.ui.wallets.byId
-  const walletIds = Object.keys(wallets)
+  const edgeWallets = state.core.account.currencyWallets
+  const walletIds = Object.keys(edgeWallets)
   const walletId = walletIds.find(id => {
-    const wallet = wallets[id]
-    const walletCurrency = wallet.currencyCode.toUpperCase()
+    const edgeWallet = edgeWallets[id]
+    const walletCurrency = edgeWallet.currencyInfo.currencyCode.toUpperCase()
     return walletCurrency === currencyCode
   })
   if (walletId) {
-    const wallet = wallets[walletId]
-    return wallet.receiveAddress.publicAddress
+    const wallet = edgeWallets[walletId]
+    return (await wallet.getReceiveAddress()).publicAddress
   }
 
   // Wallet Creation

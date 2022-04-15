@@ -1,6 +1,6 @@
 // @flow
 
-import { abs, div, lt } from 'biggystring'
+import { abs, add, div, gt, lt, mul } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
 
@@ -106,6 +106,51 @@ function makeCsvDateTime(date: number): { date: string, time: string } {
   }
 }
 
+//
+// Check if tx is
+// 1. A transfer
+// 2. Outgoing spend
+// 3. Has a network fee
+// If so:
+//  1. Modify transaction to reduce the nativeAmount by the networkFee
+//  2. Set networkFee to 0
+//  3. Return a new transaction that has:
+//      1. nativeAmount and networkFee set to original tx fee
+//      2. category set to 'Expense:Network Fee'
+//      3. txid set to old txid + '-TRANSFER_TX'
+
+export function getTransferTx(oldEdgeTransaction: EdgeTransaction): EdgeTransaction[] | null {
+  const edgeTransaction = { ...oldEdgeTransaction }
+  edgeTransaction.metadata = { ...oldEdgeTransaction.metadata }
+
+  const category = edgeTransaction.metadata?.category ?? ''
+  if (!category.toLowerCase().startsWith('transfer:')) return null
+  if (!lt(edgeTransaction.nativeAmount, '0')) return null
+  if (!gt(edgeTransaction.networkFee, '0')) return null
+
+  const nativeAmountNoFee = add(edgeTransaction.nativeAmount, edgeTransaction.networkFee)
+  let newTxFiatFee = 0
+  let amountFiat = edgeTransaction.metadata?.amountFiat ?? 0
+
+  if (amountFiat > 0) {
+    const exchangeRate: string = div(amountFiat.toString(), edgeTransaction.nativeAmount, 16)
+    const newTxFiatFeeString: string = mul(exchangeRate, edgeTransaction.networkFee)
+    newTxFiatFee = Math.abs(Number(newTxFiatFeeString))
+    amountFiat = Number(mul(exchangeRate, nativeAmountNoFee))
+  }
+
+  const newEdgeTransaction: EdgeTransaction = { ...edgeTransaction }
+  newEdgeTransaction.nativeAmount = `-${edgeTransaction.networkFee}`
+  newEdgeTransaction.metadata = { ...edgeTransaction.metadata }
+  newEdgeTransaction.metadata.category = `Expense:Network Fee`
+  newEdgeTransaction.metadata.amountFiat = newTxFiatFee
+  newEdgeTransaction.txid += '-TRANSFER_TX'
+  edgeTransaction.nativeAmount = nativeAmountNoFee
+  edgeTransaction.networkFee = '0'
+  edgeTransaction.metadata.amountFiat = amountFiat
+  return [edgeTransaction, newEdgeTransaction]
+}
+
 export function exportTransactionsToQBOInner(
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
@@ -116,7 +161,17 @@ export function exportTransactionsToQBOInner(
   const STMTTRN: any[] = []
   const now = makeOfxDate(dateNow / 1000)
 
-  for (const edgeTx of edgeTransactions) {
+  for (const tx of edgeTransactions) {
+    const newTxs = getTransferTx(tx)
+    if (newTxs != null) {
+      edgeTxToQbo(newTxs[0])
+      edgeTxToQbo(newTxs[1])
+    } else {
+      edgeTxToQbo(tx)
+    }
+  }
+
+  function edgeTxToQbo(edgeTx: EdgeTransaction) {
     const TRNAMT: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
     const DTPOSTED = makeOfxDate(edgeTx.date)
@@ -233,7 +288,17 @@ export function exportTransactionsToCSVInner(
 ): string {
   const items: any[] = []
 
-  for (const edgeTx of edgeTransactions) {
+  for (const tx of edgeTransactions) {
+    const newTxs = getTransferTx(tx)
+    if (newTxs != null) {
+      edgeTxToCsv(newTxs[0])
+      edgeTxToCsv(newTxs[1])
+    } else {
+      edgeTxToCsv(tx)
+    }
+  }
+
+  function edgeTxToCsv(edgeTx: EdgeTransaction) {
     const amount: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
     const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
@@ -269,6 +334,6 @@ export function exportTransactionsToCSVInner(
   return csvStringify(items, {
     header: true,
     quoted_string: true,
-    record_delimiter: 'windows'
+    record_delimiter: '\n'
   })
 }

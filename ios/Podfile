@@ -1,6 +1,8 @@
+source "https://cdn.cocoapods.org/"
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
+# Edge change: React Native itself only requires 11.0:
 platform :ios, '12.0'
 
 target 'edge' do
@@ -18,22 +20,15 @@ target 'edge' do
   # you should disable the next line.
   use_flipper!()
 
-  pod 'react-native-zcash', :path => '../node_modules/react-native-zcash'
-  # Necessary for Zcash
-  pod ‘CNIOAtomics’,:modular_headers => true
-  pod ‘CNIOBoringSSL’,:modular_headers => true
-  pod ‘CNIOBoringSSLShims’,:modular_headers => true
-  pod ‘CNIOLinux’,:modular_headers => true
-  pod ‘CNIODarwin’,:modular_headers => true
-  pod ‘CNIOHTTPParser’,:modular_headers => true
-  pod ‘CNIOWindows’,:modular_headers => true
-  pod ‘CGRPCZlib’,:modular_headers => true
-
   post_install do |installer|
     react_native_post_install(installer)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 
+  # --------------------------------------------------------------------------
   # Edge additions
+  # --------------------------------------------------------------------------
+
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   # Permissions
@@ -46,4 +41,15 @@ target 'edge' do
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
+  # Necessary for Zcash
+  pod 'react-native-zcash', :path => '../node_modules/react-native-zcash'
+  pod 'CNIOAtomics', :modular_headers => true
+  pod 'CNIOBoringSSL', :modular_headers => true
+  pod 'CNIOBoringSSLShims', :modular_headers => true
+  pod 'CNIOLinux', :modular_headers => true
+  pod 'CNIODarwin', :modular_headers => true
+  pod 'CNIOHTTPParser', :modular_headers => true
+  pod 'CNIOWindows', :modular_headers => true
+  pod 'CGRPCZlib', :modular_headers => true
+  pod 'ZcashLightClientKit', :git => 'https://github.com/zcash/ZcashLightClientKit.git', :tag => '0.13.0-beta.2'
 end

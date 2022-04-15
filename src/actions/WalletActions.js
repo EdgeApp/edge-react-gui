@@ -15,29 +15,13 @@ import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
-import { getReceiveAddresses, getSupportedFiats, logPrefix, mergeTokens } from '../util/utils.js'
+import { getSupportedFiats, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
 import { registerNotifications } from './NotificationActions.js'
 
-export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyWallets } = state.core.account
-  const currentWalletId = state.ui.wallets.selectedWalletId
-
-  if (walletId === currentWalletId) {
-    const wallet = currencyWallets[walletId]
-    wallet.getReceiveAddress().then(receiveAddress => {
-      dispatch({
-        type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
-        data: { walletId, receiveAddress }
-      })
-    })
-  }
-}
-
-export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => (dispatch: Dispatch, getState: GetState) => {
+export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets } = state.core.account
 
@@ -52,7 +36,7 @@ export const selectWallet = (walletId: string, currencyCode: string, alwaysActiv
     const currentWalletId = state.ui.wallets.selectedWalletId
     const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
     if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-      dispatch(selectEOSWallet(walletId, currencyCode))
+      await dispatch(selectEOSWallet(walletId, currencyCode))
     }
     return
   }
@@ -64,12 +48,8 @@ export const selectWallet = (walletId: string, currencyCode: string, alwaysActiv
       data: { walletId, currencyCode }
     })
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    wallet
-      .getReceiveAddress({ currencyCode })
-      .then(receiveAddress => {
-        dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
-      })
-      .catch(showError)
+    const receiveAddress = await wallet.getReceiveAddress({ currencyCode })
+    dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
   }
 }
 
@@ -136,7 +116,6 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
-  dispatch(refreshReceiveAddressRequest(walletId))
 }
 
 function dispatchUpsertWallets(dispatch, wallets: EdgeCurrencyWallet[]) {
@@ -157,22 +136,17 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (wallet) {
-    const prefix = logPrefix(wallet)
-
     if (!refreshDetails.delayUpsert) {
       const now = Date.now()
       if (now - refreshDetails.lastUpsert > upsertFrequency) {
         dispatchUpsertWallets(dispatch, [wallet])
         refreshDetails.lastUpsert = Date.now()
       } else {
-        console.log(`${prefix}: refreshWallets setTimeout delay upsert`)
         refreshDetails.delayUpsert = true
         refreshDetails.walletIds[walletId] = wallet
         setTimeout(() => {
           const wallets = []
           for (const wid of Object.keys(refreshDetails.walletIds)) {
-            const w = refreshDetails.walletIds[wid]
-            console.log(`${logPrefix(w)}: refreshWallets upserting now`)
             wallets.push(refreshDetails.walletIds[wid])
           }
           dispatchUpsertWallets(dispatch, wallets)
@@ -184,10 +158,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
     } else {
       // Add wallet to the queue to upsert
       refreshDetails.walletIds[walletId] = wallet
-      console.log(`${prefix}: refreshWallets delayUpsert`)
     }
-  } else {
-    console.log(`${walletId.slice(0, 2)} refreshWallets no wallet`)
   }
 }
 
@@ -536,22 +507,18 @@ export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: stri
 export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const { activeWalletIds, archivedWalletIds, currencyWallets } = account
+  const { activeWalletIds, currencyWallets } = account
 
   if (activeWalletIds.length === Object.keys(currencyWallets).length) {
     dispatch(registerNotifications())
   }
 
   const incomingWalletIds = activeWalletIds.filter(id => state.ui.wallets.byId[id] == null)
-  const receiveAddresses = await getReceiveAddresses(currencyWallets)
 
   dispatch({
     type: 'CORE/WALLETS/UPDATE_WALLETS',
     data: {
-      activeWalletIds,
-      archivedWalletIds,
-      currencyWallets,
-      receiveAddresses
+      currencyWallets
     }
   })
   const newState = getState()

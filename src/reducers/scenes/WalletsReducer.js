@@ -1,17 +1,14 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeReceiveAddress } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
 import { FIO_WALLET_TYPE, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import type { Action } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
-import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
-  activeWalletIds: string[],
-  archivedWalletIds: string[],
   selectedWalletId: string,
   selectedCurrencyCode: string,
   addTokenPending: boolean,
@@ -26,7 +23,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
+        const tempWallet = schema(wallets[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -131,7 +128,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
         if (!state || !state[wallet.id]) {
           continue
         }
-        const guiWallet = schema(wallet, state[wallet.id].receiveAddress)
+        const guiWallet = schema(wallet)
         const enabledTokensOnWallet = state[wallet.id].enabledTokens
         guiWallet.enabledTokens = enabledTokensOnWallet
         enabledTokensOnWallet.forEach(customToken => {
@@ -200,28 +197,6 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
   }
 }
 
-const activeWalletIds = (state = [], action: Action): string[] => {
-  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    return action.data.activeWalletIds
-  }
-  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    return action.data.activeWalletIds
-  }
-
-  return state
-}
-
-const archivedWalletIds = (state = [], action: Action): string[] => {
-  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    return action.data.archivedWalletIds
-  }
-  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    return action.data.archivedWalletIds
-  }
-
-  return state
-}
-
 const selectedWalletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
@@ -285,12 +260,12 @@ const manageTokensPending = (state = false, action: Action): boolean => {
   }
 }
 
-function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
+function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
 
-  const { currencyCode, metaTokens, denominations, pluginId } = wallet.currencyInfo
+  const { currencyCode, metaTokens, denominations } = wallet.currencyInfo
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const blockHeight: number = wallet.blockHeight
@@ -353,9 +328,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     allDenominations,
     metaTokens,
     enabledTokens,
-    receiveAddress,
-    blockHeight,
-    ...getCurrencyIcon(pluginId)
+    blockHeight
   }
 
   return newWallet
@@ -382,8 +355,6 @@ const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fi
 
 export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
-  activeWalletIds,
-  archivedWalletIds,
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,

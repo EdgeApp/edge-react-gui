@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionListRow should render with loading props 1`] = `
+<WithTheme(TransactionRowComponent)
+  cryptoAmount="1"
+  denominationSymbol="BTC"
+  fiatAmount="1000000"
+  fiatSymbol="USD"
+  isSentTransaction={true}
+  onPress={[Function]}
+  requiredConfirmations={11}
+  selectedCurrencyName="Bitcoin"
+  thumbnailPath="wyre.png"
+  transaction="12ser4hh..."
+  walletBlockHeight={11}
+/>
+`;

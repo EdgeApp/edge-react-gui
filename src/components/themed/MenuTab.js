@@ -24,7 +24,7 @@ const title: { [name: $Keys<ParamList>]: string } = {
   exchange: s.strings.title_exchange
 }
 
-class MenuTabComponent extends React.PureComponent<Props> {
+export class MenuTabComponent extends React.PureComponent<Props> {
   handleOnPress = (route: 'walletList' | 'pluginBuy' | 'pluginSell' | 'exchange') => {
     switch (route) {
       case 'walletList':

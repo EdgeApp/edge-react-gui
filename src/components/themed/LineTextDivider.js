@@ -12,7 +12,7 @@ type Props = {
   lowerCased?: boolean
 }
 
-class LineTextDividerComponent extends React.PureComponent<Props & ThemeProps> {
+export class LineTextDividerComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
     const { title, children, theme } = this.props
     const styles = getStyles(theme)

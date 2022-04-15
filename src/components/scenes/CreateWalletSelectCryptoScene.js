@@ -3,7 +3,7 @@
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, FlatList, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -15,7 +15,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SelectableRow } from '../themed/SelectableRow'
+import { WalletListRow } from '../themed/WalletListRow'
 
 type OwnProps = {
   navigation: NavigationProp<'createWalletReview'>
@@ -30,7 +30,7 @@ type State = {
   searchTerm: string
 }
 
-class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
+export class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -82,21 +82,17 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
   }
 
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
+    const { currencyCode } = data.item
     const { theme } = this.props
-    const { symbolImageDarkMono, currencyCode } = data.item
     const styles = getStyles(theme)
-
     // Ripple hack:
     let { currencyName } = data.item
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
     return (
-      <SelectableRow
-        onPress={() => this.handleSelectWalletType(data.item)}
-        icon={symbolImageDarkMono ? <FastImage source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
-        title={currencyCode}
-        subTitle={currencyName}
-      />
+      <WalletListRow currencyCode={currencyCode} onPress={() => this.handleSelectWalletType(data.item)} gradient walletName={currencyName}>
+        <IonIcon size={theme.rem(1.5)} color={theme.iconTappable} name="chevron-forward-outline" style={styles.iconStyle} />
+      </WalletListRow>
     )
   }
 
@@ -151,6 +147,9 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  iconStyle: {
+    marginRight: theme.rem(-0.5)
+  },
   content: {
     flex: 1
   },

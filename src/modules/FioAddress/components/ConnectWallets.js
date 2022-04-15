@@ -3,10 +3,10 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, ScrollView, Switch, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { CurrencyIcon } from '../../../components/themed/CurrencyIcon.js'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
 import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
@@ -141,11 +141,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]} underlayColor={theme.secondaryButton}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              {wallet.symbolImage ? (
-                <FastImage style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" />
-              ) : (
-                <EdgeText>{noWalletSymbol}</EdgeText>
-              )}
+              {wallet != null ? <CurrencyIcon currencyCode={wallet.currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
@@ -276,11 +272,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const wallets = state.ui.wallets.byId
+    const edgeWallets = state.core.account.currencyWallets
     const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
     if (!ccWalletMap) return { walletItems: {}, loading: true }
 
-    const walletItems = makeConnectWallets(wallets, ccWalletMap)
+    const walletItems = makeConnectWallets(edgeWallets, wallets, ccWalletMap)
 
     return {
       walletItems,

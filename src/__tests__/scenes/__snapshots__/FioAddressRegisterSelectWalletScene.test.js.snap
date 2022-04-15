@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FioAddressRegistered should render with loading props 1`] = `
+<SceneWrapper
+  background="header"
+>
+  <View
+    style={
+      Object {
+        "flex": 2,
+        "flexDirection": "column",
+        "justifyContent": "space-between",
+        "paddingHorizontal": 22,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "flex": 1,
+          "justifyContent": "center",
+          "marginBottom": 56,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "marginBottom": 67,
+            "marginLeft": 6,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "testUri": "../../../src/assets/images/details_fioAddress.png",
+            }
+          }
+        />
+      </View>
+      <FormattedText
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+          }
+        }
+      >
+        Registered
+      </FormattedText>
+      <FormattedText
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 39,
+            "marginBottom": 17,
+            "marginTop": 28,
+          }
+        }
+      />
+    </View>
+    <MainButton
+      label="FIO Names"
+      marginRem={2}
+      onPress={[Function]}
+    />
+  </View>
+</SceneWrapper>
+`;

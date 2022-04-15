@@ -2,10 +2,10 @@
 
 import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
 import {
+  type EdgeCurrencyWallet,
   type EdgeDenomination,
   type EdgeMetadata,
   type EdgeMetaToken,
-  type EdgeReceiveAddress,
   type EdgeSpendTarget,
   type EdgeSwapQuote,
   type EdgeSwapRequest,
@@ -24,17 +24,14 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  symbolImage: string | void,
-  symbolImageDarkMono: string | void,
   metaTokens: EdgeMetaToken[],
   enabledTokens: string[],
-  receiveAddress: EdgeReceiveAddress,
   addressLoadingProgress?: number,
   blockHeight: number | null
 }
 
 // FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
-export const asSafeDefaultGuiWallet = <T>(guiWallet: T): T => ({
+export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
   ...asOptional(
     asObject({
       name: asOptional(asString, ''),
@@ -121,15 +118,12 @@ export type CustomTokenInfo = {
 export type CreateWalletType = {
   currencyName: string,
   walletType: string,
-  symbolImage?: string,
-  symbolImageDarkMono?: string,
   currencyCode: string
 }
 
 export type CreateTokenType = {
   currencyCode: string,
   currencyName: string,
-  symbolImage?: string,
   parentCurrencyCode: string
 }
 
@@ -197,8 +191,6 @@ export const emptyGuiWallet: GuiWallet = {
   currencyCode: '',
   isoFiatCurrencyCode: '',
   fiatCurrencyCode: '',
-  symbolImage: '',
-  symbolImageDarkMono: '',
   metaTokens: [],
   enabledTokens: [],
   receiveAddress: {
@@ -299,7 +291,7 @@ export type FioRequest = {
 export type FioConnectionWalletItem = {
   key: string,
   id: string,
-  publicAddress: string,
+  edgeWallet: EdgeCurrencyWallet,
   symbolImage: string,
   name: string,
   currencyCode: string,

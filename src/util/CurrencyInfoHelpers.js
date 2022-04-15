@@ -4,12 +4,13 @@ import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
 import { EDGE_CONTENT_SERVER, SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
+import { removeHexPrefix } from './utils.js'
 
 /**
  * Get currency icon URL
  */
 
-type CurrencyIcons = {
+export type CurrencyIcons = {
   symbolImage: string,
   symbolImageDarkMono: string
 }
@@ -19,7 +20,8 @@ const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function getCurrencyIcon(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
-  const url = `${EDGE_CONTENT_SERVER}/currencyIcons/${pluginId.toLowerCase()}/${contractAddress.toLowerCase().replace('0x', '')}`
+  const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
+  const url = `${EDGE_CONTENT_SERVER}/currencyIcons/${currencyPath}`
   return {
     symbolImage: `${url}.png`,
     symbolImageDarkMono: `${url}_dark.png`
@@ -61,12 +63,11 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
  * so make that.
  */
 export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
-  const { currencyCode, walletType, displayName: currencyName, pluginId } = currencyInfo
+  const { currencyCode, walletType, displayName: currencyName } = currencyInfo
   return {
     currencyName,
     walletType,
-    currencyCode,
-    ...getCurrencyIcon(pluginId)
+    currencyCode
   }
 }
 
@@ -82,19 +83,16 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
     // FIO disable changes
-    if (pluginId === 'fio' && global.isFioDisabled) continue
     if (pluginId === 'bitcoin') {
       out.push({
         currencyName: 'Bitcoin (Segwit)',
         walletType: 'wallet:bitcoin-bip49',
-        currencyCode,
-        ...getCurrencyIcon(pluginId)
+        currencyCode
       })
       out.push({
         currencyName: 'Bitcoin (no Segwit)',
         walletType: 'wallet:bitcoin-bip44',
-        currencyCode,
-        ...getCurrencyIcon(pluginId)
+        currencyCode
       })
     } else {
       out.push(makeCreateWalletType(currencyInfo))
@@ -112,4 +110,10 @@ export function getCreateWalletType(account: EdgeAccount, currencyCode: string):
   const currencyCodeFormatted = currencyCode.toUpperCase()
   const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
   return currencyInfo ? makeCreateWalletType(currencyInfo) : null
+}
+
+export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string) => {
+  const { builtinTokens = {}, customTokens = {} } = account.currencyConfig[pluginId]
+  const allTokens = { ...customTokens, ...builtinTokens }
+  return Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
 }

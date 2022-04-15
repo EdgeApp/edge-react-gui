@@ -1,7 +1,8 @@
 // @flow
 
+import { Picker } from '@react-native-picker/picker'
 import * as React from 'react'
-import { Appearance, Picker, Platform, Text, View } from 'react-native'
+import { Appearance, Platform, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -26,7 +27,7 @@ type State = DisplayTime
 
 type Props = OwnProps & ThemeProps
 
-class AutoLogoutModalComponent extends React.Component<Props, State> {
+export class AutoLogoutModalComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { autoLogoutTimeInSeconds } = this.props

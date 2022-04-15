@@ -42,7 +42,7 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps
 
-class WalletListSortModalComponent extends React.PureComponent<Props, State> {
+export class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

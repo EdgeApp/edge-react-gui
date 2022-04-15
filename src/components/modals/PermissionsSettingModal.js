@@ -24,11 +24,8 @@ export function PermissionsSettingModal(props: {
   const { bridge, fullPermision, mandatory, name, permission } = props
 
   useEffect(() => {
-    AppState.addEventListener('change', handleChangePermissions)
-
-    return () => {
-      AppState.removeEventListener('change', handleChangePermissions)
-    }
+    const listener = AppState.addEventListener('change', handleChangePermissions)
+    return () => listener.remove()
   })
 
   const message = mandatory
