@@ -34,6 +34,11 @@ const contractInfoEntries: ContractInfoEntry[] = [
     address: '0xF491e7B69E4244ad4002BC14e878a34207E38c29'
   },
   {
+    name: 'TOMB',
+    abi: TOMB_ABI,
+    address: '0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7'
+  },
+  {
     name: 'TOMB_MASONRY',
     abi: MASONRY_ABI,
     address: '0x8764de60236c5843d9faeb1b638fbce962773b67'
@@ -42,11 +47,6 @@ const contractInfoEntries: ContractInfoEntry[] = [
     name: 'TOMB_TREASURY',
     abi: TOMB_TREASURY_ABI,
     address: '0xF50c6dAAAEC271B56FCddFBC38F0b56cA45E6f0d'
-  },
-  {
-    name: 'TOMB',
-    abi: TOMB_ABI,
-    address: '0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7'
   },
   {
     name: 'TOMB_WFTM_LP',
