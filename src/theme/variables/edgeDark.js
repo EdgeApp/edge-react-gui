@@ -138,27 +138,28 @@ export const edgeDark: Theme = {
 
   // Buttons
   // Should add palette when pressed
+  buttonBorderRadiusRem: 0.25,
   primaryButtonOutline: palette.transparent,
-  primaryButton: palette.edgeMint,
+  primaryButtonOutlineWidth: 1,
+  primaryButton: [palette.edgeMint, palette.edgeMint],
+  primaryButtonColorStart: { x: 0, y: 0 },
+  primaryButtonColorEnd: { x: 1, y: 0 },
   primaryButtonText: palette.edgeBlue,
   // primaryButtonDeactivated: palette.gray,
 
   secondaryButtonOutline: palette.edgeMint,
-  secondaryButton: palette.transparent,
+  secondaryButtonOutlineWidth: 1,
+  secondaryButton: [palette.transparent, palette.transparent],
+  secondaryButtonColorStart: { x: 0, y: 0 },
+  secondaryButtonColorEnd: { x: 1, y: 1 },
   secondaryButtonText: palette.edgeMint,
 
-  // tertiaryButtonOutline: palette.edgeMint,
-  // tertiaryButton: palette.transparent,
-  // tertiaryButtonText: palette.edgeMint,
-
-  // glassButton: palette.whiteOp10,
-  // glassButtonIcon: palette.white,
-  // glassButtonDark: palette.blackOp50,
-  // glassButtonDarkIcon: palette.white,
-
-  // dangerButtonOutline: palette.transparent,
-  // dangerButton: palette.white,
-  // dangerButtonText: palette.accentRed,
+  escapeButtonOutline: palette.transparent,
+  escapeButtonOutlineWidth: 0,
+  escapeButton: [palette.transparent, palette.transparent],
+  escapeButtonColorStart: { x: 0, y: 0 },
+  escapeButtonColorEnd: { x: 1, y: 1 },
+  escapeButtonText: palette.edgeMint,
 
   buttonBoxShadow: palette.black,
 

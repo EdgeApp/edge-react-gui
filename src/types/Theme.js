@@ -78,14 +78,28 @@ export type Theme = {
   // backButton: string,
 
   // Buttons
+  buttonBorderRadiusRem: number,
+
   primaryButtonOutline: string,
-  primaryButton: string,
+  primaryButtonOutlineWidth: number,
+  primaryButton: string[],
+  primaryButtonColorStart: { x: number, y: number },
+  primaryButtonColorEnd: { x: number, y: number },
   primaryButtonText: string,
-  // primaryButtonDeactivated: string,
 
   secondaryButtonOutline: string,
-  secondaryButton: string,
+  secondaryButtonOutlineWidth: number,
+  secondaryButton: string[],
+  secondaryButtonColorStart: { x: number, y: number },
+  secondaryButtonColorEnd: { x: number, y: number },
   secondaryButtonText: string,
+
+  escapeButtonOutline: string,
+  escapeButtonOutlineWidth: number,
+  escapeButton: string[],
+  escapeButtonColorStart: { x: number, y: number },
+  escapeButtonColorEnd: { x: number, y: number },
+  escapeButtonText: string,
 
   // tertiaryButtonOutline: string,
   // tertiaryButton: string,

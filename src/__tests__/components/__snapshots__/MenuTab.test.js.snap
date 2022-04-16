@@ -23,6 +23,7 @@ exports[`MenuTab should render with loading props 1`] = `
     Object {
       "backgroundGradientLeft": "#0D2145",
       "backgroundGradientRight": "#0C446A",
+      "buttonBorderRadiusRem": 0.25,
       "buttonBoxShadow": "#000000",
       "buySellCustomPluginModalIcon": "#0C446A",
       "cameraOverlayColor": "#000000",
@@ -47,6 +48,21 @@ exports[`MenuTab should render with loading props 1`] = `
       "dateModalTextLight": "#0073D9",
       "deactivatedText": "#87939E",
       "defaultBorderColor": "#FFFFFF",
+      "escapeButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "escapeButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "escapeButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "escapeButtonOutline": "rgba(255, 255, 255, 0)",
+      "escapeButtonOutlineWidth": 0,
+      "escapeButtonText": "#66EDA8",
       "fadeDisable": "#87939E",
       "fioAddressLogo": Object {
         "testUri": "../../../src/assets/images/details_fioAddress.png",
@@ -128,16 +144,40 @@ exports[`MenuTab should render with loading props 1`] = `
       "pickerTextDark": "#FFFFFF",
       "pickerTextLight": "#000000",
       "positiveText": "#77C513",
-      "primaryButton": "#66EDA8",
+      "primaryButton": Array [
+        "#66EDA8",
+        "#66EDA8",
+      ],
+      "primaryButtonColorEnd": Object {
+        "x": 1,
+        "y": 0,
+      },
+      "primaryButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
       "primaryButtonOutline": "rgba(255, 255, 255, 0)",
+      "primaryButtonOutlineWidth": 1,
       "primaryButtonText": "#0E4B75",
       "primaryText": "#FFFFFF",
       "qrBackgroundColor": "#FFFFFF",
       "qrForegroundColor": "#000000",
       "rem": [Function],
       "searchListRefreshControlIndicator": "rgba(255, 255, 255, 0)",
-      "secondaryButton": "rgba(255, 255, 255, 0)",
+      "secondaryButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "secondaryButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "secondaryButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
       "secondaryButtonOutline": "#66EDA8",
+      "secondaryButtonOutlineWidth": 1,
       "secondaryButtonText": "#66EDA8",
       "secondaryText": "#A4C7DF",
       "settingsChangellyLogo": Object {

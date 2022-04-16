@@ -1241,43 +1241,78 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "alignItems": "center",
-              "alignSelf": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "#66EDA8",
-              "borderRadius": 6,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 45,
-              "marginLeft": 45,
-              "marginRight": 45,
-              "marginTop": 45,
-              "minHeight": 67,
-              "minWidth": 202,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
             }
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
-            numberOfLines={1}
-            style={
+          <BVLinearGradient
+            colors={
+              Array [
+                16777215,
+                16777215,
+              ]
+            }
+            endPoint={
               Object {
-                "color": "#66EDA8",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 11,
+                "x": 1,
+                "y": 1,
               }
             }
+            locations={null}
+            startPoint={
+              Object {
+                "x": 0,
+                "y": 0,
+              }
+            }
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "borderColor": "#66EDA8",
+                  "borderRadius": 6,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 67,
+                  "minWidth": 202,
+                },
+                Object {
+                  "alignSelf": "center",
+                  "marginBottom": 45,
+                  "marginLeft": 45,
+                  "marginRight": 45,
+                  "marginTop": 45,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                Object {
+                  "borderRadius": 6,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                },
+              ]
+            }
           >
-            Send Logs
-          </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.75}
+              numberOfLines={1}
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                }
+              }
+            >
+              Send Logs
+            </Text>
+          </BVLinearGradient>
         </View>
       </View>
     </RCTScrollView>
@@ -2526,43 +2561,78 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "alignItems": "center",
-              "alignSelf": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "#66EDA8",
-              "borderRadius": 6,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 45,
-              "marginLeft": 45,
-              "marginRight": 45,
-              "marginTop": 45,
-              "minHeight": 67,
-              "minWidth": 202,
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
             }
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
-            numberOfLines={1}
-            style={
+          <BVLinearGradient
+            colors={
+              Array [
+                16777215,
+                16777215,
+              ]
+            }
+            endPoint={
               Object {
-                "color": "#66EDA8",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 11,
+                "x": 1,
+                "y": 1,
               }
             }
+            locations={null}
+            startPoint={
+              Object {
+                "x": 0,
+                "y": 0,
+              }
+            }
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "borderColor": "#66EDA8",
+                  "borderRadius": 6,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 67,
+                  "minWidth": 202,
+                },
+                Object {
+                  "alignSelf": "center",
+                  "marginBottom": 45,
+                  "marginLeft": 45,
+                  "marginRight": 45,
+                  "marginTop": 45,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                Object {
+                  "borderRadius": 6,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                },
+              ]
+            }
           >
-            Send Logs
-          </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.75}
+              numberOfLines={1}
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "marginHorizontal": 11,
+                }
+              }
+            >
+              Send Logs
+            </Text>
+          </BVLinearGradient>
         </View>
       </View>
     </RCTScrollView>

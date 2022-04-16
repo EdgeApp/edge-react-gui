@@ -136,14 +136,28 @@ export const edgeLight: Theme = {
 
   // Buttons
   // Should add palette when pressed
+  buttonBorderRadiusRem: 0.25,
   primaryButtonOutline: palette.transparent,
-  primaryButton: palette.edgeBlue,
+  primaryButtonOutlineWidth: 1,
+  primaryButton: [palette.edgeBlue, palette.edgeBlue],
+  primaryButtonColorStart: { x: 0, y: 0 },
+  primaryButtonColorEnd: { x: 1, y: 1 },
   primaryButtonText: palette.edgeBlue,
   // primaryButtonDeactivated: palette.gray,
 
   secondaryButtonOutline: palette.edgeBlue,
-  secondaryButton: palette.transparent,
+  secondaryButtonOutlineWidth: 1,
+  secondaryButton: [palette.transparent, palette.transparent],
+  secondaryButtonColorStart: { x: 0, y: 0 },
+  secondaryButtonColorEnd: { x: 1, y: 1 },
   secondaryButtonText: palette.edgeBlue,
+
+  escapeButtonOutline: palette.transparent,
+  escapeButtonOutlineWidth: 0,
+  escapeButton: [palette.transparent, palette.transparent],
+  escapeButtonColorStart: { x: 0, y: 0 },
+  escapeButtonColorEnd: { x: 1, y: 1 },
+  escapeButtonText: palette.edgeMint,
 
   // tertiaryButtonOutline: palette.edgeBlue,
   // tertiaryButton: palette.transparent,

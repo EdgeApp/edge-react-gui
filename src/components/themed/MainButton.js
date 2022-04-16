@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress.js'
@@ -53,9 +54,30 @@ export function MainButton(props: Props) {
   // Styles:
   const theme = useTheme()
   const styles = getStyles(theme)
-  const touchableStyle = type === 'primary' ? styles.primaryButton : type === 'escape' ? styles.escapeButton : styles.secondaryButton
-  const textStyle = type === 'primary' ? styles.primaryText : styles.secondaryText
-  const spinnerColor = type === 'primary' ? theme.primaryButtonText : theme.secondaryButtonText
+
+  let touchableStyle, textStyle, spinnerColor, colors, start, end
+  if (type === 'primary') {
+    touchableStyle = styles.primaryButton
+    textStyle = styles.primaryText
+    spinnerColor = theme.primaryButtonText
+    colors = theme.primaryButton
+    start = theme.primaryButtonColorStart
+    end = theme.primaryButtonColorEnd
+  } else if (type === 'secondary') {
+    touchableStyle = styles.secondaryButton
+    textStyle = styles.secondaryText
+    spinnerColor = theme.secondaryButtonText
+    colors = theme.secondaryButton
+    start = theme.secondaryButtonColorStart
+    end = theme.secondaryButtonColorEnd
+  } else {
+    touchableStyle = styles.escapeButton
+    textStyle = styles.escapeText
+    spinnerColor = theme.escapeButtonText
+    colors = theme.escapeButton
+    start = theme.escapeButtonColorStart
+    end = theme.escapeButtonColorEnd
+  }
   const dynamicStyles = {
     alignSelf,
     opacity: disabled ? 0.3 : pending ? 0.7 : 1,
@@ -64,14 +86,16 @@ export function MainButton(props: Props) {
   }
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={[touchableStyle, dynamicStyles]} onPress={handlePress}>
-      {pending ? null : children}
-      {pending || label == null ? null : (
-        <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
-          {label}
-        </Text>
-      )}
-      {!pending && !spinner ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
+    <TouchableOpacity disabled={disabled || pending} onPress={handlePress}>
+      <LinearGradient colors={colors} start={start} end={end} style={[touchableStyle, dynamicStyles, styles.linearGradient]}>
+        {pending ? null : children}
+        {pending || label == null ? null : (
+          <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
+            {label}
+          </Text>
+        )}
+        {!pending && !spinner ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
+      </LinearGradient>
     </TouchableOpacity>
   )
 }
@@ -79,8 +103,7 @@ export function MainButton(props: Props) {
 const getStyles = cacheStyles((theme: Theme) => {
   const commonButton = {
     alignItems: 'center',
-    borderRadius: theme.rem(0.25),
-    borderWidth: theme.thinLineWidth,
+    borderRadius: theme.rem(theme.buttonBorderRadiusRem),
     flexDirection: 'row',
     justifyContent: 'center',
     minHeight: theme.rem(3),
@@ -93,11 +116,19 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   return {
+    linearGradient: {
+      // flex: 1,
+      paddingLeft: 0,
+      paddingRight: 0,
+      borderRadius: theme.rem(theme.buttonBorderRadiusRem)
+    },
+
     primaryButton: {
       ...commonButton,
-      backgroundColor: theme.primaryButton,
-      borderColor: theme.primaryButtonOutline
+      borderColor: theme.primaryButtonOutline,
+      borderWidth: theme.primaryButtonOutlineWidth
     },
+
     primaryText: {
       ...commonText,
       color: theme.primaryButtonText
@@ -105,9 +136,10 @@ const getStyles = cacheStyles((theme: Theme) => {
 
     secondaryButton: {
       ...commonButton,
-      backgroundColor: theme.secondaryButton,
-      borderColor: theme.secondaryButtonOutline
+      borderColor: theme.secondaryButtonOutline,
+      borderWidth: theme.secondaryButtonOutlineWidth
     },
+
     secondaryText: {
       ...commonText,
       color: theme.secondaryButtonText
@@ -115,8 +147,13 @@ const getStyles = cacheStyles((theme: Theme) => {
 
     escapeButton: {
       ...commonButton,
-      backgroundColor: theme.secondaryButton,
-      borderColor: 'transparent'
+      borderColor: theme.escapeButtonOutline,
+      borderWidth: theme.escapeButtonOutlineWidth
+    },
+
+    escapeText: {
+      ...commonText,
+      color: theme.escapeButtonText
     },
 
     // Common styles:
