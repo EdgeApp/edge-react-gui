@@ -190,6 +190,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         topReturnKeyType={this.props.topReturnKeyType}
         inputAccessoryViewID={this.props.inputAccessoryViewID}
         ref={ref => (this.flipInput = ref)}
+        testId="ExchnagedFlipInput.OpenList"
       />
     )
   }

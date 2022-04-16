@@ -1,9 +1,9 @@
 // @flow
-
 import Clipboard from '@react-native-community/clipboard'
 import { div, eq, mul } from 'biggystring'
+import { hook } from 'cavy'
 import * as React from 'react'
-import { type Event, Animated, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
@@ -12,6 +12,8 @@ import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { forwardRef } from '../../types/reactHooks.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
@@ -79,7 +81,7 @@ export type FlipInputOwnProps = {
   onError?: (error: string | void) => void
 }
 
-type Props = FlipInputOwnProps & ThemeProps
+type Props = FlipInputOwnProps & ThemeProps & TestProps
 
 type Amounts = {
   primaryDecimalAmount: string,
@@ -522,7 +524,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
 
     return (
       <>
-        <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
+        <TouchableOpacity onPress={headerCallback} style={styles.headerContainer} ref={this.props.generateTestHook(this.props.testId ?? '')}>
           {headerLogo ? <FastImage style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
@@ -672,6 +674,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FlipInputThemed = withTheme(FlipInputComponent)
+const FlipInputThemed = hook(withTheme(FlipInputComponent))
 
 export const FlipInput = forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />)
