@@ -6,7 +6,7 @@ import * as React from 'react'
 import renderer from 'react-test-renderer'
 
 import { SettingsSceneComponent } from '../components/scenes/SettingsScene.js'
-import { edgeDark } from '../theme/variables/edgeDark.js'
+import { config } from '../theme/appConfig.js'
 import { fakeNavigation } from '../util/fake/fakeNavigation.js'
 
 const typeHack: any = {
@@ -23,7 +23,7 @@ describe('MyComponent', () => {
   it('should render UnLocked SettingsOverview', () => {
     const element = (
       <SettingsSceneComponent
-        theme={edgeDark}
+        theme={config.darkTheme}
         navigation={fakeNavigation}
         // StateProps:
         account={account}
@@ -55,7 +55,7 @@ describe('MyComponent', () => {
   it('should render Locked SettingsOverview', () => {
     const element = (
       <SettingsSceneComponent
-        theme={edgeDark}
+        theme={config.darkTheme}
         navigation={fakeNavigation}
         // StateProps:
         account={account}

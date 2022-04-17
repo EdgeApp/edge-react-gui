@@ -19,8 +19,7 @@ import {
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
-import { edgeDark } from '../../theme/variables/edgeDark.js'
-import { edgeLight } from '../../theme/variables/edgeLight.js'
+import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
@@ -76,7 +75,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const { logSettings } = this.props.context
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID,
-      darkTheme: theme === edgeDark,
+      darkTheme: theme === config.darkTheme,
       defaultLogLevel: logSettings.defaultLogLevel
     }
   }
@@ -185,7 +184,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleDarkThemeToggle = (): void => {
     this.setState({ darkTheme: !this.state.darkTheme }, () => {
-      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(edgeLight)
+      this.state.darkTheme ? changeTheme(config.darkTheme) : changeTheme(config.lightTheme)
     })
   }
 

@@ -13,6 +13,7 @@ import {
 } from 'edge-core-js/types'
 
 import { type RootState } from './reduxTypes.js'
+import { type Theme } from './Theme.js'
 
 export type GuiWallet = {
   id: string,
@@ -359,4 +360,11 @@ export type wcGetConnection = {
   token?: string,
   uri: string,
   timeConnected: number
+}
+
+export type AppConfig = {
+  configName: string,
+  appName: string,
+  darkTheme: Theme,
+  lightTheme: Theme
 }
