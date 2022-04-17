@@ -1241,7 +1241,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             Object {
+              "elevation": 0,
               "opacity": 1,
+              "shadowColor": "#000000",
+              "shadowOffset": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "shadowOpacity": 0,
+              "shadowRadius": 0,
             }
           }
         >
@@ -2561,7 +2569,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             Object {
+              "elevation": 0,
               "opacity": 1,
+              "shadowColor": "#000000",
+              "shadowOffset": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "shadowOpacity": 0,
+              "shadowRadius": 0,
             }
           }
         >

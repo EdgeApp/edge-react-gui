@@ -33,7 +33,7 @@ import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeL
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
-import { type Theme } from '../../types/Theme.js'
+import { type Theme, textNoShadow, themeNoShadow } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 import { PLATFORM } from './platform'
 
@@ -143,7 +143,8 @@ export const edgeLight: Theme = {
   primaryButtonColorStart: { x: 0, y: 0 },
   primaryButtonColorEnd: { x: 1, y: 1 },
   primaryButtonText: palette.edgeBlue,
-  // primaryButtonDeactivated: palette.gray,
+  primaryButtonTextShadow: textNoShadow,
+  primaryButtonShadow: themeNoShadow,
 
   secondaryButtonOutline: palette.edgeBlue,
   secondaryButtonOutlineWidth: 1,
@@ -151,6 +152,8 @@ export const edgeLight: Theme = {
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
   secondaryButtonText: palette.edgeBlue,
+  secondaryButtonTextShadow: textNoShadow,
+  secondaryButtonShadow: themeNoShadow,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -158,6 +161,8 @@ export const edgeLight: Theme = {
   escapeButtonColorStart: { x: 0, y: 0 },
   escapeButtonColorEnd: { x: 1, y: 1 },
   escapeButtonText: palette.edgeMint,
+  escapeButtonTextShadow: textNoShadow,
+  escapeButtonShadow: themeNoShadow,
 
   // tertiaryButtonOutline: palette.edgeBlue,
   // tertiaryButton: palette.transparent,

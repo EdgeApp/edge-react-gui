@@ -55,7 +55,7 @@ export function MainButton(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  let touchableStyle, textStyle, spinnerColor, colors, start, end
+  let touchableStyle, textStyle, spinnerColor, colors, start, end, buttonShadow
   if (type === 'primary') {
     touchableStyle = styles.primaryButton
     textStyle = styles.primaryText
@@ -63,6 +63,7 @@ export function MainButton(props: Props) {
     colors = theme.primaryButton
     start = theme.primaryButtonColorStart
     end = theme.primaryButtonColorEnd
+    buttonShadow = styles.primaryButtonShadow
   } else if (type === 'secondary') {
     touchableStyle = styles.secondaryButton
     textStyle = styles.secondaryText
@@ -70,6 +71,7 @@ export function MainButton(props: Props) {
     colors = theme.secondaryButton
     start = theme.secondaryButtonColorStart
     end = theme.secondaryButtonColorEnd
+    buttonShadow = styles.secondaryButtonShadow
   } else {
     touchableStyle = styles.escapeButton
     textStyle = styles.escapeText
@@ -77,6 +79,7 @@ export function MainButton(props: Props) {
     colors = theme.escapeButton
     start = theme.escapeButtonColorStart
     end = theme.escapeButtonColorEnd
+    buttonShadow = styles.escapeButtonShadow
   }
   const dynamicStyles = {
     alignSelf,
@@ -86,7 +89,7 @@ export function MainButton(props: Props) {
   }
 
   return (
-    <TouchableOpacity disabled={disabled || pending} onPress={handlePress}>
+    <TouchableOpacity disabled={disabled || pending} style={buttonShadow} onPress={handlePress}>
       <LinearGradient colors={colors} start={start} end={end} style={[touchableStyle, dynamicStyles, styles.linearGradient]}>
         {pending ? null : children}
         {pending || label == null ? null : (
@@ -129,8 +132,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderWidth: theme.primaryButtonOutlineWidth
     },
 
+    primaryButtonShadow: { ...theme.primaryButtonShadow },
+
     primaryText: {
       ...commonText,
+      ...theme.primaryButtonTextShadow,
       color: theme.primaryButtonText
     },
 
@@ -139,6 +145,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderColor: theme.secondaryButtonOutline,
       borderWidth: theme.secondaryButtonOutlineWidth
     },
+    secondaryButtonShadow: { ...theme.secondaryButtonShadow },
 
     secondaryText: {
       ...commonText,
@@ -150,6 +157,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderColor: theme.escapeButtonOutline,
       borderWidth: theme.escapeButtonOutlineWidth
     },
+    escapeButtonShadow: { ...theme.escapeButtonShadow },
 
     escapeText: {
       ...commonText,

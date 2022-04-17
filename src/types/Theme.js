@@ -1,5 +1,45 @@
 // @flow
 
+type ThemeShadowParams = {
+  shadowColor: string,
+  shadowOffset: {
+    width: number,
+    height: number
+  },
+  shadowOpacity: number,
+  shadowRadius: number,
+  elevation: number
+}
+
+type TextShadowParams = {
+  textShadowColor: string,
+  textShadowOffset: {
+    width: number,
+    height: number
+  },
+  textShadowRadius: number
+}
+
+export const themeNoShadow = {
+  shadowColor: '#000000',
+  shadowOffset: {
+    width: 0,
+    height: 0
+  },
+  shadowOpacity: 0,
+  shadowRadius: 0,
+  elevation: 0
+}
+
+export const textNoShadow = {
+  textShadowColor: '#000000',
+  textShadowOffset: {
+    width: 0,
+    height: 0
+  },
+  textShadowRadius: 0
+}
+
 // Commented themes are not used
 export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
@@ -86,6 +126,8 @@ export type Theme = {
   primaryButtonColorStart: { x: number, y: number },
   primaryButtonColorEnd: { x: number, y: number },
   primaryButtonText: string,
+  primaryButtonTextShadow: TextShadowParams,
+  primaryButtonShadow: ThemeShadowParams,
 
   secondaryButtonOutline: string,
   secondaryButtonOutlineWidth: number,
@@ -93,6 +135,8 @@ export type Theme = {
   secondaryButtonColorStart: { x: number, y: number },
   secondaryButtonColorEnd: { x: number, y: number },
   secondaryButtonText: string,
+  secondaryButtonTextShadow: TextShadowParams,
+  secondaryButtonShadow: ThemeShadowParams,
 
   escapeButtonOutline: string,
   escapeButtonOutlineWidth: number,
@@ -100,6 +144,8 @@ export type Theme = {
   escapeButtonColorStart: { x: number, y: number },
   escapeButtonColorEnd: { x: number, y: number },
   escapeButtonText: string,
+  escapeButtonTextShadow: TextShadowParams,
+  escapeButtonShadow: ThemeShadowParams,
 
   // tertiaryButtonOutline: string,
   // tertiaryButton: string,

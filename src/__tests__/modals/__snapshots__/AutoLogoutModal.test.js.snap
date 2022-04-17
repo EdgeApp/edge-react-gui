@@ -54,7 +54,25 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       },
       "escapeButtonOutline": "rgba(255, 255, 255, 0)",
       "escapeButtonOutlineWidth": 0,
+      "escapeButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
       "escapeButtonText": "#66EDA8",
+      "escapeButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "fadeDisable": "#87939E",
       "fioAddressLogo": Object {
         "testUri": "../../../src/assets/images/details_fioAddress.png",
@@ -150,7 +168,25 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       },
       "primaryButtonOutline": "rgba(255, 255, 255, 0)",
       "primaryButtonOutlineWidth": 1,
+      "primaryButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
       "primaryButtonText": "#0E4B75",
+      "primaryButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "primaryText": "#FFFFFF",
       "qrBackgroundColor": "#FFFFFF",
       "qrForegroundColor": "#000000",
@@ -170,7 +206,25 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       },
       "secondaryButtonOutline": "#66EDA8",
       "secondaryButtonOutlineWidth": 1,
+      "secondaryButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
       "secondaryButtonText": "#66EDA8",
+      "secondaryButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "secondaryText": "#A4C7DF",
       "settingsChangellyLogo": Object {
         "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
