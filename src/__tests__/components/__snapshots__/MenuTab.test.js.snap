@@ -24,7 +24,6 @@ exports[`MenuTab should render with loading props 1`] = `
       "backgroundGradientLeft": "#0D2145",
       "backgroundGradientRight": "#0C446A",
       "buttonBorderRadiusRem": 0.25,
-      "buttonBoxShadow": "#000000",
       "buySellCustomPluginModalIcon": "#0C446A",
       "cameraOverlayColor": "#000000",
       "cameraOverlayOpEnd": 0.3,

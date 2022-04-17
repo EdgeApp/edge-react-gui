@@ -134,17 +134,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     disabled: {
       opacity: 0.7
     },
-    buttonBox: {
-      shadowColor: theme.buttonBoxShadow,
-      shadowOffset: {
-        width: 0,
-        height: theme.rem(0.25)
-      },
-      shadowOpacity: 0.34,
-      shadowRadius: theme.rem(0.25),
-
-      elevation: theme.rem(0.5)
-    },
     rightChevronContainer: {
       flexDirection: 'row',
       alignItems: 'center'

@@ -161,8 +161,6 @@ export const edgeDark: Theme = {
   escapeButtonColorEnd: { x: 1, y: 1 },
   escapeButtonText: palette.edgeMint,
 
-  buttonBoxShadow: palette.black,
-
   // Card
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,

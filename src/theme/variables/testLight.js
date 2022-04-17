@@ -172,8 +172,6 @@ export const testLight: Theme = {
   // dangerButton: palette.accentRed,
   // dangerButtonText: palette.white,
 
-  buttonBoxShadow: palette.black,
-
   // Card
   // cardBackground: palette.white,
   // cardShadow: palette.blackOp25,
