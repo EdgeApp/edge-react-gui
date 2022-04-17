@@ -365,6 +365,13 @@ export type wcGetConnection = {
 export type AppConfig = {
   configName: string,
   appName: string,
+  appNameShort: string,
   darkTheme: Theme,
-  lightTheme: Theme
+  lightTheme: Theme,
+  supportsEdgeLogin: boolean,
+  knowledgeBase: string,
+  supportSite: string,
+  phoneNumber: string,
+  website: string,
+  appStore: string
 }

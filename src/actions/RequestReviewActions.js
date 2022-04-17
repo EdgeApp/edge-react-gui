@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
+import { config } from '../theme/appConfig.js'
 import { type RootState } from '../types/reduxTypes.js'
 
 const SWAP_COUNT_DATA_FILE = 'swapCountData.json'
@@ -17,7 +18,7 @@ const requestReview = async () => {
   if (Platform.OS === 'ios') {
     StoreReview.requestReview()
   } else if (Platform.OS === 'android') {
-    const title = sprintf(s.strings.request_review_question_title, s.strings.app_name_short)
+    const title = sprintf(s.strings.request_review_question_title, config.appNameShort)
     const result = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}

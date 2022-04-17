@@ -6,9 +6,11 @@ import * as React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { B } from '../../styles/common/textStyles.js'
+import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -88,6 +90,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     const { theme } = this.props
     const { otpKey } = this.state
     const styles = getStyles(theme)
+    const otpDescriptionTwo = sprintf(s.strings.otp_description_two, config.appName)
 
     return (
       <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
@@ -95,7 +98,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
         <Text style={styles.titleText}>{otpKey != null ? s.strings.title_otp_enabled : s.strings.title_otp_disabled}</Text>
 
         <Text style={styles.messageText}>{s.strings.otp_description}</Text>
-        <Text style={styles.messageText}>{s.strings.otp_description_2}</Text>
+        <Text style={styles.messageText}>{otpDescriptionTwo}</Text>
         {otpKey != null ? (
           <Text style={styles.messageText}>
             <B>{s.strings.otp_enabled_message}</B>

@@ -5,10 +5,12 @@ import { Image, Keyboard, Linking, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
+import { sprintf } from 'sprintf-js'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
+import { config } from '../../theme/appConfig.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -20,10 +22,10 @@ import { ThemedModal } from '../themed/ThemedModal'
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
 const HELP_URIS = {
-  knowledgeBase: 'https://support.edge.app/support/home',
-  support: 'https://support.edge.app/support/tickets/new',
-  call: '+1-855-346-4974',
-  site: 'https://edge.app'
+  knowledgeBase: config.knowledgeBase,
+  support: config.supportSite,
+  call: config.phoneNumber,
+  site: config.website
 }
 
 export function showHelpModal(): Promise<mixed> {
@@ -71,13 +73,15 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
     const buildText = `${s.strings.help_build} ${buildNumber}`
     const optionMarginRem = [0.75, 0, 0.5, 1]
     const optionPaddingRem = [0, 1, 1, 0]
+    const helpModalTitle = sprintf(s.strings.help_modal_title_thanks, config.appName)
+    const helpSiteMoreInfoText = sprintf(s.strings.help_site_more_info_text, config.appName)
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
         <View style={styles.titleContainer}>
           <Image source={edgeLogo} style={styles.logo} resizeMode="contain" />
           <ModalTitle center paddingRem={[0, 1, 1]}>
-            {s.strings.help_modal_title}
+            {helpModalTitle}
           </ModalTitle>
         </View>
 
@@ -116,9 +120,9 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
 
         <SelectableRow
           icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
-          title={s.strings.help_site}
-          subTitle={s.strings.help_site_text}
-          onPress={() => showWebViewModal(HELP_URIS.site, s.strings.help_site_text)}
+          title={sprintf(s.strings.help_visit_site, config.appName)}
+          subTitle={helpSiteMoreInfoText}
+          onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
           arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}

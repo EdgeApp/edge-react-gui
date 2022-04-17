@@ -16,6 +16,7 @@ import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/W
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
+import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
@@ -441,10 +442,10 @@ export class RequestComponent extends React.Component<Props, State> {
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
       edgePayUri = edgePayUri + `pay/${sharedAddress.replace(':', '/')}`
-      addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\n`
+      addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, config.appName)}\n\n`
     }
 
-    const subject = currencyInfo ? sprintf(s.strings.request_qr_email_subject, currencyInfo.displayName) : ''
+    const subject = currencyInfo ? sprintf(s.strings.request_email_subject, config.appName, currencyInfo.displayName) : ''
     const message = `${sharedAddress}${addOnMessage}`
 
     const shareOptions = {

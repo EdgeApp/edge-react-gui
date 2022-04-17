@@ -175,8 +175,8 @@ exports[`HelpModal should render with loading props 1`] = `
         0,
       ]
     }
-    subTitle="More info on Edge and Developer API/SDK"
-    title="Visit the Edge App site"
+    subTitle="More info on Edge"
+    title="Visit the Edge site"
   />
   <View
     style={

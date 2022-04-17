@@ -23,6 +23,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
+import { config } from '../../theme/appConfig.js'
 import { useEffect, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
@@ -140,7 +141,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleShareApp = () => {
-    const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n`
+    const message = `${sprintf(s.strings.share_subject, config.appName)}\n\n${s.strings.share_message}\n\n`
 
     const shareOptions = {
       message: Platform.OS === 'ios' ? message : message + EDGE_URL,
@@ -223,7 +224,7 @@ export function ControlPanel(props: Props) {
       iconName: 'cp-tos',
       title: s.strings.title_terms_of_service
     },
-    { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + s.strings.app_name },
+    { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + config.appName },
     {
       pressHandler: () => handleGoToScene(SETTINGS_OVERVIEW_TAB),
       iconName: 'cp-settings',

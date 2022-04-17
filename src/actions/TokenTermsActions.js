@@ -7,10 +7,11 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.
 import { Airship } from '../components/services/AirshipInstance.js'
 import { TOKEN_TERMS_AGREEMENT } from '../constants/constantSettings.js'
 import s from '../locales/strings.js'
+import { config } from '../theme/appConfig.js'
 
 export const approveTokenTerms = async (disklet: Disklet, currencyCode: string) => {
   const title = sprintf(s.strings.token_agreement_modal_title, currencyCode)
-  const body = sprintf(s.strings.token_agreement_modal_body, currencyCode)
+  const body = sprintf(s.strings.token_agreement_modal_message, currencyCode, config.appName)
   const filePath = `${currencyCode}-${TOKEN_TERMS_AGREEMENT}`
 
   try {

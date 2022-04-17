@@ -19,6 +19,7 @@ import { FormattedText as Text } from '../../modules/UI/components/FormattedText
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { config } from '../../theme/appConfig.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
@@ -250,7 +251,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
       selectedWalletType.currencyCode,
-      'Edge',
+      config.appNameShort,
       `${activationCost} ${selectedWalletType.currencyCode}`
     )
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
