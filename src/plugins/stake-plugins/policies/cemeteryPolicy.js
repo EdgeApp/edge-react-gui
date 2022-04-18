@@ -55,7 +55,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     // 3. Get the amount of each token in for the policy
     return policyInfo.stakeAssets.reduce((acc, assetId, index) => {
       const address = assetToContractAddress(policyInfo, assetId)
-      const reserve = reservesMap[address.toLowerCase()]
+      const reserve = reservesMap[address]
       if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.tokenId}`)
       const nativeAmount = div(mul(reserve, lpTokenAmount), lpTokenSupply)
       return { ...acc, [serializeAssetId(assetId)]: { nativeAmount } }
@@ -66,7 +66,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     // 1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
     const lpTokenSupply = (await multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
     const reservesMap = await getTokenReservesMap()
-    const tokenContractAddress = assetToContractAddress(policyInfo, allocation).toLowerCase()
+    const tokenContractAddress = assetToContractAddress(policyInfo, allocation)
     const tokenSupplyInReserve = reservesMap[tokenContractAddress]
     const liquidity = round(mul(div(allocation.nativeAmount, tokenSupplyInReserve, DECIMALS), fromHex(lpTokenSupply)))
     return liquidity
@@ -92,7 +92,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     }
     const contractInfo = getContractInfo(assetId.tokenId)
     const { address } = contractInfo
-    return address
+    return address.toLowerCase()
   }
 
   const instance: StakePluginPolicy = {
