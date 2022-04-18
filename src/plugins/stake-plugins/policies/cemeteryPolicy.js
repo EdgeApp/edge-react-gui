@@ -97,9 +97,14 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const requestAsset = policyInfo.stakeAssets.find(asset => asset.tokenId === request.tokenId)
       if (requestAsset == null) throw new Error(`Asset '${request.tokenId}' not found in policy '${stakePolicyId}'`)
 
+      const parentCurrencyCode = policyInfo.parentTokenId
       const tokenACurrencyCode = policyInfo.stakeAssets[0].tokenId
       const tokenBCurrencyCode = policyInfo.stakeAssets[1].tokenId
-      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentTokenId
+      const isTokenBNative = tokenBCurrencyCode === parentCurrencyCode
+
+      // Metadata constants:
+      const metadataName = 'Tomb Finance'
+      const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
 
       const signerSeed = getSeed(wallet)
 
@@ -162,12 +167,6 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       let txCount: number = await signer.getTransactionCount()
       const nextNonce = (): number => txCount++
 
-      // Metadata constants:
-      const metadataName = 'Tomb Finance'
-      const nativeCurrencyCode = policyInfo.parentTokenId
-      const metadataTokenCurrencyCode = policyInfo.stakeAssets[0].tokenId
-      const metadataLpName = `${metadataTokenCurrencyCode} - ${nativeCurrencyCode}`
-
       // Transaction builder
       const txs = makeBuilder(async fn => await multipass(provider => fn({ signer: signer.connect(provider) })))
 
@@ -220,12 +219,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             if (!isFullyAllowed) {
               txs.build(
                 (gasLimit =>
-                  async function approveLiquidityPool({ signer }) {
+                  async function approveSwapRouter({ signer }) {
                     const result = await tokenAContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { gasLimit, nonce: nextNonce() })
-                    cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                    cacheTxMetadata(result.hash, parentCurrencyCode, {
                       name: metadataName,
                       category: 'Expense:Fees',
-                      notes: `Approve ${metadataLpName} rewards pool contract`
+                      notes: `Approve ${metadataLpName} liquidity pool contract`
                     })
                   })(gasLimitAcc('50000'))
               )
@@ -292,6 +291,11 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                       gasLimit
                     }
                   )
+                cacheTxMetadata(result.hash, parentCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: `Provide liquidity for ${metadataLpName} - LP`
+                })
               }
 
               // Cache metadata
@@ -301,7 +305,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                 {
                   name: metadataName,
                   category: 'Transfer:Staking',
-                  notes: 'Stake into ' + metadataLpName + ' LP'
+                  notes: `Provide liquidity for ${metadataLpName} - LP`
                 },
                 amountTokenADesired
               )
@@ -311,7 +315,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                 {
                   name: metadataName,
                   category: 'Transfer:Staking',
-                  notes: 'Stake into ' + metadataLpName + ' LP'
+                  notes: `Provide liquidity for ${metadataLpName} - LP`
                 },
                 amountTokenBDesired
               )
@@ -346,8 +350,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
               if (!isFullyAllowed) {
                 const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { nonce: nextNonce(), gasLimit })
-
-                cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                cacheTxMetadata(result.hash, parentCurrencyCode, {
                   name: metadataName,
                   category: 'Expense:Fees',
                   notes: `Approve ${metadataLpName} rewards pool contract`
@@ -363,15 +366,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const result = await poolContract.connect(signer).deposit(POOL_ID, liquidity, { nonce: nextNonce(), gasLimit })
 
               // Amounts need to be calculated here
-              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
                 name: metadataName,
-                category: 'Transfer:Staking',
-                notes: `Stake into ${metadataLpName} Reward Pool`
-              })
-              cacheTxMetadata(result.hash, metadataTokenCurrencyCode, {
-                name: metadataName,
-                category: 'Transfer:Staking',
-                notes: `Stake into ${metadataLpName} Reward Pool`
+                category: 'Expense:Fee',
+                notes: `Stake into ${metadataLpName} reward pool`
               })
             })(gasLimitAcc('240000'))
         )
@@ -415,15 +413,20 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               if (lte(amountToUnstake, '0')) return
 
               const result = await poolContract.connect(signer).withdraw(POOL_ID, amountToUnstake, { nonce: nextNonce(), gasLimit })
-              cacheTxMetadata(result.hash, nativeCurrencyCode, {
+              // Reward transaction metadata
+              policyInfo.rewardAssets
+                .map(asset => asset.tokenId)
+                .forEach(currencyCode => {
+                  cacheTxMetadata(result.hash, currencyCode, {
+                    name: metadataName,
+                    category: 'Income:Staking',
+                    notes: `Claimed rewards from ${metadataLpName}`
+                  })
+                })
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
                 name: metadataName,
-                category: 'Income:Staking',
-                notes: `Unstake from ${metadataLpName} Reward Pool`
-              })
-              cacheTxMetadata(result.hash, metadataTokenCurrencyCode, {
-                name: metadataName,
-                category: 'Income:Staking',
-                notes: `Unstake from ${metadataLpName} Reward Pool`
+                category: 'Expense:Fees',
+                notes: `Unstake and claim rewards from ${metadataLpName} reward pool`
               })
             })(gasLimitAcc('240000'), lpTokenBalance)
         )
@@ -435,12 +438,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         if (!isAllowed) {
           txs.build(
             (gasLimit =>
-              async function approveRouter({ signer }) {
+              async function approveSwapRouter({ signer }) {
                 const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, { nonce: nextNonce(), gasLimit })
-                cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                cacheTxMetadata(result.hash, parentCurrencyCode, {
                   name: metadataName,
                   category: 'Expense:Fees',
-                  notes: `Approve ${metadataLpName} rewards pool contract`
+                  notes: `Approve ${metadataLpName} liquidity pool contract`
                 })
               })(gasLimitAcc('50000'))
           )
@@ -478,17 +481,22 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                       gasLimit
                     }
                   )
+                cacheTxMetadata(result.hash, parentCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: 'Remove liquidity from ' + metadataLpName + ' - LP'
+                })
               }
 
               cacheTxMetadata(result.hash, tokenACurrencyCode, {
                 name: metadataName,
-                category: 'Income:Staking',
-                notes: 'Unstake from ' + metadataLpName + ' LP'
+                category: 'Transfer:Staking',
+                notes: 'Remove liquidity from ' + metadataLpName + ' - LP'
               })
               cacheTxMetadata(result.hash, tokenBCurrencyCode, {
                 name: metadataName,
-                category: 'Income:Staking',
-                notes: 'Unstake from ' + metadataLpName + ' LP'
+                category: 'Transfer:Staking',
+                notes: 'Remove liquidity from ' + metadataLpName + ' - LP'
               })
             })(gasLimitAcc('500000'))
         )
@@ -509,12 +517,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               policyInfo.rewardAssets
                 .map(asset => asset.tokenId)
                 .forEach(currencyCode => {
-                  cacheTxMetadata(result.hash, currencyCode, { name: 'Tomb Finance', notes: `Claimed ${currencyCode} rewards from ${metadataLpName}` })
+                  cacheTxMetadata(result.hash, currencyCode, {
+                    name: metadataName,
+                    category: 'Income:Staking',
+                    notes: `Claimed rewards from ${metadataLpName}`
+                  })
                 })
-              cacheTxMetadata(result.hash, policyInfo.parentTokenId, {
-                name: 'Tomb Finance',
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
+                name: metadataName,
                 category: 'Expense:Fees',
-                notes: `Fees for claim reward`
+                notes: `Claimed rewards from ${metadataLpName}`
               })
             })(gasLimitAcc('240000'))
         )
