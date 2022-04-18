@@ -17,6 +17,9 @@ IDEWorkspaceChecks.plist
 ios-release.bundle.map
 keystores/
 
+# Debugging
+overrideTheme.json
+
 # Code Coverage
 coverage/
 flow_coverage/
