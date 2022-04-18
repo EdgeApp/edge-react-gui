@@ -41,10 +41,11 @@ const palette = {
   white: '#FDF2D5',
   black: '#000000',
   deepPurple: '#1A043D',
-  darkPurple2: '#280363',
-  glowPurple: '#FA00FF',
   darkPurple1: '#2C0F60',
+  darkPurple2: '#280363',
+  darkPurple3: '#210449',
   plainPurple: '#532499',
+  glowPurple: '#FA00FF',
   royalBlue: '#003B65',
   darkBlue: '#0C446A',
   edgeNavy: '#0D2145',
@@ -287,6 +288,11 @@ export const testDark: Theme = {
   // Input Accessory
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
+
+  // Outline Text Input
+  outlineTextInputColor: palette.darkPurple3,
+  outlineTextInputTextColor: palette.white,
+  outlineTextInputBorderWidth: 1,
 
   // Animation
   fadeDisable: palette.gray,

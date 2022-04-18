@@ -273,6 +273,11 @@ export const edgeDark: Theme = {
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
 
+  // Outline Text Input
+  outlineTextInputColor: palette.transparent,
+  outlineTextInputTextColor: palette.white,
+  outlineTextInputBorderWidth: 1,
+
   // Animation
   fadeDisable: palette.gray,
 

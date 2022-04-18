@@ -131,6 +131,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "modal": "#0D2145",
               "modalCloseIcon": "#66EDA8",
               "negativeText": "#E85466",
+              "outlineTextInputBorderWidth": 1,
+              "outlineTextInputColor": "rgba(255, 255, 255, 0)",
+              "outlineTextInputTextColor": "#FFFFFF",
               "paymentTypeLogoApplePay": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
               },
@@ -440,6 +443,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "modal": "#0D2145",
               "modalCloseIcon": "#66EDA8",
               "negativeText": "#E85466",
+              "outlineTextInputBorderWidth": 1,
+              "outlineTextInputColor": "rgba(255, 255, 255, 0)",
+              "outlineTextInputTextColor": "#FFFFFF",
               "paymentTypeLogoApplePay": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
               },

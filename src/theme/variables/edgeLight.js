@@ -284,6 +284,11 @@ export const edgeLight: Theme = {
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
 
+  // Outline Text Input
+  outlineTextInputColor: palette.transparent,
+  outlineTextInputTextColor: palette.black,
+  outlineTextInputBorderWidth: 1,
+
   // Animation
   fadeDisable: palette.gray,
 

@@ -290,7 +290,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
 const getStyles = cacheStyles(theme => {
   // A top or bottom line in the border puzzle:
   const commonLine = {
-    borderTopWidth: theme.thinLineWidth,
+    borderTopWidth: theme.outlineTextInputBorderWidth,
     position: 'absolute',
     left: theme.rem(1),
     right: theme.rem(1)
@@ -298,8 +298,8 @@ const getStyles = cacheStyles(theme => {
 
   // A left or right C-shape in the border puzzle:
   const commonCap = {
-    borderBottomWidth: theme.thinLineWidth,
-    borderTopWidth: theme.thinLineWidth,
+    borderBottomWidth: theme.outlineTextInputBorderWidth,
+    borderTopWidth: theme.outlineTextInputBorderWidth,
     position: 'absolute',
     bottom: 0,
     top: 0,
@@ -316,6 +316,8 @@ const getStyles = cacheStyles(theme => {
   return {
     // Provides a layout container for the text input:
     container: {
+      backgroundColor: theme.outlineTextInputColor,
+      borderRadius: theme.rem(0.5),
       justifyContent: 'center',
       minHeight: theme.rem(3),
       paddingHorizontal: theme.rem(1)
@@ -342,7 +344,7 @@ const getStyles = cacheStyles(theme => {
     },
     textInput: {
       alignSelf: 'stretch',
-      color: theme.primaryText,
+      color: theme.outlineTextInputTextColor,
       fontFamily: theme.fontFaceDefault,
       fontSize: theme.rem(1),
       padding: 0
@@ -359,7 +361,7 @@ const getStyles = cacheStyles(theme => {
     },
     leftCap: {
       ...commonCap,
-      borderLeftWidth: theme.thinLineWidth,
+      borderLeftWidth: theme.outlineTextInputBorderWidth,
       borderRightWidth: 0,
       borderBottomLeftRadius: theme.rem(0.5),
       borderTopLeftRadius: theme.rem(0.5),
@@ -368,7 +370,7 @@ const getStyles = cacheStyles(theme => {
     rightCap: {
       ...commonCap,
       borderLeftWidth: 0,
-      borderRightWidth: theme.thinLineWidth,
+      borderRightWidth: theme.outlineTextInputBorderWidth,
       borderBottomRightRadius: theme.rem(0.5),
       borderTopRightRadius: theme.rem(0.5),
       right: 0
