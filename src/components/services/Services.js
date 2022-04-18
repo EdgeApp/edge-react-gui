@@ -1,7 +1,7 @@
 // @flow
 
 import { makeReactNativeDisklet } from 'disklet'
-import { type EdgeContext } from 'edge-core-js/types'
+import { type EdgeAccount, type EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -19,13 +19,12 @@ import { errorAlert } from '../../util/middleware/errorAlert.js'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
 import { perfLogger } from '../../util/middleware/perfLogger.js'
 import { Main } from '../Main.ui.js'
+import { AccountCallbackManager } from './AccountCallbackManager.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
 import { ContactsLoader } from './ContactsLoader.js'
 import { DeepLinkingManager } from './DeepLinkingManager.js'
-import { EdgeAccountCallbackManager } from './EdgeAccountCallbackManager.js'
 import { EdgeContextCallbackManager } from './EdgeContextCallbackManager.js'
-import { EdgeWalletsCallbackManager } from './EdgeWalletsCallbackManager.js'
 import { NetworkActivity } from './NetworkActivity.js'
 import { PasswordReminderService } from './PasswordReminderService.js'
 import { PermissionsManager } from './PermissionsManager.js'
@@ -41,6 +40,7 @@ type Props = {
  */
 export function Services(props: Props) {
   const { context } = props
+  const [account, setAccount] = useState<EdgeAccount | void>()
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.
@@ -63,6 +63,14 @@ export function Services(props: Props) {
       data: { context, disklet }
     })
 
+    // Watch the account:
+    store.subscribe(() => {
+      const newAccount = store.getState().core.account
+      if (newAccount !== account) {
+        setAccount(newAccount.watch == null ? undefined : newAccount)
+      }
+    })
+
     return store
   })
 
@@ -82,9 +90,8 @@ export function Services(props: Props) {
         <AutoLogout />
         <ContactsLoader />
         <DeepLinkingManager />
-        <EdgeAccountCallbackManager />
+        {account == null ? null : <AccountCallbackManager account={account} />}
         <EdgeContextCallbackManager />
-        <EdgeWalletsCallbackManager />
         <PermissionsManager />
         <NetworkActivity />
         <PasswordReminderService />
