@@ -1,5 +1,6 @@
 // @flow
 
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { Image } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -16,6 +17,7 @@ type Props = {
 export function WalletListSlidingTutorialModal(props: Props) {
   const { bridge } = props
   const theme = useTheme()
+  const generateTestHook = useCavy()
 
   return (
     <AirshipModal
@@ -28,7 +30,13 @@ export function WalletListSlidingTutorialModal(props: Props) {
     >
       <ModalTitle>{s.strings.wallet_list_swipe_tutorial_title}</ModalTitle>
       <Image source={theme.walletListSlideTutorialImage} resizeMode="contain" style={{ height: theme.rem(3), width: '100%' }} />
-      <MainButton label={s.strings.string_ok} onPress={() => bridge.resolve()} marginRem={0.5} type="secondary" />
+      <MainButton
+        label={s.strings.string_ok}
+        onPress={() => bridge.resolve()}
+        marginRem={0.5}
+        type="secondary"
+        ref={generateTestHook('WalletListSlidingTutorialModal.Close')}
+      />
     </AirshipModal>
   )
 }

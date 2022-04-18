@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-raw-text */
 // @flow
 
+import { useCavy } from 'cavy'
 import { type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, Pressable, ScrollView } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
@@ -24,6 +25,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { useEffect, useState } from '../../types/reactHooks'
+import { TouchableOpacity, View } from '../../types/reactNative.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
@@ -50,7 +52,7 @@ export function ControlPanel(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-
+  const generateTestHook = useCavy()
   // ---- Redux State ----
 
   const activeUsername = useSelector(state => state.core.account.username)
@@ -311,7 +313,12 @@ export function ControlPanel(props: Props) {
         <View style={styles.rowsContainer}>
           <ScrollView>
             {rowDatas.map(rowData => (
-              <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+              <TouchableOpacity
+                onPress={rowData.pressHandler}
+                key={rowData.title}
+                style={styles.rowContainer}
+                ref={generateTestHook(`SideMenu.${rowData.iconName.replace('cp-', '')}`)}
+              >
                 <View style={styles.rowIconContainer}>
                   <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
                 </View>

@@ -13,6 +13,7 @@ describe('HelpModal', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       bridge: fakeAirshipBridge,
       theme: getTheme()
     }

@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { Image, Linking, Platform, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -21,6 +21,7 @@ export function UpdateModal(props: Props) {
   const { bridge, onSkip } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   const handleUpdate = () => {
     const url =
@@ -42,7 +43,7 @@ export function UpdateModal(props: Props) {
       <ModalMessage>{s.strings.update_fresh}</ModalMessage>
       <MainButton label={s.strings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
       <MainButton label={s.strings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('UpdateModal.Close')} />
     </ThemedModal>
   )
 }

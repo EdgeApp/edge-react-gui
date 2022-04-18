@@ -13,6 +13,7 @@ describe('TransactionAdvanceDetailsComponent', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       bridge: fakeAirshipBridge,
       transaction: {
         blockHeight: 0,

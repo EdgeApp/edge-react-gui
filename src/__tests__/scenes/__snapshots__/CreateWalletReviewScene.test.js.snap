@@ -48,7 +48,7 @@ exports[`CreateWalletReviewComponent should render with loading props 1`] = `
       title="Wallet Name:"
       type="static"
     />
-    <MainButton
+    <ForwardRef
       alignSelf="center"
       label="Create Wallet"
       marginRem={

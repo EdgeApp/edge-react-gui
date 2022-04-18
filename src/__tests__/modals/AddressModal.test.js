@@ -13,6 +13,7 @@ describe('AddressModalComponent', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       bridge: fakeAirshipBridge,
       // eslint-disable-next-line react/no-unused-prop-types
       walletId: 'string',

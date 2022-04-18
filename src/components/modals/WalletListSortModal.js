@@ -6,7 +6,7 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import { updateWalletsSort } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
@@ -40,7 +40,7 @@ type State = {
   option: SortOption
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & TestProps
 
 export class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -81,13 +81,13 @@ export class WalletListSortModalComponent extends React.PureComponent<Props, Sta
             )
           }
         })}
-        <ModalCloseArrow onPress={this.handleCloseModal} />
+        <ModalCloseArrow onPress={this.handleCloseModal} ref={this.props.generateTestHook('WalletListSortModal.Close')} />
       </ThemedModal>
     )
   }
 }
 
-export const WalletListSortModal = connect<StateProps, DispatchProps, OwnProps>(
+export const WalletListSortModal = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     sortOption: state.ui.settings.walletsSort
   }),
