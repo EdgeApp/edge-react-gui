@@ -1,5 +1,6 @@
 // @flow
-/* globals spec */
+
+// globals spec
 
 // import ENV from '../env.json'
 
