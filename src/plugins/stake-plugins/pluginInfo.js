@@ -92,6 +92,99 @@ export const pluginInfo: StakePluginInfo = {
         }
       ],
       mustClaimRewards: true
+    },
+    {
+      stakePolicyId: '',
+      exchangeProvider: 'TombSwap',
+      parentPluginId: 'fantom',
+      parentTokenId: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 2,
+        lpTokenContract: makeContract('TOMBSWAP_TOMB_MAI_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
+        tokenAContract: makeContract('TOMB'),
+        tokenBContract: makeContract('MAI')
+      }),
+      stakeAssets: [
+        {
+          pluginId: 'fantom',
+          tokenId: 'TOMB'
+        },
+        {
+          pluginId: 'fantom',
+          tokenId: 'MAI'
+        }
+      ],
+      rewardAssets: [
+        {
+          pluginId: 'fantom',
+          tokenId: 'TSHARE'
+        }
+      ],
+      mustClaimRewards: true
+    },
+    {
+      stakePolicyId: '',
+      exchangeProvider: 'TombSwap',
+      parentPluginId: 'fantom',
+      parentTokenId: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 3,
+        lpTokenContract: makeContract('TOMBSWAP_TOMB_WFTM_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
+        tokenAContract: makeContract('TOMB'),
+        tokenBContract: makeContract('FTM')
+      }),
+      stakeAssets: [
+        {
+          pluginId: 'fantom',
+          tokenId: 'TOMB'
+        },
+        {
+          pluginId: 'fantom',
+          tokenId: 'FTM'
+        }
+      ],
+      rewardAssets: [
+        {
+          pluginId: 'fantom',
+          tokenId: 'TSHARE'
+        }
+      ],
+      mustClaimRewards: true
+    },
+    {
+      stakePolicyId: '',
+      exchangeProvider: 'TombSwap',
+      parentPluginId: 'fantom',
+      parentTokenId: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 4,
+        lpTokenContract: makeContract('TOMBSWAP_TSHARE_MAI_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
+        tokenAContract: makeContract('TSHARE'),
+        tokenBContract: makeContract('MAI')
+      }),
+      stakeAssets: [
+        {
+          pluginId: 'fantom',
+          tokenId: 'TSHARE'
+        },
+        {
+          pluginId: 'fantom',
+          tokenId: 'MAI'
+        }
+      ],
+      rewardAssets: [
+        {
+          pluginId: 'fantom',
+          tokenId: 'TSHARE'
+        }
+      ],
+      mustClaimRewards: true
     }
   ].map(withGeneratedStakePolicyId)
 }

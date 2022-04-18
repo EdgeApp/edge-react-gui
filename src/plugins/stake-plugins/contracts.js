@@ -3,6 +3,7 @@
 import { ethers } from 'ethers'
 
 import ENV from '../../../env.json'
+import ANYSWAP_V5_ERC20_ABI from './abi/ANYSWAP_V5_ERC20_ABI.json'
 import MASONRY_ABI from './abi/MASONRY_ABI.json'
 import TOMB_ABI from './abi/TOMB_ABI.json'
 import TOMB_TREASURY_ABI from './abi/TOMB_TREASURY_ABI.json'
@@ -32,6 +33,10 @@ const contractInfoMap: { [key: string]: ContractInfo } = {
     abi: WRAPPED_FTM_ABI,
     address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
   },
+  MAI: {
+    abi: ANYSWAP_V5_ERC20_ABI,
+    address: '0xfB98B335551a418cD0737375a2ea0ded62Ea213b'
+  },
   SPOOKY_SWAP_ROUTER: {
     abi: UNISWAP_V2_ROUTER_02,
     address: '0xF491e7B69E4244ad4002BC14e878a34207E38c29'
@@ -43,6 +48,22 @@ const contractInfoMap: { [key: string]: ContractInfo } = {
   TOMB_MASONRY: {
     abi: MASONRY_ABI,
     address: '0x8764de60236c5843d9faeb1b638fbce962773b67'
+  },
+  TOMB_SWAP_ROUTER: {
+    abi: UNISWAP_V2_ROUTER_02,
+    address: '0x6d0176c5ea1e44b08d3dd001b0784ce42f47a3a7'
+  },
+  TOMBSWAP_TSHARE_MAI_LP: {
+    abi: UNISWAP_V2_PAIR,
+    address: '0x67b2faf48c1710ff1d2a9ac429b726b8f63ee83c'
+  },
+  TOMBSWAP_TOMB_MAI_LP: {
+    abi: UNISWAP_V2_PAIR,
+    address: '0x45f4682b560d4e3b8ff1f1b3a38fdbe775c7177b'
+  },
+  TOMBSWAP_TOMB_WFTM_LP: {
+    abi: UNISWAP_V2_PAIR,
+    address: '0xfca12A13ac324C09e9F43B5e5cfC9262f3Ab3223'
   },
   TOMB_TREASURY: {
     abi: TOMB_TREASURY_ABI,
