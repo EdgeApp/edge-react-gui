@@ -71,6 +71,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dateModalTextLight": "#0073D9",
               "deactivatedText": "#87939E",
               "defaultBorderColor": "#FFFFFF",
+              "exchangeLogoBaseUrl": "https://content.edge.app/exchangeIcons",
               "fadeDisable": "#87939E",
               "fioAddressLogo": Object {
                 "testUri": "../../../src/assets/images/details_fioAddress.png",
@@ -164,40 +165,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "secondaryButtonOutline": "#66EDA8",
               "secondaryButtonText": "#66EDA8",
               "secondaryText": "#A4C7DF",
-              "settingsChangellyLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
-              },
-              "settingsChangenowLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeChangenow.png",
-              },
-              "settingsDefaultLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeDefault.png",
-              },
-              "settingsExolixLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeExolix.png",
-              },
-              "settingsFoxExchangeLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeFoxExchange.png",
-              },
-              "settingsGodexLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeGodex.png",
-              },
               "settingsRowBackground": "rgba(255, 255, 255, 0)",
               "settingsRowHeaderBackground": "#0D2145",
               "settingsRowPressed": "rgba(255, 255, 255, 0)",
               "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
-              "settingsSideshiftLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
-              },
-              "settingsSpookySwapLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
-              },
-              "settingsSwitchainLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
-              },
-              "settingsTotleLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeTotle.png",
-              },
               "sliderTabMore": "#0073D9",
               "sliderTabRequest": "#77C513",
               "sliderTabSend": "#E85466",
@@ -287,6 +258,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dateModalTextLight": "#0073D9",
               "deactivatedText": "#87939E",
               "defaultBorderColor": "#FFFFFF",
+              "exchangeLogoBaseUrl": "https://content.edge.app/exchangeIcons",
               "fadeDisable": "#87939E",
               "fioAddressLogo": Object {
                 "testUri": "../../../src/assets/images/details_fioAddress.png",
@@ -380,40 +352,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "secondaryButtonOutline": "#66EDA8",
               "secondaryButtonText": "#66EDA8",
               "secondaryText": "#A4C7DF",
-              "settingsChangellyLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
-              },
-              "settingsChangenowLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeChangenow.png",
-              },
-              "settingsDefaultLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeDefault.png",
-              },
-              "settingsExolixLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeExolix.png",
-              },
-              "settingsFoxExchangeLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeFoxExchange.png",
-              },
-              "settingsGodexLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeGodex.png",
-              },
               "settingsRowBackground": "rgba(255, 255, 255, 0)",
               "settingsRowHeaderBackground": "#0D2145",
               "settingsRowPressed": "rgba(255, 255, 255, 0)",
               "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
-              "settingsSideshiftLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
-              },
-              "settingsSpookySwapLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
-              },
-              "settingsSwitchainLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
-              },
-              "settingsTotleLogo": Object {
-                "testUri": "../../../src/assets/images/exchange/settingsExchangeTotle.png",
-              },
               "sliderTabMore": "#0073D9",
               "sliderTabRequest": "#77C513",
               "sliderTabSend": "#E85466",

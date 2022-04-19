@@ -2,10 +2,11 @@
 
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
-import { swapPluginIcons } from '../../assets/images/exchange'
+import { getSwapPluginIconUri } from '../../constants/CdnUris'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux.js'
@@ -130,7 +131,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
           />
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <Image style={styles.partnerIconImage} resizeMode="contain" source={swapPluginIcons[quote.pluginId]} />
+            <FastImage style={styles.partnerIconImage} resizeMode="contain" source={getSwapPluginIconUri(quote.pluginId, theme)} />
             <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
           </View>
           {quote.isEstimate && (
@@ -142,7 +143,6 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
               onPress={this.showExplanationForEstimate}
             />
           )}
-
           <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
           {this.renderTimer()}
           <View style={styles.spacer} />
