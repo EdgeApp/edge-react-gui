@@ -142,15 +142,9 @@ export class EdgeProvider extends Bridgeable {
   async getCurrentWalletInfo(): Promise<WalletDetails> {
     const edgeWallet = this._state.core.account.currencyWallets[this._state.ui.wallets.selectedWalletId]
     const currencyCode = this._state.ui.wallets.selectedCurrencyCode
-    let walletName = edgeWallet.name ?? ''
+    const walletName = edgeWallet.name ?? ''
     const receiveAddress = await edgeWallet.getReceiveAddress()
-    const enabledTokens = await edgeWallet.getEnabledTokens()
     const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-
-    if (enabledTokens.length > 1) {
-      console.log('EP: We have tokens.. what do we do with them ')
-      walletName = currencyCode
-    }
 
     const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
     const returnObject: WalletDetails = {
