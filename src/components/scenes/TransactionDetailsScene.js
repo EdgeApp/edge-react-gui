@@ -515,6 +515,13 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                 ref={this.props.generateTestHook('TransactionDetailsScene.OpenAccelerateModal')}
               />
             )}
+            <Tile
+              type="editable"
+              title={s.strings.transaction_details_notes_title}
+              body={notes}
+              onPress={this.openNotesInput}
+              ref={this.props.generateTestHook('TransactionDetailsScene.OpenNotes')}
+            />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails} ref={this.props.generateTestHook('TransactionDetailsScene.OpenAdvancedDetails')}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
