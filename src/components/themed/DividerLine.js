@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -11,6 +11,9 @@ type Props = {
   // using the same logic as the web `margin` property. Defaults to 0.
   marginRem?: number | number[]
 }
+
+const start = { x: 0, y: 0.5 }
+const end = { x: 1, y: 0.5 }
 
 /**
  * A horizontal line for dividing sections of the app.
@@ -28,13 +31,12 @@ export const DividerLine = (props: Props) => {
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
   margin.marginRight -= theme.rem(1)
 
-  return <View style={[styles.underline, margin]} />
+  return <LinearGradient colors={theme.dividerLineColors} start={start} end={end} style={[styles.underline, margin]} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   underline: {
-    borderTopWidth: theme.thinLineWidth,
-    borderTopColor: theme.lineDivider,
+    height: theme.dividerLineHeight,
     alignSelf: 'stretch'
   }
 }))

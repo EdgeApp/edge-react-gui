@@ -219,6 +219,10 @@ export const testDark: Theme = {
   thinLineWidth: 1,
   mediumLineWidth: 2,
 
+  // DividerLine component
+  dividerLineHeight: 2,
+  dividerLineColors: [palette.edgeMint, palette.edgeNavy],
+
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
   // messageBanner: palette.grayOp80,

@@ -206,6 +206,10 @@ export type Theme = {
   thinLineWidth: number,
   mediumLineWidth: number,
 
+  // DividerLine component
+  dividerLineHeight: number,
+  dividerLineColors: string[],
+
   // Notifications
   // notificationBackground: string,
   // messageBanner: string,
