@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from '../../types/reactHooks.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
@@ -81,6 +82,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
     autoFocus = !searchIcon,
     blurOnClear = searchIcon,
     maxLength,
+    secureTextEntry,
     ...inputProps
   } = props
   const theme = useTheme()
@@ -89,6 +91,10 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const hasError = error != null
   const hasLabel = label != null
   const hasValue = value !== ''
+
+  // Show/Hide password input:
+  const [hidePassword, setHidePassword] = useState(secureTextEntry ?? false)
+  const handleHidePassword = () => setHidePassword(!hidePassword)
 
   // Imperative methods:
   const inputRef = useRef<TextInput>(null)
@@ -239,7 +245,15 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const errorStyle = useAnimatedStyle(() => ({
     opacity: errorAnimation.value
   }))
-
+  const showPasswordLineStyle = useAnimatedStyle(() => ({
+    backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+    transform: [
+      { rotateZ: '45deg' },
+      {
+        scaleX: withTiming(hidePassword ? 1 : 0, { duration: baseDuration })
+      }
+    ]
+  }))
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
@@ -261,12 +275,20 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
         <Animated.Text numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout}>
           {charLimitLabel}
         </Animated.Text>
-        {!searchIcon ? null : <AntDesignIcon name="search1" style={styles.searchIcon} />}
-        {!clearIcon || !hasValue ? null : (
+        {searchIcon ? <AntDesignIcon name="search1" style={styles.searchIcon} /> : null}
+        {clearIcon && hasValue && !secureTextEntry ? (
           <TouchableOpacity style={styles.clearTapArea} onPress={() => clear()}>
             <AntDesignIcon name="close" style={styles.clearIcon} />
           </TouchableOpacity>
-        )}
+        ) : null}
+        {secureTextEntry ? (
+          <TouchableWithoutFeedback onPress={handleHidePassword}>
+            <View style={styles.clearTapArea}>
+              <Animated.View style={[styles.eyeIconHideLine, showPasswordLineStyle]} />
+              <IonIcon name="eye-outline" style={styles.eyeIcon} />
+            </View>
+          </TouchableWithoutFeedback>
+        ) : null}
         <TextInput
           ref={inputRef}
           {...inputProps}
@@ -276,6 +298,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
           style={[styles.textInput, textInputStyle]}
           textAlignVertical="top"
           value={value}
+          secureTextEntry={hidePassword}
           // Callbacks:
           onBlur={handleBlur}
           onChangeText={onChangeText}
@@ -392,6 +415,24 @@ const getStyles = cacheStyles(theme => {
       color: theme.iconDeactivated,
       fontSize: theme.rem(1),
       padding: theme.rem(1)
+    },
+    eyeIcon: {
+      zIndex: 0,
+      color: theme.iconTappable,
+      fontSize: theme.rem(1),
+      padding: theme.rem(1)
+    },
+    eyeIconHideLine: {
+      borderTopWidth: theme.thinLineWidth,
+      borderTopColor: theme.modal,
+      borderBottomColor: theme.modal,
+      borderBottomWidth: theme.thinLineWidth,
+      top: theme.rem(1.5) - theme.thinLineWidth,
+      position: 'absolute',
+      alignSelf: 'center',
+      zIndex: 2,
+      width: '40%',
+      height: theme.thinLineWidth * 3
     },
 
     // The error text hangs out in the margin area below the main box:
