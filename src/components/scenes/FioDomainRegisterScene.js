@@ -184,8 +184,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   selectFioWallet = async () => {
+    const allowedCurrencyCodes: string[] = [FIO_STR]
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[FIO_STR]} />
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
     if (walletId && currencyCode) {
       if (currencyCode === FIO_STR) {

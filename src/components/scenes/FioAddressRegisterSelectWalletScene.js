@@ -119,7 +119,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   selectWallet = async () => {
     const { supportedCurrencies } = this.state
 
-    const allowedCurrencyCodes = []
+    const allowedCurrencyCodes: string[] = []
     for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         allowedCurrencyCodes.push(currency)

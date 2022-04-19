@@ -19,8 +19,10 @@ import s from '../../../../locales/strings'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
+import type { EdgeTokenIdExtended } from '../../../../types/types.js'
 import { type GuiMakeSpendInfo } from '../../../../types/types.js'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
+import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
 
 type WalletDetails = {
   name: string,
@@ -115,7 +117,8 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes: string[] = []): Promise<string> {
+  // $FlowFixMe // Default empty array is not typed
+  async chooseCurrencyWallet(allowedCurrencyCodes: string[] | EdgeTokenIdExtended[] = []): Promise<string> {
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
@@ -123,6 +126,15 @@ export class EdgeProvider extends Bridgeable {
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
+      if (allowedCurrencyCodes.every(code => typeof code === 'object')) {
+        const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
+        const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
+        return Promise.resolve({
+          pluginId,
+          tokenId,
+          currencyCode
+        })
+      }
       return Promise.resolve(currencyCode)
     }
 
