@@ -17,60 +17,67 @@ export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACT
 export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
-const emptyArray = []
-
-export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state: RootState = getState()
-  const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
-  let { currentEndIndex } = state.ui.scenes.transactionList
-  const { transactions } = state.ui.scenes.transactionList
-  let existingTransactions = transactions
-  const walletTransactionsCount = numTransactions
-  // if we are resetting then start over
-  if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
-    currentEndIndex = 0
-    existingTransactions = emptyArray
-  }
-
-  // new batch will start with the first index after previous end index
-  const nextStartIndex = currentEndIndex ? currentEndIndex + 1 : 0
-  let nextEndIndex = currentEndIndex // start off with nextEndIndex equal to previous endIndex, will add range
-
-  // set number of transactions in our existingTransactions array
-  const existingTransactionsCount = existingTransactions.length
-  if (!existingTransactionsCount) {
-    // if there are no transactions yet
-    nextEndIndex = INITIAL_TRANSACTION_BATCH_QUANTITY - 1 // then the ending index will be batch quantity minus one
-  } else if (existingTransactionsCount < walletTransactionsCount) {
-    // if we haven't gotten all of the transactions yet
-    nextEndIndex += SUBSEQUENT_TRANSACTION_BATCH_QUANTITY // then the next batch end index will be the addition of the batch quantity
-    if (nextEndIndex >= walletTransactionsCount) {
-      // if you're at the end
-      nextEndIndex = undefined // then don't worry about getting anything more
+export const fetchMoreTransactions =
+  (walletId: string, currencyCode: string, reset: boolean) =>
+  async (dispatch: Dispatch, getState: GetState): Promise<TransactionListTx[]> => {
+    const state: RootState = getState()
+    const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
+    let { currentEndIndex } = state.ui.scenes.transactionList
+    const { transactions } = state.ui.scenes.transactionList
+    let existingTransactions = transactions
+    const walletTransactionsCount = numTransactions
+    // if we are resetting then start over
+    if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
+      currentEndIndex = 0
+      existingTransactions = []
     }
-  }
 
-  if (
-    nextEndIndex !== currentEndIndex || // if there are more tx to fetch
-    (currentWalletId !== '' && currentWalletId !== walletId) || // if the wallet has change
-    (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode) // maybe you've switched to a token wallet
-  ) {
-    let startEntries
-    if (nextEndIndex) {
-      startEntries = nextEndIndex - nextStartIndex + 1
+    // new batch will start with the first index after previous end index
+    const nextStartIndex = currentEndIndex ? currentEndIndex + 1 : 0
+    let nextEndIndex = currentEndIndex // start off with nextEndIndex equal to previous endIndex, will add range
+
+    // set number of transactions in our existingTransactions array
+    const existingTransactionsCount = existingTransactions.length
+    if (!existingTransactionsCount) {
+      // if there are no transactions yet
+      nextEndIndex = INITIAL_TRANSACTION_BATCH_QUANTITY - 1 // then the ending index will be batch quantity minus one
+    } else if (existingTransactionsCount < walletTransactionsCount) {
+      // if we haven't gotten all of the transactions yet
+      nextEndIndex += SUBSEQUENT_TRANSACTION_BATCH_QUANTITY // then the next batch end index will be the addition of the batch quantity
+      if (nextEndIndex >= walletTransactionsCount) {
+        // if you're at the end
+        nextEndIndex = undefined // then don't worry about getting anything more
+      }
     }
-    // If startEntries is undefined / null, this means query until the end of the transaction list
-    getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
-      startEntries,
-      startIndex: nextStartIndex
-    })
-  }
-}
 
-const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
+    if (
+      nextEndIndex !== currentEndIndex || // if there are more tx to fetch
+      (currentWalletId !== '' && currentWalletId !== walletId) || // if the wallet has change
+      (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode) // maybe you've switched to a token wallet
+    ) {
+      let startEntries
+      if (nextEndIndex) {
+        startEntries = nextEndIndex - nextStartIndex + 1
+      }
+      // If startEntries is undefined / null, this means query until the end of the transaction list
+      return getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+        startEntries,
+        startIndex: nextStartIndex
+      })
+    }
+    return []
+  }
+
+const getAndMergeTransactions = async (
+  state: RootState,
+  dispatch: Dispatch,
+  walletId: string,
+  currencyCode: string,
+  options: Object
+): Promise<TransactionListTx[]> => {
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
-  if (!wallet) return
+  if (!wallet) return []
   // initialize the master array of transactions that will eventually go into Redux
   let transactionsWithKeys: TransactionListTx[] = [] // array of transactions as objects with key included for sorting?
   let transactionIdMap = {} // maps id to sort order(?)
@@ -121,9 +128,11 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
         currentEndIndex: lastUnfilteredIndex
       }
     })
+    return transactionsWithKeys
   } catch (error) {
     showError(error)
   }
+  return []
 }
 
 export const refreshTransactionsRequest = (walletId: string, transactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
