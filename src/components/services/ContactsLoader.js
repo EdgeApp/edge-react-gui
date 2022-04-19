@@ -4,7 +4,7 @@ import * as React from 'react'
 import Contacts from 'react-native-contacts'
 import RNPermissions from 'react-native-permissions'
 
-import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants.js'
+import { EDGE_CONTENT_SERVER_URL } from '../../constants/CdnConstants'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiContact } from '../../types/types.js'
@@ -186,7 +186,7 @@ const merchantPartners = [
     familyName: '',
     recordID: ''
   }
-].map(({ thumbnailPath, ...rest }) => ({ ...rest, thumbnailPath: `${EDGE_CONTENT_SERVER}/${thumbnailPath}` }))
+].map(({ thumbnailPath, ...rest }) => ({ ...rest, thumbnailPath: `${EDGE_CONTENT_SERVER_URL}/${thumbnailPath}` }))
 
 class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {

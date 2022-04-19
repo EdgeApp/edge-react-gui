@@ -7,7 +7,7 @@ import { type AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { getSwapPluginIconUri } from '../../constants/CdnUris'
+import { getSwapPluginIconUri } from '../../constants/CdnConstants'
 import s from '../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'

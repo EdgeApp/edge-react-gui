@@ -8,7 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
-import { getSwapPluginIconUri } from '../../constants/CdnUris'
+import { getSwapPluginIconUri } from '../../constants/CdnConstants'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'

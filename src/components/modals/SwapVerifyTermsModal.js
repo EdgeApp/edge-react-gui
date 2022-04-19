@@ -6,7 +6,7 @@ import { Linking, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
-import { getSwapPluginIconUri } from '../../constants/CdnUris'
+import { getSwapPluginIconUri } from '../../constants/CdnConstants'
 import s from '../../locales/strings.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../services/ThemeContext'

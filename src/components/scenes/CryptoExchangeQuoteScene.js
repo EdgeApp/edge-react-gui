@@ -6,7 +6,7 @@ import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
-import { getSwapPluginIconUri } from '../../constants/CdnUris'
+import { getSwapPluginIconUri } from '../../constants/CdnConstants'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux.js'

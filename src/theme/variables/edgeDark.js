@@ -23,7 +23,7 @@ import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeL
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
-import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants'
+import { EDGE_CONTENT_SERVER_URL } from '../../constants/CdnConstants'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 import { PLATFORM } from './platform'
@@ -264,7 +264,7 @@ export const edgeDark: Theme = {
   fadeDisable: palette.gray,
 
   // Images
-  exchangeLogoBaseUrl: `${EDGE_CONTENT_SERVER}/exchangeIcons`,
+  exchangeLogoBaseUrl: `${EDGE_CONTENT_SERVER_URL}/exchangeIcons`,
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,
