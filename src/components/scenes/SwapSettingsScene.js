@@ -9,7 +9,7 @@ import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferra
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -34,7 +34,7 @@ type StateProps = {
   settingsPreferredSwap: string | void
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & TestProps
 
 type State = {
   enabled: { [pluginId: string]: boolean },
@@ -176,7 +176,7 @@ export class SwapSettings extends React.Component<Props, State> {
         <View style={styles.instructionArea}>
           <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
         </View>
-        <SettingsTappableRow label={label} onPress={this.handlePreferredModal}>
+        <SettingsTappableRow label={label} onPress={this.handlePreferredModal} ref={this.props.generateTestHook('SwapSettingsScene.OpenPreferred')}>
           {icon}
         </SettingsTappableRow>
       </>
@@ -201,7 +201,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
+export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps & TestProps>(
   state => ({
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
