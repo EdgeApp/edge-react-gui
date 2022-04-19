@@ -21,8 +21,10 @@ exports[`MenuTab should render with loading props 1`] = `
   }
   theme={
     Object {
-      "backgroundGradientLeft": "#0D2145",
-      "backgroundGradientRight": "#0C446A",
+      "backgroundGradientColors": Array [
+        "#0D2145",
+        "#0C446A",
+      ],
       "buttonBorderRadiusRem": 0.25,
       "buySellCustomPluginModalIcon": "#0C446A",
       "cameraOverlayColor": "#000000",

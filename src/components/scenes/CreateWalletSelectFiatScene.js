@@ -169,7 +169,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(2),
     borderRadius: theme.rem(1),
     marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientRight
+    backgroundColor: theme.backgroundGradientColors[1]
   }
 }))
 

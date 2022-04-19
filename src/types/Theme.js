@@ -62,8 +62,7 @@ export type Theme = {
   buySellCustomPluginModalIcon: string,
 
   // Background
-  backgroundGradientLeft: string,
-  backgroundGradientRight: string,
+  backgroundGradientColors: string[],
 
   // Camera Overlay
   cameraOverlayColor: string,

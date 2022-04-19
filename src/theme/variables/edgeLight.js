@@ -93,8 +93,7 @@ export const edgeLight: Theme = {
   buySellCustomPluginModalIcon: palette.white,
 
   // Background
-  backgroundGradientLeft: palette.lightestGray,
-  backgroundGradientRight: palette.lightestGray,
+  backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,
