@@ -24,6 +24,7 @@ import { getCurrencyIconUris } from '../../../../util/CdnUris'
 
 type WalletDetails = {
   name: string,
+  pluginId?: string,
   receiveAddress: {
     publicAddress: string
   },
@@ -154,6 +155,7 @@ export class EdgeProvider extends Bridgeable {
     const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
     const returnObject: WalletDetails = {
       name: walletName,
+      pluginId: edgeWallet.currencyInfo.pluginId,
       receiveAddress,
       currencyCode,
       fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
