@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { Appearance, Picker, Platform, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -100,4 +101,4 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
   }
 }
 
-export const AutoLogoutModal = withTheme(AutoLogoutModalComponent)
+export const AutoLogoutModal = hook(withTheme(AutoLogoutModalComponent))

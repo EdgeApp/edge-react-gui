@@ -22,7 +22,7 @@ import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
@@ -60,7 +60,7 @@ type DispatchProps = {
   showUnlockSettingsModal: () => void,
   toggleDeveloperMode: (developerModeOn: boolean) => void
 }
-type Props = StateProps & DispatchProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps & TestProps
 
 type State = {
   touchIdText: string,
@@ -240,7 +240,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
           <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
           <SettingsTappableRow label={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
-          <SettingsLabelRow right={autoLogoutRightText} label={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
+          <SettingsLabelRow
+            right={autoLogoutRightText}
+            label={s.strings.settings_title_auto_logoff}
+            onPress={this.handleAutoLogout}
+            ref={this.props.generateTestHook('SettingsScene.OpenAutoLogout')}
+          />
           <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
 
           <SettingsSwitchRow key="pinRelogin" label={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
@@ -303,7 +308,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+export const SettingsScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,

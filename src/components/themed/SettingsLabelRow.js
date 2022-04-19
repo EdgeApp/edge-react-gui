@@ -1,5 +1,6 @@
 // @flow
 
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { Text } from 'react-native'
 
@@ -47,4 +48,4 @@ export function SettingsLabelRowComponent(props: Props): React.Node {
   )
 }
 
-export const SettingsLabelRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsLabelRowComponent)
+export const SettingsLabelRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = wrap(withTheme(SettingsLabelRowComponent))
