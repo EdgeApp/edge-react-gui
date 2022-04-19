@@ -172,6 +172,11 @@ export const testDark: Theme = {
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
 
+  // Dropdown colors:
+  dropdownWarning: palette.accentOrange,
+  dropdownError: palette.accentRed,
+  dropdownText: palette.white,
+
   // Card
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
