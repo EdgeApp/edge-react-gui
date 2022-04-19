@@ -42,7 +42,7 @@ exports[`TransactionAdvanceDetailsComponent should render with loading props 1`]
     }
   >
     <ScrollView>
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         body=""
         title="Transaction ID"
         type="copy"

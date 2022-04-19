@@ -14,7 +14,7 @@ exports[`TransactionDetails.ui should render 1`] = `
         }
       }
     >
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Sender Name"
         type="editable"
@@ -53,13 +53,13 @@ exports[`TransactionDetails.ui should render 1`] = `
             Sender
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body="₿ 0.00000123"
         title="Bitcoin Amount"
         type="static"
       />
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Amount in iso:USD"
         type="editable"
@@ -93,8 +93,8 @@ exports[`TransactionDetails.ui should render 1`] = `
             0.00
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         title="Amount at Current Price"
         type="static"
       >
@@ -138,8 +138,8 @@ exports[`TransactionDetails.ui should render 1`] = `
             0%
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Category"
         type="editable"
@@ -154,8 +154,8 @@ exports[`TransactionDetails.ui should render 1`] = `
         >
           Income
         </WithTheme(EdgeTextComponent)>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body=""
         onPress={[Function]}
         title="Notes"
@@ -178,7 +178,7 @@ exports[`TransactionDetails.ui should render 1`] = `
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
+      <ForwardRef
         label="Done"
         marginRem={
           Array [
@@ -209,7 +209,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         }
       }
     >
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Recipient Name"
         type="editable"
@@ -248,13 +248,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             Recipient
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body="₿ 0.00000122 (+ 0 fee)"
         title="Bitcoin Amount"
         type="static"
       />
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Amount in iso:USD"
         type="editable"
@@ -288,8 +288,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             6392.93
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         title="Amount at Current Price"
         type="static"
       >
@@ -333,8 +333,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             - 98.12%
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Category"
         type="editable"
@@ -349,8 +349,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         >
           Expense
         </WithTheme(EdgeTextComponent)>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body=""
         onPress={[Function]}
         title="Notes"
@@ -373,7 +373,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
+      <ForwardRef
         label="Done"
         marginRem={
           Array [
@@ -404,7 +404,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         }
       }
     >
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Sender Name"
         type="editable"
@@ -443,13 +443,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             Sender
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body="₿ 0.00000123"
         title="Bitcoin Amount"
         type="static"
       />
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Amount in iso:USD"
         type="editable"
@@ -483,8 +483,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             0.00
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         title="Amount at Current Price"
         type="static"
       >
@@ -528,8 +528,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             0%
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Category"
         type="editable"
@@ -544,8 +544,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         >
           Income
         </WithTheme(EdgeTextComponent)>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body=""
         onPress={[Function]}
         title="Notes"
@@ -568,7 +568,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
+      <ForwardRef
         label="Done"
         marginRem={
           Array [
@@ -599,7 +599,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         }
       }
     >
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Sender Name"
         type="editable"
@@ -638,13 +638,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             Sender
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body="₿ 0.00000123"
         title="Bitcoin Amount"
         type="static"
       />
-      <WithTheme(TileComponent)
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Amount in iso:USD"
         type="editable"
@@ -678,8 +678,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             0.00
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         title="Amount at Current Price"
         type="static"
       >
@@ -723,8 +723,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             0%
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         onPress={[Function]}
         title="Category"
         type="editable"
@@ -739,8 +739,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         >
           Income
         </WithTheme(EdgeTextComponent)>
-      </WithTheme(TileComponent)>
-      <WithTheme(TileComponent)
+      </Hook(WithTheme(TileComponent))>
+      <Hook(WithTheme(TileComponent))
         body=""
         onPress={[Function]}
         title="Notes"
@@ -763,7 +763,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           View Advanced Transaction Data
         </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
-      <MainButton
+      <ForwardRef
         label="Done"
         marginRem={
           Array [

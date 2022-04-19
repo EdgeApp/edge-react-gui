@@ -2,7 +2,7 @@
 
 exports[`AddressTileComponent should render with loading props 1`] = `
 <View>
-  <WithTheme(TileComponent)
+  <Hook(WithTheme(TileComponent))
     onPress={[Function]}
     title="Title"
     type="static"
@@ -13,6 +13,6 @@ exports[`AddressTileComponent should render with loading props 1`] = `
     >
       bc1
     </WithTheme(EdgeTextComponent)>
-  </WithTheme(TileComponent)>
+  </Hook(WithTheme(TileComponent))>
 </View>
 `;

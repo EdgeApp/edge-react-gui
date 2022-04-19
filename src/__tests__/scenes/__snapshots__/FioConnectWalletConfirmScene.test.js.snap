@@ -5,7 +5,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
   background="header"
 >
   <ScrollView>
-    <WithTheme(TileComponent)
+    <Hook(WithTheme(TileComponent))
       body="MyFioAddress"
       title="FIO Crypto Handle"
       type="static"

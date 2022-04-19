@@ -2,7 +2,7 @@
 
 exports[`FlipInputComponent should render with loading props 1`] = `
 <React.Fragment>
-  <TouchableOpacity
+  <Wrap(TouchableOpacity)
     onPress={[Function]}
     style={
       Object {
@@ -31,7 +31,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
       onPress={[Function]}
       text="string"
     />
-  </TouchableOpacity>
+  </Wrap(TouchableOpacity)>
   <View
     style={
       Object {

@@ -2,12 +2,12 @@
 
 exports[`SelectFioAddress should render with loading props 1`] = `
 <View>
-  <WithTheme(TileComponent)
+  <Hook(WithTheme(TileComponent))
     body="string"
     title="Send from FIO Crypto Handle"
     type="static"
   />
-  <WithTheme(TileComponent)
+  <Hook(WithTheme(TileComponent))
     onPress={[Function]}
     title="FIO Memo Error"
     type="touchable"
@@ -21,6 +21,6 @@ exports[`SelectFioAddress should render with loading props 1`] = `
     >
       memo error
     </WithTheme(EdgeTextComponent)>
-  </WithTheme(TileComponent)>
+  </Hook(WithTheme(TileComponent))>
 </View>
 `;

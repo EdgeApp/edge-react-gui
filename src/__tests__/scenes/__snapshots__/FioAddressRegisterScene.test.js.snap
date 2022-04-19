@@ -111,7 +111,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       <View
         onLayout={[Function]}
       >
-        <WithTheme(TileComponent)
+        <Hook(WithTheme(TileComponent))
           onPress={[Function]}
           title="Choose a FIO Crypto Handle"
           type="editable"
@@ -133,8 +133,8 @@ exports[`FioAddressRegister should render with loading props 1`] = `
               Your Crypto Handle name here
             </WithTheme(EdgeTextComponent)>
           </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
+        </Hook(WithTheme(TileComponent))>
+        <Hook(WithTheme(TileComponent))
           body="Loading…"
           onPress={[Function]}
           title="Choose FIO Domain for Your Crypto Handle"

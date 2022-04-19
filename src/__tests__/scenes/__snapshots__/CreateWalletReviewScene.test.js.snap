@@ -30,25 +30,25 @@ exports[`CreateWalletReviewComponent should render with loading props 1`] = `
     >
       Please double-check wallet information and submit:
     </WithTheme(EdgeTextComponent)>
-    <WithTheme(TileComponent)
+    <Hook(WithTheme(TileComponent))
       body="bitcoin - BTC"
       contentPadding={false}
       title="Wallet Type:"
       type="static"
     />
-    <WithTheme(TileComponent)
+    <Hook(WithTheme(TileComponent))
       body="USD"
       contentPadding={false}
       title="Wallet Fiat:"
       type="static"
     />
-    <WithTheme(TileComponent)
+    <Hook(WithTheme(TileComponent))
       body="my bitcoin wallet"
       contentPadding={false}
       title="Wallet Name:"
       type="static"
     />
-    <MainButton
+    <ForwardRef
       alignSelf="center"
       label="Create Wallet"
       marginRem={

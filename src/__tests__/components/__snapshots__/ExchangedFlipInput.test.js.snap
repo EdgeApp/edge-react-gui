@@ -37,5 +37,6 @@ exports[`ExchangedFlipInput should render with loading props 1`] = `
       "maxEntryDecimals": 10,
     }
   }
+  testId="ExchnagedFlipInput.OpenList"
 />
 `;
