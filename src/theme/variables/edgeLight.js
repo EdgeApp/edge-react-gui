@@ -163,6 +163,11 @@ export const edgeLight: Theme = {
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
 
+  // Dropdown colors:
+  dropdownWarning: palette.accentOrange,
+  dropdownError: palette.accentRed,
+  dropdownText: palette.white,
+
   // tertiaryButtonOutline: palette.edgeBlue,
   // tertiaryButton: palette.transparent,
   // tertiaryButtonText: palette.edgeBlue,

@@ -146,6 +146,11 @@ export type Theme = {
   escapeButtonTextShadow: TextShadowParams,
   escapeButtonShadow: ThemeShadowParams,
 
+  // Dropdown colors:
+  dropdownWarning: string,
+  dropdownError: string,
+  dropdownText: string,
+
   // tertiaryButtonOutline: string,
   // tertiaryButton: string,
   // tertiaryButtonText: string,

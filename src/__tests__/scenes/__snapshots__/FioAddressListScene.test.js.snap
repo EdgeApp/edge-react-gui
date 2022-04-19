@@ -78,6 +78,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "rgba(255, 255, 255, .1)",
               ],
               "dividerLineHeight": 1,
+              "dropdownError": "#E85466",
+              "dropdownText": "#FFFFFF",
+              "dropdownWarning": "#F1AA19",
               "escapeButton": Array [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
@@ -397,6 +400,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "rgba(255, 255, 255, .1)",
               ],
               "dividerLineHeight": 1,
+              "dropdownError": "#E85466",
+              "dropdownText": "#FFFFFF",
+              "dropdownWarning": "#F1AA19",
               "escapeButton": Array [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
