@@ -188,8 +188,6 @@ export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[]
       type: 'UPDATE_WALLET_ENABLED_TOKENS',
       data: { walletId, tokens: enabledTokens }
     })
-    // refresh the wallet in Redux
-    dispatch(refreshWallet(walletId))
   })
 }
 
@@ -235,7 +233,6 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
         type: 'UPDATE_WALLET_ENABLED_TOKENS',
         data: { walletId, tokens: tokensToEnable }
       })
-      dispatch(refreshWallet(walletId))
     }
   } catch (error) {
     showError(error)
@@ -416,7 +413,6 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     })
     .then(() => {
       coreWalletsToUpdate.forEach(wallet => {
-        dispatch(upsertWallets([wallet]))
         dispatch({
           type: 'UPDATE_WALLET_ENABLED_TOKENS',
           data: {

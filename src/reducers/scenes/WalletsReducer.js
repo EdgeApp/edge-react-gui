@@ -51,10 +51,10 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       if (state[walletId] !== undefined) {
         return {
           ...state,
-          [walletId]: {
+          [walletId]: fixTokenBalances({
             ...state[walletId],
             enabledTokens: tokens
-          }
+          })
         }
       } else {
         return state
@@ -66,10 +66,10 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       if (state[walletId] !== undefined) {
         return {
           ...state,
-          [walletId]: {
+          [walletId]: fixTokenBalances({
             ...state[walletId],
             enabledTokens
-          }
+          })
         }
       } else {
         return state
@@ -332,6 +332,24 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   }
 
   return newWallet
+}
+
+/**
+ * Ensure that we have a balance for each enabled token.
+ */
+function fixTokenBalances(guiWallet: GuiWallet): GuiWallet {
+  const { nativeBalances, enabledTokens } = guiWallet
+
+  let newBalances: { [currencyCode: string]: string } | void
+  for (const currencyCode of enabledTokens) {
+    if (nativeBalances[currencyCode] == null) {
+      if (newBalances == null) newBalances = { ...nativeBalances }
+      newBalances[currencyCode] = '0'
+    }
+  }
+
+  if (newBalances == null) return guiWallet
+  return { ...guiWallet, nativeBalances: newBalances }
 }
 
 const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fioWallets'> => {
