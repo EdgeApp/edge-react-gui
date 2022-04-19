@@ -56,6 +56,7 @@ describe('TransactionDetails.ui', () => {
   it('should render', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      generateTestHook: () => {},
       route: {
         name: 'transactionDetails',
         params: {
@@ -94,6 +95,7 @@ describe('TransactionDetails.ui', () => {
   it('should render with tx date off by 1000x in future', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      generateTestHook: () => {},
       route: {
         name: 'transactionDetails',
         params: {
@@ -133,6 +135,7 @@ describe('TransactionDetails.ui', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       route: {
         name: 'transactionDetails',
         params: {
@@ -171,6 +174,7 @@ describe('TransactionDetails.ui', () => {
   it('should render with negative nativeAmount and fiatAmount', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      generateTestHook: () => {},
       route: {
         name: 'transactionDetails',
         params: {

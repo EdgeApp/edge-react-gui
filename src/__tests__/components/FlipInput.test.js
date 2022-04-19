@@ -12,6 +12,7 @@ describe('FlipInputComponent', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       overridePrimaryDecimalAmount: 'string',
 
       // Exchange rate

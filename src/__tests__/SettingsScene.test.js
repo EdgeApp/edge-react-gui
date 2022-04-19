@@ -23,6 +23,7 @@ describe('MyComponent', () => {
   it('should render UnLocked SettingsOverview', () => {
     const element = (
       <SettingsSceneComponent
+        generateTestHook={() => {}}
         theme={edgeDark}
         navigation={fakeNavigation}
         // StateProps:
@@ -55,6 +56,7 @@ describe('MyComponent', () => {
   it('should render Locked SettingsOverview', () => {
     const element = (
       <SettingsSceneComponent
+        generateTestHook={() => {}}
         theme={edgeDark}
         navigation={fakeNavigation}
         // StateProps:
