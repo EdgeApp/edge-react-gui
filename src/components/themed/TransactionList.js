@@ -33,7 +33,7 @@ export function TransactionList({ walletId, currencyCode, searching = false, sea
 
   const theme = useTheme()
 
-  const { getNumTransactions, getTransactions, currencyInfo } = useSelector(state => state.core.account.currencyWallets[walletId])
+  const { getNumTransactions, getTransactions } = useSelector(state => state.core.account.currencyWallets[walletId])
 
   const [transactions, setTransactions] = useState([])
   const [reset, setReset] = useState(true)
