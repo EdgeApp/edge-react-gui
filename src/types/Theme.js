@@ -270,16 +270,7 @@ export type Theme = {
   fadeDisable: string,
 
   // Images
-  settingsChangellyLogo: string,
-  settingsChangenowLogo: string,
-  settingsDefaultLogo: string,
-  settingsExolixLogo: string,
-  settingsFoxExchangeLogo: string,
-  settingsGodexLogo: string,
-  settingsSpookySwapLogo: string,
-  settingsSwitchainLogo: string,
-  settingsSideshiftLogo: string,
-  settingsTotleLogo: string,
+  exchangeLogoBaseUri: string,
 
   paymentTypeLogoApplePay: string,
   paymentTypeLogoAuspost: string,

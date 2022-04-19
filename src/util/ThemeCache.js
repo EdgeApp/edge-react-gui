@@ -2,17 +2,12 @@
 
 import { asDate, asMap, asObject, uncleaner } from 'cleaners'
 import { Disklet } from 'disklet'
-import { ImageSourcePropType, Platform } from 'react-native'
+import { ImageSourcePropType } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { EDGE_CONTENT_SERVER } from '../constants/WalletAndCurrencyConstants.js'
-
-const directory = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.ExternalCachesDirectoryPath
+import { BACKGROUND_IMAGE_LOCAL_URI, BACKGROUND_IMAGE_URI } from '../constants/CdnConstants'
 
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
-const BACKGROUND_IMAGE_FILE_NAME = 'login_bg.gif'
-const BACKGROUND_IMAGE_URL = `${EDGE_CONTENT_SERVER}/${BACKGROUND_IMAGE_FILE_NAME}`
-const BACKGROUND_IMAGE_LOCAL_URI = `file://${directory}/${BACKGROUND_IMAGE_FILE_NAME}`
 
 const asThemeCache = asObject({
   assets: asMap(
@@ -69,9 +64,9 @@ export async function getBackgroundImage(disklet: Disklet): Promise<ImageSourceP
   const now = Date.now()
 
   const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
-  const cacheTimes = cache.assets[BACKGROUND_IMAGE_URL]
+  const cacheTimes = cache.assets[BACKGROUND_IMAGE_URI]
   // Always return existing local file but query and download new remote file in the background
-  downloadFile(disklet, BACKGROUND_IMAGE_URL, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
+  downloadFile(disklet, BACKGROUND_IMAGE_URI, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
     console.warn(`Error downloading ${BACKGROUND_IMAGE_LOCAL_URI}`)
   })
   if (cacheTimes != null && cacheTimes.start.valueOf() < now && cacheTimes.expiration.valueOf() > now && (await RNFS.exists(BACKGROUND_IMAGE_LOCAL_URI))) {
