@@ -23,7 +23,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
       }
     }
   >
-    <TouchableOpacity
+    <Wrap(TouchableOpacity)
       onPress={[Function]}
     >
       <View
@@ -67,7 +67,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
           Add Wallet
         </WithTheme(EdgeTextComponent)>
       </View>
-    </TouchableOpacity>
+    </Wrap(TouchableOpacity)>
   </View>
   <View
     style={
@@ -76,7 +76,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
       }
     }
   >
-    <TouchableOpacity
+    <Wrap(TouchableOpacity)
       onPress={[Function]}
     >
       <View
@@ -120,7 +120,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
           Add Token
         </WithTheme(EdgeTextComponent)>
       </View>
-    </TouchableOpacity>
+    </Wrap(TouchableOpacity)>
   </View>
 </View>
 `;

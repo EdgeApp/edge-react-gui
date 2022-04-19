@@ -1,14 +1,15 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { CREATE_WALLET_SELECT_CRYPTO, MANAGE_TOKENS } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
@@ -31,13 +32,13 @@ const TokenSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   })
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
-export class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps> {
+export class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps & TestProps> {
   renderAddButton = (title: string, onPress: () => void) => {
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
       <View style={styles.addButtonsContainer}>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} ref={this.props.generateTestHook(`WalletListFooter.${title.replace(' ', '')}`)}>
           <View style={styles.addButtonsInnerContainer}>
             <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={[styles.addItem, styles.addItemText]}>{title}</EdgeText>
@@ -125,7 +126,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListFooter = connect<StateProps, DispatchProps, {}>(
+export const WalletListFooter = connect<StateProps, DispatchProps, TestProps>(
   state => ({
     wallets: state.ui.wallets.byId
   }),

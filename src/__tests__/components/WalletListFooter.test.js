@@ -12,6 +12,7 @@ describe('WalletListFooter', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => {},
       wallets: 'GuiWallet',
       theme: getTheme()
     }
