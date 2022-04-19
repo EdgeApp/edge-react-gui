@@ -656,3 +656,8 @@ export function logPrefix(wallet: EdgeCurrencyWallet): string {
   const name = wallet.name ? wallet.name : 'NULL'
   return `${prettyDate} ${wallet.currencyInfo.currencyCode}-${wallet.id.slice(0, 2)}-${name}`
 }
+
+export const pickRandom = <T>(array?: T[]): T | null => {
+  if (array == null || array.length === 0) return null
+  return array[Math.floor(Math.random() * array.length)]
+}

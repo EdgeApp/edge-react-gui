@@ -5,13 +5,15 @@ import { Disklet } from 'disklet'
 import { ImageSourcePropType, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { EDGE_CONTENT_SERVER } from '../constants/WalletAndCurrencyConstants.js'
+import { config } from '../theme/appConfig.js'
+import { pickRandom } from './utils.js'
 
 const directory = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.ExternalCachesDirectoryPath
 
+const BACKGROUND_IMAGE_SERVER = pickRandom(config.backgroundImageServers)
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
 const BACKGROUND_IMAGE_FILE_NAME = 'login_bg.gif'
-const BACKGROUND_IMAGE_URL = `${EDGE_CONTENT_SERVER}/${BACKGROUND_IMAGE_FILE_NAME}`
+const BACKGROUND_IMAGE_URL = BACKGROUND_IMAGE_SERVER ? `${BACKGROUND_IMAGE_SERVER}/${BACKGROUND_IMAGE_FILE_NAME}` : null
 const BACKGROUND_IMAGE_LOCAL_URI = `file://${directory}/${BACKGROUND_IMAGE_FILE_NAME}`
 
 const asThemeCache = asObject({
@@ -67,6 +69,8 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
 
 export async function getBackgroundImage(disklet: Disklet): Promise<ImageSourcePropType | null> {
   const now = Date.now()
+
+  if (BACKGROUND_IMAGE_URL == null) return null
 
   const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
   const cacheTimes = cache.assets[BACKGROUND_IMAGE_URL]
