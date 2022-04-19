@@ -1,5 +1,5 @@
 // @flow
-
+import { hook } from 'cavy'
 import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -32,7 +32,7 @@ type State = {
   subCategory: string
 }
 
-export class TransactionDetailsCategoryInput extends React.Component<Props, State> {
+export class TransactionDetailsCategoryInputComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { category, subCategory } = props
@@ -195,3 +195,4 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+export const TransactionDetailsCategoryInput = hook(TransactionDetailsCategoryInputComponent)

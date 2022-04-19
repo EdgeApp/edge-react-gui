@@ -3,7 +3,7 @@
 import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { Linking, Platform, ScrollView } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
@@ -14,7 +14,8 @@ import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../.
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { TouchableWithoutFeedback, View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import {
@@ -60,7 +61,7 @@ type DispatchProps = {
   setNewSubcategory: (newSubcategory: string) => void,
   setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void
 }
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
 type State = {
   contactName: string, // remove commenting once metaData in Redux
@@ -456,7 +457,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.tilesContainer}>
-            <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
+            <Tile
+              type="editable"
+              title={personHeader}
+              onPress={this.openPersonInput}
+              ref={this.props.generateTestHook('TransactionDetailsScene.OpenPersonInput')}
+            >
               <View style={styles.tileRow}>
                 {thumbnailPath ? (
                   <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
@@ -471,7 +477,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               title={sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}
               body={`${crypto.symbolString} ${crypto.amountString}${crypto.feeString ? ` (${crypto.feeString})` : ''}`}
             />
-            <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
+            <Tile
+              type="editable"
+              title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
+              onPress={this.openFiatInput}
+              ref={this.props.generateTestHook('TransactionDetailsScene.OpenFiatInput')}
+            >
               <View style={styles.tileRow}>
                 <EdgeText style={styles.tileTextBottom}>{fiatSymbol + ' '}</EdgeText>
                 <EdgeText style={styles.tileTextBottom}>{fiatValue}</EdgeText>
@@ -486,14 +497,25 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                 </EdgeText>
               </View>
             </Tile>
-            <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
+            <Tile
+              type="editable"
+              title={s.strings.transaction_details_category_title}
+              onPress={this.openCategoryInput}
+              ref={this.props.generateTestHook('TransactionDetailsScene.OpenCategoryInput')}
+            >
               <EdgeText style={styles.tileCategory}>{categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')}</EdgeText>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData(crypto.symbolString)}
-            {isAcceleratable && <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />}
-            <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
-            <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
+            {isAcceleratable && (
+              <Tile
+                type="touchable"
+                title={s.strings.transaction_details_advance_details_accelerate}
+                onPress={this.openAccelerateModel}
+                ref={this.props.generateTestHook('TransactionDetailsScene.OpenAccelerateModal')}
+              />
+            )}
+            <TouchableWithoutFeedback onPress={this.openAdvancedDetails} ref={this.props.generateTestHook('TransactionDetailsScene.OpenAdvancedDetails')}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
             <MainButton onPress={Actions.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
@@ -558,7 +580,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnProps>(
+export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, { route: { params } }) => {
     const { edgeTransaction } = params
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
