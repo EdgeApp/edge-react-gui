@@ -417,12 +417,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
             </View>
 
             <View onLayout={this.fieldViewOnLayout}>
-              <Tile
-                type="editable"
-                title={s.strings.fio_address_choose_label}
-                onPress={this.editAddressPressed}
-                ref={this.props.generateTestHook('FioAddressRegisterScene.editAddress')}
-              >
+              <Tile type="editable" title={s.strings.fio_address_choose_label} onPress={this.editAddressPressed}>
                 <View style={styles.addressTileBody}>
                   {fioAddress ? (
                     <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
@@ -437,7 +432,6 @@ export class FioAddressRegister extends React.Component<Props, State> {
                 title={s.strings.fio_address_choose_domain_label}
                 onPress={this.selectFioDomain}
                 body={domainsLoading ? s.strings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
-                ref={this.props.generateTestHook('FioAddressRegisterScene.SelectFioDomain')}
               />
               {this.renderFioWallets()}
             </View>

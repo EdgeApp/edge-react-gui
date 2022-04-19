@@ -330,6 +330,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isToFocused}
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
+            testId="CryptoExchangeScene.ToWalletList"
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderAlert()}
