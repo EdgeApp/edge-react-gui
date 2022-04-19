@@ -87,8 +87,7 @@ export const edgeDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.edgeNavy,
-  backgroundGradientRight: palette.darkBlue,
+  backgroundGradientColors: [palette.edgeNavy, palette.darkBlue],
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

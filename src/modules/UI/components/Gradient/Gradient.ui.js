@@ -11,18 +11,15 @@ const UPPER_RIGHT = { x: 1, y: 0 }
 
 type OwnProps = {
   children?: React.Node,
-  reverse?: boolean,
   style?: StyleSheet.Styles
 }
 type Props = OwnProps & ThemeProps
 
 class GradientComponent extends React.PureComponent<Props> {
   render() {
-    const { children, reverse, theme, style } = this.props
-    const colors = [theme.backgroundGradientLeft, theme.backgroundGradientRight]
-    const reverseColors = [theme.backgroundGradientRight, theme.backgroundGradientLeft]
+    const { children, theme, style } = this.props
     return (
-      <LinearGradient style={style} start={UPPER_LEFT} end={UPPER_RIGHT} colors={reverse ? reverseColors : colors}>
+      <LinearGradient style={style} start={UPPER_LEFT} end={UPPER_RIGHT} colors={theme.backgroundGradientColors}>
         {children}
       </LinearGradient>
     )
