@@ -223,6 +223,10 @@ export const testLight: Theme = {
   thinLineWidth: 1,
   mediumLineWidth: 2,
 
+  // DividerLine component
+  dividerLineHeight: 1,
+  dividerLineColors: [palette.edgeBlue, palette.edgeBlue],
+
   // Notifications
   // notificationBackground: palette.grayOp80,
   // messageBanner: palette.grayOp80,

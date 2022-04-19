@@ -71,6 +71,11 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dateModalTextLight": "#0073D9",
               "deactivatedText": "#87939E",
               "defaultBorderColor": "#FFFFFF",
+              "dividerLineColors": Array [
+                "rgba(255, 255, 255, .1)",
+                "rgba(255, 255, 255, .1)",
+              ],
+              "dividerLineHeight": 1,
               "escapeButton": Array [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
@@ -383,6 +388,11 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dateModalTextLight": "#0073D9",
               "deactivatedText": "#87939E",
               "defaultBorderColor": "#FFFFFF",
+              "dividerLineColors": Array [
+                "rgba(255, 255, 255, .1)",
+                "rgba(255, 255, 255, .1)",
+              ],
+              "dividerLineHeight": 1,
               "escapeButton": Array [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",

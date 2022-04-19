@@ -212,6 +212,10 @@ export const edgeDark: Theme = {
   thinLineWidth: 1,
   mediumLineWidth: 2,
 
+  // DividerLine component
+  dividerLineHeight: 1,
+  dividerLineColors: [palette.whiteOp10, palette.whiteOp10],
+
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
   // messageBanner: palette.grayOp80,
