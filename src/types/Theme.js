@@ -1,5 +1,45 @@
 // @flow
 
+type ThemeShadowParams = {
+  shadowColor: string,
+  shadowOffset: {
+    width: number,
+    height: number
+  },
+  shadowOpacity: number,
+  shadowRadius: number,
+  elevation: number
+}
+
+type TextShadowParams = {
+  textShadowColor: string,
+  textShadowOffset: {
+    width: number,
+    height: number
+  },
+  textShadowRadius: number
+}
+
+export const themeNoShadow = {
+  shadowColor: '#000000',
+  shadowOffset: {
+    width: 0,
+    height: 0
+  },
+  shadowOpacity: 0,
+  shadowRadius: 0,
+  elevation: 0
+}
+
+export const textNoShadow = {
+  textShadowColor: '#000000',
+  textShadowOffset: {
+    width: 0,
+    height: 0
+  },
+  textShadowRadius: 0
+}
+
 // Commented themes are not used
 export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
@@ -78,14 +118,34 @@ export type Theme = {
   // backButton: string,
 
   // Buttons
+  buttonBorderRadiusRem: number,
+
   primaryButtonOutline: string,
-  primaryButton: string,
+  primaryButtonOutlineWidth: number,
+  primaryButton: string[],
+  primaryButtonColorStart: { x: number, y: number },
+  primaryButtonColorEnd: { x: number, y: number },
   primaryButtonText: string,
-  // primaryButtonDeactivated: string,
+  primaryButtonTextShadow: TextShadowParams,
+  primaryButtonShadow: ThemeShadowParams,
 
   secondaryButtonOutline: string,
-  secondaryButton: string,
+  secondaryButtonOutlineWidth: number,
+  secondaryButton: string[],
+  secondaryButtonColorStart: { x: number, y: number },
+  secondaryButtonColorEnd: { x: number, y: number },
   secondaryButtonText: string,
+  secondaryButtonTextShadow: TextShadowParams,
+  secondaryButtonShadow: ThemeShadowParams,
+
+  escapeButtonOutline: string,
+  escapeButtonOutlineWidth: number,
+  escapeButton: string[],
+  escapeButtonColorStart: { x: number, y: number },
+  escapeButtonColorEnd: { x: number, y: number },
+  escapeButtonText: string,
+  escapeButtonTextShadow: TextShadowParams,
+  escapeButtonShadow: ThemeShadowParams,
 
   // tertiaryButtonOutline: string,
   // tertiaryButton: string,
@@ -99,8 +159,6 @@ export type Theme = {
   // dangerButtonOutline: string,
   // dangerButton: string,
   // dangerButtonText: string,
-
-  buttonBoxShadow: string,
 
   // Card
   // cardBackground: string,
@@ -202,6 +260,11 @@ export type Theme = {
   // Input Accessory
   inputAccessoryBackground: string,
   inputAccessoryText: string,
+
+  // Outline Text Input
+  outlineTextInputColor: string,
+  outlineTextInputTextColor: string,
+  outlineTextInputBorderWidth: number,
 
   // Animation
   fadeDisable: string,

@@ -512,7 +512,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1),
     paddingVertical: theme.rem(0.5),
     paddingHorizontal: theme.rem(0.25),
-    backgroundColor: theme.primaryButton
+    backgroundColor: theme.primaryButton[0]
   },
   domain: {
     marginTop: theme.rem(1.5),
@@ -520,7 +520,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingHorizontal: theme.rem(0.75),
     paddingVertical: theme.rem(0.25),
     borderRadius: theme.rem(0.25),
-    borderColor: theme.primaryButton,
+    borderColor: theme.primaryButton[0],
     borderWidth: theme.rem(0.125)
   },
   domainText: {

@@ -8,6 +8,8 @@ exports[`OutlinedTextInput should render with some props 1`] = `
     style={
       Array [
         Object {
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "borderRadius": 11,
           "justifyContent": "center",
           "minHeight": 67,
           "paddingHorizontal": 22,

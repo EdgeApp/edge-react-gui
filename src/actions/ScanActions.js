@@ -15,6 +15,7 @@ import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneK
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
+import { config } from '../theme/appConfig.js'
 import { type ReturnAddressLink } from '../types/DeepLinkTypes.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
@@ -275,12 +276,13 @@ const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dis
   const { currencyWallets } = state.core.account
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const edgeWallet = currencyWallets[selectedWalletId]
+  const message = sprintf(s.strings.private_key_modal_sweep_from_private_key_message, config.appName)
 
   await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.private_key_modal_sweep_from_private_address}
-      message={s.strings.private_key_modal_sweep_from_private_address_message}
+      message={message}
       buttons={{
         confirm: {
           label: s.strings.private_key_modal_import,
