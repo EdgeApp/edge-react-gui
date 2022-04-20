@@ -1,4 +1,5 @@
 // @flow
+import { asNumber, asObject } from 'cleaners'
 
 type ThemeShadowParams = {
   shadowColor: string,
@@ -20,7 +21,13 @@ type TextShadowParams = {
   textShadowRadius: number
 }
 
-export const themeNoShadow = {
+const asGradientCoords = asObject({
+  x: asNumber,
+  y: asNumber
+})
+type GradientCoords = $Call<typeof asGradientCoords>
+
+export const themeNoShadow: ThemeShadowParams = {
   shadowColor: '#000000',
   shadowOffset: {
     width: 0,
@@ -31,7 +38,7 @@ export const themeNoShadow = {
   elevation: 0
 }
 
-export const textNoShadow = {
+export const textNoShadow: TextShadowParams = {
   textShadowColor: '#000000',
   textShadowOffset: {
     width: 0,
@@ -122,8 +129,8 @@ export type Theme = {
   primaryButtonOutline: string,
   primaryButtonOutlineWidth: number,
   primaryButton: string[],
-  primaryButtonColorStart: { x: number, y: number },
-  primaryButtonColorEnd: { x: number, y: number },
+  primaryButtonColorStart: GradientCoords,
+  primaryButtonColorEnd: GradientCoords,
   primaryButtonText: string,
   primaryButtonTextShadow: TextShadowParams,
   primaryButtonShadow: ThemeShadowParams,
@@ -131,8 +138,8 @@ export type Theme = {
   secondaryButtonOutline: string,
   secondaryButtonOutlineWidth: number,
   secondaryButton: string[],
-  secondaryButtonColorStart: { x: number, y: number },
-  secondaryButtonColorEnd: { x: number, y: number },
+  secondaryButtonColorStart: GradientCoords,
+  secondaryButtonColorEnd: GradientCoords,
   secondaryButtonText: string,
   secondaryButtonTextShadow: TextShadowParams,
   secondaryButtonShadow: ThemeShadowParams,
@@ -140,8 +147,8 @@ export type Theme = {
   escapeButtonOutline: string,
   escapeButtonOutlineWidth: number,
   escapeButton: string[],
-  escapeButtonColorStart: { x: number, y: number },
-  escapeButtonColorEnd: { x: number, y: number },
+  escapeButtonColorStart: GradientCoords,
+  escapeButtonColorEnd: GradientCoords,
   escapeButtonText: string,
   escapeButtonTextShadow: TextShadowParams,
   escapeButtonShadow: ThemeShadowParams,
