@@ -10,7 +10,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import { EDGE_CONTENT_SERVER_URI, FLAG_LOGO_URL } from '../../constants/CdnConstants'
+import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
@@ -21,6 +21,7 @@ import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
+import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -217,7 +218,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
-    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: `${EDGE_CONTENT_SERVER_URI}/${item.partnerIconPath}` }
+    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
 
     return (
       <View style={styles.pluginRowContainer}>
