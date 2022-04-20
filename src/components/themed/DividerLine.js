@@ -9,7 +9,8 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 type Props = {
   // The gap around the line. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
-  marginRem?: number | number[]
+  marginRem?: number | number[],
+  colors?: string[]
 }
 
 const start = { x: 0, y: 0.5 }
@@ -31,7 +32,9 @@ export const DividerLine = (props: Props) => {
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
   margin.marginRight -= theme.rem(1)
 
-  return <LinearGradient colors={theme.dividerLineColors} start={start} end={end} style={[styles.underline, margin]} />
+  const colors = props.colors ?? theme.dividerLineColors
+
+  return <LinearGradient colors={colors} start={start} end={end} style={[styles.underline, margin]} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
