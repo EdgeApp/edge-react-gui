@@ -93,7 +93,7 @@ export function getCreateWalletType(account: EdgeAccount, currencyCode: string):
   return currencyInfo ? makeCreateWalletType(currencyInfo) : null
 }
 
-export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string) => {
+export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): string | void => {
   const { builtinTokens = {}, customTokens = {} } = account.currencyConfig[pluginId]
   const allTokens = { ...customTokens, ...builtinTokens }
   return Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)

@@ -4,7 +4,6 @@ import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { type DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
 import { type PasswordReminderState } from '../PasswordReminderReducer.js'
@@ -132,11 +131,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         const { currencyCode } = currencyInfo
         if (newState.denominationSettings[pluginId] == null) state.denominationSettings[pluginId] = {}
         if (newState.denominationSettings[pluginId][currencyCode] == null) {
-          newState.denominationSettings[pluginId][currencyCode] = getDenominationFromCurrencyInfo(currencyInfo, currencyCode)
+          newState.denominationSettings[pluginId][currencyCode] = currencyInfo.denominations[0]
         }
         for (const token of currencyInfo.metaTokens) {
           const tokenCode = token.currencyCode
-          newState.denominationSettings[pluginId][tokenCode] = getDenominationFromCurrencyInfo(currencyInfo, tokenCode)
+          newState.denominationSettings[pluginId][tokenCode] = token.denominations[0]
         }
       }
       return newState

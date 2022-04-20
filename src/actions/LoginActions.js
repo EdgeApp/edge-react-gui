@@ -289,6 +289,8 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
 
 /**
  * Creates the custom default wallets inside a new account.
+ * The `currencyCodes` are in the format "ETH:DAI",
+ * so we may need to enable tokens on some of the created wallets.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
   const currencyInfos = []

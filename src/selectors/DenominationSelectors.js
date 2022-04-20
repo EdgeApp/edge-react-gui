@@ -4,7 +4,7 @@ import { type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
 
 import type { Dispatch, GetState, RootState } from '../types/reduxTypes.js'
 
-export const emptyEdgeDenomination: EdgeDenomination = {
+const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
   multiplier: '1',
   symbol: ''
@@ -26,14 +26,31 @@ export const getExchangeDenominationFromState = (pluginId: string, currencyCode:
   return getExchangeDenomination(state, pluginId, currencyCode)
 }
 
+/**
+ * Finds the primary denomination for the given currencyCode.
+ * This would match "BTC" but not "sats".
+ */
 export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  const { customTokens } = state.ui.settings
-  const customToken = customTokens.find(item => item.currencyCode === currencyCode)
-  const { currencyInfo } = state.core.account.currencyConfig[pluginId]
-  const denom = getDenominationFromCurrencyInfo(currencyInfo, currencyCode)
-  return customToken?.denominations?.[0] ?? denom
+  const currencyConfig = state.core.account.currencyConfig[pluginId]
+  const { builtinTokens = {}, currencyInfo, customTokens = {} } = currencyConfig
+
+  if (currencyInfo.currencyCode === currencyCode) return currencyInfo.denominations[0]
+  for (const tokenId of Object.keys(customTokens)) {
+    const token = customTokens[tokenId]
+    if (token.currencyCode === currencyCode) return token.denominations[0]
+  }
+  for (const tokenId of Object.keys(builtinTokens)) {
+    const token = builtinTokens[tokenId]
+    if (token.currencyCode === currencyCode) return token.denominations[0]
+  }
+
+  return { ...emptyEdgeDenomination }
 }
 
+/**
+ * @deprecated Use `getExchangeDenomination` instead.
+ * This is buggy, since it does not include custom tokens.
+ */
 export const getDenominationFromCurrencyInfo = (currencyInfo: EdgeCurrencyInfo, currencyCode: string): EdgeDenomination => {
   const mainDenom = currencyInfo.denominations.find(denom => denom.name === currencyCode)
   if (mainDenom != null) return mainDenom
