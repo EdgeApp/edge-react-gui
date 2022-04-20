@@ -63,7 +63,7 @@ exports[`CreateWalletChoiceComponent should render with loading props 1`] = `
               }
             }
           >
-            Create a new wallet, or restore an existing wallet using the private seed?
+            Create a new wallet or import an existing wallet using the private seed
           </FormattedText>
         </View>
         <View
