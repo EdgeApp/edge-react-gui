@@ -1,14 +1,14 @@
 // @flow
 
 import ENV from '../../env.json'
+import { config } from '../theme/appConfig.js'
+import { fetchWaterfall } from '../util/utils'
 
 class NotifServer {
-  uri: string
   version: number
   apiKey: string
 
   constructor(version: number) {
-    this.uri = 'https://notif1.edge.app'
     this.version = version
     this.apiKey = ENV.AIRBITZ_API_KEY
   }
@@ -26,7 +26,7 @@ class NotifServer {
   }
 
   async request(path: string, method: string, body?: Object, headers: Object = {}) {
-    const response = await fetch(`${this.uri}/v${this.version}/${path}`, {
+    const response = await fetchWaterfall(config.notificationServers, `v${this.version}/${path}`, {
       method,
       headers: {
         ...headers,

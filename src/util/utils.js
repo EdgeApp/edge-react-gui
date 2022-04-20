@@ -494,6 +494,20 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
   }
 }
 
+export async function fetchWaterfall(servers?: string[], path: string, options?: any): Promise<any> {
+  if (servers == null) return
+  const funcs = servers.map(server => async () => {
+    const result = await fetch(server + '/' + path, options)
+    if (typeof result !== 'object') {
+      const msg = `Invalid return value ${path} in ${server}`
+      console.log(msg)
+      throw new Error(msg)
+    }
+    return result
+  })
+  return asyncWaterfall(funcs)
+}
+
 export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {

@@ -2,10 +2,12 @@
 
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 
+import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { type DeviceReferral } from '../types/ReferralTypes.js'
 import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
-import { logEvent, utilWaterfall } from '../util/tracking.js'
+import { logEvent } from '../util/tracking.js'
+import { fetchWaterfall } from '../util/utils.js'
 
 const DEVICE_REFERRAL_FILE = 'utilityServer.json'
 
@@ -31,7 +33,7 @@ export const loadDeviceReferral = () => async (dispatch: Dispatch, getState: Get
   // Now try the network:
   try {
     console.log('Fetching app install reason')
-    const reply = await utilWaterfall('ref')
+    const reply = await fetchWaterfall(config.referralServers, 'ref')
     if (!reply.ok) {
       throw new Error(`Util server returned status code ${reply.status}`)
     }
