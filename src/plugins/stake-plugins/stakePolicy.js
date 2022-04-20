@@ -13,10 +13,24 @@ export type StakePolicyInfo = {
   mustClaimRewards: boolean
 }
 
+const sortAssetIds = (a: AssetId, b: AssetId): number => {
+  if (a.pluginId < b.pluginId) return -1
+  if (a.pluginId > b.pluginId) return 1
+  if (a.tokenId < b.tokenId) return -1
+  if (a.tokenId > b.tokenId) return 1
+  return 0
+}
+
 // Generate a unique deterministic ID for the policy
 const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
-  const stakePart = policyInfo.stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const rewardPart = policyInfo.rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
+  const stakePart = policyInfo.stakeAssets
+    .sort(sortAssetIds)
+    .map(asset => `${asset.pluginId}:${asset.tokenId}`)
+    .join('+')
+  const rewardPart = policyInfo.rewardAssets
+    .sort(sortAssetIds)
+    .map(asset => `${asset.pluginId}:${asset.tokenId}`)
+    .join('+')
   return `${stakePart}=${rewardPart}`.toLowerCase()
 }
 
