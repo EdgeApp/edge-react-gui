@@ -5,7 +5,7 @@ import { getUniqueId } from 'react-native-device-info'
 
 import ENV from '../../env.json'
 import { config } from '../theme/appConfig'
-import { asyncWaterfall, pickRandom } from './utils.js'
+import { pickRandom } from './utils.js'
 
 export type TrackingEvent =
   | 'ActivateWalletCancel'
@@ -108,19 +108,4 @@ async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
     },
     body: JSON.stringify({ ...values, event })
   })
-}
-
-export async function utilWaterfall(path: string, options?: any): Promise<any> {
-  if (config.referralServers == null) return
-  const servers = config.referralServers
-  const funcs = servers.map(server => async () => {
-    const result = await fetch(server + '/' + path, options)
-    if (typeof result !== 'object') {
-      const msg = `Invalid return value ${path} in ${server}`
-      console.log(msg)
-      throw new Error(msg)
-    }
-    return result
-  })
-  return asyncWaterfall(funcs)
 }

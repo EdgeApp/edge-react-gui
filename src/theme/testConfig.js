@@ -13,9 +13,11 @@ export const testConfig: AppConfig = {
   supportsEdgeLogin: false,
   backgroundImageServers: ['https://content.testy.com'],
   referralServers: ['https://referral1.testy.com'],
+  notificationServers: ['https://notif1.edge.app'],
   knowledgeBase: 'https://support.testy.com/knowledge',
   supportSite: 'https://support.testy.com',
   phoneNumber: '+1-800-100-1000',
   website: 'https://testy.com',
+  termsOfServiceSite: 'https://testy.com/tos/',
   appStore: 'https://itunes.apple.com/app/id1344400092'
 }
