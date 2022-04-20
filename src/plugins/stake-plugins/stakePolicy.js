@@ -1,6 +1,6 @@
 // @flow
 import { type StakePluginPolicy } from './policies/types'
-import { type InfoServerResponse } from './types'
+import { type AssetId, type InfoServerResponse } from './types'
 import type { StakePolicy } from './types.js'
 
 export type StakePolicyInfo = {
@@ -8,14 +8,8 @@ export type StakePolicyInfo = {
   parentPluginId: string,
   parentTokenId: string,
   policy: StakePluginPolicy,
-  stakeAssets: Array<{
-    pluginId: string,
-    tokenId: string
-  }>,
-  rewardAssets: Array<{
-    pluginId: string,
-    tokenId: string
-  }>,
+  stakeAssets: AssetId[],
+  rewardAssets: AssetId[],
   mustClaimRewards: boolean
 }
 
