@@ -290,6 +290,10 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       },
       "tabBarIcon": "#FFFFFF",
       "tabBarIconHighlighted": "#66EDA8",
+      "tabBarTopOutlineColors": Array [
+        "#0D2145",
+        "#0D2145",
+      ],
       "textLink": "#66EDA8",
       "thinLineWidth": 1,
       "tileBackground": "rgba(255, 255, 255, 0)",

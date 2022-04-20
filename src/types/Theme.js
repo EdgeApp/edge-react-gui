@@ -181,6 +181,7 @@ export type Theme = {
   tabBarBackground: string[],
   tabBarBackgroundStart: GradientCoords,
   tabBarBackgroundEnd: GradientCoords,
+  tabBarTopOutlineColors: string[],
   tabBarIcon: string,
   tabBarIconHighlighted: string,
 

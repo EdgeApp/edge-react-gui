@@ -180,6 +180,7 @@ export const edgeDark: Theme = {
   tabBarBackground: [palette.edgeNavy, palette.edgeNavy],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
+  tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeNavy],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
