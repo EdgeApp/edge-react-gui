@@ -177,7 +177,9 @@ export const edgeDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.edgeNavy,
+  tabBarBackground: [palette.edgeNavy, palette.edgeNavy],
+  tabBarBackgroundStart: { x: 0, y: 0 },
+  tabBarBackgroundEnd: { x: 1, y: 1 },
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 

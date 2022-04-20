@@ -283,7 +283,18 @@ exports[`MenuTab should render with loading props 1`] = `
       "sliderTabMore": "#0073D9",
       "sliderTabRequest": "#77C513",
       "sliderTabSend": "#E85466",
-      "tabBarBackground": "#0D2145",
+      "tabBarBackground": Array [
+        "#0D2145",
+        "#0D2145",
+      ],
+      "tabBarBackgroundEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "tabBarBackgroundStart": Object {
+        "x": 0,
+        "y": 0,
+      },
       "tabBarIcon": "#FFFFFF",
       "tabBarIconHighlighted": "#66EDA8",
       "textLink": "#66EDA8",

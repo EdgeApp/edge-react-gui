@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -43,8 +44,12 @@ export class MenuTabComponent extends React.PureComponent<Props> {
     const styles = getStyles(theme)
     const state: any = this.props.navigation.state
     const activeTabIndex = state.index
+    const colors = theme.tabBarBackground
+    const start = theme.tabBarBackgroundStart
+    const end = theme.tabBarBackgroundEnd
+
     return (
-      <View style={styles.container}>
+      <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
         {state.routes.map((element, index) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon = {
@@ -60,14 +65,13 @@ export class MenuTabComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )
         })}
-      </View>
+      </LinearGradient>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    backgroundColor: theme.tabBarBackground,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
