@@ -19,6 +19,7 @@ export type GuiWallet = {|
   id: string,
   type: string,
   name: string,
+  pluginId: string,
   primaryNativeBalance: string,
   nativeBalances: { [currencyCode: string]: string },
   currencyNames: { [currencyCode: string]: string },

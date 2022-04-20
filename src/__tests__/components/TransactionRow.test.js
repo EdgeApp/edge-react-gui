@@ -20,6 +20,7 @@ describe('Transaction List Row', () => {
       id: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA=',
       type: 'wallet:monero',
       name: 'Monero',
+      pluginId: 'monero',
       primaryNativeBalance: '1492780012',
       nativeBalances: { XMR: '1492780012' },
       currencyNames: { XMR: 'Monero' },

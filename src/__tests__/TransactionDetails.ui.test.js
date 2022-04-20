@@ -19,6 +19,7 @@ const fakeGuiWallet: GuiWallet = {
   metaTokens: [],
   name: 'wallet name',
   nativeBalances: {},
+  pluginId: 'bitcoin',
   primaryNativeBalance: '0',
   type: 'wallet:bitcoin'
 }
