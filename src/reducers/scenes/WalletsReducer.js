@@ -251,7 +251,7 @@ const manageTokensPending = (state = false, action: Action): boolean => {
 
 function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   const { blockHeight, currencyInfo, id, type } = wallet
-  const { currencyCode, metaTokens } = currencyInfo
+  const { currencyCode, metaTokens, pluginId } = currencyInfo
   const name: string = wallet.name || 'no wallet name'
 
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
@@ -283,6 +283,7 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
     id,
     type,
     name,
+    pluginId,
     primaryNativeBalance,
     nativeBalances,
     currencyNames,
