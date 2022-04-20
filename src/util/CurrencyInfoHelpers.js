@@ -2,32 +2,12 @@
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
-import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
-import { removeHexPrefix } from './utils.js'
-
-/**
- * Get currency icon URL
- */
-
-export type CurrencyIcons = {
-  symbolImage: string,
-  symbolImageDarkMono: string
-}
 
 const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired ?? false)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
-
-export function getCurrencyIcon(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
-  const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
-  const url = `${EDGE_CONTENT_SERVER_URI}/currencyIcons/${currencyPath}`
-  return {
-    symbolImage: `${url}.png`,
-    symbolImageDarkMono: `${url}_dark.png`
-  }
-}
 
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.

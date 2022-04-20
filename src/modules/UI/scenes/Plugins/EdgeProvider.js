@@ -20,7 +20,7 @@ import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPlugin
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../../../../types/types.js'
-import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
+import { getCurrencyIconUris } from '../../../../util/CdnUris'
 
 type WalletDetails = {
   name: string,
@@ -151,7 +151,7 @@ export class EdgeProvider extends Bridgeable {
       walletName = currencyCode
     }
 
-    const icons = getCurrencyIcon(edgeWallet.currencyInfo.pluginId, contractAddress)
+    const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
     const returnObject: WalletDetails = {
       name: walletName,
       receiveAddress,
