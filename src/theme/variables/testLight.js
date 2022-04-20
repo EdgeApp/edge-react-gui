@@ -182,6 +182,7 @@ export const testLight: Theme = {
   tabBarBackground: [palette.white, palette.edgeMint],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
+  tabBarTopOutlineColors: [palette.white, palette.edgeMint],
   tabBarIcon: palette.gray,
   tabBarIconHighlighted: palette.edgeBlue,
 
