@@ -179,7 +179,9 @@ export const testLight: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.white,
+  tabBarBackground: [palette.white, palette.edgeMint],
+  tabBarBackgroundStart: { x: 0, y: 0 },
+  tabBarBackgroundEnd: { x: 1, y: 1 },
   tabBarIcon: palette.gray,
   tabBarIconHighlighted: palette.edgeBlue,
 
