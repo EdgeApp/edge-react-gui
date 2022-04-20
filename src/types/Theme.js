@@ -178,7 +178,9 @@ export type Theme = {
   cardBorderColor: string,
   cardBorderRadius: number,
 
-  tabBarBackground: string,
+  tabBarBackground: string[],
+  tabBarBackgroundStart: GradientCoords,
+  tabBarBackgroundEnd: GradientCoords,
   tabBarIcon: string,
   tabBarIconHighlighted: string,
 
