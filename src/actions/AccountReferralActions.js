@@ -3,11 +3,12 @@
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 
+import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
 import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
-import { utilWaterfall } from '../util/tracking'
+import { fetchWaterfall } from '../util/utils.js'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
 const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
@@ -86,7 +87,7 @@ const createAccountReferral = () => async (dispatch: Dispatch, getState: GetStat
  */
 export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const uri = `api/v1/promo?installerId=${installerId}`
-  const reply = await utilWaterfall(uri)
+  const reply = await fetchWaterfall(config.referralServers, uri)
   if (reply.status === 404) {
     throw new Error(`Invalid promotion code ${installerId}`)
   }
@@ -138,7 +139,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
   const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
 
   const uri = `api/v1/partner?installerId=${installerId}`
-  const reply = await utilWaterfall(uri)
+  const reply = await fetchWaterfall(config.referralServers, uri)
   if (!reply.ok) {
     throw new Error(`Util server returned status code ${reply.status}`)
   }
