@@ -130,6 +130,7 @@ export type Theme = {
 
   // Buttons
   buttonBorderRadiusRem: number,
+  keypadButtonType: 'primary' | 'secondary' | 'escape',
 
   primaryButtonOutline: string,
   primaryButtonOutlineWidth: number,

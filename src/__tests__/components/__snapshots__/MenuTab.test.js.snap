@@ -112,6 +112,7 @@ exports[`MenuTab should render with loading props 1`] = `
       "inputAccessoryBackground": "#FFFFFF",
       "inputAccessoryText": "#0073D9",
       "isDark": true,
+      "keypadButtonType": "secondary",
       "lineDivider": "rgba(255, 255, 255, .1)",
       "mediumLineWidth": 2,
       "modal": "#0D2145",

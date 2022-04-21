@@ -46,6 +46,7 @@ const palette = {
   darkPurple3: '#210449',
   plainPurple: '#532499',
   glowPurple: '#FA00FF',
+  lightPurple: '#FAaaFF',
   royalBlue: '#003B65',
   darkBlue: '#0C446A',
   edgeNavy: '#0D2145',
@@ -95,7 +96,7 @@ export const testDark: Theme = {
 
   // Icons
   icon: palette.white,
-  iconTappable: palette.edgeMint,
+  iconTappable: palette.glowPurple,
   iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
@@ -127,7 +128,7 @@ export const testDark: Theme = {
   walletListMutedBackground: palette.mutedBlue,
 
   // Text
-  primaryText: palette.white,
+  primaryText: palette.lightPurple,
   secondaryText: palette.blueGray,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
@@ -145,12 +146,14 @@ export const testDark: Theme = {
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.5,
+  keypadButtonType: 'primary',
+
   primaryButtonOutline: palette.glowPurple,
   primaryButtonOutlineWidth: 2,
   primaryButton: [palette.plainPurple, palette.darkPurple1],
   primaryButtonColorStart: { x: 0.5, y: 0 },
   primaryButtonColorEnd: { x: 0.5, y: 1 },
-  primaryButtonText: palette.white,
+  primaryButtonText: palette.lightPurple,
   primaryButtonTextShadow: {
     textShadowColor: palette.edgeMint,
     textShadowOffset: { width: 0, height: 0 },
@@ -169,7 +172,7 @@ export const testDark: Theme = {
   secondaryButton: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0.5, y: 0 },
   secondaryButtonColorEnd: { x: 0.5, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.glowPurple,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
 

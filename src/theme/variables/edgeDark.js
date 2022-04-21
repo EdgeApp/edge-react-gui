@@ -139,6 +139,8 @@ export const edgeDark: Theme = {
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.25,
+  keypadButtonType: 'secondary',
+
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 1,
   primaryButton: [palette.edgeMint, palette.edgeMint],
