@@ -9,7 +9,7 @@ type StateProps = {
   loginStatus: boolean
 }
 
-export function ifLoggedIn<Props: {}>(Component: React.ComponentType<Props>): React.StatelessFunctionalComponent<$Exact<Props>> {
+export function ifLoggedIn<Props: {}>(Component: React.ComponentType<Props>) {
   return connect<StateProps, {}, Props>(
     state => ({
       loginStatus: state.ui.settings.loginStatus ?? false
