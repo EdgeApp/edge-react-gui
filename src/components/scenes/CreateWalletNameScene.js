@@ -8,6 +8,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -16,12 +17,12 @@ export type CreateWalletNameOwnProps = {
   navigation: NavigationProp<'createWalletName'>,
   route: RouteProp<'createWalletName'>
 }
-type Props = CreateWalletNameOwnProps
+type Props = CreateWalletNameOwnProps & ThemeProps
 type State = {
   walletName: string
 }
 
-export class CreateWalletName extends React.Component<Props, State> {
+class CreateWalletNameComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { route } = props
@@ -69,6 +70,8 @@ export class CreateWalletName extends React.Component<Props, State> {
   }
 
   render() {
+    const buttonType = this.props.theme.preferPrimaryButton ? 'primary' : 'secondary'
+
     return (
       <SceneWrapper avoidKeyboard background="theme">
         <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
@@ -82,8 +85,10 @@ export class CreateWalletName extends React.Component<Props, State> {
           label={s.strings.fragment_wallets_addwallet_name_hint}
           marginRem={[0, 1.75]}
         />
-        <MainButton alignSelf="center" label={s.strings.string_next_capitalized} marginRem={[3, 1]} type="secondary" onPress={this.onNext} />
+        <MainButton alignSelf="center" label={s.strings.string_next_capitalized} marginRem={[3, 1]} type={buttonType} onPress={this.onNext} />
       </SceneWrapper>
     )
   }
 }
+
+export const CreateWalletName = withTheme(CreateWalletNameComponent)

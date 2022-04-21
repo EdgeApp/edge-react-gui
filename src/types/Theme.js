@@ -52,6 +52,11 @@ export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
 
+  // Prefer using at the Primary button style when there is only one button option on a
+  // scene or modal. Edge prefers the Secondary button style and uses the Primary button sparingly
+  // since it uses a loud solid mint color.
+  preferPrimaryButton: boolean,
+
   // Used to control the OS status bar, modal blur,
   // and other binary light / dark choices:
   isDark: boolean,

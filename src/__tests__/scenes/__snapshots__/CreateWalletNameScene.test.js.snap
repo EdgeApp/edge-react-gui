@@ -1,39 +1,345 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`createWalletName should render with loading props 1`] = `
-<SceneWrapper
-  avoidKeyboard={true}
-  background="theme"
->
-  <WithTheme(SceneHeaderComponent)
-    title="Create Wallet"
-    withTopMargin={true}
-  />
-  <ForwardRef
-    autoCorrect={false}
-    label="New Wallet Name"
-    marginRem={
-      Array [
-        0,
-        1.75,
-      ]
+<CreateWalletNameComponent
+  navigation={
+    Object {
+      "addListener": [Function],
+      "closeDrawer": [Function],
+      "goBack": [Function],
+      "isFocused": [Function],
+      "navigate": [Function],
+      "openDrawer": [Function],
+      "pop": [Function],
+      "popToTop": [Function],
+      "push": [Function],
+      "replace": [Function],
+      "setParams": [Function],
+      "state": Object {},
+      "toggleDrawer": [Function],
     }
-    onChangeText={[Function]}
-    onSubmitEditing={[Function]}
-    returnKeyType="next"
-    value="My bitcoin"
-  />
-  <MainButton
-    alignSelf="center"
-    label="Next"
-    marginRem={
-      Array [
-        3,
-        1,
-      ]
+  }
+  route={
+    Object {
+      "name": "createWalletName",
+      "params": Object {
+        "cleanedPrivateKey": "bitcoinbitcoinbitcoin",
+        "selectedFiat": Object {
+          "label": "USD",
+          "value": "USD",
+        },
+        "selectedWalletType": Object {
+          "currencyCode": "BTC",
+          "currencyName": "bitcoin",
+          "symbolImage": "BTC",
+          "walletType": "wallet:bitcoin",
+        },
+      },
     }
-    onPress={[Function]}
-    type="secondary"
-  />
-</SceneWrapper>
+  }
+  theme={
+    Object {
+      "backgroundGradientColors": Array [
+        "#0D2145",
+        "#0C446A",
+      ],
+      "buttonBorderRadiusRem": 0.25,
+      "buySellCustomPluginModalIcon": "#0C446A",
+      "cameraOverlayColor": "#000000",
+      "cameraOverlayOpEnd": 0.3,
+      "cameraOverlayOpStart": 0.7,
+      "cardBorder": 1,
+      "cardBorderColor": "rgba(255, 255, 255, .1)",
+      "cardBorderRadius": 4,
+      "clipboardPopupText": "#000000",
+      "confirmationSlider": "rgba(255, 255, 255, .05)",
+      "confirmationSliderArrow": "#0E4B75",
+      "confirmationSliderText": "#FFFFFF",
+      "confirmationSliderTextDeactivated": "#87939E",
+      "confirmationSliderThumb": "#66EDA8",
+      "confirmationSliderThumbWidth": 55,
+      "confirmationSliderWidth": 295,
+      "confirmationThumbDeactivated": "#87939E",
+      "dangerText": "#E85466",
+      "dateModalBackgroundDark": "#0E4B75",
+      "dateModalBackgroundLight": "#FFFFFF",
+      "dateModalTextDark": "#FFFFFF",
+      "dateModalTextLight": "#0073D9",
+      "deactivatedText": "#87939E",
+      "defaultBorderColor": "#FFFFFF",
+      "dividerLineColors": Array [
+        "rgba(255, 255, 255, .1)",
+        "rgba(255, 255, 255, .1)",
+      ],
+      "dividerLineHeight": 1,
+      "dropdownError": "#E85466",
+      "dropdownText": "#FFFFFF",
+      "dropdownWarning": "#F1AA19",
+      "escapeButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "escapeButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "escapeButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "escapeButtonOutline": "rgba(255, 255, 255, 0)",
+      "escapeButtonOutlineWidth": 0,
+      "escapeButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "escapeButtonText": "#66EDA8",
+      "escapeButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
+      "fadeDisable": "#87939E",
+      "fioAddressLogo": Object {
+        "testUri": "../../../src/assets/images/details_fioAddress.png",
+      },
+      "flipInputBorder": "#A4C7DF",
+      "fontFaceBold": "Quicksand-Bold",
+      "fontFaceDefault": "Quicksand-Regular",
+      "fontFaceMedium": "Quicksand-Medium",
+      "fontFaceSymbols": "Quicksand-Regular",
+      "guiPluginLogoBitaccess": Object {
+        "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoBitaccessDark.png",
+      },
+      "guiPluginLogoMoonpay": Object {
+        "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
+      },
+      "icon": "#FFFFFF",
+      "iconDeactivated": "rgba(255, 255, 255, .75)",
+      "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
+      "iconTappable": "#66EDA8",
+      "inputAccessoryBackground": "#FFFFFF",
+      "inputAccessoryText": "#0073D9",
+      "isDark": true,
+      "lineDivider": "rgba(255, 255, 255, .1)",
+      "mediumLineWidth": 2,
+      "modal": "#0D2145",
+      "modalCloseIcon": "#66EDA8",
+      "negativeText": "#E85466",
+      "outlineTextInputBorderWidth": 1,
+      "outlineTextInputColor": "rgba(255, 255, 255, 0)",
+      "outlineTextInputTextColor": "#FFFFFF",
+      "paymentTypeLogoApplePay": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
+      },
+      "paymentTypeLogoAuspost": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoAuspost.png",
+      },
+      "paymentTypeLogoBankTransfer": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankTransfer.png",
+      },
+      "paymentTypeLogoBankgirot": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankgirot.png",
+      },
+      "paymentTypeLogoCash": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCash.png",
+      },
+      "paymentTypeLogoCreditCard": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCreditCard.png",
+      },
+      "paymentTypeLogoDebitCard": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoDebitCard.png",
+      },
+      "paymentTypeLogoFasterPayments": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoFasterPayments.png",
+      },
+      "paymentTypeLogoGiftCard": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGiftCard.png",
+      },
+      "paymentTypeLogoIdeal": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoIdeal.png",
+      },
+      "paymentTypeLogoInterac": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
+      },
+      "paymentTypeLogoNewsagent": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoNewsagent.png",
+      },
+      "paymentTypeLogoPayid": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPayid.png",
+      },
+      "paymentTypeLogoPoli": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",
+      },
+      "paymentTypeLogoSofort": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSofort.png",
+      },
+      "paymentTypeLogoSwish": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSwish.png",
+      },
+      "paymentTypeLogoUpi": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
+      },
+      "pickerTextDark": "#FFFFFF",
+      "pickerTextLight": "#000000",
+      "positiveText": "#77C513",
+      "preferPrimaryButton": false,
+      "primaryButton": Array [
+        "#66EDA8",
+        "#66EDA8",
+      ],
+      "primaryButtonColorEnd": Object {
+        "x": 1,
+        "y": 0,
+      },
+      "primaryButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "primaryButtonOutline": "rgba(255, 255, 255, 0)",
+      "primaryButtonOutlineWidth": 1,
+      "primaryButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "primaryButtonText": "#0E4B75",
+      "primaryButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
+      "primaryText": "#FFFFFF",
+      "qrBackgroundColor": "#FFFFFF",
+      "qrForegroundColor": "#000000",
+      "rem": [Function],
+      "searchListRefreshControlIndicator": "rgba(255, 255, 255, 0)",
+      "secondaryButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "secondaryButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "secondaryButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "secondaryButtonOutline": "#66EDA8",
+      "secondaryButtonOutlineWidth": 1,
+      "secondaryButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "secondaryButtonText": "#66EDA8",
+      "secondaryButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
+      "secondaryText": "#A4C7DF",
+      "settingsChangellyLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
+      },
+      "settingsChangenowLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangenow.png",
+      },
+      "settingsDefaultLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeDefault.png",
+      },
+      "settingsExolixLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeExolix.png",
+      },
+      "settingsFoxExchangeLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeFoxExchange.png",
+      },
+      "settingsGodexLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeGodex.png",
+      },
+      "settingsRowBackground": "rgba(255, 255, 255, 0)",
+      "settingsRowHeaderBackground": "#0D2145",
+      "settingsRowPressed": "rgba(255, 255, 255, 0)",
+      "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
+      "settingsSideshiftLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
+      },
+      "settingsSpookySwapLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
+      },
+      "settingsSwitchainLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
+      },
+      "settingsTotleLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeTotle.png",
+      },
+      "sliderTabMore": "#0073D9",
+      "sliderTabRequest": "#77C513",
+      "sliderTabSend": "#E85466",
+      "tabBarBackground": Array [
+        "#0D2145",
+        "#0D2145",
+      ],
+      "tabBarBackgroundEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "tabBarBackgroundStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "tabBarIcon": "#FFFFFF",
+      "tabBarIconHighlighted": "#66EDA8",
+      "tabBarTopOutlineColors": Array [
+        "#0D2145",
+        "#0D2145",
+      ],
+      "textLink": "#66EDA8",
+      "thinLineWidth": 1,
+      "tileBackground": "rgba(255, 255, 255, 0)",
+      "tileBackgroundMuted": "rgba(255, 255, 255, 0)",
+      "titleLineDivider": "#A4C7DF",
+      "toggleButton": "#66EDA8",
+      "toggleButtonOff": "#87939E",
+      "transactionListIconBackground": "#0C446A",
+      "tutorialModalUnderlay": "rgba(255, 255, 255, 0)",
+      "underlayColor": "#FFFFFF",
+      "underlayOpacity": 0.95,
+      "walletListBackground": "#0E4B75",
+      "walletListMutedBackground": "#2F5E89",
+      "walletListSlideTutorialImage": Object {
+        "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
+      },
+      "walletProgressIconFill": "#66EDA8",
+      "warningIcon": "#F1AA19",
+      "warningText": "#F1AA19",
+    }
+  }
+/>
 `;

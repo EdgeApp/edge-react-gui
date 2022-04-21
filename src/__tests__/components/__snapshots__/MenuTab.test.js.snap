@@ -175,6 +175,7 @@ exports[`MenuTab should render with loading props 1`] = `
       "pickerTextDark": "#FFFFFF",
       "pickerTextLight": "#000000",
       "positiveText": "#77C513",
+      "preferPrimaryButton": false,
       "primaryButton": Array [
         "#66EDA8",
         "#66EDA8",

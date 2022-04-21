@@ -79,6 +79,7 @@ export const testDark: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: true,
+  preferPrimaryButton: true,
 
   // Common border
   defaultBorderColor: palette.white,
