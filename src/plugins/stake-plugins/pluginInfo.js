@@ -33,6 +33,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
+      swapPluginId: 'spookySwap',
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -62,6 +63,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
+      swapPluginId: 'spookySwap',
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({

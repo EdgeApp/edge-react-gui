@@ -8,6 +8,7 @@ export type StakePolicyInfo = {
   parentPluginId: string,
   parentTokenId: string,
   policy: StakePluginPolicy,
+  swapPluginId?: string,
   stakeAssets: AssetId[],
   rewardAssets: AssetId[],
   mustClaimRewards: boolean
@@ -23,6 +24,7 @@ const sortAssetIds = (a: AssetId, b: AssetId): number => {
 
 // Generate a unique deterministic ID for the policy
 const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
+  const { swapPluginId = '' } = policyInfo
   const stakePart = policyInfo.stakeAssets
     .sort(sortAssetIds)
     .map(asset => `${asset.pluginId}:${asset.tokenId}`)
@@ -31,7 +33,7 @@ const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
     .sort(sortAssetIds)
     .map(asset => `${asset.pluginId}:${asset.tokenId}`)
     .join('+')
-  return `${stakePart}=${rewardPart}`.toLowerCase()
+  return `${swapPluginId}/${stakePart}=${rewardPart}`.toLowerCase()
 }
 
 export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePolicyInfo => {
@@ -48,13 +50,14 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
 export const toStakePolicy =
   (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
+    const { swapPluginId, stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
     const stakePolicyId = deriveStakePolicyId(policyInfo)
     const apy = infoResponse.policies[stakePolicyId]
 
     return {
       stakePolicyId,
       apy,
+      swapPluginId,
       stakeAssets,
       rewardAssets,
       mustClaimRewards

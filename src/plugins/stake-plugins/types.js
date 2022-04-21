@@ -19,6 +19,8 @@ export type StakePolicy = {
   // A percentage number representing the yield per year
   apy: number,
 
+  swapPluginId?: string,
+
   // The assets which must be staked
   stakeAssets: AssetId[],
 
