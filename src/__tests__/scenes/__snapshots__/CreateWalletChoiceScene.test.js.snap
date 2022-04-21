@@ -1,117 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateWalletChoiceComponent should render with loading props 1`] = `
-<SafeAreaViewComponent>
+exports[`CreateWalletChoiceScene should render with loading props 1`] = `
+<SceneWrapper
+  avoidKeyboard={true}
+  background="theme"
+>
+  <WithTheme(SceneHeaderComponent)
+    title="Create Wallet"
+    withTopMargin={true}
+  />
   <View
     style={
       Object {
-        "backgroundColor": "#FFFFFF",
-        "flex": 1,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "marginVertical": 22,
       }
     }
   >
-    <WithTheme(GradientComponent)
-      style={
-        Object {
-          "height": 44,
-          "position": "absolute",
-          "width": "100%",
-        }
-      }
+    <UNDEFINED
+      color="#66EDA8"
+      height={0}
+      width={0}
     />
-    <ScrollView>
-      <View
-        style={
-          Object {
-            "height": 1221,
-            "paddingHorizontal": 20,
-            "position": "relative",
-            "top": 44,
-          }
-        }
-      >
-        <Image
-          resizeMode="cover"
-          source={
-            Object {
-              "testUri": "../../../src/assets/images/createWallet/wallet_icon_lg.png",
-            }
-          }
-          style={
-            Object {
-              "alignSelf": "center",
-              "height": 89.89295774647887,
-              "marginTop": 33.709859154929575,
-              "width": 89.89295774647887,
-            }
-          }
-        />
-        <View
-          style={
-            Object {
-              "paddingBottom": 11.236619718309859,
-              "paddingTop": 22.473239436619718,
-            }
-          }
-        >
-          <FormattedText
-            style={
-              Object {
-                "color": "#4A5157",
-                "fontSize": 22.473239436619718,
-                "textAlign": "center",
-              }
-            }
-          >
-            Create a new wallet or import an existing wallet using the private seed
-          </FormattedText>
-        </View>
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-              "marginTop": 33.709859154929575,
-            }
-          }
-        >
-          <PrimaryButton
-            onPress={[Function]}
-            style={
-              Object {
-                "flex": 1,
-                "marginLeft": 1.4045774647887324,
-              }
-            }
-          >
-            <Text>
-              Create New Wallet
-            </Text>
-          </PrimaryButton>
-        </View>
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-              "marginTop": 33.709859154929575,
-            }
-          }
-        >
-          <SecondaryButton
-            onPress={[Function]}
-            style={
-              Object {
-                "flex": 1,
-                "marginLeft": 1.4045774647887324,
-              }
-            }
-          >
-            <Text>
-              Import Wallet
-            </Text>
-          </SecondaryButton>
-        </View>
-      </View>
-    </ScrollView>
   </View>
-</SafeAreaViewComponent>
+  <WithTheme(EdgeTextComponent)
+    numberOfLines={2}
+    style={
+      Object {
+        "color": "#FFFFFF",
+        "fontSize": 22,
+        "marginBottom": 45,
+        "marginHorizontal": 56,
+        "marginTop": 11,
+        "paddingHorizontal": 22,
+        "textAlign": "center",
+      }
+    }
+  >
+    Create a new wallet or import an existing wallet using the private seed
+  </WithTheme(EdgeTextComponent)>
+  <View
+    onLayout={[Function]}
+  >
+    <MainButton
+      alignSelf="stretch"
+      label="Create New Wallet"
+      marginRem={
+        Array [
+          1,
+          1,
+        ]
+      }
+      onPress={[Function]}
+      type="secondary"
+    />
+  </View>
+  <MainButton
+    alignSelf="stretch"
+    label="Import Wallet"
+    onPress={[Function]}
+    type="escape"
+  />
+</SceneWrapper>
 `;

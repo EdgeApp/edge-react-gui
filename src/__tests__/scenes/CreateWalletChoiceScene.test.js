@@ -4,11 +4,11 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { CreateWalletChoiceComponent } from '../../components/scenes/CreateWalletChoiceScene'
+import { CreateWalletChoiceScene } from '../../components/scenes/CreateWalletChoiceScene'
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { fakeNavigation } from '../../util/fake/fakeNavigation.js'
 
-describe('CreateWalletChoiceComponent', () => {
+describe('CreateWalletChoiceScene', () => {
   it('should render with loading props', () => {
     const renderer = new ShallowRenderer()
 
@@ -27,7 +27,7 @@ describe('CreateWalletChoiceComponent', () => {
       },
       theme: getTheme()
     }
-    const actual = renderer.render(<CreateWalletChoiceComponent {...props} />)
+    const actual = renderer.render(<CreateWalletChoiceScene {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

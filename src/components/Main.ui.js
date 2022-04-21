@@ -10,7 +10,7 @@ import { registerDevice } from '../actions/DeviceIdActions.js'
 import { logoutRequest } from '../actions/LoginActions.js'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
-import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
+import { CreateWalletChoiceScene } from '../components/scenes/CreateWalletChoiceScene.js'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
 import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
 import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene.js'
@@ -273,9 +273,8 @@ export class MainComponent extends React.Component<Props> {
 
               <Scene
                 key={CREATE_WALLET_CHOICE}
-                component={withNavigation(ifLoggedIn(CreateWalletChoiceComponent))}
+                component={withNavigation(ifLoggedIn(CreateWalletChoiceScene))}
                 navTransparent
-                renderTitle={<HeaderTitle title={s.strings.title_create_wallet} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
