@@ -94,6 +94,7 @@ export const swapPlugins = {
   exolix: ENV.EXOLIX_INIT,
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
+  letsexchange: ENV.LETSEXCHANGE_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
   switchain: ENV.SWITCHAIN_INIT,
