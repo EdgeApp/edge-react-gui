@@ -3,16 +3,6 @@
 import { Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
-import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
-import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
-import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
-import exolixLogo from '../../assets/images/exchange/settingsExchangeExolix.png'
-import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
-import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
-import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
-import spookySwapLogo from '../../assets/images/exchange/settingsExchangeSpookySwap.png'
-import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
-import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
@@ -33,6 +23,7 @@ import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeL
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
+import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { type Theme, textNoShadow, themeNoShadow } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 import { PLATFORM } from './platform'
@@ -298,16 +289,8 @@ export const testDark: Theme = {
   fadeDisable: palette.gray,
 
   // Images
-  settingsChangellyLogo: changellyLogo,
-  settingsChangenowLogo: changenowLogo,
-  settingsDefaultLogo: defaultLogo,
-  settingsFoxExchangeLogo: foxExchangeLogo,
-  settingsGodexLogo: godexLogo,
-  settingsSideshiftLogo: sideshiftLogo,
-  settingsSpookySwapLogo: spookySwapLogo,
-  settingsSwitchainLogo: switchainLogo,
-  settingsTotleLogo: totleLogo,
-  settingsExolixLogo: exolixLogo,
+  currencyIconBaseUri: `${EDGE_CONTENT_SERVER_URI}/currencyIcons`,
+  exchangeLogoBaseUri: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons`,
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,

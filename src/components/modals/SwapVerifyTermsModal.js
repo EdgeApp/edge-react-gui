@@ -2,11 +2,12 @@
 
 import { type EdgeSwapConfig, type EdgeSwapInfo } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, Linking, Text, View } from 'react-native'
+import { Linking, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import FastImage from 'react-native-fast-image'
 
-import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
+import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { Airship } from '../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
@@ -75,7 +76,7 @@ function SwapVerifyTermsModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
       <View style={styles.titleContainer}>
-        <Image style={styles.titleImage} source={swapPluginIcons[pluginId]} resizeMode="contain" />
+        <FastImage style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
         <ModalTitle>{displayName}</ModalTitle>
       </View>
       <ModalMessage>{s.strings.swap_terms_statement}</ModalMessage>

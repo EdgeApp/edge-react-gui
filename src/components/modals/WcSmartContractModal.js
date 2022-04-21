@@ -13,6 +13,7 @@ import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { getCurrencyIconUris } from '../../util/CdnUris'
 import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -23,7 +24,6 @@ import { FiatAmountTile } from '../themed/FiatAmountTile.js'
 import { IconTile } from '../themed/IconTile'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
 type Props = {
   bridge: AirshipBridge<string | null>,
@@ -112,7 +112,7 @@ export const WcSmartContractModal = (props: Props) => {
   }
 
   const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
-  const walletImageUri = getCurrencyIcon(pluginId, contractAddress).symbolImage
+  const walletImageUri = getCurrencyIconUris(pluginId, contractAddress).symbolImage
   const slider = isInsufficientBal ? null : (
     <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
   )
