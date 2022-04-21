@@ -18,7 +18,7 @@ exports[`CurrencySettings should render 1`] = `
           Object {
             "color": "#FFFFFF",
             "flexShrink": 1,
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "Poppins-Regular",
             "fontSize": 22,
             "paddingHorizontal": 11,
             "textAlign": "left",
@@ -28,7 +28,7 @@ exports[`CurrencySettings should render 1`] = `
         <Text
           style={
             Object {
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "Poppins-Regular",
             }
           }
         >
@@ -46,7 +46,7 @@ exports[`CurrencySettings should render 1`] = `
           Object {
             "color": "#FFFFFF",
             "flexShrink": 1,
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "Poppins-Regular",
             "fontSize": 22,
             "paddingHorizontal": 11,
             "textAlign": "left",
@@ -56,7 +56,7 @@ exports[`CurrencySettings should render 1`] = `
         <Text
           style={
             Object {
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "Poppins-Regular",
             }
           }
         >
@@ -74,7 +74,7 @@ exports[`CurrencySettings should render 1`] = `
           Object {
             "color": "#FFFFFF",
             "flexShrink": 1,
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "Poppins-Regular",
             "fontSize": 22,
             "paddingHorizontal": 11,
             "textAlign": "left",
@@ -84,7 +84,7 @@ exports[`CurrencySettings should render 1`] = `
         <Text
           style={
             Object {
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "Poppins-Regular",
             }
           }
         >

@@ -27,7 +27,7 @@ exports[`LineTextDivider should render with loading props 1`] = `
       Array [
         Object {
           "color": "#A4C7DF",
-          "fontFamily": "Quicksand-Medium",
+          "fontFamily": "Poppins-Medium",
           "fontSize": 22,
           "paddingHorizontal": 17,
         },

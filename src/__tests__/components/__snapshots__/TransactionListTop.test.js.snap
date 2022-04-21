@@ -111,7 +111,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   minimumFontScale={0.3}
                   style={
                     Object {
-                      "fontFamily": "Quicksand-Medium",
+                      "fontFamily": "Poppins-Medium",
                       "fontSize": 45,
                     }
                   }
@@ -162,7 +162,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
             style={
               Object {
                 "color": "#66EDA8",
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "Poppins-Medium",
                 "fontSize": 22,
                 "marginLeft": 6,
               }
@@ -200,7 +200,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
             style={
               Object {
                 "color": "#66EDA8",
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "Poppins-Medium",
                 "fontSize": 22,
                 "marginLeft": 6,
               }
@@ -218,7 +218,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "fontFamily": "Quicksand-Medium",
+          "fontFamily": "Poppins-Medium",
         }
       }
     >

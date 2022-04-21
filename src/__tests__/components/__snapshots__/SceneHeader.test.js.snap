@@ -20,7 +20,7 @@ exports[`SceneHeader should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "fontFamily": "Quicksand-Medium",
+          "fontFamily": "Poppins-Medium",
           "fontSize": 27,
         }
       }

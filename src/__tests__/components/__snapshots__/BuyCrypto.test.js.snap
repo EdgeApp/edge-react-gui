@@ -38,7 +38,7 @@ exports[`BuyCrypto should render with some props 1`] = `
         <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "Poppins-Medium",
               "marginVertical": 6,
             }
           }

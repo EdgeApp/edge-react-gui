@@ -121,7 +121,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           Array [
             Object {
               "alignSelf": "flex-start",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "Poppins-Regular",
               "fontSize": 22,
               "padding": 0,
             },
@@ -139,7 +139,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           Object {
             "bottom": -20,
             "color": "#E85466",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "Poppins-Regular",
             "fontSize": 17,
             "left": 17,
             "position": "absolute",
@@ -157,7 +157,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         Array [
           Object {
             "bottom": -10,
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "Poppins-Regular",
             "fontSize": 17,
             "position": "absolute",
             "right": 28,
@@ -227,7 +227,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           Object {
             "alignSelf": "stretch",
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "Poppins-Regular",
             "fontSize": 22,
             "padding": 0,
           },

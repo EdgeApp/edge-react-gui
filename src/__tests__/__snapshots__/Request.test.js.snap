@@ -25,7 +25,7 @@ exports[`Request should render with loaded props 1`] = `
       <WithTheme(EdgeTextComponent)
         style={
           Object {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "Poppins-Medium",
             "fontSize": 45,
           }
         }
@@ -36,7 +36,7 @@ exports[`Request should render with loaded props 1`] = `
         style={
           Object {
             "alignSelf": "flex-end",
-            "fontFamily": "Quicksand-Bold",
+            "fontFamily": "Poppins-Bold",
             "textAlign": "right",
           }
         }
@@ -60,7 +60,7 @@ exports[`Request should render with loaded props 1`] = `
         style={
           Object {
             "alignSelf": "flex-end",
-            "fontFamily": "Quicksand-Bold",
+            "fontFamily": "Poppins-Bold",
             "textAlign": "right",
           }
         }

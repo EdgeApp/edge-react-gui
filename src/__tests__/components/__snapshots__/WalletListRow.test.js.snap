@@ -55,7 +55,7 @@ exports[`WalletListRow should render with loading props 1`] = `
               Object {
                 "flexBasis": "auto",
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "Poppins-Medium",
               }
             }
           >

@@ -147,7 +147,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
                 style={
                   Object {
                     "color": "#87939E",
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "Poppins-Medium",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
@@ -248,7 +248,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
                 style={
                   Object {
                     "color": "#87939E",
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "Poppins-Medium",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
