@@ -16,6 +16,7 @@ type Props = {
 export function WalletListSlidingTutorialModal(props: Props) {
   const { bridge } = props
   const theme = useTheme()
+  const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
 
   return (
     <AirshipModal
@@ -28,7 +29,7 @@ export function WalletListSlidingTutorialModal(props: Props) {
     >
       <ModalTitle>{s.strings.wallet_list_swipe_tutorial_title}</ModalTitle>
       <Image source={theme.walletListSlideTutorialImage} resizeMode="contain" style={{ height: theme.rem(3), width: '100%' }} />
-      <MainButton label={s.strings.string_ok} onPress={() => bridge.resolve()} marginRem={0.5} type="secondary" />
+      <MainButton label={s.strings.string_ok} onPress={() => bridge.resolve()} marginRem={0.5} type={buttonType} />
     </AirshipModal>
   )
 }

@@ -79,6 +79,7 @@ export const edgeLight: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: false,
+  preferPrimaryButton: false,
 
   // Common border
   defaultBorderColor: palette.white,
