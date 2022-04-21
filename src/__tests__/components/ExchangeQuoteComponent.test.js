@@ -13,7 +13,6 @@ describe('ExchangeQuote', () => {
 
     const props = {
       isTop: true,
-      walletIcon: '/assets/images/createWallet/wallet_icon_lg.png',
       cryptoAmount: '1',
       currency: 'BTC',
       currencyCode: 'BTC',
