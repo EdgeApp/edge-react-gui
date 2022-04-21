@@ -3,6 +3,7 @@
 .*/android/app/build/intermediates/.*
 .*/node_modules/edge-plugin-bity/.*
 .*/node_modules/metro/.*
+.*/node_modules/metro-config/.*
 .*/node_modules/react-native-confetti-cannon/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
