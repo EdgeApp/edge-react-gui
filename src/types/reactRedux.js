@@ -5,6 +5,10 @@ import * as ReactRedux from 'react-redux'
 
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
+export type TestProps = {
+  generateTestHook: (id: string, ref: any) => void
+}
+
 /**
  * The react-redux connect function, locked to our own Redux types
  * and fixed to take the same type parameters as the TypeScript version.
@@ -12,9 +16,9 @@ import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 export function connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps: (state: RootState, ownProps: OwnProps) => StateProps,
   mapDispatchToProps: (dispatch: Dispatch, ownProps: OwnProps) => DispatchProps
-): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => React.StatelessFunctionalComponent<$Exact<OwnProps>> {
+): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => React.StatelessFunctionalComponent<$Exact<{ ...TestProps, ...OwnProps }>> {
   // $FlowFixMe
-  return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
+  return component => ReactRedux.connect(mapStateToProps, mapDispatchToProps)(component)
 }
 
 type UseDispatch = () => Dispatch
