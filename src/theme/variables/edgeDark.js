@@ -74,7 +74,25 @@ const palette = {
   QuicksandRegular: 'Quicksand-Regular',
   QuicksandMedium: 'Quicksand-Medium',
   QuicksandSemiBold: 'Quicksand-SemiBold',
-  QuicksandBold: 'Quicksand-Bold'
+  QuicksandBold: 'Quicksand-Bold',
+
+  PoppinsBlack: 'Poppins-Black',
+  PoppinsBlackItalic: 'Poppins-BlackItalic',
+  PoppinsBold: 'Poppins-Bold',
+  PoppinsBoldItalic: 'Poppins-BoldItalic',
+  PoppinsExtraBold: 'Poppins-ExtraBold',
+  PoppinsExtraLight: 'Poppins-ExtraLight',
+  PoppinsExtraLightItalic: 'Poppins-ExtraLightItalic',
+  PoppinsItalic: 'Poppins-Italic',
+  PoppinsLight: 'Poppins-Light',
+  PoppinsLightItalic: 'Poppins-LightItalic',
+  PoppinsMedium: 'Poppins-Medium',
+  PoppinsMediumItalic: 'Poppins-MediumItalic',
+  PoppinsRegular: 'Poppins-Regular',
+  PoppinsSemiBold: 'Poppins-SemiBold',
+  PoppinsSemiBoldItalic: 'Poppins-SemiBoldItalic',
+  PoppinsThin: 'Poppins-Thin',
+  PoppinsThinItalic: 'Poppins-ThinItalic'  
 }
 
 export const edgeDark: Theme = {
@@ -263,10 +281,10 @@ export const edgeDark: Theme = {
   flipInputBorder: palette.blueGray,
 
   // Fonts
-  fontFaceDefault: palette.QuicksandRegular,
-  fontFaceMedium: palette.QuicksandMedium,
-  fontFaceBold: palette.QuicksandBold,
-  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
+  fontFaceDefault: palette.PoppinsRegular,
+  fontFaceMedium: palette.PoppinsMedium,
+  fontFaceBold: palette.PoppinsBold,
+  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.PoppinsRegular,
 
   // TouchableHighlights underlay
   underlayColor: palette.white,
