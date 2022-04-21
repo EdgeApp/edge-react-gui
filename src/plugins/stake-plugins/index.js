@@ -4,7 +4,6 @@ import '@ethersproject/shims'
 import { type Cleaner, asNumber, asObject, asString } from 'cleaners'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 
-import { showError } from '../../components/services/AirshipInstance.js'
 import { pluginInfo } from './pluginInfo.js'
 import { toStakePolicy } from './stakePolicy.js'
 import { type InfoServerResponse } from './types'
@@ -12,28 +11,23 @@ import type { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePolicy, StakePo
 
 export * from './types.js'
 
+const infoServerUri = 'https://info1.edge.app'
+
 export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   const instance: StakePlugin = {
     async getStakePolicies(): Promise<StakePolicy[]> {
-      let fetchResponseJson: any
-      let infoServerResponse
-      const apyUri = 'https://info1.edgesecure.co:8444/v1/apyValues'
-      try {
-        const fetchResponse = await fetch(apyUri)
-        if (!fetchResponse.ok) {
-          const rawText = await fetchResponse.text()
-          showError(`Fetch APY invalid response: ${rawText}`)
-        } else {
-          try {
-            fetchResponseJson = await fetchResponse.json()
-            infoServerResponse = asInfoServerResponse(fetchResponseJson)
-          } catch (e) {
-            showError(`Invalid APY response (${e.message}): ${JSON.stringify(fetchResponse)}`)
+      const fetchResponse = await fetch(`${infoServerUri}/v1/apyValues`)
+        .then(async res => {
+          if (!res.ok) {
+            throw new Error(`Fetch APY invalid response: ${await res.text()}`)
           }
-        }
-      } catch (e) {
-        showError(`Fetch APY failed: ${e.message}`)
-      }
+          return res
+        })
+        .catch(err => {
+          throw new Error(`Fetch APY failed: ${err.message}`)
+        })
+      const fetchResponseJson = await fetchResponse.json()
+      const infoServerResponse = asInfoServerResponse(fetchResponseJson)
 
       const policies = pluginInfo.policyInfo.map(toStakePolicy(infoServerResponse))
       return policies

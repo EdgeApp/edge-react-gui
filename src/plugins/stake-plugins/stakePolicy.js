@@ -1,6 +1,6 @@
 // @flow
 import { type StakePluginPolicy } from './policies/types'
-import { type InfoServerResponse } from './types'
+import { type AssetId, type InfoServerResponse } from './types'
 import type { StakePolicy } from './types.js'
 
 export type StakePolicyInfo = {
@@ -8,22 +8,36 @@ export type StakePolicyInfo = {
   parentPluginId: string,
   parentTokenId: string,
   policy: StakePluginPolicy,
-  stakeAssets: Array<{
-    pluginId: string,
-    tokenId: string
-  }>,
-  rewardAssets: Array<{
-    pluginId: string,
-    tokenId: string
-  }>,
+  swapPluginId?: string,
+  stakeAssets: AssetId[],
+  rewardAssets: AssetId[],
   mustClaimRewards: boolean
 }
 
+const sortAssetIds = (a: AssetId, b: AssetId): number => {
+  if (a.pluginId < b.pluginId) return -1
+  if (a.pluginId > b.pluginId) return 1
+  if (a.tokenId < b.tokenId) return -1
+  if (a.tokenId > b.tokenId) return 1
+  return 0
+}
+
+// Generate a unique deterministic ID for the policy
+const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
+  const { swapPluginId = '' } = policyInfo
+  const stakePart = policyInfo.stakeAssets
+    .sort(sortAssetIds)
+    .map(asset => `${asset.pluginId}:${asset.tokenId}`)
+    .join('+')
+  const rewardPart = policyInfo.rewardAssets
+    .sort(sortAssetIds)
+    .map(asset => `${asset.pluginId}:${asset.tokenId}`)
+    .join('+')
+  return `${swapPluginId}/${stakePart}=${rewardPart}`.toLowerCase()
+}
+
 export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePolicyInfo => {
-  // Generate a unique deterministic ID for the policy
-  const stakePart = policyInfo.stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const rewardPart = policyInfo.rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const stakePolicyId = `${stakePart}=${rewardPart}`
+  const stakePolicyId = deriveStakePolicyId(policyInfo)
   // Include all fields except for the policy ID
   const { stakePolicyId: _exclude, ...rest } = policyInfo
 
@@ -34,21 +48,16 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
 }
 
 export const toStakePolicy =
-  (infoResponse: InfoServerResponse | void) =>
+  (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
-    const stakePart = stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-    const rewardPart = rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-    const stakePolicyId = `${stakePart}=${rewardPart}`
-
-    let apy = 0
-    if (Object.keys(infoResponse?.policies ?? {}).includes(stakePolicyId.toLowerCase())) {
-      apy = infoResponse?.policies[stakePolicyId.toLowerCase()] ?? 0
-    }
+    const { swapPluginId, stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
+    const stakePolicyId = deriveStakePolicyId(policyInfo)
+    const apy = infoResponse.policies[stakePolicyId]
 
     return {
       stakePolicyId,
       apy,
+      swapPluginId,
       stakeAssets,
       rewardAssets,
       mustClaimRewards

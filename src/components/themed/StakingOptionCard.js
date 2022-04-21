@@ -2,7 +2,11 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
+import { type RootState } from '../../reducers/RootReducer'
+import { useSelector } from '../../types/reactRedux.js'
+import { getSwapPluginIconUri } from '../../util/CdnUris.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { PairIcons } from './PairIcons.js'
@@ -10,13 +14,32 @@ import { PairIcons } from './PairIcons.js'
 export function StakingOptionCard({
   currencyLogos,
   primaryText,
-  secondaryText
+  secondaryText,
+  swapPluginId
 }: {
   currencyLogos: string[],
   primaryText: string,
-  secondaryText: string
+  secondaryText: string,
+  swapPluginId?: string
 }): React.Node {
-  const styles = getStyles(useTheme())
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const swapInfo = useSelector((state: RootState) => {
+    if (swapPluginId == null) return null
+    const swapConfig = state.core.account.swapConfig[swapPluginId]
+    return swapConfig ? swapConfig.swapInfo : null
+  })
+
+  const renderExchangeProvider = () => {
+    if (swapInfo == null) return
+    const swapProviderIcon = getSwapPluginIconUri(swapInfo.pluginId, theme)
+    return (
+      <View style={styles.swapProvider}>
+        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        <EdgeText style={styles.swapProviderText}>{swapInfo.displayName}</EdgeText>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -30,7 +53,8 @@ export function StakingOptionCard({
           <View style={styles.middleLine} />
         </View>
         <View style={styles.textContainer}>
-          <EdgeText>{primaryText}</EdgeText>
+          <EdgeText style={styles.primaryText}>{primaryText}</EdgeText>
+          {renderExchangeProvider()}
           <EdgeText style={styles.secondaryText}>{secondaryText}</EdgeText>
         </View>
       </View>
@@ -90,9 +114,25 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderBottomRightRadius: theme.rem(0.2),
       borderTopRightRadius: theme.rem(0.2)
     },
+    primaryText: {
+      marginBottom: theme.rem(0.5)
+    },
     secondaryText: {
-      marginTop: theme.rem(1),
+      marginTop: theme.rem(0.5),
       fontSize: theme.rem(0.75)
+    },
+    swapProvider: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    swapProviderIcon: {
+      width: theme.rem(0.625),
+      height: theme.rem(0.625),
+      marginRight: theme.rem(0.5)
+    },
+    swapProviderText: {
+      fontSize: theme.rem(0.75),
+      color: theme.secondaryText
     }
   }
 })
