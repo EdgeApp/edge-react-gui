@@ -1,5 +1,7 @@
 // @flow
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
+import { edgeDark } from '../theme/variables/edgeDark'
+import { edgeLight } from '../theme/variables/edgeLight'
 import { type Theme } from '../types/Theme'
 import { removeHexPrefix } from './utils'
 
@@ -21,10 +23,9 @@ export type CurrencyIcons = {
 
 export function getCurrencyIconUris(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
   const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
-  const url = `${EDGE_CONTENT_SERVER_URI}/currencyIcons/${currencyPath}`
   return {
-    symbolImage: `${url}.png`,
-    symbolImageDarkMono: `${url}_dark.png`
+    symbolImage: `${edgeLight.currencyIconBaseUri}/${currencyPath}.png`,
+    symbolImageDarkMono: `${edgeDark.currencyIconBaseUri}/${currencyPath}_dark.png`
   }
 }
 
@@ -33,7 +34,9 @@ export function getCurrencyIconUris(pluginId: string, contractAddress?: string =
  */
 
 // TODO: Add other CDN references to the theme files to allow third-party config:
-// flags, partners, etc
+// flags, contacts, partners, etc.
+// Clean up file naming scheme to be more generic, if possible.
+
 export function getPartnerIconUri(partnerIconPath: string) {
   return `${EDGE_CONTENT_SERVER_URI}/${partnerIconPath}`
 }
