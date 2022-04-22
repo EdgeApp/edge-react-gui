@@ -3,7 +3,7 @@ import { type StakePluginPolicy } from './policies/types'
 import { type AssetId, type InfoServerResponse } from './types'
 import type { StakePolicy } from './types.js'
 
-export type StakePolicyInfo = {
+export type StakePolicyInfo = {|
   stakePolicyId: string,
   parentPluginId: string,
   parentTokenId: string,
@@ -12,7 +12,7 @@ export type StakePolicyInfo = {
   stakeAssets: AssetId[],
   rewardAssets: AssetId[],
   mustClaimRewards: boolean
-}
+|}
 
 const sortAssetIds = (a: AssetId, b: AssetId): number => {
   if (a.pluginId < b.pluginId) return -1

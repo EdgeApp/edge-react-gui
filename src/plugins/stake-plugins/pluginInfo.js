@@ -95,7 +95,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      exchangeProvider: 'TombSwap',
+      swapPluginId: 'TombSwap',
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -126,7 +126,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      exchangeProvider: 'TombSwap',
+      swapPluginId: 'TombSwap',
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -157,7 +157,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      exchangeProvider: 'TombSwap',
+      swapPluginId: 'TombSwap',
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
