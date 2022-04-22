@@ -255,7 +255,7 @@ export const signBroadcastAndSave =
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
-            error: new Error('transactionCancelled'),
+            error: null,
             forceUpdateGui: true,
             guiMakeSpendInfo,
             transaction: edgeUnsignedTransaction
@@ -422,15 +422,14 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
       bridge={bridge}
       title={s.strings.send_confirmation_fee_modal_alert_title}
       message={message}
+      closeArrow
       buttons={{
-        confirm: { label: s.strings.title_send },
-        cancel: { label: s.strings.string_cancel_cap }
+        send: { label: s.strings.high_fee_warning_confirm_send }
       }}
     />
   ))
 
-  console.log('resolveValue is: ', resolveValue)
-  return resolveValue === 'confirm'
+  return resolveValue === 'send'
 }
 
 let lastUpdateTransactionAmountNonce = 0
