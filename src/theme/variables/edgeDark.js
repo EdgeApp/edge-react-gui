@@ -100,6 +100,9 @@ export const edgeDark: Theme = {
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,
+  sideMenuColor: palette.edgeNavy,
+  sideMenuBorderColor: palette.transparent,
+  sideMenuBorderWidth: 0,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,

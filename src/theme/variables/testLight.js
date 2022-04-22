@@ -99,6 +99,10 @@ export const testLight: Theme = {
   // modalFullGradientLeft: palette.white,
   // modalFullGradientRight: palette.white,
 
+  sideMenuColor: palette.lightestGray,
+  sideMenuBorderColor: palette.transparent,
+  sideMenuBorderWidth: 0,
+
   // Tile
   // listHeaderBackground: palette.white,
   tileBackground: palette.transparent,

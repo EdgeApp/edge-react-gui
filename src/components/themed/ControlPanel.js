@@ -365,14 +365,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Containers/Panels
   topPanel: {
     backgroundColor: theme.modal,
-    borderTopLeftRadius: theme.rem(2),
+    borderTopLeftRadius: theme.rem(1),
+    borderTopColor: theme.sideMenuBorderColor,
+    borderLeftColor: theme.sideMenuBorderColor,
+    borderTopWidth: theme.sideMenuBorderWidth,
+    borderLeftWidth: theme.sideMenuBorderWidth,
     height: theme.rem(10.5)
   },
   bottomPanel: {
     flex: 1,
     flexGrow: 1,
     backgroundColor: theme.modal,
-    borderBottomLeftRadius: theme.rem(2)
+    borderBottomColor: theme.sideMenuBorderColor,
+    borderLeftColor: theme.sideMenuBorderColor,
+    borderBottomWidth: theme.sideMenuBorderWidth,
+    borderLeftWidth: theme.sideMenuBorderWidth,
+    borderBottomLeftRadius: theme.rem(1)
   },
   rowsContainer: {
     flex: 1,
