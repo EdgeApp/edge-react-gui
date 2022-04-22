@@ -45,7 +45,7 @@ export function SwapPreferredModal(props: Props) {
       pluginId != null
         ? {
             text: exchanges[pluginId].swapInfo.displayName,
-            icon: <FastImage resizeMode="contain" style={styles.icon} source={getSwapPluginIconUri(pluginId, theme)} />
+            icon: <FastImage resizeMode="contain" style={styles.icon} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} />
           }
         : {
             text: s.strings.swap_preferred_cheapest,
