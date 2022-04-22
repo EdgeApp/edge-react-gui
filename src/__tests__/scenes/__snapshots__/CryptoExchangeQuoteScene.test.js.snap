@@ -62,7 +62,11 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       </WithTheme(EdgeTextComponent)>
       <FastImage
         resizeMode="contain"
-        source="https://content.edge.app/exchangeIcons/ChangeNow/icon.png"
+        source={
+          Object {
+            "uri": "https://content.edge.app/exchangeIcons/ChangeNow/icon.png",
+          }
+        }
         style={
           Object {
             "aspectRatio": 1,
