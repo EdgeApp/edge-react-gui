@@ -111,28 +111,6 @@ Level 2 Limit: Unlimited",
     "cryptoCodes": Array [
       "BTC",
       "BCH",
-      "BSV",
-      "ETH",
-      "LTC",
-      "USDT",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10 - 30 minutes
-Daily Limit: $18000
-Monthly Limit: $47000",
-    "partnerIconPath": "simplex-logo-sm-square.png",
-    "paymentTypeLogoKey": "credit",
-    "paymentTypes": Array [
-      "credit",
-    ],
-    "pluginId": "simplex",
-    "title": "Credit and Debit Card",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "BCH",
       "ETH",
       "DAI",
       "DGB",
@@ -162,6 +140,28 @@ Doge supported on USA",
     "pluginId": "moonpay",
     "title": "Credit and Debit Card",
   },
+  Object {
+    "cryptoCodes": Array [
+      "BTC",
+      "BCH",
+      "BSV",
+      "ETH",
+      "LTC",
+      "USDT",
+    ],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 7% / Settlement: 10 - 30 minutes
+Daily Limit: $18000
+Monthly Limit: $47000",
+    "partnerIconPath": "simplex-logo-sm-square.png",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "simplex",
+    "title": "Credit and Debit Card",
+  },
 ]
 `;
 
@@ -186,28 +186,6 @@ Monthly Limit: $50000",
     ],
     "pluginId": "wyre",
     "title": "ACH Bank Transfer",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "BCH",
-      "BSV",
-      "ETH",
-      "LTC",
-      "USDT",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10 - 30 minutes
-Daily Limit: $18000
-Monthly Limit: $47000",
-    "partnerIconPath": "simplex-logo-sm-square.png",
-    "paymentTypeLogoKey": "credit",
-    "paymentTypes": Array [
-      "credit",
-    ],
-    "pluginId": "simplex",
-    "title": "Credit and Debit Card",
   },
   Object {
     "cryptoCodes": Array [
@@ -242,6 +220,28 @@ Doge supported on USA",
     ],
     "pluginId": "moonpay",
     "title": "Apple Pay, Credit, and Debit Card",
+  },
+  Object {
+    "cryptoCodes": Array [
+      "BTC",
+      "BCH",
+      "BSV",
+      "ETH",
+      "LTC",
+      "USDT",
+    ],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 7% / Settlement: 10 - 30 minutes
+Daily Limit: $18000
+Monthly Limit: $47000",
+    "partnerIconPath": "simplex-logo-sm-square.png",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "simplex",
+    "title": "Credit and Debit Card",
   },
   Object {
     "cryptoCodes": Array [

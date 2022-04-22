@@ -29,8 +29,14 @@ import { scale } from '../../util/scaling.js'
 import { PLATFORM } from './platform'
 
 const palette = {
-  white: '#FFFFFF',
+  white: '#FDF2D5',
   black: '#000000',
+  deepPurple: '#1A043D',
+  darkPurple1: '#2C0F60',
+  darkPurple2: '#280363',
+  darkPurple3: '#210449',
+  plainPurple: '#532499',
+  glowPurple: '#FA00FF',
   royalBlue: '#003B65',
   darkBlue: '#0C446A',
   edgeNavy: '#0D2145',
@@ -68,7 +74,7 @@ const palette = {
   QuicksandBold: 'Quicksand-Bold'
 }
 
-export const edgeDark: Theme = {
+export const testDark: Theme = {
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },
@@ -87,8 +93,8 @@ export const edgeDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.edgeNavy,
-  backgroundGradientRight: palette.darkBlue,
+  backgroundGradientLeft: palette.deepPurple,
+  backgroundGradientRight: palette.darkPurple2,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -129,21 +135,31 @@ export const edgeDark: Theme = {
 
   // Buttons
   // Should add palette when pressed
-  buttonBorderRadiusRem: 0.25,
-  primaryButtonOutline: palette.transparent,
-  primaryButtonOutlineWidth: 1,
-  primaryButton: [palette.edgeMint, palette.edgeMint],
-  primaryButtonColorStart: { x: 0, y: 0 },
-  primaryButtonColorEnd: { x: 1, y: 0 },
-  primaryButtonText: palette.edgeBlue,
-  primaryButtonTextShadow: textNoShadow,
-  primaryButtonShadow: themeNoShadow,
+  buttonBorderRadiusRem: 0.5,
+  primaryButtonOutline: palette.glowPurple,
+  primaryButtonOutlineWidth: 2,
+  primaryButton: [palette.plainPurple, palette.darkPurple1],
+  primaryButtonColorStart: { x: 0.5, y: 0 },
+  primaryButtonColorEnd: { x: 0.5, y: 1 },
+  primaryButtonText: palette.white,
+  primaryButtonTextShadow: {
+    textShadowColor: palette.edgeMint,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8
+  },
+  primaryButtonShadow: {
+    shadowColor: palette.edgeMint,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
+    elevation: 3
+  },
 
-  secondaryButtonOutline: palette.edgeMint,
-  secondaryButtonOutlineWidth: 1,
+  secondaryButtonOutline: palette.glowPurple,
+  secondaryButtonOutlineWidth: 2,
   secondaryButton: [palette.transparent, palette.transparent],
-  secondaryButtonColorStart: { x: 0, y: 0 },
-  secondaryButtonColorEnd: { x: 1, y: 1 },
+  secondaryButtonColorStart: { x: 0.5, y: 0 },
+  secondaryButtonColorEnd: { x: 0.5, y: 1 },
   secondaryButtonText: palette.edgeMint,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
@@ -265,7 +281,7 @@ export const edgeDark: Theme = {
   inputAccessoryText: palette.accentBlue,
 
   // Outline Text Input
-  outlineTextInputColor: palette.transparent,
+  outlineTextInputColor: palette.darkPurple3,
   outlineTextInputTextColor: palette.white,
   outlineTextInputBorderWidth: 1,
 

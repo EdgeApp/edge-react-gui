@@ -2,9 +2,9 @@
 
 import { Platform } from 'react-native'
 
-import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
+import fioAddressLogo from '../../assets/images/list_fioAddress.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
 import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
@@ -22,39 +22,36 @@ import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
-import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
+import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { type Theme, textNoShadow, themeNoShadow } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 import { PLATFORM } from './platform'
 
 const palette = {
-  white: '#FFFFFF',
   black: '#000000',
-  royalBlue: '#003B65',
-  darkBlue: '#0C446A',
+  white: '#FFFFFF',
+  whiteBlue: '#EEF3F6',
+  lightestBlue: '#D1ECFF',
   edgeNavy: '#0D2145',
   edgeBlue: '#0E4B75',
   edgeMint: '#66EDA8',
-  blueGray: '#A4C7DF',
   gray: '#87939E',
-  lightGray: '#D9E3ED',
+  lightGray: '#DBDBDB',
+  lightestGray: '#F6F6F6',
   mutedBlue: '#2F5E89',
+  mutedGray: '#EDEDED',
   accentGreen: '#77C513',
   accentRed: '#E85466',
   accentBlue: '#0073D9',
-  accentOrange: '#F1AA19',
-  darkBlueNavyGradient1: '#0C446A',
-  darkBlueNavyGradient2: '#0D2145',
+  accentOrange: '#FF8A00',
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
-
-  whiteOp10: 'rgba(255, 255, 255, .1)',
-  whiteOp05: 'rgba(255, 255, 255, .05)',
-  whiteOp75: 'rgba(255, 255, 255, .75)',
-
+  blackOp10: 'rgba(0, 0, 0, .1)',
   grayOp80: 'rgba(135, 147, 158, .8)',
+  whiteOp10: 'rgba(255, 255, 255, 0.1)',
+  whiteOp75: 'rgba(255, 255, 255, .75)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
   lightGrayOp75: 'rgba(217, 227, 237, .75)',
   transparent: 'rgba(255, 255, 255, 0)',
@@ -68,83 +65,84 @@ const palette = {
   QuicksandBold: 'Quicksand-Bold'
 }
 
-export const edgeDark: Theme = {
+export const testLight: Theme = {
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },
-  isDark: true,
+  isDark: false,
 
   // Common border
   defaultBorderColor: palette.white,
 
   // Icons
-  icon: palette.white,
-  iconTappable: palette.edgeMint,
+  icon: palette.black,
+  iconTappable: palette.edgeBlue,
   iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.darkBlue,
-  buySellCustomPluginModalIcon: palette.darkBlue,
+  transactionListIconBackground: palette.white,
+  buySellCustomPluginModalIcon: palette.white,
 
   // Background
-  backgroundGradientLeft: palette.edgeNavy,
-  backgroundGradientRight: palette.darkBlue,
+  backgroundGradientLeft: palette.lightestGray,
+  backgroundGradientRight: palette.lightestGray,
 
   // Camera Overlay
-  cameraOverlayColor: palette.black,
-  cameraOverlayOpStart: 0.7,
-  cameraOverlayOpEnd: 0.3,
+  cameraOverlayColor: palette.gray,
+  cameraOverlayOpStart: 1,
+  cameraOverlayOpEnd: 0.4,
 
   // Modal
-  modal: palette.edgeNavy,
+  modal: palette.lightestGray,
+  modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.darkBlue,
-  // modalFullGradientRight: palette.edgeNavy,
+  // modalFullGradientLeft: palette.white,
+  // modalFullGradientRight: palette.white,
 
   // Tile
-  // listHeaderBackground: palette.edgeNavy,
+  // listHeaderBackground: palette.white,
   tileBackground: palette.transparent,
   tileBackgroundMuted: palette.transparent,
-  // listSectionHeaderBackground: palette.edgeNavy,
+  // listSectionHeaderBackground: palette.white,
 
   // WalletList
   walletListBackground: palette.edgeBlue,
   walletListMutedBackground: palette.mutedBlue,
 
   // Text
-  primaryText: palette.white,
-  secondaryText: palette.blueGray,
+  primaryText: palette.black,
+  secondaryText: palette.gray,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
-  textLink: palette.edgeMint,
+  textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
-  // listHeaderText: palette.white,
+  // listHeaderText: palette.black,
 
   // Header
-  // headerText: palette.white,
-  // hamburgerButton: palette.white,
-  // backButton: palette.white,
+  // headerText: palette.black,
+  // hamburgerButton: palette.black,
+  // backButton: palette.black,
 
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.25,
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 1,
-  primaryButton: [palette.edgeMint, palette.edgeMint],
+  primaryButton: [palette.edgeBlue, palette.edgeBlue],
   primaryButtonColorStart: { x: 0, y: 0 },
-  primaryButtonColorEnd: { x: 1, y: 0 },
+  primaryButtonColorEnd: { x: 1, y: 1 },
   primaryButtonText: palette.edgeBlue,
   primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: themeNoShadow,
 
-  secondaryButtonOutline: palette.edgeMint,
+  secondaryButtonOutline: palette.edgeBlue,
   secondaryButtonOutlineWidth: 1,
   secondaryButton: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.edgeBlue,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
 
@@ -157,54 +155,67 @@ export const edgeDark: Theme = {
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
 
+  // tertiaryButtonOutline: palette.edgeBlue,
+  // tertiaryButton: palette.transparent,
+  // tertiaryButtonText: palette.edgeBlue,
+
+  // glassButton: palette.blackOp10,
+  // glassButtonDark: palette.blackOp50,
+  // glassButtonDarkIcon: palette.white,
+  // glassButtonIcon: palette.edgeBlue,
+
+  // dangerButtonOutline: palette.transparent,
+  // dangerButton: palette.accentRed,
+  // dangerButtonText: palette.white,
+
   // Card
-  // cardBackground: palette.edgeBlue,
+  // cardBackground: palette.white,
   // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.edgeNavy,
-  tabBarIcon: palette.white,
-  tabBarIconHighlighted: palette.edgeMint,
+  tabBarBackground: palette.white,
+  tabBarIcon: palette.gray,
+  tabBarIconHighlighted: palette.edgeBlue,
 
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
   sliderTabMore: palette.accentBlue,
 
-  // pinOutline: palette.white,
-  // pinFilled: palette.white,
+  // pinOutline: palette.edgeBlue,
+  // pinFilled: palette.edgeBlue,
 
-  // radioButtonOutline: palette.lightGray,
-  // radioButtonFilled: palette.edgeMint,
+  // radioButtonOutline: palette.edgeNavy,
+  // radioButtonFilled: palette.edgeBlue,
 
-  toggleButton: palette.edgeMint,
+  toggleButton: palette.accentGreen,
   toggleButtonOff: palette.gray,
   // toggleButtonThumb: palette.white,
 
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  confirmationSlider: palette.whiteOp05,
-  confirmationSliderText: palette.white,
-  confirmationSliderArrow: palette.edgeBlue,
-  confirmationSliderThumb: palette.edgeMint,
+  confirmationSlider: palette.blackOp10,
+  confirmationSliderText: palette.edgeBlue,
+  confirmationSliderArrow: palette.white,
+  confirmationSliderThumb: palette.edgeBlue,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
   confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines
-  lineDivider: palette.whiteOp10,
-  titleLineDivider: palette.blueGray,
-  // textInputLine: palette.blueGray,
-  // orLine: palette.blueGray,
-  // tileDivider: palette.blueGray,
+  lineDivider: palette.edgeBlue,
+  titleLineDivider: palette.edgeBlue,
+  // textInputLine: palette.gray,
+  // orLine: palette.gray,
+  // tileDivider: palette.gray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
 
   // Notifications
-  // notificationBackground: palette.lightGrayOp75,
+  // notificationBackground: palette.grayOp80,
   // messageBanner: palette.grayOp80,
   // bubble: palette.whiteOp10,
 
@@ -219,9 +230,9 @@ export const edgeDark: Theme = {
   // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
-  settingsRowBackground: palette.transparent,
+  settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: palette.edgeNavy,
+  settingsRowHeaderBackground: palette.lightGray,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
@@ -237,7 +248,7 @@ export const edgeDark: Theme = {
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
-  flipInputBorder: palette.blueGray,
+  flipInputBorder: palette.edgeBlue,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
@@ -266,7 +277,7 @@ export const edgeDark: Theme = {
 
   // Outline Text Input
   outlineTextInputColor: palette.transparent,
-  outlineTextInputTextColor: palette.white,
+  outlineTextInputTextColor: palette.black,
   outlineTextInputBorderWidth: 1,
 
   // Animation

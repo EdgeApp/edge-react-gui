@@ -6,7 +6,8 @@ import FastImage from 'react-native-fast-image'
 
 import { memo, useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
-import { getCurrencyIcon, getTokenId } from '../../util/CurrencyInfoHelpers.js'
+import { getCurrencyIconUris } from '../../util/CdnUris'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletSyncCircle } from './WalletSyncCircle.js'
@@ -74,7 +75,7 @@ export const CurrencyIconComponent = (props: Props) => {
   const primaryCurrencyIcon = useMemo(() => {
     if (pluginId == null) return null
     // Get Currency Icon URI
-    const icon = getCurrencyIcon(pluginId, tokenId)
+    const icon = getCurrencyIconUris(pluginId, tokenId)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
     // Return Currency logo from the edge server
     return <FastImage style={StyleSheet.absoluteFill} source={source} />
@@ -85,7 +86,7 @@ export const CurrencyIconComponent = (props: Props) => {
     // Return null if no plugin id or not a token
     if (pluginId == null || tokenId == null || tokenId === pluginId) return null
     // Get Parent Icon URI
-    const icon = getCurrencyIcon(pluginId)
+    const icon = getCurrencyIconUris(pluginId)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
     // Return Parent logo from the edge server
     return <FastImage style={styles.parentIcon} source={source} />

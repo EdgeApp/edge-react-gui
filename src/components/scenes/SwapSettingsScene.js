@@ -2,16 +2,17 @@
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
-import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
+import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
@@ -130,9 +131,9 @@ export class SwapSettings extends React.Component<Props, State> {
 
   renderPluginIcon(pluginId: string): React.Node {
     const { theme } = this.props
-    const logoSource = getSwapPluginIcon(pluginId, theme)
+    const logoSource = getSwapPluginIconUri(pluginId, theme)
     const styles = getStyles(theme)
-    return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
+    return <FastImage resizeMode="contain" style={styles.swapIcon} source={{ uri: logoSource }} />
   }
 
   renderPreferredArea() {

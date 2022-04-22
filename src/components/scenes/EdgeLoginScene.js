@@ -11,6 +11,7 @@ import { lobbyLogin } from '../../actions/EdgeLoginActions.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
+import { config } from '../../theme/appConfig.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -35,7 +36,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
   renderBody() {
     let message = this.props.error
     if (!this.props.error) {
-      message = s.strings.edge_description
+      message = sprintf(s.strings.access_wallet_description, config.appName)
     }
     if (!this.props.lobby && !this.props.error) {
       throw new Error('Not normal expected behavior')

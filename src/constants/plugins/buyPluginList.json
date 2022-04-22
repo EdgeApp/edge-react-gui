@@ -790,7 +790,7 @@
   "----- Sorting -----",
   {
     "id": "simplex",
-    "sortIndex": 4
+    "sortIndex": 5
   },
   {
     "id": "bits of gold",
@@ -842,7 +842,7 @@
   },
   {
     "id": "moonpay",
-    "sortIndex": 5
+    "sortIndex": 4
   },
   "----- iOS specifics -----",
   {

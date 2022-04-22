@@ -19,11 +19,14 @@ import s from '../../../../locales/strings'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
+import type { EdgeTokenIdExtended } from '../../../../types/types.js'
 import { type GuiMakeSpendInfo } from '../../../../types/types.js'
-import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
+import { getCurrencyIconUris } from '../../../../util/CdnUris'
+import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
 
 type WalletDetails = {
   name: string,
+  pluginId?: string,
   receiveAddress: {
     publicAddress: string
   },
@@ -114,7 +117,8 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes: string[] = []): Promise<string> {
+  // $FlowFixMe // Default empty array is not typed
+  async chooseCurrencyWallet(allowedCurrencyCodes: string[] | EdgeTokenIdExtended[] = []): Promise<string> {
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
@@ -122,6 +126,15 @@ export class EdgeProvider extends Bridgeable {
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
+      if (allowedCurrencyCodes.every(code => typeof code === 'object')) {
+        const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
+        const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
+        return Promise.resolve({
+          pluginId,
+          tokenId,
+          currencyCode
+        })
+      }
       return Promise.resolve(currencyCode)
     }
 
@@ -141,19 +154,14 @@ export class EdgeProvider extends Bridgeable {
   async getCurrentWalletInfo(): Promise<WalletDetails> {
     const edgeWallet = this._state.core.account.currencyWallets[this._state.ui.wallets.selectedWalletId]
     const currencyCode = this._state.ui.wallets.selectedCurrencyCode
-    let walletName = edgeWallet.name ?? ''
+    const walletName = edgeWallet.name ?? ''
     const receiveAddress = await edgeWallet.getReceiveAddress()
-    const enabledTokens = await edgeWallet.getEnabledTokens()
     const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
 
-    if (enabledTokens.length > 1) {
-      console.log('EP: We have tokens.. what do we do with them ')
-      walletName = currencyCode
-    }
-
-    const icons = getCurrencyIcon(edgeWallet.currencyInfo.pluginId, contractAddress)
+    const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
     const returnObject: WalletDetails = {
       name: walletName,
+      pluginId: edgeWallet.currencyInfo.pluginId,
       receiveAddress,
       currencyCode,
       fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),

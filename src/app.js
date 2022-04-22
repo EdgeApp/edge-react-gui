@@ -2,10 +2,12 @@
 /* global __DEV__ */
 
 import Bugsnag from '@bugsnag/react-native'
+import { asObject, asString } from 'cleaners'
 import { LogBox, Platform, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import ENV from '../env.json'
+import { changeTheme, getTheme } from './components/services/ThemeContext.js'
 import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
@@ -14,6 +16,11 @@ Bugsnag.start({
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
     return event
   }
+})
+
+const asServerDetails = asObject({
+  host: asString,
+  port: asString
 })
 
 const ENABLE_PERF_LOGGING = false
@@ -155,4 +162,48 @@ fetch = (...args: any) => {
     console.log(`realFetchError: ${args[0]} ${e.name} ${e.message}`)
     throw e
   })
+}
+
+if (ENV.DEBUG_THEME === true) {
+  const themeFunc = async () => {
+    try {
+      const oldTheme = getTheme()
+      const { host, port } = asServerDetails(ENV.THEME_SERVER)
+      const url = `${host}:${port}/theme`
+      console.log('THEME:\n' + JSON.stringify(oldTheme, null, 2))
+      const postOptions = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(oldTheme)
+      }
+      realFetch(url, postOptions)
+      const getOptions = {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      }
+      let themeJson = ''
+      setInterval(async () => {
+        try {
+          const response = await realFetch(url, getOptions)
+          const overrideTheme = await response.json()
+          const newTheme = { ...oldTheme, ...overrideTheme }
+          const newThemeJson = JSON.stringify(newTheme, null, 2)
+          if (newThemeJson !== themeJson) {
+            console.log('Theme changed!')
+            changeTheme(newTheme)
+            themeJson = newThemeJson
+          }
+        } catch (e) {
+          console.log(`Failed get theme`, e.message)
+        }
+      }, 3000)
+    } catch (e) {
+      console.log(`Failed to access theme server`)
+    }
+  }
+  themeFunc()
 }

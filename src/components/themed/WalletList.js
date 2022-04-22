@@ -9,7 +9,7 @@ import { getExchangeDenominationFromState } from '../../selectors/DenominationSe
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
+import type { CreateTokenType, CreateWalletType, EdgeTokenIdExtended, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { checkCurrencyCodes, checkFilterWallet } from '../../util/utils.js'
@@ -47,7 +47,7 @@ type Props = {
   searchText: string,
   showCreateWallet?: boolean,
   excludeWalletIds?: string[],
-  allowedCurrencyCodes?: string[],
+  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
   excludeCurrencyCodes?: string[],
   activateSearch?: () => void,
   showSlidingTutorial?: boolean,

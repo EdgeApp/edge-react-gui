@@ -60,8 +60,9 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       >
         Powered by 
       </WithTheme(EdgeTextComponent)>
-      <Image
+      <FastImage
         resizeMode="contain"
+        source="https://content.edge.app/exchangeIcons/ChangeNow/icon.png"
         style={
           Object {
             "aspectRatio": 1,

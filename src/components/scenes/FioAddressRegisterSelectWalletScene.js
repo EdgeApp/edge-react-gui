@@ -10,6 +10,7 @@ import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
@@ -118,7 +119,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   selectWallet = async () => {
     const { supportedCurrencies } = this.state
 
-    const allowedCurrencyCodes = []
+    const allowedCurrencyCodes: string[] = []
     for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         allowedCurrencyCodes.push(currency)
@@ -219,9 +220,9 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
   render() {
     const { theme } = this.props
-    const { activationCost, errorMessage, loading } = this.state
+    const { errorMessage } = this.state
     const styles = getStyles(theme)
-    const detailsText = sprintf(s.strings.fio_address_wallet_selection_text, loading ? '-' : activationCost)
+    const detailsText = sprintf(s.strings.fio_address_payment_required_text, config.appName)
     return (
       <SceneWrapper background="theme">
         <ScrollView>
