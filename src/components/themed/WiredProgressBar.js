@@ -70,7 +70,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     left: 0,
     top: -3,
     bottom: 0,
-    backgroundColor: theme.textLink,
+    backgroundColor: theme.walletProgressIconFill,
     zIndex: 100
   }
 }))
