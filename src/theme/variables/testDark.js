@@ -108,6 +108,10 @@ export const testDark: Theme = {
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,
 
+  sideMenuColor: palette.edgeNavy,
+  sideMenuBorderColor: palette.glowPurple,
+  sideMenuBorderWidth: 4,
+
   // Tile
   // listHeaderBackground: palette.edgeNavy,
   tileBackground: palette.transparent,

@@ -84,6 +84,10 @@ export type Theme = {
   // Modal
   modal: string,
   modalCloseIcon: string,
+
+  sideMenuColor: string,
+  sideMenuBorderColor: string,
+  sideMenuBorderWidth: number,
   // modalFullGradientLeft: string,
   // modalFullGradientRight: string,
 
