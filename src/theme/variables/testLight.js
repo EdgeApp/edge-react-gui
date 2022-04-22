@@ -310,6 +310,8 @@ export const testLight: Theme = {
   outlineTextInputColor: palette.transparent,
   outlineTextInputTextColor: palette.black,
   outlineTextInputBorderWidth: 1,
+  outlineTextInputBorderColor: palette.gray,
+  outlineTextInputBorderColorFocused: palette.edgeBlue,
 
   // Animation
   fadeDisable: palette.gray,

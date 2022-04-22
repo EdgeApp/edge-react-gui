@@ -306,6 +306,8 @@ export type Theme = {
   outlineTextInputColor: string,
   outlineTextInputTextColor: string,
   outlineTextInputBorderWidth: number,
+  outlineTextInputBorderColor: string,
+  outlineTextInputBorderColorFocused: string,
 
   // Animation
   fadeDisable: string,
