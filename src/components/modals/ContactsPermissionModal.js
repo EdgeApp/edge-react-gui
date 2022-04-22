@@ -13,6 +13,9 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
 export type ContactsPermissionResult = 'allow' | 'deny'
+const message1 = sprintf(s.strings.contacts_permission_modal_body_1, config.appName)
+const message2 = sprintf(s.strings.contacts_permission_modal_body_2, config.appName)
+const message3 = sprintf(s.strings.contacts_permission_modal_body_3, config.appName)
 
 export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   const { bridge } = props

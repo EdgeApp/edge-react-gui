@@ -6,6 +6,7 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
 import { type TestProps } from '../../types/reactRedux.js'
+import { type EdgeTokenIdExtended } from '../../types/types'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
