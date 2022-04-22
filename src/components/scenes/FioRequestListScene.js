@@ -358,7 +358,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { content } = selectedFioPendingRequest
     const chainCode = content.chain_code.toUpperCase()
     const tokenCode = content.token_code.toUpperCase()
-    const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}-${tokenCode}`] : [chainCode]
+    const allowedFullCurrencyCode: string[] = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}-${tokenCode}`] : [chainCode]
 
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />

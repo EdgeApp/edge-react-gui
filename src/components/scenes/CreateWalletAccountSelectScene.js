@@ -108,7 +108,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
 
   onPressSelect = () => {
     const { supportedCurrencies } = this.props
-    const allowedCurrencyCodes = []
+    const allowedCurrencyCodes: string[] = []
     for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         allowedCurrencyCodes.push(currency)

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
+import { type EdgeTokenIdExtended } from '../../types/types.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -19,7 +20,7 @@ type OwnProps = {
   headerTitle: string,
   showCreateWallet?: boolean,
   excludeWalletIds?: string[],
-  allowedCurrencyCodes?: string[],
+  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
   excludeCurrencyCodes?: string[],
   filterActivation?: boolean
 }
