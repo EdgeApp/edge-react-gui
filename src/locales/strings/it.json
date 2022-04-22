@@ -207,6 +207,7 @@
   "help_site_more_info_text": "Altre informazioni su %1$s",
   "loading": "Caricamento…",
   "validating": "Validazione in corso…",
+  "high_fee_warning_confirm_send": "Confirm Send",
   "mining_fee_custom_label_choice": "Personalizzata",
   "mining_fee_high_label_choice": "Alta",
   "mining_fee_low_label_choice": "Bassa",
