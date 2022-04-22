@@ -131,7 +131,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
           />
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <FastImage style={styles.partnerIconImage} resizeMode="contain" source={getSwapPluginIconUri(quote.pluginId, theme)} />
+            <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
             <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
           </View>
           {quote.isEstimate && (
