@@ -88,6 +88,7 @@ export const ratePlugins = {
 }
 
 export const swapPlugins = {
+  // Centralized Swaps
   changelly: ENV.CHANGELLY_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   exolix: ENV.EXOLIX_INIT,
@@ -95,8 +96,12 @@ export const swapPlugins = {
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
-  spookySwap: false,
   switchain: ENV.SWITCHAIN_INIT,
+
+  // Defi Swaps
+  tombSwap: ENV.TOMB_SWAP_INIT,
+  spookySwap: false,
+
   transfer: true
 }
 
