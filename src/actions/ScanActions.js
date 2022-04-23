@@ -24,7 +24,7 @@ import { parseDeepLink } from '../util/DeepLinkParser.js'
 import { zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
-export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, link: ReturnAddressLink) => {
+export const doReturnAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
   dispatch({ type: 'DISABLE_SCAN' })
   if (currencyName !== edgeWallet.currencyInfo.pluginId) {
@@ -133,7 +133,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         break
       case 'returnAddress':
         try {
-          return doRequestAddress(dispatch, edgeWallet, deepLink)
+          return doReturnAddress(dispatch, edgeWallet, deepLink)
         } catch (e) {
           console.log(e)
         }

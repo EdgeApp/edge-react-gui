@@ -13,7 +13,7 @@ import { Actions } from '../types/routerTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { launchBitPay } from './BitPayActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
-import { doRequestAddress, parseScannedUri } from './ScanActions.js'
+import { doReturnAddress, parseScannedUri } from './ScanActions.js'
 import { selectWallet } from './WalletActions.js'
 
 /**
@@ -96,7 +96,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       if (!hasCurrentWallet) return false
       // The code for dealing with this is a mess, so fake a barcode scan:
       const edgeWallet = currencyWallets[selectedWalletId]
-      doRequestAddress(dispatch, edgeWallet, link)
+      doReturnAddress(dispatch, edgeWallet, link)
       return true
     }
 
