@@ -74,6 +74,14 @@ export type ReturnAddressLink = {
   successUri?: string
 }
 
+export type RequestAddressLink = {
+  type: 'requestAddress',
+  assets: Array<{ nativeCode: string, tokenCode: string }>,
+  post?: string, // Either post or redir must be specified
+  redir?: string,
+  payer?: string
+}
+
 export type SwapLink = {
   type: 'swap'
   // We may eventually add query parameters to pre-populate currencies.
@@ -93,6 +101,7 @@ export type DeepLink =
   | PluginLink
   | PromotionLink
   | ReturnAddressLink
+  | RequestAddressLink
   | WalletConnectLink
   | SwapLink
   | {
