@@ -5,7 +5,7 @@ import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
-import { CREATE_WALLET_SELECT_CRYPTO, MANAGE_TOKENS } from '../../constants/SceneKeys.js'
+import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
@@ -66,7 +66,7 @@ export class WalletListFooterComponent extends React.PureComponent<StateProps & 
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId != null && currencyCode != null) {
           onSelectWallet(walletId, currencyCode)
-          Actions.push(MANAGE_TOKENS, { walletId })
+          Actions.push('manageTokens', { walletId })
         }
       })
       .catch(error => {

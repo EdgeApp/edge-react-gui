@@ -220,20 +220,6 @@ export const getCurrencyInfo = (allCurrencyInfos: EdgeCurrencyInfo[], currencyCo
   }
 }
 
-export const denominationToDecimalPlaces = (denomination: string): string => {
-  const numberOfDecimalPlaces = (denomination.match(/0/g) || []).length
-  const decimalPlaces = numberOfDecimalPlaces.toString()
-  return decimalPlaces
-}
-
-export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
-  const numberOfDecimalPlaces: number = parseInt(decimalPlaces)
-  const denomination: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-
-  // will return, '1' at the very least
-  return denomination
-}
-
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
   return !isSentTransaction(edgeTransaction)
 }

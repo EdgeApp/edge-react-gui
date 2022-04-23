@@ -11,7 +11,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.js'
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
+import { EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
@@ -21,7 +21,7 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types.js'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
-import { denominationToDecimalPlaces, zeroString } from '../util/utils.js'
+import { zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, link: ReturnAddressLink) => {
@@ -159,24 +159,14 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
     if (parsedUri.token) {
       // TOKEN URI
-      const { contractAddress, currencyName } = parsedUri.token
-      const multiplier = parsedUri.token.denominations[0].multiplier
-      const currencyCode = parsedUri.token.currencyCode.toUpperCase()
-      let decimalPlaces = '18'
-
-      if (multiplier) {
-        decimalPlaces = denominationToDecimalPlaces(multiplier)
-      }
-
-      const parameters = {
-        contractAddress,
-        currencyCode,
-        currencyName,
-        decimalPlaces,
+      const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
+      return Actions.push('editToken', {
+        currencyCode: currencyCode.toUpperCase(),
+        multiplier: denominations[0]?.multiplier,
+        displayName: currencyName,
+        networkLocation: { contractAddress },
         walletId: selectedWalletId
-      }
-
-      return Actions.push(ADD_TOKEN, parameters)
+      })
     }
 
     // LEGACY ADDRESS URI

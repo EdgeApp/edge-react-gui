@@ -10,7 +10,7 @@ import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { TextInputModal } from '../components/modals/TextInputModal.js'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance.js'
 import { ModalMessage } from '../components/themed/ModalParts.js'
-import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
+import { TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
@@ -37,7 +37,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
   switch (switchString) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
-        Actions.push(MANAGE_TOKENS, {
+        Actions.push('manageTokens', {
           walletId
         })
       }
