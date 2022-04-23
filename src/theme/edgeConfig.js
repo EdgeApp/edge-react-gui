@@ -11,7 +11,6 @@ export const edgeConfig: AppConfig = {
   darkTheme: edgeDark,
   lightTheme: edgeLight,
   supportsEdgeLogin: true,
-  backgroundImageServers: ['https://content.edge.app'],
   referralServers: ['https://referral1.edge.app'],
   notificationServers: ['https://notif1.edge.app'],
   knowledgeBase: 'https://support.edge.app/support/home',

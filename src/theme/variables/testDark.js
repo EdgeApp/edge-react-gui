@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native'
 
+import backgroundImage from '../../assets/images/backgrounds/login_bg.jpg'
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
@@ -96,6 +97,8 @@ export const testDark: Theme = {
 
   // Background
   backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
+  backgroundImageServerUrls: ['https://content-test.edge.app'],
+  backgroundImage,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

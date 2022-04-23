@@ -86,6 +86,8 @@ export const edgeLight: Theme = {
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundImageServerUrls: ['https://content.edge.app'],
+  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,

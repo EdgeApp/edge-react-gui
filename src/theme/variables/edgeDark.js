@@ -89,6 +89,8 @@ export const edgeDark: Theme = {
 
   // Background
   backgroundGradientColors: [palette.edgeNavy, palette.darkBlue],
+  backgroundImageServerUrls: ['https://content.edge.app'],
+  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

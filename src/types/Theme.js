@@ -75,6 +75,8 @@ export type Theme = {
 
   // Background
   backgroundGradientColors: string[],
+  backgroundImageServerUrls: string[],
+  backgroundImage?: string,
 
   // Camera Overlay
   cameraOverlayColor: string,
