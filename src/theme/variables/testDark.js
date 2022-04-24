@@ -138,9 +138,7 @@ export const testDark: Theme = {
   // listHeaderText: palette.white,
 
   // Header
-  // headerText: palette.white,
-  // hamburgerButton: palette.white,
-  // backButton: palette.white,
+  headerIcon: fioAddressLogo,
 
   // Buttons
   // Should add palette when pressed

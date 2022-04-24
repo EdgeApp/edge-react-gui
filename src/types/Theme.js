@@ -129,9 +129,7 @@ export type Theme = {
   // listHeaderText: string,
 
   // Header
-  // headerText: string,
-  // hamburgerButton: string,
-  // backButton: string,
+  headerIcon: string,
 
   // Buttons
   buttonBorderRadiusRem: number,

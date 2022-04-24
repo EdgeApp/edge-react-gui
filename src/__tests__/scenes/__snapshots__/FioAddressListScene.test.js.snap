@@ -134,6 +134,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "guiPluginLogoMoonpay": Object {
                 "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
               },
+              "headerIcon": Object {
+                "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_Icon.png",
+              },
               "icon": "#FFFFFF",
               "iconDeactivated": "rgba(255, 255, 255, .75)",
               "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
@@ -490,6 +493,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "guiPluginLogoMoonpay": Object {
                 "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
+              },
+              "headerIcon": Object {
+                "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_Icon.png",
               },
               "icon": "#FFFFFF",
               "iconDeactivated": "rgba(255, 255, 255, .75)",

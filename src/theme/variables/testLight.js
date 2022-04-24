@@ -128,9 +128,7 @@ export const testLight: Theme = {
   // listHeaderText: palette.black,
 
   // Header
-  // headerText: palette.black,
-  // hamburgerButton: palette.black,
-  // backButton: palette.black,
+  headerIcon: fioAddressLogo,
 
   // Buttons
   // Should add palette when pressed

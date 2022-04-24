@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native'
 
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
@@ -128,9 +129,7 @@ export const edgeLight: Theme = {
   // listHeaderText: palette.black,
 
   // Header
-  // headerText: palette.black,
-  // hamburgerButton: palette.black,
-  // backButton: palette.black,
+  headerIcon: edgeMark,
 
   // Buttons
   // Should add palette when pressed
