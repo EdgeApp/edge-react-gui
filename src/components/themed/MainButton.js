@@ -85,7 +85,7 @@ export function MainButton(props: Props) {
     alignSelf,
     opacity: disabled ? 0.3 : pending ? 0.7 : 1,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
-    ...sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+    ...sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
   }
 
   return (
@@ -115,7 +115,11 @@ const getStyles = cacheStyles((theme: Theme) => {
   const commonText = {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    marginHorizontal: theme.rem(0.5)
+    marginHorizontal: theme.rem(0),
+    paddingTop: theme.rem(0.5),
+    paddingBottom: theme.rem(0.5),
+    paddingLeft: theme.rem(0.75),
+    paddingRight: theme.rem(0.75)
   }
 
   return {
