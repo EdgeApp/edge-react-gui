@@ -316,6 +316,7 @@ exports[`createWalletName should render with loading props 1`] = `
       "sideMenuBorderColor": "rgba(255, 255, 255, 0)",
       "sideMenuBorderWidth": 0,
       "sideMenuColor": "#0D2145",
+      "sideMenuFont": "Quicksand-Medium",
       "sliderTabMore": "#0073D9",
       "sliderTabRequest": "#77C513",
       "sliderTabSend": "#E85466",

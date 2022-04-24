@@ -90,8 +90,7 @@ export type Theme = {
   sideMenuColor: string,
   sideMenuBorderColor: string,
   sideMenuBorderWidth: number,
-  // modalFullGradientLeft: string,
-  // modalFullGradientRight: string,
+  sideMenuFont: string,
 
   // Tile
   // listHeaderBackground: string,

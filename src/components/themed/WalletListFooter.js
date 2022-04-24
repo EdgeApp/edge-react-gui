@@ -100,7 +100,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   addItem: {
     margin: theme.rem(0.25),
     color: theme.textLink,
-    fontFamily: theme.fontFaceMedium
+    fontFamily: theme.addButtonFont
   },
   addItemText: {
     flexShrink: 1

@@ -104,6 +104,7 @@ export const testLight: Theme = {
   sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandBold,
 
   // Tile
   // listHeaderBackground: palette.white,

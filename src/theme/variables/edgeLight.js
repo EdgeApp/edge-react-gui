@@ -104,6 +104,7 @@ export const edgeLight: Theme = {
   sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.white,

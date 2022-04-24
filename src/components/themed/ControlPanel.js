@@ -436,7 +436,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5)
   },
   text: {
-    fontFamily: theme.fontFaceMedium,
+    fontFamily: theme.sideMenuFont,
     marginLeft: theme.rem(0.5)
   },
   invisibleTapper: {

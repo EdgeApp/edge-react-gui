@@ -105,6 +105,7 @@ export const edgeDark: Theme = {
   sideMenuColor: palette.edgeNavy,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,

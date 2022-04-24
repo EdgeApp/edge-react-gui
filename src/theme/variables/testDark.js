@@ -114,6 +114,7 @@ export const testDark: Theme = {
   sideMenuColor: palette.edgeNavy,
   sideMenuBorderColor: palette.glowPurple,
   sideMenuBorderWidth: 4,
+  sideMenuFont: palette.QuicksandBold,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
