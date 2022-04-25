@@ -332,6 +332,7 @@ export type Theme = {
   paymentTypeLogoSwish: string,
   paymentTypeLogoUpi: string,
 
+  primaryLogo: string,
   fioAddressLogo: string,
   walletListSlideTutorialImage: string,
 

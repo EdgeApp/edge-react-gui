@@ -248,6 +248,9 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         },
         "textShadowRadius": 0,
       },
+      "primaryLogo": Object {
+        "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+      },
       "primaryText": "#FFFFFF",
       "qrBackgroundColor": "#FFFFFF",
       "qrForegroundColor": "#000000",

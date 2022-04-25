@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
@@ -327,6 +328,7 @@ export const edgeDark: Theme = {
   paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
+  primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 

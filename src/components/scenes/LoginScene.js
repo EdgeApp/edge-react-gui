@@ -11,7 +11,6 @@ import { checkVersion } from 'react-native-check-version'
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions.js'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
 import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig.js'
@@ -153,7 +152,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           key={String(counter)}
           appName={config.appNameShort}
           backgroundImage={backgroundImage}
-          primaryLogo={edgeLogo}
+          primaryLogo={theme.primaryLogo}
           primaryLogoCallback={handleSendLogs}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
           skipSecurityAlerts

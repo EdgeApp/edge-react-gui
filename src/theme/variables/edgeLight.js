@@ -3,6 +3,7 @@
 import { Platform } from 'react-native'
 
 import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
@@ -339,6 +340,7 @@ export const edgeLight: Theme = {
   paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
+  primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 

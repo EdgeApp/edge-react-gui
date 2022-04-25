@@ -356,6 +356,7 @@ export const testDark: Theme = {
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
   fioAddressLogo: fioAddressLogo,
+  primaryLogo: paymentTypeLogoPayid,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoBitaccess: guiPluginLogoBitaccess,

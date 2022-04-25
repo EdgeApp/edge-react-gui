@@ -279,6 +279,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 },
                 "textShadowRadius": 0,
               },
+              "primaryLogo": Object {
+                "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+              },
               "primaryText": "#FFFFFF",
               "qrBackgroundColor": "#FFFFFF",
               "qrForegroundColor": "#000000",
@@ -638,6 +641,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                   "width": 0,
                 },
                 "textShadowRadius": 0,
+              },
+              "primaryLogo": Object {
+                "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
               },
               "primaryText": "#FFFFFF",
               "qrBackgroundColor": "#FFFFFF",
