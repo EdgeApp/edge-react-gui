@@ -1,13 +1,15 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
-import { FlatList, RefreshControl, SectionList } from 'react-native'
+import { RefreshControl, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
+import { FlatList } from '../../types/reactNative.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
@@ -56,7 +58,7 @@ type Props = {
   onPress?: (walletId: string, currencyCode: string) => void
 }
 
-export function WalletList(props: Props) {
+export function WalletListComponent(props: Props) {
   const dispatch = useDispatch()
   const {
     header,
@@ -75,6 +77,7 @@ export function WalletList(props: Props) {
   } = props
 
   const theme = useTheme()
+  const generateTestHook = useCavy()
   const handlePress = useMemo(
     () =>
       onPress ??
@@ -363,6 +366,9 @@ export function WalletList(props: Props) {
       ListHeaderComponent={header}
       refreshControl={isModal ? undefined : renderRefreshControl()}
       renderItem={renderRow}
+      ref={generateTestHook('WalletList.WalletId')}
     />
   )
 }
+
+export const WalletList = wrap(WalletListComponent)
