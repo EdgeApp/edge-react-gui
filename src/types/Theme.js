@@ -270,8 +270,7 @@ export type Theme = {
   fadeDisable: string,
 
   // Images
-  currencyIconBaseUri: string,
-  exchangeLogoBaseUri: string,
+  iconServerBaseUri: string,
 
   paymentTypeLogoApplePay: string,
   paymentTypeLogoAuspost: string,

@@ -284,8 +284,7 @@ export const testLight: Theme = {
   fadeDisable: palette.gray,
 
   // Images
-  currencyIconBaseUri: `${EDGE_CONTENT_SERVER_URI}/currencyIcons`,
-  exchangeLogoBaseUri: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons`,
+  iconServerBaseUri: EDGE_CONTENT_SERVER_URI,
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,
