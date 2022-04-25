@@ -115,6 +115,8 @@ export type Theme = {
   settingsRowBackground: string,
   settingsRowPressed: string,
   settingsRowHeaderBackground: string,
+  settingsRowHeaderFont: string,
+  settingsRowHeaderFontSizeRem: number,
   settingsRowSubHeader: string,
 
   // Text

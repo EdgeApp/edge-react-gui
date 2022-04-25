@@ -299,6 +299,8 @@ exports[`MenuTab should render with loading props 1`] = `
       "secondaryText": "#A4C7DF",
       "settingsRowBackground": "rgba(255, 255, 255, 0)",
       "settingsRowHeaderBackground": "#0D2145",
+      "settingsRowHeaderFont": "Quicksand-Medium",
+      "settingsRowHeaderFontSizeRem": 1,
       "settingsRowPressed": "rgba(255, 255, 255, 0)",
       "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
       "sideMenuBorderColor": "rgba(255, 255, 255, 0)",

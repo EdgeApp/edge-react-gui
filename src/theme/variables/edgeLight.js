@@ -266,6 +266,8 @@ export const edgeLight: Theme = {
   settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.lightGray,
+  settingsRowHeaderFont: palette.QuicksandMedium,
+  settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
