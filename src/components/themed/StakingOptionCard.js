@@ -4,9 +4,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { type RootState } from '../../reducers/RootReducer'
-import { useSelector } from '../../types/reactRedux.js'
-import { getSwapPluginIconUri } from '../../util/CdnUris.js'
+import { type LiquidityPool } from '../../plugins/stake-plugins/types'
+import { getLiquidityPoolIconUri } from '../../util/CdnUris.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { PairIcons } from './PairIcons.js'
@@ -15,28 +14,24 @@ export function StakingOptionCard({
   currencyLogos,
   primaryText,
   secondaryText,
-  swapPluginId
+  liquidityPool
 }: {
   currencyLogos: string[],
   primaryText: string,
   secondaryText: string,
-  swapPluginId?: string
+  liquidityPool?: LiquidityPool
 }): React.Node {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const swapInfo = useSelector((state: RootState) => {
-    if (swapPluginId == null) return null
-    const swapConfig = state.core.account.swapConfig[swapPluginId]
-    return swapConfig ? swapConfig.swapInfo : null
-  })
 
   const renderExchangeProvider = () => {
-    if (swapInfo == null) return
-    const swapProviderIcon = getSwapPluginIconUri(swapInfo.pluginId, theme)
+    if (liquidityPool == null) return null
+    const { pluginId, lpId } = liquidityPool
+    const swapProviderIcon = getLiquidityPoolIconUri(pluginId, lpId, theme)
     return (
       <View style={styles.swapProvider}>
         {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
-        <EdgeText style={styles.swapProviderText}>{swapInfo.displayName}</EdgeText>
+        <EdgeText style={styles.swapProviderText}>{liquidityPool.displayName}</EdgeText>
       </View>
     )
   }
