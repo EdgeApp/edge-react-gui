@@ -126,7 +126,7 @@ export class EdgeProvider extends Bridgeable {
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
-      if (allowedCurrencyCodes.every(code => typeof code === 'object')) {
+      if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
         const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
         return Promise.resolve({
