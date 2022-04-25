@@ -3,10 +3,23 @@ import { makeContract } from './contracts.js'
 import { makeCemeteryPolicy } from './policies/cemeteryPolicy.js'
 import { makeMasonryPolicy } from './policies/masonryPolicy.js'
 import { type StakePolicyInfo, withGeneratedStakePolicyId } from './stakePolicy.js'
+import { type LiquidityPool } from './types'
 
 export type StakePluginInfo = {
   pluginId: string,
   policyInfo: StakePolicyInfo[]
+}
+
+const spookySwapLiquidityPool: LiquidityPool = {
+  pluginId: 'fantom',
+  lpId: 'f491e7b69e4244ad4002bc14e878a34207e38c29',
+  displayName: 'SpookySwap'
+}
+
+const tombSwapLiquidityPool: LiquidityPool = {
+  pluginId: 'fantom',
+  lpId: '6d0176c5ea1e44b08d3dd001b0784ce42f47a3a7',
+  displayName: 'TombSwap'
 }
 
 export const pluginInfo: StakePluginInfo = {
@@ -33,7 +46,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      swapPluginId: 'spookySwap',
+      liquidityPool: spookySwapLiquidityPool,
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -64,7 +77,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      swapPluginId: 'spookySwap',
+      liquidityPool: spookySwapLiquidityPool,
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -95,7 +108,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      swapPluginId: 'TombSwap',
+      liquidityPool: tombSwapLiquidityPool,
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -126,7 +139,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      swapPluginId: 'TombSwap',
+      liquidityPool: tombSwapLiquidityPool,
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({
@@ -157,7 +170,7 @@ export const pluginInfo: StakePluginInfo = {
     },
     {
       stakePolicyId: '',
-      swapPluginId: 'TombSwap',
+      liquidityPool: tombSwapLiquidityPool,
       parentPluginId: 'fantom',
       parentTokenId: 'FTM',
       policy: makeCemeteryPolicy({

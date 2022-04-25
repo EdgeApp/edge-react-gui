@@ -1,6 +1,6 @@
 // @flow
 import { type StakePluginPolicy } from './policies/types'
-import { type AssetId, type InfoServerResponse } from './types'
+import { type AssetId, type InfoServerResponse, type LiquidityPool } from './types'
 import type { StakePolicy } from './types.js'
 
 export type StakePolicyInfo = {|
@@ -8,7 +8,7 @@ export type StakePolicyInfo = {|
   parentPluginId: string,
   parentTokenId: string,
   policy: StakePluginPolicy,
-  swapPluginId?: string,
+  liquidityPool?: LiquidityPool,
   stakeAssets: AssetId[],
   rewardAssets: AssetId[],
   mustClaimRewards: boolean
@@ -24,7 +24,8 @@ const sortAssetIds = (a: AssetId, b: AssetId): number => {
 
 // Generate a unique deterministic ID for the policy
 const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
-  const { swapPluginId = '' } = policyInfo
+  const { liquidityPool } = policyInfo
+  const liquidityPoolPart = liquidityPool ? `${liquidityPool.pluginId}:${liquidityPool.lpId}/` : ''
   const stakePart = policyInfo.stakeAssets
     .sort(sortAssetIds)
     .map(asset => `${asset.pluginId}:${asset.tokenId}`)
@@ -33,7 +34,7 @@ const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
     .sort(sortAssetIds)
     .map(asset => `${asset.pluginId}:${asset.tokenId}`)
     .join('+')
-  return `${swapPluginId}/${stakePart}=${rewardPart}`.toLowerCase()
+  return `${liquidityPoolPart}${stakePart}=${rewardPart}`.toLowerCase()
 }
 
 export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePolicyInfo => {
@@ -50,14 +51,14 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
 export const toStakePolicy =
   (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { swapPluginId, stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
+    const { liquidityPool, stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
     const stakePolicyId = deriveStakePolicyId(policyInfo)
     const apy = infoResponse.policies[stakePolicyId]
 
     return {
       stakePolicyId,
       apy,
-      swapPluginId,
+      liquidityPool,
       stakeAssets,
       rewardAssets,
       mustClaimRewards
