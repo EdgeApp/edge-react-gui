@@ -246,7 +246,7 @@ export function WalletList(props: Props) {
               createTokenType: {
                 currencyCode,
                 currencyName,
-                parentCurrencyCode: currencyInfo.currencyCode
+                pluginId: currencyInfo.pluginId
               }
             })
           }
