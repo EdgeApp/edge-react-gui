@@ -33,7 +33,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "confirmationSliderThumbWidth": 55,
       "confirmationSliderWidth": 295,
       "confirmationThumbDeactivated": "#87939E",
-      "currencyIconBaseUri": "https://content.edge.app/currencyIcons",
       "dangerText": "#E85466",
       "dateModalBackgroundDark": "#0E4B75",
       "dateModalBackgroundLight": "#FFFFFF",
@@ -74,7 +73,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         },
         "textShadowRadius": 0,
       },
-      "exchangeLogoBaseUri": "https://content.edge.app/exchangeIcons",
       "fadeDisable": "#87939E",
       "fioAddressLogo": Object {
         "testUri": "../../../src/assets/images/details_fioAddress.png",
@@ -93,6 +91,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "icon": "#FFFFFF",
       "iconDeactivated": "rgba(255, 255, 255, .75)",
       "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
+      "iconServerBaseUri": "https://content.edge.app",
       "iconTappable": "#66EDA8",
       "inputAccessoryBackground": "#FFFFFF",
       "inputAccessoryText": "#0073D9",

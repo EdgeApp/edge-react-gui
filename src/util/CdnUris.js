@@ -10,7 +10,15 @@ import { removeHexPrefix } from './utils'
  */
 
 export function getSwapPluginIconUri(pluginId: string, theme: Theme) {
-  return `${theme.exchangeLogoBaseUri}/${pluginId}/icon.png`
+  return `${theme.iconServerBaseUri}/exchangeIcons/${pluginId}/icon.png`
+}
+
+/**
+ * Swap Plugin Icons
+ */
+
+export function getLiquidityPoolIconUri(pluginId: string, lpId: string, theme: Theme) {
+  return `${theme.iconServerBaseUri}/liquidityPoolIcons/${pluginId}/${lpId}/icon.png`
 }
 
 /**
@@ -24,8 +32,8 @@ export type CurrencyIcons = {
 export function getCurrencyIconUris(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
   const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
   return {
-    symbolImage: `${edgeLight.currencyIconBaseUri}/${currencyPath}.png`,
-    symbolImageDarkMono: `${edgeDark.currencyIconBaseUri}/${currencyPath}_dark.png`
+    symbolImage: `${edgeLight.iconServerBaseUri}/currencyIcons/${currencyPath}.png`,
+    symbolImageDarkMono: `${edgeDark.iconServerBaseUri}/currencyIcons/${currencyPath}_dark.png`
   }
 }
 
