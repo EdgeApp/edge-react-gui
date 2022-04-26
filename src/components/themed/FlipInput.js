@@ -22,6 +22,7 @@ export type FlipInputFieldInfo = {
   currencyName: string,
   currencySymbol: string, // currency symbol of field
   currencyCode: string, // 3-5 digit currency code
+  pluginId?: string,
 
   // Maximum number of decimals to allow the user to enter. FlipInput will automatically truncate use input to this
   // number of decimals as the user types.
@@ -522,7 +523,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <>
         <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
-          <CurrencyIcon currencyCode={primaryInfo.currencyCode} marginRem={[0, 1, 0, 0]} sizeRem={1.5} />
+          <CurrencyIcon pluginId={primaryInfo.pluginId} currencyCode={primaryInfo.currencyCode} marginRem={[0, 1, 0, 0]} sizeRem={1.5} />
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
         <View style={styles.clipboardContainer}>

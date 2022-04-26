@@ -97,6 +97,7 @@ function propsToState(props: Props): State {
     currencyName: props.primaryCurrencyInfo.displayDenomination.name,
     currencySymbol: props.primaryCurrencyInfo.displayDenomination.symbol ? props.primaryCurrencyInfo.displayDenomination.symbol : '',
     currencyCode: props.primaryCurrencyInfo.displayCurrencyCode,
+    pluginId: props.primaryCurrencyInfo.pluginId,
     maxEntryDecimals: primaryEntryPrecision,
     maxConversionDecimals: primaryConversionPrecision
   }

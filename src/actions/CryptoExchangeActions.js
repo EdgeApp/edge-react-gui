@@ -371,12 +371,13 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction: 'from' | 'to') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.core.account.currencyWallets[walletId]
-  const { currencyCode: chainCc } = wallet.currencyInfo
+  const { currencyCode: chainCc, pluginId } = wallet.currencyInfo
   const cc = currencyCode || chainCc
   const balanceMessage = await getBalanceMessage(state, walletId, cc)
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
   const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
   const primaryInfo: GuiCurrencyInfo = {
+    pluginId,
     displayCurrencyCode: cc,
     exchangeCurrencyCode: cc,
     displayDenomination: primaryDisplayDenomination,
