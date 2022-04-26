@@ -55,9 +55,9 @@ export const createAndSelectToken =
       const addToken = async () => {
         if (wallet == null) throw new Error(s.strings.create_wallet_failed_message)
         const enabledTokens = (await wallet.getEnabledTokens()) ?? []
-        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.pluginId)
+        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.currencyCode)
         await setEnabledTokens(wallet, [...tokens, currencyCode], [])
-        return [...enabledTokens, currencyCode]
+        return [...tokens, currencyCode]
       }
 
       const enabledTokens = await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, addToken())
