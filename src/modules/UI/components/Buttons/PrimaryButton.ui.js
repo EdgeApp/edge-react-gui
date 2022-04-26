@@ -30,7 +30,7 @@ export class PrimaryButton extends React.Component<Props> {
   render() {
     const { children, style, ...props } = this.props
     return (
-      <TouchableHighlight underlayColor={rawStyles.primaryButtonUnderlay.color} style={[styles.button, styles.primaryButton[0], style]} {...props}>
+      <TouchableHighlight underlayColor={rawStyles.primaryButtonUnderlay.color} style={[styles.button, styles.primaryButton, style]} {...props}>
         <View>{children}</View>
       </TouchableHighlight>
     )
