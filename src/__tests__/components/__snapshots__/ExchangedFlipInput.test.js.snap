@@ -18,6 +18,7 @@ exports[`ExchangedFlipInput should render with loading props 1`] = `
       "currencySymbol": "₿",
       "maxConversionDecimals": 0,
       "maxEntryDecimals": 10,
+      "pluginId": undefined,
     }
   }
   secondaryInfo={
