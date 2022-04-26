@@ -125,7 +125,7 @@ export type CreateWalletType = {
 export type CreateTokenType = {
   currencyCode: string,
   currencyName: string,
-  parentCurrencyCode: string
+  pluginId: string
 }
 
 export type CustomNodeSetting = {
