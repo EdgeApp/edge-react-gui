@@ -47,7 +47,7 @@ export const createAndSelectToken =
       if (wallet == null) {
         const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
         if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await createWallet(account, { walletType, fiatCurrencyCode: defaultIsoFiat })
+        wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
       }
       // Reassign walletId just in case we created a new wallet
       walletId = wallet.id

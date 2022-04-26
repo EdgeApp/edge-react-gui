@@ -146,7 +146,7 @@ export const getSpecialCurrencyInfo = (input: string): SpecialCurrencyInfo => {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
     return {
-      initWalletName: '',
+      initWalletName: s.strings.string_no_name,
       chainCode: '',
       displayBuyCrypto: false
     }
