@@ -74,7 +74,7 @@ export async function getBackgroundImage(disklet: Disklet, imageServer?: string 
   }
   // Always return existing local file but query and download new remote file in the background
   downloadFile(disklet, backgroundImageUrl, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
-    console.warn(`Error downloading ${BACKGROUND_IMAGE_LOCAL_URI}`)
+    console.warn(`Error downloading from background image server ${backgroundImageUrl} to ${BACKGROUND_IMAGE_LOCAL_URI}`)
   })
   return image
 }
