@@ -45,7 +45,7 @@ export const createAndSelectToken =
       let wallet = walletId != null ? currencyWallets[walletId] : null
       // If no parent chain wallet exists, create it
       if (wallet == null) {
-        const { walletType } = getCreateWalletType(account, currencyCode) ?? {}
+        const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
         if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
         wallet = await createWallet(account, { walletType, fiatCurrencyCode: defaultIsoFiat })
       }
