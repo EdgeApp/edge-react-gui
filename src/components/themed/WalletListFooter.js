@@ -10,15 +10,10 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import { type GuiWallet } from '../../types/types.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-
-type StateProps = {
-  wallets: { [walletId: string]: GuiWallet }
-}
 
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
@@ -31,7 +26,7 @@ const TokenSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   })
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
-export class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps> {
+export class WalletListFooterComponent extends React.PureComponent<ThemeProps & DispatchProps> {
   renderAddButton = (title: string, onPress: () => void) => {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -125,10 +120,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListFooter = connect<StateProps, DispatchProps, {}>(
-  state => ({
-    wallets: state.ui.wallets.byId
-  }),
+export const WalletListFooter = connect<{}, DispatchProps, {}>(
+  state => ({}),
   dispatch => ({
     onSelectWallet(walletId: string, currencyCode: string) {
       dispatch(selectWalletFromModal(walletId, currencyCode))

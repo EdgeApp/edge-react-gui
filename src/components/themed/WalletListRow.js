@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
+// import { useWhyDidYouUpdate } from '../../hooks/useWhyDidYouUpdate.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo } from '../../types/reactHooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -26,6 +27,7 @@ type Props = {
 }
 
 export const WalletListRowComponent = (props: Props) => {
+  // useWhyDidYouUpdate('WalletListRowComponent', props)
   const { currencyCode, children, pluginId, tokenId, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
   const theme = useTheme()
   const styles = getStyles(theme)

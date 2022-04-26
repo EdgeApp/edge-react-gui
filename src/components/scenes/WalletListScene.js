@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
 import s from '../../locales/strings.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useCallback, useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
@@ -41,7 +41,7 @@ export function WalletListScene(props: Props) {
   useEffect(() => account.watch('currencyWallets', setCurrencyWallets), [account])
   const loading = Object.keys(currencyWallets).length <= 0
 
-  async function handleTutorialModal() {
+  const handleTutorialModal = useCallback(async () => {
     const userTutorialList = await getWalletListSlideTutorial(disklet)
     const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
@@ -51,15 +51,15 @@ export function WalletListScene(props: Props) {
       userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
       await setUserTutorialList(userTutorialList, disklet)
     }
-  }
+  }, [disklet])
 
-  function handleSort(): void {
+  const handleSort = useCallback((): void => {
     Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
       .then(sort => {
         if (sort === 'manual') setSorting(true)
       })
       .catch(showError)
-  }
+  }, [])
 
   // Show the tutorial or password reminder on mount:
   useEffect(
@@ -70,6 +70,24 @@ export function WalletListScene(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+
+  const header = useMemo(
+    () => (
+      <WalletListHeader
+        sorting={sorting}
+        searching={searching}
+        searchText={searchText}
+        openSortModal={handleSort}
+        onChangeSearchText={setSearchText}
+        onChangeSearchingState={setSearching}
+      />
+    ),
+    [handleSort, searchText, searching, sorting]
+  )
+
+  const footer = useMemo(() => (searching ? null : <WalletListFooter />), [searching])
+
+  const activateSearch = useCallback(() => setSearching(true), [])
 
   return (
     <SceneWrapper>
@@ -87,20 +105,11 @@ export function WalletListScene(props: Props) {
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
           <WalletList
             key="fullList"
-            header={
-              <WalletListHeader
-                sorting={sorting}
-                searching={searching}
-                searchText={searchText}
-                openSortModal={handleSort}
-                onChangeSearchText={setSearchText}
-                onChangeSearchingState={setSearching}
-              />
-            }
-            footer={searching ? null : <WalletListFooter />}
+            header={header}
+            footer={footer}
             searching={searching}
             searchText={searchText}
-            activateSearch={() => setSearching(true)}
+            activateSearch={activateSearch}
             showSlidingTutorial={showSlidingTutorial}
           />
           <WalletListSortable key="sortList" />

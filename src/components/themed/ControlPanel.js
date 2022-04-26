@@ -24,7 +24,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig.js'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useCallback, useEffect, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
@@ -78,9 +78,9 @@ export function ControlPanel(props: Props) {
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = useState(false)
   const isMultiUsers = usernames.length > 0
-  const handleToggleDropdown = () => {
+  const handleToggleDropdown = useCallback(() => {
     if (isMultiUsers) setIsDropped(!isDropped)
-  }
+  }, [isDropped, isMultiUsers])
   useEffect(() => {
     if (!isDrawerOpen || !isMultiUsers) setIsDropped(false)
   }, [isDrawerOpen, isMultiUsers])

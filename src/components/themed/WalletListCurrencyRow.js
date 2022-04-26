@@ -6,11 +6,11 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText.js'
+// import { useWhyDidYouUpdate } from '../../hooks/useWhyDidYouUpdate.js'
 import { formatNumber, truncateDecimals } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { memo, useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import { type GuiExchangeRates } from '../../types/types.js'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -38,13 +38,6 @@ type Props = {
   walletName?: string
 }
 
-type GetDifferenceParams = {
-  exchangeRate: string,
-  currencyCode: string,
-  exchangeRates: GuiExchangeRates,
-  fiatExchangeRate: string
-}
-
 type GetCryptoAmountParams = {
   balance: string,
   exchangeRate: string,
@@ -52,6 +45,13 @@ type GetCryptoAmountParams = {
   fiatDenomination: EdgeDenomination,
   denomination: EdgeDenomination,
   currencyCode: string
+}
+
+type GetDifferenceParams = {
+  exchangeRate: string,
+  currencyCode: string,
+  yesterdayUsdExchangeRate: string,
+  fiatExchangeRate: string
 }
 
 export const getCryptoAmount = ({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode }: GetCryptoAmountParams) => {
@@ -84,16 +84,15 @@ export const getCryptoAmount = ({ balance, exchangeRate, exchangeDenomination, f
 }
 
 export const getDifference = (getRateParams: GetDifferenceParams) => {
-  const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate = '0' } = getRateParams
+  const { exchangeRate, yesterdayUsdExchangeRate, fiatExchangeRate = '0' } = getRateParams
   // Create the default empty result function
   const result = (value, style = 'neutral') => ({
     differencePercentageString: value != null ? `${value}%` : '',
     differencePercentageStyle: style
   })
   // Yesterdays Exchange Rate
-  const currencyPair = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
-  const yesterdayUsdExchangeRate = toFixed(exchangeRates[currencyPair] ?? '0', 0, 2)
-  const yesterdayExchangeRate = mul(yesterdayUsdExchangeRate, fiatExchangeRate)
+  const fixedYesterdayUsdExchangeRate = toFixed(yesterdayUsdExchangeRate ?? '0', 0, 2)
+  const yesterdayExchangeRate = mul(fixedYesterdayUsdExchangeRate, fiatExchangeRate)
   // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rate
   if (zeroString(yesterdayExchangeRate)) return result()
   // Calculate the percentage difference in rate between yesterday and today
@@ -110,19 +109,28 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
 }
 
 export const WalletListCurrencyRowComponent = (props: Props) => {
+  // useWhyDidYouUpdate('WalletListCurrencyRowComponent', props)
   const { currencyCode, showRate = false, onPress, onLongPress, gradient, walletId, walletName, tokenCode } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
-  const exchangeRates = useSelector(state => state.exchangeRates)
+  const [fiatCurrencyCode, setFiatCurrencyCode] = useState(edgeWallet.fiatCurrencyCode)
+  const isoFiatCurrencyCode = fixFiatCurrencyCode(fiatCurrencyCode)
+  const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
+  const yesterdayUsdRateKey = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
+
+  const rawExchangeRate = useSelector(state => state.exchangeRates[rateKey])
+  const usdExchangeRate = useSelector(state => state.exchangeRates[`iso:USD_${isoFiatCurrencyCode}`])
+  const yesterdayUsdExchangeRate = useSelector(state => state.exchangeRates[yesterdayUsdRateKey])
+
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
 
   // Subscribe to wallet updates
   const { currencyInfo } = edgeWallet
-  const [fiatCurrencyCode, setFiatCurrencyCode] = useState(edgeWallet.fiatCurrencyCode)
-  const [balances, setBalances] = useState(edgeWallet.balances)
+
+  const [balance, setBalance] = useState(edgeWallet.balances[currencyCode] ?? '0')
   const [name, setName] = useState(edgeWallet.name)
 
   useEffect(() => {
@@ -130,19 +138,16 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     if (edgeWallet != null) {
       watchers.push(edgeWallet.watch('fiatCurrencyCode', setFiatCurrencyCode))
       watchers.push(edgeWallet.watch('name', setName))
-      watchers.push(edgeWallet.watch('balances', setBalances))
+      watchers.push(edgeWallet.watch('balances', balances => setBalance(balances[currencyCode] ?? '0')))
     }
     return () => watchers.forEach(cleaner => cleaner())
-  }, [edgeWallet])
+  }, [currencyCode, edgeWallet])
 
   // Crypto Amount And Exchange Rate
-  const balance = balances[currencyCode] ?? '0'
   const denomination = dispatch(getDisplayDenominationFromState(currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyInfo.pluginId, currencyCode))
   const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
-  const isoFiatCurrencyCode = fixFiatCurrencyCode(fiatCurrencyCode)
-  const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
-  const exchangeRate = !zeroString(exchangeRates[rateKey]) ? exchangeRates[rateKey] : '1'
+  const exchangeRate = !zeroString(rawExchangeRate) ? rawExchangeRate : '1'
   const cryptoExchangeMultiplier = exchangeDenomination.multiplier
 
   const nativeCryptoAmount = getCryptoAmount({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode })
@@ -170,8 +175,8 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     const { differencePercentageString, differencePercentageStyle } = getDifference({
       exchangeRate,
       currencyCode,
-      exchangeRates,
-      fiatExchangeRate: isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${isoFiatCurrencyCode}`] : '1'
+      yesterdayUsdExchangeRate,
+      fiatExchangeRate: isoFiatCurrencyCode !== 'iso:USD' ? usdExchangeRate : '1'
     })
     exchangeRateText += ` ${differencePercentageString}`
     exchangeRateType = differencePercentageStyle

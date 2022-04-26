@@ -7,6 +7,7 @@ import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+// import { useWhyDidYouUpdate } from '../../hooks/useWhyDidYouUpdate.js'
 import { memo, useCallback, useEffect, useRef } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
@@ -31,6 +32,7 @@ type Props = {|
  * which can be swiped to reveal or activate various options.
  */
 function WalletListSwipeRowComponent(props: Props) {
+  // useWhyDidYouUpdate('WalletListSwipeRowComponent', props)
   const { currencyCode, openTutorial = false, isToken, walletId } = props
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -14,6 +14,7 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 
+// import { useWhyDidYouUpdate } from '../../hooks/useWhyDidYouUpdate.js'
 import { forwardRef, useImperativeHandle } from '../../types/reactHooks.js'
 
 type Props = {|
@@ -70,6 +71,7 @@ declare export class SwipableRowRef extends React.Component<Props> {
  * A row that can be slid left or right to reveal underlying buttons.
  */
 export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref) => {
+  // useWhyDidYouUpdate('SwipeableRow', props)
   // Tracks the width of the row:
   const width = useSharedValue(0)
   const handleLayout = event => {

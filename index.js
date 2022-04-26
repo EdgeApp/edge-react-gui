@@ -1,5 +1,6 @@
 // @flow
 
+import './wdyr'
 import 'react-native-gesture-handler'
 import './src/app.js'
 
