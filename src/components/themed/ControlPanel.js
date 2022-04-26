@@ -14,7 +14,6 @@ import { deleteLocalAccount } from '../../actions/AccountActions.js'
 import { logoutRequest } from '../../actions/LoginActions.js'
 import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
@@ -241,7 +240,7 @@ export function ControlPanel(props: Props) {
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
-        <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
+        <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
           {isoFiatCurrencyCode === null ? (
