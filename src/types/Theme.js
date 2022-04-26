@@ -86,6 +86,9 @@ export type Theme = {
   // Modal
   modal: string,
   modalCloseIcon: string,
+  modalBorderColor: string,
+  modalBorderWidth: number,
+  modalBorderRadiusRem: number,
 
   sideMenuColor: string,
   sideMenuBorderColor: string,

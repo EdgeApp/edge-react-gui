@@ -100,8 +100,9 @@ export const edgeLight: Theme = {
   modal: palette.lightestGray,
   modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.white,
-  // modalFullGradientRight: palette.white,
+  modalBorderColor: palette.transparent,
+  modalBorderWidth: 0,
+  modalBorderRadiusRem: 1,
 
   sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,

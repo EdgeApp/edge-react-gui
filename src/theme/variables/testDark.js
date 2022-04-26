@@ -108,8 +108,9 @@ export const testDark: Theme = {
   // Modal
   modal: palette.edgeNavy,
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.darkBlue,
-  // modalFullGradientRight: palette.edgeNavy,
+  modalBorderColor: palette.glowPurple,
+  modalBorderWidth: 4,
+  modalBorderRadiusRem: 2,
 
   sideMenuColor: palette.edgeNavy,
   sideMenuBorderColor: palette.glowPurple,
@@ -328,7 +329,7 @@ export const testDark: Theme = {
 
   // Outline Text Input
   outlineTextInputColor: palette.darkPurple3,
-  outlineTextInputTextColor: palette.white,
+  outlineTextInputTextColor: palette.lightPurple,
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.darkPurple1,
   outlineTextInputBorderColorFocused: palette.glowPurple,

@@ -121,7 +121,7 @@
     "qrcode-generator": "^1.4.4",
     "react": "17.0.2",
     "react-native": "^0.67.2",
-    "react-native-airship": "^0.2.8",
+    "react-native-airship": "^0.2.9",
     "react-native-camera": "https://github.com/EdgeApp/react-native-camera.git#edge-fixes",
     "react-native-check-version": "^1.0.5",
     "react-native-confetti-cannon": "^1.5.2",
