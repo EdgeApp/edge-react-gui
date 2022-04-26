@@ -128,6 +128,20 @@ export const testLight: Theme = {
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.25,
+  addButtonFont: palette.QuicksandBold,
+
+  keypadButtonOutline: palette.edgeBlue,
+  keypadButtonOutlineWidth: 1,
+  keypadButton: [palette.transparent, palette.transparent],
+  keypadButtonColorStart: { x: 0, y: 0 },
+  keypadButtonColorEnd: { x: 1, y: 1 },
+  keypadButtonText: palette.edgeBlue,
+  keypadButtonTextShadow: textNoShadow,
+  keypadButtonShadow: themeNoShadow,
+  keypadButtonBorderRadiusRem: 0.25,
+  keypadButtonFontSizeRem: 1,
+  keypadButtonFont: palette.QuicksandMedium,
+
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 1,
   primaryButton: [palette.edgeBlue, palette.edgeBlue],

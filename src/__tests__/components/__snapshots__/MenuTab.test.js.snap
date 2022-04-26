@@ -21,6 +21,7 @@ exports[`MenuTab should render with loading props 1`] = `
   }
   theme={
     Object {
+      "addButtonFont": "Quicksand-Medium",
       "backgroundGradientColors": Array [
         "#0D2145",
         "#0C446A",
@@ -113,6 +114,42 @@ exports[`MenuTab should render with loading props 1`] = `
       "inputAccessoryBackground": "#FFFFFF",
       "inputAccessoryText": "#0073D9",
       "isDark": true,
+      "keypadButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "keypadButtonBorderRadiusRem": 0.25,
+      "keypadButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "keypadButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "keypadButtonFont": "Quicksand-Medium",
+      "keypadButtonFontSizeRem": 1,
+      "keypadButtonOutline": "#66EDA8",
+      "keypadButtonOutlineWidth": 1,
+      "keypadButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "keypadButtonText": "#66EDA8",
+      "keypadButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "lineDivider": "rgba(255, 255, 255, .1)",
       "mediumLineWidth": 2,
       "modal": "#0D2145",
