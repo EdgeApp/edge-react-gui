@@ -18,6 +18,15 @@ type Props = {
   wallet: EdgeCurrencyWallet
 }
 
+// We are "done" once the sync ratio exceeds this value.
+// We want to tolerate floating-point rounding errors,
+// so this is a bit less than 1:
+const DONE_VALUE = 0.999
+
+// We detect a resync if the ratio falls below this value
+// after being "done":
+const RESYNC_VALUE = 0.05
+
 /**
  * Renders the sync progress ratio as part of the `CurrencyIcon` component.
  */
@@ -26,7 +35,7 @@ export const WalletSyncCircle = (props: Props) => {
   const theme = useTheme()
 
   // Subscribe to the sync ratio:
-  const done = useRef(wallet.syncRatio > 0.99)
+  const done = useRef(wallet.syncRatio > DONE_VALUE)
   const opacity = useSharedValue(done.current ? 0 : 1)
   const syncRatio = useSharedValue(wallet.syncRatio)
   useEffect(() => {
@@ -34,12 +43,12 @@ export const WalletSyncCircle = (props: Props) => {
       if (!done.current) {
         // We are not done, so track the ratio:
         syncRatio.value = withTiming(ratio, { duration: 1000 })
-        if (ratio > 0.99) {
+        if (ratio > DONE_VALUE) {
           // We have reached the end, so fade away:
           done.current = true
           opacity.value = withTiming(0, { duration: 2000 })
         }
-      } else if (ratio < 0.05) {
+      } else if (ratio < RESYNC_VALUE) {
         // We were already done, but a resync took place:
         done.current = false
         opacity.value = withTiming(1, { duration: 1000 })
