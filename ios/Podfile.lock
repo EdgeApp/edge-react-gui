@@ -450,6 +450,9 @@ PODS:
     - React
   - react-native-smart-splash-screen (2.3.5):
     - React
+  - react-native-tcp-socket (5.6.1):
+    - CocoaAsyncSocket
+    - React-Core
   - react-native-webview (10.2.3):
     - React
   - react-native-zcash (0.2.1):
@@ -669,9 +672,6 @@ PODS:
     - SwiftNIOFoundationCompat (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
   - SwiftProtobuf (1.19.0)
-  - TcpSockets (4.0.0):
-    - CocoaAsyncSocket
-    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -755,6 +755,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
+  - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -791,7 +792,6 @@ DEPENDENCIES:
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
-  - TcpSockets (from `../node_modules/react-native-tcp`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
   - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`, tag `0.13.0-beta.2`)
 
@@ -936,6 +936,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
     :path: "../node_modules/react-native-smart-splash-screen"
+  react-native-tcp-socket:
+    :path: "../node_modules/react-native-tcp-socket"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   react-native-zcash:
@@ -1008,8 +1010,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
-  TcpSockets:
-    :path: "../node_modules/react-native-tcp"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
   ZcashLightClientKit:
@@ -1101,6 +1101,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
+  react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
   react-native-webview: 0bacc79175bc44869e4c1a015b9bc21df8cf4feb
   react-native-zcash: febe4cb0f4b4953a91eda20c2754658e9931cc84
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
@@ -1154,7 +1155,6 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 1b8290ec775238ccc714ed842d929494df95a2c2
   SwiftNIOTransportServices: 1fbbdb58510af3c53a838a1dbea98f18132dc952
   SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
-  TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZcashLightClientKit: ac11c62951bc8130abbce780705956fb7fb54fd9
