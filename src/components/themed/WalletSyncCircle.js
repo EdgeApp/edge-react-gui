@@ -5,12 +5,15 @@ import * as React from 'react'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
 
-import { useEffect, useMemo } from '../../types/reactHooks.js'
+import { useEffect, useMemo, useRef } from '../../types/reactHooks.js'
 import { useTheme } from '../services/ThemeContext.js'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
+const MIN_RATIO = 0.02
 const BASE_RATIO = 0.05
 const MAX_RATIO = 0.95
+const DONE_RATIO = 0.999
+
 type Props = {
   // The diameter of the inner currency icon:
   size: number,
@@ -24,8 +27,8 @@ export const WalletSyncCircle = (props: Props) => {
   const theme = useTheme()
   const { size = theme.rem(2), edgeWallet } = props
   // Animation shared state
-  const syncRatio = useSharedValue(edgeWallet.syncRatio < 0.05 ? 0.05 : edgeWallet.syncRatio)
-  const isDone = useSharedValue(false)
+  const syncRatio = useSharedValue(edgeWallet.syncRatio < BASE_RATIO ? MIN_RATIO : edgeWallet.syncRatio)
+  const isDone = useRef(false)
   const stroke = useSharedValue(theme.walletProgressIconFill)
 
   // Subscribe to the sync ratio:
@@ -33,27 +36,26 @@ export const WalletSyncCircle = (props: Props) => {
     () =>
       edgeWallet.watch('syncRatio', (ratio: number) => {
         // If already done but needs to resync reset the flags and animations
-        if (isDone.value && ratio < BASE_RATIO) {
-          isDone.value = false
+        if (isDone.current && ratio < BASE_RATIO) {
+          isDone.current = false
           stroke.value = theme.walletProgressIconFill
           syncRatio.value = BASE_RATIO
         }
         // If the wallet hasn't fully synced show progress animation
-        if (!isDone.value) {
-          if (ratio === 1) {
-            isDone.value = true
-            stroke.value = theme.primaryText
+        if (!isDone.current) {
+          if (ratio > DONE_RATIO) {
+            isDone.current = true
+            stroke.value = theme.walletProgressIconDone
           }
           if (ratio < BASE_RATIO) syncRatio.value = withTiming(BASE_RATIO, { duration: 1000 })
-          else if (ratio > MAX_RATIO && ratio < 1) syncRatio.value = withTiming(MAX_RATIO, { duration: 1000 })
+          else if (ratio > MAX_RATIO && ratio < DONE_RATIO) syncRatio.value = withTiming(MAX_RATIO, { duration: 1000 })
           else syncRatio.value = withTiming(ratio, { duration: 1000 })
         }
       }),
-    [edgeWallet, isDone, isDone.value, stroke, syncRatio, theme.primaryText, theme.walletProgressIconFill]
+    [edgeWallet, isDone.current, stroke, syncRatio, theme.walletProgressIconDone, theme.walletProgressIconFill]
   )
 
-  // Calculate the sync circle "Thickness" to make sure it's proportional to the size
-  const strokeWidth = 2 * Math.floor(size / theme.rem(1)) - theme.rem(1 / 16) // Make sure to always end with a round number
+  const strokeWidth = theme.rem(3 / 16)
   // Calculate circle params based on size
   const radius = Math.floor((size + strokeWidth) / 2)
   const circumference = 2 * Math.PI * radius
