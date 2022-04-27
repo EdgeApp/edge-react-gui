@@ -186,6 +186,8 @@ export const testDark: Theme = {
     shadowRadius: 8,
     elevation: 3
   },
+  primaryButtonFontSizeRem: 1.25,
+  primaryButtonFont: palette.QuicksandBold,
 
   secondaryButtonOutline: palette.glowPurple,
   secondaryButtonOutlineWidth: 2,
@@ -195,6 +197,8 @@ export const testDark: Theme = {
   secondaryButtonText: palette.glowPurple,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
+  secondaryButtonFontSizeRem: 1,
+  secondaryButtonFont: palette.QuicksandLight,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -204,6 +208,8 @@ export const testDark: Theme = {
   escapeButtonText: palette.edgeMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
+  escapeButtonFontSizeRem: 1,
+  escapeButtonFont: palette.QuicksandRegular,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,

@@ -92,6 +92,8 @@ exports[`createWalletName should render with loading props 1`] = `
         "x": 0,
         "y": 0,
       },
+      "escapeButtonFont": "Quicksand-Regular",
+      "escapeButtonFontSizeRem": 1,
       "escapeButtonOutline": "rgba(255, 255, 255, 0)",
       "escapeButtonOutlineWidth": 0,
       "escapeButtonShadow": Object {
@@ -255,6 +257,8 @@ exports[`createWalletName should render with loading props 1`] = `
         "x": 0,
         "y": 0,
       },
+      "primaryButtonFont": "Quicksand-Regular",
+      "primaryButtonFontSizeRem": 1,
       "primaryButtonOutline": "rgba(255, 255, 255, 0)",
       "primaryButtonOutlineWidth": 1,
       "primaryButtonShadow": Object {
@@ -296,6 +300,8 @@ exports[`createWalletName should render with loading props 1`] = `
         "x": 0,
         "y": 0,
       },
+      "secondaryButtonFont": "Quicksand-Regular",
+      "secondaryButtonFontSizeRem": 1,
       "secondaryButtonOutline": "#66EDA8",
       "secondaryButtonOutlineWidth": 1,
       "secondaryButtonShadow": Object {

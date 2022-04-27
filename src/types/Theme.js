@@ -160,6 +160,8 @@ export type Theme = {
   primaryButtonText: string,
   primaryButtonTextShadow: TextShadowParams,
   primaryButtonShadow: ThemeShadowParams,
+  primaryButtonFontSizeRem: number,
+  primaryButtonFont: string,
 
   secondaryButtonOutline: string,
   secondaryButtonOutlineWidth: number,
@@ -169,6 +171,8 @@ export type Theme = {
   secondaryButtonText: string,
   secondaryButtonTextShadow: TextShadowParams,
   secondaryButtonShadow: ThemeShadowParams,
+  secondaryButtonFontSizeRem: number,
+  secondaryButtonFont: string,
 
   escapeButtonOutline: string,
   escapeButtonOutlineWidth: number,
@@ -178,6 +182,8 @@ export type Theme = {
   escapeButtonText: string,
   escapeButtonTextShadow: TextShadowParams,
   escapeButtonShadow: ThemeShadowParams,
+  escapeButtonFontSizeRem: number,
+  escapeButtonFont: string,
 
   // Dropdown colors:
   dropdownWarning: string,
