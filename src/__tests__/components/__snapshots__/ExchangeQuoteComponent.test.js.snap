@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ExchangeQuote should render with loading props 1`] = `
-<WithTheme(CardComponent)>
+<WithTheme(CardComponent)
+  marginRem={
+    Array [
+      0,
+      1,
+    ]
+  }
+>
   <WithTheme(CardContentComponent)
     image={
       <Memo(CurrencyIconComponent)

@@ -107,10 +107,11 @@ export class CreateWalletSelectFiatComponent extends React.Component<Props, Stat
 
     return (
       <SelectableRow
-        onPress={() => this.handleSelectFiatType(data.item)}
         icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
-        title={data.item.value}
+        paddingRem={[0, 1]}
         subTitle={s.strings[`currency_label_${data.item.value}`]}
+        title={data.item.value}
+        onPress={() => this.handleSelectFiatType(data.item)}
       />
     )
   }

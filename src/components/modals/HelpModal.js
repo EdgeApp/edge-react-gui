@@ -86,46 +86,46 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
         </View>
 
         <SelectableRow
+          arrowTappable
           icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
-          title={s.strings.help_knowledge_base}
+          marginRem={optionMarginRem}
+          paddingRem={optionPaddingRem}
           subTitle={s.strings.help_knowledge_base_text}
+          title={s.strings.help_knowledge_base}
+          underline
           onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
-          underline
-          arrowTappable
-          marginRem={optionMarginRem}
-          paddingRem={optionPaddingRem}
         />
 
         <SelectableRow
+          arrowTappable
           icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
-          title={s.strings.help_support}
+          marginRem={optionMarginRem}
+          paddingRem={optionPaddingRem}
           subTitle={s.strings.help_support_text}
+          title={s.strings.help_support}
+          underline
           onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
-          underline
-          arrowTappable
-          marginRem={optionMarginRem}
-          paddingRem={optionPaddingRem}
         />
 
         <SelectableRow
+          arrowTappable
           icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
-          title={s.strings.help_call}
-          subTitle={s.strings.help_call_text}
-          onPress={() => Linking.openURL(`tel:${HELP_URIS.call}`)}
-          underline
-          arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
+          subTitle={s.strings.help_call_text}
+          title={s.strings.help_call}
+          underline
+          onPress={() => Linking.openURL(`tel:${HELP_URIS.call}`)}
         />
 
         <SelectableRow
-          icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
-          title={sprintf(s.strings.help_visit_site, config.appName)}
-          subTitle={helpSiteMoreInfoText}
-          onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
           arrowTappable
+          icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
+          subTitle={helpSiteMoreInfoText}
+          title={sprintf(s.strings.help_visit_site, config.appName)}
+          onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
         />
         <View style={styles.footer}>
           <EdgeText style={styles.version}>{versionText}</EdgeText>

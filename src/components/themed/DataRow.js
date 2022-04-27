@@ -3,38 +3,28 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { unpackEdges } from '../../util/edges'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type Props = {
   label: React.Node,
   value: React.Node,
-  // eslint-disable-next-line react/no-unused-prop-types
   marginRem?: number[] | number
 }
 
 export class DataRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { label, value, theme } = this.props
+    const { label, marginRem, value, theme } = this.props
     const styles = getStyles(theme)
 
+    const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+
     return (
-      <View style={[styles.row, marginRem(this.props, theme)]}>
+      <View style={[styles.row, margin]}>
         <View style={styles.label}>{label}</View>
         <View style={styles.value}>{value}</View>
       </View>
     )
-  }
-}
-
-function marginRem(props: Props, theme: Theme) {
-  const marginRem = unpackEdges(props.marginRem || 0)
-
-  return {
-    marginBottom: theme.rem(marginRem.bottom),
-    marginLeft: theme.rem(marginRem.left),
-    marginRight: theme.rem(marginRem.right),
-    marginTop: theme.rem(marginRem.top)
   }
 }
 

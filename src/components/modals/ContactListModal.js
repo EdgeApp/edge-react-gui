@@ -28,7 +28,6 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
     const fullName = familyName ? `${givenName} ${familyName}` : givenName
     return (
       <SelectableRow
-        onPress={() => bridge.resolve({ contactName: fullName, thumbnailPath })}
         icon={
           hasThumbnail && thumbnailPath != null ? (
             <Image style={styles.image} source={{ uri: thumbnailPath }} />
@@ -36,7 +35,9 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
             <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(1.5)} />
           )
         }
+        paddingRem={[0, 1]}
         title={fullName}
+        onPress={() => bridge.resolve({ contactName: fullName, thumbnailPath })}
       />
     )
   }

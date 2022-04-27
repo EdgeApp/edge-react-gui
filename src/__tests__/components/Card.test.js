@@ -14,9 +14,7 @@ describe('Card', () => {
     const props = {
       children: 'string',
       warning: true,
-      // eslint-disable-next-line react/no-unused-prop-types
       marginRem: 11,
-      // eslint-disable-next-line react/no-unused-prop-types
       paddingRem: 11,
       theme: getTheme()
     }
