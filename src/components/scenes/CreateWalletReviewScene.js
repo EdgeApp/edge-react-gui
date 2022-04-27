@@ -12,12 +12,12 @@ import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
 
 type OwnProps = {
   navigation: NavigationProp<'createWalletReview'>,

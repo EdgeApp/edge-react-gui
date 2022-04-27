@@ -8,9 +8,9 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { DECIMAL_PRECISION, getObjectDiff } from '../../util/utils'
+import { FiatText } from '../common/text/FiatText.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { FiatText } from '../themed/FiatText.js'
 
 type Props = {
   primaryInfo: GuiCurrencyInfo,

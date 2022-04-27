@@ -13,13 +13,13 @@ import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
+import { Tile } from '../common/tiles/Tile'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile.js'
 
 type OwnProps = {
   selected: string,

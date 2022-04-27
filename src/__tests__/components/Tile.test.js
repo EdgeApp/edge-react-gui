@@ -4,8 +4,8 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
+import { TileComponent } from '../../components/common/tiles/Tile.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { TileComponent } from '../../components/themed/Tile.js'
 
 describe('Tile', () => {
   it('should render with loading props', () => {

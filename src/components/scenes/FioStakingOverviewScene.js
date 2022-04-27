@@ -19,12 +19,12 @@ import type { RouteProp } from '../../types/routerTypes'
 import { Actions } from '../../types/routerTypes.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { Tile } from '../common/tiles/Tile.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader.js'
-import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
   route: RouteProp<'fioStakingOverview'>

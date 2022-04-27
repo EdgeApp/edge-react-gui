@@ -17,13 +17,13 @@ import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
-import { Tile } from '../themed/Tile'
 
 type StateProps = {
   state: RootState,

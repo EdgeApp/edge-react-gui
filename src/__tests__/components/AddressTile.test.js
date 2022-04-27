@@ -6,8 +6,8 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
+import { AddressTileComponent } from '../../components/common/tiles/AddressTile'
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { AddressTileComponent } from '../../components/themed/AddressTile.js'
 
 describe('AddressTileComponent', () => {
   it('should render with loading props', () => {

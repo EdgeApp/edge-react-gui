@@ -9,13 +9,13 @@ import s from '../../locales/strings.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { Tile } from '../common/tiles/Tile'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
 
 type OwnProps = {
   route: RouteProp<'wcDisconnect'>,

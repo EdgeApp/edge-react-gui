@@ -12,10 +12,10 @@ import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
 type OwnProps = {
   route: RouteProp<'fioSentRequestDetails'>
 }

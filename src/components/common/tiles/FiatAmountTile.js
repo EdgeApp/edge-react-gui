@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react'
 
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText'
-import { FiatText } from './FiatText'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
+import { EdgeText } from '../../themed/EdgeText'
+import { FiatText } from '../text/FiatText'
 import { Tile } from './Tile.js'
 
 type Props = {

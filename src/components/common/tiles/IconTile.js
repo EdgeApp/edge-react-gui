@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
 
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 import { Tile } from './Tile.js'
 
 type Props = {

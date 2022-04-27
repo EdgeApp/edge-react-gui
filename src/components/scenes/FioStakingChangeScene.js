@@ -21,6 +21,7 @@ import type { NavigationProp, RouteProp } from '../../types/routerTypes'
 import type { FioAddress } from '../../types/types'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { Tile } from '../common/tiles/Tile.js'
 import { FlipInputModal } from '../modals/FlipInputModal'
 import { Airship, showToast } from '../services/AirshipInstance'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -28,7 +29,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader.js'
 import { ThemedModal } from '../themed/ThemedModal'
-import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
   route: RouteProp<'fioStakingChange'>,

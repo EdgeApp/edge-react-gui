@@ -10,11 +10,11 @@ import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSu
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles } from '../services/ThemeContext.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
 
 type StateProps = {
   fioPlugin?: EdgeCurrencyConfig,

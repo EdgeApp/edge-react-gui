@@ -11,12 +11,12 @@ import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Radio } from '../themed/ThemedButtons'
-import { Tile } from '../themed/Tile'
 
 type State = {
   acknowledge: boolean,

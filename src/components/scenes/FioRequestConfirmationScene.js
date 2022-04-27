@@ -18,12 +18,12 @@ import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { AddressModal } from '../modals/AddressModal.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Tile } from '../themed/Tile'
 
 type StateProps = {
   exchangeSecondaryToPrimaryRatio: string,

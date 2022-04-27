@@ -14,11 +14,11 @@ import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
+import { Tile } from '../common/tiles/Tile'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { Tile } from '../themed/Tile.js'
 
 type Status = 'confirming' | 'sending' | 'sent'
 

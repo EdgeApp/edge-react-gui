@@ -16,6 +16,7 @@ import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Tile } from '../common/tiles/Tile'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
@@ -26,7 +27,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
 
 type State = {
   selectedWallet: EdgeCurrencyWallet | null,

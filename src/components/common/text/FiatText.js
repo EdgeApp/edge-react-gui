@@ -1,10 +1,10 @@
 // @flow
 import { div } from 'biggystring'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
-import { convertCurrency } from '../../selectors/WalletSelectors.js'
-import { useSelector } from '../../types/reactRedux.js'
-import { DECIMAL_PRECISION, formatFiatString } from '../../util/utils'
+import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { convertCurrency } from '../../../selectors/WalletSelectors'
+import { useSelector } from '../../../types/reactRedux'
+import { DECIMAL_PRECISION, formatFiatString } from '../../../util/utils'
 
 type Props = {
   appendFiatCurrencyCode?: boolean,

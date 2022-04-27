@@ -3,13 +3,13 @@ import { abs, div } from 'biggystring'
 import { type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
-import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
-import { formatNumber, trimEnd } from '../../locales/intl.js'
-import { DECIMAL_PRECISION } from '../../util/utils'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText'
-import { FiatText } from './FiatText'
-import { Tile } from './Tile.js'
+import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../../constants/WalletAndCurrencyConstants.js'
+import { formatNumber, trimEnd } from '../../../locales/intl.js'
+import { DECIMAL_PRECISION } from '../../../util/utils'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
+import { EdgeText } from '../../themed/EdgeText'
+import { FiatText } from '../text/FiatText'
+import { Tile } from './Tile'
 
 type Props = {
   nativeCryptoAmount: string,
