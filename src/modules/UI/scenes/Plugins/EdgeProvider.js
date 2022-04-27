@@ -127,7 +127,10 @@ export class EdgeProvider extends Bridgeable {
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
       if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
-        const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
+        const { pluginId, displayName } = this._state.core.account.currencyWallets[walletId].currencyInfo
+        if (this._plugin.filterPlugins != null && this._plugin.filterPlugins.includes(pluginId)) {
+          throw new Error(sprintf(s.strings.UnsupportedCurrency, `${displayName}-${currencyCode}`, this._plugin.displayName))
+        }
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
         return Promise.resolve({
           pluginId,
