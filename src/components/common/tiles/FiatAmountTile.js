@@ -20,6 +20,7 @@ export const FiatAmountTile = (props: Props) => {
   const styles = getStyles(theme)
   const fiatAmount = (
     <FiatText
+      format="raw"
       nativeCryptoAmount={nativeCryptoAmount}
       cryptoCurrencyCode={cryptoCurrencyCode}
       isoFiatCurrencyCode={isoFiatCurrencyCode}

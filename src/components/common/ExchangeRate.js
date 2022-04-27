@@ -67,6 +67,7 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
       <EdgeText style={style}>
         {primaryText}
         <FiatText
+          format="raw"
           nativeCryptoAmount={primaryInfo.displayDenomination.multiplier}
           cryptoCurrencyCode={primaryInfo.exchangeCurrencyCode}
           isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}

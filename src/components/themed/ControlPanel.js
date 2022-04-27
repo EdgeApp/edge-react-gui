@@ -255,6 +255,7 @@ export function ControlPanel(props: Props) {
                 <TitleText style={styles.text}>
                   {`1 ${currencyDenomName} = `}
                   <FiatText
+                    format="primary"
                     nativeCryptoAmount={currencyDenomMult}
                     cryptoCurrencyCode={selectedCurrencyCode}
                     isoFiatCurrencyCode={isoFiatCurrencyCode}

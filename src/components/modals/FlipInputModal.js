@@ -169,6 +169,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         <EdgeText style={styles.rateBalanceText}>
           {balance}
           <FiatText
+            format="secondary"
             nativeCryptoAmount={balanceCrypto}
             cryptoCurrencyCode={currencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
@@ -221,6 +222,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
           <FiatText
+            format="secondary"
             nativeCryptoAmount={feeNativeAmount}
             cryptoCurrencyCode={feeCurrencyCode}
             isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}

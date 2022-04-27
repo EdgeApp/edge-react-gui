@@ -40,6 +40,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
   const fiatAmount = (
     <FiatText
+      format="secondary"
       nativeCryptoAmount={absCryptoAmount}
       cryptoCurrencyCode={cryptoCurrencyCode}
       isoFiatCurrencyCode={isoFiatCurrencyCode}
