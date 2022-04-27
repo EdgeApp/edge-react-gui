@@ -1,8 +1,6 @@
 // @flow
 
 const strings = {
-  app_name: 'Edge Wallet',
-  app_name_short: 'Edge',
   bitpay_metadata_name: 'BitPay Invoice ID: %s',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
@@ -57,7 +55,8 @@ const strings = {
   azteco_btc_only: 'Please choose a BTC wallet and scan again.',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
+  access_wallet_description:
+    'This application would like to create or access its wallet in your %1$s account.\n\n It will not have access to any other wallets.',
   edge_description_warning:
     'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
@@ -220,7 +219,7 @@ const strings = {
   submit: 'Submit',
   login: 'Login',
   help_build: 'Build',
-  help_modal_title: 'Thanks for using Edge!',
+  help_modal_title_thanks: 'Thanks for using %1$s!',
   help_version: 'Version',
   help_knowledge_base: 'Knowledge Base',
   help_knowledge_base_text: 'Commonly asked questions and FAQ',
@@ -228,10 +227,11 @@ const strings = {
   help_support_text: 'Troubleshooting and technical support',
   help_call: 'Call for Assistance',
   help_call_text: 'Get in touch by phone',
-  help_site: 'Visit the Edge App site',
-  help_site_text: 'More info on Edge and Developer API/SDK',
+  help_visit_site: 'Visit the %1$s site',
+  help_site_more_info_text: 'More info on %1$s',
   loading: 'Loading…',
   validating: 'Validating…',
+  high_fee_warning_confirm_send: 'Confirm Send',
   mining_fee_custom_label_choice: 'Custom',
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
@@ -239,7 +239,7 @@ const strings = {
   request_deprecated_currency_code:
     'Support for %1$s has been deprecated. To continue using this wallet, extract the private keys and import into a %1$s supporting wallet.',
   request_qr_email_title: 'Pay with %1$s:',
-  request_qr_email_subject: 'Edge %s Request',
+  request_email_subject: '%1$s %2$s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',
@@ -258,7 +258,6 @@ const strings = {
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
-  send_scan_edge_login_or_sweep_private_key: 'Edge Login or Sweep Private Key',
   send_scan_edge_login_success_title: 'Edge Login Successful',
   send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
   send_to_title: 'To: %s',
@@ -539,7 +538,8 @@ const strings = {
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
   otp_description: 'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
-  otp_description_2: 'If you download Edge on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
+  otp_description_two:
+    'If you download %1$s on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
   otp_enabled_message: 'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
   otp_disable: 'Disable 2FA',
   otp_enable: 'Enable 2FA',
@@ -588,8 +588,8 @@ const strings = {
   buy_crypto_modal_exchange: 'Exchange',
   exchange_crypto_modal_message: 'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
-  private_key_modal_sweep_from_private_address_message:
-    'This process needs an on-chain transaction from the original wallet to Edge. Mining fees are applied and depend on the network status.',
+  private_key_modal_sweep_from_private_key_message:
+    'This process needs an on-chain transaction from the original wallet to %1$s. Mining fees are applied and depend on the network status.',
   private_key_modal_import: 'Import',
   private_key_modal_cancel: 'Cancel',
   private_key_modal_success: 'Private key successfully swept',
@@ -612,7 +612,7 @@ const strings = {
   unique_identifier_modal_cancel: 'Cancel',
 
   cannot_delete_last_wallet_modal_title: 'Cannot Archive Wallet',
-  cannot_delete_last_wallet_modal_message_part_1: 'Edge requires at least one wallet in this account.',
+  cannot_delete_last_wallet_modal_message_part_1: 'At least one wallet required in this account.',
   cannot_delete_last_wallet_modal_message_part_2: 'If you’d like to archive this wallet, you’ll need to add an additional wallet to this account.',
 
   enter_your_password: 'Enter your password',
@@ -677,7 +677,8 @@ const strings = {
   search_region: 'Search region',
   buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
-  plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
+  plugin_service_provider_disclaimer:
+    'The following services are not provided by %1$s. \n\nFor issues and feedback please contact the respective service providers.',
   plugin_powered_by: 'Powered by',
   no_exchange_rate: 'No Exchange Rate',
   unstake_from_wallet: 'Unstake from %s',
@@ -699,10 +700,10 @@ const strings = {
   fio_address_reg_free: 'Register Free FIO Crypto Handle',
   fio_domain_label: 'FIO Domain',
   fio_domain_free: 'Free',
-  fio_address_wallet_selection_text:
-    'This payment is required by the FIO Protocol and not a requirement of Edge. Each FIO Crypto Handle includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',
+  fio_address_payment_required_text:
+    'This payment is required by the FIO Protocol and not a requirement of %1$s. Each FIO Crypto Handle includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',
   fio_domain_wallet_selection_text:
-    'FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Select a wallet to pay from:',
+    'FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of %1$s. The current annual cost is equivalent to %2$s FIO, but may fluctuate in the future. Select a wallet to pay from:',
   fio_address_list: 'Fio Address List',
   fio_address_register_form_field_label: 'FIO Crypto Handle',
   fio_address_register_placeholder: 'Your Crypto Handle name here',
@@ -832,13 +833,13 @@ const strings = {
   invalid_character_error: 'Invalid input characters',
 
   update_header: 'Update Available',
-  update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
+  update_fresh_new_version: 'A fresh new version of %1$s is now available. Please update to get our hot new features and fixes.',
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
   error_boundary_title: 'Oops!',
   error_boundary_message:
-    "We're sorry but something went wrong. Please kill and restart the app to continue using Edge.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
+    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -870,9 +871,9 @@ const strings = {
 
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
-  contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
-  contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
-  contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
+  contacts_permission_modal_body_1: '%1$s would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
+  contacts_permission_modal_body_2: 'No contact information is shared with %1$s or any other entities. All information is encrypted and only seen by YOU.',
+  contacts_permission_modal_body_3: 'If you deny access, %1$s can still function to buy, sell, trade, and transact cryptocurrency.',
   contacts_permission_modal_enable_settings: 'To use %1$s, please enable your %2$s permission.',
   contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
 
@@ -938,15 +939,15 @@ const strings = {
 
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed To Send Tokens',
-  token_agreement_modal_body:
-    '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within Edge using the Buy or Exchange function.',
+  token_agreement_modal_message:
+    '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Buy or Exchange function.',
 
   // Generic TermsAgreement Modal
   confirm_continue_modal_body: 'Please confirm your understanding below:',
   confirm_continue_modal_button_text: 'I understand and agree to the terms',
 
   // Gateway Warning Modal
-  gateway_agreement_modal_title: '%s Gatway Address Detected',
+  gateway_agreement_modal_title: '%s Gateway Address Detected',
   gateway_agreement_modal_body:
     'This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.',
 

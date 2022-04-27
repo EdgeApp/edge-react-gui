@@ -12,15 +12,6 @@ export const MAX_ADDRESS_CHARACTERS = 17 // for displaying a truncated wallet ad
 export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fractional characters
 export const FIAT_PRECISION = 2
 
-export const EDGE_CONTENT_SERVER = 'https://content.edge.app'
-
-export const CURRENCY_SYMBOL_IMAGES = {
-  BCH: `${EDGE_CONTENT_SERVER}/bitcoincash-logo-solo-64.png`,
-  BTC: `${EDGE_CONTENT_SERVER}/bitcoin-logo-solo-64.png`,
-  ETH: `${EDGE_CONTENT_SERVER}/ethereum-logo-solo-64.png`,
-  ETC: `${EDGE_CONTENT_SERVER}/ethereum-classic-logo-solo-64.png`
-}
-
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
   gasLimit: s.strings.gasLimit,
@@ -155,7 +146,7 @@ export const getSpecialCurrencyInfo = (input: string): SpecialCurrencyInfo => {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
     return {
-      initWalletName: '',
+      initWalletName: s.strings.string_no_name,
       chainCode: '',
       displayBuyCrypto: false
     }

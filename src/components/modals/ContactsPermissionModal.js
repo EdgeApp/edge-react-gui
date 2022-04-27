@@ -3,9 +3,11 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
+import { config } from '../../theme/appConfig'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -16,6 +18,9 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   const { bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const message1 = sprintf(s.strings.contacts_permission_modal_body_1, config.appName)
+  const message2 = sprintf(s.strings.contacts_permission_modal_body_2, config.appName)
+  const message3 = sprintf(s.strings.contacts_permission_modal_body_3, config.appName)
 
   return (
     <ButtonsModal
@@ -34,13 +39,13 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
         <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
       </View>
       <EdgeText numberOfLines={0} style={styles.message}>
-        {s.strings.contacts_permission_modal_text_1}
+        {message1}
       </EdgeText>
       <EdgeText numberOfLines={0} style={styles.message}>
-        {s.strings.contacts_permission_modal_text_2}
+        {message2}
       </EdgeText>
       <EdgeText numberOfLines={0} style={styles.message}>
-        {s.strings.contacts_permission_modal_text_3}
+        {message3}
       </EdgeText>
     </ButtonsModal>
   )

@@ -353,11 +353,15 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   getReceivedCryptoAmount(): FiatCryptoAmountUI {
     const { walletDefaultDenomProps, guiWallet, route } = this.props
     const { edgeTransaction } = route.params
+    const { swapData } = edgeTransaction
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
-    const symbolString = guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString =
+      guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol
+        ? walletDefaultDenomProps.symbol
+        : swapData?.payoutCurrencyCode ?? ''
 
     return {
       amountString: convertedAmount,
@@ -372,7 +376,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const symbolString = guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
+    const symbolString =
+      guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : edgeTransaction.currencyCode
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
 
     if (edgeTransaction.networkFee) {
@@ -582,7 +587,7 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
       swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
     }
 
-    const currencyWallet = state.core.account.currencyWallets[walletId || state.ui.wallets.selectedWalletId]
+    const currencyWallet = state.core.account.currencyWallets[swapData?.payoutWalletId || state.ui.wallets.selectedWalletId]
     const destinationDenomination = swapData ? getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, swapData.payoutCurrencyCode) : undefined
     const destinationWallet = swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined
 

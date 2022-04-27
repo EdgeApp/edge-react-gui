@@ -5,30 +5,40 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 // Stake Policy
 // -----------------------------------------------------------------------------
 
+export type AssetId = {
+  pluginId: string,
+  tokenId: string
+}
+
+export type LpUid = {
+  pluginId: string,
+  lpId: string
+}
+
+export type LiquidityPool = LpUid & {
+  displayName: string
+}
+
 // Not sure if this is going be enough because how "LP-staking" works;
 // Need to figure out how we deal with LP pool asset-ratios.
-export type StakePolicy = {
+export type StakePolicy = {|
   // Perhaps we need a UUID for each policy?
   stakePolicyId: string,
 
   // A percentage number representing the yield per year
   apy: number,
 
+  liquidityPool?: LiquidityPool,
+
   // The assets which must be staked
-  stakeAssets: Array<{
-    pluginId: string,
-    tokenId: string
-  }>,
+  stakeAssets: AssetId[],
 
   // The assets which can be earned
-  rewardAssets: Array<{
-    pluginId: string,
-    tokenId: string
-  }>,
+  rewardAssets: AssetId[],
 
   // Whether claim action is required to obtain reward
   mustClaimRewards: boolean
-}
+|}
 
 // -----------------------------------------------------------------------------
 // Change Quote

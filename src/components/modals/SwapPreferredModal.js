@@ -2,12 +2,13 @@
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
+import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -44,7 +45,7 @@ export function SwapPreferredModal(props: Props) {
       pluginId != null
         ? {
             text: exchanges[pluginId].swapInfo.displayName,
-            icon: <Image resizeMode="contain" style={styles.icon} source={getSwapPluginIcon(pluginId)} />
+            icon: <FastImage resizeMode="contain" style={styles.icon} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} />
           }
         : {
             text: s.strings.swap_preferred_cheapest,

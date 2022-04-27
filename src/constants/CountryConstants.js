@@ -1,9 +1,7 @@
 // @flow
 
 import { type CountryData } from '../types/types.js'
-import { EDGE_CONTENT_SERVER } from './WalletAndCurrencyConstants.js'
-
-export const FLAG_LOGO_URL = `${EDGE_CONTENT_SERVER}/country-logos`
+import { FLAG_LOGO_URL } from './CdnConstants'
 
 export const COUNTRY_CODES: CountryData[] = [
   { name: 'Afghanistan', 'alpha-2': 'AF', fiat: '' },

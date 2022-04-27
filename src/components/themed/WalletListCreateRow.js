@@ -24,16 +24,17 @@ export type WalletListCreateRowProps = {
   currencyCode: string,
   currencyName: string,
   walletType?: string,
-  parentCurrencyCode?: string
+  pluginId?: string
 }
 
 export const createAndSelectToken =
-  ({ currencyCode, parentCurrencyCode }: { currencyCode: string, parentCurrencyCode: string }) =>
+  ({ currencyCode, pluginId }: { currencyCode: string, pluginId: string }) =>
   async (dispatch: Dispatch, getState: GetState): Promise<string> => {
     const state = getState()
     const { account, disklet } = state.core
     // const { wallets } = state.ui.wallets.byId
     const { defaultIsoFiat } = state.ui.settings
+    const parentCurrencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
     try {
       // Show the user the token terms modal only once
@@ -44,9 +45,9 @@ export const createAndSelectToken =
       let wallet = walletId != null ? currencyWallets[walletId] : null
       // If no parent chain wallet exists, create it
       if (wallet == null) {
-        const { walletType } = getCreateWalletType(account, currencyCode) ?? {}
+        const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
         if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await createWallet(account, { walletType, fiatCurrencyCode: defaultIsoFiat })
+        wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
       }
       // Reassign walletId just in case we created a new wallet
       walletId = wallet.id
@@ -54,9 +55,9 @@ export const createAndSelectToken =
       const addToken = async () => {
         if (wallet == null) throw new Error(s.strings.create_wallet_failed_message)
         const enabledTokens = (await wallet.getEnabledTokens()) ?? []
-        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.pluginId)
+        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.currencyCode)
         await setEnabledTokens(wallet, [...tokens, currencyCode], [])
-        return [...enabledTokens, currencyCode]
+        return [...tokens, currencyCode]
       }
 
       const enabledTokens = await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, addToken())
@@ -96,16 +97,16 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { currencyCode = '', currencyName = '', walletType, parentCurrencyCode, onPress } = props
+  const { currencyCode = '', currencyName = '', walletType, pluginId, onPress } = props
 
   const handlePress = useCallback(() => {
     const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
-    } else if (parentCurrencyCode != null) {
-      dispatch(createAndSelectToken({ currencyCode, parentCurrencyCode })).then(handleRes)
+    } else if (pluginId != null) {
+      dispatch(createAndSelectToken({ currencyCode, pluginId })).then(handleRes)
     }
-  }, [walletType, parentCurrencyCode, onPress, currencyCode, dispatch])
+  }, [walletType, pluginId, onPress, currencyCode, dispatch])
 
   const children = useMemo(
     () => (
@@ -117,7 +118,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   )
 
   return (
-    <WalletListRow currencyCode={currencyCode} onPress={handlePress} walletName={currencyName}>
+    <WalletListRow currencyCode={currencyCode} pluginId={pluginId} onPress={handlePress} walletName={currencyName}>
       {children}
     </WalletListRow>
   )

@@ -7,18 +7,21 @@ import * as React from 'react'
 import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { sprintf } from 'sprintf-js'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
+import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
+import { COUNTRY_CODES } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
-import { EDGE_CONTENT_SERVER } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
+import { config } from '../../theme/appConfig.js'
 import { type GuiPluginRow, asGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
+import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -107,6 +110,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    */
   async checkDisclaimer() {
     const { account } = this.props
+    const message = sprintf(s.strings.plugin_service_provider_disclaimer, config.appName)
     try {
       const text = await account.disklet.getText(MODAL_DATA_FILE)
       const json = JSON.parse(text)
@@ -114,9 +118,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       if (timesPluginWarningModalViewed < 3) {
         const newNumber = timesPluginWarningModalViewed + 1
         if (newNumber === 3) {
-          await Airship.show(bridge => (
-            <ButtonsModal bridge={bridge} message={s.strings.plugin_provider_disclaimer} buttons={{ ok: { label: s.strings.string_ok_cap } }} />
-          ))
+          await Airship.show(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
         }
         const newText = JSON.stringify({
           viewed: newNumber
@@ -129,9 +131,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
       const text = JSON.stringify(json)
       await account.disklet.setText(MODAL_DATA_FILE, text)
-      await Airship.show(bridge => (
-        <ButtonsModal bridge={bridge} message={s.strings.plugin_provider_disclaimer} buttons={{ ok: { label: s.strings.string_ok_cap } }} />
-      ))
+      await Airship.show(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
     }
   }
 
@@ -218,7 +218,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
-    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: `${EDGE_CONTENT_SERVER}/${item.partnerIconPath}` }
+    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
 
     return (
       <View style={styles.pluginRowContainer}>

@@ -13,6 +13,7 @@ import {
 } from 'edge-core-js/types'
 
 import { type RootState } from './reduxTypes.js'
+import { type Theme } from './Theme.js'
 
 export type GuiWallet = {
   id: string,
@@ -45,6 +46,7 @@ export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
 
 export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
+  pluginId?: string,
   displayCurrencyCode: string,
   exchangeCurrencyCode: string,
   displayDenomination: GuiDenomination,
@@ -124,7 +126,7 @@ export type CreateWalletType = {
 export type CreateTokenType = {
   currencyCode: string,
   currencyName: string,
-  parentCurrencyCode: string
+  pluginId: string
 }
 
 export type CustomNodeSetting = {
@@ -359,4 +361,27 @@ export type wcGetConnection = {
   token?: string,
   uri: string,
   timeConnected: number
+}
+
+export type AppConfig = {
+  configName: string,
+  appName: string,
+  appNameShort: string,
+  darkTheme: Theme,
+  lightTheme: Theme,
+  supportsEdgeLogin: boolean,
+  knowledgeBase: string,
+  supportSite: string,
+  phoneNumber: string,
+  website: string,
+  appStore: string
+}
+
+export type EdgeTokenId = {
+  pluginId: string,
+  tokenId?: string
+}
+
+export type EdgeTokenIdExtended = EdgeTokenId & {
+  currencyCode?: string
 }

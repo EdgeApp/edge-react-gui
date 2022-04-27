@@ -79,7 +79,7 @@ export const StakeOptionsScene = (props: Props) => {
   // Renders
   //
 
-  const renderOptions = ({ item }) => {
+  const renderOptions = ({ item }: { item: StakePolicy }) => {
     const primaryText = getPolicyAssetName(item, 'stakeAssets')
     const secondaryText = getPolicyTitleName(item)
     const key = [primaryText, secondaryText].join()
@@ -87,7 +87,12 @@ export const StakeOptionsScene = (props: Props) => {
     return (
       <View key={key} style={styles.optionContainer}>
         <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>
-          <StakingOptionCard currencyLogos={policyIcons.stakeAssetUris} primaryText={primaryText} secondaryText={secondaryText} />
+          <StakingOptionCard
+            currencyLogos={policyIcons.stakeAssetUris}
+            primaryText={primaryText}
+            secondaryText={secondaryText}
+            liquidityPool={item.liquidityPool}
+          />
         </TouchableOpacity>
       </View>
     )

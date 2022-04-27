@@ -5,7 +5,7 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { CurrencySettingsComponent } from '../components/scenes/CurrencySettingsScene.js'
-import { edgeDark } from '../theme/variables/edgeDark.js'
+import { config } from '../theme/appConfig.js'
 
 describe('CurrencySettings', () => {
   it('should render', () => {
@@ -38,7 +38,7 @@ describe('CurrencySettings', () => {
         route={route}
         selectDenomination={jest.fn()}
         selectedDenominationMultiplier="100"
-        theme={edgeDark}
+        theme={config.darkTheme}
       />
     )
 

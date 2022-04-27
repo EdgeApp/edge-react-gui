@@ -65,7 +65,7 @@ const palette = {
   QuicksandBold: 'Quicksand-Bold'
 }
 
-export const edgeLight: Theme = {
+export const testLight: Theme = {
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },

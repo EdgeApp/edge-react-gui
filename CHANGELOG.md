@@ -1,5 +1,31 @@
 # edge-react-gui
 
+## 2.14.0 (2022-04-26)
+
+- Add Tomb Swap
+- Add yield farming on Tomb Finance
+- Simplex: Add support for additional blockchains and tokens
+- Add MAI token (Fantom)
+- Add ability to show/hide password in text fields
+- Change high fee modal layout
+- Move exchange partner icons to CDN
+- Allow easier theming
+- Fix crash when checking if localized amount is equal to zero
+- FIx security vault GIF
+- Fix parent token icon overlay on flipinput
+- Fix for race condition that resulted in setting the local token file multiple times with and and then without tokens
+- Fix denominations and currency code issue in exchange details of transactions details modal
+- Use the default wallet name when creating a wallet from create wallet row
+- Various visual fixes
+- Upgrade edge-currency-accountbased to v0.15.6
+  - Add MAI token (miMATIC) to FTM (Fantom)
+- Upgrade edge-currency-bitcoin v4.9.21
+  - Round up fees for segwit transactions
+- Upgrade edge-exchange-plugins to v0.13.0
+  - Add new swap partner TombSwap
+  - Add new swap partner LetsExchange
+  - Coingecko: Add miMATIC (MAI)
+
 ## 2.13.1 (2022-04-15)
 
 - Disabled SpookySwap

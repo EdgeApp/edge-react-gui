@@ -3,16 +3,6 @@
 import { Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
-import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
-import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
-import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
-import exolixLogo from '../../assets/images/exchange/settingsExchangeExolix.png'
-import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
-import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
-import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
-import spookySwapLogo from '../../assets/images/exchange/settingsExchangeSpookySwap.png'
-import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
-import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
@@ -33,7 +23,8 @@ import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeL
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
-import { type Theme } from '../../types/Theme.js'
+import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
+import { type Theme, textNoShadow, themeNoShadow } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 import { PLATFORM } from './platform'
 
@@ -138,29 +129,33 @@ export const edgeDark: Theme = {
 
   // Buttons
   // Should add palette when pressed
+  buttonBorderRadiusRem: 0.25,
   primaryButtonOutline: palette.transparent,
-  primaryButton: palette.edgeMint,
+  primaryButtonOutlineWidth: 1,
+  primaryButton: [palette.edgeMint, palette.edgeMint],
+  primaryButtonColorStart: { x: 0, y: 0 },
+  primaryButtonColorEnd: { x: 1, y: 0 },
   primaryButtonText: palette.edgeBlue,
-  // primaryButtonDeactivated: palette.gray,
+  primaryButtonTextShadow: textNoShadow,
+  primaryButtonShadow: themeNoShadow,
 
   secondaryButtonOutline: palette.edgeMint,
-  secondaryButton: palette.transparent,
+  secondaryButtonOutlineWidth: 1,
+  secondaryButton: [palette.transparent, palette.transparent],
+  secondaryButtonColorStart: { x: 0, y: 0 },
+  secondaryButtonColorEnd: { x: 1, y: 1 },
   secondaryButtonText: palette.edgeMint,
+  secondaryButtonTextShadow: textNoShadow,
+  secondaryButtonShadow: themeNoShadow,
 
-  // tertiaryButtonOutline: palette.edgeMint,
-  // tertiaryButton: palette.transparent,
-  // tertiaryButtonText: palette.edgeMint,
-
-  // glassButton: palette.whiteOp10,
-  // glassButtonIcon: palette.white,
-  // glassButtonDark: palette.blackOp50,
-  // glassButtonDarkIcon: palette.white,
-
-  // dangerButtonOutline: palette.transparent,
-  // dangerButton: palette.white,
-  // dangerButtonText: palette.accentRed,
-
-  buttonBoxShadow: palette.black,
+  escapeButtonOutline: palette.transparent,
+  escapeButtonOutlineWidth: 0,
+  escapeButton: [palette.transparent, palette.transparent],
+  escapeButtonColorStart: { x: 0, y: 0 },
+  escapeButtonColorEnd: { x: 1, y: 1 },
+  escapeButtonText: palette.edgeMint,
+  escapeButtonTextShadow: textNoShadow,
+  escapeButtonShadow: themeNoShadow,
 
   // Card
   // cardBackground: palette.edgeBlue,
@@ -269,20 +264,16 @@ export const edgeDark: Theme = {
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
 
+  // Outline Text Input
+  outlineTextInputColor: palette.transparent,
+  outlineTextInputTextColor: palette.white,
+  outlineTextInputBorderWidth: 1,
+
   // Animation
   fadeDisable: palette.gray,
 
   // Images
-  settingsChangellyLogo: changellyLogo,
-  settingsChangenowLogo: changenowLogo,
-  settingsDefaultLogo: defaultLogo,
-  settingsFoxExchangeLogo: foxExchangeLogo,
-  settingsGodexLogo: godexLogo,
-  settingsSideshiftLogo: sideshiftLogo,
-  settingsSpookySwapLogo: spookySwapLogo,
-  settingsSwitchainLogo: switchainLogo,
-  settingsTotleLogo: totleLogo,
-  settingsExolixLogo: exolixLogo,
+  iconServerBaseUri: EDGE_CONTENT_SERVER_URI,
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,

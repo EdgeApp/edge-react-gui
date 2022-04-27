@@ -68,7 +68,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: hostedUri + 'co.edgesecure.wyre/index.html',
     lockUriPath: true,
     displayName: 'Wyre',
-    permissions: ['camera']
+    permissions: ['camera'],
+    filterPlugins: ['polygon', 'fantom', 'rsk', 'ethereumclassic', 'celo', 'binancesmartchain', 'avalanche']
     // supportEmail: 'support@sendwyre.com'
   },
   bity: {

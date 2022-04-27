@@ -1,17 +1,25 @@
 // @flow
 
 import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
+import { asArray, asEither, asMaybe, asObject, asOptional, asString } from 'cleaners'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getSpecialCurrencyInfo,
+  getSymbolFromCurrency
+} from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo, GuiDenomination, TransactionListTx } from '../types/types.js'
+import type { CustomTokenInfo, EdgeTokenIdExtended, GuiDenomination, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
@@ -540,13 +548,35 @@ export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: strin
   return checkToken || checkParent
 }
 
-export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
-  return !!currencyCodesArray.find(item => checkCurrencyCodes(item, currencyCode))
+const asEdgeTokenIdExtended = asObject({
+  pluginId: asString,
+  tokenId: asOptional(asString),
+  currencyCode: asOptional(asString)
+})
+
+const asCurrencyCodesArray = asMaybe(asArray(asEither(asString, asEdgeTokenIdExtended)), [])
+
+export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[]): boolean {
+  const cleanedArray = asCurrencyCodesArray(currencyCodesArray)
+  return !!cleanedArray.find(item => {
+    if (typeof item === 'string') {
+      return checkCurrencyCodes(item, currencyCode)
+    } else if (typeof item === 'object') {
+      const { chainCode } = getSpecialCurrencyInfo(item.pluginId)
+      return checkCurrencyCodes(`${chainCode}-${item.currencyCode ?? ''}`, currencyCode)
+    }
+    return undefined
+  })
 }
 
 export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string }
 
-export function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedCurrencyCodes?: string[], excludeCurrencyCodes?: string[]): boolean {
+export function checkFilterWallet(
+  details: FilterDetailsType,
+  filterText: string,
+  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
+  excludeCurrencyCodes?: string[]
+): boolean {
   const currencyCode = details.currencyCode.toLowerCase()
 
   if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {

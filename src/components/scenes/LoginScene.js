@@ -14,6 +14,7 @@ import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import { type ThemeProps, withTheme } from '../../components/services/ThemeContext.js'
 import s from '../../locales/strings.js'
+import { config } from '../../theme/appConfig.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLinkTypes.js'
 import { connect } from '../../types/reactRedux.js'
@@ -135,7 +136,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
           onLogin={this.onLogin}
           fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceMedium }}
           key={String(counter)}
-          appName={s.strings.app_name_short}
+          appName={config.appNameShort}
           backgroundImage={backgroundImage}
           primaryLogo={edgeLogo}
           primaryLogoCallback={handleSendLogs}

@@ -7,7 +7,7 @@ import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
 import { makeStakePlugin } from '../plugins/stake-plugins'
 import { type PositionAllocation, type StakePolicy, type StakePosition } from '../plugins/stake-plugins/types'
-import { getCurrencyIcon } from './CurrencyInfoHelpers'
+import { getCurrencyIconUris } from './CdnUris'
 
 // TODO: Get the plugin instance from the core context when the plugin is loaded into the core
 export const stakePlugin = makeStakePlugin()
@@ -70,10 +70,10 @@ export const getPolicyIconUris = (currencyWallet: EdgeCurrencyWallet, stakePolic
   )
 
   const stakeAssetUris = stakeContractAddresses.map(
-    stakeContractAddress => getCurrencyIcon(currencyWallet.currencyInfo.pluginId, stakeContractAddress).symbolImage
+    stakeContractAddress => getCurrencyIconUris(currencyWallet.currencyInfo.pluginId, stakeContractAddress).symbolImage
   )
   const rewardAssetUris = rewardContractAddresses.map(
-    rewardContractAddress => getCurrencyIcon(currencyWallet.currencyInfo.pluginId, rewardContractAddress).symbolImage
+    rewardContractAddress => getCurrencyIconUris(currencyWallet.currencyInfo.pluginId, rewardContractAddress).symbolImage
   )
 
   return { stakeAssetUris, rewardAssetUris }

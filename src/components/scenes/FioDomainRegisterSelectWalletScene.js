@@ -11,6 +11,7 @@ import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
@@ -103,7 +104,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   selectWallet = async () => {
     const { supportedCurrencies } = this.state
 
-    const allowedCurrencyCodes = []
+    const allowedCurrencyCodes: string[] = []
     for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         allowedCurrencyCodes.push(currency)
@@ -189,7 +190,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const { fioDomain } = route.params
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
     const styles = getStyles(theme)
-    const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, loading ? '-' : activationCost)
+    const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, config.appName, loading ? '-' : activationCost)
     const paymentWalletBody =
       paymentWallet && paymentWallet.id ? `${wallets[paymentWallet.id].name} (${wallets[paymentWallet.id].currencyCode})` : s.strings.choose_your_wallet
 

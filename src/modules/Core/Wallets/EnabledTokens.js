@@ -11,7 +11,7 @@ export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Prom
     return tokens
   } catch (e) {
     console.log(e)
-    return setEnabledTokens(wallet, [])
+    return []
   }
 }
 
