@@ -318,6 +318,8 @@ export type Theme = {
   outlineTextInputBorderWidth: number,
   outlineTextInputBorderColor: string,
   outlineTextInputBorderColorFocused: string,
+  outlineTextInputLabelColor: string,
+  outlineTextInputLabelColorFocused: string,
 
   // Animation
   fadeDisable: string,

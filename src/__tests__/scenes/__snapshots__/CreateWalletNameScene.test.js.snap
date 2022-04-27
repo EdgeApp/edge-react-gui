@@ -189,6 +189,8 @@ exports[`createWalletName should render with loading props 1`] = `
       "outlineTextInputBorderColorFocused": "#66EDA8",
       "outlineTextInputBorderWidth": 1,
       "outlineTextInputColor": "rgba(255, 255, 255, 0)",
+      "outlineTextInputLabelColor": "#A4C7DF",
+      "outlineTextInputLabelColorFocused": "#66EDA8",
       "outlineTextInputTextColor": "#FFFFFF",
       "paymentTypeLogoApplePay": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",

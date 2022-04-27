@@ -203,6 +203,14 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
     },
     [theme]
   )
+  const getLabelColor = useCallback<(errorValue: number, focusValue: number) => string>(
+    (errorValue, focusValue) => {
+      'worklet'
+      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused])
+      return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
+    },
+    [theme]
+  )
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
@@ -226,7 +234,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
-      color: getBorderColor(errorAnimation.value, focusAnimation.value),
+      color: getLabelColor(errorAnimation.value, focusAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
         { translateY: labelProgressAlt * labelTranslateY },
