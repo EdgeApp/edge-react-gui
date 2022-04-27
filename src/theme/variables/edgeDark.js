@@ -232,6 +232,7 @@ export const edgeDark: Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
+  walletProgressIconDone: palette.white,
 
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
