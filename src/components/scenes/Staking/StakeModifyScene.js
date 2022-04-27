@@ -86,7 +86,7 @@ export const StakeModifyScene = (props: Props) => {
 
     // Initialize the claim row since the user would never modify the amount
     if (modification === 'claim' && changeQuoteRequest.nativeAmount === '0')
-      setChangeQuoteRequest({ ...changeQuoteRequest, nativeAmount: existingAllocations.earned[0].nativeAmount })
+      setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: stakePolicy.rewardAssets[0].tokenId, nativeAmount: existingAllocations.earned[0].nativeAmount })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
