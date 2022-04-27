@@ -39,13 +39,16 @@ export const useFiatText = (props: Props) => {
     const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
     return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
-  // Convert the amount to an internationalized string
-  let fiatString = formatFiatString({
-    fiatAmount,
-    autoPrecision,
-    noGrouping
-  })
-  if (!autoPrecision && zeroString(fiatString)) fiatString = '0'
+  // Convert the amount to an internationalized string or '0'
+  const fiatString =
+    autoPrecision || !zeroString(fiatAmount)
+      ? formatFiatString({
+          fiatAmount,
+          autoPrecision,
+          noGrouping
+        })
+      : '0'
+
   // Create FiatText' prefix
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
   const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
