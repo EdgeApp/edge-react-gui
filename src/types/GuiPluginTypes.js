@@ -53,7 +53,10 @@ export type GuiPlugin = {
 
   // Device permissions to acquire before launching the plugin:
   permissions?: Permission[],
-  mandatoryPermissions?: boolean
+  mandatoryPermissions?: boolean,
+
+  // Temp HACK
+  filterPlugins?: string[]
 }
 
 /**
