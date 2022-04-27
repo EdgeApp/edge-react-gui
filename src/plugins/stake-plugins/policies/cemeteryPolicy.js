@@ -94,7 +94,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
-      const requestAsset = policyInfo.stakeAssets.find(asset => asset.tokenId === request.tokenId)
+      const requestAsset = [...policyInfo.stakeAssets, ...policyInfo.rewardAssets].find(asset => asset.tokenId === request.tokenId)
       if (requestAsset == null) throw new Error(`Asset '${request.tokenId}' not found in policy '${stakePolicyId}'`)
 
       const parentCurrencyCode = policyInfo.parentTokenId
