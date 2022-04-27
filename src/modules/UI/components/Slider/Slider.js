@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Entypo from 'react-native-vector-icons/Entypo'
 
-import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
@@ -122,7 +122,7 @@ export const SliderComponent = (props: Props) => {
 
         <PanGestureHandler onGestureEvent={onGestureEvent}>
           <Animated.View style={[styles.thumb, sliderDisabled ? styles.disabledThumb : null, scrollTranslationStyle]}>
-            <Image source={leftArrowImg} />
+            <Entypo style={styles.thumbIcon} name="chevron-left" size={theme.rem(1.5)} />
           </Animated.View>
         </PanGestureHandler>
         {showSpinner ? (
@@ -157,6 +157,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 5
+  },
+  thumbIcon: {
+    color: theme.confirmationSliderArrow,
+    fontSize: theme.rem(2.25)
   },
   disabledThumb: {
     backgroundColor: theme.confirmationThumbDeactivated
