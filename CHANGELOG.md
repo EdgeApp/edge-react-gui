@@ -759,7 +759,7 @@
   - Upgrade to edge-core-js v0.17.29
   - Upgrade to Webpack 5
 - Upgrade edge-login-ui-rn to v0.9.0
-  - _Breaking change_: This release contains a breaking change that was not indicated in the minor version update:
+  - *Breaking change*: This release contains a breaking change that was not indicated in the minor version update:
     - rn: Prompt for notification permissions to support security features
   - rn: Update modal colors
 - Upgrade edge-currency-monero to v0.2.10
@@ -1460,8 +1460,7 @@
 - New transaction details screen
 - Enhanced deeplinking capabilities
 - Bug fixes and visual enhancements
-- **_BREAKING CHANGE_** Upgrade edge-core-js to v0.17.0
-
+- ***BREAKING CHANGE*** Upgrade edge-core-js to v0.17.0
   - This release also renames all `pluginName` instances to `pluginId`. This affects all plugin types, but the core contains compatibility code so old currency plugins continue working (but not for rate or swap plugins, which are easier to just upgrade).
   - Breaking changes to the swap API:
     - Return a new `EdgeSwapResult` structure from `EdgeSwapQuote.approve`. This now contains the `destinationAddress` and `orderId` that used to exist on the `EdgeSwapQuote` type.
@@ -1478,13 +1477,11 @@
     - Remove deprecated `EdgeIo.WebSocket`.
 
 - Upgrade edge-exchange-plugins to v0.10.2
-
   - Add Switchain swap plugin.
   - Pass promo codes to Changelly, ChangeNow, and Godex.
   - Fix ChangeNow on Android & add better logging.
 
 - Upgrade edge-currency-accountbased to v0.7.2
-
   - Add cleaners v0.2.0 type checking
   - Fix duplicate FIO address after registration
   - Reprioritize EOS Hyperion nodes to resolve transaction history view issue
