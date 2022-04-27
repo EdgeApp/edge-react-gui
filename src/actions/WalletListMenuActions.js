@@ -18,7 +18,6 @@ import { validatePassword } from './AccountActions.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
-import { refreshWallet } from './WalletActions.js'
 
 export type WalletListMenuKey =
   | 'rename'
@@ -225,7 +224,10 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             title={s.strings.fragment_wallets_rename_wallet}
             onSubmit={async name => {
               await wallet.renameWallet(name)
-              dispatch(refreshWallet(walletId))
+              dispatch({
+                type: 'UI/WALLETS/UPSERT_WALLETS',
+                data: { wallets: [wallet] }
+              })
               return true
             }}
           />

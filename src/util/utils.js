@@ -680,9 +680,3 @@ export function unixToLocaleDateTime(unixDate: number): { date: string, time: st
     dateTime: toLocaleDateTime(date)
   }
 }
-
-export function logPrefix(wallet: EdgeCurrencyWallet): string {
-  const prettyDate = new Date().toISOString().replace(/.*(\d\d-\d\d)T(\d\d:\d\d:\d\d).*/, '$1 $2')
-  const name = wallet.name ? wallet.name : 'NULL'
-  return `${prettyDate} ${wallet.currencyInfo.currencyCode}-${wallet.id.slice(0, 2)}-${name}`
-}

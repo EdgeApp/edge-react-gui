@@ -17,7 +17,6 @@ import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import { getSupportedFiats, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
-import { updateExchangeRates } from './ExchangeRateActions.js'
 import { refreshConnectedWallets } from './FioActions.js'
 import { registerNotifications } from './NotificationActions.js'
 
@@ -118,60 +117,6 @@ export const selectWalletFromModal = (walletId: string, currencyCode: string) =>
   dispatch(selectWallet(walletId, currencyCode))
 }
 
-function dispatchUpsertWallets(dispatch, wallets: EdgeCurrencyWallet[]) {
-  global.pcount('dispatchUpsertWallets')
-  dispatch(upsertWallets(wallets))
-}
-
-const refreshDetails = {
-  lastUpsert: 0,
-  delayUpsert: false,
-  walletIds: {}
-}
-
-const upsertFrequency = 3000
-
-export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyWallets } = state.core.account
-  const wallet = currencyWallets[walletId]
-  if (wallet) {
-    if (!refreshDetails.delayUpsert) {
-      const now = Date.now()
-      if (now - refreshDetails.lastUpsert > upsertFrequency) {
-        dispatchUpsertWallets(dispatch, [wallet])
-        refreshDetails.lastUpsert = Date.now()
-      } else {
-        refreshDetails.delayUpsert = true
-        refreshDetails.walletIds[walletId] = wallet
-        setTimeout(() => {
-          const wallets = []
-          for (const wid of Object.keys(refreshDetails.walletIds)) {
-            wallets.push(refreshDetails.walletIds[wid])
-          }
-          dispatchUpsertWallets(dispatch, wallets)
-          refreshDetails.delayUpsert = false
-          refreshDetails.lastUpsert = Date.now()
-          refreshDetails.walletIds = {}
-        }, upsertFrequency)
-      }
-    } else {
-      // Add wallet to the queue to upsert
-      refreshDetails.walletIds[walletId] = wallet
-    }
-  }
-}
-
-export const upsertWallets = (wallets: EdgeCurrencyWallet[]) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(updateExchangeRates())
-  dispatch({
-    type: 'UI/WALLETS/UPSERT_WALLETS',
-    data: {
-      wallets
-    }
-  })
-}
-
 export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[], disabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch({ type: 'MANAGE_TOKENS_START' })
@@ -188,8 +133,6 @@ export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[]
       type: 'UPDATE_WALLET_ENABLED_TOKENS',
       data: { walletId, tokens: enabledTokens }
     })
-    // refresh the wallet in Redux
-    dispatch(refreshWallet(walletId))
   })
 }
 
@@ -235,7 +178,6 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
         type: 'UPDATE_WALLET_ENABLED_TOKENS',
         data: { walletId, tokens: tokensToEnable }
       })
-      dispatch(refreshWallet(walletId))
     }
   } catch (error) {
     showError(error)
@@ -416,7 +358,6 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     })
     .then(() => {
       coreWalletsToUpdate.forEach(wallet => {
-        dispatch(upsertWallets([wallet]))
         dispatch({
           type: 'UPDATE_WALLET_ENABLED_TOKENS',
           data: {

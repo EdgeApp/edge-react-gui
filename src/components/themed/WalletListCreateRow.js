@@ -5,7 +5,6 @@ import { View } from 'react-native'
 
 import { type CreateWalletOptions, createWallet } from '../../actions/CreateWalletActions.js'
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
-import { refreshWallet } from '../../actions/WalletActions.js'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner.js'
 import { showError } from '../../components/services/AirshipInstance.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
@@ -66,7 +65,6 @@ export const createAndSelectToken =
         type: 'UPDATE_WALLET_ENABLED_TOKENS',
         data: { walletId, tokens: enabledTokens }
       })
-      dispatch(refreshWallet(walletId))
 
       return walletId
     } catch (error) {

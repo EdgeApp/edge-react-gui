@@ -10,7 +10,7 @@ import { type Dispatch, type GetState, type RootState } from '../types/reduxType
 import { Actions } from '../types/routerTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import { mergeTokens } from '../util/utils.js'
-import { assembleCustomToken, refreshWallet } from './WalletActions.js'
+import { assembleCustomToken } from './WalletActions.js'
 
 export const addNewToken = (
   walletId: string,
@@ -36,7 +36,6 @@ export const addNewToken = (
             enabledTokens: enabledTokensOnWallet
           }
         })
-        dispatch(refreshWallet(walletId))
         Actions.pop()
       })
       .catch(error => {
