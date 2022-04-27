@@ -61,7 +61,7 @@ exports[`TransactionDetails.ui should render 1`] = `
       />
       <WithTheme(TileComponent)
         onPress={[Function]}
-        title="Amount in iso:USD"
+        title="Amount in USD"
         type="editable"
       >
         <View
@@ -256,7 +256,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
       />
       <WithTheme(TileComponent)
         onPress={[Function]}
-        title="Amount in iso:USD"
+        title="Amount in USD"
         type="editable"
       >
         <View
@@ -451,7 +451,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
       />
       <WithTheme(TileComponent)
         onPress={[Function]}
-        title="Amount in iso:USD"
+        title="Amount in USD"
         type="editable"
       >
         <View
@@ -646,7 +646,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
       />
       <WithTheme(TileComponent)
         onPress={[Function]}
-        title="Amount in iso:USD"
+        title="Amount in USD"
         type="editable"
       >
         <View

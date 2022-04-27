@@ -4,6 +4,7 @@ import * as React from 'react'
 import { FlatList, RefreshControl, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
+import { useAllTokens } from '../../hooks/useAllTokens.js'
 import s from '../../locales/strings'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
@@ -84,7 +85,6 @@ export function WalletList(props: Props) {
     [dispatch, onPress]
   )
   const account = useSelector(state => state.core.account)
-  const customTokens = useSelector(state => state.ui.settings.customTokens)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)
@@ -93,6 +93,9 @@ export function WalletList(props: Props) {
   // Subscribe to the wallet list:
   const [activeWalletIds, setActiveWalletIds] = useState(account.activeWalletIds)
   useEffect(() => account.watch('activeWalletIds', setActiveWalletIds), [account])
+
+  // Subscribe to all the tokens in the account:
+  const allTokens = useAllTokens(account)
 
   function sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
@@ -161,10 +164,12 @@ export function WalletList(props: Props) {
           key: walletId
         })
       } else if (wallet != null) {
-        const { enabledTokens, name, currencyCode, currencyNames } = asSafeDefaultGuiWallet(wallet)
+        const { enabledTokens, name, pluginId } = asSafeDefaultGuiWallet(wallet)
+        const { currencyInfo } = account.currencyConfig[pluginId]
+        const { currencyCode, displayName } = currencyInfo
 
         // Initialize wallets
-        if (checkFilterWallet({ name, currencyCode, currencyName: currencyNames[currencyCode] }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
+        if (checkFilterWallet({ name, currencyCode, currencyName: displayName }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: currencyCode,
@@ -172,28 +177,15 @@ export function WalletList(props: Props) {
           })
         }
 
-        // Old logic on getting tokens
-        const enabledNotHiddenTokens = enabledTokens.filter(token => {
-          let isVisible = true // assume we will enable token
-          const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
-          // if token is not supposed to be visible, not point in enabling it
-          if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-          return isVisible
-        })
-
         // Initialize tokens
-        for (const tokenCode of enabledNotHiddenTokens) {
-          const fullCurrencyCode = `${currencyCode}-${tokenCode}`
-          const customTokenInfo = currencyNames[tokenCode] ? undefined : customTokens.find(token => token.currencyCode === tokenCode)
+        for (const tokenCode of enabledTokens) {
+          const tokenId = Object.keys(allTokens[pluginId]).find(id => allTokens[pluginId][id].currencyCode === tokenCode)
+          if (tokenId == null) continue
+          const token = allTokens[pluginId][tokenId]
 
-          if (
-            checkFilterWallet(
-              { name, currencyCode: tokenCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' },
-              searchText,
-              allowedCurrencyCodes,
-              excludeCurrencyCodes
-            )
-          ) {
+          const fullCurrencyCode = `${currencyCode}-${tokenCode}`
+
+          if (checkFilterWallet({ name, currencyCode: tokenCode, currencyName: token.displayName }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
             walletList.push({
               id: walletId,
               fullCurrencyCode,

@@ -1,7 +1,6 @@
 // @flow
 /* globals jest describe it expect */
 
-import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
@@ -9,37 +8,25 @@ import { TransactionDetailsComponent } from '../components/scenes/TransactionDet
 import { getTheme } from '../components/services/ThemeContext.js'
 import { type GuiWallet } from '../types/types.js'
 
-const typeHack: any = {
-  allDenominations: {
-    BTC: {
-      // prettier-ignore
-      '100000000': {
-        name: 'BTC',
-        multiplier: '100000000',
-        symbol: '₿'
-      }
-    }
-  },
-  denominations: [
-    {
-      name: 'BTC',
-      multiplier: '100000000',
-      symbol: '₿'
-    }
-  ],
-  balances: { BTC: '123123' },
+const fakeGuiWallet: GuiWallet = {
   blockHeight: 12345,
   currencyNames: { BTC: 'Bitcoin' },
   currencyCode: 'BTC',
-  currencyInfo: {},
-  displayPrivateSeed: 'private seed',
-  displayPublicSeed: 'public seed',
-  fiatCurrencyCode: 'iso:USD',
+  enabledTokens: [],
+  fiatCurrencyCode: 'USD',
   id: '123',
-  name: 'wallet name'
+  isoFiatCurrencyCode: 'iso:USD',
+  metaTokens: [],
+  name: 'wallet name',
+  nativeBalances: {},
+  pluginId: 'bitcoin',
+  primaryNativeBalance: '0',
+  type: 'wallet:bitcoin'
 }
-const fakeGuiWallet: GuiWallet = typeHack
-const fakeCoreWallet: EdgeCurrencyWallet = typeHack
+const fakeCoreWallet: any = {
+  ...fakeGuiWallet,
+  balances: { BTC: '123123' }
+}
 
 const settings = {
   [fakeGuiWallet.currencyCode]: {

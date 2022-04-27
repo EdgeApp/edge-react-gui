@@ -140,8 +140,8 @@ type SpecialCurrencyInfo = {|
 /*
  * Accepts a walletType or pluginId
  */
-export const getSpecialCurrencyInfo = (input: string): SpecialCurrencyInfo => {
-  const pluginId = getPluginId(input ?? '')
+export const getSpecialCurrencyInfo = (walletType: string = ''): SpecialCurrencyInfo => {
+  const pluginId = getPluginId(walletType)
   if (SPECIAL_CURRENCY_INFO[pluginId]) {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {

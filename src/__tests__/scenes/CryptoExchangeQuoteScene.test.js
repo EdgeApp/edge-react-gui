@@ -62,34 +62,10 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       },
       request: {
         fromWallet: {
-          fiatCurrencyCode: 'USD',
-          allDenominations: {
-            BTC: {
-              // prettier-ignore
-              '100000000': {
-              name: 'BTC',
-              multiplier: '100000000',
-              symbol: '₿'
-            }
-            }
-          }
+          fiatCurrencyCode: 'USD'
         },
         toWallet: {
-          fiatCurrencyCode: 'USD',
-          allDenominations: {
-            ETH: {
-              // prettier-ignore
-              '100000000': {
-              name: 'ETH',
-              multiplier: '100000000',
-              symbol: 'ETH'
-            }
-            }
-          },
-          fromCurrencyCode: 'BTC',
-          toCurrencyCode: 'ETH',
-          nativeAmount: '1000',
-          quoteFor: 'from'
+          fiatCurrencyCode: 'USD'
         },
         fee: '1',
         fromDisplayAmount: '1',

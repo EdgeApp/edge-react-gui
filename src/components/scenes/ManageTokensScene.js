@@ -7,7 +7,7 @@ import * as React from 'react'
 import { FlatList, View } from 'react-native'
 
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
-import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
+import { setWalletEnabledTokens } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
@@ -274,7 +274,6 @@ export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
   dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
       dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
-      dispatch(checkEnabledTokensArray(walletId, enabledTokens))
     }
   })
 )(withTheme(ManageTokensSceneComponent))
