@@ -45,9 +45,9 @@ export const createAndSelectToken =
       let wallet = walletId != null ? currencyWallets[walletId] : null
       // If no parent chain wallet exists, create it
       if (wallet == null) {
-        const { walletType } = getCreateWalletType(account, currencyCode) ?? {}
+        const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
         if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await createWallet(account, { walletType, fiatCurrencyCode: defaultIsoFiat })
+        wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
       }
       // Reassign walletId just in case we created a new wallet
       walletId = wallet.id
@@ -55,9 +55,9 @@ export const createAndSelectToken =
       const addToken = async () => {
         if (wallet == null) throw new Error(s.strings.create_wallet_failed_message)
         const enabledTokens = (await wallet.getEnabledTokens()) ?? []
-        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.pluginId)
+        const tokens = enabledTokens.filter(tokenId => tokenId !== wallet?.currencyInfo?.currencyCode)
         await setEnabledTokens(wallet, [...tokens, currencyCode], [])
-        return [...enabledTokens, currencyCode]
+        return [...tokens, currencyCode]
       }
 
       const enabledTokens = await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, addToken())
