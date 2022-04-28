@@ -245,6 +245,42 @@ exports[`createWalletName should render with loading props 1`] = `
       },
       "pickerTextDark": "#FFFFFF",
       "pickerTextLight": "#000000",
+      "pinUsernameButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "pinUsernameButtonBorderRadiusRem": 1,
+      "pinUsernameButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "pinUsernameButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "pinUsernameButtonFont": "Quicksand-Regular",
+      "pinUsernameButtonFontSizeRem": 1.5,
+      "pinUsernameButtonOutline": "rgba(255, 255, 255, 0)",
+      "pinUsernameButtonOutlineWidth": 0,
+      "pinUsernameButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "pinUsernameButtonText": "#FFFFFF",
+      "pinUsernameButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "positiveText": "#77C513",
       "preferPrimaryButton": false,
       "primaryButton": Array [

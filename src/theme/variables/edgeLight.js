@@ -183,6 +183,18 @@ export const edgeLight: Theme = {
   escapeButtonFontSizeRem: 1,
   escapeButtonFont: palette.QuicksandRegular,
 
+  pinUsernameButtonOutline: palette.transparent,
+  pinUsernameButtonOutlineWidth: 0,
+  pinUsernameButton: [palette.transparent, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.edgeBlue,
+  pinUsernameButtonTextShadow: textNoShadow,
+  pinUsernameButtonShadow: themeNoShadow,
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandMedium,
+
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
   dropdownError: palette.accentRed,

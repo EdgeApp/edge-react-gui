@@ -211,6 +211,18 @@ export const testDark: Theme = {
   escapeButtonFontSizeRem: 1,
   escapeButtonFont: palette.QuicksandRegular,
 
+  pinUsernameButtonOutline: palette.white,
+  pinUsernameButtonOutlineWidth: 0.5,
+  pinUsernameButton: [palette.edgeMint, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.accentRed,
+  pinUsernameButtonTextShadow: { textShadowColor: palette.edgeMint, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 },
+  pinUsernameButtonShadow: { shadowColor: palette.edgeMint, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.7, shadowRadius: 8, elevation: 3 },
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandRegular,
+
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
   dropdownError: palette.accentRed,

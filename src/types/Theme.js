@@ -185,6 +185,18 @@ export type Theme = {
   escapeButtonFontSizeRem: number,
   escapeButtonFont: string,
 
+  pinUsernameButtonOutline: string,
+  pinUsernameButtonOutlineWidth: number,
+  pinUsernameButton: string[],
+  pinUsernameButtonColorStart: GradientCoords,
+  pinUsernameButtonColorEnd: GradientCoords,
+  pinUsernameButtonText: string,
+  pinUsernameButtonTextShadow: TextShadowParams,
+  pinUsernameButtonShadow: ThemeShadowParams,
+  pinUsernameButtonBorderRadiusRem: number,
+  pinUsernameButtonFontSizeRem: number,
+  pinUsernameButtonFont: string,
+
   // Dropdown colors:
   dropdownWarning: string,
   dropdownError: string,
