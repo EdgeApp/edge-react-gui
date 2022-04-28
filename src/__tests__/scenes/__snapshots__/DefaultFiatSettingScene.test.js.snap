@@ -3,7 +3,7 @@
 exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
 <SceneWrapper
   avoidKeyboard={true}
-  background="body"
+  background="theme"
   hasTabs={false}
 >
   [Function]

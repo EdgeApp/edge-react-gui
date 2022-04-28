@@ -659,7 +659,6 @@ export class MainComponent extends React.Component<Props> {
               key={DEFAULT_FIAT_SETTING}
               component={withNavigation(ifLoggedIn(DefaultFiatSettingScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_default_fiat} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
