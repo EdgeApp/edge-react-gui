@@ -52,8 +52,7 @@ export const WalletSyncCircle = (props: Props) => {
     [wallet, isDone, isDone.value, stroke, syncRatio, theme.primaryText, theme.walletProgressIconFill]
   )
 
-  // Calculate the sync circle "Thickness" to make sure it's proportional to the size
-  const strokeWidth = 2 * Math.floor(size / theme.rem(1)) - theme.rem(1 / 16) // Make sure to always end with a round number
+  const strokeWidth = theme.rem(3 / 16)
   // Calculate circle params based on size
   const radius = Math.floor((size + strokeWidth) / 2)
   const circumference = 2 * Math.PI * radius
