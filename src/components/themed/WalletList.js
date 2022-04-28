@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, EdgeTokenIdExtended, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { checkFilterWallet } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
@@ -49,6 +50,7 @@ type Props = {|
   footer?: React.Node,
   header?: React.Node,
   isModal?: boolean,
+  marginRem?: number | number[],
   searching: boolean,
   searchText: string,
   showCreateWallet?: boolean,
@@ -69,6 +71,7 @@ export function WalletList(props: Props) {
     footer,
     header,
     isModal,
+    marginRem,
     searching,
     searchText,
     showCreateWallet,
@@ -80,6 +83,8 @@ export function WalletList(props: Props) {
   } = props
 
   const theme = useTheme()
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+
   const handlePress = useMemo(
     () =>
       onPress ??
@@ -356,6 +361,7 @@ export function WalletList(props: Props) {
         renderItem={renderRow}
         renderSectionHeader={renderSectionHeader}
         sections={getSection(walletList, walletOnlyList.length)}
+        style={margin}
       />
     )
   }
@@ -369,6 +375,7 @@ export function WalletList(props: Props) {
       ListHeaderComponent={header}
       refreshControl={isModal ? undefined : renderRefreshControl()}
       renderItem={renderRow}
+      style={margin}
     />
   )
 }

@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo } from '../../types/reactHooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from './CurrencyIcon.js'
@@ -14,8 +13,6 @@ type Props = {|
   currencyCode: string,
   exchangeRateText?: string,
   exchangeRateType?: 'neutral' | 'positive' | 'negative',
-  gradient?: boolean,
-  iconSizeRem?: number,
   walletName: string,
 
   // Icon currency:
@@ -32,8 +29,6 @@ export const WalletListRowComponent = (props: Props) => {
   const {
     children,
     currencyCode,
-    gradient = false,
-    iconSizeRem,
     walletName,
 
     // Icon currency:
@@ -48,17 +43,13 @@ export const WalletListRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const contents = (
-    <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+  return (
+    <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
       {currencyCode === '' ? (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator color={theme.primaryText} size="large" />
-        </View>
+        <ActivityIndicator color={theme.primaryText} size="large" />
       ) : (
-        <View style={styles.contentContainer}>
-          <View style={styles.iconContainer}>
-            <CurrencyIcon sizeRem={iconSizeRem} pluginId={pluginId} tokenId={tokenId} walletId={walletId} currencyCode={currencyCode} />
-          </View>
+        <>
+          <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} walletId={walletId} />
           <View style={styles.detailsContainer}>
             <View style={styles.detailsTop}>
               <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
@@ -66,67 +57,37 @@ export const WalletListRowComponent = (props: Props) => {
                 <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
               ) : null}
             </View>
-            <View style={styles.detailsBottom}>
-              <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-            </View>
+            <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
           </View>
           <View style={styles.childrenContainer}>{children}</View>
-        </View>
+        </>
       )}
     </TouchableOpacity>
   )
-  return gradient ? <Gradient style={styles.containerGradient}>{contents}</Gradient> : <View style={styles.container}>{contents}</View>
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // Background
-  containerGradient: {
-    flex: 1,
-    paddingHorizontal: theme.rem(1)
-  },
   container: {
-    backgroundColor: theme.modal
-  },
-  // Top level Containers
-  contentContainer: {
-    flexDirection: 'row',
-    marginVertical: theme.rem(1)
-  },
-  loaderContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    height: theme.rem(4.25),
-    paddingHorizontal: theme.rem(1.75)
+    minHeight: theme.rem(4.25)
   },
   // Data containers //
-  // Icon Container
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.rem(1)
-  },
   // Details Container
   detailsContainer: {
-    flex: 1,
     flexDirection: 'column',
+    flexGrow: 1,
+    flexShrink: 1,
     marginRight: theme.rem(0.5)
   },
   // Children (Right part) Container
   childrenContainer: {
-    flex: 0
+    paddingRight: theme.rem(1)
   },
   // Other styles
-  iconSize: {
-    width: theme.rem(2),
-    height: theme.rem(2)
-  },
   detailsTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  },
-  detailsBottom: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start'

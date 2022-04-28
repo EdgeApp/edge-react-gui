@@ -71,6 +71,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           excludeWalletIds={excludeWalletIds}
           filterActivation={filterActivation}
           isModal
+          marginRem={listMargin}
           searching={searching}
           searchText={search}
           showCreateWallet={showCreateWallet}
@@ -81,3 +82,5 @@ export class WalletListModal extends React.PureComponent<Props, State> {
     )
   }
 }
+
+const listMargin = [0, -1]

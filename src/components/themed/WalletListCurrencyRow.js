@@ -29,7 +29,6 @@ import { WalletListRow } from './WalletListRow.js'
 
 type Props = {|
   currencyCode: string,
-  gradient?: boolean,
   showRate?: boolean,
   tokenCode?: string,
   walletId: string,
@@ -114,7 +113,6 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
 export const WalletListCurrencyRowComponent = (props: Props) => {
   const {
     currencyCode,
-    gradient,
     showRate = false,
     tokenCode,
     walletId,
@@ -210,7 +208,6 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
       currencyCode={currencyCode}
       exchangeRateText={showRate ? exchangeRateText : undefined}
       exchangeRateType={showRate ? exchangeRateType : undefined}
-      gradient={gradient}
       walletId={walletId}
       walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
       onLongPress={onLongPress}

@@ -1,23 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListRow should render with loading props 1`] = `
-<WithTheme(GradientComponent)
+<TouchableOpacity
+  onLongPress={[Function]}
+  onPress={[Function]}
   style={
     Object {
-      "flex": 1,
-      "paddingHorizontal": 22,
+      "alignItems": "center",
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 96,
     }
   }
 >
-  <TouchableOpacity
-    onLongPress={[Function]}
-    onPress={[Function]}
-  >
+  <React.Fragment>
+    <Memo(CurrencyIconComponent)
+      currencyCode="BTC"
+      marginRem={1}
+      sizeRem={2}
+    />
     <View
       style={
         Object {
-          "flexDirection": "row",
-          "marginVertical": 22,
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "flexShrink": 1,
+          "marginRight": 11,
         }
       }
     >
@@ -25,76 +33,43 @@ exports[`WalletListRow should render with loading props 1`] = `
         style={
           Object {
             "alignItems": "center",
-            "justifyContent": "center",
-            "marginRight": 22,
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
           }
         }
       >
-        <Memo(CurrencyIconComponent)
-          currencyCode="BTC"
-        />
-      </View>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "flexDirection": "column",
-            "marginRight": 11,
-          }
-        }
-      >
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "flex-start",
+              "flexBasis": "auto",
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Medium",
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "flexBasis": "auto",
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
-              }
-            }
-          >
-            BTC
-          </WithTheme(EdgeTextComponent)>
-        </View>
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "flex-start",
-            }
-          }
-        >
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#A4C7DF",
-                "fontSize": 17,
-              }
-            }
-          >
-            My bitcoin wallet
-          </WithTheme(EdgeTextComponent)>
-        </View>
+          BTC
+        </WithTheme(EdgeTextComponent)>
       </View>
-      <View
+      <WithTheme(EdgeTextComponent)
         style={
           Object {
-            "flex": 0,
+            "color": "#A4C7DF",
+            "fontSize": 17,
           }
         }
       >
-        Hello
-      </View>
+        My bitcoin wallet
+      </WithTheme(EdgeTextComponent)>
     </View>
-  </TouchableOpacity>
-</WithTheme(GradientComponent)>
+    <View
+      style={
+        Object {
+          "paddingRight": 22,
+        }
+      }
+    >
+      Hello
+    </View>
+  </React.Fragment>
+</TouchableOpacity>
 `;

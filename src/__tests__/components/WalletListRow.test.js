@@ -13,7 +13,6 @@ describe('WalletListRow', () => {
     const props = {
       children: 'Hello',
       currencyCode: 'BTC',
-      gradient: true,
       walletName: 'My bitcoin wallet',
       onLongPress: () => undefined,
       onPress: () => undefined
