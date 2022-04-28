@@ -349,6 +349,8 @@ export type AppConfig = {
   appNameShort: string,
   darkTheme: Theme,
   lightTheme: Theme,
+  backgroundImageServers?: string[],
+  referralServers?: string[],
   supportsEdgeLogin: boolean,
   knowledgeBase: string,
   supportSite: string,

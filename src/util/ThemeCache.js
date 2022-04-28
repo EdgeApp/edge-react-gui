@@ -5,7 +5,9 @@ import { Disklet } from 'disklet'
 import { ImageSourcePropType } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { BACKGROUND_IMAGE_LOCAL_URI, BACKGROUND_IMAGE_URI } from '../constants/CdnConstants'
+import { BACKGROUND_IMAGE_FILE_NAME, BACKGROUND_IMAGE_LOCAL_URI } from '../constants/CdnConstants'
+import { config } from '../theme/appConfig.js'
+import { pickRandom } from './utils.js'
 
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
 
@@ -63,10 +65,16 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
 export async function getBackgroundImage(disklet: Disklet): Promise<ImageSourcePropType | null> {
   const now = Date.now()
 
+  const backgroundImageServer = pickRandom(config.backgroundImageServers)
+  if (backgroundImageServer == null) return null
+
+  const backgroundImageUrl = `${backgroundImageServer}/${BACKGROUND_IMAGE_FILE_NAME}`
+
+  console.log(`backgroundImageUrl:${backgroundImageUrl}`)
   const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
-  const cacheTimes = cache.assets[BACKGROUND_IMAGE_URI]
+  const cacheTimes = cache.assets[backgroundImageUrl]
   // Always return existing local file but query and download new remote file in the background
-  downloadFile(disklet, BACKGROUND_IMAGE_URI, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
+  downloadFile(disklet, backgroundImageUrl, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
     console.warn(`Error downloading ${BACKGROUND_IMAGE_LOCAL_URI}`)
   })
   if (cacheTimes != null && cacheTimes.start.valueOf() < now && cacheTimes.expiration.valueOf() > now && (await RNFS.exists(BACKGROUND_IMAGE_LOCAL_URI))) {
