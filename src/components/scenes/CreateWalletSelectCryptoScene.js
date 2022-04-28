@@ -90,7 +90,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
     return (
-      <WalletListRow currencyCode={currencyCode} onPress={() => this.handleSelectWalletType(data.item)} gradient walletName={currencyName}>
+      <WalletListRow currencyCode={currencyCode} gradient walletName={currencyName} onPress={() => this.handleSelectWalletType(data.item)}>
         <IonIcon size={theme.rem(1.5)} color={theme.iconTappable} name="chevron-forward-outline" style={styles.iconStyle} />
       </WalletListRow>
     )

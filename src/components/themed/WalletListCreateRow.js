@@ -17,13 +17,14 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
-export type WalletListCreateRowProps = {
-  onPress?: (walletId: string, currencyCode: string) => void,
+export type WalletListCreateRowProps = {|
   currencyCode: string,
   currencyName: string,
+  pluginId?: string,
   walletType?: string,
-  pluginId?: string
-}
+
+  onPress?: (walletId: string, currencyCode: string) => void
+|}
 
 export const createAndSelectToken =
   ({ currencyCode, pluginId }: { currencyCode: string, pluginId: string }) =>
@@ -74,10 +75,18 @@ export const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName
 }
 
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
+  const {
+    currencyCode = '',
+    currencyName = '',
+    walletType,
+    pluginId,
+
+    // Callbacks:
+    onPress
+  } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { currencyCode = '', currencyName = '', walletType, pluginId, onPress } = props
 
   const handlePress = useCallback(() => {
     const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)

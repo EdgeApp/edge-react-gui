@@ -27,16 +27,18 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
-type Props = {
+type Props = {|
   currencyCode: string,
   gradient?: boolean,
-  onPress?: (walletId: string, currencyCode: string) => void,
-  onLongPress?: () => void,
   showRate?: boolean,
-  walletId: string,
   tokenCode?: string,
-  walletName?: string
-}
+  walletId: string,
+  walletName?: string,
+
+  // Callbacks:
+  onLongPress?: () => void,
+  onPress?: (walletId: string, currencyCode: string) => void
+|}
 
 type GetDifferenceParams = {
   exchangeRate: string,
@@ -110,7 +112,18 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
 }
 
 export const WalletListCurrencyRowComponent = (props: Props) => {
-  const { currencyCode, showRate = false, onPress, onLongPress, gradient, walletId, walletName, tokenCode } = props
+  const {
+    currencyCode,
+    gradient,
+    showRate = false,
+    tokenCode,
+    walletId,
+    walletName,
+
+    // Callbacks:
+    onLongPress,
+    onPress
+  } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -195,13 +208,13 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   return (
     <WalletListRow
       currencyCode={currencyCode}
-      walletId={walletId}
       exchangeRateText={showRate ? exchangeRateText : undefined}
       exchangeRateType={showRate ? exchangeRateType : undefined}
-      onPress={handlePress}
-      onLongPress={onLongPress}
-      walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
       gradient={gradient}
+      walletId={walletId}
+      walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
+      onLongPress={onLongPress}
+      onPress={handlePress}
     >
       {showBalance ? children : null}
     </WalletListRow>

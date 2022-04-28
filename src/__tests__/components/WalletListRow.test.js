@@ -1,5 +1,5 @@
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
@@ -11,14 +11,12 @@ describe('WalletListRow', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
-      currencyCode: 'string',
       children: 'Hello',
-      icon: 'btc',
-      editIcon: 'btc',
+      currencyCode: 'BTC',
       gradient: true,
-      onPress: () => undefined,
+      walletName: 'My bitcoin wallet',
       onLongPress: () => undefined,
-      walletName: 'My bitcoin wallet'
+      onPress: () => undefined
     }
     const actual = renderer.render(<WalletListRow {...props} />)
 

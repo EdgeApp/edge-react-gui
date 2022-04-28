@@ -66,15 +66,15 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           searchIcon
         />
         <WalletList
-          onPress={this.handleOnPress}
-          showCreateWallet={showCreateWallet}
-          excludeWalletIds={excludeWalletIds}
           allowedCurrencyCodes={allowedCurrencyCodes}
           excludeCurrencyCodes={excludeCurrencyCodes}
-          searchText={search}
-          searching={searching}
+          excludeWalletIds={excludeWalletIds}
           filterActivation={filterActivation}
           isModal
+          searching={searching}
+          searchText={search}
+          showCreateWallet={showCreateWallet}
+          onPress={this.handleOnPress}
         />
         <ModalCloseArrow onPress={() => bridge.resolve({})} />
       </ThemedModal>

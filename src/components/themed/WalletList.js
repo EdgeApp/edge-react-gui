@@ -41,38 +41,42 @@ const getSortOptionsCurrencyCode = (fullCurrencyCode: string): string => {
   return splittedCurrencyCode[1] || splittedCurrencyCode[0]
 }
 
-type Props = {
-  header?: React.Node,
+type Props = {|
+  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
+  excludeCurrencyCodes?: string[],
+  excludeWalletIds?: string[],
+  filterActivation?: boolean,
   footer?: React.Node,
+  header?: React.Node,
+  isModal?: boolean,
   searching: boolean,
   searchText: string,
   showCreateWallet?: boolean,
-  excludeWalletIds?: string[],
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[],
-  activateSearch?: () => void,
   showSlidingTutorial?: boolean,
-  filterActivation?: boolean,
-  isModal?: boolean,
-  onPress?: (walletId: string, currencyCode: string) => void
-}
+
+  // Callbacks:
+  onPress?: (walletId: string, currencyCode: string) => void,
+  onRefresh?: () => void
+|}
 
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
   const {
-    header,
+    allowedCurrencyCodes,
+    excludeCurrencyCodes,
+    excludeWalletIds,
+    filterActivation,
     footer,
+    header,
+    isModal,
     searching,
     searchText,
     showCreateWallet,
-    excludeWalletIds,
-    allowedCurrencyCodes,
-    excludeCurrencyCodes,
-    activateSearch,
     showSlidingTutorial,
-    filterActivation,
-    isModal,
-    onPress
+
+    // Callbacks:
+    onPress,
+    onRefresh
   } = props
 
   const theme = useTheme()
@@ -280,14 +284,14 @@ export function WalletList(props: Props) {
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
 
       if (isModal) {
-        return <WalletListCurrencyRow currencyCode={currencyCode} onPress={handlePress} walletId={walletId} paddingRem={0} />
+        return <WalletListCurrencyRow currencyCode={currencyCode} walletId={walletId} onPress={handlePress} />
       }
 
       return <WalletListSwipeRow currencyCode={currencyCode} isToken={isToken} openTutorial={data.index === 0 && showSlidingTutorial} walletId={walletId} />
     }
   }
 
-  const renderRefreshControl = () => <RefreshControl refreshing={false} onRefresh={activateSearch} tintColor={theme.searchListRefreshControlIndicator} />
+  const renderRefreshControl = () => <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
 
   const renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
 

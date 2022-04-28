@@ -30,7 +30,9 @@ exports[`WalletListRow should render with loading props 1`] = `
           }
         }
       >
-        btc
+        <Memo(CurrencyIconComponent)
+          currencyCode="BTC"
+        />
       </View>
       <View
         style={
@@ -59,7 +61,7 @@ exports[`WalletListRow should render with loading props 1`] = `
               }
             }
           >
-            string
+            BTC
           </WithTheme(EdgeTextComponent)>
         </View>
         <View

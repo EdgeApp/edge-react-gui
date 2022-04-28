@@ -9,24 +9,42 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
-type Props = {
+type Props = {|
+  children?: React.Node,
   currencyCode: string,
-  walletId?: string,
-  pluginId?: string,
-  tokenId?: string,
   exchangeRateText?: string,
   exchangeRateType?: 'neutral' | 'positive' | 'negative',
-  children?: React.Node,
-  icon?: React.Node,
-  iconSizeRem?: number,
   gradient?: boolean,
-  onPress?: () => void,
+  iconSizeRem?: number,
+  walletName: string,
+
+  // Icon currency:
+  pluginId?: string,
+  tokenId?: string,
+  walletId?: string,
+
+  // Callbacks:
   onLongPress?: () => void,
-  walletName?: string
-}
+  onPress?: () => void
+|}
 
 export const WalletListRowComponent = (props: Props) => {
-  const { currencyCode, children, pluginId, tokenId, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
+  const {
+    children,
+    currencyCode,
+    gradient = false,
+    iconSizeRem,
+    walletName,
+
+    // Icon currency:
+    pluginId,
+    tokenId,
+    walletId,
+
+    // Callbacks:
+    onLongPress,
+    onPress
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -39,7 +57,7 @@ export const WalletListRowComponent = (props: Props) => {
       ) : (
         <View style={styles.contentContainer}>
           <View style={styles.iconContainer}>
-            {icon == null ? <CurrencyIcon sizeRem={iconSizeRem} pluginId={pluginId} tokenId={tokenId} walletId={walletId} currencyCode={currencyCode} /> : icon}
+            <CurrencyIcon sizeRem={iconSizeRem} pluginId={pluginId} tokenId={tokenId} walletId={walletId} currencyCode={currencyCode} />
           </View>
           <View style={styles.detailsContainer}>
             <View style={styles.detailsTop}>
