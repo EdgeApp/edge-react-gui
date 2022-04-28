@@ -18,5 +18,6 @@ export const edgeConfig: AppConfig = {
   phoneNumber: '+1-855-346-4974',
   website: 'https://edge.app',
   termsOfServiceSite: 'https://edge.app/tos/',
-  appStore: 'https://itunes.apple.com/app/id1344400091'
+  appStore: 'https://itunes.apple.com/app/id1344400091',
+  defaultWallets: ['BTC', 'BCH', 'ETH']
 }

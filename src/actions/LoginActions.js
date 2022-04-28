@@ -19,6 +19,7 @@ import {
 } from '../modules/Core/Account/settings.js'
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer.js'
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
+import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type GuiTouchIdInfo } from '../types/types.js'
@@ -295,17 +296,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
  */
 async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
   // TODO: Run these in parallel once the Core has safer locking:
-  if (!account.allKeys.find(({ type }) => type === 'wallet:bitcoin')) {
-    await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
-  }
-
-  if (!account.allKeys.find(({ type }) => type === 'wallet:bitcoincash')) {
-    await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
-  }
-
-  if (!account.allKeys.find(({ type }) => type === 'wallet:ethereum')) {
-    await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
-  }
+  await createCustomWallets(account, fiatCurrencyCode, config.defaultWallets, dispatch)
 
   dispatch(trackAccountEvent('SignupWalletsCreated'))
 }

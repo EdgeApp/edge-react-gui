@@ -18,5 +18,6 @@ export const testConfig: AppConfig = {
   phoneNumber: '+1-800-100-1000',
   website: 'https://testy.com',
   termsOfServiceSite: 'https://testy.com/tos/',
-  appStore: 'https://itunes.apple.com/app/id1344400092'
+  appStore: 'https://itunes.apple.com/app/id1344400092',
+  defaultWallets: ['BTC', 'FTM:TOMB', 'ETH:USDC']
 }

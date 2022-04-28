@@ -314,7 +314,6 @@ export type wcGetConnection = {
   uri: string,
   timeConnected: number
 }
-
 export type AppConfig = {
   configName: string,
   appName: string,
@@ -329,7 +328,8 @@ export type AppConfig = {
   phoneNumber: string,
   website: string,
   termsOfServiceSite: string,
-  appStore: string
+  appStore: string,
+  defaultWallets: string[]
 }
 
 export type EdgeTokenId = {
