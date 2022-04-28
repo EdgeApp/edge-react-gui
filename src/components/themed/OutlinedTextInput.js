@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
@@ -59,7 +59,7 @@ declare export class OutlinedTextInputRef extends React.Component<Props> {
   clear: () => void;
 }
 
-export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
+export const OutlinedTextInputComponent: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
   const {
     // Contents:
     error,
@@ -453,3 +453,4 @@ const getStyles = cacheStyles(theme => {
     }
   }
 })
+export const OutlinedTextInput = wrap(OutlinedTextInputComponent)

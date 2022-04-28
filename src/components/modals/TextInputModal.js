@@ -1,5 +1,6 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -37,10 +38,11 @@ type Props = {|
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
   secureTextEntry?: boolean,
   multiline?: boolean,
-  maxLength?: number
+  maxLength?: number,
+  testId?: string
 |}
 
-export function TextInputModal(props: Props) {
+export function TextInputModalComponent(props: Props) {
   const {
     autoCapitalize,
     autoCorrect,
@@ -56,12 +58,14 @@ export function TextInputModal(props: Props) {
     submitLabel = s.strings.submit,
     title,
     maxLength,
-    warning
+    warning,
+    testId = 'TextInputModal'
   } = props
 
   const [errorMessage, setErrorMessage] = useState<string | void>()
   const [spinning, setSpinning] = useState(false)
   const [text, setText] = useState(initialValue)
+  const generateTestHook = useCavy()
 
   const handleChangeText = (text: string) => {
     setText(text)
@@ -108,6 +112,7 @@ export function TextInputModal(props: Props) {
         onSubmitEditing={handleSubmit}
         value={text}
         maxLength={maxLength}
+        ref={generateTestHook(testId)}
       />
       {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
@@ -116,9 +121,17 @@ export function TextInputModal(props: Props) {
       {spinning ? (
         <MainButton alignSelf="center" disabled marginRem={0.5} type="secondary" spinner />
       ) : (
-        <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="secondary" />
+        <MainButton
+          alignSelf="center"
+          label={submitLabel}
+          marginRem={0.5}
+          onPress={handleSubmit}
+          type="secondary"
+          ref={generateTestHook('TextInputModal.SubmitChangedWalletName')}
+        />
       )}
       <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
     </ThemedModal>
   )
 }
+export const TextInputModal = wrap(TextInputModalComponent)
