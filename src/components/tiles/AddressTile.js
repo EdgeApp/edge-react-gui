@@ -3,7 +3,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import * as React from 'react'
-import { AppState, TouchableOpacity, View } from 'react-native'
+import { AppState } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
@@ -13,7 +13,8 @@ import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
 import { forwardRef } from '../../types/reactHooks.js'
-import { connect } from '../../types/reactRedux.js'
+import { TouchableOpacity, View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
 import { AddressModal } from '../modals/AddressModal'
@@ -42,7 +43,7 @@ type State = {
   clipboard: string,
   loading: boolean
 }
-type Props = OwnProps & StateProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps & TestProps
 
 export class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -209,11 +210,15 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         <Tile type={tileType} title={title} onPress={this.handleTilePress}>
           {!recipientAddress && (
             <View style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={this.handleChangeAddress}
+                ref={this.props.generateTestHook('AddressTile.SendEnterAddress')}
+              >
                 <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
                 <EdgeText style={styles.buttonText}>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleScan}>
+              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleScan} ref={this.props.generateTestHook('AddressTile.SendOpenScan')}>
                 <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
                 <EdgeText style={styles.buttonText}>{s.strings.scan_as_in_scan_barcode}</EdgeText>
               </TouchableOpacity>
@@ -255,7 +260,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+const AddressTileConnector = connect<StateProps, {}, OwnProps & TestProps>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig.fio
