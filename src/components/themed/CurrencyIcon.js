@@ -104,7 +104,7 @@ export const CurrencyIconComponent = (props: Props) => {
 
   return (
     <View style={spacingStyle}>
-      {edgeWallet != null ? <WalletSyncCircle size={size} edgeWallet={edgeWallet} /> : null}
+      {edgeWallet != null ? <WalletSyncCircle size={size} wallet={edgeWallet} /> : null}
       {primaryCurrencyIcon}
       {secondaryCurrencyIcon}
     </View>

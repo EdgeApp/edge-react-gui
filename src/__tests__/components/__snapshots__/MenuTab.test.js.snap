@@ -263,6 +263,7 @@ exports[`MenuTab should render with loading props 1`] = `
       "walletListSlideTutorialImage": Object {
         "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
       },
+      "walletProgressIconDone": "#FFFFFF",
       "walletProgressIconFill": "#66EDA8",
       "warningIcon": "#F1AA19",
       "warningText": "#F1AA19",

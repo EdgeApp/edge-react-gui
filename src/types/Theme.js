@@ -229,6 +229,7 @@ export type Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: string,
+  walletProgressIconDone: string,
 
   // Misc
   // pressedOpacity: number,
