@@ -14,7 +14,7 @@ const MAX_RATIO = 0.95
 type Props = {
   // The diameter of the inner currency icon:
   size: number,
-  edgeWallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet
 }
 
 /**
@@ -22,16 +22,16 @@ type Props = {
  */
 export const WalletSyncCircle = (props: Props) => {
   const theme = useTheme()
-  const { size = theme.rem(2), edgeWallet } = props
+  const { size = theme.rem(2), wallet } = props
   // Animation shared state
-  const syncRatio = useSharedValue(edgeWallet.syncRatio < 0.05 ? 0.05 : edgeWallet.syncRatio)
+  const syncRatio = useSharedValue(wallet.syncRatio < 0.05 ? 0.05 : wallet.syncRatio)
   const isDone = useSharedValue(false)
   const stroke = useSharedValue(theme.walletProgressIconFill)
 
   // Subscribe to the sync ratio:
   useEffect(
     () =>
-      edgeWallet.watch('syncRatio', (ratio: number) => {
+      wallet.watch('syncRatio', (ratio: number) => {
         // If already done but needs to resync reset the flags and animations
         if (isDone.value && ratio < BASE_RATIO) {
           isDone.value = false
@@ -49,7 +49,7 @@ export const WalletSyncCircle = (props: Props) => {
           else syncRatio.value = withTiming(ratio, { duration: 1000 })
         }
       }),
-    [edgeWallet, isDone, isDone.value, stroke, syncRatio, theme.primaryText, theme.walletProgressIconFill]
+    [wallet, isDone, isDone.value, stroke, syncRatio, theme.primaryText, theme.walletProgressIconFill]
   )
 
   // Calculate the sync circle "Thickness" to make sure it's proportional to the size

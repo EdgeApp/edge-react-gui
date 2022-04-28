@@ -14,13 +14,13 @@ exports[`CurrencyIcon should render with loading props 1`] = `
   }
 >
   <WalletSyncCircle
-    edgeWallet={
+    size={45}
+    wallet={
       Object {
         "pluginId": "bitcoin",
         "watch": [Function],
       }
     }
-    size={45}
   />
   <FastImage
     source={
