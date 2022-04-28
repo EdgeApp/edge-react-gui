@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
@@ -140,4 +140,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListRow = memo(WalletListRowComponent)
+export const WalletListRow = memo(wrap(WalletListRowComponent))
