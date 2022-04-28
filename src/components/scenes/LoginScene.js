@@ -144,6 +144,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
       <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
           username={username}
+          appId={config.appId}
           accountOptions={{ pauseWallets: true }}
           context={context}
           recoveryLogin={passwordRecoveryKey}

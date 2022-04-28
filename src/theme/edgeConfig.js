@@ -6,6 +6,7 @@ import { edgeLight } from './variables/edgeLight.js'
 
 export const edgeConfig: AppConfig = {
   configName: 'edge',
+  appId: undefined,
   appName: 'Edge',
   appNameShort: 'Edge',
   darkTheme: edgeDark,

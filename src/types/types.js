@@ -316,6 +316,7 @@ export type wcGetConnection = {
 }
 export type AppConfig = {
   configName: string,
+  appId?: string,
   appName: string,
   appNameShort: string,
   darkTheme: Theme,

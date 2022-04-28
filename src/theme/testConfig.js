@@ -6,6 +6,7 @@ import { testLight } from './variables/testLight.js'
 
 export const testConfig: AppConfig = {
   configName: 'test',
+  appId: 'com.testy.wallet',
   appName: 'Testy Wallet',
   appNameShort: 'Testy',
   darkTheme: testDark,
