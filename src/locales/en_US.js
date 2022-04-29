@@ -433,7 +433,6 @@ const strings = {
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
   title_export_transactions: 'Export Transactions',
-  title_default_fiat: 'Default Fiat',
   title_edge_login: 'Edge Login',
   title_exchange: 'Exchange',
   title_fio_sent_request_details: 'Sent Request Details',
