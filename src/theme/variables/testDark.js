@@ -93,8 +93,7 @@ export const testDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.deepPurple,
-  backgroundGradientRight: palette.darkPurple2,
+  backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
