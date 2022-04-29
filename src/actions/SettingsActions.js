@@ -201,6 +201,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
   const { account } = state.core
   const response = await Airship.show(bridge => (
     <ButtonsModal
+      testId="RestoreWalletsModal"
       bridge={bridge}
       title={s.strings.restore_wallets_modal_title}
       message={s.strings.restore_wallets_modal_description}
