@@ -132,7 +132,9 @@ export function WalletList(props: Props) {
     if (walletsSort === 'highest') {
       walletList.sort((itemA, itemB) => {
         if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        return getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '') - getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '')
+        const aBalance = getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '')
+        const bBalance = getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '')
+        return aBalance - bBalance
       })
     }
 
