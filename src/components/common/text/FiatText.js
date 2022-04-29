@@ -1,30 +1,64 @@
 // @flow
 
-import { useFiatText } from '../../../hooks/useFiatText'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-/**
- * - raw: Only the numeric fiat text itself
- * - primary: Fiat text with the fiat symbol
- * - secondary: Fiat text enclosed in parenthesis, used when the fiat text is
- * combined with a crypto amount
- **/
-export type FiatTextFormat = 'raw' | 'primary' | 'secondary'
+import { useFiatText } from '../../../hooks/useFiatText'
+import { useSelector } from '../../../types/reactRedux'
+import { getAllTokens, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { fixFiatCurrencyCode } from '../../../util/utils'
 
 type Props = {
-  format: FiatTextFormat,
+  appendFiatCurrencyCode?: boolean,
+  autoPrecision?: boolean,
+  currencyCode?: string,
+  fiatSymbolSpace?: boolean,
   nativeCryptoAmount: string,
-  cryptoCurrencyCode: string,
-  cryptoExchangeMultiplier: string,
-  isoFiatCurrencyCode: string
+  tokenId?: string,
+  wallet: EdgeCurrencyWallet
 }
 
-export const FiatText = ({ format, nativeCryptoAmount, cryptoCurrencyCode, cryptoExchangeMultiplier, isoFiatCurrencyCode }: Props) => {
+/**
+ * Return a formatted fiat text string representing the exchange rate of a
+ * specific crypto asset and native amount.
+ **/
+export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, currencyCode, fiatSymbolSpace, nativeCryptoAmount, tokenId, wallet }: Props) => {
+  const account = useSelector(state => state.core.account)
+  const currencyInfo = wallet.currencyInfo
+  const pluginId = currencyInfo.pluginId
+  const nativeCurrencyCode = currencyInfo.currencyCode
+
+  let cryptoCurrencyCode, cryptoExchangeMultiplier
+  if (nativeCurrencyCode === currencyCode) {
+    cryptoCurrencyCode = nativeCurrencyCode
+    cryptoExchangeMultiplier = currencyInfo.denominations[0].multiplier
+  } else if (tokenId != null) {
+    const token = getAllTokens(account.currencyConfig[pluginId])[tokenId]
+    cryptoCurrencyCode = token.currencyCode
+    cryptoExchangeMultiplier = token.denominations[0].multiplier
+  } else if (currencyCode != null) {
+    cryptoCurrencyCode = currencyCode
+
+    // HACK: Maintain backwards compatibility
+    const guessedToken = guessFromCurrencyCode(account, { currencyCode, pluginId, tokenId })
+    const guessedTokenId = guessedToken.tokenId
+    if (!guessedTokenId)
+      throw new Error(`Could not guess tokenId from: ${JSON.stringify({ currencyCode: currencyCode, pluginId: pluginId, tokenId: tokenId }, null, 2)}`)
+
+    const tokens = getAllTokens(account.currencyConfig[pluginId])
+    const token = tokens[guessedTokenId]
+    cryptoExchangeMultiplier = token.denominations[0].multiplier
+  } else {
+    throw new Error('FiatText requires either a tokenId or a currencyCode')
+  }
+  const isoFiatCurrencyCode = fixFiatCurrencyCode(wallet.fiatCurrencyCode)
+
   return useFiatText({
-    nativeCryptoAmount,
+    appendFiatCurrencyCode,
+    autoPrecision,
     cryptoCurrencyCode,
-    isoFiatCurrencyCode,
     cryptoExchangeMultiplier,
-    autoPrecision: format === 'primary',
-    parenthesisEnclosed: format === 'secondary'
-  }).fiatString
+    fiatSymbolSpace,
+    isoFiatCurrencyCode,
+    nativeCryptoAmount
+  })
 }

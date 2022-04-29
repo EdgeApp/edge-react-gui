@@ -8,24 +8,25 @@ import { DECIMAL_PRECISION, formatFiatString, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 type Props = {
+  appendFiatCurrencyCode?: boolean,
+  autoPrecision?: boolean,
   cryptoCurrencyCode: string,
   cryptoExchangeMultiplier?: string,
-  nativeCryptoAmount?: string,
-  appendFiatCurrencyCode?: boolean,
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode?: string,
-  autoPrecision?: boolean,
+  nativeCryptoAmount?: string,
   noGrouping?: boolean
 }
 
 export const useFiatText = (props: Props) => {
   const {
-    cryptoExchangeMultiplier = defaultMultiplier,
     appendFiatCurrencyCode,
-    nativeCryptoAmount = cryptoExchangeMultiplier,
-    cryptoCurrencyCode,
-    isoFiatCurrencyCode = USD_FIAT,
     autoPrecision,
+    cryptoCurrencyCode,
+    cryptoExchangeMultiplier = defaultMultiplier,
+    fiatSymbolSpace,
+    isoFiatCurrencyCode = USD_FIAT,
+    nativeCryptoAmount = cryptoExchangeMultiplier,
     noGrouping = false
   } = props
 
@@ -46,8 +47,7 @@ export const useFiatText = (props: Props) => {
         })
       : '0'
 
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+  const fiatSymbol = `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}`
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  const fiatText = `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
-  return { fiatAmount, fiatString, fiatText }
+  return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }

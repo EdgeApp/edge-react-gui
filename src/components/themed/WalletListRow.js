@@ -5,6 +5,7 @@ import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo } from '../../types/reactHooks.js'
+import { TickerText } from '../common/text/TickerText'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
@@ -14,8 +15,7 @@ type Props = {
   walletId?: string,
   pluginId?: string,
   tokenId?: string,
-  exchangeRateText?: string,
-  exchangeRateType?: 'neutral' | 'positive' | 'negative',
+  showRate?: boolean,
   children?: React.Node,
   icon?: React.Node,
   iconSizeRem?: number,
@@ -26,7 +26,20 @@ type Props = {
 }
 
 export const WalletListRowComponent = (props: Props) => {
-  const { currencyCode, children, pluginId, tokenId, gradient = false, icon, iconSizeRem, onPress, onLongPress, walletName = '', walletId } = props
+  const {
+    currencyCode,
+    children,
+    pluginId,
+    tokenId,
+    showRate = false,
+    gradient = false,
+    icon,
+    iconSizeRem,
+    onPress,
+    onLongPress,
+    walletName = '',
+    walletId
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -44,9 +57,7 @@ export const WalletListRowComponent = (props: Props) => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailsTop}>
               <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-              {props.exchangeRateText != null ? (
-                <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
-              ) : null}
+              {showRate && walletId != null ? <TickerText walletId={walletId} tokenId={currencyCode} style={styles.exchangeRateStyle} /> : null}
             </View>
             <View style={styles.detailsBottom}>
               <EdgeText style={styles.detailsName}>{walletName}</EdgeText>

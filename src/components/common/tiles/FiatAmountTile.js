@@ -1,4 +1,5 @@
 // @flow
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -7,26 +8,18 @@ import { FiatText } from '../text/FiatText'
 import { Tile } from './Tile.js'
 
 type Props = {
+  currencyCode?: string,
   nativeCryptoAmount: string,
-  cryptoCurrencyCode: string,
-  isoFiatCurrencyCode: string,
   title: string,
-  cryptoExchangeMultiplier: string
+  tokenId?: string,
+  wallet: EdgeCurrencyWallet
 }
 
 export const FiatAmountTile = (props: Props) => {
-  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoExchangeMultiplier } = props
+  const { currencyCode, nativeCryptoAmount, title, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const fiatAmount = (
-    <FiatText
-      format="raw"
-      nativeCryptoAmount={nativeCryptoAmount}
-      cryptoCurrencyCode={cryptoCurrencyCode}
-      isoFiatCurrencyCode={isoFiatCurrencyCode}
-      cryptoExchangeMultiplier={cryptoExchangeMultiplier}
-    />
-  )
+  const fiatAmount = <FiatText currencyCode={currencyCode} tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} noFiatSymbol />
 
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
