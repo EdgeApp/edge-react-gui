@@ -130,6 +130,19 @@ export type Theme = {
 
   // Buttons
   buttonBorderRadiusRem: number,
+  addButtonFont: string,
+
+  keypadButtonOutline: string,
+  keypadButtonOutlineWidth: number,
+  keypadButton: string[],
+  keypadButtonColorStart: GradientCoords,
+  keypadButtonColorEnd: GradientCoords,
+  keypadButtonText: string,
+  keypadButtonTextShadow: TextShadowParams,
+  keypadButtonShadow: ThemeShadowParams,
+  keypadButtonBorderRadiusRem: number,
+  keypadButtonFontSizeRem: number,
+  keypadButtonFont: string,
 
   primaryButtonOutline: string,
   primaryButtonOutlineWidth: number,

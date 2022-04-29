@@ -37,6 +37,7 @@ const palette = {
   darkPurple3: '#210449',
   plainPurple: '#532499',
   glowPurple: '#FA00FF',
+  lightPurple: '#FAaaFF',
   royalBlue: '#003B65',
   darkBlue: '#0C446A',
   edgeNavy: '#0D2145',
@@ -86,7 +87,7 @@ export const testDark: Theme = {
 
   // Icons
   icon: palette.white,
-  iconTappable: palette.edgeMint,
+  iconTappable: palette.glowPurple,
   iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
@@ -118,7 +119,7 @@ export const testDark: Theme = {
   walletListMutedBackground: palette.mutedBlue,
 
   // Text
-  primaryText: palette.white,
+  primaryText: palette.lightPurple,
   secondaryText: palette.blueGray,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
@@ -136,12 +137,36 @@ export const testDark: Theme = {
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.5,
+  addButtonFont: palette.QuicksandBold,
+
+  keypadButtonOutline: palette.glowPurple,
+  keypadButtonOutlineWidth: 1.5,
+  keypadButton: [palette.plainPurple, palette.darkPurple1],
+  keypadButtonColorStart: { x: 0, y: 0 },
+  keypadButtonColorEnd: { x: 1, y: 1 },
+  keypadButtonText: palette.lightPurple,
+  keypadButtonTextShadow: {
+    textShadowColor: palette.edgeMint,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8
+  },
+  keypadButtonShadow: {
+    shadowColor: palette.edgeMint,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
+    elevation: 3
+  },
+  keypadButtonBorderRadiusRem: 0.5,
+  keypadButtonFontSizeRem: 2,
+  keypadButtonFont: palette.QuicksandMedium,
+
   primaryButtonOutline: palette.glowPurple,
   primaryButtonOutlineWidth: 2,
   primaryButton: [palette.plainPurple, palette.darkPurple1],
   primaryButtonColorStart: { x: 0.5, y: 0 },
   primaryButtonColorEnd: { x: 0.5, y: 1 },
-  primaryButtonText: palette.white,
+  primaryButtonText: palette.lightPurple,
   primaryButtonTextShadow: {
     textShadowColor: palette.edgeMint,
     textShadowOffset: { width: 0, height: 0 },
@@ -160,7 +185,7 @@ export const testDark: Theme = {
   secondaryButton: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0.5, y: 0 },
   secondaryButtonColorEnd: { x: 0.5, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.glowPurple,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
 
