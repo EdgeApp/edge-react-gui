@@ -1,13 +1,13 @@
 // @flow
 
-import { div } from 'biggystring'
+import { div, gt } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
-import { formatNumberInput } from '../../locales/intl.js'
+import { FIAT_PRECISION, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
+import { formatNumber, formatNumberInput } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -65,9 +65,9 @@ export class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
     const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)
-    const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
+    const fiatBalanceFormat = fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
-    const fiatBalanceString = showBalance ? fiatBalanceFormat : ''
+    const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
 
     return (
       <View style={styles.container}>
