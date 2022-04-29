@@ -18,7 +18,7 @@ import { checkFilterWallet } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
-import { WalletListRow } from './WalletListRow.js'
+import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
 import { WalletListSwipeRow } from './WalletListSwipeRow.js'
 
@@ -280,7 +280,7 @@ export function WalletList(props: Props) {
 
     if (guiWallet == null || account.currencyWallets[walletId] == null) {
       if (isModal) {
-        return <WalletListRow currencyCode="" walletName="" />
+        return <WalletListLoadingRow />
       }
       return <WalletListSwipeRow currencyCode="" isToken={false} walletId={walletId} />
     } else {

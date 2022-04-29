@@ -16,7 +16,7 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow.js'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
-import { WalletListRow } from '../themed/WalletListRow.js'
+import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 
 type Props = {|
   currencyCode: string,
@@ -134,7 +134,7 @@ function WalletListSwipeRowComponent(props: Props) {
     return (
       <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
         <Gradient>
-          <WalletListRow currencyCode="" walletName="" onLongPress={handleMenu} />
+          <WalletListLoadingRow onLongPress={handleMenu} />
         </Gradient>
       </SwipeableRow>
     )

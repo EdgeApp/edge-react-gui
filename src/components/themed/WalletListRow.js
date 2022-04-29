@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import { memo } from '../../types/reactHooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -45,23 +45,17 @@ export const WalletListRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
-      {currencyCode === '' ? (
-        <ActivityIndicator color={theme.primaryText} size="large" />
-      ) : (
-        <>
-          <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} walletId={walletId} />
-          <View style={styles.detailsContainer}>
-            <View style={styles.detailsTop}>
-              <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-              {props.exchangeRateText != null ? (
-                <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
-              ) : null}
-            </View>
-            <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-          </View>
-          <View style={styles.childrenContainer}>{children}</View>
-        </>
-      )}
+      <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} walletId={walletId} />
+      <View style={styles.detailsContainer}>
+        <View style={styles.detailsTop}>
+          <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+          {props.exchangeRateText != null ? (
+            <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
+          ) : null}
+        </View>
+        <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
+      </View>
+      <View style={styles.childrenContainer}>{children}</View>
     </TouchableOpacity>
   )
 }

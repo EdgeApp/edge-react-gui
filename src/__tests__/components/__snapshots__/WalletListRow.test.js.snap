@@ -13,63 +13,61 @@ exports[`WalletListRow should render with loading props 1`] = `
     }
   }
 >
-  <React.Fragment>
-    <Memo(CurrencyIconComponent)
-      currencyCode="BTC"
-      marginRem={1}
-      sizeRem={2}
-    />
+  <Memo(CurrencyIconComponent)
+    currencyCode="BTC"
+    marginRem={1}
+    sizeRem={2}
+  />
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "marginRight": 11,
+      }
+    }
+  >
     <View
       style={
         Object {
-          "flexDirection": "column",
-          "flexGrow": 1,
-          "flexShrink": 1,
-          "marginRight": 11,
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "flex-start",
         }
       }
     >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "flex-start",
-          }
-        }
-      >
-        <WithTheme(EdgeTextComponent)
-          style={
-            Object {
-              "flexBasis": "auto",
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
-            }
-          }
-        >
-          BTC
-        </WithTheme(EdgeTextComponent)>
-      </View>
       <WithTheme(EdgeTextComponent)
         style={
           Object {
-            "color": "#A4C7DF",
-            "fontSize": 17,
+            "flexBasis": "auto",
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Medium",
           }
         }
       >
-        My bitcoin wallet
+        BTC
       </WithTheme(EdgeTextComponent)>
     </View>
-    <View
+    <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "paddingRight": 22,
+          "color": "#A4C7DF",
+          "fontSize": 17,
         }
       }
     >
-      Hello
-    </View>
-  </React.Fragment>
+      My bitcoin wallet
+    </WithTheme(EdgeTextComponent)>
+  </View>
+  <View
+    style={
+      Object {
+        "paddingRight": 22,
+      }
+    }
+  >
+    Hello
+  </View>
 </TouchableOpacity>
 `;
