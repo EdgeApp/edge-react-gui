@@ -120,17 +120,27 @@ export class EdgeProvider extends Bridgeable {
   // $FlowFixMe // Default empty array is not typed
   async chooseCurrencyWallet(allowedCurrencyCodes: string[] | EdgeTokenIdExtended[] = []): Promise<string> {
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
+      <WalletListModal
+        bridge={bridge}
+        showCreateWallet
+        allowedCurrencyCodes={
+          this._plugin.filterPlugins != null
+            ? this.convertCurrencyCodesToEdgeTokenIds(
+                allowedCurrencyCodes.filter(code => typeof code === 'string'),
+                this._plugin.filterPlugins
+              )
+            : allowedCurrencyCodes
+        }
+        headerTitle={s.strings.choose_your_wallet}
+      />
     ))
 
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
+      // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
       if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
-        const { pluginId, displayName } = this._state.core.account.currencyWallets[walletId].currencyInfo
-        if (this._plugin.filterPlugins != null && this._plugin.filterPlugins.includes(pluginId)) {
-          throw new Error(sprintf(s.strings.UnsupportedCurrency, `${displayName}-${currencyCode}`, this._plugin.displayName))
-        }
+        const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
         return Promise.resolve({
           pluginId,
@@ -491,6 +501,23 @@ export class EdgeProvider extends Bridgeable {
       }
     }
     return orderData
+  }
+
+  // Convert an array of currency codes to an array of EdgeTokenIdExtended objects by creating all possible plugin/token combinations, ignoring any plugin passed as filterPlugins.
+  convertCurrencyCodesToEdgeTokenIds(currencyCodes: string[], filterPlugins?: string[] = []): EdgeTokenIdExtended[] {
+    const tokenIds: EdgeTokenIdExtended[] = []
+    for (const pluginId of Object.keys(this._state.core.account.currencyConfig).filter(plugin => !filterPlugins.includes(plugin))) {
+      const { currencyCode, metaTokens } = this._state.core.account.currencyConfig[pluginId].currencyInfo
+      if (currencyCodes.includes(currencyCode)) {
+        tokenIds.push({ pluginId, currencyCode })
+      }
+      for (const allowedCode of currencyCodes) {
+        if (metaTokens.find(token => token.currencyCode === allowedCode) != null) {
+          tokenIds.push({ pluginId, currencyCode: allowedCode })
+        }
+      }
+    }
+    return tokenIds
   }
 
   async openSafariView(url: string): Promise<mixed> {
