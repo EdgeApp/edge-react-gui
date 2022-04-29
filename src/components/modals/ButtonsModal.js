@@ -1,9 +1,10 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
-import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { View } from '../../types/reactNative.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { showError } from '../services/AirshipInstance.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
@@ -20,7 +21,9 @@ export type ButtonInfo = {
   // a spinning button cannot be clicked again until the promise resolves.
   onPress?: () => Promise<boolean>
 }
-
+// type TestProps = {
+//   testId?: string
+// }
 /**
  * A modal with a title, message, and buttons.
  * This is an alternative to the native `Alert` component.
@@ -32,20 +35,23 @@ export type ButtonInfo = {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
-  bridge: AirshipBridge<$Keys<Buttons> | void>,
-  title?: string,
-  message?: string,
-  children?: React.Node,
-  buttons: Buttons,
-  closeArrow?: boolean,
-  disableCancel?: boolean,
-  fullScreen?: boolean
-|}) {
-  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
+export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(
+  props: {|
+    bridge: AirshipBridge<$Keys<Buttons> | void>,
+    title?: string,
+    message?: string,
+    children?: React.Node,
+    buttons: Buttons,
+    closeArrow?: boolean,
+    disableCancel?: boolean,
+    fullScreen?: boolean,
+    testId?: string
+  |} & TestProps
+) {
+  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false, testId = 'ButtonsModal' } = props
 
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
-
+  const generateTestHook = useCavy()
   const styles = {
     container: {
       flex: fullScreen ? 1 : 0
@@ -81,10 +87,9 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
               error => showError(error)
             )
           }
-
-          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
+          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} testId={`${testId}.${key}`} />
         })}
-        {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+        {closeArrow ? <ModalCloseArrow onPress={handleCancel} ref={generateTestHook(testId)} /> : null}
       </View>
     </ThemedModal>
   )
