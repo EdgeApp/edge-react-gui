@@ -126,6 +126,7 @@ exports[`createWalletName should render with loading props 1`] = `
       "icon": "#FFFFFF",
       "iconDeactivated": "rgba(255, 255, 255, .75)",
       "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
+      "iconServerBaseUri": "https://content.edge.app",
       "iconTappable": "#66EDA8",
       "inputAccessoryBackground": "#FFFFFF",
       "inputAccessoryText": "#0073D9",
@@ -265,40 +266,10 @@ exports[`createWalletName should render with loading props 1`] = `
         "textShadowRadius": 0,
       },
       "secondaryText": "#A4C7DF",
-      "settingsChangellyLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
-      },
-      "settingsChangenowLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangenow.png",
-      },
-      "settingsDefaultLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeDefault.png",
-      },
-      "settingsExolixLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeExolix.png",
-      },
-      "settingsFoxExchangeLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeFoxExchange.png",
-      },
-      "settingsGodexLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeGodex.png",
-      },
       "settingsRowBackground": "rgba(255, 255, 255, 0)",
       "settingsRowHeaderBackground": "#0D2145",
       "settingsRowPressed": "rgba(255, 255, 255, 0)",
       "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
-      "settingsSideshiftLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeSideShiftAI.png",
-      },
-      "settingsSpookySwapLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeSpookySwap.png",
-      },
-      "settingsSwitchainLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
-      },
-      "settingsTotleLogo": Object {
-        "testUri": "../../../src/assets/images/exchange/settingsExchangeTotle.png",
-      },
       "sliderTabMore": "#0073D9",
       "sliderTabRequest": "#77C513",
       "sliderTabSend": "#E85466",
@@ -336,6 +307,7 @@ exports[`createWalletName should render with loading props 1`] = `
       "walletListSlideTutorialImage": Object {
         "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
       },
+      "walletProgressIconDone": "#FFFFFF",
       "walletProgressIconFill": "#66EDA8",
       "warningIcon": "#F1AA19",
       "warningText": "#F1AA19",
