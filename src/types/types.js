@@ -121,6 +121,7 @@ export type CustomTokenInfo = {
 export type CreateWalletType = {
   currencyName: string,
   walletType: string,
+  pluginId: string,
   currencyCode: string
 }
 
