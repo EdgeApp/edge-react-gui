@@ -57,8 +57,6 @@ export const WcSmartContractModal = (props: Props) => {
   }
   const { currencyCode: feeCurrencyCode, pluginId, metaTokens } = wallet.currencyInfo
 
-  const { isoFiatCurrencyCode } = guiWallet
-
   const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
   const feeCurrencyBalance = guiWallet.primaryNativeBalance
 
@@ -133,9 +131,9 @@ export const WcSmartContractModal = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.string_amount}
             nativeCryptoAmount={amountCrypto}
-            cryptoCurrencyCode={amountCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={amountDenom}
+            walletId={walletId}
+            tokenId={amountCurrencyCode}
           />
         )}
         {walletName != null && (
@@ -150,18 +148,17 @@ export const WcSmartContractModal = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeCrypto}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={feeDenom}
+            walletId={walletId}
+            tokenId={feeCurrencyCode}
           />
         )}
         {!zeroString(totalNativeCrypto) && (
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
             nativeCryptoAmount={totalNativeCrypto}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
-            cryptoExchangeMultiplier={feeDenom.multiplier}
+            walletId={walletId}
+            tokenId={amountCurrencyCode}
           />
         )}
         {slider}

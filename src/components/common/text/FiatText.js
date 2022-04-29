@@ -1,6 +1,9 @@
 // @flow
 
 import { useFiatText } from '../../../hooks/useFiatText'
+import { getDenominationFromCurrencyInfo } from '../../../selectors/DenominationSelectors'
+import { useSelector } from '../../../types/reactRedux'
+import { fixFiatCurrencyCode } from '../../../util/utils'
 
 /**
  * - raw: Only the numeric fiat text itself
@@ -11,17 +14,26 @@ import { useFiatText } from '../../../hooks/useFiatText'
 export type FiatTextFormat = 'raw' | 'primary' | 'secondary'
 
 type Props = {
-  format: FiatTextFormat,
+  walletId: string,
+  tokenId?: string,
   nativeCryptoAmount: string,
-  cryptoCurrencyCode: string,
-  cryptoExchangeMultiplier: string,
-  isoFiatCurrencyCode: string
+  format: FiatTextFormat
 }
 
-export const FiatText = ({ format, nativeCryptoAmount, cryptoCurrencyCode, cryptoExchangeMultiplier, isoFiatCurrencyCode }: Props) => {
+/**
+ * Return a formatted fiat text string representing the exchange rate of a
+ * specific crypto asset and native amount.
+ **/
+export const FiatText = ({ walletId, tokenId, nativeCryptoAmount, format }: Props) => {
+  const fiatCurrencyCode = useSelector(state => state.core.account.currencyWallets[walletId].fiatCurrencyCode)
+  const currencyInfo = useSelector(state => state.core.account.currencyWallets[walletId].currencyInfo)
+  const tokenOrNativeCode = tokenId ?? currencyInfo.currencyCode
+  const isoFiatCurrencyCode = fixFiatCurrencyCode(fiatCurrencyCode)
+  const { multiplier: cryptoExchangeMultiplier } = getDenominationFromCurrencyInfo(currencyInfo, tokenOrNativeCode)
+
   return useFiatText({
     nativeCryptoAmount,
-    cryptoCurrencyCode,
+    cryptoCurrencyCode: tokenOrNativeCode,
     isoFiatCurrencyCode,
     cryptoExchangeMultiplier,
     autoPrecision: format === 'primary',

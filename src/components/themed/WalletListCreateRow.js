@@ -91,6 +91,9 @@ export const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName
   }
 }
 
+/**
+ * Renders a WalletListRow with "Create Wallet" children
+ * */
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
   const dispatch = useDispatch()
   const theme = useTheme()

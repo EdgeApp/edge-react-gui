@@ -21,7 +21,7 @@ import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useState } from '../../types/reactHooks'
@@ -65,9 +65,6 @@ export function ControlPanel(props: Props) {
     guiWallet != null ? getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
   )
   const isoFiatCurrencyCode = selectedWallet != null ? getWalletFiat(selectedWallet).isoFiatCurrencyCode : null
-  const { multiplier: selectedCurrencyCodeExchangeMultiplier } = useSelector(state =>
-    guiWallet != null ? getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
-  )
 
   /// ---- Local State ----
 
@@ -254,15 +251,7 @@ export function ControlPanel(props: Props) {
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
                   {`1 ${currencyDenomName} = `}
-                  <FiatText
-                    format="primary"
-                    nativeCryptoAmount={currencyDenomMult}
-                    cryptoCurrencyCode={selectedCurrencyCode}
-                    isoFiatCurrencyCode={isoFiatCurrencyCode}
-                    autoPrecision
-                    appendFiatCurrencyCode
-                    cryptoExchangeMultiplier={selectedCurrencyCodeExchangeMultiplier}
-                  />
+                  <FiatText format="primary" nativeCryptoAmount={currencyDenomMult} tokenId={selectedCurrencyCode} walletId={selectedWallet.id} />
                 </TitleText>
               </View>
             </>

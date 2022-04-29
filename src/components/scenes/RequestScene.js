@@ -314,11 +314,8 @@ export class RequestComponent extends React.Component<Props, State> {
                 <FiatText
                   format="primary"
                   nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
-                  cryptoCurrencyCode={primaryCurrencyInfo.displayCurrencyCode}
-                  isoFiatCurrencyCode={edgeWallet.fiatCurrencyCode}
-                  autoPrecision
-                  appendFiatCurrencyCode
-                  cryptoExchangeMultiplier={primaryCurrencyInfo.exchangeDenomination.multiplier}
+                  tokenId={primaryCurrencyInfo.displayCurrencyCode}
+                  walletId={edgeWallet.id}
                 />
               </EdgeText>
             </View>
@@ -598,12 +595,14 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: walletId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
     const secondaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: walletId,
       displayCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
       displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: secondaryExchangeCurrencyCode,

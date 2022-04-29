@@ -377,6 +377,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
   const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
   const primaryInfo: GuiCurrencyInfo = {
+    walletId,
     pluginId,
     displayCurrencyCode: cc,
     exchangeCurrencyCode: cc,

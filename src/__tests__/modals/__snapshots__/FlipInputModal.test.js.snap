@@ -140,12 +140,9 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
           >
             1 BTC 
             <FiatText
-              cryptoCurrencyCode="BTC"
-              cryptoExchangeMultiplier="100000000000"
               format="secondary"
-              isoFiatCurrencyCode="BTC"
               nativeCryptoAmount="1"
-              parenthesisEnclosed={true}
+              tokenId="BTC"
             />
           </WithTheme(EdgeTextComponent)>
         </View>
@@ -231,12 +228,9 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
           >
             0.0000001 BTC 
             <FiatText
-              cryptoCurrencyCode="BTC"
-              cryptoExchangeMultiplier="100000000000"
               format="secondary"
-              isoFiatCurrencyCode="BTC"
               nativeCryptoAmount="10000"
-              parenthesisEnclosed={true}
+              tokenId="BTC"
             />
           </WithTheme(EdgeTextComponent)>
         </View>

@@ -12,16 +12,16 @@ import { FiatText } from '../text/FiatText'
 import { Tile } from './Tile'
 
 type Props = {
-  nativeCryptoAmount: string,
-  cryptoCurrencyCode: string,
-  isoFiatCurrencyCode: string,
+  denomination: EdgeDenomination,
   maxCryptoChars?: number,
+  nativeCryptoAmount: string,
   title: string,
-  denomination: EdgeDenomination
+  walletId: string,
+  tokenId?: string
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { title, nativeCryptoAmount, cryptoCurrencyCode, isoFiatCurrencyCode, maxCryptoChars, denomination } = props
+  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId } = props
   const styles = getStyles(useTheme())
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
@@ -38,16 +38,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
 
   // Fiat amount is always positive for this specific tile
   const absCryptoAmount = abs(nativeCryptoAmount)
-  const fiatAmount = (
-    <FiatText
-      format="secondary"
-      nativeCryptoAmount={absCryptoAmount}
-      cryptoCurrencyCode={cryptoCurrencyCode}
-      isoFiatCurrencyCode={isoFiatCurrencyCode}
-      cryptoExchangeMultiplier={cryptoDenomMult}
-      parenthesisEnclosed
-    />
-  )
+  const fiatAmount = <FiatText format="secondary" walletId={walletId} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />
 
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
