@@ -28,27 +28,17 @@ exports[`WalletListRow should render with loading props 1`] = `
       }
     }
   >
-    <View
+    <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "flex-start",
+          "flexBasis": "auto",
+          "flexShrink": 1,
+          "fontFamily": "Quicksand-Medium",
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
-        style={
-          Object {
-            "flexBasis": "auto",
-            "flexShrink": 1,
-            "fontFamily": "Quicksand-Medium",
-          }
-        }
-      >
-        BTC
-      </WithTheme(EdgeTextComponent)>
-    </View>
+      BTC
+    </WithTheme(EdgeTextComponent)>
     <WithTheme(EdgeTextComponent)
       style={
         Object {

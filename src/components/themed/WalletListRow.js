@@ -11,14 +11,11 @@ import { EdgeText } from './EdgeText.js'
 type Props = {|
   children?: React.Node,
   currencyCode: string,
-  exchangeRateText?: string,
-  exchangeRateType?: 'neutral' | 'positive' | 'negative',
   walletName: string,
 
   // Icon currency:
   pluginId?: string,
   tokenId?: string,
-  walletId?: string,
 
   // Callbacks:
   onLongPress?: () => void,
@@ -34,7 +31,6 @@ export const WalletListRowComponent = (props: Props) => {
     // Icon currency:
     pluginId,
     tokenId,
-    walletId,
 
     // Callbacks:
     onLongPress,
@@ -45,14 +41,9 @@ export const WalletListRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
-      <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} walletId={walletId} />
+      <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
-        <View style={styles.detailsTop}>
-          <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-          {props.exchangeRateText != null ? (
-            <EdgeText style={[styles.exchangeRateStyle, styles[props.exchangeRateType ?? 'neutral']]}>{props.exchangeRateText}</EdgeText>
-          ) : null}
-        </View>
+        <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
       </View>
       <View style={styles.childrenContainer}>{children}</View>
@@ -81,35 +72,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingRight: theme.rem(1)
   },
   // Other styles
-  detailsTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  },
   detailsCurrency: {
     flexBasis: 'auto',
     flexShrink: 1,
     fontFamily: theme.fontFaceMedium
   },
-  exchangeRateStyle: {
-    textAlign: 'left',
-    flexBasis: 'auto',
-    flexShrink: 1,
-    marginLeft: theme.rem(0.75)
-  },
   detailsName: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
-  },
-  // Difference Percentage Styles
-  neutral: {
-    color: theme.secondaryText
-  },
-  positive: {
-    color: theme.positiveText
-  },
-  negative: {
-    color: theme.negativeText
   }
 }))
 
