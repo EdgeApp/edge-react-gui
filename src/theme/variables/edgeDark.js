@@ -73,6 +73,7 @@ export const edgeDark: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: true,
+  preferPrimaryButton: false,
 
   // Common border
   defaultBorderColor: palette.white,
