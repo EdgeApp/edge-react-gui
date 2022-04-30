@@ -87,7 +87,9 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
 
     const fiatValue = `${fiatSymbol} ${fiatAmount}`
     const currencyValue = `${displayDenomination.symbol || ''} ${fioRequest.content.amount}`
-    const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
+    // time_stamp is returned as UTC but doesn't always include the zulu
+    const safeDate = fioRequest.time_stamp.includes('Z') ? fioRequest.time_stamp : `${fioRequest.time_stamp}Z`
+    const dateValue = `${formatTime(new Date(safeDate))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
     return (
       <SwipeableRow
         ref={this.rowRef}
