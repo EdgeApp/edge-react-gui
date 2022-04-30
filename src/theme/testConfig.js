@@ -11,6 +11,8 @@ export const testConfig: AppConfig = {
   darkTheme: testDark,
   lightTheme: testLight,
   supportsEdgeLogin: false,
+  backgroundImageServers: ['https://content.testy.com'],
+  referralServers: ['https://referral1.testy.com'],
   knowledgeBase: 'https://support.testy.com/knowledge',
   supportSite: 'https://support.testy.com',
   phoneNumber: '+1-800-100-1000',

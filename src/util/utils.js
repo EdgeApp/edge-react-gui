@@ -672,3 +672,8 @@ export function unixToLocaleDateTime(unixDate: number): { date: string, time: st
     dateTime: toLocaleDateTime(date)
   }
 }
+
+export const pickRandom = <T>(array?: T[]): T | null => {
+  if (array == null || array.length === 0) return null
+  return array[Math.floor(Math.random() * array.length)]
+}
