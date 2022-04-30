@@ -11,9 +11,13 @@ export const edgeConfig: AppConfig = {
   darkTheme: edgeDark,
   lightTheme: edgeLight,
   supportsEdgeLogin: true,
+  backgroundImageServers: ['https://content.edge.app'],
+  referralServers: ['https://referral1.edge.app'],
+  notificationServers: ['https://notif1.edge.app'],
   knowledgeBase: 'https://support.edge.app/support/home',
   supportSite: 'https://support.edge.app/support/tickets/new',
   phoneNumber: '+1-855-346-4974',
   website: 'https://edge.app',
+  termsOfServiceSite: 'https://edge.app/tos/',
   appStore: 'https://itunes.apple.com/app/id1344400091'
 }

@@ -73,6 +73,7 @@ export const edgeDark: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: true,
+  preferPrimaryButton: false,
 
   // Common border
   defaultBorderColor: palette.white,
@@ -87,8 +88,7 @@ export const edgeDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.edgeNavy,
-  backgroundGradientRight: palette.darkBlue,
+  backgroundGradientColors: [palette.edgeNavy, palette.darkBlue],
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -100,6 +100,9 @@ export const edgeDark: Theme = {
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,
+  sideMenuColor: palette.edgeNavy,
+  sideMenuBorderColor: palette.transparent,
+  sideMenuBorderWidth: 0,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
@@ -130,6 +133,20 @@ export const edgeDark: Theme = {
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.25,
+  addButtonFont: palette.QuicksandMedium,
+
+  keypadButtonOutline: palette.edgeMint,
+  keypadButtonOutlineWidth: 1,
+  keypadButton: [palette.transparent, palette.transparent],
+  keypadButtonColorStart: { x: 0, y: 0 },
+  keypadButtonColorEnd: { x: 1, y: 1 },
+  keypadButtonText: palette.edgeMint,
+  keypadButtonTextShadow: textNoShadow,
+  keypadButtonShadow: themeNoShadow,
+  keypadButtonBorderRadiusRem: 0.25,
+  keypadButtonFontSizeRem: 1,
+  keypadButtonFont: palette.QuicksandMedium,
+
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 1,
   primaryButton: [palette.edgeMint, palette.edgeMint],
@@ -157,6 +174,11 @@ export const edgeDark: Theme = {
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
 
+  // Dropdown colors:
+  dropdownWarning: palette.accentOrange,
+  dropdownError: palette.accentRed,
+  dropdownText: palette.white,
+
   // Card
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
@@ -164,7 +186,10 @@ export const edgeDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.edgeNavy,
+  tabBarBackground: [palette.edgeNavy, palette.edgeNavy],
+  tabBarBackgroundStart: { x: 0, y: 0 },
+  tabBarBackgroundEnd: { x: 1, y: 1 },
+  tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeNavy],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
@@ -202,6 +227,10 @@ export const edgeDark: Theme = {
   // tileDivider: palette.blueGray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
+
+  // DividerLine component
+  dividerLineHeight: 1,
+  dividerLineColors: [palette.whiteOp10, palette.whiteOp10],
 
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
@@ -269,6 +298,8 @@ export const edgeDark: Theme = {
   outlineTextInputColor: palette.transparent,
   outlineTextInputTextColor: palette.white,
   outlineTextInputBorderWidth: 1,
+  outlineTextInputBorderColor: palette.blueGray,
+  outlineTextInputBorderColorFocused: palette.edgeMint,
 
   // Animation
   fadeDisable: palette.gray,

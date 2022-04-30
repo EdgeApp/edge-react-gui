@@ -349,11 +349,15 @@ export type AppConfig = {
   appNameShort: string,
   darkTheme: Theme,
   lightTheme: Theme,
+  backgroundImageServers?: string[],
+  referralServers?: string[],
+  notificationServers: string[],
   supportsEdgeLogin: boolean,
   knowledgeBase: string,
   supportSite: string,
   phoneNumber: string,
   website: string,
+  termsOfServiceSite: string,
   appStore: string
 }
 

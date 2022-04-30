@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { showError } from '../services/AirshipInstance.js'
+import { useTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -43,6 +44,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   fullScreen?: boolean
 |}) {
   const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
+  const theme = useTheme()
 
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
 
@@ -68,8 +70,13 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
         </View>
       </View>
       <View style={styles.buttons}>
-        {Object.keys(buttons).map((key, i) => {
-          const defaultType = i === 0 && Object.keys(buttons).length > 1 ? 'primary' : 'secondary'
+        {Object.keys(buttons).map((key, i, arr) => {
+          let defaultType
+          if (theme.preferPrimaryButton) {
+            defaultType = i === 0 ? 'primary' : 'secondary'
+          } else {
+            defaultType = i === 0 && arr.length > 1 ? 'primary' : 'secondary'
+          }
           const { type = defaultType, label, onPress } = buttons[key]
 
           const handlePress = (): void | Promise<void> => {

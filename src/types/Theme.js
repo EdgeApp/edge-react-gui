@@ -1,4 +1,5 @@
 // @flow
+import { asNumber, asObject } from 'cleaners'
 
 type ThemeShadowParams = {
   shadowColor: string,
@@ -20,7 +21,13 @@ type TextShadowParams = {
   textShadowRadius: number
 }
 
-export const themeNoShadow = {
+const asGradientCoords = asObject({
+  x: asNumber,
+  y: asNumber
+})
+type GradientCoords = $Call<typeof asGradientCoords>
+
+export const themeNoShadow: ThemeShadowParams = {
   shadowColor: '#000000',
   shadowOffset: {
     width: 0,
@@ -31,7 +38,7 @@ export const themeNoShadow = {
   elevation: 0
 }
 
-export const textNoShadow = {
+export const textNoShadow: TextShadowParams = {
   textShadowColor: '#000000',
   textShadowOffset: {
     width: 0,
@@ -44,6 +51,11 @@ export const textNoShadow = {
 export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
+
+  // Prefer using at the Primary button style when there is only one button option on a
+  // scene or modal. Edge prefers the Secondary button style and uses the Primary button sparingly
+  // since it uses a loud solid mint color.
+  preferPrimaryButton: boolean,
 
   // Used to control the OS status bar, modal blur,
   // and other binary light / dark choices:
@@ -62,8 +74,7 @@ export type Theme = {
   buySellCustomPluginModalIcon: string,
 
   // Background
-  backgroundGradientLeft: string,
-  backgroundGradientRight: string,
+  backgroundGradientColors: string[],
 
   // Camera Overlay
   cameraOverlayColor: string,
@@ -73,6 +84,10 @@ export type Theme = {
   // Modal
   modal: string,
   modalCloseIcon: string,
+
+  sideMenuColor: string,
+  sideMenuBorderColor: string,
+  sideMenuBorderWidth: number,
   // modalFullGradientLeft: string,
   // modalFullGradientRight: string,
 
@@ -119,12 +134,25 @@ export type Theme = {
 
   // Buttons
   buttonBorderRadiusRem: number,
+  addButtonFont: string,
+
+  keypadButtonOutline: string,
+  keypadButtonOutlineWidth: number,
+  keypadButton: string[],
+  keypadButtonColorStart: GradientCoords,
+  keypadButtonColorEnd: GradientCoords,
+  keypadButtonText: string,
+  keypadButtonTextShadow: TextShadowParams,
+  keypadButtonShadow: ThemeShadowParams,
+  keypadButtonBorderRadiusRem: number,
+  keypadButtonFontSizeRem: number,
+  keypadButtonFont: string,
 
   primaryButtonOutline: string,
   primaryButtonOutlineWidth: number,
   primaryButton: string[],
-  primaryButtonColorStart: { x: number, y: number },
-  primaryButtonColorEnd: { x: number, y: number },
+  primaryButtonColorStart: GradientCoords,
+  primaryButtonColorEnd: GradientCoords,
   primaryButtonText: string,
   primaryButtonTextShadow: TextShadowParams,
   primaryButtonShadow: ThemeShadowParams,
@@ -132,8 +160,8 @@ export type Theme = {
   secondaryButtonOutline: string,
   secondaryButtonOutlineWidth: number,
   secondaryButton: string[],
-  secondaryButtonColorStart: { x: number, y: number },
-  secondaryButtonColorEnd: { x: number, y: number },
+  secondaryButtonColorStart: GradientCoords,
+  secondaryButtonColorEnd: GradientCoords,
   secondaryButtonText: string,
   secondaryButtonTextShadow: TextShadowParams,
   secondaryButtonShadow: ThemeShadowParams,
@@ -141,11 +169,16 @@ export type Theme = {
   escapeButtonOutline: string,
   escapeButtonOutlineWidth: number,
   escapeButton: string[],
-  escapeButtonColorStart: { x: number, y: number },
-  escapeButtonColorEnd: { x: number, y: number },
+  escapeButtonColorStart: GradientCoords,
+  escapeButtonColorEnd: GradientCoords,
   escapeButtonText: string,
   escapeButtonTextShadow: TextShadowParams,
   escapeButtonShadow: ThemeShadowParams,
+
+  // Dropdown colors:
+  dropdownWarning: string,
+  dropdownError: string,
+  dropdownText: string,
 
   // tertiaryButtonOutline: string,
   // tertiaryButton: string,
@@ -167,7 +200,10 @@ export type Theme = {
   cardBorderColor: string,
   cardBorderRadius: number,
 
-  tabBarBackground: string,
+  tabBarBackground: string[],
+  tabBarBackgroundStart: GradientCoords,
+  tabBarBackgroundEnd: GradientCoords,
+  tabBarTopOutlineColors: string[],
   tabBarIcon: string,
   tabBarIconHighlighted: string,
 
@@ -205,6 +241,10 @@ export type Theme = {
   // tileDivider: string,
   thinLineWidth: number,
   mediumLineWidth: number,
+
+  // DividerLine component
+  dividerLineHeight: number,
+  dividerLineColors: string[],
 
   // Notifications
   // notificationBackground: string,
@@ -266,6 +306,8 @@ export type Theme = {
   outlineTextInputColor: string,
   outlineTextInputTextColor: string,
   outlineTextInputBorderWidth: number,
+  outlineTextInputBorderColor: string,
+  outlineTextInputBorderColorFocused: string,
 
   // Animation
   fadeDisable: string,

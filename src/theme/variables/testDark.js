@@ -37,6 +37,7 @@ const palette = {
   darkPurple3: '#210449',
   plainPurple: '#532499',
   glowPurple: '#FA00FF',
+  lightPurple: '#FAaaFF',
   royalBlue: '#003B65',
   darkBlue: '#0C446A',
   edgeNavy: '#0D2145',
@@ -79,13 +80,14 @@ export const testDark: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: true,
+  preferPrimaryButton: true,
 
   // Common border
   defaultBorderColor: palette.white,
 
   // Icons
   icon: palette.white,
-  iconTappable: palette.edgeMint,
+  iconTappable: palette.glowPurple,
   iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
@@ -93,8 +95,7 @@ export const testDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.deepPurple,
-  backgroundGradientRight: palette.darkPurple2,
+  backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -107,6 +108,10 @@ export const testDark: Theme = {
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,
 
+  sideMenuColor: palette.edgeNavy,
+  sideMenuBorderColor: palette.glowPurple,
+  sideMenuBorderWidth: 4,
+
   // Tile
   // listHeaderBackground: palette.edgeNavy,
   tileBackground: palette.transparent,
@@ -118,7 +123,7 @@ export const testDark: Theme = {
   walletListMutedBackground: palette.mutedBlue,
 
   // Text
-  primaryText: palette.white,
+  primaryText: palette.lightPurple,
   secondaryText: palette.blueGray,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
@@ -136,12 +141,36 @@ export const testDark: Theme = {
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.5,
+  addButtonFont: palette.QuicksandBold,
+
+  keypadButtonOutline: palette.glowPurple,
+  keypadButtonOutlineWidth: 1.5,
+  keypadButton: [palette.plainPurple, palette.darkPurple1],
+  keypadButtonColorStart: { x: 0, y: 0 },
+  keypadButtonColorEnd: { x: 1, y: 1 },
+  keypadButtonText: palette.lightPurple,
+  keypadButtonTextShadow: {
+    textShadowColor: palette.edgeMint,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8
+  },
+  keypadButtonShadow: {
+    shadowColor: palette.edgeMint,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
+    elevation: 3
+  },
+  keypadButtonBorderRadiusRem: 0.5,
+  keypadButtonFontSizeRem: 2,
+  keypadButtonFont: palette.QuicksandMedium,
+
   primaryButtonOutline: palette.glowPurple,
   primaryButtonOutlineWidth: 2,
   primaryButton: [palette.plainPurple, palette.darkPurple1],
   primaryButtonColorStart: { x: 0.5, y: 0 },
   primaryButtonColorEnd: { x: 0.5, y: 1 },
-  primaryButtonText: palette.white,
+  primaryButtonText: palette.lightPurple,
   primaryButtonTextShadow: {
     textShadowColor: palette.edgeMint,
     textShadowOffset: { width: 0, height: 0 },
@@ -160,7 +189,7 @@ export const testDark: Theme = {
   secondaryButton: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0.5, y: 0 },
   secondaryButtonColorEnd: { x: 0.5, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.glowPurple,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
 
@@ -173,6 +202,11 @@ export const testDark: Theme = {
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
 
+  // Dropdown colors:
+  dropdownWarning: palette.accentOrange,
+  dropdownError: palette.accentRed,
+  dropdownText: palette.white,
+
   // Card
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
@@ -180,7 +214,10 @@ export const testDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.edgeNavy,
+  tabBarBackground: [palette.edgeNavy, palette.edgeMint],
+  tabBarBackgroundStart: { x: 0, y: 0 },
+  tabBarBackgroundEnd: { x: 1, y: 1 },
+  tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeMint],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
@@ -218,6 +255,10 @@ export const testDark: Theme = {
   // tileDivider: palette.blueGray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
+
+  // DividerLine component
+  dividerLineHeight: 2,
+  dividerLineColors: [palette.edgeMint, palette.edgeNavy],
 
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
@@ -285,6 +326,8 @@ export const testDark: Theme = {
   outlineTextInputColor: palette.darkPurple3,
   outlineTextInputTextColor: palette.white,
   outlineTextInputBorderWidth: 1,
+  outlineTextInputBorderColor: palette.darkPurple1,
+  outlineTextInputBorderColorFocused: palette.glowPurple,
 
   // Animation
   fadeDisable: palette.gray,
