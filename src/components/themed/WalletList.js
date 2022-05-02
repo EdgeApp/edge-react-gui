@@ -161,10 +161,12 @@ export function WalletList(props: Props) {
           key: walletId
         })
       } else if (wallet != null) {
-        const { enabledTokens, name, currencyCode, currencyNames } = asSafeDefaultGuiWallet(wallet)
+        const { enabledTokens, name, pluginId, currencyNames } = asSafeDefaultGuiWallet(wallet)
+        const { currencyInfo } = account.currencyConfig[pluginId]
+        const { currencyCode, displayName } = currencyInfo
 
         // Initialize wallets
-        if (checkFilterWallet({ name, currencyCode, currencyName: currencyNames[currencyCode] }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
+        if (checkFilterWallet({ name, currencyCode, currencyName: displayName }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: currencyCode,
