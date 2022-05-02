@@ -105,7 +105,13 @@ export const WcSmartContractModal = (props: Props) => {
         type="warning"
       />
     ) : (
-      <Alert marginTop={0.5} title={s.strings.wc_smartcontract_warning_title} message={s.strings.wc_smartcontract_warning_text} type="warning" />
+      <Alert
+        numberOfLines={0}
+        marginTop={0.5}
+        title={s.strings.wc_smartcontract_warning_title}
+        message={s.strings.wc_smartcontract_warning_text}
+        type="warning"
+      />
     )
   }
 
