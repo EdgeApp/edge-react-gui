@@ -1,5 +1,18 @@
 # edge-react-gui
 
+## 2.14.1 (2022-05-02)
+
+- Wallet Connect: Fix hex value handling
+- Add Edge Provider utility to convert currency code array to EdgeTokenIdExtended array
+- Upgrade edge-currency-accountbased to v0.15.7
+  - Fix assignment of network fees from info server
+  - Add logging of fees
+  - Add feeUpdateFrequency override and change FTM to 1 min
+  - Change preference of fee providers
+  - Do not overwrite baseFeeMultiplier coming from settings
+  - Fix hex number handling
+  - Update ZEC checkpoints
+
 ## 2.14.0 (2022-04-26)
 
 - Add Tomb Swap
