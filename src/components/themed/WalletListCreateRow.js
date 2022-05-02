@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { type CreateWalletOptions, createWallet } from '../../actions/CreateWalletActions.js'
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
@@ -9,13 +10,13 @@ import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreen
 import { showError } from '../../components/services/AirshipInstance.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { memo, useCallback, useMemo } from '../../types/reactHooks.js'
+import { memo, useCallback } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
-import { WalletListRow } from './WalletListRow.js'
 
 export type WalletListCreateRowProps = {|
   currencyCode: string,
@@ -49,19 +50,17 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     }
   }, [walletType, pluginId, onPress, currencyCode, dispatch])
 
-  const children = useMemo(
-    () => (
-      <View style={styles.labelContainer}>
+  return (
+    <TouchableOpacity style={styles.row} onPress={handlePress}>
+      <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} />
+      <View style={styles.nameColumn}>
+        <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
+        <EdgeText style={styles.nameText}>{currencyName}</EdgeText>
+      </View>
+      <View style={styles.labelColumn}>
         <EdgeText style={styles.labelText}>{walletType != null ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</EdgeText>
       </View>
-    ),
-    [styles.labelContainer, styles.labelText, walletType]
-  )
-
-  return (
-    <WalletListRow currencyCode={currencyCode} pluginId={pluginId} onPress={handlePress} walletName={currencyName}>
-      {children}
-    </WalletListRow>
+    </TouchableOpacity>
   )
 }
 
@@ -114,9 +113,37 @@ const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName }: Cre
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // Label
-  labelContainer: { justifyContent: 'center' },
-  labelText: { fontFamily: theme.fontFaceMedium }
+  // Layout:
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    minHeight: theme.rem(4.25)
+  },
+  labelColumn: {
+    justifyContent: 'center',
+    paddingRight: theme.rem(1)
+  },
+  nameColumn: {
+    flexDirection: 'column',
+    flexGrow: 1,
+    flexShrink: 1,
+    marginRight: theme.rem(0.5)
+  },
+
+  // Text:
+  currencyText: {
+    flexBasis: 'auto',
+    flexShrink: 1,
+    fontFamily: theme.fontFaceMedium
+  },
+  labelText: {
+    fontFamily: theme.fontFaceMedium
+  },
+  nameText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  }
 }))
 
 export const WalletListCreateRow = memo(WalletListCreateRowComponent)
