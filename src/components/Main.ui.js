@@ -38,7 +38,6 @@ import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import { ControlPanel } from '../components/themed/ControlPanel'
 import {
-  ADD_TOKEN,
   CHANGE_MINING_FEE,
   CHANGE_PASSWORD,
   CHANGE_PIN,
@@ -55,7 +54,6 @@ import {
   DEFAULT_FIAT_SETTING,
   EDGE,
   EDGE_LOGIN,
-  EDIT_TOKEN,
   EXCHANGE,
   EXCHANGE_QUOTE_PROCESSING_SCENE,
   EXCHANGE_QUOTE_SCENE,
@@ -81,8 +79,6 @@ import {
   FIO_STAKING_CHANGE,
   FIO_STAKING_OVERVIEW,
   LOGIN,
-  MANAGE_TOKENS,
-  MANAGE_TOKENS_NOT_USED,
   NOTIFICATION_SETTINGS,
   OTP_REPAIR_SCENE,
   OTP_SETUP,
@@ -124,7 +120,6 @@ import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
-import { AddTokenScene } from './scenes/AddTokenScene.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
@@ -397,7 +392,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={MANAGE_TOKENS}
+                key="manageTokens"
                 component={withNavigation(ifLoggedIn(ManageTokensScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
@@ -407,21 +402,11 @@ export class MainComponent extends React.Component<Props> {
                 duration={600}
               />
               <Scene
-                key={ADD_TOKEN}
-                component={withNavigation(ifLoggedIn(AddTokenScene))}
-                navTransparent
-                onLeft={Actions.pop}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={this.renderEmptyButton()}
-                renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
-              />
-              <Scene
-                key={EDIT_TOKEN}
+                key="editToken"
                 component={withNavigation(ifLoggedIn(EditTokenScene))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
-                renderTitle={<HeaderTitle title={s.strings.title_edit_token} />}
               />
               <Scene
                 key={TRANSACTIONS_EXPORT}
@@ -561,21 +546,12 @@ export class MainComponent extends React.Component<Props> {
             <Scene key={SECURITY_ALERTS_SCENE} component={withNavigation(ifLoggedIn(SecurityAlertsScene))} navTransparent />
           </Stack>
 
-          <Stack key={MANAGE_TOKENS} hideTabBar>
+          <Stack key="manageTokens" hideTabBar>
             <Scene
-              key={MANAGE_TOKENS_NOT_USED}
+              key="manageTokens_notused"
               component={withNavigation(ifLoggedIn(ManageTokensScene))}
               navTransparent
               renderTitle=""
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={this.renderEmptyButton()}
-            />
-
-            <Scene
-              key={ADD_TOKEN}
-              component={withNavigation(ifLoggedIn(AddTokenScene))}
-              navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />

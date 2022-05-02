@@ -1,6 +1,6 @@
 // @flow
 
-import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asObject, asOptional, asString } from 'cleaners'
 import {
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -88,34 +88,6 @@ export type ExchangeData = {
   primaryDisplayName: string,
   secondaryDisplayAmount: string,
   secondaryCurrencyCode: string
-}
-
-const asEdgeDenomination = asObject({
-  name: asString,
-  multiplier: asString,
-  symbol: asOptional(asString)
-})
-
-export const asCustomTokenInfo = asObject({
-  currencyName: asString,
-  currencyCode: asString,
-  contractAddress: asString,
-  multiplier: asString,
-  denomination: asString,
-  isVisible: asOptional(asBoolean),
-  denominations: asArray(asEdgeDenomination),
-  walletType: asOptional(asString)
-})
-
-export type CustomTokenInfo = {
-  currencyName: string,
-  currencyCode: string,
-  contractAddress: string,
-  multiplier: string,
-  denomination: string, // eventually change to mandatory
-  isVisible?: boolean, // eventually change to mandatory,
-  denominations: EdgeDenomination[],
-  walletType?: string
 }
 
 export type CreateWalletType = {

@@ -2,7 +2,7 @@
 
 import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
 import { asArray, asEither, asMaybe, asObject, asOptional, asString } from 'cleaners'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
@@ -12,7 +12,7 @@ import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo, EdgeTokenIdExtended, GuiDenomination, TransactionListTx } from '../types/types.js'
+import type { EdgeTokenIdExtended, GuiDenomination, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
@@ -52,40 +52,6 @@ export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, n
   const initialAmount = fiatAmount.toFixed(precision)
   const absoluteAmount = abs(initialAmount)
   return formatNumber(toFixed(absoluteAmount, 2, precision), { noGrouping })
-}
-
-// will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-export const mergeTokens = (
-  preferredEdgeMetaTokens: EdgeMetaToken[] | CustomTokenInfo[],
-  edgeMetaTokens: CustomTokenInfo[]
-): Array<EdgeMetaToken | CustomTokenInfo> => {
-  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  for (const x of edgeMetaTokens) {
-    // loops through the account-level array
-    let found = false // assumes it is not present in the currencyInfo from plugin
-    for (const val of tokensEnabled) {
-      // loops through currencyInfo array to see if already present
-      if (x.currencyCode === val.currencyCode) {
-        found = true // if present, then set 'found' to true
-      }
-    }
-    if (!found) tokensEnabled.push(x) // if not already in the currencyInfo, then add to tokensEnabled array
-  }
-  return tokensEnabled
-}
-
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToken[], edgeMetaTokens: CustomTokenInfo[]): EdgeMetaToken[] => {
-  const tokensEnabled: EdgeMetaToken[] = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  const tokensToAdd = []
-  for (const x of edgeMetaTokens) {
-    // loops through the account-level array
-    if (x.isVisible !== false && tokensEnabled.findIndex(walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
-      tokensToAdd.push(x)
-    }
-  }
-
-  // $FlowFixMe this is actually an error, but I don't know how to fix it:
-  return tokensEnabled.concat(tokensToAdd)
 }
 
 // Used to reject non-numeric (expect '.') values in the FlipInput
@@ -252,20 +218,6 @@ export const getCurrencyInfo = (allCurrencyInfos: EdgeCurrencyInfo[], currencyCo
       }
     }
   }
-}
-
-export const denominationToDecimalPlaces = (denomination: string): string => {
-  const numberOfDecimalPlaces = (denomination.match(/0/g) || []).length
-  const decimalPlaces = numberOfDecimalPlaces.toString()
-  return decimalPlaces
-}
-
-export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
-  const numberOfDecimalPlaces: number = parseInt(decimalPlaces)
-  const denomination: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-
-  // will return, '1' at the very least
-  return denomination
 }
 
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
@@ -685,6 +637,17 @@ export function unixToLocaleDateTime(unixDate: number): { date: string, time: st
     time: toLocaleTime(date),
     dateTime: toLocaleDateTime(date)
   }
+}
+
+export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, tokenIds: string[]): string[] {
+  const { builtinTokens = {}, customTokens = {} } = currencyConfig
+
+  const out: string[] = []
+  for (const tokenId of tokenIds) {
+    const token = customTokens[tokenId] ?? builtinTokens[tokenId]
+    if (token != null) out.push(token.currencyCode)
+  }
+  return out
 }
 
 export const pickRandom = <T>(array?: T[]): T | null => {

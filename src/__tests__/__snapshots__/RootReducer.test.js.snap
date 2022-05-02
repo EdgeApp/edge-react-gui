@@ -120,9 +120,6 @@ Object {
         },
         "walletAccountActivationQuoteError": "",
       },
-      "editToken": Object {
-        "editCustomTokenProcessing": false,
-      },
       "fioAddress": Object {
         "fioAddresses": Array [],
         "fioAddressesLoading": false,
@@ -193,7 +190,6 @@ Object {
       "autoLogoutTimeInSeconds": 3600,
       "changesLocked": true,
       "countryCode": "",
-      "customTokens": Array [],
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",
       "denominationSettings": Object {},
@@ -233,10 +229,8 @@ Object {
       "walletsSort": "default",
     },
     "wallets": Object {
-      "addTokenPending": false,
       "byId": Object {},
       "fioWallets": Array [],
-      "manageTokensPending": false,
       "selectedCurrencyCode": "",
       "selectedWalletId": "",
       "walletLoadingProgress": Object {},
