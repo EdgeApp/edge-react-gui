@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { memo } from '../../types/reactHooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -9,7 +10,6 @@ import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {|
-  children?: React.Node,
   currencyCode: string,
   walletName: string,
 
@@ -22,9 +22,8 @@ type Props = {|
   onPress?: () => void
 |}
 
-export const WalletListRowComponent = (props: Props) => {
+export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
   const {
-    children,
     currencyCode,
     walletName,
 
@@ -46,7 +45,9 @@ export const WalletListRowComponent = (props: Props) => {
         <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
       </View>
-      <View style={styles.childrenContainer}>{children}</View>
+      <View style={styles.childrenContainer}>
+        <IonIcon size={theme.rem(1.5)} color={theme.iconTappable} name="chevron-forward-outline" />
+      </View>
     </TouchableOpacity>
   )
 }
@@ -69,7 +70,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   // Children (Right part) Container
   childrenContainer: {
-    paddingRight: theme.rem(1)
+    paddingRight: theme.rem(0.5)
   },
   // Other styles
   detailsCurrency: {
@@ -83,4 +84,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListRow = memo(WalletListRowComponent)
+export const CreateWalletSelectCryptoRow = memo(CreateWalletSelectCryptoRowComponent)

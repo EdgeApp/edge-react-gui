@@ -53,11 +53,16 @@ exports[`WalletListRow should render with loading props 1`] = `
   <View
     style={
       Object {
-        "paddingRight": 22,
+        "paddingRight": 11,
       }
     }
   >
-    Hello
+    <Icon
+      allowFontScaling={false}
+      color="#66EDA8"
+      name="chevron-forward-outline"
+      size={34}
+    />
   </View>
 </TouchableOpacity>
 `;
