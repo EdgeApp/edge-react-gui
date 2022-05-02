@@ -121,7 +121,10 @@ export const removeHexPrefix = (s: string) => s.replace(/^0x/, '')
 
 export const isHex = (h: string) => /^[0-9A-F]+$/i.test(h)
 
-export const hexToDecimal = (num: string) => add(num, '0', 10)
+export const hexToDecimal = (num: string) => {
+  const numberString = num.toLowerCase().startsWith('0x') ? num : `0x${num}`
+  return add(numberString, '0', 10)
+}
 
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
   if (nativeAmount === '') return nativeAmount

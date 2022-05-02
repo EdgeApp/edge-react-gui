@@ -68,7 +68,7 @@ export const WcSmartContractModal = (props: Props) => {
     amountCrypto = hexToDecimal(params.value)
   }
   if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
-    networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
+    networkFeeCrypto = hexToDecimal(mul(params.gas, params.gasPrice, 16))
   }
 
   const amountDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, amountCurrencyCode)
