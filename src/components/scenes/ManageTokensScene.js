@@ -7,9 +7,9 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
-import { useWatchCurrencyConfig } from '../../hooks/useWatch.js'
+import { useWatchCurrencyConfig, useWatchWallet } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { useCallback, useEffect, useMemo, useState } from '../../types/reactHooks.js'
+import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type FlatListItem } from '../../types/types.js'
@@ -51,11 +51,7 @@ export function ManageTokensScene(props: Props) {
   const customTokens = useWatchCurrencyConfig(currencyConfig, 'customTokens')
 
   // Subscribe to the wallet's enabled tokens:
-  const [enabledTokenIds, setEnabledTokenIds] = useState<string[]>(wallet.enabledTokenIds)
-  useEffect(() => {
-    setEnabledTokenIds(wallet.enabledTokenIds)
-    return wallet.watch('enabledTokenIds', setEnabledTokenIds)
-  }, [wallet])
+  const enabledTokenIds = useWatchWallet(wallet, 'enabledTokenIds')
 
   // Optimize the enabled tokens:
   const enabledTokenSet = useMemo(() => new Set(enabledTokenIds), [enabledTokenIds])

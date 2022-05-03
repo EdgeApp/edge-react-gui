@@ -20,11 +20,12 @@ import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useWatchContext } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig.js'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
@@ -72,8 +73,8 @@ export function ControlPanel(props: Props) {
   /// ---- Local State ----
 
   // Maintain the list of usernames:
-  const [usernames, setUsernames] = useState(arrangeUsers(context.localUsers, activeUsername))
-  useEffect(() => context.watch('localUsers', localUsers => setUsernames(arrangeUsers(context.localUsers, activeUsername))))
+  const localUsers = useWatchContext(context, 'localUsers')
+  const usernames = useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = useState(false)

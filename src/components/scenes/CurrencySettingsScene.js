@@ -6,9 +6,9 @@ import * as React from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
 import { setDenominationKeyRequest } from '../../actions/SettingsActions.js'
+import { useWatchCurrencyConfig } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -49,8 +49,7 @@ export function CurrencySettingsComponent(props: Props) {
   const styles = getStyles(theme)
 
   // Follow the on-disk currency settings:
-  const [userSettings = {}, setUserSettings] = useState(currencyConfig.userSettings)
-  useEffect(() => currencyConfig.watch('userSettings', setUserSettings), [currencyConfig])
+  const userSettings = useWatchCurrencyConfig(currencyConfig, 'userSettings')
 
   // Are the electrum servers enabled? What are they?
   const defaults = asMaybe(asElectrumDefaults)(defaultSettings)

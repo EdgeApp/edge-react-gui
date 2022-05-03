@@ -7,9 +7,10 @@ import { TouchableOpacity, View } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
+import { useWatchWallet } from '../../hooks/useWatch.js'
 import { formatNumber, truncateDecimals } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { memo, useEffect, useMemo, useState } from '../../types/reactHooks.js'
+import { memo, useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import {
@@ -128,22 +129,12 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
   const exchangeRates = useSelector(state => state.exchangeRates)
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-
-  // Subscribe to wallet updates
-  const { currencyInfo } = edgeWallet
-  const [fiatCurrencyCode, setFiatCurrencyCode] = useState(edgeWallet.fiatCurrencyCode)
-  const [balances, setBalances] = useState(edgeWallet.balances)
-
-  useEffect(() => {
-    const watchers = []
-    if (edgeWallet != null) {
-      watchers.push(edgeWallet.watch('fiatCurrencyCode', setFiatCurrencyCode))
-      watchers.push(edgeWallet.watch('balances', setBalances))
-    }
-    return () => watchers.forEach(cleaner => cleaner())
-  }, [edgeWallet])
+  const balances = useWatchWallet(edgeWallet, 'balances')
+  const fiatCurrencyCode = useWatchWallet(edgeWallet, 'fiatCurrencyCode')
+  const name = useWalletName(edgeWallet)
 
   // Crypto Amount And Exchange Rate
+  const { currencyInfo } = edgeWallet
   const balance = balances[currencyCode] ?? '0'
   const denomination = dispatch(getDisplayDenominationFromState(currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyInfo.pluginId, currencyCode))
@@ -189,7 +180,6 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     () => (onPress != null ? () => onPress(walletId, tokenCode ?? currencyCode) : () => {}),
     [currencyCode, onPress, tokenCode, walletId]
   )
-  const name = useWalletName(edgeWallet)
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
