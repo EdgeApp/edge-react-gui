@@ -4,18 +4,14 @@ import { type EdgeCurrencyWallet } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import s from '../locales/strings.js'
-import { useEffect, useState } from '../types/reactHooks'
+import { useWatchWallet } from './useWatch.js'
 
 /**
  * Subscribes to a wallet's name.
  */
 export function useWalletName(wallet: EdgeCurrencyWallet): string {
-  const [name, setName] = useState(wallet.name)
+  const name = useWatchWallet(wallet, 'name')
+  if (name != null) return name
 
-  useEffect(() => {
-    setName(wallet.name)
-    return wallet.watch('name', setName)
-  }, [wallet])
-
-  return name ?? sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
+  return sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
 }

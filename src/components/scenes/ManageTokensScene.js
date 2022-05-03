@@ -6,8 +6,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
-import { useTokens } from '../../hooks/useTokens.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
+import { useWatchCurrencyConfig } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useCallback, useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
@@ -46,7 +46,9 @@ export function ManageTokensScene(props: Props) {
   const [searchValue, setSearchValue] = useState('')
 
   // Subscribe to the account's token lists:
-  const { allTokens, customTokens } = useTokens(wallet.currencyConfig)
+  const { currencyConfig } = wallet
+  const allTokens = useWatchCurrencyConfig(currencyConfig, 'allTokens')
+  const customTokens = useWatchCurrencyConfig(currencyConfig, 'customTokens')
 
   // Subscribe to the wallet's enabled tokens:
   const [enabledTokenIds, setEnabledTokenIds] = useState<string[]>(wallet.enabledTokenIds)
