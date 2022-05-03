@@ -32,6 +32,7 @@ type Props<T> = {
   blurOnClear?: boolean, // Defaults to 'true'
   // List Props
   rowsData?: T[], // Defaults to []
+  fullScreen?: boolean,
   rowComponent?: (props: T) => React.Node,
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean,
   // Footer Props
@@ -44,6 +45,7 @@ export function ListModal<T>({
   textInput = true,
   initialValue = '',
   rowsData = [],
+  fullScreen = true,
   rowComponent,
   rowDataFilter,
   closeArrow = true,
@@ -81,7 +83,7 @@ export function ListModal<T>({
         />
       )}
       <FlatList
-        style={{ flex: 1 }}
+        style={{ flexGrow: fullScreen ? 1 : 0 }}
         data={filteredRows}
         initialNumToRender={12}
         onScroll={() => Keyboard.dismiss()}
