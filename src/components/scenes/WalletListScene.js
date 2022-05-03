@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
+import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
@@ -37,8 +38,7 @@ export function WalletListScene(props: Props) {
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
 
   // Subscribe to account state:
-  const [currencyWallets, setCurrencyWallets] = useState(account.currencyWallets)
-  useEffect(() => account.watch('currencyWallets', setCurrencyWallets), [account])
+  const currencyWallets = useWatchAccount(account, 'currencyWallets')
   const loading = Object.keys(currencyWallets).length <= 0
 
   async function handleTutorialModal() {

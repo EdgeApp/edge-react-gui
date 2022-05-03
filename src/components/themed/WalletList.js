@@ -5,10 +5,11 @@ import { FlatList, RefreshControl, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { useAllTokens } from '../../hooks/useAllTokens.js'
+import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
-import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
+import { useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, EdgeTokenIdExtended, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
@@ -100,8 +101,7 @@ export function WalletList(props: Props) {
   const wallets = useSelector(state => state.ui.wallets.byId)
 
   // Subscribe to the wallet list:
-  const [activeWalletIds, setActiveWalletIds] = useState(account.activeWalletIds)
-  useEffect(() => account.watch('activeWalletIds', setActiveWalletIds), [account])
+  const activeWalletIds = useWatchAccount(account, 'activeWalletIds')
 
   // Subscribe to all the tokens in the account:
   const allTokens = useAllTokens(account)
