@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyConfig, type EdgeTokenMap } from 'edge-core-js'
+import { type EdgeAccount, type EdgeTokenMap } from 'edge-core-js'
 
 import { useEffect, useState } from '../types/reactHooks'
 
@@ -14,7 +14,7 @@ export function useAllTokens(account: EdgeAccount): EdgeTokenMaps {
   const [out, setOut] = useState<EdgeTokenMaps>(() => {
     const out: EdgeTokenMaps = {}
     for (const pluginId of Object.keys(account.currencyConfig)) {
-      out[pluginId] = getAllTokens(account.currencyConfig[pluginId])
+      out[pluginId] = account.currencyConfig[pluginId].allTokens
     }
     return out
   })
@@ -26,19 +26,13 @@ export function useAllTokens(account: EdgeAccount): EdgeTokenMaps {
     for (const pluginId of Object.keys(account.currencyConfig)) {
       const currencyConfig = account.currencyConfig[pluginId]
       function update(): void {
-        setOut(out => ({ ...out, [pluginId]: getAllTokens(currencyConfig) }))
+        setOut(out => ({ ...out, [pluginId]: currencyConfig.allTokens }))
       }
-      cleanups.push(currencyConfig.watch('builtinTokens', update))
-      cleanups.push(currencyConfig.watch('customTokens', update))
+      cleanups.push(currencyConfig.watch('allTokens', update))
     }
 
     return () => cleanups.forEach(cleanup => cleanup())
   }, [account])
 
   return out
-}
-
-function getAllTokens(currencyConfig: EdgeCurrencyConfig): EdgeTokenMap {
-  const { builtinTokens = {}, customTokens = {} } = currencyConfig
-  return { ...customTokens, ...builtinTokens }
 }
