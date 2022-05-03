@@ -7,6 +7,7 @@ import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo, useCallback, useEffect, useRef } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
@@ -15,7 +16,7 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow.js'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
-import { WalletListRow } from '../themed/WalletListRow.js'
+import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 
 type Props = {|
   currencyCode: string,
@@ -132,7 +133,9 @@ function WalletListSwipeRowComponent(props: Props) {
   if (edgeWallet == null) {
     return (
       <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
-        <WalletListRow currencyCode="" gradient walletName="" onLongPress={handleMenu} />
+        <Gradient>
+          <WalletListLoadingRow onLongPress={handleMenu} />
+        </Gradient>
       </SwipeableRow>
     )
   }
@@ -150,7 +153,9 @@ function WalletListSwipeRowComponent(props: Props) {
       onLeftSwipe={handleRequest}
       onRightSwipe={handleSend}
     >
-      <WalletListCurrencyRow currencyCode={currencyCode} gradient showRate walletId={walletId} onLongPress={handleMenu} onPress={handleSelect} />
+      <Gradient>
+        <WalletListCurrencyRow currencyCode={currencyCode} showRate walletId={walletId} onLongPress={handleMenu} onPress={handleSelect} />
+      </Gradient>
     </SwipeableRow>
   )
 }

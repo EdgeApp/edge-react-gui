@@ -3,9 +3,10 @@
 import { abs, div, gt, log10, mul, sub, toFixed } from 'biggystring'
 import { type EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText.js'
+import { useWalletName } from '../../hooks/useWalletName.js'
 import { formatNumber, truncateDecimals } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { memo, useEffect, useMemo, useState } from '../../types/reactHooks.js'
@@ -24,19 +25,19 @@ import {
   zeroString
 } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
-import { WalletListRow } from './WalletListRow.js'
 
-type Props = {
+type Props = {|
   currencyCode: string,
-  gradient?: boolean,
-  onPress?: (walletId: string, currencyCode: string) => void,
-  onLongPress?: () => void,
   showRate?: boolean,
-  walletId: string,
   tokenCode?: string,
-  walletName?: string
-}
+  walletId: string,
+
+  // Callbacks:
+  onLongPress?: () => void,
+  onPress?: (walletId: string, currencyCode: string) => void
+|}
 
 type GetDifferenceParams = {
   exchangeRate: string,
@@ -110,7 +111,16 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
 }
 
 export const WalletListCurrencyRowComponent = (props: Props) => {
-  const { currencyCode, showRate = false, onPress, onLongPress, gradient, walletId, walletName, tokenCode } = props
+  const {
+    currencyCode,
+    showRate = false,
+    tokenCode,
+    walletId,
+
+    // Callbacks:
+    onLongPress,
+    onPress
+  } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -123,13 +133,11 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const { currencyInfo } = edgeWallet
   const [fiatCurrencyCode, setFiatCurrencyCode] = useState(edgeWallet.fiatCurrencyCode)
   const [balances, setBalances] = useState(edgeWallet.balances)
-  const [name, setName] = useState(edgeWallet.name)
 
   useEffect(() => {
     const watchers = []
     if (edgeWallet != null) {
       watchers.push(edgeWallet.watch('fiatCurrencyCode', setFiatCurrencyCode))
-      watchers.push(edgeWallet.watch('name', setName))
       watchers.push(edgeWallet.watch('balances', setBalances))
     }
     return () => watchers.forEach(cleaner => cleaner())
@@ -181,41 +189,83 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     () => (onPress != null ? () => onPress(walletId, tokenCode ?? currencyCode) : () => {}),
     [currencyCode, onPress, tokenCode, walletId]
   )
-
-  const children = useMemo(
-    () => (
-      <View style={styles.balance}>
-        <EdgeText>{nativeCryptoAmount}</EdgeText>
-        <EdgeText style={styles.fiatBalance}>{fiatBalanceText}</EdgeText>
-      </View>
-    ),
-    [fiatBalanceText, nativeCryptoAmount, styles.balance, styles.fiatBalance]
-  )
+  const name = useWalletName(edgeWallet)
 
   return (
-    <WalletListRow
-      currencyCode={currencyCode}
-      walletId={walletId}
-      exchangeRateText={showRate ? exchangeRateText : undefined}
-      exchangeRateType={showRate ? exchangeRateType : undefined}
-      onPress={handlePress}
-      onLongPress={onLongPress}
-      walletName={walletName ?? name ?? `My ${currencyInfo?.displayName ?? ''}`}
-      gradient={gradient}
-    >
-      {showBalance ? children : null}
-    </WalletListRow>
+    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
+      <CurrencyIcon currencyCode={currencyCode} marginRem={1} sizeRem={2} walletId={walletId} />
+      <View style={styles.nameColumn}>
+        <View style={styles.currencyRow}>
+          <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
+          {showRate ? <EdgeText style={[styles.exchangeRateText, styles[exchangeRateType ?? 'neutral']]}>{exchangeRateText}</EdgeText> : null}
+        </View>
+        <EdgeText style={styles.nameText}>{name}</EdgeText>
+      </View>
+      {showBalance ? (
+        <View style={styles.balanceColumn}>
+          <EdgeText>{nativeCryptoAmount}</EdgeText>
+          <EdgeText style={styles.fiatBalanceText}>{fiatBalanceText}</EdgeText>
+        </View>
+      ) : null}
+    </TouchableOpacity>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  balance: {
-    flexDirection: 'column',
-    alignItems: 'flex-end'
+  // Layout:
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    minHeight: theme.rem(4.25)
   },
-  fiatBalance: {
+  balanceColumn: {
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    paddingRight: theme.rem(1)
+  },
+  nameColumn: {
+    flexDirection: 'column',
+    flexGrow: 1,
+    flexShrink: 1,
+    marginRight: theme.rem(0.5)
+  },
+  currencyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+
+  // Text:
+  fiatBalanceText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
+  },
+  currencyText: {
+    flexBasis: 'auto',
+    flexShrink: 1,
+    fontFamily: theme.fontFaceMedium
+  },
+  exchangeRateText: {
+    textAlign: 'left',
+    flexBasis: 'auto',
+    flexShrink: 1,
+    marginLeft: theme.rem(0.75)
+  },
+  nameText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+
+  // Difference Percentage Styles
+  neutral: {
+    color: theme.secondaryText
+  },
+  positive: {
+    color: theme.positiveText
+  },
+  negative: {
+    color: theme.negativeText
   }
 }))
 

@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WalletListRow should render with loading props 1`] = `
+<TouchableOpacity
+  onLongPress={[Function]}
+  onPress={[Function]}
+  style={
+    Object {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 96,
+    }
+  }
+>
+  <Memo(CurrencyIconComponent)
+    currencyCode="BTC"
+    marginRem={1}
+    sizeRem={2}
+  />
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "marginRight": 11,
+      }
+    }
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "flexBasis": "auto",
+          "flexShrink": 1,
+          "fontFamily": "Quicksand-Medium",
+        }
+      }
+    >
+      BTC
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "color": "#A4C7DF",
+          "fontSize": 17,
+        }
+      }
+    >
+      My bitcoin wallet
+    </WithTheme(EdgeTextComponent)>
+  </View>
+  <View
+    style={
+      Object {
+        "paddingRight": 11,
+      }
+    }
+  >
+    <Icon
+      allowFontScaling={false}
+      color="#66EDA8"
+      name="chevron-forward-outline"
+      size={34}
+    />
+  </View>
+</TouchableOpacity>
+`;

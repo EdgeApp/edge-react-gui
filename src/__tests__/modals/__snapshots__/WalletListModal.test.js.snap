@@ -37,6 +37,12 @@ exports[`WalletListModal should render with loading props 1`] = `
   />
   <WalletList
     isModal={true}
+    marginRem={
+      Array [
+        0,
+        -1,
+      ]
+    }
     onPress={[Function]}
     searchText=""
     searching={false}

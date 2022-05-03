@@ -13,11 +13,12 @@ import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, EdgeTokenIdExtended, FlatListItem, GuiWallet } from '../../types/types.js'
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { checkFilterWallet } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
-import { WalletListRow } from './WalletListRow.js'
+import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
 import { WalletListSwipeRow } from './WalletListSwipeRow.js'
 
@@ -41,41 +42,49 @@ const getSortOptionsCurrencyCode = (fullCurrencyCode: string): string => {
   return splittedCurrencyCode[1] || splittedCurrencyCode[0]
 }
 
-type Props = {
-  header?: React.Node,
+type Props = {|
+  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
+  excludeCurrencyCodes?: string[],
+  excludeWalletIds?: string[],
+  filterActivation?: boolean,
   footer?: React.Node,
+  header?: React.Node,
+  isModal?: boolean,
+  marginRem?: number | number[],
   searching: boolean,
   searchText: string,
   showCreateWallet?: boolean,
-  excludeWalletIds?: string[],
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[],
-  activateSearch?: () => void,
   showSlidingTutorial?: boolean,
-  filterActivation?: boolean,
-  isModal?: boolean,
-  onPress?: (walletId: string, currencyCode: string) => void
-}
+
+  // Callbacks:
+  onPress?: (walletId: string, currencyCode: string) => void,
+  onRefresh?: () => void
+|}
 
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
   const {
-    header,
+    allowedCurrencyCodes,
+    excludeCurrencyCodes,
+    excludeWalletIds,
+    filterActivation,
     footer,
+    header,
+    isModal,
+    marginRem,
     searching,
     searchText,
     showCreateWallet,
-    excludeWalletIds,
-    allowedCurrencyCodes,
-    excludeCurrencyCodes,
-    activateSearch,
     showSlidingTutorial,
-    filterActivation,
-    isModal,
-    onPress
+
+    // Callbacks:
+    onPress,
+    onRefresh
   } = props
 
   const theme = useTheme()
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+
   const handlePress = useMemo(
     () =>
       onPress ??
@@ -271,7 +280,7 @@ export function WalletList(props: Props) {
 
     if (guiWallet == null || account.currencyWallets[walletId] == null) {
       if (isModal) {
-        return <WalletListRow currencyCode="" walletName="" />
+        return <WalletListLoadingRow />
       }
       return <WalletListSwipeRow currencyCode="" isToken={false} walletId={walletId} />
     } else {
@@ -280,14 +289,14 @@ export function WalletList(props: Props) {
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
 
       if (isModal) {
-        return <WalletListCurrencyRow currencyCode={currencyCode} onPress={handlePress} walletId={walletId} paddingRem={0} />
+        return <WalletListCurrencyRow currencyCode={currencyCode} walletId={walletId} onPress={handlePress} />
       }
 
       return <WalletListSwipeRow currencyCode={currencyCode} isToken={isToken} openTutorial={data.index === 0 && showSlidingTutorial} walletId={walletId} />
     }
   }
 
-  const renderRefreshControl = () => <RefreshControl refreshing={false} onRefresh={activateSearch} tintColor={theme.searchListRefreshControlIndicator} />
+  const renderRefreshControl = () => <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
 
   const renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
 
@@ -352,6 +361,7 @@ export function WalletList(props: Props) {
         renderItem={renderRow}
         renderSectionHeader={renderSectionHeader}
         sections={getSection(walletList, walletOnlyList.length)}
+        style={margin}
       />
     )
   }
@@ -365,6 +375,7 @@ export function WalletList(props: Props) {
       ListHeaderComponent={header}
       refreshControl={isModal ? undefined : renderRefreshControl()}
       renderItem={renderRow}
+      style={margin}
     />
   )
 }

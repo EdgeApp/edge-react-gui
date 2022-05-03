@@ -100,8 +100,8 @@ export function WalletListScene(props: Props) {
             footer={searching ? null : <WalletListFooter />}
             searching={searching}
             searchText={searchText}
-            activateSearch={() => setSearching(true)}
             showSlidingTutorial={showSlidingTutorial}
+            onRefresh={() => setSearching(true)}
           />
           <WalletListSortable key="sortList" />
         </CrossFade>
