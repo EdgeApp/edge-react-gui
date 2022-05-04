@@ -4,8 +4,10 @@
 
 - Wallet Connect: Fix hex value handling
 - Add Edge Provider utility to convert currency code array to EdgeTokenIdExtended array
-- Upgrade edge-currency-accountbased to v0.15.7
+- Upgrade edge-currency-accountbased to v0.15.8
   - Fix assignment of network fees from info server
+  - Merge info server fees response with local data instead of overwriting
+  - Prioritize the queried minGasLimit and minGasPrice over the default values
   - Add logging of fees
   - Add feeUpdateFrequency override and change FTM to 1 min
   - Change preference of fee providers
