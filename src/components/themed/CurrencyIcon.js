@@ -1,5 +1,4 @@
 // @flow
-import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -7,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import { memo, useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getCurrencyIconUris } from '../../util/CdnUris'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { WalletSyncCircle } from './WalletSyncCircle.js'
@@ -24,29 +23,6 @@ type Props = {
   marginRem?: number | number[],
   // Deprecated!!! here for backward compatibility instead of pluginId or tokenId wherever it's not yet easily available
   currencyCode?: string
-}
-
-/**
- * If we have a currency code, guess the pluginId and tokenId from that.
- */
-const guessFromCurrencyCode = (account: EdgeAccount, { currencyCode, pluginId, tokenId }: { [key: string]: string | void }) => {
-  if (currencyCode == null) return { pluginId, tokenId }
-  // If you already have a main network code but not a tokenId, check if you are a token and get the right tokenId
-  if (pluginId != null && tokenId == null) {
-    tokenId = getTokenId(account, pluginId, currencyCode)
-  }
-  // If we don't have a pluginId, try to get one for a main network first
-  if (pluginId == null) {
-    pluginId = Object.keys(account.currencyConfig).find(id => account.currencyConfig[id].currencyInfo.currencyCode === currencyCode)
-  }
-  // If we still don't have a pluginId, try to get a pluginId and tokenId for a token
-  if (pluginId == null) {
-    pluginId = Object.keys(account.currencyConfig).find(id => {
-      tokenId = getTokenId(account, id, currencyCode)
-      return tokenId != null
-    })
-  }
-  return { pluginId, tokenId }
 }
 
 export const CurrencyIconComponent = (props: Props) => {

@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyConfig, type EdgeCurrencyInfo, type EdgeTokenMap } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
@@ -97,4 +97,32 @@ export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode:
   const { builtinTokens = {}, customTokens = {} } = account.currencyConfig[pluginId]
   const allTokens = { ...customTokens, ...builtinTokens }
   return Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+}
+
+/**
+ * If we have a currency code, guess the pluginId and tokenId from that.
+ */
+export const guessFromCurrencyCode = (account: EdgeAccount, { currencyCode, pluginId, tokenId }: { [key: string]: string | void }) => {
+  if (currencyCode == null) return { pluginId, tokenId }
+  // If you already have a main network code but not a tokenId, check if you are a token and get the right tokenId
+  if (pluginId != null && tokenId == null) {
+    tokenId = getTokenId(account, pluginId, currencyCode)
+  }
+  // If we don't have a pluginId, try to get one for a main network first
+  if (pluginId == null) {
+    pluginId = Object.keys(account.currencyConfig).find(id => account.currencyConfig[id].currencyInfo.currencyCode === currencyCode)
+  }
+  // If we still don't have a pluginId, try to get a pluginId and tokenId for a token
+  if (pluginId == null) {
+    pluginId = Object.keys(account.currencyConfig).find(id => {
+      tokenId = getTokenId(account, id, currencyCode)
+      return tokenId != null
+    })
+  }
+  return { pluginId, tokenId }
+}
+
+export const getAllTokens = (currencyConfig: EdgeCurrencyConfig): EdgeTokenMap => {
+  const { builtinTokens = {}, customTokens = {} } = currencyConfig
+  return { ...customTokens, ...builtinTokens }
 }

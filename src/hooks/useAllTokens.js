@@ -1,8 +1,9 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyConfig, type EdgeTokenMap } from 'edge-core-js'
+import { type EdgeAccount, type EdgeTokenMap } from 'edge-core-js'
 
 import { useEffect, useState } from '../types/reactHooks'
+import { getAllTokens } from '../util/CurrencyInfoHelpers'
 
 type EdgeTokenMaps = { [pluginId: string]: EdgeTokenMap }
 
@@ -36,9 +37,4 @@ export function useAllTokens(account: EdgeAccount): EdgeTokenMaps {
   }, [account])
 
   return out
-}
-
-function getAllTokens(currencyConfig: EdgeCurrencyConfig): EdgeTokenMap {
-  const { builtinTokens = {}, customTokens = {} } = currencyConfig
-  return { ...customTokens, ...builtinTokens }
 }
