@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native'
 
+import backgroundImage from '../../assets/images/backgrounds/login_bg.jpg'
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
@@ -96,6 +97,8 @@ export const testDark: Theme = {
 
   // Background
   backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
+  backgroundImageServerUrls: ['https://content-test.edge.app'],
+  backgroundImage,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -105,12 +108,14 @@ export const testDark: Theme = {
   // Modal
   modal: palette.edgeNavy,
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.darkBlue,
-  // modalFullGradientRight: palette.edgeNavy,
+  modalBorderColor: palette.glowPurple,
+  modalBorderWidth: 4,
+  modalBorderRadiusRem: 2,
 
   sideMenuColor: palette.edgeNavy,
   sideMenuBorderColor: palette.glowPurple,
   sideMenuBorderWidth: 4,
+  sideMenuFont: palette.QuicksandBold,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
@@ -134,9 +139,7 @@ export const testDark: Theme = {
   // listHeaderText: palette.white,
 
   // Header
-  // headerText: palette.white,
-  // hamburgerButton: palette.white,
-  // backButton: palette.white,
+  headerIcon: fioAddressLogo,
 
   // Buttons
   // Should add palette when pressed
@@ -183,6 +186,8 @@ export const testDark: Theme = {
     shadowRadius: 8,
     elevation: 3
   },
+  primaryButtonFontSizeRem: 1.25,
+  primaryButtonFont: palette.QuicksandBold,
 
   secondaryButtonOutline: palette.glowPurple,
   secondaryButtonOutlineWidth: 2,
@@ -192,6 +197,8 @@ export const testDark: Theme = {
   secondaryButtonText: palette.glowPurple,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
+  secondaryButtonFontSizeRem: 1,
+  secondaryButtonFont: palette.QuicksandLight,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -201,6 +208,20 @@ export const testDark: Theme = {
   escapeButtonText: palette.edgeMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
+  escapeButtonFontSizeRem: 1,
+  escapeButtonFont: palette.QuicksandRegular,
+
+  pinUsernameButtonOutline: palette.white,
+  pinUsernameButtonOutlineWidth: 0.5,
+  pinUsernameButton: [palette.edgeMint, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.accentRed,
+  pinUsernameButtonTextShadow: { textShadowColor: palette.edgeMint, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 },
+  pinUsernameButtonShadow: { shadowColor: palette.edgeMint, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.7, shadowRadius: 8, elevation: 3 },
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandRegular,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
@@ -279,6 +300,8 @@ export const testDark: Theme = {
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.edgeNavy,
+  settingsRowHeaderFont: palette.QuicksandMedium,
+  settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
@@ -324,10 +347,12 @@ export const testDark: Theme = {
 
   // Outline Text Input
   outlineTextInputColor: palette.darkPurple3,
-  outlineTextInputTextColor: palette.white,
+  outlineTextInputTextColor: palette.lightPurple,
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.darkPurple1,
   outlineTextInputBorderColorFocused: palette.glowPurple,
+  outlineTextInputLabelColor: palette.white,
+  outlineTextInputLabelColorFocused: palette.black,
 
   // Animation
   fadeDisable: palette.gray,
@@ -354,6 +379,7 @@ export const testDark: Theme = {
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
   fioAddressLogo: fioAddressLogo,
+  primaryLogo: paymentTypeLogoPayid,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoBitaccess: guiPluginLogoBitaccess,

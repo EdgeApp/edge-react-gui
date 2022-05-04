@@ -86,13 +86,21 @@ const createAccountReferral = () => async (dispatch: Dispatch, getState: GetStat
  * Downloads a promotion matching the given install link.
  */
 export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
+  if (config.referralServers == null || config.referralServers.length === 0) return
+
   const uri = `api/v1/promo?installerId=${installerId}`
-  const reply = await fetchWaterfall(config.referralServers, uri)
-  if (reply.status === 404) {
-    throw new Error(`Invalid promotion code ${installerId}`)
+  let reply
+  try {
+    reply = await fetchWaterfall(config.referralServers, uri)
+  } catch (e) {
+    console.warn(`Failed to contact referral server`)
+    return
   }
   if (!reply.ok) {
-    throw new Error(`Util server returned status code ${reply.status}`)
+    console.warn(`Referral server returned status code ${reply.status}`)
+  }
+  if (reply.status === 404) {
+    throw new Error(`Invalid promotion code ${installerId}`)
   }
   const clean = asServerTweaks(await reply.json())
 
@@ -135,13 +143,20 @@ export const ignoreAccountSwap =
   }
 
 export const refreshAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
+  if (config.referralServers == null || config.referralServers.length === 0) return
   const state = getState()
   const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
 
   const uri = `api/v1/partner?installerId=${installerId}`
-  const reply = await fetchWaterfall(config.referralServers, uri)
+  let reply
+  try {
+    reply = await fetchWaterfall(config.referralServers, uri)
+  } catch (e) {
+    console.warn(`Failed to contact referral server`)
+    return
+  }
   if (!reply.ok) {
-    throw new Error(`Util server returned status code ${reply.status}`)
+    console.warn(`Referral server returned status code ${reply.status}`)
   }
   const clean = asServerTweaks(await reply.json())
   const cache: ReferralCache = {

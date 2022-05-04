@@ -314,14 +314,13 @@ export type wcGetConnection = {
   uri: string,
   timeConnected: number
 }
-
 export type AppConfig = {
   configName: string,
+  appId?: string,
   appName: string,
   appNameShort: string,
   darkTheme: Theme,
   lightTheme: Theme,
-  backgroundImageServers?: string[],
   referralServers?: string[],
   notificationServers: string[],
   supportsEdgeLogin: boolean,
@@ -330,7 +329,8 @@ export type AppConfig = {
   phoneNumber: string,
   website: string,
   termsOfServiceSite: string,
-  appStore: string
+  appStore: string,
+  defaultWallets: string[]
 }
 
 export type EdgeTokenId = {

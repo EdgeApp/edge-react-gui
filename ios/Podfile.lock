@@ -20,7 +20,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (0.19.15):
     - React-Core
-  - edge-login-ui-rn (0.9.32):
+  - edge-login-ui-rn (0.10.0):
     - React
   - FBLazyVector (0.67.2)
   - FBReactNativeSpec (0.67.2):
@@ -1038,7 +1038,7 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   edge-core-js: 18a6f9b717f41b18bb5431a5f3bafb68dea13fc1
-  edge-login-ui-rn: 5cc68b40248882524a0a6190f9caf06144999d2a
+  edge-login-ui-rn: d5d7868cf99133b9b6793a491ddce7089f4952a4
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
   FBReactNativeSpec: c94002c1d93da3658f4d5119c6994d19961e3d52
   Firebase: e1e089d9aac215a52442583f818ab61de3c4581b

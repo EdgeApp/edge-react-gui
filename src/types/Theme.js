@@ -75,6 +75,8 @@ export type Theme = {
 
   // Background
   backgroundGradientColors: string[],
+  backgroundImageServerUrls: string[],
+  backgroundImage?: string,
 
   // Camera Overlay
   cameraOverlayColor: string,
@@ -84,12 +86,14 @@ export type Theme = {
   // Modal
   modal: string,
   modalCloseIcon: string,
+  modalBorderColor: string,
+  modalBorderWidth: number,
+  modalBorderRadiusRem: number,
 
   sideMenuColor: string,
   sideMenuBorderColor: string,
   sideMenuBorderWidth: number,
-  // modalFullGradientLeft: string,
-  // modalFullGradientRight: string,
+  sideMenuFont: string,
 
   // Tile
   // listHeaderBackground: string,
@@ -114,6 +118,8 @@ export type Theme = {
   settingsRowBackground: string,
   settingsRowPressed: string,
   settingsRowHeaderBackground: string,
+  settingsRowHeaderFont: string,
+  settingsRowHeaderFontSizeRem: number,
   settingsRowSubHeader: string,
 
   // Text
@@ -128,9 +134,7 @@ export type Theme = {
   // listHeaderText: string,
 
   // Header
-  // headerText: string,
-  // hamburgerButton: string,
-  // backButton: string,
+  headerIcon: string,
 
   // Buttons
   buttonBorderRadiusRem: number,
@@ -156,6 +160,8 @@ export type Theme = {
   primaryButtonText: string,
   primaryButtonTextShadow: TextShadowParams,
   primaryButtonShadow: ThemeShadowParams,
+  primaryButtonFontSizeRem: number,
+  primaryButtonFont: string,
 
   secondaryButtonOutline: string,
   secondaryButtonOutlineWidth: number,
@@ -165,6 +171,8 @@ export type Theme = {
   secondaryButtonText: string,
   secondaryButtonTextShadow: TextShadowParams,
   secondaryButtonShadow: ThemeShadowParams,
+  secondaryButtonFontSizeRem: number,
+  secondaryButtonFont: string,
 
   escapeButtonOutline: string,
   escapeButtonOutlineWidth: number,
@@ -174,6 +182,20 @@ export type Theme = {
   escapeButtonText: string,
   escapeButtonTextShadow: TextShadowParams,
   escapeButtonShadow: ThemeShadowParams,
+  escapeButtonFontSizeRem: number,
+  escapeButtonFont: string,
+
+  pinUsernameButtonOutline: string,
+  pinUsernameButtonOutlineWidth: number,
+  pinUsernameButton: string[],
+  pinUsernameButtonColorStart: GradientCoords,
+  pinUsernameButtonColorEnd: GradientCoords,
+  pinUsernameButtonText: string,
+  pinUsernameButtonTextShadow: TextShadowParams,
+  pinUsernameButtonShadow: ThemeShadowParams,
+  pinUsernameButtonBorderRadiusRem: number,
+  pinUsernameButtonFontSizeRem: number,
+  pinUsernameButtonFont: string,
 
   // Dropdown colors:
   dropdownWarning: string,
@@ -308,6 +330,8 @@ export type Theme = {
   outlineTextInputBorderWidth: number,
   outlineTextInputBorderColor: string,
   outlineTextInputBorderColorFocused: string,
+  outlineTextInputLabelColor: string,
+  outlineTextInputLabelColorFocused: string,
 
   // Animation
   fadeDisable: string,
@@ -333,6 +357,7 @@ export type Theme = {
   paymentTypeLogoSwish: string,
   paymentTypeLogoUpi: string,
 
+  primaryLogo: string,
   fioAddressLogo: string,
   walletListSlideTutorialImage: string,
 

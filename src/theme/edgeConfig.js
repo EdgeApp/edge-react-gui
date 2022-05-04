@@ -6,12 +6,12 @@ import { edgeLight } from './variables/edgeLight.js'
 
 export const edgeConfig: AppConfig = {
   configName: 'edge',
+  appId: undefined,
   appName: 'Edge',
   appNameShort: 'Edge',
   darkTheme: edgeDark,
   lightTheme: edgeLight,
   supportsEdgeLogin: true,
-  backgroundImageServers: ['https://content.edge.app'],
   referralServers: ['https://referral1.edge.app'],
   notificationServers: ['https://notif1.edge.app'],
   knowledgeBase: 'https://support.edge.app/support/home',
@@ -19,5 +19,6 @@ export const edgeConfig: AppConfig = {
   phoneNumber: '+1-855-346-4974',
   website: 'https://edge.app',
   termsOfServiceSite: 'https://edge.app/tos/',
-  appStore: 'https://itunes.apple.com/app/id1344400091'
+  appStore: 'https://itunes.apple.com/app/id1344400091',
+  defaultWallets: ['BTC', 'BCH', 'ETH']
 }

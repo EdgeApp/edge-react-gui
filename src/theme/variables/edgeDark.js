@@ -3,6 +3,8 @@
 import { Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
@@ -89,6 +91,8 @@ export const edgeDark: Theme = {
 
   // Background
   backgroundGradientColors: [palette.edgeNavy, palette.darkBlue],
+  backgroundImageServerUrls: ['https://content.edge.app'],
+  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -98,11 +102,14 @@ export const edgeDark: Theme = {
   // Modal
   modal: palette.edgeNavy,
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.darkBlue,
-  // modalFullGradientRight: palette.edgeNavy,
+  modalBorderColor: palette.transparent,
+  modalBorderWidth: 0,
+  modalBorderRadiusRem: 1,
+
   sideMenuColor: palette.edgeNavy,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
@@ -126,9 +133,7 @@ export const edgeDark: Theme = {
   // listHeaderText: palette.white,
 
   // Header
-  // headerText: palette.white,
-  // hamburgerButton: palette.white,
-  // backButton: palette.white,
+  headerIcon: edgeMark,
 
   // Buttons
   // Should add palette when pressed
@@ -155,6 +160,8 @@ export const edgeDark: Theme = {
   primaryButtonText: palette.edgeBlue,
   primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: themeNoShadow,
+  primaryButtonFontSizeRem: 1,
+  primaryButtonFont: palette.QuicksandRegular,
 
   secondaryButtonOutline: palette.edgeMint,
   secondaryButtonOutlineWidth: 1,
@@ -164,6 +171,8 @@ export const edgeDark: Theme = {
   secondaryButtonText: palette.edgeMint,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
+  secondaryButtonFontSizeRem: 1,
+  secondaryButtonFont: palette.QuicksandRegular,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -173,6 +182,20 @@ export const edgeDark: Theme = {
   escapeButtonText: palette.edgeMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
+  escapeButtonFontSizeRem: 1,
+  escapeButtonFont: palette.QuicksandRegular,
+
+  pinUsernameButtonOutline: palette.transparent,
+  pinUsernameButtonOutlineWidth: 0,
+  pinUsernameButton: [palette.transparent, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.white,
+  pinUsernameButtonTextShadow: textNoShadow,
+  pinUsernameButtonShadow: themeNoShadow,
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandRegular,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
@@ -251,6 +274,8 @@ export const edgeDark: Theme = {
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.edgeNavy,
+  settingsRowHeaderFont: palette.QuicksandMedium,
+  settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
@@ -300,6 +325,8 @@ export const edgeDark: Theme = {
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.blueGray,
   outlineTextInputBorderColorFocused: palette.edgeMint,
+  outlineTextInputLabelColor: palette.blueGray,
+  outlineTextInputLabelColorFocused: palette.edgeMint,
 
   // Animation
   fadeDisable: palette.gray,
@@ -325,6 +352,7 @@ export const edgeDark: Theme = {
   paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
+  primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 

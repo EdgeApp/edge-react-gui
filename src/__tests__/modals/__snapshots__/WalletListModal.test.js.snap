@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListModal should render with loading props 1`] = `
-<ThemedModal
+<WithTheme(ThemedModalComponent)
   bridge={
     Object {
       "on": [Function],
@@ -50,5 +50,5 @@ exports[`WalletListModal should render with loading props 1`] = `
   <ModalCloseArrow
     onPress={[Function]}
   />
-</ThemedModal>
+</WithTheme(ThemedModalComponent)>
 `;

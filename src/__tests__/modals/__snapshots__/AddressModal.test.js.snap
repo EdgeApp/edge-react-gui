@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AddressModalComponent should render with loaded props 1`] = `
-<ThemedModal
+<WithTheme(ThemedModalComponent)
   bridge={
     Object {
       "on": [Function],
@@ -78,5 +78,5 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
   <ModalCloseArrow
     onPress={[Function]}
   />
-</ThemedModal>
+</WithTheme(ThemedModalComponent)>
 `;

@@ -2,6 +2,8 @@
 
 import { Platform } from 'react-native'
 
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
@@ -86,6 +88,8 @@ export const edgeLight: Theme = {
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundImageServerUrls: ['https://content.edge.app'],
+  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,
@@ -96,12 +100,14 @@ export const edgeLight: Theme = {
   modal: palette.lightestGray,
   modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.white,
-  // modalFullGradientRight: palette.white,
+  modalBorderColor: palette.transparent,
+  modalBorderWidth: 0,
+  modalBorderRadiusRem: 1,
 
   sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.white,
@@ -125,9 +131,7 @@ export const edgeLight: Theme = {
   // listHeaderText: palette.black,
 
   // Header
-  // headerText: palette.black,
-  // hamburgerButton: palette.black,
-  // backButton: palette.black,
+  headerIcon: edgeMark,
 
   // Buttons
   // Should add palette when pressed
@@ -154,6 +158,8 @@ export const edgeLight: Theme = {
   primaryButtonText: palette.edgeBlue,
   primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: themeNoShadow,
+  primaryButtonFontSizeRem: 1,
+  primaryButtonFont: palette.QuicksandRegular,
 
   secondaryButtonOutline: palette.edgeBlue,
   secondaryButtonOutlineWidth: 1,
@@ -163,6 +169,8 @@ export const edgeLight: Theme = {
   secondaryButtonText: palette.edgeBlue,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
+  secondaryButtonFontSizeRem: 1,
+  secondaryButtonFont: palette.QuicksandRegular,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -172,6 +180,20 @@ export const edgeLight: Theme = {
   escapeButtonText: palette.edgeMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
+  escapeButtonFontSizeRem: 1,
+  escapeButtonFont: palette.QuicksandRegular,
+
+  pinUsernameButtonOutline: palette.transparent,
+  pinUsernameButtonOutlineWidth: 0,
+  pinUsernameButton: [palette.transparent, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.edgeBlue,
+  pinUsernameButtonTextShadow: textNoShadow,
+  pinUsernameButtonShadow: themeNoShadow,
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandMedium,
 
   // Dropdown colors:
   dropdownWarning: palette.accentOrange,
@@ -263,6 +285,8 @@ export const edgeLight: Theme = {
   settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.lightGray,
+  settingsRowHeaderFont: palette.QuicksandMedium,
+  settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
@@ -312,6 +336,8 @@ export const edgeLight: Theme = {
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.gray,
   outlineTextInputBorderColorFocused: palette.edgeBlue,
+  outlineTextInputLabelColor: palette.gray,
+  outlineTextInputLabelColorFocused: palette.edgeBlue,
 
   // Animation
   fadeDisable: palette.gray,
@@ -337,6 +363,7 @@ export const edgeLight: Theme = {
   paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
+  primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 

@@ -7,7 +7,6 @@ import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
 import { sprintf } from 'sprintf-js'
 
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig.js'
@@ -79,7 +78,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
         <View style={styles.titleContainer}>
-          <Image source={edgeLogo} style={styles.logo} resizeMode="contain" />
+          <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
           <ModalTitle center paddingRem={[0, 1, 1]}>
             {helpModalTitle}
           </ModalTitle>

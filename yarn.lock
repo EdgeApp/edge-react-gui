@@ -5991,15 +5991,15 @@ edge-exchange-plugins@^0.13.0:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.32:
-  version "0.9.32"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.32.tgz#1fcc1613084dc3ea4cb47d377940ee85fa63c06b"
-  integrity sha512-u1HCsOlETKPgHfijDdGiTt9yOrm84xQAm1z/Tl5vHX0qqWu7SjSKeuPMomAt3Z74jrfZb2KM/6/Rm9gchYllTw==
+edge-login-ui-rn@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.0.tgz#0bb7addb176bcb8e59d71e5ee2b5687c996122c0"
+  integrity sha512-zNmq/eqXlvaWALxSXbFXnZReT8WfkU9VNr4VqEnnhmzrZK9A+/Zohji416xOuS5/P3Pg6cZCl/7KznL2gUBXzQ==
   dependencies:
-    cleaners "^0.3.1"
+    cleaners "^0.3.12"
     date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
-    react-native-airship "^0.2.6"
+    react-native-airship "^0.2.9"
     react-native-gesture-handler "^1.10.3"
     react-native-keyboard-aware-scroll-view "^0.9.5"
     react-native-linear-gradient "^2.0.0"
@@ -6010,6 +6010,7 @@ edge-login-ui-rn@^0.9.32:
     react-native-permissions "^3.0.1"
     react-native-reanimated "^2.0.0"
     react-native-share "^5.1.4"
+    react-native-svg "^12.1.0"
     react-native-vector-icons "^7.1.0"
     react-redux "^6.0.1"
     redux "~3.5.2"
@@ -11923,10 +11924,10 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.6, react-native-airship@^0.2.8:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.8.tgz#c8999891448a583cc64aa7f899b45b6d9412500b"
-  integrity sha512-gLQhSV/tuUbroQEw0oINe9zpBGlhagZ/nGeBrKeLl2mm5ai2XAMxb+wkVj40AkcWNRpqzJyfXo/0QXfJZZfijQ==
+react-native-airship@^0.2.9:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.9.tgz#6ccb1d430dca3a86c8cd32336c0ad5e0af00e0c8"
+  integrity sha512-WwiukjkQ/5LQ4OiV03XjT5Ic43AdPatZM6SARItRX2piXesGp7VuIWHludbOWCGCmlaqWkD+7cK2vafXsQCIgQ==
   dependencies:
     yavent "^0.1.1"
 
