@@ -37,11 +37,11 @@ function WalletListSwipeRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   const dispatch = useDispatch()
-  const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
+  const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
   const rowRef = useRef<SwipableRowRef>(null)
 
   // Tutorial mode:
-  const isEmpty = edgeWallet == null
+  const isEmpty = wallet == null
   useEffect(() => {
     if (openTutorial && !isEmpty && rowRef.current != null) {
       rowRef.current.openRight()
@@ -71,18 +71,18 @@ function WalletListSwipeRowComponent(props: Props) {
       // Go to the transaction list, but only if the wallet exists
       // and does not need activation:
       if (
-        edgeWallet != null &&
+        wallet != null &&
         // It won't need activation if its a token:
         (isToken ||
           // Or because it doesn't need activation in the first place:
-          !getSpecialCurrencyInfo(edgeWallet.type).isAccountActivationRequired ||
+          !getSpecialCurrencyInfo(wallet.type).isAccountActivationRequired ||
           // Or because it is already activated:
-          (await edgeWallet.getReceiveAddress()).publicAddress !== '')
+          (await wallet.getReceiveAddress()).publicAddress !== '')
       ) {
         Actions.push('transactionList')
       }
     })
-  }, [currencyCode, dispatch, edgeWallet, isToken, walletId])
+  }, [currencyCode, dispatch, wallet, isToken, walletId])
 
   const handleSend = () => {
     closeRow()
@@ -130,7 +130,7 @@ function WalletListSwipeRowComponent(props: Props) {
   )
 
   // Render as an empty spinner row:
-  if (edgeWallet == null) {
+  if (wallet == null) {
     return (
       <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
         <Gradient>
