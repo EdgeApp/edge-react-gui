@@ -14,7 +14,6 @@ type Props = {
   appendFiatCurrencyCode?: boolean,
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode?: string,
-  parenthesisEnclosed?: boolean,
   autoPrecision?: boolean,
   noGrouping?: boolean
 }
@@ -24,7 +23,6 @@ export const useFiatText = (props: Props) => {
     cryptoExchangeMultiplier = defaultMultiplier,
     appendFiatCurrencyCode,
     nativeCryptoAmount = cryptoExchangeMultiplier,
-    parenthesisEnclosed,
     cryptoCurrencyCode,
     isoFiatCurrencyCode = USD_FIAT,
     autoPrecision,
@@ -48,13 +46,8 @@ export const useFiatText = (props: Props) => {
         })
       : '0'
 
-  // Create FiatText' prefix
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
-  const prefix = `${parenthesisEnclosed ? '(' : ''}${fiatSymbol} `
-  // Create FiatText' suffix
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  const suffix = `${fiatCurrencyCode}${parenthesisEnclosed ? ')' : ''}`
-
-  const fiatText = `${prefix}${fiatString}${fiatCurrencyCode}${suffix}`
+  const fiatText = `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
   return { fiatAmount, fiatString, fiatText }
 }
