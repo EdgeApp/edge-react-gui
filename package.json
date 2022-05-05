@@ -41,10 +41,6 @@
     "start": "react-native start",
     "start.plugins": "webpack serve",
     "test": "jest --config jest.config.js",
-    "test-android": "detox build --configuration android.emu.debug && detox test --configuration android.emu.debug -l verbose",
-    "test-ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
-    "test:e2e": "detox test -c ios.sim.debug",
-    "test:e2e:build": "detox build",
     "theme": "node ./themeServer.js",
     "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"
@@ -105,7 +101,6 @@
     "date-fns": "^2.22.1",
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",
-    "detox": "^18.10.0",
     "disklet": "^0.5.2",
     "edge-core-js": "^0.19.15",
     "edge-currency-accountbased": "^0.15.9",
@@ -176,7 +171,6 @@
     "body-parser": "^1.18.2",
     "eslint": "^7.14.0",
     "eslint-config-standard-kit": "0.15.1",
-    "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
@@ -206,37 +200,6 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0"
-  },
-  "detox": {
-    "test-runner": "jest",
-    "specs": "e2e",
-    "runner-config": "e2e/config.json",
-    "configurations": {
-      "ios.sim.release": {
-        "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/edge.app",
-        "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -workspace ios/edge.xcworkspace -scheme edge -configuration Release -sdk iphonesimulator -derivedDataPath ios/build -quiet",
-        "type": "ios.simulator",
-        "name": "iPhone 8"
-      },
-      "ios.sim.debug": {
-        "binaryPath": "/Users/marcusbates/Library/Developer/Xcode/DerivedData/edge-hhrsbwmzjemvddgtqahjbywenytl/Build/Products/Debug-iphonesimulator/edge.app",
-        "build": "xcodebuild -workspace ios/edge.xcworkspace -scheme edge -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "name": "iPhone 8"
-      },
-      "android.emu.debug": {
-        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
-        "build": "pushd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && popd",
-        "type": "android.emulator",
-        "name": "Nexus_5X_API_26"
-      },
-      "android.emu.release": {
-        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
-        "build": "pushd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && popd",
-        "type": "android.emulator",
-        "name": "Nexus_5X_API_26"
-      }
-    }
   },
   "flow-coverage-report": {
     "includeGlob": [
