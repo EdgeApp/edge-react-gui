@@ -17,6 +17,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
 
   const resolveValue = await Airship.show(bridge => (
     <ButtonsModal
+      testId="DeleteWalletModal"
       bridge={bridge}
       title={s.strings.fragment_wallets_delete_wallet}
       buttons={{
