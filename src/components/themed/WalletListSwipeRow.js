@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
-import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { type SharedValue } from 'react-native-reanimated'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
@@ -16,6 +16,7 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow.js'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
+import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 
 type Props = {|
@@ -95,12 +96,13 @@ function WalletListSwipeRowComponent(props: Props) {
   }
 
   // Underlay rendering:
+  const iconWidth = theme.rem(2.5)
   const renderMenuUnderlay = (isActive: SharedValue<boolean>) => {
     return (
       <TouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
-        <SwipeIcon isActive={isActive}>
+        <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Text style={styles.menuIcon}>…</Text>
-        </SwipeIcon>
+        </SwipeableRowIcon>
       </TouchableOpacity>
     )
   }
@@ -110,18 +112,18 @@ function WalletListSwipeRowComponent(props: Props) {
         <Text style={styles.menuIcon}>…</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
-        <SwipeIcon isActive={isActive}>
+        <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
-        </SwipeIcon>
+        </SwipeableRowIcon>
       </TouchableOpacity>
     </>
   )
   const renderSendUnderlay = (isActive: SharedValue<boolean>) => (
     <>
       <TouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
-        <SwipeIcon isActive={isActive}>
+        <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="send" color={theme.icon} size={theme.rem(1)} />
-        </SwipeIcon>
+        </SwipeableRowIcon>
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
@@ -160,28 +162,7 @@ function WalletListSwipeRowComponent(props: Props) {
   )
 }
 
-/**
- * Helper component to render the expanding icons in the underlay.
- * The only reason this needs to be a component is to get access
- * to the `useAnimatedStyle` hook.
- */
-function SwipeIcon(props: { children: React.Node, isActive: SharedValue<boolean> }) {
-  const { children, isActive } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const style = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(isActive.value ? 1.5 : 1) }]
-  }))
-  return <Animated.View style={[styles.iconBox, style]}>{children}</Animated.View>
-}
-
 const getStyles = cacheStyles((theme: Theme) => ({
-  iconBox: {
-    width: theme.rem(2.5),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
   menuButton: {
     backgroundColor: theme.sliderTabMore,
     width: theme.rem(2.5),
