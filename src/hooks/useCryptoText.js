@@ -14,22 +14,21 @@ import {
 } from '../util/utils'
 
 type UseCryptoTextParams = {
-  nativeAmount: string,
-  exchangeRate?: string,
-  exchangeDenomination: EdgeDenomination,
-  fiatDenomination: EdgeDenomination,
   denomination: EdgeDenomination,
-  currencyCode: string
+  exchangeRate?: string,
+  fiatDenomination: EdgeDenomination,
+  nativeAmount: string,
+  tokenId?: string
 }
 
-export const useCryptoText = ({ nativeAmount, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode }: UseCryptoTextParams) => {
+export const useCryptoText = ({ denomination, fiatDenomination, exchangeRate, nativeAmount, tokenId }: UseCryptoTextParams) => {
   const { multiplier, symbol } = denomination
   if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0`
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
 
   if (exchangeRate != null) {
     const precisionAdjustValue = precisionAdjust({
-      primaryExchangeMultiplier: exchangeDenomination.multiplier,
+      primaryExchangeMultiplier: multiplier,
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
       exchangeSecondaryToPrimaryRatio: exchangeRate
     })
@@ -42,7 +41,7 @@ export const useCryptoText = ({ nativeAmount, exchangeRate, exchangeDenomination
     return `${symbol != null ? symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
     if (error.message === 'Cannot operate on base16 float values') {
-      const errorMessage = `${error.message}: Currency code - ${currencyCode}, amount - ${nativeAmount}, demonination multiplier: ${multiplier}`
+      const errorMessage = `${error.message}: Currency - ${denomination.name}, amount - ${nativeAmount}, demonination multiplier: ${multiplier}`
       console.error(errorMessage)
     }
     console.error(error)
