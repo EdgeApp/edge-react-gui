@@ -1,6 +1,6 @@
 // @flow
 
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import type { Disklet } from 'disklet'
 import * as React from 'react'
 import { Platform } from 'react-native'
