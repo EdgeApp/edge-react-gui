@@ -1,26 +1,25 @@
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
-import { WalletListModal } from '../../components/modals/WalletListModal'
-import { getTheme } from '../../components/services/ThemeContext.js'
+import { WalletListModal } from '../../components/modals/WalletListModal.js'
+import { rootReducer } from '../../reducers/RootReducer.js'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge.js'
 
 describe('WalletListModal', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const store = createStore(rootReducer)
 
-    const props = {
-      bridge: fakeAirshipBridge,
-      headerTitle: 'Wallet List',
-      search: '',
-      searching: true,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<WalletListModal {...props} />)
+    const actual = renderer.create(
+      <Provider store={store}>
+        <WalletListModal bridge={fakeAirshipBridge} headerTitle="Wallet List" />
+      </Provider>
+    )
 
-    expect(actual).toMatchSnapshot()
+    expect(actual.toJSON()).toMatchSnapshot()
   })
 })
