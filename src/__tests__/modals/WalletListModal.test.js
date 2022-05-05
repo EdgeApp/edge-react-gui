@@ -6,8 +6,9 @@ import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
-import { WalletListModal } from '../../components/modals/WalletListModal.js'
+import { upgradeCurrencyCodes, WalletListModal } from '../../components/modals/WalletListModal.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
+import { type EdgeTokenId } from '../../types/types.js'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge.js'
 
 describe('WalletListModal', () => {
@@ -21,5 +22,28 @@ describe('WalletListModal', () => {
     )
 
     expect(actual.toJSON()).toMatchSnapshot()
+  })
+
+  it("Should upgrade currency codes to token ID's", () => {
+    const data = {
+      ETH: [{ pluginId: 'ethereum' }],
+      BNB: [{ pluginId: 'binance' }, { pluginId: 'ethereum', tokenId: '1234abcd' }]
+    }
+    function lookup(currencyCode: string): EdgeTokenId[] {
+      return data[currencyCode.toUpperCase()] ?? []
+    }
+
+    // Check ambiguous currency codes:
+    expect(upgradeCurrencyCodes(lookup, ['ETH', 'BNB'])).toEqual([
+      { pluginId: 'ethereum' },
+      { pluginId: 'binance' },
+      { pluginId: 'ethereum', tokenId: '1234abcd' }
+    ])
+
+    // Check scoped currency codes:
+    expect(upgradeCurrencyCodes(lookup, ['ETH', 'ETH-BNB'])).toEqual([{ pluginId: 'ethereum' }, { pluginId: 'ethereum', tokenId: '1234abcd' }])
+
+    // Check missing currency codes:
+    expect(upgradeCurrencyCodes(lookup, ['ETH', 'LOL'])).toEqual([{ pluginId: 'ethereum' }])
   })
 })

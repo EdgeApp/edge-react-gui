@@ -1,7 +1,7 @@
 // @flow
 
 import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
@@ -12,7 +12,7 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { GuiDenomination, TransactionListTx } from '../types/types.js'
-import { type GuiExchangeRates } from '../types/types.js'
+import { type EdgeTokenId, type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
 export const DECIMAL_PRECISION = 18
@@ -595,6 +595,34 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
     if (token != null) out.push(token.currencyCode)
   }
   return out
+}
+
+/**
+ * Creates a function that returns all matching tokenId's for a currency code.
+ */
+export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: string) => EdgeTokenId[] {
+  const map = new Map<string, EdgeTokenId[]>()
+
+  function addMatch(currencyCode: string, location: EdgeTokenId): void {
+    const key = currencyCode.toLowerCase()
+    const list = map.get(key)
+    if (list != null) list.push(location)
+    else map.set(key, [location])
+  }
+
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    const { allTokens, currencyInfo } = currencyConfig
+
+    addMatch(currencyInfo.currencyCode, { pluginId })
+
+    for (const tokenId of Object.keys(allTokens)) {
+      const token = allTokens[tokenId]
+      addMatch(token.currencyCode, { pluginId, tokenId })
+    }
+  }
+
+  return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
 }
 
 export const pickRandom = <T>(array?: T[]): T | null => {

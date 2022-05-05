@@ -11,9 +11,9 @@ import { getExchangeDenominationFromState } from '../../selectors/DenominationSe
 import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
 import { useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import type { CreateTokenType, CreateWalletType, EdgeTokenIdExtended, FlatListItem, GuiWallet } from '../../types/types.js'
-import { asSafeDefaultGuiWallet } from '../../types/types.js'
-import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
+import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
+import { type EdgeTokenId, asSafeDefaultGuiWallet } from '../../types/types.js'
+import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { normalizeForSearch } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
@@ -44,10 +44,13 @@ const getSortOptionsCurrencyCode = (fullCurrencyCode: string): string => {
 }
 
 type Props = {|
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[],
+  // Filtering:
+  allowedAssets?: EdgeTokenId[],
+  excludeAssets?: EdgeTokenId[],
   excludeWalletIds?: string[],
   filterActivation?: boolean,
+
+  // Visuals:
   footer?: React.Node,
   header?: React.Node,
   isModal?: boolean,
@@ -65,10 +68,13 @@ type Props = {|
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
   const {
-    allowedCurrencyCodes,
-    excludeCurrencyCodes,
+    // Filtering:
+    allowedAssets,
+    excludeAssets,
     excludeWalletIds,
     filterActivation,
+
+    // Visuals:
     footer,
     header,
     isModal,
@@ -180,7 +186,7 @@ export function WalletList(props: Props) {
         const { currencyCode, displayName } = currencyInfo
 
         // Initialize wallets
-        if (checkFilterWallet({ name, currencyCode, currencyName: displayName, pluginId }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
+        if (checkFilterWallet({ name, currencyCode, currencyName: displayName, pluginId }, searchText, allowedAssets, excludeAssets)) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: currencyCode,
@@ -197,12 +203,7 @@ export function WalletList(props: Props) {
           const fullCurrencyCode = `${currencyCode}-${tokenCode}`
 
           if (
-            checkFilterWallet(
-              { name, currencyCode: tokenCode, currencyName: token.displayName, pluginId },
-              searchText,
-              allowedCurrencyCodes,
-              excludeCurrencyCodes
-            )
+            checkFilterWallet({ name, currencyCode: tokenCode, currencyName: token.displayName, pluginId, tokenId }, searchText, allowedAssets, excludeAssets)
           ) {
             walletList.push({
               id: walletId,
@@ -224,7 +225,7 @@ export function WalletList(props: Props) {
         const { currencyCode, currencyName, pluginId } = createWalletCurrency
 
         if (
-          checkFilterWallet({ name: '', currencyCode, currencyName, pluginId }, searchText, allowedCurrencyCodes, excludeCurrencyCodes) &&
+          checkFilterWallet({ name: '', currencyCode, currencyName, pluginId }, searchText, allowedAssets, excludeAssets) &&
           !checkFromExistingWallets(walletList, currencyCode)
         ) {
           sortedWalletlist.push({
@@ -237,17 +238,19 @@ export function WalletList(props: Props) {
       }
 
       // Initialize Create Tokens
-      const currencyInfos = getCurrencyInfos(account)
-      for (const currencyInfo of currencyInfos) {
-        const { pluginId } = currencyInfo
-        for (const metaToken of currencyInfo.metaTokens) {
-          const { currencyCode, currencyName } = metaToken
+      for (const pluginId of Object.keys(account.currencyConfig)) {
+        const currencyConfig = account.currencyConfig[pluginId]
+        const { builtinTokens, currencyInfo } = currencyConfig
+
+        for (const tokenId of Object.keys(builtinTokens)) {
+          const { currencyCode, displayName } = builtinTokens[tokenId]
+
           // Fix for when the token code and chain code are the same (like EOS/TLOS)
           if (currencyCode === currencyInfo.currencyCode) continue
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
 
           if (
-            checkFilterWallet({ name: '', currencyCode, currencyName, pluginId }, searchText, allowedCurrencyCodes, excludeCurrencyCodes) &&
+            checkFilterWallet({ name: '', currencyCode, currencyName: displayName, pluginId, tokenId }, searchText, allowedAssets, excludeAssets) &&
             !checkFromExistingWallets(walletList, fullCurrencyCode)
           ) {
             sortedWalletlist.push({
@@ -256,7 +259,7 @@ export function WalletList(props: Props) {
               key: fullCurrencyCode,
               createTokenType: {
                 currencyCode,
-                currencyName,
+                currencyName: displayName,
                 pluginId: currencyInfo.pluginId
               }
             })
@@ -380,39 +383,24 @@ export function WalletList(props: Props) {
   )
 }
 
-function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
-  const [parent, token] = fullCurrencyCode.split('-')
-  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
-  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
-  return checkToken || checkParent
+type FilterDetailsType = {
+  // For searching:
+  name: string,
+  currencyCode: string,
+  currencyName: string,
+
+  // For filtering:
+  pluginId: string,
+  tokenId?: string
 }
 
-function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[], pluginId: string): boolean {
-  return !!currencyCodesArray.find(item => {
-    if (typeof item === 'string') {
-      return checkCurrencyCodes(item, currencyCode)
-    } else if (typeof item === 'object') {
-      return item.pluginId === pluginId && item.currencyCode === currencyCode.toUpperCase()
-    }
-    return undefined
-  })
-}
-
-type FilterDetailsType = { name: string, currencyCode: string, currencyName: string, pluginId: string }
-
-function checkFilterWallet(
-  details: FilterDetailsType,
-  filterText: string,
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[]
-): boolean {
-  const currencyCode = details.currencyCode.toLowerCase()
-
-  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes, details.pluginId)) {
+function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedAssets?: EdgeTokenId[], excludeAssets?: EdgeTokenId[]): boolean {
+  const { pluginId, tokenId } = details
+  if (allowedAssets != null && !hasAsset(allowedAssets, { pluginId, tokenId })) {
     return false
   }
 
-  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes, details.pluginId)) {
+  if (excludeAssets != null && hasAsset(excludeAssets, { pluginId, tokenId })) {
     return false
   }
 
@@ -420,8 +408,21 @@ function checkFilterWallet(
     return true
   }
 
+  const currencyCode = details.currencyCode.toLowerCase()
   const walletName = normalizeForSearch(details.name)
   const currencyName = normalizeForSearch(details.currencyName)
   const filterString = normalizeForSearch(filterText)
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
+}
+
+/**
+ * Returns true if the asset array includes the given asset.
+ */
+function hasAsset(assets: EdgeTokenId[], target: EdgeTokenId): boolean {
+  for (const asset of assets) {
+    if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
+      return true
+    }
+  }
+  return false
 }

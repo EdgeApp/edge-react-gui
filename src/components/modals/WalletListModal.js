@@ -4,8 +4,10 @@ import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
-import { useCallback, useState } from '../../types/reactHooks.js'
-import { type EdgeTokenIdExtended } from '../../types/types.js'
+import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
+import { useSelector } from '../../types/reactRedux.js'
+import { type EdgeTokenId } from '../../types/types.js'
+import { makeCurrencyCodeTable } from '../../util/utils.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -20,14 +22,20 @@ type Props = {|
   bridge: AirshipBridge<WalletListResult>,
 
   // Filtering:
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[],
+  allowedAssets?: EdgeTokenId[],
+  excludeAssets?: EdgeTokenId[],
   excludeWalletIds?: string[],
   filterActivation?: boolean,
 
   // Visuals:
   headerTitle: string,
-  showCreateWallet?: boolean
+  showCreateWallet?: boolean,
+
+  // Deprecated. Use `allowedAssets` and `excludeAssets` instead.
+  // Valid formats include "ETH", "REP", or "ETH-REP",
+  // and an empty list is the same as an undefined list:
+  allowedCurrencyCodes?: string[],
+  excludeCurrencyCodes?: string[]
 |}
 
 export function WalletListModal(props: Props) {
@@ -35,18 +43,34 @@ export function WalletListModal(props: Props) {
     bridge,
 
     // Filtering:
-    allowedCurrencyCodes,
-    excludeCurrencyCodes,
+    allowedAssets,
+    excludeAssets,
     excludeWalletIds,
     filterActivation,
 
     // Visuals:
     headerTitle,
-    showCreateWallet
+    showCreateWallet,
+
+    // Deprecated:
+    allowedCurrencyCodes,
+    excludeCurrencyCodes
   } = props
 
+  const account = useSelector(state => state.core.account)
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
+
+  // Upgrade deprecated props:
+  const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
+    if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
+
+    const lookup = makeCurrencyCodeTable(account)
+    const allowedAssets = upgradeCurrencyCodes(lookup, allowedCurrencyCodes)
+    const excludeAssets = upgradeCurrencyCodes(lookup, excludeCurrencyCodes)
+
+    return [allowedAssets, excludeAssets]
+  }, [account, allowedCurrencyCodes, excludeCurrencyCodes])
 
   const handleCancel = useCallback(() => {
     bridge.resolve({})
@@ -76,8 +100,8 @@ export function WalletListModal(props: Props) {
         searchIcon
       />
       <WalletList
-        allowedCurrencyCodes={allowedCurrencyCodes}
-        excludeCurrencyCodes={excludeCurrencyCodes}
+        allowedAssets={allowedAssets ?? legacyAllowedAssets}
+        excludeAssets={excludeAssets ?? legacyExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
         isModal
@@ -93,3 +117,31 @@ export function WalletListModal(props: Props) {
 }
 
 const listMargin = [0, -1]
+
+/**
+ * Precisely identify the assets named by a currency-code array.
+ * Accepts plain currency codes, such as "ETH" or "REP",
+ * but also scoped currency codes like "ETH-REP".
+ *
+ * The goal is to delete this once the wallet stops using this legacy format
+ * internally.
+ */
+export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeTokenId[], currencyCodes?: string[]): EdgeTokenId[] | void {
+  if (currencyCodes == null || currencyCodes.length === 0) return
+
+  const out: EdgeTokenId[] = []
+  for (const currencyCode of currencyCodes) {
+    const [parentCode, tokenCode] = currencyCode.split('-')
+
+    if (tokenCode == null) {
+      // It's a plain code, like "REP", so add all matches:
+      out.push(...lookup(parentCode))
+    } else {
+      // It's a scoped code, like "ETH-REP", so filter using the parent:
+      const parent = lookup(parentCode).find(match => match.tokenId == null)
+      if (parent == null) continue
+      out.push(...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
+    }
+  }
+  return out
+}
