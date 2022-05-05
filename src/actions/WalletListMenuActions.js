@@ -58,7 +58,13 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
 
         if (Object.values(wallets).length === 1) {
           Airship.show(bridge => (
-            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={s.strings.cannot_delete_last_wallet_modal_title}>
+            <ButtonsModal
+              bridge={bridge}
+              buttons={{}}
+              closeArrow
+              title={s.strings.cannot_delete_last_wallet_modal_title}
+              testId="WalletListMenuAction.CloseLastWalletModal"
+            >
               <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
               <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
             </ButtonsModal>
