@@ -196,6 +196,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       // Signer
       const signer = makeSigner(signerSeed)
 
+      // Get the gasPrice oracle data (from wallet)
+      const gasPrice = await multipass(p => p.getGasPrice())
+
       // Accumulators
       const gasLimitAcc = makeBigAccumulator('0')
       let txCount: number = await signer.getTransactionCount()
@@ -223,8 +226,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
               (gasLimit =>
                 async function approvePoolContract({ signer }) {
                   const result = await tokenContract.connect(signer).approve(poolContract.address, ethers.constants.MaxUint256, {
-                    nonce: nextNonce(),
-                    gasLimit
+                    gasLimit,
+                    gasPrice,
+                    nonce: nextNonce()
                   })
                   cacheTxMetadata(result.hash, nativeCurrencyCode, {
                     name: metadataName,
@@ -243,8 +247,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           (gasLimit =>
             async function name({ signer }) {
               const result = await poolContract.connect(signer).stake(request.nativeAmount, {
-                nonce: nextNonce(),
-                gasLimit
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
               })
               cacheTxMetadata(result.hash, nativeCurrencyCode, {
                 name: metadataName,
@@ -267,8 +272,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           (gasLimit =>
             async function name({ signer }) {
               const result = await poolContract.connect(signer).withdraw(request.nativeAmount, {
-                nonce: nextNonce(),
-                gasLimit
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
               })
               cacheTxMetadata(result.hash, nativeCurrencyCode, {
                 name: metadataName,
@@ -301,8 +307,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           (gasLimit =>
             async function name({ signer }) {
               const result = await poolContract.connect(signer).claimReward({
-                nonce: nextNonce(),
-                gasLimit
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
               })
               cacheTxMetadata(result.hash, nativeCurrencyCode, {
                 name: metadataName,
@@ -327,10 +334,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       // Calculate the fees
       //
 
-      // Calculate the fees:
-      // 1. Get the gasPrice oracle data (from wallet)
-      // 2. Calculate the networkFee as the gasLimit * gasPrice in the native token
-      const gasPrice = await multipass(p => p.getGasPrice())
+      // Calculate the networkFee as the gasLimit * gasPrice in the native token
       const networkFee = gasLimitAcc().mul(gasPrice).toString()
       allocations.push({
         allocationType: 'fee',
