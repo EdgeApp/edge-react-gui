@@ -2,6 +2,8 @@
 
 ## 2.14.1 (2022-05-02)
 
+- Use explicit gasPrice value for all transactions in stake workflow
+- Add 'pending' blocktag to getTransactionCount for stake plugin
 - Wallet Connect: Fix hex value handling
 - Add Edge Provider utility to convert currency code array to EdgeTokenIdExtended array
 - Upgrade edge-currency-accountbased to v0.15.9
