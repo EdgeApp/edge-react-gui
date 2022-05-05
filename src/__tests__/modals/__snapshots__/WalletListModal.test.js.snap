@@ -341,12 +341,6 @@ Array [
       />
     </View>
     <RCTScrollView
-      contentOffset={
-        Object {
-          "x": 0,
-          "y": 0,
-        }
-      }
       data={Array []}
       getItem={[Function]}
       getItemCount={[Function]}

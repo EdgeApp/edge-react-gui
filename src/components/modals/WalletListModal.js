@@ -104,7 +104,6 @@ export function WalletListModal(props: Props) {
         excludeAssets={excludeAssets ?? legacyExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
-        isModal
         marginRem={listMargin}
         searching={searching}
         searchText={searchText}
