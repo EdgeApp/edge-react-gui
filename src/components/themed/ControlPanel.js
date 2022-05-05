@@ -251,7 +251,14 @@ export function ControlPanel(props: Props) {
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
                   {`1 ${currencyDenomName} = `}
-                  <FiatText format="primary" nativeCryptoAmount={currencyDenomMult} tokenId={selectedCurrencyCode} walletId={selectedWallet.id} />
+                  <FiatText
+                    nativeCryptoAmount={currencyDenomMult}
+                    currencyCode={selectedCurrencyCode}
+                    wallet={selectedWallet}
+                    autoPrecision
+                    appendFiatCurrencyCode
+                    fiatSymbolSpace
+                  />
                 </TitleText>
               </View>
             </>

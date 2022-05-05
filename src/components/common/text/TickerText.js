@@ -85,7 +85,7 @@ export const TickerText = ({ walletId, style, tokenId }: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const exchangeRate = !zeroString(exchangeRates[rateKey]) ? exchangeRates[rateKey] : '1'
 
-  let { fiatText } = useFiatText({
+  let fiatText = useFiatText({
     nativeCryptoAmount: cryptoExchangeMultiplier,
     cryptoCurrencyCode: tokenOrNativeCode,
     isoFiatCurrencyCode,

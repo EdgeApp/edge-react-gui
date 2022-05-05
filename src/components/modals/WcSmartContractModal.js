@@ -157,8 +157,8 @@ export const WcSmartContractModal = (props: Props) => {
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
             nativeCryptoAmount={totalNativeCrypto}
-            walletId={walletId}
-            tokenId={amountCurrencyCode}
+            wallet={wallet}
+            currencyCode={amountCurrencyCode}
           />
         )}
         {slider}

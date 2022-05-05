@@ -1,7 +1,8 @@
 // @flow
+/* eslint-disable react-native/no-raw-text */
 
 import { div, eq } from 'biggystring'
-import { type EdgeDenomination, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeDenomination, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -53,6 +54,7 @@ type StateProps = {
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   pluginId: string,
+  wallet: EdgeCurrencyWallet,
 
   // Fees
   feeCurrencyCode: string,
@@ -158,7 +160,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalance = () => {
-    const { balanceCrypto, primaryInfo, theme } = this.props
+    const { wallet, balanceCrypto, primaryInfo, theme } = this.props
     const styles = getStyles(theme)
     const { multiplier, name } = primaryInfo.displayDenomination
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
@@ -167,7 +169,8 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
         <EdgeText style={styles.rateBalanceText}>
           {balance}
-          <FiatText format="secondary" walletId={primaryInfo.walletId} tokenId={name} nativeCryptoAmount={balanceCrypto} />
+          (
+          <FiatText wallet={wallet} currencyCode={primaryInfo.displayCurrencyCode} nativeCryptoAmount={balanceCrypto} />)
         </EdgeText>
       </View>
     )
@@ -200,7 +203,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees = () => {
-    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, secondaryInfo, theme } = this.props
+    const { wallet, feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, theme } = this.props
     const truncatedFeeAmount = truncateDecimals(feeAmount, DEFAULT_TRUNCATE_PRECISION, false)
     const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
@@ -214,7 +217,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          <FiatText format="secondary" nativeCryptoAmount={feeNativeAmount} tokenId={feeCurrencyCode} walletId={secondaryInfo.walletId} />
+          (<FiatText nativeCryptoAmount={feeNativeAmount} currencyCode={feeCurrencyCode} wallet={wallet} />)
         </EdgeText>
       </View>
     )
@@ -368,6 +371,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       overridePrimaryExchangeAmount,
       forceUpdateGuiCounter,
       pluginId,
+      wallet,
 
       // Fees
       feeCurrencyCode: wallet.currencyInfo.currencyCode,

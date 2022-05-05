@@ -1,18 +1,26 @@
 // @flow
 
 import { div, log10, mul } from 'biggystring'
+import { type EdgeAccount, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { DECIMAL_PRECISION, getObjectDiff } from '../../util/utils'
 import { FiatText } from '../common/text/FiatText.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
-type Props = {
+type StateProps = {
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet
+}
+
+type OwnProps = {
   primaryInfo: GuiCurrencyInfo,
   primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: GuiCurrencyInfo,
@@ -20,8 +28,8 @@ type Props = {
   style?: StyleSheet.Styles
 }
 
-class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
-  shouldComponentUpdate(nextProps: Props) {
+class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & StateProps> {
+  shouldComponentUpdate(nextProps: OwnProps) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryInfo: true,
       secondaryInfo: true,
@@ -32,7 +40,7 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
   }
 
   render() {
-    const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount, style } = this.props
+    const { account, primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount, style, wallet } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
@@ -67,14 +75,23 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
       <EdgeText style={style}>
         {primaryText}
         <FiatText
-          format="raw"
+          noFiatSymbol
           nativeCryptoAmount={primaryInfo.displayDenomination.multiplier}
-          tokenId={primaryInfo.exchangeCurrencyCode}
-          walletId={primaryInfo.walletId}
+          tokenId={getTokenId(account, wallet.currencyInfo.pluginId, primaryInfo.exchangeCurrencyCode)}
+          wallet={wallet}
         />
       </EdgeText>
     )
   }
 }
 
-export const ExchangeRate = withTheme(ExchangeRateComponent)
+export const ExchangeRate = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
+    const { primaryInfo } = ownProps
+    return {
+      account: state.core.account,
+      wallet: state.core.account.currencyWallets[primaryInfo.walletId]
+    }
+  },
+  dispatch => ({})
+)(withTheme(ExchangeRateComponent))

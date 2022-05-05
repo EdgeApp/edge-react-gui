@@ -139,11 +139,12 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             }
           >
             1 BTC 
+            (
             <FiatText
-              format="secondary"
+              currencyCode="BTC"
               nativeCryptoAmount="1"
-              tokenId="BTC"
             />
+            )
           </WithTheme(EdgeTextComponent)>
         </View>
         <View
@@ -164,7 +165,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
           >
             Rate
           </WithTheme(EdgeTextComponent)>
-          <WithTheme(ExchangeRateComponent)
+          <Memo(Connect(WithTheme(ExchangeRateComponent)))
             primaryInfo={
               Object {
                 "displayCurrencyCode": "BTC",
@@ -227,11 +228,12 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             }
           >
             0.0000001 BTC 
+            (
             <FiatText
-              format="secondary"
+              currencyCode="BTC"
               nativeCryptoAmount="10000"
-              tokenId="BTC"
             />
+            )
           </WithTheme(EdgeTextComponent)>
         </View>
         <WithTheme(EdgeTextComponent)
