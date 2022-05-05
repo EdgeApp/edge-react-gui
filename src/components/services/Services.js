@@ -28,6 +28,7 @@ import { EdgeContextCallbackManager } from './EdgeContextCallbackManager.js'
 import { NetworkActivity } from './NetworkActivity.js'
 import { PasswordReminderService } from './PasswordReminderService.js'
 import { PermissionsManager } from './PermissionsManager.js'
+import { SortedWalletList } from './SortedWalletList.js'
 import { useTheme } from './ThemeContext'
 import { WalletLifecycle } from './WalletLifecycle.js'
 
@@ -91,6 +92,7 @@ export function Services(props: Props) {
         <ContactsLoader />
         <DeepLinkingManager />
         {account == null ? null : <AccountCallbackManager account={account} />}
+        {account == null ? null : <SortedWalletList account={account} />}
         <EdgeContextCallbackManager />
         <PermissionsManager />
         <NetworkActivity />

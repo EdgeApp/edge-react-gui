@@ -86,6 +86,7 @@ Object {
     "contacts": "denied",
     "location": "denied",
   },
+  "sortedWalletList": Array [],
   "ui": Object {
     "fio": Object {
       "connectedWalletsByFioAddress": Object {},

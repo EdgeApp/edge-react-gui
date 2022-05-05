@@ -9,6 +9,7 @@ import {
   type EdgeSpendTarget,
   type EdgeSwapQuote,
   type EdgeSwapRequest,
+  type EdgeToken,
   type EdgeTransaction
 } from 'edge-core-js/types'
 
@@ -332,6 +333,22 @@ export type AppConfig = {
   appStore: string,
   defaultWallets: string[]
 }
+
+/**
+ * We maintain a sorted wallet list in redux,
+ * since it's quite expensive to calculate.
+ */
+export type WalletListItem = {|
+  key: string,
+
+  // These will be set for token rows:
+  token?: EdgeToken,
+  tokenId?: string,
+
+  // The wallet will be present once it loads:
+  wallet?: EdgeCurrencyWallet,
+  walletId: string
+|}
 
 export type EdgeTokenId = {
   pluginId: string,
