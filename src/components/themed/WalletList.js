@@ -161,10 +161,12 @@ export function WalletList(props: Props) {
           key: walletId
         })
       } else if (wallet != null) {
-        const { enabledTokens, name, currencyCode, currencyNames } = asSafeDefaultGuiWallet(wallet)
+        const { enabledTokens, name, pluginId, currencyNames } = asSafeDefaultGuiWallet(wallet)
+        const { currencyInfo } = account.currencyConfig[pluginId]
+        const { currencyCode, displayName } = currencyInfo
 
         // Initialize wallets
-        if (checkFilterWallet({ name, currencyCode, currencyName: currencyNames[currencyCode] }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
+        if (checkFilterWallet({ name, currencyCode, currencyName: displayName, pluginId }, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: currencyCode,
@@ -188,7 +190,7 @@ export function WalletList(props: Props) {
 
           if (
             checkFilterWallet(
-              { name, currencyCode: tokenCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '' },
+              { name, currencyCode: tokenCode, currencyName: customTokenInfo?.currencyName ?? currencyNames[tokenCode] ?? '', pluginId },
               searchText,
               allowedCurrencyCodes,
               excludeCurrencyCodes
@@ -211,10 +213,10 @@ export function WalletList(props: Props) {
       // Initialize Create Wallets
       const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
       for (const createWalletCurrency of createWalletCurrencies) {
-        const { currencyCode, currencyName } = createWalletCurrency
+        const { currencyCode, currencyName, pluginId } = createWalletCurrency
 
         if (
-          checkFilterWallet({ name: '', currencyCode, currencyName }, searchText, allowedCurrencyCodes, excludeCurrencyCodes) &&
+          checkFilterWallet({ name: '', currencyCode, currencyName, pluginId }, searchText, allowedCurrencyCodes, excludeCurrencyCodes) &&
           !checkFromExistingWallets(walletList, currencyCode)
         ) {
           sortedWalletlist.push({
@@ -229,6 +231,7 @@ export function WalletList(props: Props) {
       // Initialize Create Tokens
       const currencyInfos = getCurrencyInfos(account)
       for (const currencyInfo of currencyInfos) {
+        const { pluginId } = currencyInfo
         for (const metaToken of currencyInfo.metaTokens) {
           const { currencyCode, currencyName } = metaToken
           // Fix for when the token code and chain code are the same (like EOS/TLOS)
@@ -236,7 +239,7 @@ export function WalletList(props: Props) {
           const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
 
           if (
-            checkFilterWallet({ name: '', currencyCode, currencyName }, searchText, allowedCurrencyCodes, excludeCurrencyCodes) &&
+            checkFilterWallet({ name: '', currencyCode, currencyName, pluginId }, searchText, allowedCurrencyCodes, excludeCurrencyCodes) &&
             !checkFromExistingWallets(walletList, fullCurrencyCode)
           ) {
             sortedWalletlist.push({

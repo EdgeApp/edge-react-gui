@@ -6,14 +6,7 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaTo
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
-import {
-  FEE_ALERT_THRESHOLD,
-  FEE_COLOR_THRESHOLD,
-  FIAT_CODES_SYMBOLS,
-  FIAT_PRECISION,
-  getSpecialCurrencyInfo,
-  getSymbolFromCurrency
-} from '../constants/WalletAndCurrencyConstants.js'
+import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
@@ -162,7 +155,10 @@ export const removeHexPrefix = (s: string) => s.replace(/^0x/, '')
 
 export const isHex = (h: string) => /^[0-9A-F]+$/i.test(h)
 
-export const hexToDecimal = (num: string) => add(num, '0', 10)
+export const hexToDecimal = (num: string) => {
+  const numberString = num.toLowerCase().startsWith('0x') ? num : `0x${num}`
+  return add(numberString, '0', 10)
+}
 
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
   if (nativeAmount === '') return nativeAmount
@@ -556,20 +552,19 @@ const asEdgeTokenIdExtended = asObject({
 
 const asCurrencyCodesArray = asMaybe(asArray(asEither(asString, asEdgeTokenIdExtended)), [])
 
-export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[]): boolean {
+export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[], pluginId: string): boolean {
   const cleanedArray = asCurrencyCodesArray(currencyCodesArray)
   return !!cleanedArray.find(item => {
     if (typeof item === 'string') {
       return checkCurrencyCodes(item, currencyCode)
     } else if (typeof item === 'object') {
-      const { chainCode } = getSpecialCurrencyInfo(item.pluginId)
-      return checkCurrencyCodes(`${chainCode}-${item.currencyCode ?? ''}`, currencyCode)
+      return item.pluginId === pluginId && item.currencyCode === currencyCode.toUpperCase()
     }
     return undefined
   })
 }
 
-export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string }
+export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string, pluginId: string }
 
 export function checkFilterWallet(
   details: FilterDetailsType,
@@ -579,11 +574,11 @@ export function checkFilterWallet(
 ): boolean {
   const currencyCode = details.currencyCode.toLowerCase()
 
-  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
+  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes, details.pluginId)) {
     return false
   }
 
-  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes)) {
+  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes, details.pluginId)) {
     return false
   }
 

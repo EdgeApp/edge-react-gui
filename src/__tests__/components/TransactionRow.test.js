@@ -1,40 +1,40 @@
+// @flow
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import { abs, toFixed } from 'biggystring'
+import { type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../../components/themed/TransactionListRow.js'
-import { EDGE_CONTENT_SERVER, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
+import { type GuiWallet } from '../../types/types.js'
 import { convertNativeToDisplay, decimalOrZero, isSentTransaction, truncateDecimals } from '../../util/utils'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
     const renderer = new ShallowRenderer()
-    const guiWallet = {
+    const guiWallet: GuiWallet = {
       id: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA=',
       type: 'wallet:monero',
       name: 'Monero',
+      pluginId: 'monero',
       primaryNativeBalance: '1492780012',
       nativeBalances: { XMR: '1492780012' },
       currencyNames: { XMR: 'Monero' },
       currencyCode: 'XMR',
       isoFiatCurrencyCode: 'iso:USD',
       fiatCurrencyCode: 'USD',
-      denominations: [{}],
-      allDenominations: { XMR: {} },
       metaTokens: [],
       enabledTokens: [],
-      receiveAddress: { metadata: {}, nativeAmount: '0', publicAddress: '432hJPUp2C...' },
-      blockHeight: 1688551,
-      symbolImage: `${EDGE_CONTENT_SERVER}/XMR/XMR.png`,
-      symbolImageDarkMono: `${EDGE_CONTENT_SERVER}/XMR/XMR_dark.png`,
-      key: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA='
+      blockHeight: 1688551
     }
-    const transaction = {
+    const amountFiat = 4424808418353299.5
+
+    const wallet: any = { id: 'SXq1f3x21H…', type: 'wallet:monero' }
+    const transaction: EdgeTransaction = {
       blockHeight: 1683022,
       date: 1539555412.068,
       ourReceiveAddresses: [],
@@ -44,15 +44,13 @@ describe('Transaction List Row', () => {
       nativeAmount: '-32295514330000',
       networkFee: '0',
       currencyCode: 'XMR',
-      wallet: { id: 'SXq1f3x21H…', type: 'wallet:monero' },
+      wallet,
       otherParams: {},
       SVGMetadataElement: { name: 'ShapeShift', category: '', notes: 'Exchanged …' },
       dateString: 'Oct 14, 2018',
       time: '3:16 PM',
       key: 0,
-      metadata: {
-        amountFiat: 4424808418353299.5
-      }
+      metadata: { amountFiat }
     }
     const displayDenomination = {
       multiplier: '1000000000000',
@@ -63,9 +61,9 @@ describe('Transaction List Row', () => {
     const cryptoAmount = convertNativeToDisplay(displayDenomination.multiplier)(abs(transaction.nativeAmount ?? ''))
     const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount), 6))
     // FiatAmount
-    const fiatAmount = abs(transaction.metadata.amountFiat.toFixed(2))
+    const fiatAmount = abs(amountFiat.toFixed(2))
     const fiatAmountFormat = formatNumber(toFixed(fiatAmount, 2, 2), { toFixed: 2 })
-    const props = {
+    const props: any = {
       cryptoAmount: cryptoAmountFormat,
       denominationSymbol: displayDenomination.symbol,
       fiatAmount: fiatAmountFormat,

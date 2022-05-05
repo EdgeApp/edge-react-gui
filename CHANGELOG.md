@@ -1,5 +1,23 @@
 # edge-react-gui
 
+## 2.14.1 (2022-05-02)
+
+- Use explicit gasPrice value for all transactions in stake workflow
+- Add 'pending' blocktag to getTransactionCount for stake plugin
+- Wallet Connect: Fix hex value handling
+- Add Edge Provider utility to convert currency code array to EdgeTokenIdExtended array
+- Upgrade edge-currency-accountbased to v0.15.9
+  - Fix assignment of network fees from info server
+  - Merge info server fees response with local data instead of overwriting
+  - Round gas price values to ints before converting to hex
+  - Prioritize the queried minGasLimit and minGasPrice over the default values
+  - Add logging of fees
+  - Add feeUpdateFrequency override and change FTM to 1 min
+  - Change preference of fee providers
+  - Do not overwrite baseFeeMultiplier coming from settings
+  - Fix hex number handling
+  - Update ZEC checkpoints
+
 ## 2.14.0 (2022-04-26)
 
 - Add Tomb Swap
