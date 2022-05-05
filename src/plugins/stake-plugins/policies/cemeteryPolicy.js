@@ -167,7 +167,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
       // Accumulators
       const gasLimitAcc = makeBigAccumulator('0')
-      let txCount: number = await signer.getTransactionCount()
+      let txCount: number = await signer.getTransactionCount('pending')
       const nextNonce = (): number => txCount++
 
       // Transaction builder
