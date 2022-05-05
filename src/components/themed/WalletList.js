@@ -1,7 +1,8 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
-import { FlatList, SectionList } from 'react-native'
+import { RefreshControl, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
@@ -69,6 +70,7 @@ export function WalletList(props: Props) {
   } = props
 
   const theme = useTheme()
+  const generateTestHook = useCavy()
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
 
   const handlePress = useMemo(
