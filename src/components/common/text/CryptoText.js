@@ -1,42 +1,50 @@
 // @flow
 
+import { type EdgeCurrencyWallet } from 'edge-core-js'
+
 import { useCryptoText } from '../../../hooks/useCryptoText'
-import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../../selectors/DenominationSelectors'
-import { useDispatch, useSelector } from '../../../types/reactRedux'
+import { useSelector } from '../../../types/reactRedux'
+import { getAllTokens } from '../../../util/CurrencyInfoHelpers'
 import { fixFiatCurrencyCode, getDenomFromIsoCode, zeroString } from '../../../util/utils'
 
 type Props = {
-  walletId: string,
+  wallet: EdgeCurrencyWallet,
   tokenId?: string,
-  nativeAmount?: string
+  nativeAmount: string
 }
 
 /**
- * Returns a cleaned crypto amount string. If no nativeAmount is given, use the
- * wallet balance.
+ * Returns a cleaned crypto amount string. If no tokenId is given, use the
+ * wallet's native currency.
  **/
-export const CryptoText = ({ walletId, tokenId, nativeAmount }: Props) => {
-  const dispatch = useDispatch()
-  const currencyInfo = useSelector(state => state.core.account.currencyWallets[walletId].currencyInfo)
-  const fiatCurrencyCode = useSelector(state => state.core.account.currencyWallets[walletId].fiatCurrencyCode)
-  const tokenOrNativeCode = tokenId ?? currencyInfo.currencyCode
+export const CryptoText = ({ wallet, tokenId, nativeAmount }: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const nativeAmountOrBalance = useSelector(state => nativeAmount ?? state.core.account.currencyWallets[walletId].balances[tokenOrNativeCode] ?? '0')
+  const account = useSelector(state => state.core.account)
+  const { currencyInfo, fiatCurrencyCode } = wallet
+  const nativeCurrencyCode = currencyInfo.currencyCode
+  const tokens = getAllTokens(account.currencyConfig[currencyInfo.pluginId])
 
   // Crypto Amount And Exchange Rate
-  const denomination = dispatch(getDisplayDenominationFromState(currencyInfo.pluginId, tokenOrNativeCode))
-  const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyInfo.pluginId, tokenOrNativeCode))
+  let currencyCode, denomination
+  if (tokenId == null || nativeCurrencyCode === tokens[tokenId].currencyCode) {
+    currencyCode = nativeCurrencyCode
+    denomination = currencyInfo.denominations[0]
+  } else {
+    const token = tokens[tokenId]
+    currencyCode = token.currencyCode
+    denomination = token.denominations[0]
+  }
+
   const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
   const isoFiatCurrencyCode = fixFiatCurrencyCode(fiatCurrencyCode)
-  const rateKey = `${tokenOrNativeCode}_${isoFiatCurrencyCode}`
+  const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
   const exchangeRate = !zeroString(exchangeRates[rateKey]) ? exchangeRates[rateKey] : '1'
 
   return useCryptoText({
-    nativeAmount: nativeAmountOrBalance,
+    nativeAmount,
     exchangeRate,
-    exchangeDenomination,
     fiatDenomination,
     denomination,
-    currencyCode: tokenOrNativeCode
+    tokenId
   })
 }
