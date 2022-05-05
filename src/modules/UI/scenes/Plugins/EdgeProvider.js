@@ -1,6 +1,7 @@
 // @flow
 
 import { abs } from 'biggystring'
+import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
@@ -74,6 +75,14 @@ export type EdgeProviderSpendTarget = {
   otherParams?: JsonObject
 }
 
+const asEdgeTokenIdExtended = asObject({
+  pluginId: asString,
+  tokenId: asOptional(asString),
+  currencyCode: asOptional(asString)
+})
+
+const asCurrencyCodesArray = asArray(asEither(asString, asEdgeTokenIdExtended))
+
 export class EdgeProvider extends Bridgeable {
   // Private properties:
   _plugin: GuiPlugin
@@ -117,8 +126,10 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  // $FlowFixMe // Default empty array is not typed
-  async chooseCurrencyWallet(allowedCurrencyCodes: string[] | EdgeTokenIdExtended[] = []): Promise<string> {
+  async chooseCurrencyWallet(allowedCurrencyCodes: any = []): Promise<string> {
+    // Sanity-check our untrusted input:
+    asCurrencyCodesArray(allowedCurrencyCodes)
+
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -142,13 +153,14 @@ export class EdgeProvider extends Bridgeable {
       if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
         const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
-        return Promise.resolve({
+        // $FlowFixMe We are violating our return type here:
+        return {
           pluginId,
           tokenId,
           currencyCode
-        })
+        }
       }
-      return Promise.resolve(currencyCode)
+      return currencyCode
     }
 
     throw new Error(s.strings.user_closed_modal_no_wallet)

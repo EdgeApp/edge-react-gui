@@ -15,7 +15,7 @@ import type { CreateTokenType, CreateWalletType, EdgeTokenIdExtended, FlatListIt
 import { asSafeDefaultGuiWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
-import { checkFilterWallet } from '../../util/utils.js'
+import { normalizeForSearch } from '../../util/utils.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
@@ -378,4 +378,50 @@ export function WalletList(props: Props) {
       style={margin}
     />
   )
+}
+
+function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
+  const [parent, token] = fullCurrencyCode.split('-')
+  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
+  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
+  return checkToken || checkParent
+}
+
+function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[], pluginId: string): boolean {
+  return !!currencyCodesArray.find(item => {
+    if (typeof item === 'string') {
+      return checkCurrencyCodes(item, currencyCode)
+    } else if (typeof item === 'object') {
+      return item.pluginId === pluginId && item.currencyCode === currencyCode.toUpperCase()
+    }
+    return undefined
+  })
+}
+
+type FilterDetailsType = { name: string, currencyCode: string, currencyName: string, pluginId: string }
+
+function checkFilterWallet(
+  details: FilterDetailsType,
+  filterText: string,
+  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
+  excludeCurrencyCodes?: string[]
+): boolean {
+  const currencyCode = details.currencyCode.toLowerCase()
+
+  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes, details.pluginId)) {
+    return false
+  }
+
+  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes, details.pluginId)) {
+    return false
+  }
+
+  if (filterText === '') {
+    return true
+  }
+
+  const walletName = normalizeForSearch(details.name)
+  const currencyName = normalizeForSearch(details.currencyName)
+  const filterString = normalizeForSearch(filterText)
+  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
