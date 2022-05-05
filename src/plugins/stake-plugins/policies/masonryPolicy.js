@@ -201,7 +201,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Accumulators
       const gasLimitAcc = makeBigAccumulator('0')
-      let txCount: number = await signer.getTransactionCount()
+      let txCount: number = await signer.getTransactionCount('pending')
       const nextNonce = (): number => txCount++
 
       // Transaction builder
