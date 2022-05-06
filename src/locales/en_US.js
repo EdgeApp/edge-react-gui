@@ -161,7 +161,7 @@ const strings = {
   wallet_list_referral_link_cancelled_wallet_creation: 'User did not approve creating wallet for the promotion',
   wallet_list_swipe_tutorial_title: 'Slide wallets to show more options',
   wallet_list_wallet_search: 'Search Wallets',
-  create_wallet_choice_instructions: 'Create a new wallet, or restore an existing wallet using the private seed?',
+  create_wallet_choice_instructions: 'Create a new wallet or import an existing wallet using the private seed',
   create_wallet_choice_new_button: 'Create New Wallet',
   create_wallet_import_title: 'Import Wallet',
   create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet',
