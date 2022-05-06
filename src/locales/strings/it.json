@@ -140,7 +140,7 @@
   "wallet_list_referral_link_cancelled_wallet_creation": "L'utente non ha approvato la creazione del portafoglio per la promozione",
   "wallet_list_swipe_tutorial_title": "Scorri i portafogli per mostrare più opzioni",
   "wallet_list_wallet_search": "Cerca portafogli",
-  "create_wallet_choice_instructions": "Creare un nuovo portafoglio o ripristinare un portafoglio esistente utilizzando i seed?",
+  "create_wallet_choice_instructions": "Create a new wallet or import an existing wallet using the private seed",
   "create_wallet_choice_new_button": "Crea un nuovo portafoglio",
   "create_wallet_import_title": "Importa portafoglio",
   "create_wallet_import_instructions": "Inserisci i tuoi seed privati per verificare e ripristinare il portafoglio associato",
