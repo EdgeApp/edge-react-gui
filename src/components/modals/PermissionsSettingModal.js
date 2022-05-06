@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { AppState } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { check, openSettings } from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
+import { useIsAppForeground } from '../../hooks/useIsAppForeground.js'
 import s from '../../locales/strings.js'
-import { useEffect } from '../../types/reactHooks.js'
 import { showError } from '../services/AirshipInstance.js'
 import { checkIfDenied } from '../services/PermissionsManager.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -22,21 +22,17 @@ export function PermissionsSettingModal(props: {
   permission: string
 }) {
   const { bridge, fullPermision, mandatory, name, permission } = props
-
-  useEffect(() => {
-    const listener = AppState.addEventListener('change', handleChangePermissions)
-    return () => listener.remove()
-  })
+  const isAppForeground = useIsAppForeground()
 
   const message = mandatory
     ? sprintf(s.strings.contacts_permission_modal_enable_settings_mandatory, name, permission)
     : sprintf(s.strings.contacts_permission_modal_enable_settings, name, permission)
 
-  const handleChangePermissions = async () => {
-    if (mandatory && !checkIfDenied(await check(fullPermision))) {
-      bridge.resolve(false)
-    }
-  }
+  useAsyncEffect(async () => {
+    if (!isAppForeground || !mandatory) return
+    const status = await check(fullPermision)
+    if (!checkIfDenied(status)) bridge.resolve(false)
+  }, [fullPermision, isAppForeground])
 
   const handlePress = () => {
     openSettings().catch(showError)

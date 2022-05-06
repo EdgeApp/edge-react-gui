@@ -3,12 +3,15 @@
 import AsyncStorage from '@react-native-community/async-storage'
 import type { Disklet } from 'disklet'
 import * as React from 'react'
-import { AppState, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { check, checkMultiple, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
 
 import { SETTINGS_PERMISSION_LIMITS, SETTINGS_PERMISSION_QUANTITY } from '../../constants/constantSettings.js'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
+import { useIsAppForeground } from '../../hooks/useIsAppForeground.js'
 import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
-import { connect } from '../../types/reactRedux.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
+import { type Dispatch, type GetState } from '../../types/reduxTypes.js'
 import { type ContactsPermissionResult, ContactsPermissionModal } from '../modals/ContactsPermissionModal.js'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal.js'
 import { Airship, showError } from './AirshipInstance.js'
@@ -38,57 +41,17 @@ const PERMISSIONS_ITEM = {
   location: LOCATION[OS]
 }
 
-type StateProps = {
-  permissions: PermissionsState
-}
+export const PermissionsManager = () => {
+  const dispatch = useDispatch()
+  const statePermissions = useSelector(state => state.permissions)
+  const isAppForeground = useIsAppForeground()
 
-type DispatchProps = {
-  updatePermissions: (permissions: PermissionsState) => void
-}
+  useAsyncEffect(async () => {
+    if (!isAppForeground) return
+    await dispatch(setNewPermissions(statePermissions))
+  }, [isAppForeground, statePermissions])
 
-type Props = StateProps & DispatchProps
-
-class PermissionsManagerComponent extends React.Component<Props> {
-  render() {
-    return null
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange)
-
-    this.checkPermissions().catch(showError)
-  }
-
-  handleAppStateChange = (nextAppState: string) => {
-    console.log('State Change => ', nextAppState)
-
-    if (nextAppState === 'active') {
-      this.checkPermissions().catch(showError)
-    }
-  }
-
-  async checkPermissions() {
-    const statePermissions = this.props.permissions
-    const names = Object.keys(statePermissions)
-    const permissions = names.map(name => PERMISSIONS[OS][PERMISSIONS_ITEM[name]])
-    const response: PermissionsState = await checkMultiple(permissions)
-
-    // Figure out which ones have changed to avoid a pointless dispatch:
-    const newPermissions: PermissionsState = {}
-    for (const name of names) {
-      const responsePermission = PERMISSIONS[OS][PERMISSIONS_ITEM[name]]
-      if (response[responsePermission] !== statePermissions[name]) {
-        newPermissions[name] = response[responsePermission]
-      }
-    }
-
-    if (Object.keys(newPermissions).length > 0) {
-      console.log('Permissions updated')
-      this.props.updatePermissions(newPermissions)
-    } else {
-      console.log('Permissions unchanged')
-    }
-  }
+  return null
 }
 
 export async function requestPermission(data: Permission): Promise<PermissionStatus> {
@@ -159,13 +122,25 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
   return false
 }
 
-export const PermissionsManager = connect<StateProps, DispatchProps, {}>(
-  state => ({
-    permissions: state.permissions
-  }),
-  dispatch => ({
-    updatePermissions(permissions: PermissionsState) {
-      dispatch({ type: 'PERMISSIONS/UPDATE', data: permissions })
+export const setNewPermissions = (currentPermissions: PermissionsState) => async (dispatch: Dispatch, getState: GetState) => {
+  const names = Object.keys(currentPermissions)
+  const permissionNames = names.map(name => PERMISSIONS[OS][PERMISSIONS_ITEM[name]])
+  const devicePermissions = await checkMultiple(permissionNames)
+  // Figure out which ones have changed to avoid a pointless dispatch:
+  const newPermissions: PermissionsState = {}
+  for (const name of names) {
+    const devicePermissionName = PERMISSIONS[OS][PERMISSIONS_ITEM[name]]
+    const devicePermission = devicePermissions[devicePermissionName]
+    // Only add changed permissions
+    if (devicePermission !== currentPermissions[name]) {
+      newPermissions[name] = devicePermission
     }
-  })
-)(PermissionsManagerComponent)
+  }
+
+  if (Object.keys(newPermissions).length > 0) {
+    console.log('Permissions updated')
+    dispatch({ type: 'PERMISSIONS/UPDATE', data: newPermissions })
+  } else {
+    console.log('Permissions unchanged')
+  }
+}
