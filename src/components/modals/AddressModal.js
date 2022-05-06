@@ -2,7 +2,7 @@
 
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -13,7 +13,8 @@ import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurre
 import s from '../../locales/strings.js'
 import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { connect } from '../../types/reactRedux.js'
+import { View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { ResolutionError } from '../../types/ResolutionError.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -54,9 +55,9 @@ type State = {
   filteredFioAddresses: string[]
 }
 
-type Props = StateProps & OwnProps & DispatchProps & ThemeProps
+type Props = StateProps & OwnProps & DispatchProps & ThemeProps & TestProps
 
-export class AddressModalComponent extends React.Component<Props, State> {
+export class AddressModalComponent extends React.Component<Props & TestProps, State> {
   fioCheckQueue: number = 0
 
   constructor(props: Props) {
@@ -312,6 +313,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
             value={uri}
             marginRem={[0, 1]}
             error={fieldError}
+            ref={this.props.generateTestHook('AddressModal.EnterAddress')}
           />
           {!userFioAddressesLoading ? (
             <FlatList
@@ -326,7 +328,13 @@ export class AddressModalComponent extends React.Component<Props, State> {
               <ActivityIndicator color={this.props.theme.iconTappable} />
             </View>
           )}
-          <MainButton label={s.strings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
+          <MainButton
+            label={s.strings.submit}
+            marginRem={[0, 4]}
+            type="secondary"
+            onPress={this.handleSubmit}
+            ref={this.props.generateTestHook('AddressModal.SubmitAddress')}
+          />
         </View>
         <ModalCloseArrow onPress={this.handleClose} />
       </ThemedModal>
@@ -363,7 +371,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
+export const AddressModal = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, ownProps) => ({
     account: state.core.account,
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],
