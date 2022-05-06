@@ -23,11 +23,6 @@ jest.mock('@react-native-firebase/analytics', () => () => ({
   logEvent() {},
   setUserId() {}
 }))
-jest.mock('@react-native-firebase/iid', () => () => ({
-  getToken() {
-    return Promise.resolve('testingToken')
-  }
-}))
 jest.mock('@react-native-firebase/messaging', () => () => ({
   requestPermission() {
     return Promise.resolve()

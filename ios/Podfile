@@ -1,6 +1,7 @@
 source "https://cdn.cocoapods.org/"
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+$RNFirebaseAnalyticsWithoutAdIdSupport = true
 
 # Edge change: React Native itself only requires 11.0:
 platform :ios, '12.0'
