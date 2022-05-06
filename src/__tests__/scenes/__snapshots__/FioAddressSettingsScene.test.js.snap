@@ -10,7 +10,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
     type="static"
   />
   <React.Fragment>
-    <MainButton
+    <ForwardRef
       label="Purchase more bundled transactions"
       marginRem={
         Array [
@@ -21,7 +21,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
       }
       onPress={[Function]}
     />
-    <MainButton
+    <ForwardRef
       label="Transfer FIO Address"
       marginRem={
         Array [

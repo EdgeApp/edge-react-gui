@@ -62,7 +62,7 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
     <Fade
       visible={false}
     >
-      <MainButton
+      <ForwardRef
         label="Done"
         onPress={[Function]}
         type="secondary"
