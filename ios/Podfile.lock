@@ -1,8 +1,8 @@
 PODS:
   - _NIODataStructures (2.32.3)
   - boost (1.76.0)
-  - BugsnagReactNative (7.3.5):
-    - React
+  - BugsnagReactNative (7.16.4):
+    - React-Core
   - BVLinearGradient (2.5.6):
     - React
   - CGRPCZlib (1.0.0)
@@ -432,7 +432,7 @@ PODS:
     - React
   - react-native-camera/RN (1.13.1):
     - React
-  - react-native-contacts (7.0.0):
+  - react-native-contacts (7.0.4):
     - React-Core
   - react-native-fast-crypto (2.2.0):
     - React
@@ -444,7 +444,7 @@ PODS:
     - React-Core
   - react-native-mymonero-core (0.1.2):
     - React
-  - react-native-netinfo (5.9.10):
+  - react-native-netinfo (8.3.0):
     - React-Core
   - react-native-safari-view (1.0.0):
     - React
@@ -531,12 +531,12 @@ PODS:
     - React-Core
   - RNDateTimePicker (6.1.3):
     - React-Core
-  - RNDeviceInfo (5.6.1):
-    - React
-  - RNFastImage (8.3.7):
+  - RNDeviceInfo (8.7.1):
     - React-Core
-    - SDWebImage (~> 5.8)
-    - SDWebImageWebPCoder (~> 0.6.1)
+  - RNFastImage (8.5.11):
+    - React-Core
+    - SDWebImage (~> 5.11.1)
+    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFBAnalytics (10.8.1):
     - Firebase/Analytics (~> 7.6.0)
     - React-Core
@@ -557,7 +557,7 @@ PODS:
     - React-Core
   - RNGestureHandler (2.4.2):
     - React-Core
-  - RNLocalize (2.0.2):
+  - RNLocalize (2.2.1):
     - React-Core
   - RNPermissions (3.3.1):
     - React-Core
@@ -599,16 +599,16 @@ PODS:
     - React
   - RNStoreReview (0.1.5):
     - React
-  - RNSVG (12.1.0):
-    - React
+  - RNSVG (12.3.0):
+    - React-Core
   - RNVectorIcons (7.1.0):
     - React
-  - SDWebImage (5.12.3):
-    - SDWebImage/Core (= 5.12.3)
-  - SDWebImage/Core (5.12.3)
-  - SDWebImageWebPCoder (0.6.1):
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.4):
     - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.7)
+    - SDWebImage/Core (~> 5.10)
   - SQLite.swift (0.12.2):
     - SQLite.swift/standard (= 0.12.2)
   - SQLite.swift/standard (0.12.2)
@@ -1018,7 +1018,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
   boost: a7c83b31436843459a1961bfd74b96033dc77234
-  BugsnagReactNative: fc7d6fb2127e53a8bfc79130b58263da363bb94b
+  BugsnagReactNative: b9f5f474d0a942cefc5d4811938a8a233666cb5e
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CGRPCZlib: b0c9d704a12fa667f1824ffff20688f191945989
   CNIOAtomics: 4dde57e1838a29a9b23ef91617505f34751cdbe5
@@ -1086,13 +1086,13 @@ SPEC CHECKSUMS:
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
-  react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
+  react-native-contacts: 1bff4c47816d611f26b06fa8b3eaf2db4d1b2c86
   react-native-fast-crypto: 5943c42466b86ad70be60d3a5f64bd22251e5d9e
   react-native-flipper: df8e2a7e5dcc857033d925ad8c7e8c52760b8e06
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: d5e67aca5f755ba87a4305e1a5861323b3b0a980
-  react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
+  react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
@@ -1114,25 +1114,25 @@ SPEC CHECKSUMS:
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNDateTimePicker: 04b805a3cb4d386e5e6aff54b47ace7bad706fda
-  RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
-  RNFastImage: a7384db75df352500261e8e8f1ac2026def26102
+  RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
+  RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNFBAnalytics: 454b17745d3824156cb906e2777d85f6848bf3e1
   RNFBApp: 02bde3edecf2e9694b908a5d3504e03449980f20
   RNFBIid: b804baf463a87bc0cb9539568ea72cce99d6f2c1
   RNFBMessaging: 1823217d31e942531cc3f51fb5367dcbc69c1e10
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
-  RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
+  RNLocalize: cbcb55d0e19c78086ea4eea20e03fe8000bbbced
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
   RNReanimated: 46cdb89ca59ab7181334f4ed05a70e82ddb36751
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
-  RNSVG: ce9d996113475209013317e48b05c21ee988d42e
+  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
-  SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
-  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
   SwiftNIO: bb336ceef32850e9671d3fa0e0cc2b9add3b5948
   SwiftNIOConcurrencyHelpers: ca2594e10749655f42baf5468212be83d2f94fe3

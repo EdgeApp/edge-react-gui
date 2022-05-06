@@ -1205,10 +1205,10 @@
   optionalDependencies:
     "@ledgerhq/hw-transport-node-hid" "^4.63.2"
 
-"@bugsnag/core@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/core/-/core-7.3.5.tgz#688841abc8091dfcb6fda021b7fbc5519f23196e"
-  integrity sha512-7zKFLcA6m9aaQ1p1AQx2iRaT3gE/MJqy0vGa/RhlKNdgMdMKYRGECWxJE66firvJT5ZwL7Bu11IkK6sLWHCBaw==
+"@bugsnag/core@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/core/-/core-7.16.1.tgz#0376b5c4dd7b44f57eb503775857d974e4b5afc9"
+  integrity sha512-zuBnL7B329VldItRqhXYrp1hjmjZnltJwNXMysi9WtY4t29WKk5LVwgWb1mPM9clJ0FoObZ7kvvQMUTKh3ezFQ==
   dependencies:
     "@bugsnag/cuid" "^3.0.0"
     "@bugsnag/safe-json-stringify" "^6.0.0"
@@ -1221,72 +1221,72 @@
   resolved "https://registry.yarnpkg.com/@bugsnag/cuid/-/cuid-3.0.0.tgz#2ee7642a30aee6dc86f5e7f824653741e42e5c35"
   integrity sha512-LOt8aaBI+KvOQGneBtpuCz3YqzyEAehd1f3nC5yr9TIYW1+IzYKa2xWS4EiMz5pPOnRPHkyyS5t/wmSmN51Gjg==
 
-"@bugsnag/delivery-react-native@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/delivery-react-native/-/delivery-react-native-7.3.5.tgz#a9386d51584d604cb0696d2a0521c21271b50d13"
-  integrity sha512-k1TBehv4LnsN/9DhS8t/758oCWyVPFR7neFvKKW5RcUIG9Rwtkbvoji5nDYYqwcxr08GXv+hEg/DkLMcSuhpSw==
+"@bugsnag/delivery-react-native@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/delivery-react-native/-/delivery-react-native-7.16.1.tgz#cb18679e19a6aaa2a4297c2368d75bab2b5348b5"
+  integrity sha512-huRvAo6k5Sm1qCdD21+PVeQCyWzP8ZUT+UwT9WlB1Jceaujad5Vz6EwgpR65AoJhDFaNteZ14EK7x9jIg9zu0Q==
 
-"@bugsnag/plugin-console-breadcrumbs@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-console-breadcrumbs/-/plugin-console-breadcrumbs-7.3.5.tgz#e29c859845108f2362ebbd3838e62ffe7ebc58f0"
-  integrity sha512-7TaOi20or+aleUdJGNZKfaBWtrTwXeIMbYZ3hQUdWhExD9kuGpxBcXgZbJ4Gml60VG4emZ3x1d4fP6F7AzvBSg==
+"@bugsnag/plugin-console-breadcrumbs@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-console-breadcrumbs/-/plugin-console-breadcrumbs-7.16.1.tgz#d31f5e52a1706c91f0c7dafe3a4b762c34387e4f"
+  integrity sha512-rrQV3eWTkgu5Hy+Bmy2Cn98Pq1q+ztfY3v68nDntEfPQmYsf5oCZVjctZeSeiormXvhwW4QKNYl4kvdHvDZiRQ==
 
-"@bugsnag/plugin-network-breadcrumbs@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-network-breadcrumbs/-/plugin-network-breadcrumbs-7.3.5.tgz#215c8dafd6d320988572de977ee214d119465ac7"
-  integrity sha512-PE+Yu1+Gg1SMkm8l7PqdqhFPTYKmdQlRuKTrfn/+ZS197emiylBdAyKVnwD6y1kHoBO2X5sVXx/5SzpptBTj9w==
+"@bugsnag/plugin-network-breadcrumbs@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-network-breadcrumbs/-/plugin-network-breadcrumbs-7.16.1.tgz#00cdd461b096e05f8484dd2fc6548071e088529e"
+  integrity sha512-64DsDft/gVWR6I/z4U3n57+rmockvMwvQ50ruQYg9cfDyygQ9pVN5Nf5VK1dFyqKjdcJ5WFaPx0InuFWDgAwpg==
 
-"@bugsnag/plugin-react-native-client-sync@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-client-sync/-/plugin-react-native-client-sync-7.3.5.tgz#80eebb1c03cc2ce1b1e5a8b3f2ca6be1a610495c"
-  integrity sha512-ikfBO9oXSch/UQ8Tw5wJ79zzjut9uQPW5j773GLuH4bZLbGEpidJN6vCvua5egS7Mn+nmhwvjWzNhTzFv0BRnA==
+"@bugsnag/plugin-react-native-client-sync@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-client-sync/-/plugin-react-native-client-sync-7.16.1.tgz#276eb54ea5cba42e84a0550df8194ad56ffbfe40"
+  integrity sha512-i9OcugQyh+eWMoE+MYJ3ujR7aM57X4FECk7c/ElKPuCUXXqT+3Pwyii5M9iZPRqIsaOljpcpU2uRbnXm3TwqVA==
 
-"@bugsnag/plugin-react-native-event-sync@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-event-sync/-/plugin-react-native-event-sync-7.3.5.tgz#3517df2299b509e14f7cf9ef5bbd9253a6455965"
-  integrity sha512-+kwwbfnRdHmwaTqNp8Aexv00pCHwYSYdEh/dG20Ew1Z9I/vtF76tOqVfv3RWZz7XBmn/MLF7buHgcSNho8BQWw==
+"@bugsnag/plugin-react-native-event-sync@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-event-sync/-/plugin-react-native-event-sync-7.16.1.tgz#a7e8fe3b35a76107e515ad31cbd1cf0f0458e126"
+  integrity sha512-9GnX38vRBsfahuFBEbh4VsfB1Y3o/jZtpqlEldY8gpiyOx5hVnVDiz/ZeHL9GDdITDgog/qGAdUADSQ4oUmTUQ==
 
-"@bugsnag/plugin-react-native-global-error-handler@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-global-error-handler/-/plugin-react-native-global-error-handler-7.3.5.tgz#26f2c4e17365f2e2a80f3e955e3d331b7a865300"
-  integrity sha512-c39hld1lzRlRBJIvXM0CR+qLQM6twDfbbojbFuY9J9HP6iQ86uKQEHSV2AR3I2T48vCE3eb09E7G8ifwHyYDmA==
+"@bugsnag/plugin-react-native-global-error-handler@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-global-error-handler/-/plugin-react-native-global-error-handler-7.16.1.tgz#4ba966ef10f59367d8ef40f6a389a34314ed40cb"
+  integrity sha512-FQDHtESkzoBXqy6tmB1SgOnlxGViHS4zW9Xi0dU/3I8ThNep85L2CmXaI/fZOTnM2LeL7jEP5LX1GJSr0uW3Hw==
 
-"@bugsnag/plugin-react-native-hermes@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-hermes/-/plugin-react-native-hermes-7.3.5.tgz#7565b265395c7f5ad641ecf606383d66a5eb97b9"
-  integrity sha512-/zl7/eQOLJ9U2fG3PW615oiSlf7/iuWPcAa14+xkPhPqFFMlVaeYDvPCsqCeTjtmyCh7QueEPA1ZyWFNKW+uGg==
+"@bugsnag/plugin-react-native-hermes@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-hermes/-/plugin-react-native-hermes-7.16.1.tgz#cd154697441091877615004528d06b7b02b0e2c4"
+  integrity sha512-zDY9vXBgZI3hMhzp1bFOrmXoMapmNySgNL/Unlfxhqbx+tU4jnqPlFSACjodQE3nmUvyXNt9PMKkp5vnt20yIw==
 
-"@bugsnag/plugin-react-native-session@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-session/-/plugin-react-native-session-7.3.5.tgz#ca6f37601de37b3d7b6262c6c5108297e016a27d"
-  integrity sha512-m72MgisOS4Kth07jTJXzSXUu++pwrUn+f1a5r5DLV2j75a/AFqgNjhYFOss5dschmq35zOM+HmQ5+GEqRPLCLg==
+"@bugsnag/plugin-react-native-session@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-session/-/plugin-react-native-session-7.16.1.tgz#e204ce4329e9a01fba1525b5562145f21bf16b7d"
+  integrity sha512-Clb7yVNu5ItDOYOV4MoZa2fJiCUS04VVlrKRh5FZnyOxUUaNJBGRcwnidxyoRuB0U9R4jXI5zxzCT8T7Sw5Njw==
 
-"@bugsnag/plugin-react-native-unhandled-rejection@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-unhandled-rejection/-/plugin-react-native-unhandled-rejection-7.3.5.tgz#a01e0db0ee8a52223f0e11143f6781c3a2f86014"
-  integrity sha512-80H5YfsRudJQSzP2viDJw8HxAaFNVnrHKQIJeWkRhCipjcpDWTcdqvCAo6WkBaakB+KId16hTt6ptWQvSgkszw==
+"@bugsnag/plugin-react-native-unhandled-rejection@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react-native-unhandled-rejection/-/plugin-react-native-unhandled-rejection-7.16.1.tgz#1291fcea17f1e984dc35086d120e24022b2e2e96"
+  integrity sha512-/ikDocw5gf83ui3EghwuzaZfc+dXQwNlkVLkLIpji7jKYWkGfAYxLnMvfKQaOao9YhaHWImsMxpocmAXvYcqKw==
 
-"@bugsnag/plugin-react@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-7.3.5.tgz#0bdb462c274fdbe02cf43698aca4ae0035dbf2e3"
-  integrity sha512-y9J9hRJXwuQ+IqoURtbYpW4WRcku2PPE1JYyRFzKEN9YEPXEkG6ZPTBfa+MydoIF+hey1rsJ10OLukJZlFv3BQ==
+"@bugsnag/plugin-react@^7.16.4":
+  version "7.16.4"
+  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-7.16.4.tgz#b9df78fcdb719c26f99985afdc0525ceaa8bf9ff"
+  integrity sha512-7YCSAMVGW0P/9NDu0sPINoYuDwfy+cGbQvxGna6KviH2+i0FCqULNCm0+9OB8T8uLcszhj1DMkHEy3e6qyNkGQ==
 
-"@bugsnag/react-native@^7.3.5":
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/@bugsnag/react-native/-/react-native-7.3.5.tgz#3ff2eda577be12acff0180f5c1540e48de57d5b0"
-  integrity sha512-aOFjCdFK/QcBC92qz+0vpT34Bo9zNM1MgFpi/fKz7MEDT3KN3lUHnJg9tUL4zSkOtIgjHkhxhLIBzREL8TaZ6w==
+"@bugsnag/react-native@^7.16.4":
+  version "7.16.4"
+  resolved "https://registry.yarnpkg.com/@bugsnag/react-native/-/react-native-7.16.4.tgz#0aad39c7030dbcd09905e3e38b4cfec3563651d4"
+  integrity sha512-LV399v27SqyHN7t1yHczlnnP2+cy9nvDfqcjcpe7doJtCTlnm3dhNh0qNuLJwJBsohuIH6TXeTHgzk5aSyvgqw==
   dependencies:
-    "@bugsnag/core" "^7.3.5"
-    "@bugsnag/delivery-react-native" "^7.3.5"
-    "@bugsnag/plugin-console-breadcrumbs" "^7.3.5"
-    "@bugsnag/plugin-network-breadcrumbs" "^7.3.5"
-    "@bugsnag/plugin-react" "^7.3.5"
-    "@bugsnag/plugin-react-native-client-sync" "^7.3.5"
-    "@bugsnag/plugin-react-native-event-sync" "^7.3.5"
-    "@bugsnag/plugin-react-native-global-error-handler" "^7.3.5"
-    "@bugsnag/plugin-react-native-hermes" "^7.3.5"
-    "@bugsnag/plugin-react-native-session" "^7.3.5"
-    "@bugsnag/plugin-react-native-unhandled-rejection" "^7.3.5"
+    "@bugsnag/core" "^7.16.1"
+    "@bugsnag/delivery-react-native" "^7.16.1"
+    "@bugsnag/plugin-console-breadcrumbs" "^7.16.1"
+    "@bugsnag/plugin-network-breadcrumbs" "^7.16.1"
+    "@bugsnag/plugin-react" "^7.16.4"
+    "@bugsnag/plugin-react-native-client-sync" "^7.16.1"
+    "@bugsnag/plugin-react-native-event-sync" "^7.16.1"
+    "@bugsnag/plugin-react-native-global-error-handler" "^7.16.1"
+    "@bugsnag/plugin-react-native-hermes" "^7.16.1"
+    "@bugsnag/plugin-react-native-session" "^7.16.1"
+    "@bugsnag/plugin-react-native-unhandled-rejection" "^7.16.1"
     iserror "^0.0.2"
 
 "@bugsnag/safe-json-stringify@^6.0.0":
@@ -2321,10 +2321,10 @@
   dependencies:
     invariant "^2.2.4"
 
-"@react-native-community/netinfo@^5.9.10":
-  version "5.9.10"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-5.9.10.tgz#97d3a9fa62a3a4838ec7a6ec91cfec5a26e365b6"
-  integrity sha512-1NPlBA2Hu/KWc3EnQcDRPRX0x8Dg9tuQlQQVWVQjlg+u+PjCq7ANEtbikOFKp5yQqfF8tqzU5+84/IfDO8zpiA==
+"@react-native-community/netinfo@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-8.3.0.tgz#e3d19381c7d9f885b44ea1785ed892bc39c4b0f1"
+  integrity sha512-VlmjD7Vg1BacbNhwuJCel1eeD8N2Ps6BEcZe9qoSoeIptpCbC86o4ZqD0meSjJzioKSvgalrkmPgMaVYsVipKw==
 
 "@react-native-firebase/analytics@^10.0.0":
   version "10.8.1"
@@ -4271,7 +4271,7 @@ bonjour@^3.5.0:
     multicast-dns "^6.0.1"
     multicast-dns-service-types "^1.1.0"
 
-boolbase@^1.0.0, boolbase@~1.0.0:
+boolbase@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
@@ -5469,17 +5469,7 @@ crypto-random-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
 
-css-select@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/css-select/-/css-select-2.1.0.tgz#6a34653356635934a81baca68d0255432105dbef"
-  integrity sha512-Dqk7LQKpwLoH3VovzZnkzegqNSuAziQyNZUcrdDM401iY+R5NkGBXGmtO05/yaXQziALuPogeG0b7UAgjnTJTQ==
-  dependencies:
-    boolbase "^1.0.0"
-    css-what "^3.2.1"
-    domutils "^1.7.0"
-    nth-check "^1.0.2"
-
-css-select@^4.1.3:
+css-select@^4.1.3, css-select@^4.2.1:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/css-select/-/css-select-4.3.0.tgz#db7129b2846662fd8628cfc496abb2b59e41529b"
   integrity sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==
@@ -5505,11 +5495,6 @@ css-tree@^1.1.2, css-tree@^1.1.3:
   dependencies:
     mdn-data "2.0.14"
     source-map "^0.6.1"
-
-css-what@^3.2.1:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/css-what/-/css-what-3.4.2.tgz#ea7026fcb01777edbde52124e21f327e7ae950e4"
-  integrity sha512-ACUm3L0/jiZTqfzRM3Hi9Q8eZqd6IK37mMWPLz9PJxkLWllYeRf+EHUSHYEtFop2Eqytaq1FizFVh7XfBnXCDQ==
 
 css-what@^6.0.1:
   version "6.1.0"
@@ -5924,14 +5909,6 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dom-serializer@0:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-0.2.2.tgz#1afb81f533717175d478655debc5e332d9f9bb51"
-  integrity sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g==
-  dependencies:
-    domelementtype "^2.0.1"
-    entities "^2.0.0"
-
 dom-serializer@^1.0.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-1.4.1.tgz#de5d41b1aea290215dc45a6dae8adcf1d32e2d30"
@@ -5945,11 +5922,6 @@ domain-browser@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
   integrity sha512-jnjyiM6eRyZl2H+W8Q/zLMA481hzi0eszAaBUzIVnmYVDBbnLxVNnfu1HgEBvCbL+71FrxMl3E6lpKH7Ge3OXA==
-
-domelementtype@1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-1.3.1.tgz#d048c44b37b0d10a7f2a3d5fee3f4333d790481f"
-  integrity sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==
 
 domelementtype@^2.0.1:
   version "2.1.0"
@@ -5974,14 +5946,6 @@ domhandler@^4.2.0, domhandler@^4.3.1:
   integrity sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==
   dependencies:
     domelementtype "^2.2.0"
-
-domutils@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/domutils/-/domutils-1.7.0.tgz#56ea341e834e06e6748af7a1cb25da67ea9f8c2a"
-  integrity sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==
-  dependencies:
-    dom-serializer "0"
-    domelementtype "1"
 
 domutils@^2.8.0:
   version "2.8.0"
@@ -10991,13 +10955,6 @@ npm-run-path@^4.0.0, npm-run-path@^4.0.1:
   dependencies:
     path-key "^3.0.0"
 
-nth-check@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/nth-check/-/nth-check-1.0.2.tgz#b2bd295c37e3dd58a3bf0700376663ba4d9cf05c"
-  integrity sha512-WeBOdju8SnzPN5vTUJYxYUxLeXpCaVP5i5e0LF8fg7WORF2Wd7wFX/pk0tYZk7s8T+J7VLy0Da6J1+wCT0AtHg==
-  dependencies:
-    boolbase "~1.0.0"
-
 nth-check@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/nth-check/-/nth-check-2.0.1.tgz#2efe162f5c3da06a28959fbd3db75dbeea9f0fc2"
@@ -12088,15 +12045,15 @@ react-native-confetti-cannon@^1.5.2:
   resolved "https://registry.yarnpkg.com/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz#ca1a05edd2a64b080ea8b6238c49277908e1f123"
   integrity sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg==
 
-react-native-contacts@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-7.0.0.tgz#8123decd865d63e7f50e7040cfb1559f56ce5708"
-  integrity sha512-K8DYUo3voC/cHFqy7FJzDRCmtsI5fkhjb7tWqfGe1hU/78XL3BcevEC6ZFCeiBDC2PaU6Y1bsq9969mEYODhCw==
+react-native-contacts@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-7.0.4.tgz#6f084f651bb5dde433acc22553c6d1ca909e46b7"
+  integrity sha512-x6K9TMC0XBH/yyfqYh5BGS9JI1PpA2Ac/XHVVFVP8F8lPLNexQ0qPsNBo1cy9l2pPqlijpC33+FU0ty/N5iOWA==
 
-react-native-device-info@^5.6.1:
-  version "5.6.1"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-5.6.1.tgz#3ae88d8659b7b64d204dbfc39f69126b769363d4"
-  integrity sha512-FxjenoDZJKT53pp/Tl5gMsw5DA82Y5tOuySQlKS5AaDmw+Bu6EqEJjt0z4TRhJOVoqVJ35oCiZ3xViVbz/hB0w==
+react-native-device-info@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.1.tgz#fbb06f87dbbc4423abe713874699fb2e6e99fd15"
+  integrity sha512-cVMZztFa2Qn6qpQa601W61CtUwZQ1KXfqCOeltejAWEXmgIWivC692WGSdtGudj4upSi1UgMSaGcvKjfcpdGjg==
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
@@ -12130,10 +12087,10 @@ react-native-fast-crypto@^2.2.0:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
 
-react-native-fast-image@^8.3.7:
-  version "8.3.7"
-  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.3.7.tgz#c4877de17903101f6d94b6736a4f7e5d7b019224"
-  integrity sha512-J++Ad04PTUe4YgjyGv63gfgV8Fz1gZKAgQHpblf8Z87D9dxfc8UfXHTPv9VLGdTJU4IzdTnQqzoFgDtWdsvBsQ==
+react-native-fast-image@^8.5.11:
+  version "8.5.11"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
+  integrity sha512-cNW4bIJg3nvKaheG8vGMfqCt5LMWX9MS5+wMudgKIHbGO51spRr4sgnlhVgwHLcZ5aeNOVJ8CPRxDIWKRq/0QA==
 
 react-native-flipper@^0.143.0:
   version "0.143.0"
@@ -12193,10 +12150,10 @@ react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.5.6:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-react-native-localize@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.0.2.tgz#b0df6a88cf9947489deaa828c4c29246681fde16"
-  integrity sha512-4Ii7lqiD9iL0LxTWifAiEsDcDPpvos/29fEVkHxgEDD7J5f+NROMkFSFomKgz1Cab1TmN5mau3o8yFmYrPFcnw==
+react-native-localize@^2.0.2, react-native-localize@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.2.1.tgz#6fe646833691c6ee8a474df3c8b069402cb1dba8"
+  integrity sha512-BuPaQWvxLZG1NrCDGqgAnecDrNQu3LED9/Pyl4H2LwTMHcEngXpE5PfVntW2GiLumdr6nUOkWmMnh8PynZqrsw==
 
 react-native-mail@^6.1.0, react-native-mail@^6.1.1:
   version "6.1.1"
@@ -12314,12 +12271,12 @@ react-native-svg-transformer@^1.0.0:
     "@svgr/plugin-svgo" "^6.1.2"
     path-dirname "^1.0.2"
 
-react-native-svg@^12.1.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.1.0.tgz#acfe48c35cd5fca3d5fd767abae0560c36cfc03d"
-  integrity sha512-1g9qBRci7man8QsHoXn6tP3DhCDiypGgc6+AOWq+Sy+PmP6yiyf8VmvKuoqrPam/tf5x+ZaBT2KI0gl7bptZ7w==
+react-native-svg@^12.1.0, react-native-svg@^12.3.0:
+  version "12.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.3.0.tgz#40f657c5d1ee366df23f3ec8dae76fd276b86248"
+  integrity sha512-ESG1g1j7/WLD7X3XRFTQHVv0r6DpbHNNcdusngAODIxG88wpTWUZkhcM3A2HJTb+BbXTFDamHv7FwtRKWQ/ALg==
   dependencies:
-    css-select "^2.1.0"
+    css-select "^4.2.1"
     css-tree "^1.0.0-alpha.39"
 
 react-native-tab-view@^0.0.77:
