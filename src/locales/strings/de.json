@@ -140,7 +140,7 @@
   "wallet_list_referral_link_cancelled_wallet_creation": "Benutzer hat das Erstellen der Wallet für die Werbung nicht genehmigt",
   "wallet_list_swipe_tutorial_title": "Wallets aufschlagen, um weitere Optionen anzuzeigen",
   "wallet_list_wallet_search": "Wallets durchsuchen",
-  "create_wallet_choice_instructions": "Neue Wallet erstellen oder eine vorhandene Wallet mit dem privaten Seed wiederherstellen?",
+  "create_wallet_choice_instructions": "Create a new wallet or import an existing wallet using the private seed",
   "create_wallet_choice_new_button": "Neue Geldbörse erstellen",
   "create_wallet_import_title": "Wallet importieren",
   "create_wallet_import_instructions": "Geben Sie Ihren privaten Seed ein, um die zugehörige Wallet zu verifizieren und wiederherzustellen",
