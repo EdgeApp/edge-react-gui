@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 
+import { useSafeState } from '../hooks/useSafeState'
+
 type Memo = <T>(component: T) => T
 
 type ForwardRef = (body: (props: any, ref: any) => React.Node) => any
@@ -19,6 +21,8 @@ type UseEffect = (effect: () => void | (() => void), deps?: any[]) => void
 type UseImperativeHandle = (ref: any, init: () => any, deps?: any[]) => void
 
 type UseMemo = <T>(init: () => T, deps?: any[]) => T
+
+type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
 
 type UseReducer = {
   // Normal version:
@@ -40,8 +44,6 @@ type UseRef = {
   // Component ref:
   <T>(init: T | null): { current: T | null }
 }
-
-type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
 
 // $FlowFixMe
 export const forwardRef: ForwardRef = React.forwardRef
@@ -65,5 +67,5 @@ export const useMemo: UseMemo = React.useMemo
 export const useReducer: UseReducer = React.useReducer
 // $FlowFixMe
 export const useRef: UseRef = React.useRef
-// $FlowFixMe
-export const useState: UseState = React.useState
+
+export const useState: UseState = useSafeState
