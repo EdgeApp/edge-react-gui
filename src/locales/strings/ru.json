@@ -140,7 +140,7 @@
   "wallet_list_referral_link_cancelled_wallet_creation": "Пользователь не одобрил создание кошелька для акции",
   "wallet_list_swipe_tutorial_title": "Slide wallets to show more options",
   "wallet_list_wallet_search": "Search Wallets",
-  "create_wallet_choice_instructions": "Создать новый кошелек или восстановить существующий кошелек с помощью приватного ключа?",
+  "create_wallet_choice_instructions": "Create a new wallet or import an existing wallet using the private seed",
   "create_wallet_choice_new_button": "Создать Новый Кошелёк",
   "create_wallet_import_title": "Импорт кошелька",
   "create_wallet_import_instructions": "Enter your private seed to verify and restore the associated wallet",
