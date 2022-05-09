@@ -82,6 +82,7 @@ const asEdgeTokenIdExtended = asObject({
 })
 
 const asCurrencyCodesArray = asArray(asEither(asString, asEdgeTokenIdExtended))
+type ExtendedCurrencyCode = string | $Call<typeof asEdgeTokenIdExtended>
 
 export class EdgeProvider extends Bridgeable {
   // Private properties:
@@ -126,7 +127,7 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes: any = []): Promise<string> {
+  async chooseCurrencyWallet(allowedCurrencyCodes: any = []): Promise<ExtendedCurrencyCode> {
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
@@ -153,7 +154,6 @@ export class EdgeProvider extends Bridgeable {
       if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
         const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
-        // $FlowFixMe We are violating our return type here:
         return {
           pluginId,
           tokenId,
