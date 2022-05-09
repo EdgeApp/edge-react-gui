@@ -16,10 +16,10 @@ import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListHeader } from '../themed/WalletListHeader.js'
 import { WalletListSortable } from '../themed/WalletListSortable.js'
+import { WalletListSwipeable } from '../themed/WalletListSwipeable.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type Props = {}
@@ -85,7 +85,7 @@ export function WalletListScene(props: Props) {
       <View style={styles.listStack}>
         <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-          <WalletList
+          <WalletListSwipeable
             key="fullList"
             header={
               <WalletListHeader

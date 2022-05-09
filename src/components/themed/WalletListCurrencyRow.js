@@ -126,15 +126,15 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
+  const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
   const exchangeRates = useSelector(state => state.exchangeRates)
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-  const balances = useWatchWallet(edgeWallet, 'balances')
-  const fiatCurrencyCode = useWatchWallet(edgeWallet, 'fiatCurrencyCode')
-  const name = useWalletName(edgeWallet)
+  const balances = useWatchWallet(wallet, 'balances')
+  const fiatCurrencyCode = useWatchWallet(wallet, 'fiatCurrencyCode')
+  const name = useWalletName(wallet)
 
   // Crypto Amount And Exchange Rate
-  const { currencyInfo } = edgeWallet
+  const { currencyInfo } = wallet
   const balance = balances[currencyCode] ?? '0'
   const denomination = dispatch(getDisplayDenominationFromState(currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyInfo.pluginId, currencyCode))

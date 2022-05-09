@@ -33,7 +33,8 @@ import {
   type MostRecentWallet,
   type SpendAuthType,
   type SpendingLimits,
-  type TransactionListTx
+  type TransactionListTx,
+  type WalletListItem
 } from './types.js'
 
 // Actions with no payload:
@@ -169,6 +170,7 @@ export type Action =
       data: { currencyCode: string, walletId: string }
     }
   | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
+  | { type: 'UPDATE_SORTED_WALLET_LIST', data: WalletListItem[] }
   | { type: 'UPDATE_SWAP_QUOTE', data: GuiSwapInfo }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: number }
   | { type: 'UPDATE_WALLET_LOADING_PROGRESS', data: { walletId: string, addressLoadingProgress: number } }

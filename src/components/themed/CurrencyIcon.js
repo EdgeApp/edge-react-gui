@@ -59,9 +59,9 @@ export const CurrencyIconComponent = (props: Props) => {
 
   // Track wallets state from account and update the wallet when ready
   const account = useSelector(state => state.core.account)
-  const edgeWallet = walletId != null ? account.currencyWallets[walletId] : null
+  const wallet = walletId != null ? account.currencyWallets[walletId] : null
   // If we have a wallet, get the pluginId from it in case it's missing
-  if (edgeWallet != null && pluginId == null) pluginId = edgeWallet.currencyInfo.pluginId
+  if (wallet != null && pluginId == null) pluginId = wallet.currencyInfo.pluginId
 
   // ---------------------------------------------------------------------
   // HACK to maintain Backward compatibility for now
@@ -104,7 +104,7 @@ export const CurrencyIconComponent = (props: Props) => {
 
   return (
     <View style={spacingStyle}>
-      {edgeWallet != null ? <WalletSyncCircle size={size} wallet={edgeWallet} /> : null}
+      {wallet != null ? <WalletSyncCircle size={size} wallet={wallet} /> : null}
       {primaryCurrencyIcon}
       {secondaryCurrencyIcon}
     </View>

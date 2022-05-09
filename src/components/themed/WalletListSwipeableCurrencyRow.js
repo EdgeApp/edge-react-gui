@@ -1,52 +1,56 @@
 // @flow
 
+import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
-import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { type SharedValue } from 'react-native-reanimated'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo, useCallback, useEffect, useRef } from '../../types/reactHooks.js'
-import { useDispatch, useSelector } from '../../types/reactRedux.js'
+import { useDispatch } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow.js'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
-import { WalletListLoadingRow } from './WalletListLoadingRow.js'
+import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 
 type Props = {|
-  currencyCode: string,
-  isToken: boolean,
-  walletId: string,
-
   // Open the row for demo purposes:
-  openTutorial?: boolean
+  openTutorial?: boolean,
+
+  token?: EdgeToken,
+  tokenId?: string,
+  wallet: EdgeCurrencyWallet
 |}
 
 /**
  * A row on the wallet list scene,
  * which can be swiped to reveal or activate various options.
  */
-function WalletListSwipeRowComponent(props: Props) {
-  const { currencyCode, openTutorial = false, isToken, walletId } = props
+function WalletListSwipeableCurrencyRowComponent(props: Props) {
+  const { openTutorial = false, token, tokenId, wallet } = props
+
+  const rowRef = useRef<SwipableRowRef>(null)
+  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const dispatch = useDispatch()
-  const edgeWallet = useSelector(state => state.core.account.currencyWallets[walletId])
-  const rowRef = useRef<SwipableRowRef>(null)
-
   // Tutorial mode:
-  const isEmpty = edgeWallet == null
   useEffect(() => {
-    if (openTutorial && !isEmpty && rowRef.current != null) {
+    if (openTutorial && rowRef.current != null) {
       rowRef.current.openRight()
     }
-  }, [openTutorial, isEmpty])
+  }, [openTutorial])
+
+  // callbacks -----------------------------------------------------------
+
+  // Legacy gunk:
+  const currencyCode = token == null ? wallet.currencyInfo.currencyCode : token.currencyCode
 
   // Helper methods:
   const closeRow = () =>
@@ -54,74 +58,69 @@ function WalletListSwipeRowComponent(props: Props) {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
 
-  // Action callbacks:
   const handleMenu = useCallback(() => {
     closeRow()
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={isToken} walletId={walletId} />)
-  }, [currencyCode, isToken, walletId])
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={tokenId != null} walletId={wallet.id} />)
+  }, [currencyCode, tokenId, wallet])
 
-  const handleRequest = () => {
+  const handleRequest = useCallback(() => {
     closeRow()
-    dispatch(selectWallet(walletId, currencyCode, true))
+    dispatch(selectWallet(wallet.id, currencyCode, true))
     Actions.jump('request')
-  }
+  }, [dispatch, currencyCode, wallet])
+
   const handleSelect = useCallback(() => {
     closeRow()
-    dispatch(selectWallet(walletId, currencyCode, true)).then(async () => {
+    dispatch(selectWallet(wallet.id, currencyCode, true)).then(async () => {
       // Go to the transaction list, but only if the wallet exists
       // and does not need activation:
       if (
-        edgeWallet != null &&
+        wallet != null &&
         // It won't need activation if its a token:
-        (isToken ||
+        (tokenId != null ||
           // Or because it doesn't need activation in the first place:
-          !getSpecialCurrencyInfo(edgeWallet.type).isAccountActivationRequired ||
+          !getSpecialCurrencyInfo(wallet.type).isAccountActivationRequired ||
           // Or because it is already activated:
-          (await edgeWallet.getReceiveAddress()).publicAddress !== '')
+          (await wallet.getReceiveAddress()).publicAddress !== '')
       ) {
         Actions.push('transactionList')
       }
     })
-  }, [currencyCode, dispatch, edgeWallet, isToken, walletId])
+  }, [dispatch, currencyCode, tokenId, wallet])
 
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
     closeRow()
-    dispatch(selectWallet(walletId, currencyCode, true))
+    dispatch(selectWallet(wallet.id, currencyCode, true))
     Actions.jump('send', {
-      selectedWalletId: walletId,
+      selectedWalletId: wallet.id,
       selectedCurrencyCode: currencyCode,
       isCameraOpen: true
     })
-  }
+  }, [dispatch, currencyCode, wallet])
 
-  // Underlay rendering:
-  const renderMenuUnderlay = (isActive: SharedValue<boolean>) => {
-    return (
-      <TouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
-        <SwipeIcon isActive={isActive}>
-          <Text style={styles.menuIcon}>…</Text>
-        </SwipeIcon>
-      </TouchableOpacity>
-    )
-  }
+  // rendering -----------------------------------------------------------
+
+  const iconWidth = theme.rem(2.5)
+
   const renderRequestUnderlay = (isActive: SharedValue<boolean>) => (
     <>
       <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
-        <SwipeIcon isActive={isActive}>
+        <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
-        </SwipeIcon>
+        </SwipeableRowIcon>
       </TouchableOpacity>
     </>
   )
+
   const renderSendUnderlay = (isActive: SharedValue<boolean>) => (
     <>
       <TouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
-        <SwipeIcon isActive={isActive}>
+        <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="send" color={theme.icon} size={theme.rem(1)} />
-        </SwipeIcon>
+        </SwipeableRowIcon>
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
@@ -129,18 +128,6 @@ function WalletListSwipeRowComponent(props: Props) {
     </>
   )
 
-  // Render as an empty spinner row:
-  if (edgeWallet == null) {
-    return (
-      <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
-        <Gradient>
-          <WalletListLoadingRow onLongPress={handleMenu} />
-        </Gradient>
-      </SwipeableRow>
-    )
-  }
-
-  // Render as a regular row:
   return (
     <SwipeableRow
       ref={rowRef}
@@ -154,34 +141,13 @@ function WalletListSwipeRowComponent(props: Props) {
       onRightSwipe={handleSend}
     >
       <Gradient>
-        <WalletListCurrencyRow currencyCode={currencyCode} showRate walletId={walletId} onLongPress={handleMenu} onPress={handleSelect} />
+        <WalletListCurrencyRow currencyCode={currencyCode} showRate walletId={wallet.id} onLongPress={handleMenu} onPress={handleSelect} />
       </Gradient>
     </SwipeableRow>
   )
 }
 
-/**
- * Helper component to render the expanding icons in the underlay.
- * The only reason this needs to be a component is to get access
- * to the `useAnimatedStyle` hook.
- */
-function SwipeIcon(props: { children: React.Node, isActive: SharedValue<boolean> }) {
-  const { children, isActive } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const style = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(isActive.value ? 1.5 : 1) }]
-  }))
-  return <Animated.View style={[styles.iconBox, style]}>{children}</Animated.View>
-}
-
 const getStyles = cacheStyles((theme: Theme) => ({
-  iconBox: {
-    width: theme.rem(2.5),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
   menuButton: {
     backgroundColor: theme.sliderTabMore,
     width: theme.rem(2.5),
@@ -192,12 +158,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1.25),
     color: theme.icon
-  },
-  menuUnderlay: {
-    backgroundColor: theme.sliderTabMore,
-    flexDirection: 'row',
-    flexGrow: 1,
-    justifyContent: 'flex-end'
   },
   requestUnderlay: {
     backgroundColor: theme.sliderTabRequest,
@@ -212,4 +172,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeRow = memo(WalletListSwipeRowComponent)
+export const WalletListSwipeableCurrencyRow = memo(WalletListSwipeableCurrencyRowComponent)

@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { FlatList, RefreshControl, SectionList } from 'react-native'
+import { FlatList, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { useAllTokens } from '../../hooks/useAllTokens.js'
@@ -21,7 +21,6 @@ import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
 import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
-import { WalletListSwipeRow } from './WalletListSwipeRow.js'
 
 export const alphabeticalSort = (itemA: string, itemB: string) => (itemA < itemB ? -1 : itemA > itemB ? 1 : 0)
 
@@ -51,18 +50,13 @@ type Props = {|
   filterActivation?: boolean,
 
   // Visuals:
-  footer?: React.Node,
-  header?: React.Node,
-  isModal?: boolean,
   marginRem?: number | number[],
   searching: boolean,
   searchText: string,
   showCreateWallet?: boolean,
-  showSlidingTutorial?: boolean,
 
   // Callbacks:
-  onPress?: (walletId: string, currencyCode: string) => void,
-  onRefresh?: () => void
+  onPress?: (walletId: string, currencyCode: string) => void
 |}
 
 export function WalletList(props: Props) {
@@ -75,18 +69,13 @@ export function WalletList(props: Props) {
     filterActivation,
 
     // Visuals:
-    footer,
-    header,
-    isModal,
     marginRem,
     searching,
     searchText,
     showCreateWallet,
-    showSlidingTutorial,
 
     // Callbacks:
-    onPress,
-    onRefresh
+    onPress
   } = props
 
   const theme = useTheme()
@@ -282,24 +271,15 @@ export function WalletList(props: Props) {
     const guiWallet = wallets[walletId]
 
     if (guiWallet == null || account.currencyWallets[walletId] == null) {
-      if (isModal) {
-        return <WalletListLoadingRow />
-      }
-      return <WalletListSwipeRow currencyCode="" isToken={false} walletId={walletId} />
+      return <WalletListLoadingRow />
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode != null ? data.item.fullCurrencyCode.split('-') : []
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
 
-      if (isModal) {
-        return <WalletListCurrencyRow currencyCode={currencyCode} walletId={walletId} onPress={handlePress} />
-      }
-
-      return <WalletListSwipeRow currencyCode={currencyCode} isToken={isToken} openTutorial={data.index === 0 && showSlidingTutorial} walletId={walletId} />
+      return <WalletListCurrencyRow currencyCode={currencyCode} walletId={walletId} onPress={handlePress} />
     }
   }
-
-  const renderRefreshControl = () => <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
 
   const renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
 
@@ -348,7 +328,7 @@ export function WalletList(props: Props) {
 
   let isSectionList = false
   let walletOnlyList = []
-  if (isModal && !searching && searchText.length === 0 && mostRecentWallets.length > 1) {
+  if (!searching && searchText.length === 0 && mostRecentWallets.length > 1) {
     walletOnlyList = walletList.filter(item => item.id)
     if (walletOnlyList.length > 4) {
       isSectionList = true
@@ -359,8 +339,6 @@ export function WalletList(props: Props) {
     return (
       <SectionList
         keyboardShouldPersistTaps="handled"
-        ListFooterComponent={footer}
-        ListHeaderComponent={header}
         renderItem={renderRow}
         renderSectionHeader={renderSectionHeader}
         sections={getSection(walletList, walletOnlyList.length)}
@@ -369,18 +347,7 @@ export function WalletList(props: Props) {
     )
   }
 
-  return (
-    <FlatList
-      contentOffset={{ x: 0, y: !searching && !isModal ? theme.rem(4.5) : 0 }}
-      data={walletList}
-      keyboardShouldPersistTaps="handled"
-      ListFooterComponent={footer}
-      ListHeaderComponent={header}
-      refreshControl={isModal ? undefined : renderRefreshControl()}
-      renderItem={renderRow}
-      style={margin}
-    />
-  )
+  return <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
 }
 
 type FilterDetailsType = {
