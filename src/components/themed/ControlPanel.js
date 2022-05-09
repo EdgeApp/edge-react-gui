@@ -34,8 +34,8 @@ import { ScanModal } from '../modals/ScanModal'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+import { FiatText } from '../text/FiatText'
 import { DividerLine } from './DividerLine'
-import { FiatText } from './FiatText.js'
 import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }

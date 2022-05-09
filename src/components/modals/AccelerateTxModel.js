@@ -18,7 +18,7 @@ import { showError, showToast, showWarning } from '../services/AirshipInstance.j
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { Tile } from '../themed/Tile.js'
+import { Tile } from '../tiles/Tile'
 
 type Status = 'confirming' | 'sending' | 'sent'
 

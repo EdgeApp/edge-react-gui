@@ -23,12 +23,12 @@ import { FlashNotification } from '../../navigation/FlashNotification.js'
 import { Airship } from '../../services/AirshipInstance.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Alert } from '../../themed/Alert.js'
-import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
 import { EdgeText } from '../../themed/EdgeText.js'
-import { EditableAmountTile } from '../../themed/EditableAmountTile.js'
-import { ErrorTile } from '../../themed/ErrorTile.js'
-import { IconTile } from '../../themed/IconTile'
 import { SceneHeader } from '../../themed/SceneHeader.js'
+import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile.js'
+import { EditableAmountTile } from '../../tiles/EditableAmountTile.js'
+import { ErrorTile } from '../../tiles/ErrorTile.js'
+import { IconTile } from '../../tiles/IconTile'
 
 type Props = {
   navigation: NavigationProp<'stakeModify'>,

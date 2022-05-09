@@ -25,7 +25,7 @@ import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader.js'
-import { Tile } from '../themed/Tile.js'
+import { Tile } from '../tiles/Tile.js'
 
 type OwnProps = {
   route: RouteProp<'fioStakingOverview'>

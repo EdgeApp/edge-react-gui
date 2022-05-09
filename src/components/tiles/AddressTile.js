@@ -20,7 +20,7 @@ import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText'
+import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
 
 type OwnProps = {

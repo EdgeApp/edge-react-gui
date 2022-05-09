@@ -2,8 +2,8 @@
 import * as React from 'react'
 
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText'
-import { FiatText } from './FiatText'
+import { FiatText } from '../text/FiatText'
+import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
 
 type Props = {

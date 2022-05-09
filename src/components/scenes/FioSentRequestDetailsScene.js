@@ -15,7 +15,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 type OwnProps = {
   route: RouteProp<'fioSentRequestDetails'>
 }

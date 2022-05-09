@@ -14,7 +14,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles } from '../services/ThemeContext.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type StateProps = {
   fioPlugin?: EdgeCurrencyConfig,

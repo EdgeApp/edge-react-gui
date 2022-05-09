@@ -11,7 +11,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { Tile } from '../themed/Tile.js'
+import { Tile } from '../tiles/Tile'
 
 const localizedFeeText = {
   satPerVByte: s.strings.transaction_details_advance_details_satpervbyte,

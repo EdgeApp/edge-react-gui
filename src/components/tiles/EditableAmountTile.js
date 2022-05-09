@@ -9,7 +9,7 @@ import { type GuiExchangeRates } from '../../types/types.js'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText'
+import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
 
 type Props = {
