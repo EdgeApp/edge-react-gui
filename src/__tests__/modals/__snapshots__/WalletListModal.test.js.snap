@@ -1,54 +1,422 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListModal should render with loading props 1`] = `
-<WithTheme(ThemedModalComponent)
-  bridge={
-    Object {
-      "on": [Function],
-      "onResult": [Function],
-      "reject": [Function],
-      "remove": [Function],
-      "resolve": [Function],
+Array [
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "bottom": 0,
+        "left": 0,
+        "opacity": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
-  }
-  onCancel={[Function]}
->
-  <ModalTitle
-    center={true}
   >
-    Wallet List
-  </ModalTitle>
-  <ForwardRef
-    label="Search Wallets"
-    marginRem={
-      Array [
-        0.5,
-        0.75,
-        1.25,
-      ]
+    <BlurView
+      blurAmount={10}
+      blurType="light"
+      style={
+        Array [
+          Object {
+            "backgroundColor": "transparent",
+          },
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ]
+      }
+    />
+  </View>,
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "alignSelf": "flex-end",
+        "backgroundColor": "#0D2145",
+        "borderColor": "rgba(255, 255, 255, 0)",
+        "borderTopLeftRadius": 22,
+        "borderTopRightRadius": 22,
+        "borderWidth": 0,
+        "flexDirection": undefined,
+        "flexShrink": 1,
+        "justifyContent": undefined,
+        "marginBottom": -64,
+        "marginLeft": 0,
+        "marginRight": 0,
+        "marginTop": 0,
+        "maxHeight": undefined,
+        "overflow": "visible",
+        "paddingBottom": 86,
+        "paddingLeft": 22,
+        "paddingRight": 22,
+        "paddingTop": 22,
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 1,
+        "shadowRadius": 10,
+        "transform": Array [
+          Object {
+            "translateY": 1334,
+          },
+        ],
+        "width": 512,
+      }
     }
-    onBlur={[Function]}
-    onChangeText={[Function]}
-    onClear={[Function]}
-    onFocus={[Function]}
-    returnKeyType="search"
-    searchIcon={true}
-    value=""
-  />
-  <WalletList
-    isModal={true}
-    marginRem={
-      Array [
-        0,
-        -1,
-      ]
-    }
-    onPress={[Function]}
-    searchText=""
-    searching={false}
-  />
-  <ModalCloseArrow
-    onPress={[Function]}
-  />
-</WithTheme(ThemedModalComponent)>
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "margin": 11,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "margin": 11,
+            },
+            Object {
+              "textAlign": "center",
+            },
+            Object {
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 0,
+            },
+          ]
+        }
+      >
+        Wallet List
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 11,
+            "justifyContent": "center",
+            "minHeight": 67,
+            "paddingHorizontal": 22,
+          },
+          Object {
+            "flexGrow": 0,
+            "marginBottom": 28,
+            "marginLeft": 17,
+            "marginRight": 17,
+            "marginTop": 11,
+            "paddingLeft": 65,
+            "paddingRight": 65,
+            "paddingVertical": 0,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "left": 22,
+              "position": "absolute",
+              "right": 22,
+            },
+            [MockFunction],
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "borderBottomLeftRadius": 11,
+              "borderBottomWidth": 1,
+              "borderLeftWidth": 1,
+              "borderRightWidth": 0,
+              "borderTopLeftRadius": 11,
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": 22,
+            },
+            [MockFunction],
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "borderBottomRightRadius": 11,
+              "borderBottomWidth": 1,
+              "borderLeftWidth": 0,
+              "borderRightWidth": 1,
+              "borderTopRightRadius": 11,
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "width": 22,
+            },
+            [MockFunction],
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "borderTopWidth": 1,
+              "left": 22,
+              "position": "absolute",
+              "right": 22,
+              "top": 0,
+            },
+            [MockFunction],
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "height": 67,
+              "justifyContent": "center",
+              "left": 0,
+              "paddingHorizontal": 22,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            Object {
+              "paddingLeft": 65,
+              "paddingRight": 65,
+            },
+          ]
+        }
+      >
+        <Text
+          numberOfLines={1}
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "alignSelf": "flex-start",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "padding": 0,
+              },
+              [MockFunction],
+            ]
+          }
+        >
+          Search Wallets
+        </Text>
+      </View>
+      <Text
+        numberOfLines={1}
+        style={
+          Array [
+            Object {
+              "bottom": -20,
+              "color": "#E85466",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "left": 17,
+              "position": "absolute",
+            },
+            [MockFunction],
+          ]
+        }
+      />
+      <Text
+        numberOfLines={1}
+        onLayout={[Function]}
+        style={
+          Array [
+            Object {
+              "bottom": -10,
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "position": "absolute",
+              "right": 28,
+            },
+            [MockFunction],
+          ]
+        }
+      >
+        
+      </Text>
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": undefined,
+              "fontSize": 12,
+            },
+            Object {
+              "color": "rgba(255, 255, 255, .75)",
+              "fontSize": 22,
+              "left": 0,
+              "padding": 22,
+              "position": "absolute",
+              "top": 0,
+            },
+            Object {
+              "fontFamily": "anticon",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoFocus={false}
+        multiline={false}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        returnKeyType="search"
+        secureTextEntry={false}
+        selectionColor="#FFFFFF"
+        style={
+          Array [
+            Object {
+              "alignSelf": "stretch",
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "padding": 0,
+            },
+            Object {
+              "flexGrow": 0,
+            },
+          ]
+        }
+        textAlignVertical="top"
+        value=""
+      />
+    </View>
+    <RCTScrollView
+      contentOffset={
+        Object {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      data={Array []}
+      getItem={[Function]}
+      getItemCount={[Function]}
+      keyExtractor={[Function]}
+      keyboardShouldPersistTaps="handled"
+      onContentSizeChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={Array []}
+      style={
+        Object {
+          "marginBottom": 0,
+          "marginLeft": -22,
+          "marginRight": -22,
+          "marginTop": 0,
+        }
+      }
+      viewabilityConfigCallbackPairs={Array []}
+    >
+      <View />
+    </RCTScrollView>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "opacity": 1,
+          "paddingTop": 22,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": "#66EDA8",
+              "fontSize": 28,
+            },
+            undefined,
+            Object {
+              "fontFamily": "FontAwesome5Free-Solid",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {
+              "fontWeight": "900",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+]
 `;

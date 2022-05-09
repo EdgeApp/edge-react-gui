@@ -337,7 +337,3 @@ export type EdgeTokenId = {
   pluginId: string,
   tokenId?: string
 }
-
-export type EdgeTokenIdExtended = EdgeTokenId & {
-  currencyCode?: string
-}

@@ -1,8 +1,7 @@
 // @flow
 
 import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import { asArray, asEither, asMaybe, asObject, asOptional, asString } from 'cleaners'
-import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
@@ -12,8 +11,8 @@ import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { EdgeTokenIdExtended, GuiDenomination, TransactionListTx } from '../types/types.js'
-import { type GuiExchangeRates } from '../types/types.js'
+import type { GuiDenomination, TransactionListTx } from '../types/types.js'
+import { type EdgeTokenId, type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
 export const DECIMAL_PRECISION = 18
@@ -503,61 +502,6 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
   }
 }
 
-export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
-  const [parent, token] = fullCurrencyCode.split('-')
-  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
-  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
-  return checkToken || checkParent
-}
-
-const asEdgeTokenIdExtended = asObject({
-  pluginId: asString,
-  tokenId: asOptional(asString),
-  currencyCode: asOptional(asString)
-})
-
-const asCurrencyCodesArray = asMaybe(asArray(asEither(asString, asEdgeTokenIdExtended)), [])
-
-export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[], pluginId: string): boolean {
-  const cleanedArray = asCurrencyCodesArray(currencyCodesArray)
-  return !!cleanedArray.find(item => {
-    if (typeof item === 'string') {
-      return checkCurrencyCodes(item, currencyCode)
-    } else if (typeof item === 'object') {
-      return item.pluginId === pluginId && item.currencyCode === currencyCode.toUpperCase()
-    }
-    return undefined
-  })
-}
-
-export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string, pluginId: string }
-
-export function checkFilterWallet(
-  details: FilterDetailsType,
-  filterText: string,
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[]
-): boolean {
-  const currencyCode = details.currencyCode.toLowerCase()
-
-  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes, details.pluginId)) {
-    return false
-  }
-
-  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes, details.pluginId)) {
-    return false
-  }
-
-  if (filterText === '') {
-    return true
-  }
-
-  const walletName = normalizeForSearch(details.name)
-  const currencyName = normalizeForSearch(details.currencyName)
-  const filterString = normalizeForSearch(filterText)
-  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
-}
-
 export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
   const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
@@ -651,6 +595,34 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
     if (token != null) out.push(token.currencyCode)
   }
   return out
+}
+
+/**
+ * Creates a function that returns all matching tokenId's for a currency code.
+ */
+export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: string) => EdgeTokenId[] {
+  const map = new Map<string, EdgeTokenId[]>()
+
+  function addMatch(currencyCode: string, location: EdgeTokenId): void {
+    const key = currencyCode.toLowerCase()
+    const list = map.get(key)
+    if (list != null) list.push(location)
+    else map.set(key, [location])
+  }
+
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    const { allTokens, currencyInfo } = currencyConfig
+
+    addMatch(currencyInfo.currencyCode, { pluginId })
+
+    for (const tokenId of Object.keys(allTokens)) {
+      const token = allTokens[tokenId]
+      addMatch(token.currencyCode, { pluginId, tokenId })
+    }
+  }
+
+  return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
 }
 
 export const pickRandom = <T>(array?: T[]): T | null => {
