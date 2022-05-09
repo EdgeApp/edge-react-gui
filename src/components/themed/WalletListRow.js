@@ -5,6 +5,8 @@ import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo } from '../../types/reactHooks.js'
+import { useSelector } from '../../types/reactRedux'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { TickerText } from '../common/text/TickerText'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from './CurrencyIcon.js'
@@ -42,6 +44,8 @@ export const WalletListRowComponent = (props: Props) => {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const account = useSelector(state => state.core.account)
+  const wallet = walletId != null ? account.currencyWallets[walletId] : undefined
 
   const contents = (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
@@ -57,7 +61,9 @@ export const WalletListRowComponent = (props: Props) => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailsTop}>
               <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-              {showRate && walletId != null ? <TickerText walletId={walletId} tokenId={currencyCode} style={styles.exchangeRateStyle} /> : null}
+              {showRate && wallet != null && walletId != null ? (
+                <TickerText wallet={wallet} tokenId={getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)} style={styles.exchangeRateStyle} />
+              ) : null}
             </View>
             <View style={styles.detailsBottom}>
               <EdgeText style={styles.detailsName}>{walletName}</EdgeText>

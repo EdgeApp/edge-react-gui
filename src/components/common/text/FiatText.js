@@ -22,6 +22,7 @@ type Props = {
  * specific crypto asset and native amount.
  **/
 export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, currencyCode, fiatSymbolSpace, nativeCryptoAmount, tokenId, wallet }: Props) => {
+  // TODO: integrate new useTokenDisplayData hook?
   const account = useSelector(state => state.core.account)
   const currencyInfo = wallet.currencyInfo
   const pluginId = currencyInfo.pluginId
