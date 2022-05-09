@@ -63,7 +63,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         color="#66EDA8"
       />
     </View>
-    <MainButton
+    <ForwardRef
       label="Submit"
       marginRem={
         Array [
@@ -75,7 +75,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       type="secondary"
     />
   </View>
-  <ModalCloseArrow
+  <ForwardRef
     onPress={[Function]}
   />
 </WithTheme(ThemedModalComponent)>

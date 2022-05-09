@@ -16,7 +16,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
   <ModalTitle>
     Sort Wallets
   </ModalTitle>
-  <WithTheme(SettingsTappableRowComponent)
+  <ForwardRef
     label="Manual sort"
     onPress={[Function]}
   />
@@ -45,7 +45,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
     onPress={[Function]}
     value={false}
   />
-  <ModalCloseArrow
+  <ForwardRef
     onPress={[Function]}
   />
 </WithTheme(ThemedModalComponent)>

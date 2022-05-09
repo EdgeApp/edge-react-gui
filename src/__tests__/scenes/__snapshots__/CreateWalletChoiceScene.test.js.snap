@@ -43,7 +43,7 @@ exports[`CreateWalletChoiceScene should render with loading props 1`] = `
   <View
     onLayout={[Function]}
   >
-    <MainButton
+    <ForwardRef
       alignSelf="stretch"
       label="Create New Wallet"
       marginRem={
@@ -56,7 +56,7 @@ exports[`CreateWalletChoiceScene should render with loading props 1`] = `
       type="secondary"
     />
   </View>
-  <MainButton
+  <ForwardRef
     alignSelf="stretch"
     label="Import Wallet"
     onPress={[Function]}
