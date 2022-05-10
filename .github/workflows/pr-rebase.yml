@@ -20,7 +20,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
       - name: Automatic Rebase
-        uses: samholmes/rebase@autosquash
+        uses: samholmes/rebase@1.7
         with:
           autosquash: ${{ true }}
         env:
