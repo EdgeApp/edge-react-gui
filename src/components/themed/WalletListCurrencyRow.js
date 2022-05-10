@@ -1,7 +1,7 @@
 // @flow
 
 import { abs, div, gt, log10, mul, sub, toFixed } from 'biggystring'
-import { type EdgeDenomination } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeDenomination, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
@@ -30,10 +30,10 @@ import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {|
-  currencyCode: string,
   showRate?: boolean,
-  tokenCode?: string,
-  walletId: string,
+  token?: EdgeToken,
+  tokenId?: string,
+  wallet: EdgeCurrencyWallet,
 
   // Callbacks:
   onLongPress?: () => void,
@@ -113,10 +113,10 @@ export const getDifference = (getRateParams: GetDifferenceParams) => {
 
 export const WalletListCurrencyRowComponent = (props: Props) => {
   const {
-    currencyCode,
     showRate = false,
-    tokenCode,
-    walletId,
+    token,
+    tokenId,
+    wallet,
 
     // Callbacks:
     onLongPress,
@@ -126,7 +126,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
+  const { currencyCode } = token == null ? wallet.currencyInfo : token
   const exchangeRates = useSelector(state => state.exchangeRates)
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
   const balances = useWatchWallet(wallet, 'balances')
@@ -176,14 +176,11 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     exchangeRateType = differencePercentageStyle
   }
 
-  const handlePress = useMemo(
-    () => (onPress != null ? () => onPress(walletId, tokenCode ?? currencyCode) : () => {}),
-    [currencyCode, onPress, tokenCode, walletId]
-  )
+  const handlePress = useMemo(() => (onPress != null ? () => onPress(wallet.id, currencyCode) : () => {}), [currencyCode, onPress, wallet])
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
-      <CurrencyIcon currencyCode={currencyCode} marginRem={1} sizeRem={2} walletId={walletId} />
+      <CurrencyIcon marginRem={1} sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
       <View style={styles.nameColumn}>
         <View style={styles.currencyRow}>
           <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>

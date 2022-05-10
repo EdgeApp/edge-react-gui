@@ -232,13 +232,12 @@ export function WalletList(props: Props) {
       }
 
       const walletItem: WalletListItem = item.item
-      const { token, wallet, walletId } = walletItem
+      const { token, tokenId, wallet } = walletItem
 
       if (wallet == null) {
         return <WalletListLoadingRow />
       }
-      const { currencyCode } = token == null ? wallet.currencyInfo : token
-      return <WalletListCurrencyRow currencyCode={currencyCode} walletId={walletId} onPress={handlePress} />
+      return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
     },
     [handlePress]
   )
