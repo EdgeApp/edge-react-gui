@@ -83,7 +83,7 @@ type State = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
-export class FlipInputModalComponent extends React.PureComponent<Props, State> {
+export class FlipInputModalComponent extends React.PureComponent<Props & TestProps, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -196,7 +196,13 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
-          <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+          <MiniButton
+            alignSelf="center"
+            label={s.strings.string_max_cap}
+            marginRem={[1.2, 0, 0]}
+            onPress={this.handleSendMaxAmount}
+            ref={this.props.generateTestHook('FlipInputModal.MaxButton')}
+          />
         ) : null}
       </Card>
     )
