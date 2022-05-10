@@ -4,43 +4,19 @@ import * as React from 'react'
 import { FlatList, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
-import { useAllTokens } from '../../hooks/useAllTokens.js'
-import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
-import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { calculateFiatBalance } from '../../selectors/WalletSelectors.js'
-import { useMemo } from '../../types/reactHooks.js'
+import { useCallback, useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import type { CreateTokenType, CreateWalletType, FlatListItem, GuiWallet } from '../../types/types.js'
-import { type EdgeTokenId, asSafeDefaultGuiWallet } from '../../types/types.js'
+import type { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { normalizeForSearch } from '../../util/utils.js'
+import { searchWalletList } from '../services/SortedWalletList.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
 import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
-
-export const alphabeticalSort = (itemA: string, itemB: string) => (itemA < itemB ? -1 : itemA > itemB ? 1 : 0)
-
-type WalletListItem = {
-  id: string | null,
-  fullCurrencyCode?: string,
-  key: string,
-  createWalletType?: CreateWalletType,
-  createTokenType?: CreateTokenType
-}
-
-type Section = {
-  title: string,
-  data: WalletListItem[]
-}
-
-const getSortOptionsCurrencyCode = (fullCurrencyCode: string): string => {
-  const splittedCurrencyCode = fullCurrencyCode.split('-')
-  return splittedCurrencyCode[1] || splittedCurrencyCode[0]
-}
 
 type Props = {|
   // Filtering:
@@ -58,6 +34,20 @@ type Props = {|
   // Callbacks:
   onPress?: (walletId: string, currencyCode: string) => void
 |}
+
+type WalletCreateItem = {|
+  key: string,
+  currencyCode: string,
+  displayName: string,
+  pluginId: string,
+  tokenId?: string, // Used for creating tokens
+  walletType?: string // Used for creating wallets
+|}
+
+type Section = {
+  title: string,
+  data: Array<WalletListItem | WalletCreateItem>
+}
 
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
@@ -89,297 +79,188 @@ export function WalletList(props: Props) {
       }),
     [dispatch, onPress]
   )
+
+  // Subscribe to the common wallet list:
   const account = useSelector(state => state.core.account)
-  const exchangeRates = useSelector(state => state.exchangeRates)
   const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
-  const walletsSort = useSelector(state => state.ui.settings.walletsSort)
-  const wallets = useSelector(state => state.ui.wallets.byId)
+  const sortedWalletList = useSelector(state => state.sortedWalletList)
 
-  // Subscribe to the wallet list:
-  const activeWalletIds = useWatchAccount(account, 'activeWalletIds')
+  // Filter the common wallet list:
+  const filteredWalletList = useMemo(() => {
+    const excludeWalletSet = new Set<string>(excludeWalletIds)
 
-  // Subscribe to all the tokens in the account:
-  const allTokens = useAllTokens(account)
+    return sortedWalletList.filter(item => {
+      const { tokenId, wallet } = item
 
-  function sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
-    const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
-      const currencyWallet = account.currencyWallets[wallet.id]
-      const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
-      const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyWallet.currencyInfo.pluginId, currencyCode))
-      const fiatBalanceString = calculateFiatBalance(currencyWallet, exchangeDenomination, exchangeRates)
-      return parseFloat(fiatBalanceString)
+      // Exclude loading wallets:
+      if (wallet == null) return false
+
+      // Remove excluded walletIds:
+      if (excludeWalletSet.has(wallet.id)) return false
+
+      // Apply the currency filters:
+      const { pluginId } = wallet.currencyInfo
+      return checkFilterWallet({ pluginId, tokenId }, allowedAssets, excludeAssets)
+    })
+  }, [allowedAssets, excludeAssets, excludeWalletIds, sortedWalletList])
+
+  // Extract recent wallets:
+  const recentWalletList = useMemo(() => {
+    const out: WalletListItem[] = []
+
+    function pickLength() {
+      if (filteredWalletList.length > 10) return 3
+      if (filteredWalletList.length > 4) return 2
+      return 0
+    }
+    const maxLength = pickLength()
+
+    for (const item of mostRecentWallets) {
+      // Find the mentioned wallet, if it still exists:
+      const row = filteredWalletList.find(row => {
+        const { wallet, token } = row
+        if (wallet == null) return false
+        if (wallet.id !== item.id) return false
+        const { currencyCode } = token == null ? wallet.currencyInfo : token
+        return currencyCode.toLowerCase() === item.currencyCode.toLowerCase()
+      })
+
+      if (row != null) out.push(row)
+      if (out.length >= maxLength) break
     }
 
-    if (walletsSort === 'name') {
-      walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        return alphabeticalSort(wallets[itemA.id].name, wallets[itemB.id].name)
+    return out
+  }, [filteredWalletList, mostRecentWallets])
+
+  // Assemble create-wallet rows:
+  const createWalletList: WalletCreateItem[] = useMemo(() => {
+    const out: WalletCreateItem[] = []
+
+    // Add top-level wallet types:
+    const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
+    for (const createWalletCurrency of createWalletCurrencies) {
+      const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
+      out.push({
+        key: `create-${currencyCode}`,
+        currencyCode,
+        displayName: currencyName,
+        pluginId,
+        walletType
       })
     }
 
-    if (walletsSort === 'currencyCode') {
-      walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null) return 0
-        return alphabeticalSort(getSortOptionsCurrencyCode(itemA.fullCurrencyCode || ''), getSortOptionsCurrencyCode(itemB.fullCurrencyCode || ''))
-      })
-    }
+    // Add token types:
+    for (const pluginId of Object.keys(account.currencyConfig)) {
+      const currencyConfig = account.currencyConfig[pluginId]
+      const { builtinTokens, currencyInfo } = currencyConfig
 
-    if (walletsSort === 'currencyName') {
-      walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        const currencyNameA = wallets[itemA.id || ''].currencyNames[getSortOptionsCurrencyCode(itemA.fullCurrencyCode || '')]
-        const currencyNameB = wallets[itemB.id || ''].currencyNames[getSortOptionsCurrencyCode(itemB.fullCurrencyCode || '')]
-        return alphabeticalSort(currencyNameA, currencyNameB)
-      })
-    }
+      for (const tokenId of Object.keys(builtinTokens)) {
+        const { currencyCode, displayName } = builtinTokens[tokenId]
 
-    if (walletsSort === 'highest') {
-      walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        const aBalance = getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '')
-        const bBalance = getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '')
-        return aBalance - bBalance
-      })
-    }
+        // Fix for when the token code and chain code are the same (like EOS/TLOS)
+        if (currencyCode === currencyInfo.currencyCode) continue
 
-    if (walletsSort === 'lowest') {
-      walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        return getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '') - getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '')
-      })
-    }
-    return walletList
-  }
-
-  function checkFromExistingWallets(walletList: WalletListItem[], fullCurrencyCode: string): boolean {
-    return !!walletList.find((item: WalletListItem) => item.fullCurrencyCode === fullCurrencyCode)
-  }
-
-  function getWalletList(): WalletListItem[] {
-    const walletList = []
-
-    for (const walletId of activeWalletIds) {
-      const wallet = wallets[walletId]
-
-      if (excludeWalletIds != null && excludeWalletIds.find(excludeWalletId => excludeWalletId === walletId)) continue // Skip if excluded
-
-      if (wallet == null && !searching) {
-        // Initialize wallets that is still loading
-        walletList.push({
-          id: walletId,
-          key: walletId
+        out.push({
+          key: `create-${currencyInfo.currencyCode}-${tokenId}`,
+          currencyCode,
+          displayName,
+          pluginId,
+          tokenId
         })
-      } else if (wallet != null) {
-        const { enabledTokens, name, pluginId } = asSafeDefaultGuiWallet(wallet)
-        const { currencyInfo } = account.currencyConfig[pluginId]
-        const { currencyCode, displayName } = currencyInfo
-
-        // Initialize wallets
-        if (checkFilterWallet({ name, currencyCode, currencyName: displayName, pluginId }, searchText, allowedAssets, excludeAssets)) {
-          walletList.push({
-            id: walletId,
-            fullCurrencyCode: currencyCode,
-            key: `${walletId}-${currencyCode}`
-          })
-        }
-
-        // Initialize tokens
-        for (const tokenCode of enabledTokens) {
-          const tokenId = Object.keys(allTokens[pluginId]).find(id => allTokens[pluginId][id].currencyCode === tokenCode)
-          if (tokenId == null) continue
-          const token = allTokens[pluginId][tokenId]
-
-          const fullCurrencyCode = `${currencyCode}-${tokenCode}`
-
-          if (
-            checkFilterWallet({ name, currencyCode: tokenCode, currencyName: token.displayName, pluginId, tokenId }, searchText, allowedAssets, excludeAssets)
-          ) {
-            walletList.push({
-              id: walletId,
-              fullCurrencyCode,
-              key: `${walletId}-${fullCurrencyCode}`,
-              tokenCode
-            })
-          }
-        }
       }
     }
 
-    const sortedWalletlist = sortWalletList(walletList)
-
-    if (showCreateWallet) {
-      // Initialize Create Wallets
-      const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
-      for (const createWalletCurrency of createWalletCurrencies) {
-        const { currencyCode, currencyName, pluginId } = createWalletCurrency
-
-        if (
-          checkFilterWallet({ name: '', currencyCode, currencyName, pluginId }, searchText, allowedAssets, excludeAssets) &&
-          !checkFromExistingWallets(walletList, currencyCode)
-        ) {
-          sortedWalletlist.push({
-            id: null,
-            fullCurrencyCode: currencyCode,
-            key: currencyCode,
-            createWalletType: createWalletCurrency
-          })
-        }
-      }
-
-      // Initialize Create Tokens
-      for (const pluginId of Object.keys(account.currencyConfig)) {
-        const currencyConfig = account.currencyConfig[pluginId]
-        const { builtinTokens, currencyInfo } = currencyConfig
-
-        for (const tokenId of Object.keys(builtinTokens)) {
-          const { currencyCode, displayName } = builtinTokens[tokenId]
-
-          // Fix for when the token code and chain code are the same (like EOS/TLOS)
-          if (currencyCode === currencyInfo.currencyCode) continue
-          const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
-
-          if (
-            checkFilterWallet({ name: '', currencyCode, currencyName: displayName, pluginId, tokenId }, searchText, allowedAssets, excludeAssets) &&
-            !checkFromExistingWallets(walletList, fullCurrencyCode)
-          ) {
-            sortedWalletlist.push({
-              id: null,
-              fullCurrencyCode,
-              key: fullCurrencyCode,
-              createTokenType: {
-                currencyCode,
-                currencyName: displayName,
-                pluginId: currencyInfo.pluginId
-              }
-            })
-          }
-        }
-      }
-    }
-
-    return sortedWalletlist
-  }
-
-  function renderRow(data: FlatListItem<WalletListItem>) {
-    // Create Wallet/Token
-    if (data.item.id == null) {
-      const { createWalletType, createTokenType } = data.item
-      return <WalletListCreateRow {...{ ...createWalletType, ...createTokenType }} onPress={handlePress} />
-    }
-
-    const walletId = data.item.id.replace(/:.*/, '')
-    const guiWallet = wallets[walletId]
-
-    if (guiWallet == null || account.currencyWallets[walletId] == null) {
-      return <WalletListLoadingRow />
-    } else {
-      const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
-      const walletCodesArray = data.item.fullCurrencyCode != null ? data.item.fullCurrencyCode.split('-') : []
-      const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
-
-      return <WalletListCurrencyRow currencyCode={currencyCode} walletId={walletId} onPress={handlePress} />
-    }
-  }
-
-  const renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
-
-  function getMostRecentlyUsedWallets(size: number, walletListItem: WalletListItem[]): WalletListItem[] {
-    const recentWallets = []
-
-    for (let i = 0; i < size; i++) {
-      const recentUsed = mostRecentWallets[i]
-      if (!recentUsed) break
-      const wallet = walletListItem.find(item => {
-        const fullCurrencyCodeLowerCase = item.fullCurrencyCode ? item.fullCurrencyCode.toLowerCase() : ''
-        return item.id === recentUsed.id && fullCurrencyCodeLowerCase.includes(recentUsed.currencyCode.toLowerCase())
+    // Filter this list:
+    const existingWallets: EdgeTokenId[] = []
+    for (const { wallet, tokenId } of sortedWalletList) {
+      if (wallet == null) continue
+      existingWallets.push({
+        pluginId: wallet.currencyInfo.pluginId,
+        tokenId
       })
-      if (wallet) {
-        recentWallets.push(wallet)
+    }
+    return out.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
+  }, [account, allowedAssets, excludeAssets, filterActivation, sortedWalletList])
+
+  // Merge the lists, filtering based on the search term:
+  const { walletList, sectionList } = useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>, sectionList?: Section[] }>(() => {
+    const walletList: Array<WalletListItem | WalletCreateItem> = [
+      // Search the wallet list:
+      ...searchWalletList(filteredWalletList, searching, searchText)
+    ]
+
+    // Show the create-wallet list, filtered by the search term:
+    if (showCreateWallet) {
+      const searchTarget = normalizeForSearch(searchText)
+      for (const item of createWalletList) {
+        const { currencyCode, displayName } = item
+        if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
+          walletList.push(item)
+        }
       }
     }
 
-    return recentWallets
-  }
-
-  const getSection = (walletList: WalletListItem[], walletListOnlyCount: number) => {
-    const sections: Section[] = []
-
-    let mostRecentWalletsCount = 0
-    if (walletListOnlyCount > 4 && walletListOnlyCount < 11) {
-      mostRecentWalletsCount = 2
-    } else if (walletListOnlyCount > 10) {
-      mostRecentWalletsCount = 3
+    // Show a flat list if we are searching, or have no recent wallets:
+    if (searching || searchText.length > 0 || recentWalletList.length === 0) {
+      return { walletList }
     }
 
-    sections.push({
-      title: s.strings.wallet_list_modal_header_mru,
-      data: getMostRecentlyUsedWallets(mostRecentWalletsCount, walletList)
-    })
-
-    sections.push({
-      title: s.strings.wallet_list_modal_header_all,
-      data: walletList
-    })
-
-    return sections
-  }
-
-  const walletList = getWalletList()
-
-  let isSectionList = false
-  let walletOnlyList = []
-  if (!searching && searchText.length === 0 && mostRecentWallets.length > 1) {
-    walletOnlyList = walletList.filter(item => item.id)
-    if (walletOnlyList.length > 4) {
-      isSectionList = true
+    // Add the recent wallets section:
+    return {
+      sectionList: [
+        {
+          title: s.strings.wallet_list_modal_header_mru,
+          data: [...recentWalletList]
+        },
+        {
+          title: s.strings.wallet_list_modal_header_all,
+          data: walletList
+        }
+      ],
+      walletList
     }
-  }
+  }, [createWalletList, filteredWalletList, recentWalletList, searchText, searching, showCreateWallet])
 
-  if (isSectionList) {
-    return (
-      <SectionList
-        keyboardShouldPersistTaps="handled"
-        renderItem={renderRow}
-        renderSectionHeader={renderSectionHeader}
-        sections={getSection(walletList, walletOnlyList.length)}
-        style={margin}
-      />
-    )
-  }
+  // rendering -------------------------------------------------------------
 
-  return <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
+  const renderRow = useCallback(
+    (item: FlatListItem<any>) => {
+      if (item.item.walletId == null) {
+        const createItem: WalletCreateItem = item.item
+        const { currencyCode, displayName, pluginId, walletType } = createItem
+        return <WalletListCreateRow currencyCode={currencyCode} currencyName={displayName} pluginId={pluginId} walletType={walletType} onPress={handlePress} />
+      }
+
+      const walletItem: WalletListItem = item.item
+      const { token, tokenId, wallet } = walletItem
+
+      if (wallet == null) {
+        return <WalletListLoadingRow />
+      }
+      return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
+    },
+    [handlePress]
+  )
+
+  const renderSectionHeader = useCallback((section: { section: Section }) => {
+    return <WalletListSectionHeader title={section.section.title} />
+  }, [])
+
+  return sectionList == null ? (
+    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
+  ) : (
+    <SectionList keyboardShouldPersistTaps="handled" renderItem={renderRow} renderSectionHeader={renderSectionHeader} sections={sectionList} style={margin} />
+  )
 }
 
-type FilterDetailsType = {
-  // For searching:
-  name: string,
-  currencyCode: string,
-  currencyName: string,
-
-  // For filtering:
-  pluginId: string,
-  tokenId?: string
-}
-
-function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedAssets?: EdgeTokenId[], excludeAssets?: EdgeTokenId[]): boolean {
-  const { pluginId, tokenId } = details
-  if (allowedAssets != null && !hasAsset(allowedAssets, { pluginId, tokenId })) {
+function checkFilterWallet(details: EdgeTokenId, allowedAssets?: EdgeTokenId[], excludeAssets?: EdgeTokenId[]): boolean {
+  if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
     return false
   }
-
-  if (excludeAssets != null && hasAsset(excludeAssets, { pluginId, tokenId })) {
+  if (excludeAssets != null && hasAsset(excludeAssets, details)) {
     return false
   }
-
-  if (filterText === '') {
-    return true
-  }
-
-  const currencyCode = details.currencyCode.toLowerCase()
-  const walletName = normalizeForSearch(details.name)
-  const currencyName = normalizeForSearch(details.currencyName)
-  const filterString = normalizeForSearch(filterText)
-  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
+  return true
 }
 
 /**

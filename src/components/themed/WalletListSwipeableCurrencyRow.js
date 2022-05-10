@@ -141,7 +141,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       onRightSwipe={handleSend}
     >
       <Gradient>
-        <WalletListCurrencyRow currencyCode={currencyCode} showRate walletId={wallet.id} onLongPress={handleMenu} onPress={handleSelect} />
+        <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
       </Gradient>
     </SwipeableRow>
   )
