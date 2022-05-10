@@ -146,14 +146,14 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
 
   const nativeCryptoAmount = getCryptoAmount({ balance, exchangeRate, exchangeDenomination, fiatDenomination, denomination, currencyCode })
 
-  const { fiatText: fiatBalanceText } = useFiatText({
+  const fiatBalanceText = useFiatText({
     nativeCryptoAmount: balance,
     cryptoCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
     cryptoExchangeMultiplier
   })
 
-  let { fiatText: exchangeRateText } = useFiatText({
+  let exchangeRateText = useFiatText({
     nativeCryptoAmount: cryptoExchangeMultiplier,
     cryptoCurrencyCode: currencyCode,
     isoFiatCurrencyCode,

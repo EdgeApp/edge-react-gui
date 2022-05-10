@@ -8,27 +8,25 @@ import { DECIMAL_PRECISION, formatFiatString, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 type Props = {
+  appendFiatCurrencyCode?: boolean,
+  autoPrecision?: boolean,
   cryptoCurrencyCode: string,
   cryptoExchangeMultiplier?: string,
-  nativeCryptoAmount?: string,
-  appendFiatCurrencyCode?: boolean,
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode?: string,
-  parenthesisEnclosed?: boolean,
-  autoPrecision?: boolean,
+  nativeCryptoAmount?: string,
   noGrouping?: boolean
 }
 
-export const useFiatText = (props: Props) => {
+export const useFiatText = (props: Props): string => {
   const {
-    cryptoExchangeMultiplier = defaultMultiplier,
     appendFiatCurrencyCode,
-    nativeCryptoAmount = cryptoExchangeMultiplier,
-    fiatSymbolSpace,
-    parenthesisEnclosed,
-    cryptoCurrencyCode,
-    isoFiatCurrencyCode = USD_FIAT,
     autoPrecision,
+    cryptoCurrencyCode,
+    cryptoExchangeMultiplier = defaultMultiplier,
+    fiatSymbolSpace,
+    isoFiatCurrencyCode = USD_FIAT,
+    nativeCryptoAmount = cryptoExchangeMultiplier,
     noGrouping = false
   } = props
 
@@ -49,14 +47,7 @@ export const useFiatText = (props: Props) => {
         })
       : '0'
 
-  // Create FiatText' prefix
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
-  const fiatSymbolFmt = fiatSymbolSpace ? `${fiatSymbol} ` : fiatSymbol
-  const prefix = `${parenthesisEnclosed ? '(' : ''}${fiatSymbolFmt} `
-  // Create FiatText' suffix
+  const fiatSymbol = `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}`
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  const suffix = `${fiatCurrencyCode}${parenthesisEnclosed ? ')' : ''}`
-
-  const fiatText = `${prefix}${fiatString}${fiatCurrencyCode}${suffix}`
-  return { fiatAmount, fiatString, fiatText }
+  return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
