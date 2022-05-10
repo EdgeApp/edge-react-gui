@@ -118,7 +118,7 @@ export function ControlPanel(props: Props) {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
-        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
+        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | void) => {
             if (result) {
               dispatch(qrCodeScanned(result))
@@ -131,7 +131,7 @@ export function ControlPanel(props: Props) {
 
   const handleLoginQr = () => {
     Actions.drawerClose()
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} />)
+    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
           dispatch(parseScannedUri(result))
