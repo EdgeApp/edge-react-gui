@@ -61,7 +61,7 @@ export function SortedWalletList(props: Props) {
 
     // Add the tokens:
     if (wallet == null) continue
-    for (const tokenId of enabledTokenIds[walletId]) {
+    for (const tokenId of enabledTokenIds[walletId] ?? []) {
       const { pluginId } = wallet.currencyInfo
       const token = allTokens[pluginId][tokenId]
       if (token == null) continue
