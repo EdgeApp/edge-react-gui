@@ -23,7 +23,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type StateProps = {
   exchangeSecondaryToPrimaryRatio: string,

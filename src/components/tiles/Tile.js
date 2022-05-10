@@ -9,7 +9,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import s from '../../locales/strings.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText.js'
+import { EdgeText } from '../themed/EdgeText'
 
 const textHeights = {
   small: 2,

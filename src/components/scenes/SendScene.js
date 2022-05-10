@@ -35,13 +35,13 @@ import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
-import { EditableAmountTile } from '../themed/EditableAmountTile'
-import { ErrorTile } from '../themed/ErrorTile'
 import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
-import { Tile } from '../themed/Tile.js'
+import { AddressTile } from '../tiles/AddressTile.js'
+import { EditableAmountTile } from '../tiles/EditableAmountTile'
+import { ErrorTile } from '../tiles/ErrorTile'
+import { Tile } from '../tiles/Tile.js'
 
 const PIN_MAX_LENGTH = 4
 

@@ -18,10 +18,10 @@ import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, ge
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
-import { CryptoFiatAmountTile } from '../../themed/CryptoFiatAmountTile.js'
 import { MainButton } from '../../themed/MainButton.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 import { StakingReturnsCard } from '../../themed/StakingReturnsCard.js'
+import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile.js'
 
 type Props = {
   navigation: NavigationProp<'stakeModify'>,
