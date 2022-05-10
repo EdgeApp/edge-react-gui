@@ -1,25 +1,27 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 
 import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
+import { B } from '../../styles/common/textStyles.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal.js'
-import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
 import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { ModalMessage } from '../themed/ModalParts'
+import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListHeader } from '../themed/WalletListHeader.js'
 import { WalletListSortable } from '../themed/WalletListSortable.js'
-import { WalletListSwipeable } from '../themed/WalletListSwipeable.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type Props = {}
@@ -45,8 +47,22 @@ export function WalletListScene(props: Props) {
     const userTutorialList = await getWalletListSlideTutorial(disklet)
     const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
-    if (tutorialCount < 2) {
-      Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
+    if (tutorialCount > 0) {
+      Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.wallet_list_swipe_tutorial_title}
+          buttons={{
+            gotIt: { label: s.strings.string_ok }
+          }}
+        >
+          <Image
+            source={theme.walletListSlideTutorialImage}
+            resizeMode="contain"
+            style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}
+          />
+        </ButtonsModal>
+      ))
       setShowTutorial(true)
       userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
       await setUserTutorialList(userTutorialList, disklet)
@@ -85,7 +101,7 @@ export function WalletListScene(props: Props) {
       <View style={styles.listStack}>
         <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-          <WalletListSwipeable
+          <WalletList
             key="fullList"
             header={
               <WalletListHeader
