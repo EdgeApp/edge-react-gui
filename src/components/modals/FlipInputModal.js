@@ -16,7 +16,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
@@ -80,9 +80,9 @@ type State = {
   errorMessage?: string
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
-export class FlipInputModalComponent extends React.PureComponent<Props, State> {
+export class FlipInputModalComponent extends React.PureComponent<Props & TestProps, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -200,7 +200,13 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
-          <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+          <MiniButton
+            alignSelf="center"
+            label={s.strings.string_max_cap}
+            marginRem={[1.2, 0, 0]}
+            onPress={this.handleSendMaxAmount}
+            ref={this.props.generateTestHook('FlipInputModal.MaxButton')}
+          />
         ) : null}
       </Card>
     )
@@ -315,7 +321,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
+export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
     const wallet = state.core.account.currencyWallets[walletId]
