@@ -3,6 +3,7 @@
 import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 import { type Permission } from '../reducers/PermissionsReducer.js'
+import { type EdgeTokenId } from '../types/types.js'
 
 /**
  * A set of query parameters to pass to a plugin.
@@ -55,8 +56,8 @@ export type GuiPlugin = {
   permissions?: Permission[],
   mandatoryPermissions?: boolean,
 
-  // Temp HACK
-  filterPlugins?: string[]
+  // Sometimes plugins pass weird strings for their currency codes:
+  fixCurrencyCodes?: { [badString: string]: EdgeTokenId }
 }
 
 /**
