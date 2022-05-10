@@ -145,7 +145,7 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal
         bridge={bridge}
         showCreateWallet
-        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.filterPlugins, allowedCurrencyCodes)}
+        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
         headerTitle={s.strings.choose_your_wallet}
       />
     ))
@@ -543,7 +543,11 @@ export class EdgeProvider extends Bridgeable {
  * This one serves a public-facing API,
  * so it will potentially need to stick around forever.
  */
-function upgradeExtendedCurrencyCodes(account: EdgeAccount, excludePluginIds?: string[], currencyCodes?: ExtendedCurrencyCode[]): EdgeTokenId[] | void {
+function upgradeExtendedCurrencyCodes(
+  account: EdgeAccount,
+  fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
+  currencyCodes?: ExtendedCurrencyCode[]
+): EdgeTokenId[] | void {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   // Grab all relevant tokens from the account:
@@ -552,6 +556,13 @@ function upgradeExtendedCurrencyCodes(account: EdgeAccount, excludePluginIds?: s
   const out: EdgeTokenId[] = []
   for (const code of currencyCodes) {
     if (typeof code === 'string') {
+      const fixed = fixCurrencyCodes[code]
+      if (fixed != null) {
+        //  We have a tokenId for this code
+        out.push(fixed)
+        continue
+      }
+
       const [parentCode, tokenCode] = code.split('-')
 
       if (tokenCode == null) {
@@ -576,7 +587,5 @@ function upgradeExtendedCurrencyCodes(account: EdgeAccount, excludePluginIds?: s
     }
   }
 
-  // Filter out bad pluginId's:
-  const set = new Set<string>(excludePluginIds)
-  return out.filter(item => !set.has(item.pluginId))
+  return out
 }

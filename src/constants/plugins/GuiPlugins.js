@@ -24,7 +24,37 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     queryPromoCode: 'apiKey',
     displayName: 'MoonPay',
     permissions: ['camera'],
-    mandatoryPermissions: true
+    mandatoryPermissions: true,
+    fixCurrencyCodes: {
+      BAT: { pluginId: 'ethereum', tokenId: '0D8775F648430679A709E98d2b0Cb6250d2887EF' },
+      BCH: { pluginId: 'bitcoincash' },
+      BNB: { pluginId: 'binance' },
+      BTC: { pluginId: 'bitcoin' },
+      CELO: { pluginId: 'celo' },
+      CHZ: { pluginId: 'ethereum', tokenId: '3506424F91fD33084466F402d5D97f05F8e3b4AF' },
+      COMP: { pluginId: 'ethereum', tokenId: 'c00e94cb662c3520282e6f5717214004a7f26888' },
+      DAI: { pluginId: 'ethereum', tokenId: '6B175474E89094C44Da98b954EedeAC495271d0F' },
+      DASH: { pluginId: 'dash' },
+      DGB: { pluginId: 'digibyte' },
+      DOGE: { pluginId: 'dogecoin' },
+      DOT: { pluginId: 'polkadot' },
+      EOS: { pluginId: 'eos' },
+      ETC: { pluginId: 'ethereumclassic' },
+      ETH: { pluginId: 'ethereum' },
+      FLOW: { pluginId: 'flow' },
+      HBAR: { pluginId: 'hedera' },
+      LTC: { pluginId: 'litecoin' },
+      MATIC_POLYGON: { pluginId: 'polygon' },
+      QTUM: { pluginId: 'qtum' },
+      RVN: { pluginId: 'ravencoin' },
+      TUSD: { pluginId: 'ethereum', tokenId: '0000000000085d4780B73119b644AE5ecd22b376' },
+      USDC: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
+      USDT: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
+      XLM: { pluginId: 'stellar' },
+      XRP: { pluginId: 'ripple' },
+      XTZ: { pluginId: 'tezos' },
+      ZRX: { pluginId: 'ethereum', tokenId: 'E41d2489571d322189246DaFA5ebDe1F4699F498' }
+    }
   },
   safello: {
     pluginId: 'safello',
@@ -69,7 +99,12 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Wyre',
     permissions: ['camera'],
-    filterPlugins: ['polygon', 'fantom', 'rsk', 'ethereumclassic', 'celo', 'binancesmartchain', 'avalanche']
+    fixCurrencyCodes: {
+      ETH: { pluginId: 'ethereum' },
+      BTC: { pluginId: 'bitcoin' },
+      DAI: { pluginId: 'ethereum', tokenId: '6B175474E89094C44Da98b954EedeAC495271d0F' },
+      USDC: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
+    }
     // supportEmail: 'support@sendwyre.com'
   },
   bity: {
