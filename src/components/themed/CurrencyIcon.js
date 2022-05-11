@@ -29,7 +29,7 @@ type Props = {
 /**
  * If we have a currency code, guess the pluginId and tokenId from that.
  */
-const guessFromCurrencyCode = (account: EdgeAccount, { currencyCode, pluginId, tokenId }: { [key: string]: string | void }) => {
+export const guessFromCurrencyCode = (account: EdgeAccount, { currencyCode, pluginId, tokenId }: { [key: string]: string | void }) => {
   if (currencyCode == null) return { pluginId, tokenId }
   // If you already have a main network code but not a tokenId, check if you are a token and get the right tokenId
   if (pluginId != null && tokenId == null) {
