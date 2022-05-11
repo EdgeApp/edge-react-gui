@@ -10,9 +10,7 @@
   "globals": {
     "fetch": true
   },
-  "plugins": [
-    "detox", "simple-import-sort"
-  ],
+  "plugins": [ "simple-import-sort" ],
   "rules": {
     "react-native/no-inline-styles": "off",
     "react-native/no-raw-text": ["error", { "skip": ["FormattedText", "T", "B"] }],

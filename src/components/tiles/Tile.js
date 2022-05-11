@@ -1,6 +1,6 @@
 // @flow
 
-import Clipboard from '@react-native-community/clipboard'
+import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'

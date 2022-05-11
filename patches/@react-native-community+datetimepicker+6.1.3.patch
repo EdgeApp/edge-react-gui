@@ -1,0 +1,40 @@
+diff --git a/node_modules/@react-native-community/datetimepicker/src/DateTimePickerAndroid.js b/node_modules/@react-native-community/datetimepicker/src/DateTimePickerAndroid.js
+index a12da17..445118f 100644
+--- a/node_modules/@react-native-community/datetimepicker/src/DateTimePickerAndroid.js
++++ b/node_modules/@react-native-community/datetimepicker/src/DateTimePickerAndroid.js
+@@ -94,7 +94,7 @@ function open(props: AndroidNativeProps) {
+   presentPicker();
+ }
+
+-function dismiss(mode: AndroidNativeProps['mode']) {
++function dismiss(mode: AndroidNativeProps.mode) {
+   // $FlowFixMe - `AbstractComponent` [1] is not an instance type.
+   pickers[mode].dismiss();
+ }
+diff --git a/node_modules/@react-native-community/datetimepicker/src/androidUtils.js b/node_modules/@react-native-community/datetimepicker/src/androidUtils.js
+index 8f63abc..815dd3a 100644
+--- a/node_modules/@react-native-community/datetimepicker/src/androidUtils.js
++++ b/node_modules/@react-native-community/datetimepicker/src/androidUtils.js
+@@ -13,14 +13,14 @@ type Timestamp = number;
+
+ type Params = {
+   value: Timestamp,
+-  mode: AndroidNativeProps['mode'],
+-  display: AndroidNativeProps['display'],
+-  is24Hour: AndroidNativeProps['is24Hour'],
+-  minimumDate: AndroidNativeProps['minimumDate'],
+-  maximumDate: AndroidNativeProps['maximumDate'],
+-  neutralButtonLabel: AndroidNativeProps['neutralButtonLabel'],
+-  minuteInterval: AndroidNativeProps['minuteInterval'],
+-  timeZoneOffsetInMinutes: AndroidNativeProps['timeZoneOffsetInMinutes'],
++  mode: AndroidNativeProps.mode,
++  display: AndroidNativeProps.display,
++  is24Hour: AndroidNativeProps.is24Hour,
++  minimumDate: AndroidNativeProps.minimumDate,
++  maximumDate: AndroidNativeProps.maximumDate,
++  neutralButtonLabel: AndroidNativeProps.neutralButtonLabel,
++  minuteInterval: AndroidNativeProps.minuteInterval,
++  timeZoneOffsetInMinutes: AndroidNativeProps.timeZoneOffsetInMinutes,
+ };
+ export function getOpenPicker({
+   mode,

@@ -10,6 +10,7 @@
 .*/node_modules/react-native-permissions/.*
 .*/node_modules/react-native/.*
 .*/node_modules/@react-native-community/async-storage/jest/.*
+.*/node_modules/react-native-fast-image/dist/index.cjs.js.flow
 ; We fork some components by platform
 .*/*[.]android.js
 

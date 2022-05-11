@@ -1,6 +1,6 @@
 // @flow
 
-import Clipboard from '@react-native-community/clipboard'
+import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'

@@ -1,6 +1,6 @@
 // @flow
 
-import Clipboard from '@react-native-community/clipboard'
+import Clipboard from '@react-native-clipboard/clipboard'
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'

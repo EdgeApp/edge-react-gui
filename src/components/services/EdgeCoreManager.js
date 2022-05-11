@@ -7,12 +7,14 @@ import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.j
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import * as React from 'react'
-import { Alert, AppState } from 'react-native'
+import { Alert } from 'react-native'
 import { getBrand, getDeviceId } from 'react-native-device-info'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
-import { useEffect, useRef, useState } from '../../types/reactHooks.js'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
+import { useIsAppForeground } from '../../hooks/useIsAppForeground.js'
+import { useRef, useState } from '../../types/reactHooks.js'
 import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
 import { LoadingScene } from '../scenes/LoadingScene.js'
@@ -66,20 +68,14 @@ export function EdgeCoreManager(props: Props) {
   const counter = useRef<number>(0)
   const splashHidden = useRef<boolean>(false)
 
-  // Subscribe to the application state:
-  const [paused, setPaused] = useState(false)
-  useEffect(() => {
-    const listener = AppState.addEventListener('change', appState => setPaused(appState !== 'active'))
-    return () => listener.remove()
-  }, [])
+  // Get the application state:
+  const isAppForeground = useIsAppForeground()
 
   // Keep the core in sync with the application state:
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (context == null) return
-
-    // TODO: Display a popdown error alert once we get that redux-free:
-    context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
-  }, [context, paused])
+    await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
+  }, [context, isAppForeground])
 
   function hideSplash() {
     if (!splashHidden.current) {
