@@ -2,11 +2,12 @@
 
 import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
-import { RefreshControl, SectionList } from 'react-native'
+import { SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import s from '../../locales/strings'
 import { useCallback, useMemo } from '../../types/reactHooks.js'
+import { FlatList } from '../../types/reactNative.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
@@ -50,7 +51,7 @@ type Section = {
   data: Array<WalletListItem | WalletCreateItem>
 }
 
-export function WalletList(props: Props) {
+export function WalletListComponent(props: Props) {
   const dispatch = useDispatch()
   const {
     // Filtering:
@@ -249,7 +250,7 @@ export function WalletList(props: Props) {
   }, [])
 
   return sectionList == null ? (
-    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
+    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} ref={generateTestHook('WalletList.WalletId')} />
   ) : (
     <SectionList keyboardShouldPersistTaps="handled" renderItem={renderRow} renderSectionHeader={renderSectionHeader} sections={sectionList} style={margin} />
   )
@@ -276,3 +277,4 @@ function hasAsset(assets: EdgeTokenId[], target: EdgeTokenId): boolean {
   }
   return false
 }
+export const WalletList = wrap(WalletListComponent)
