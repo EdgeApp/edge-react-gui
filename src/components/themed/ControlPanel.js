@@ -21,7 +21,7 @@ import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SER
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useWatchContext } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
@@ -65,9 +65,6 @@ export function ControlPanel(props: Props) {
     guiWallet != null ? getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
   )
   const isoFiatCurrencyCode = selectedWallet != null ? getWalletFiat(selectedWallet).isoFiatCurrencyCode : null
-  const { multiplier: selectedCurrencyCodeExchangeMultiplier } = useSelector(state =>
-    guiWallet != null ? getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
-  )
 
   /// ---- Local State ----
 
@@ -256,11 +253,11 @@ export function ControlPanel(props: Props) {
                   {`1 ${currencyDenomName} = `}
                   <FiatText
                     nativeCryptoAmount={currencyDenomMult}
-                    cryptoCurrencyCode={selectedCurrencyCode}
-                    isoFiatCurrencyCode={isoFiatCurrencyCode}
+                    currencyCode={selectedCurrencyCode}
+                    wallet={selectedWallet}
                     autoPrecision
                     appendFiatCurrencyCode
-                    cryptoExchangeMultiplier={selectedCurrencyCodeExchangeMultiplier}
+                    fiatSymbolSpace
                   />
                 </TitleText>
               </View>

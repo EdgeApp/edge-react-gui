@@ -31,6 +31,7 @@ export type CryptoExchangeState = {
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
+  walletId: '',
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
   displayDenomination: {

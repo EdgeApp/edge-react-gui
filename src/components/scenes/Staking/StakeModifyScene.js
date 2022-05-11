@@ -13,7 +13,6 @@ import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { zeroString } from '../../../util/utils.js'
 import { FillLoader } from '../../common/FillLoader.js'
@@ -42,17 +41,15 @@ export const StakeModifyScene = (props: Props) => {
   const { stakePolicyId } = stakePolicy
 
   // Hooks
-  const { currencyWallet, guiExchangeRates, isoFiatCurrencyCode, nativeAssetDenomination } = useSelector(state => {
+  const { currencyWallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[walletId]
     const guiExchangeRates = state.exchangeRates
 
     const nativeAssetDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyWallet.currencyInfo.currencyCode)
-    const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
     return {
       currencyWallet,
       guiExchangeRates,
-      isoFiatCurrencyCode,
       nativeAssetDenomination
     }
   })
@@ -244,6 +241,7 @@ export const StakeModifyScene = (props: Props) => {
   }
 
   const renderChangeQuoteAmountTiles = modification => {
+    const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
     return (
       <View style={styles.amountTilesContainer}>
         <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(currencyWallet.currencyInfo.pluginId).symbolImage}>
@@ -263,9 +261,9 @@ export const StakeModifyScene = (props: Props) => {
           // Render network fee tile
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
-            nativeCryptoAmount={changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')?.nativeAmount ?? '0'}
-            cryptoCurrencyCode={currencyWallet.currencyInfo.currencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
+            nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
+            walletId={walletId}
+            tokenId={networkFeeQuote?.tokenId}
             denomination={nativeAssetDenomination}
           />
         }

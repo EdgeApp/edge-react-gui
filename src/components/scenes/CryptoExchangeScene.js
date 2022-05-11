@@ -260,6 +260,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     let fromSecondaryInfo: GuiCurrencyInfo
     if (fromFiatCurrencyCode !== '') {
       fromSecondaryInfo = {
+        walletId: defaultFromWalletInfo.fromWalletId,
         displayCurrencyCode: fromFiatCurrencyCode,
         exchangeCurrencyCode: fromIsoFiatCurrencyCode,
         displayDenomination: getDenomFromIsoCode(fromFiatCurrencyCode),
@@ -272,6 +273,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     let toSecondaryInfo: GuiCurrencyInfo
     if (toFiatCurrencyCode !== '') {
       toSecondaryInfo = {
+        walletId: defaultToWalletInfo.toWalletId,
         displayCurrencyCode: toFiatCurrencyCode,
         exchangeCurrencyCode: toIsoFiatCurrencyCode,
         displayDenomination: getDenomFromIsoCode(toFiatCurrencyCode),

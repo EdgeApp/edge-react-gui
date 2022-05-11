@@ -347,12 +347,14 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: state.ui.wallets.selectedWalletId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
     const secondaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: state.ui.wallets.selectedWalletId,
       displayCurrencyCode: selectedWallet.fiatCurrencyCode.replace('iso:', ''),
       displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: secondaryExchangeCurrencyCode,

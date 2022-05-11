@@ -42,7 +42,7 @@ type OwnProps = {
 type StateProps = {
   currencyCode?: string,
   currencyInfo?: EdgeCurrencyInfo,
-  edgeWallet?: EdgeCurrencyWallet,
+  wallet?: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio?: string,
   fioAddressesExist?: boolean,
   isConnected: boolean,
@@ -92,9 +92,9 @@ export class RequestComponent extends React.Component<Props, State> {
       isFioMode: false
     }
     if (this.shouldShowMinimumModal(props)) {
-      const { edgeWallet } = props
-      if (edgeWallet == null) return
-      this.state.minimumPopupModalState[edgeWallet.currencyInfo.pluginId] = 'VISIBLE'
+      const { wallet } = props
+      if (wallet == null) return
+      this.state.minimumPopupModalState[wallet.currencyInfo.pluginId] = 'VISIBLE'
       console.log('stop, in constructor')
       this.enqueueMinimumAmountModal()
     }
@@ -103,8 +103,8 @@ export class RequestComponent extends React.Component<Props, State> {
   componentDidMount() {
     this.generateEncodedUri()
     this.props.refreshAllFioAddresses()
-    if (this.props.edgeWallet != null) {
-      this.unsubscribeAddressChanged = this.props.edgeWallet.on('addressChanged', () => this.generateEncodedUri())
+    if (this.props.wallet != null) {
+      this.unsubscribeAddressChanged = this.props.wallet.on('addressChanged', () => this.generateEncodedUri())
     }
   }
 
@@ -127,11 +127,11 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   async generateEncodedUri() {
-    const { edgeWallet, useLegacyAddress, currencyCode } = this.props
+    const { wallet, useLegacyAddress, currencyCode } = this.props
     let legacyAddress = ''
     let publicAddress = ''
-    if (edgeWallet != null) {
-      const receiveAddress = await edgeWallet.getReceiveAddress()
+    if (wallet != null) {
+      const receiveAddress = await wallet.getReceiveAddress()
       legacyAddress = receiveAddress.legacyAddress
       publicAddress = receiveAddress.publicAddress
     }
@@ -146,7 +146,7 @@ export class RequestComponent extends React.Component<Props, State> {
     }
     let encodedURI
     try {
-      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : undefined
+      encodedURI = wallet ? await wallet.encodeUri(abcEncodeUri) : undefined
       this.setState({
         encodedURI
       })
@@ -162,14 +162,14 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    const { currencyCode, edgeWallet, useLegacyAddress } = this.props
-    if (edgeWallet == null || currencyCode == null) return
-    const { pluginId } = edgeWallet.currencyInfo
-    const receiveAddress = await edgeWallet.getReceiveAddress()
+    const { currencyCode, wallet, useLegacyAddress } = this.props
+    if (wallet == null || currencyCode == null) return
+    const { pluginId } = wallet.currencyInfo
+    const receiveAddress = await wallet.getReceiveAddress()
 
     const didAddressChange = this.state.publicAddress !== receiveAddress.publicAddress
     const changeLegacyPublic = useLegacyAddress !== prevProps.useLegacyAddress
-    const didWalletChange = prevProps.edgeWallet && edgeWallet.id !== prevProps.edgeWallet.id
+    const didWalletChange = prevProps.wallet && wallet.id !== prevProps.wallet.id
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
       let { publicAddress, legacyAddress } = receiveAddress
@@ -177,7 +177,7 @@ export class RequestComponent extends React.Component<Props, State> {
       const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
       let encodedURI
       try {
-        encodedURI = await edgeWallet.encodeUri(abcEncodeUri)
+        encodedURI = await wallet.encodeUri(abcEncodeUri)
       } catch (err) {
         console.log(err)
         publicAddress = s.strings.loading
@@ -207,9 +207,9 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   enqueueMinimumAmountModal = async () => {
-    const { edgeWallet } = this.props
-    if (edgeWallet == null) return
-    const { pluginId } = edgeWallet.currencyInfo
+    const { wallet } = this.props
+    if (wallet == null) return
+    const { pluginId } = wallet.currencyInfo
     const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
     if (minimumPopupModals == null) return
 
@@ -281,19 +281,19 @@ export class RequestComponent extends React.Component<Props, State> {
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
   render() {
-    const { exchangeSecondaryToPrimaryRatio, edgeWallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
-    if (primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || edgeWallet == null) {
+    if (primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
-    const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(edgeWallet))
-    const { keysOnlyMode = false } = getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId)
+    const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(wallet))
+    const { keysOnlyMode = false } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
 
     // Balance
-    const nativeBalance = getAvailableBalance(edgeWallet, primaryCurrencyInfo.displayCurrencyCode)
+    const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.displayCurrencyCode)
     const displayBalanceAmount = convertNativeToDenomination(primaryCurrencyInfo.displayDenomination.multiplier)(nativeBalance)
     const displayBalanceString = sprintf(s.strings.request_balance, `${truncateDecimals(displayBalanceAmount)} ${primaryCurrencyInfo.displayDenomination.name}`)
 
@@ -312,12 +312,10 @@ export class RequestComponent extends React.Component<Props, State> {
               <EdgeText>{displayBalanceString}</EdgeText>
               <EdgeText style={styles.exchangeRate}>
                 <FiatText
+                  format="primary"
                   nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
-                  cryptoCurrencyCode={primaryCurrencyInfo.displayCurrencyCode}
-                  isoFiatCurrencyCode={edgeWallet.fiatCurrencyCode}
-                  autoPrecision
-                  appendFiatCurrencyCode
-                  cryptoExchangeMultiplier={primaryCurrencyInfo.exchangeDenomination.multiplier}
+                  tokenId={primaryCurrencyInfo.displayCurrencyCode}
+                  wallet={wallet}
                 />
               </EdgeText>
             </View>
@@ -388,7 +386,7 @@ export class RequestComponent extends React.Component<Props, State> {
     }
     let encodedURI
     try {
-      encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : undefined
+      encodedURI = this.props.wallet ? await this.props.wallet.encodeUri(edgeEncodeUri) : undefined
     } catch (e) {
       console.log(e)
     }
@@ -403,15 +401,15 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shouldShowMinimumModal = (props: Props): boolean => {
-    const { currencyCode, edgeWallet } = props
-    if (currencyCode == null || edgeWallet == null) return false
-    const { pluginId } = edgeWallet.currencyInfo
+    const { currencyCode, wallet } = props
+    if (currencyCode == null || wallet == null) return false
+    const { pluginId } = wallet.currencyInfo
 
     if (this.state.minimumPopupModalState[pluginId]) {
       if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
         const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
-        if (lt(edgeWallet.balances[currencyCode] ?? '0', minBalance)) {
+        if (lt(wallet.balances[currencyCode] ?? '0', minBalance)) {
           return true
         }
       }
@@ -420,16 +418,16 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shareMessage = async () => {
-    const { currencyCode, edgeWallet, currencyInfo, useLegacyAddress } = this.props
+    const { currencyCode, wallet, currencyInfo, useLegacyAddress } = this.props
     const { legacyAddress, publicAddress } = this.state
-    if (!currencyCode || !edgeWallet) {
+    if (!currencyCode || !wallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
     }
     let sharedAddress = this.state.encodedURI ?? ''
     let edgePayUri = 'https://deep.edge.app/'
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
-    if (getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId).isUriEncodedStructure) {
+    if (getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).isUriEncodedStructure) {
       sharedAddress = publicAddress
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
@@ -438,7 +436,7 @@ export class RequestComponent extends React.Component<Props, State> {
           useLegacyAddress && legacyAddress
             ? { publicAddress, legacyAddress, currencyCode, nativeAmount: '0' }
             : { publicAddress, currencyCode, nativeAmount: '0' }
-        const newUri = await edgeWallet.encodeUri(edgeEncodeUri)
+        const newUri = await wallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
       edgePayUri = edgePayUri + `pay/${sharedAddress.replace(':', '/')}`
@@ -581,6 +579,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
 
     if (currencyCode == null) {
       return {
+        account,
         publicAddress: '',
         legacyAddress: '',
         fioAddressesExist: false,
@@ -588,34 +587,36 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       }
     }
 
-    const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(edgeWallet.fiatCurrencyCode.replace('iso:', ''))
+    const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: walletId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
     const secondaryCurrencyInfo: GuiCurrencyInfo = {
-      displayCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
+      walletId: walletId,
+      displayCurrencyCode: wallet.fiatCurrencyCode.replace('iso:', ''),
       displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: secondaryExchangeCurrencyCode,
       exchangeDenomination: secondaryExchangeDenomination
     }
-    const isoFiatCurrencyCode: string = edgeWallet.fiatCurrencyCode
+    const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
     return {
       currencyCode,
       currencyInfo,
-      edgeWallet,
+      wallet,
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
