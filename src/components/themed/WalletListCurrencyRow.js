@@ -1,9 +1,9 @@
 // @flow
-
 import { abs, div, gt, log10, mul, sub, toFixed } from 'biggystring'
+import { useCavy } from 'cavy'
 import { type EdgeCurrencyWallet, type EdgeDenomination, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
@@ -11,6 +11,7 @@ import { useWatchWallet } from '../../hooks/useWatch.js'
 import { formatNumber, truncateDecimals } from '../../locales/intl.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { memo, useMemo } from '../../types/reactHooks.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import {
@@ -125,6 +126,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   const { currencyCode } = token == null ? wallet.currencyInfo : token
   const exchangeRates = useSelector(state => state.exchangeRates)
@@ -179,7 +181,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const handlePress = useMemo(() => (onPress != null ? () => onPress(wallet.id, currencyCode) : () => {}), [currencyCode, onPress, wallet])
 
   return (
-    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
+    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress} ref={generateTestHook(wallet.id)}>
       <CurrencyIcon marginRem={1} sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
       <View style={styles.nameColumn}>
         <View style={styles.currencyRow}>

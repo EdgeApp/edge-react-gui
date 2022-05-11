@@ -1,9 +1,9 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
-import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { View } from '../../types/reactNative.js'
 import { showError } from '../services/AirshipInstance.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -41,13 +41,13 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   buttons: Buttons,
   closeArrow?: boolean,
   disableCancel?: boolean,
-  fullScreen?: boolean
+  fullScreen?: boolean,
+  testId?: string
 |}) {
-  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
+  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false, testId = 'ButtonsModal' } = props
   const theme = useTheme()
-
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
-
+  const generateTestHook = useCavy()
   const styles = {
     container: {
       flex: fullScreen ? 1 : 0
@@ -88,10 +88,9 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
               error => showError(error)
             )
           }
-
-          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
+          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} testId={`${testId}.${key}`} />
         })}
-        {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+        {closeArrow ? <ModalCloseArrow onPress={handleCancel} ref={generateTestHook(testId)} /> : null}
       </View>
     </ThemedModal>
   )
