@@ -169,6 +169,7 @@
     "@babel/preset-env": "^7.6.0",
     "@babel/runtime": "^7.16.7",
     "@sucrase/webpack-loader": "^2.0.0",
+    "@welldone-software/why-did-you-render": "^7.0.1",
     "appcenter-cli": "^2.7.3",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.4.6",
