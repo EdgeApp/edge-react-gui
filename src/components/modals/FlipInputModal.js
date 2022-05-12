@@ -242,7 +242,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props & TestPro
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
-      <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
+      <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal} ref={this.props.generateTestHook('FlipInputModal.Close')}>
         {/* Extra view needed here to fullscreen the modal on small devices */}
         <View style={styles.hackContainer}>
           <View style={styles.flipInput}>{this.renderFlipInput()}</View>
