@@ -314,7 +314,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 <FiatText
                   appendFiatCurrencyCode
                   nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
-                  tokenId={primaryCurrencyInfo.displayCurrencyCode}
+                  currencyCode={primaryCurrencyInfo.displayCurrencyCode}
                   wallet={wallet}
                 />
               </EdgeText>
