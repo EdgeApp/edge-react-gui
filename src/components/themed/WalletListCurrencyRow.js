@@ -3,8 +3,8 @@ import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
+import { useWalletBalance } from '../../hooks/useWalletBalance.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
-import { useWatchWallet } from '../../hooks/useWatch'
 import { memo, useCallback } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -45,8 +45,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
 
   // Balance stuff:
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-  const balances = useWatchWallet(wallet, 'balances')
-  const balance = balances[currencyCode] ?? '0'
+  const balance = useWalletBalance(wallet, tokenId)
 
   const handlePress = useCallback(() => {
     if (onPress != null) onPress(wallet.id, currencyCode)
