@@ -7,6 +7,7 @@ import { Text } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
+import { useMemo } from '../../types/reactHooks'
 import { type Theme } from '../../types/Theme'
 import { truncateDecimals, zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
@@ -59,5 +60,8 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
   const { percentString, deltaColorStyle } = getPercentDeltaString(currencyCode, assetToFiatRate, assetToYestFiatRate, usdToWalletFiatRate, theme)
 
   const tickerText = `${fiatText} ${percentString}`
-  return <Text style={{ color: deltaColorStyle }}>{tickerText}</Text>
+
+  const textStyle = useMemo(() => ({ color: deltaColorStyle, fontFamily: theme.fontFaceDefault }), [deltaColorStyle, theme.fontFaceDefault])
+
+  return <Text style={textStyle}>{tickerText}</Text>
 }
