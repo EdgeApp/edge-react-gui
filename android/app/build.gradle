@@ -201,7 +201,7 @@ dependencies {
     }
 
     // Edge additions:
-    implementation 'androidx.work:work-runtime:2.0.1'
+    implementation 'androidx.work:work-runtime:2.7.1'
     api 'com.google.guava:guava:31.0.1-android'
 
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
