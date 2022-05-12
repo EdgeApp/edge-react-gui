@@ -9,7 +9,7 @@ import { fixFiatCurrencyCode, getDenomFromIsoCode, getYesterdayDateRoundDownHour
  * Returns data from tokens relevant for display
  * */
 
-export const useTokenDisplayData = (props: { tokenId?: string, wallet: EdgeCurrencyWallet }) => {
+export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurrencyWallet |}) => {
   const { tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { allTokens } = currencyConfig

@@ -4,11 +4,9 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 import { useWalletName } from '../../hooks/useWalletName.js'
-import { useWatchAccount, useWatchWallet } from '../../hooks/useWatch'
-import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { memo, useMemo } from '../../types/reactHooks.js'
-import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import { fixFiatCurrencyCode } from '../../util/utils'
+import { useWatchWallet } from '../../hooks/useWatch'
+import { memo, useCallback } from '../../types/reactHooks.js'
+import { useSelector } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText.js'
@@ -38,27 +36,21 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
     onLongPress,
     onPress
   } = props
-  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // Crypto & Fiat Texts
-  const name = useWalletName(wallet)
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-
-  const balances = useWatchWallet(wallet, 'balances')
-  const fiatCurrencyCode = useWatchWallet(wallet, 'fiatCurrencyCode')
-  const account = useSelector(state => state.core.account)
-  const currencyConfigMap = useWatchAccount(account, 'currencyConfig')
-
-  const { currencyInfo } = wallet
+  // Currency code and wallet name for display:
   const { currencyCode } = token == null ? wallet.currencyInfo : token
-  const balance = balances[currencyCode] ?? '0'
-  const exchangeDenomination = dispatch(getExchangeDenominationFromState(currencyInfo.pluginId, currencyCode))
-  const isoFiatCurrencyCode = fixFiatCurrencyCode(fiatCurrencyCode)
-  const cryptoExchangeMultiplier = exchangeDenomination.multiplier
+  const name = useWalletName(wallet)
 
-  const handlePress = useMemo(() => (onPress != null ? () => onPress(wallet.id, currencyCode) : () => {}), [currencyCode, onPress, wallet])
+  // Balance stuff:
+  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const balances = useWatchWallet(wallet, 'balances')
+  const balance = balances[currencyCode] ?? '0'
+
+  const handlePress = useCallback(() => {
+    if (onPress != null) onPress(wallet.id, currencyCode)
+  }, [currencyCode, onPress, wallet])
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
@@ -68,7 +60,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
           <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
           {showRate && wallet != null ? (
             <EdgeText style={styles.exchangeRateText}>
-              <TickerText currencyConfigMap={currencyConfigMap} wallet={wallet} tokenId={tokenId} />
+              <TickerText wallet={wallet} tokenId={tokenId} />
             </EdgeText>
           ) : null}
         </View>
@@ -77,16 +69,10 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
       {showBalance ? (
         <View style={styles.balanceColumn}>
           <EdgeText>
-            <CryptoText currencyConfigMap={currencyConfigMap} wallet={wallet} tokenId={tokenId} nativeAmount={balance} />
+            <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} />
           </EdgeText>
           <EdgeText style={styles.fiatBalanceText}>
-            <FiatText
-              wallet={wallet}
-              nativeCryptoAmount={balance}
-              currencyCode={currencyCode}
-              isoFiatCurrencyCode={isoFiatCurrencyCode}
-              cryptoExchangeMultiplier={cryptoExchangeMultiplier}
-            />
+            <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallet} />
           </EdgeText>
         </View>
       ) : null}
@@ -138,17 +124,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   nameText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
-  },
-
-  // Difference Percentage Styles
-  neutral: {
-    color: theme.secondaryText
-  },
-  positive: {
-    color: theme.positiveText
-  },
-  negative: {
-    color: theme.negativeText
   }
 }))
 

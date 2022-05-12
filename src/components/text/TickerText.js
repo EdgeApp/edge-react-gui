@@ -7,16 +7,14 @@ import { Text } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { useWatchAccount } from '../../hooks/useWatch'
-import { useSelector } from '../../types/reactRedux'
 import { type Theme } from '../../types/Theme'
 import { truncateDecimals, zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
 
-type Props = {
+type Props = {|
   wallet: EdgeCurrencyWallet,
   tokenId?: string
-}
+|}
 
 const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, assetToYestFiatRate: string, usdToWalletFiatRate: string, theme: Theme) => {
   const yesterdayExchangeRate = mul(assetToYestFiatRate, usdToWalletFiatRate)
@@ -40,10 +38,7 @@ const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, as
  * daily % change from a wallet asset
  **/
 export const TickerText = ({ wallet, tokenId }: Props) => {
-  const account = useSelector(state => state.core.account)
-  const currencyConfigMap = useWatchAccount(account, 'currencyConfig')
   const { currencyCode, denomination, isoFiatCurrencyCode, assetToFiatRate, usdToWalletFiatRate, assetToYestFiatRate } = useTokenDisplayData({
-    currencyConfigMap,
     tokenId,
     wallet
   })
