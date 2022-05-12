@@ -91,7 +91,7 @@ const asEdgeTokenIdExtended = asObject({
   currencyCode: asOptional(asString)
 })
 
-const asCurrencyCodesArray = asArray(asEither(asString, asEdgeTokenIdExtended))
+const asCurrencyCodesArray = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
 type ExtendedCurrencyCode = string | $Call<typeof asEdgeTokenIdExtended>
 
 export class EdgeProvider extends Bridgeable {
@@ -137,7 +137,7 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes: ExtendedCurrencyCode[]): Promise<ExtendedCurrencyCode> {
+  async chooseCurrencyWallet(allowedCurrencyCodes: ExtendedCurrencyCode[] | void): Promise<ExtendedCurrencyCode> {
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
@@ -154,7 +154,7 @@ export class EdgeProvider extends Bridgeable {
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
       // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
-      if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
+      if (allowedCurrencyCodes != null && allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
         const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
         return {
