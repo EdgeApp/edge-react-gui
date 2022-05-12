@@ -81,9 +81,12 @@ export function WalletListModal(props: Props) {
     },
     [bridge]
   )
-  const handleClearText = useCallback(() => setSearchText(''), [])
-  const handleTextFieldBlur = useCallback(() => setSearching(false), [])
-  const handleTextFieldFocus = useCallback(() => setSearching(true), [])
+  const handleSearchClear = useCallback(() => {
+    setSearchText('')
+    setSearching(false)
+  }, [])
+  const handleSearchUnfocus = useCallback(() => setSearching(searchText.length > 0), [searchText.length])
+  const handleSearchFocus = useCallback(() => setSearching(true), [])
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
@@ -92,9 +95,9 @@ export function WalletListModal(props: Props) {
         returnKeyType="search"
         label={s.strings.search_wallets}
         onChangeText={setSearchText}
-        onFocus={handleTextFieldFocus}
-        onBlur={handleTextFieldBlur}
-        onClear={handleClearText}
+        onFocus={handleSearchFocus}
+        onBlur={handleSearchUnfocus}
+        onClear={handleSearchClear}
         value={searchText}
         marginRem={[0.5, 0.75, 1.25]}
         searchIcon
