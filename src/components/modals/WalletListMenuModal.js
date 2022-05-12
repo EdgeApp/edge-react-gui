@@ -1,8 +1,8 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import { type EdgeAccount } from 'edge-core-js'
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -11,6 +11,7 @@ import { type WalletListMenuKey, walletListMenuAction } from '../../actions/Wall
 import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { getCurrencyInfos, getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -105,6 +106,7 @@ export function WalletListMenuModal(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   // Look up the image and name:
   const walletName = edgeWallet?.name ?? ''
@@ -140,7 +142,12 @@ export function WalletListMenuModal(props: Props) {
         {currencyCode ? <ModalTitle>{currencyCode}</ModalTitle> : null}
       </View>
       {options.map((option: Option) => (
-        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+        <TouchableOpacity
+          key={option.value}
+          onPress={() => optionAction(option.value)}
+          style={styles.row}
+          ref={generateTestHook(`WalletListMenuModal.${option.value}`)}
+        >
           <AntDesignIcon
             name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
             size={theme.rem(1)}

@@ -17,7 +17,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
   >
     Remaining bundled transactions: 100
   </WithTheme(EdgeTextComponent)>
-  <WithTheme(SettingsTappableRowComponent)
+  <ForwardRef
     label="Crypto Handle Settings"
     onPress={[Function]}
   >
@@ -33,7 +33,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         }
       }
     />
-  </WithTheme(SettingsTappableRowComponent)>
+  </ForwardRef>
   <WithTheme(SettingsHeaderRowComponent)
     icon={
       <Icon
@@ -45,7 +45,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     }
     label="Choose wallets to connect to your FIO Crypto Handle"
   />
-  <Memo(Connect(WithTheme(ConnectWallets)))
+  <Memo(Connect(Hook(WithTheme(ConnectWallets))))
     disabled={false}
     fioAddressName="Fio@edge"
     fioWallet={null}

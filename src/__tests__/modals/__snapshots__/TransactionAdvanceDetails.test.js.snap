@@ -49,7 +49,7 @@ exports[`TransactionAdvanceDetailsComponent should render with loading props 1`]
       />
     </ScrollView>
   </View>
-  <ModalCloseArrow
+  <ForwardRef
     onPress={[Function]}
   />
 </WithTheme(ThemedModalComponent)>

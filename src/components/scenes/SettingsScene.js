@@ -20,7 +20,7 @@ import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { config } from '../../theme/appConfig.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -58,7 +58,7 @@ type DispatchProps = {
   showUnlockSettingsModal: () => void,
   toggleDeveloperMode: (developerModeOn: boolean) => void
 }
-type Props = StateProps & DispatchProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps & TestProps
 
 type State = {
   touchIdText: string,
@@ -66,7 +66,7 @@ type State = {
   defaultLogLevel: EdgeLogType | 'silent'
 }
 
-export class SettingsSceneComponent extends React.Component<Props, State> {
+export class SettingsSceneComponent extends React.Component<Props & TestProps, State> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
@@ -272,7 +272,11 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsTappableRow
+            label={s.strings.restore_wallets_modal_title}
+            onPress={this.props.showRestoreWalletsModal}
+            ref={this.props.generateTestHook('SettingsScene.OpenRestoreWalletsModal')}
+          />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
@@ -287,7 +291,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 }
 
-export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+export const SettingsScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,
