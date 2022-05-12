@@ -6204,10 +6204,10 @@ edge-currency-bitcoin@^4.9.21:
     uri-js "^4.4.1"
     url-parse "^1.5.1"
 
-edge-currency-monero@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.4.0.tgz#ddc5df860f8b06fa1a416512bcf8040cc7e7a070"
-  integrity sha512-EsPukSjLQJVOyl4WLm8qvjDgzL+wIn9ny1wD3xpqF80TPJihgmjbBc/7E8lDJy6dh0YsI9P/13Y58nTqo+zVqA==
+edge-currency-monero@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.4.1.tgz#d97f3c433d59695b21e57dc730916f2a1263f136"
+  integrity sha512-zjkM3v1hfpyOwqbn808hATAJPGllOaxgAniv9JuXOzZmrb5e7HRkH4beOmQ7AXHv0WcaAlzJE4WKhb7xuawwew==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
