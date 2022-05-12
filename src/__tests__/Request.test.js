@@ -14,7 +14,7 @@ describe('Request', () => {
     const props = {
       currencyCode: null,
       currentScene: 'request',
-      edgeWallet: null,
+      wallet: null,
       exchangeSecondaryToPrimaryRatio: null,
       guiWallet: null,
       loading: true,
@@ -36,7 +36,7 @@ describe('Request', () => {
 
     const props = {
       currencyCode: 'BTC',
-      edgeWallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
+      wallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
       exchangeSecondaryToPrimaryRatio: {},
       guiWallet: {},
       loading: false,

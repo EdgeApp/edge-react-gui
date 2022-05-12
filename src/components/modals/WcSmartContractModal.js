@@ -57,8 +57,6 @@ export const WcSmartContractModal = (props: Props) => {
   }
   const { currencyCode: feeCurrencyCode, pluginId, metaTokens } = wallet.currencyInfo
 
-  const { isoFiatCurrencyCode } = guiWallet
-
   const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
   const feeCurrencyBalance = guiWallet.primaryNativeBalance
 
@@ -68,7 +66,7 @@ export const WcSmartContractModal = (props: Props) => {
     amountCrypto = hexToDecimal(params.value)
   }
   if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
-    networkFeeCrypto = hexToDecimal(mul(params.gas, params.gasPrice, 16))
+    networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
   }
 
   const amountDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, amountCurrencyCode)
@@ -139,9 +137,9 @@ export const WcSmartContractModal = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.string_amount}
             nativeCryptoAmount={amountCrypto}
-            cryptoCurrencyCode={amountCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={amountDenom}
+            walletId={walletId}
+            currencyCode={amountCurrencyCode}
           />
         )}
         {walletName != null && (
@@ -156,18 +154,17 @@ export const WcSmartContractModal = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeCrypto}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={feeDenom}
+            walletId={walletId}
+            currencyCode={feeCurrencyCode}
           />
         )}
         {!zeroString(totalNativeCrypto) && (
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
             nativeCryptoAmount={totalNativeCrypto}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
-            cryptoExchangeMultiplier={feeDenom.multiplier}
+            wallet={wallet}
+            currencyCode={amountCurrencyCode}
           />
         )}
         {slider}

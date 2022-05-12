@@ -112,6 +112,9 @@ const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName }: Cre
   }
 }
 
+/**
+ * Renders a WalletListRow with "Create Wallet" children
+ * */
 const getStyles = cacheStyles((theme: Theme) => ({
   // Layout:
   row: {

@@ -13,7 +13,6 @@ import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
-import { getWalletFiat } from '../../../util/CurrencyWalletHelpers.js'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
@@ -38,7 +37,6 @@ export const StakeOverviewScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const currencyWallet = useSelector((state: RootState) => state.core.account.currencyWallets[walletId])
-  const isoFiatCurrencyCode = getWalletFiat(currencyWallet).isoFiatCurrencyCode
   const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
     denomMap[asset.tokenId] = dispatch(getDisplayDenominationFromState(currencyWallet.currencyInfo.pluginId, asset.tokenId))
     return denomMap
@@ -94,15 +92,7 @@ export const StakeOverviewScene = (props: Props) => {
     const title = `${sprintf(titleBase, tokenId)} ${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[tokenId]
 
-    return (
-      <CryptoFiatAmountTile
-        title={title}
-        nativeCryptoAmount={nativeAmount ?? '0'}
-        cryptoCurrencyCode={tokenId}
-        isoFiatCurrencyCode={isoFiatCurrencyCode}
-        denomination={denomination}
-      />
-    )
+    return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
   }
 
   if (stakeAllocations == null || rewardAllocations == null)

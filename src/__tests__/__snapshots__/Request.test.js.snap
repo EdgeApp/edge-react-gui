@@ -66,10 +66,18 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         <FiatText
-          appendFiatCurrencyCode={true}
-          autoPrecision={true}
-          cryptoExchangeMultiplier="100000000"
+          format="primary"
           nativeCryptoAmount="100000000"
+          wallet={
+            Object {
+              "balances": Object {
+                "BTC": "1234",
+              },
+              "currencyInfo": Object {
+                "pluginId": "bitcoin",
+              },
+            }
+          }
         />
       </WithTheme(EdgeTextComponent)>
     </View>
