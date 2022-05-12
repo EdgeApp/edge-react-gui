@@ -8,11 +8,15 @@ import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
 
 type Props = {
-  currencyCode?: string,
-  nativeCryptoAmount: string,
   title: string,
+
+  // The amount to show:
+  nativeCryptoAmount: string,
   tokenId?: string,
-  wallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet,
+
+  // Deprecated. Use `tokenId` instead:
+  currencyCode?: string
 }
 
 export const FiatAmountTile = (props: Props) => {
@@ -23,7 +27,7 @@ export const FiatAmountTile = (props: Props) => {
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
       <EdgeText style={styles.tileBodyText}>
-        <FiatText currencyCode={currencyCode} tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} noFiatSymbol />
+        <FiatText currencyCode={currencyCode} tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
       </EdgeText>
     </Tile>
   )

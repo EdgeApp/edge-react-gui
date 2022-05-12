@@ -312,7 +312,7 @@ export class RequestComponent extends React.Component<Props, State> {
               <EdgeText>{displayBalanceString}</EdgeText>
               <EdgeText style={styles.exchangeRate}>
                 <FiatText
-                  format="primary"
+                  appendFiatCurrencyCode
                   nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
                   tokenId={primaryCurrencyInfo.displayCurrencyCode}
                   wallet={wallet}
