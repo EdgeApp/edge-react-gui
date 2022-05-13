@@ -73,7 +73,7 @@ export function WalletListScene(props: Props) {
               bridge={bridge}
               title={s.strings.wallet_list_swipe_tutorial_title}
               buttons={{
-                gotIt: { label: s.strings.string_ok }
+                gotIt: { label: s.strings.string_got_it }
               }}
             >
               <Image
