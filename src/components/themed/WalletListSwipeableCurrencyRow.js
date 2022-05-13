@@ -11,7 +11,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo, useCallback, useEffect, useRef } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -20,6 +20,8 @@ import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
 import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 
 type Props = {|
+  navigation: NavigationProp<'walletList'>,
+
   // Open the row for demo purposes:
   openTutorial?: boolean,
 
@@ -33,7 +35,7 @@ type Props = {|
  * which can be swiped to reveal or activate various options.
  */
 function WalletListSwipeableCurrencyRowComponent(props: Props) {
-  const { openTutorial = false, token, tokenId, wallet } = props
+  const { navigation, openTutorial = false, token, tokenId, wallet } = props
 
   const rowRef = useRef<SwipableRowRef>(null)
   const dispatch = useDispatch()
@@ -60,14 +62,16 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleMenu = useCallback(() => {
     closeRow()
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={tokenId != null} walletId={wallet.id} />)
-  }, [currencyCode, tokenId, wallet])
+    Airship.show(bridge => (
+      <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={tokenId != null} navigation={navigation} walletId={wallet.id} />
+    ))
+  }, [currencyCode, navigation, tokenId, wallet])
 
   const handleRequest = useCallback(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
-    Actions.jump('request')
-  }, [dispatch, currencyCode, wallet])
+    navigation.navigate('request')
+  }, [dispatch, wallet, currencyCode, navigation])
 
   const handleSelect = useCallback(() => {
     closeRow()
@@ -83,20 +87,20 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           // Or because it is already activated:
           (await wallet.getReceiveAddress()).publicAddress !== '')
       ) {
-        Actions.push('transactionList')
+        navigation.navigate('transactionList')
       }
     })
-  }, [dispatch, currencyCode, tokenId, wallet])
+  }, [currencyCode, dispatch, navigation, tokenId, wallet])
 
   const handleSend = useCallback(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
-    Actions.jump('send', {
+    navigation.navigate('send', {
       selectedWalletId: wallet.id,
       selectedCurrencyCode: currencyCode,
       isCameraOpen: true
     })
-  }, [dispatch, currencyCode, wallet])
+  }, [currencyCode, dispatch, navigation, wallet])
 
   // rendering -----------------------------------------------------------
 

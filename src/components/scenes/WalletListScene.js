@@ -8,6 +8,7 @@ import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -23,9 +24,12 @@ import { WalletListSortable } from '../themed/WalletListSortable.js'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
-type Props = {}
+type Props = {
+  navigation: NavigationProp<'walletList'>
+}
 
 export function WalletListScene(props: Props) {
+  const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -78,8 +82,8 @@ export function WalletListScene(props: Props) {
   // rendering -------------------------------------------------------------
 
   const footer = useMemo(() => {
-    return <WalletListFooter />
-  }, [])
+    return <WalletListFooter navigation={navigation} />
+  }, [navigation])
 
   const header = useMemo(() => {
     return (
@@ -112,6 +116,7 @@ export function WalletListScene(props: Props) {
             key="fullList"
             header={header}
             footer={searching ? null : footer}
+            navigation={navigation}
             searching={searching}
             searchText={searchText}
             showSlidingTutorial={showSlidingTutorial}

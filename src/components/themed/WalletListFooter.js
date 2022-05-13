@@ -5,16 +5,19 @@ import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
-import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+
+type OwnProps = {
+  navigation: NavigationProp<'walletList'>
+}
 
 type StateProps = {
   wallets: { [walletId: string]: GuiWallet }
@@ -31,7 +34,7 @@ const TokenSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   })
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
-export class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps & DispatchProps> {
+export class WalletListFooterComponent extends React.PureComponent<OwnProps & StateProps & ThemeProps & DispatchProps> {
   renderAddButton = (title: string, onPress: () => void) => {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -48,25 +51,25 @@ export class WalletListFooterComponent extends React.PureComponent<StateProps & 
   }
 
   render() {
-    const { theme } = this.props
+    const { navigation, theme } = this.props
     const styles = getStyles(theme)
     return (
       <View style={styles.container}>
-        {this.renderAddButton(s.strings.wallet_list_add_wallet, () => Actions.push(CREATE_WALLET_SELECT_CRYPTO))}
+        {this.renderAddButton(s.strings.wallet_list_add_wallet, () => navigation.navigate('createWalletSelectCrypto'))}
         {this.renderAddButton(s.strings.wallet_list_add_token, this.addToken)}
       </View>
     )
   }
 
   addToken = () => {
-    const { onSelectWallet } = this.props
+    const { navigation, onSelectWallet } = this.props
     Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={TokenSupportedCurrencyCodes} showCreateWallet />
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId != null && currencyCode != null) {
           onSelectWallet(walletId, currencyCode)
-          Actions.push('manageTokens', { walletId })
+          navigation.navigate('manageTokens', { walletId })
         }
       })
       .catch(error => {
@@ -125,7 +128,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListFooter = connect<StateProps, DispatchProps, {}>(
+export const WalletListFooter = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     wallets: state.ui.wallets.byId
   }),

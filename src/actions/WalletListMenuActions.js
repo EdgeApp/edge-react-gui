@@ -10,10 +10,9 @@ import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { TextInputModal } from '../components/modals/TextInputModal.js'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance.js'
 import { ModalMessage } from '../components/themed/ModalParts.js'
-import { TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { validatePassword } from './AccountActions.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
@@ -31,13 +30,13 @@ export type WalletListMenuKey =
   | 'rawDelete'
   | string // for split keys like splitBCH, splitETH, etc.
 
-export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
+export function walletListMenuAction(navigation: NavigationProp<'walletList'>, walletId: string, option: WalletListMenuKey, currencyCode?: string) {
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
-        Actions.push('manageTokens', {
+        navigation.navigate('manageTokens', {
           walletId
         })
       }
@@ -143,7 +142,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        Actions.push(TRANSACTIONS_EXPORT, {
+        navigation.navigate('transactionsExport', {
           sourceWallet: wallet,
           currencyCode: currencyCode ?? ''
         })
