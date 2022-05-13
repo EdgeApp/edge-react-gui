@@ -12,7 +12,7 @@ import s from '../../locales/strings.js'
 import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { type FlatListItem } from '../../types/types.js'
+import { type EdgeTokenId, type FlatListItem } from '../../types/types.js'
 import { normalizeForSearch } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal.js'
@@ -89,17 +89,12 @@ export function ManageTokensScene(props: Props) {
 
   // Shows the wallet picker modal:
   const handleSelectWallet = useCallback(async () => {
-    const allowedCurrencyCodes = Object.keys(account.currencyConfig)
-      .filter(pluginId => Object.keys(account.currencyConfig[pluginId].builtinTokens ?? {}).length > 0)
-      .map(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode)
+    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
+      .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
+      .map(pluginId => ({ pluginId }))
 
     const { walletId, currencyCode } = await Airship.show(bridge => (
-      <WalletListModal
-        allowedCurrencyCodes={allowedCurrencyCodes}
-        // excludeWalletIds={getWalletIdsIfNotTokens()}
-        bridge={bridge}
-        headerTitle={s.strings.select_wallet}
-      />
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} />
     ))
 
     if (walletId != null && currencyCode != null) {
