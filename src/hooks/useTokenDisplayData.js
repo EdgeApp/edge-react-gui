@@ -15,7 +15,7 @@ export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurr
   const { allTokens } = currencyConfig
   const isoFiatCurrencyCode = fixFiatCurrencyCode(wallet.fiatCurrencyCode)
 
-  // Get currencyCode and deomination from token
+  // Get currencyCode and denomination from token
   const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
   const [denomination] = denominations
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
