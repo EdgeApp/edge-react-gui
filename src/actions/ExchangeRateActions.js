@@ -62,7 +62,7 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
     }
   }
 
-  const serverRates: GuiExchangeRates = {}
+  const serverRates: GuiExchangeRates = { 'iso:USD_iso:USD': '1' }
   while (exchangeRates.length > 0) {
     const query = exchangeRates.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
     let tries = 5
