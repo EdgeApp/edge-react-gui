@@ -3,9 +3,10 @@
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
@@ -41,35 +42,57 @@ export function WalletListScene(props: Props) {
   const currencyWallets = useWatchAccount(account, 'currencyWallets')
   const loading = Object.keys(currencyWallets).length <= 0
 
-  async function handleTutorialModal() {
-    const userTutorialList = await getWalletListSlideTutorial(disklet)
-    const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
-
-    if (tutorialCount < 2) {
-      Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
-      setShowTutorial(true)
-      userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
-      await setUserTutorialList(userTutorialList, disklet)
-    }
-  }
-
-  function handleSort(): void {
+  const handleSort = useCallback(() => {
     Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
       .then(sort => {
         if (sort === 'manual') setSorting(true)
       })
       .catch(showError)
-  }
+  }, [])
+
+  const handleRefresh = useCallback(() => {
+    setSearching(true)
+  }, [])
 
   // Show the tutorial or password reminder on mount:
-  useEffect(
-    () => {
-      if (needsPasswordCheck) Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
-      else handleTutorialModal().catch(showError)
+  useAsyncEffect(
+    async () => {
+      if (needsPasswordCheck) {
+        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+      } else {
+        const userTutorialList = await getWalletListSlideTutorial(disklet)
+        const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
+
+        if (tutorialCount < 2) {
+          Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
+          setShowTutorial(true)
+          userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
+          await setUserTutorialList(userTutorialList, disklet)
+        }
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+
+  // rendering -------------------------------------------------------------
+
+  const footer = useMemo(() => {
+    return <WalletListFooter />
+  }, [])
+
+  const header = useMemo(() => {
+    return (
+      <WalletListHeader
+        sorting={sorting}
+        searching={searching}
+        searchText={searchText}
+        openSortModal={handleSort}
+        onChangeSearchText={setSearchText}
+        onChangeSearchingState={setSearching}
+      />
+    )
+  }, [handleSort, searchText, searching, sorting])
 
   return (
     <SceneWrapper>
@@ -87,21 +110,12 @@ export function WalletListScene(props: Props) {
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
           <WalletListSwipeable
             key="fullList"
-            header={
-              <WalletListHeader
-                sorting={sorting}
-                searching={searching}
-                searchText={searchText}
-                openSortModal={handleSort}
-                onChangeSearchText={setSearchText}
-                onChangeSearchingState={setSearching}
-              />
-            }
-            footer={searching ? null : <WalletListFooter />}
+            header={header}
+            footer={searching ? null : footer}
             searching={searching}
             searchText={searchText}
             showSlidingTutorial={showSlidingTutorial}
-            onRefresh={() => setSearching(true)}
+            onRefresh={handleRefresh}
           />
           <WalletListSortable key="sortList" />
         </CrossFade>
