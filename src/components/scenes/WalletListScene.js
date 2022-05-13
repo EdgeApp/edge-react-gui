@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
@@ -12,8 +12,8 @@ import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal.js'
-import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
 import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -68,7 +68,21 @@ export function WalletListScene(props: Props) {
         const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
         if (tutorialCount < 2) {
-          Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
+          Airship.show(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={s.strings.wallet_list_swipe_tutorial_title}
+              buttons={{
+                gotIt: { label: s.strings.string_ok }
+              }}
+            >
+              <Image
+                source={theme.walletListSlideTutorialImage}
+                resizeMode="contain"
+                style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}
+              />
+            </ButtonsModal>
+          ))
           setShowTutorial(true)
           userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
           await setUserTutorialList(userTutorialList, disklet)
