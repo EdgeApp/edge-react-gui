@@ -4,7 +4,8 @@ import SafariView from 'react-native-safari-view'
 import URL from 'url-parse'
 
 import { type UriQueryMap } from '../types/WebTypes'
-import { parseQuery, stringifyQuery } from './GuiPluginTools'
+
+// TODO: Replace everything with the 'url-parse' library where possible
 
 export type OpenBrowserUriParams = { uri: string, isSafariView: boolean }
 
@@ -57,4 +58,45 @@ export const stringifyUriAndQuery = (uri: string, query: UriQueryMap): string =>
  */
 export const omitLastChar = (uri: string, lastChar: string): string => {
   return uri.substr(-1) === lastChar ? uri.substr(0, uri.length - 1) : uri
+}
+
+/**
+ * -Replaces reserved characters with escape sequences representing the UTF-8
+ * encoding of the character.
+ * -Joins each query with '&'
+ */
+export const stringifyQuery = (query: UriQueryMap): string => {
+  return Object.keys(query)
+    .map(key => {
+      let out = encodeURIComponent(key)
+      if (query[key] != null) out += `=${encodeURIComponent(query[key])}`
+      return out
+    })
+    .join('&')
+}
+
+/**
+ * Parses the query portion of a URL/URI into a UriQueryMap.
+ * Does NOT extract the query from the complete URI!
+ * */
+export const parseQuery = (query?: string): UriQueryMap => {
+  if (query == null || query === '') return {}
+
+  // The literal '&' divides query arguments:
+  const parts = query.slice(1).split('&')
+
+  const out: UriQueryMap = {}
+  for (const part of parts) {
+    // The literal '=' divides the key from the value:
+    const key = part.replace(/=.*/, '')
+    const value = part.slice(key.length)
+
+    // Avoid dangerous keys:
+    const safeKey = decodeURIComponent(key)
+    if (safeKey === '__proto__') continue
+
+    // A key without an '=' gets a null value:
+    out[safeKey] = value === '' ? null : decodeURIComponent(value.slice(1))
+  }
+  return out
 }

@@ -2,6 +2,7 @@
 
 import { type GuiPlugin, type GuiPluginJson, type GuiPluginRow } from '../types/GuiPluginTypes'
 import { type UriQueryMap } from '../types/WebTypes'
+import { stringifyQuery } from './WebUtils'
 
 /**
  * Helper function to turn a GuiPluginJson into a cooked list.
@@ -80,36 +81,4 @@ export function makePluginUri(
   const queryString = stringifyQuery(query)
   if (queryString.length > 0) uri += `?${queryString}`
   return uri
-}
-
-export function stringifyQuery(query: UriQueryMap): string {
-  return Object.keys(query)
-    .map(key => {
-      let out = encodeURIComponent(key)
-      if (query[key] != null) out += `=${encodeURIComponent(query[key])}`
-      return out
-    })
-    .join('&')
-}
-
-export function parseQuery(query?: string): UriQueryMap {
-  if (query == null || query === '') return {}
-
-  // The literal '&' divides query arguments:
-  const parts = query.slice(1).split('&')
-
-  const out: UriQueryMap = {}
-  for (const part of parts) {
-    // The literal '=' divides the key from the value:
-    const key = part.replace(/=.*/, '')
-    const value = part.slice(key.length)
-
-    // Avoid dangerous keys:
-    const safeKey = decodeURIComponent(key)
-    if (safeKey === '__proto__') continue
-
-    // A key without an '=' gets a null value:
-    out[safeKey] = value === '' ? null : decodeURIComponent(value.slice(1))
-  }
-  return out
 }

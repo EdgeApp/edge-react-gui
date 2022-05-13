@@ -4,7 +4,7 @@ import URL from 'url-parse'
 
 import ENV from '../../env.json'
 import { type DeepLink, type PromotionLink } from '../types/DeepLinkTypes.js'
-import { parseQuery, stringifyQuery } from './GuiPluginTools'
+import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
  * Parse a link into the app, identifying special
