@@ -27,11 +27,12 @@ import { type WalletListResult, WalletListModal } from '../../../../components/m
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
-import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
+import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
 import type { EdgeTokenId } from '../../../../types/types.js'
 import { type GuiMakeSpendInfo } from '../../../../types/types.js'
+import { type UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
 import { makeCurrencyCodeTable } from '../../../../util/utils.js'
@@ -103,7 +104,7 @@ export class EdgeProvider extends Bridgeable {
 
   // Public properties:
   deepPath: string | void
-  deepQuery: GuiPluginQuery | void
+  deepQuery: UriQueryMap | void
   promoCode: string | void
   restartPlugin: () => void
 
@@ -113,7 +114,7 @@ export class EdgeProvider extends Bridgeable {
     dispatch: Dispatch,
     restartPlugin: () => void,
     deepPath?: string,
-    deepQuery?: GuiPluginQuery,
+    deepQuery?: UriQueryMap,
     promoCode?: string
   ) {
     super()
@@ -127,7 +128,7 @@ export class EdgeProvider extends Bridgeable {
     this.restartPlugin = restartPlugin
   }
 
-  _updateState(state: RootState, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string): void {
+  _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
     this._state = state
     this.deepPath = deepPath
     this.deepQuery = deepQuery

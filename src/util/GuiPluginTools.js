@@ -1,6 +1,7 @@
 // @flow
 
-import { type GuiPlugin, type GuiPluginJson, type GuiPluginQuery, type GuiPluginRow } from '../types/GuiPluginTypes.js'
+import { type GuiPlugin, type GuiPluginJson, type GuiPluginRow } from '../types/GuiPluginTypes'
+import { type UriQueryMap } from '../types/WebTypes'
 
 /**
  * Helper function to turn a GuiPluginJson into a cooked list.
@@ -60,7 +61,7 @@ export function makePluginUri(
   plugin: GuiPlugin,
   opts: {
     deepPath?: string,
-    deepQuery?: GuiPluginQuery,
+    deepQuery?: UriQueryMap,
     promoCode?: string
   }
 ): string {
@@ -81,7 +82,7 @@ export function makePluginUri(
   return uri
 }
 
-export function stringifyQuery(query: GuiPluginQuery): string {
+export function stringifyQuery(query: UriQueryMap): string {
   return Object.keys(query)
     .map(key => {
       let out = encodeURIComponent(key)
@@ -91,13 +92,13 @@ export function stringifyQuery(query: GuiPluginQuery): string {
     .join('&')
 }
 
-export function parseQuery(query?: string): GuiPluginQuery {
+export function parseQuery(query?: string): UriQueryMap {
   if (query == null || query === '') return {}
 
   // The literal '&' divides query arguments:
   const parts = query.slice(1).split('&')
 
-  const out: GuiPluginQuery = {}
+  const out: UriQueryMap = {}
   for (const part of parts) {
     // The literal '=' divides the key from the value:
     const key = part.replace(/=.*/, '')

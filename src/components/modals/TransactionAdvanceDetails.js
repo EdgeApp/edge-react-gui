@@ -2,11 +2,11 @@
 
 import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { Linking, Platform, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import SafariView from 'react-native-safari-view'
 
 import s from '../../locales/strings.js'
+import { openBrowserUri } from '../../util/WebUtils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
@@ -39,19 +39,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   openUrl = () => {
     const { url } = this.props
     if (url == null || url === '') return
-    if (Platform.OS === 'ios') {
-      return SafariView.isAvailable()
-        .then(SafariView.show({ url }))
-        .catch(error => {
-          Linking.openURL(url)
-          console.log(error)
-        })
-    }
-    Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url)
-      }
-    })
+    openBrowserUri({ uri: url, isSafariView: true })
   }
 
   openProveUrl = () => {
@@ -59,19 +47,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     const recipientAddress = this.getRecipientAddress()
     if (recipientAddress === '' || txid === '' || txSecret == null) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
-    if (Platform.OS === 'ios') {
-      return SafariView.isAvailable()
-        .then(SafariView.show({ url }))
-        .catch(error => {
-          Linking.openURL(url)
-          console.log(error)
-        })
-    }
-    Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url)
-      }
-    })
+    openBrowserUri({ uri: url, isSafariView: true })
   }
 
   renderFeeOptions(): string {
