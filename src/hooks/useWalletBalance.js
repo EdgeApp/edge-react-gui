@@ -14,7 +14,7 @@ export function useWalletBalance(wallet: EdgeCurrencyWallet, tokenId?: string): 
 
   useEffect(() => {
     setOut(wallet.balances[currencyCode] ?? '0')
-    return wallet.watch('balances', balances => balances[currencyCode] ?? '0')
+    return wallet.watch('balances', balances => setOut(balances[currencyCode] ?? '0'))
   }, [wallet, currencyCode])
 
   return out
