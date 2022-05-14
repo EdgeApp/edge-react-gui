@@ -149,6 +149,7 @@ import { StakeModifyScene } from './scenes/Staking/StakeModifyScene'
 import { StakeOptionsScene } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene } from './scenes/Staking/StakeOverviewScene'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+import { TestScene } from './scenes/TestScene'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
 import { WcConnectionsScene } from './scenes/WcConnectionsScene'
@@ -258,6 +259,16 @@ export class MainComponent extends React.Component<Props> {
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
+            <Stack key="testlab">
+              <Scene
+                key="testScene"
+                component={withNavigation(ifLoggedIn(TestScene))}
+                navTransparent
+                renderTitle={<EdgeLogoHeader />}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderRightButton={<SideMenuButton />}
+              />
+            </Stack>
             <Stack key={WALLET_LIST}>
               <Scene
                 key={WALLET_LIST_SCENE}
