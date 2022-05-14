@@ -44,20 +44,12 @@ export const openBrowserUri = ({ uri, isSafariView }: OpenBrowserUriParams) => {
  * This function also cleans the end of the original uri, handling '/'
  * terminated uri's
  */
-export const stringifyUriAndQuery = (uri: string, query: UriQueryMap): string => {
+export const stringifyUriAndQuery = (uri: string, newQueries: UriQueryMap): string => {
   const url = new URL(uri)
-  const existingQueries = parseQuery(url.query)
-
-  // Decide whether to use '&' or '?' to add new queries into the uri.
-  const joiningChar = Object.keys(existingQueries).length > 0 ? '&' : '?'
-  return `${omitLastChar(uri, '/')}${joiningChar}${stringifyQuery(query)}`
-}
-
-/**
- * Remove last character if it matches the param
- */
-export const omitLastChar = (uri: string, lastChar: string): string => {
-  return uri.substr(-1) === lastChar ? uri.substr(0, uri.length - 1) : uri
+  const query = parseQuery(url.query)
+  Object.keys(query).forEach(key => (query[key] = newQueries[key]))
+  url.query = stringifyQuery(query)
+  return url.toString()
 }
 
 /**
@@ -66,18 +58,18 @@ export const omitLastChar = (uri: string, lastChar: string): string => {
  * -Joins each query with '&'
  */
 export const stringifyQuery = (query: UriQueryMap): string => {
-  return Object.keys(query)
-    .map(key => {
-      let out = encodeURIComponent(key)
-      if (query[key] != null) out += `=${encodeURIComponent(query[key])}`
-      return out
-    })
-    .join('&')
+  const queryKeys = Object.keys(query)
+  if (queryKeys.length === 0) return ''
+  const nonNullQuery = queryKeys.map(key => [key, query[key] ?? ''])
+  const searchParams = new URLSearchParams(nonNullQuery)
+  return searchParams.toString().replace(/=(?=&|$)/gm, '')
 }
 
 /**
  * Parses the query portion of a URL/URI into a UriQueryMap.
  * Does NOT extract the query from the complete URI!
+ *
+ * TODO: jontz: Does not work with URLSearchParams...
  * */
 export const parseQuery = (query?: string): UriQueryMap => {
   if (query == null || query === '') return {}
