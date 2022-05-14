@@ -5,6 +5,7 @@ import { FlatList, RefreshControl } from 'react-native'
 
 import { useCallback, useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { type FlatListItem, type WalletListItem } from '../../types/types.js'
 import { searchWalletList } from '../services/SortedWalletList.js'
 import { useTheme } from '../services/ThemeContext.js'
@@ -14,6 +15,7 @@ import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow.j
 type Props = {|
   footer?: React.Node,
   header?: React.Node,
+  navigation: NavigationProp<'walletList'>,
   searching: boolean,
   searchText: string,
   showSlidingTutorial?: boolean,
@@ -29,6 +31,7 @@ export function WalletListSwipeable(props: Props) {
   const {
     footer,
     header,
+    navigation,
     searching,
     searchText,
     showSlidingTutorial,
@@ -56,14 +59,22 @@ export function WalletListSwipeable(props: Props) {
       const { token, tokenId, wallet, walletId } = item.item
 
       if (wallet != null) {
-        return <WalletListSwipeableCurrencyRow openTutorial={item.index === 0 && showSlidingTutorial} token={token} tokenId={tokenId} wallet={wallet} />
+        return (
+          <WalletListSwipeableCurrencyRow
+            navigation={navigation}
+            openTutorial={item.index === 0 && showSlidingTutorial}
+            token={token}
+            tokenId={tokenId}
+            wallet={wallet}
+          />
+        )
       }
       if (walletId != null) {
-        return <WalletListSwipeableLoadingRow walletId={walletId} />
+        return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
       }
       return null
     },
-    [showSlidingTutorial]
+    [navigation, showSlidingTutorial]
   )
 
   return (

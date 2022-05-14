@@ -6,6 +6,7 @@ import { type SharedValue } from 'react-native-reanimated'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo, useCallback, useRef } from '../../types/reactHooks.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -14,6 +15,7 @@ import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 
 type Props = {|
+  navigation: NavigationProp<'walletList'>,
   walletId: string
 |}
 
@@ -22,7 +24,7 @@ type Props = {|
  * which can be swiped to reveal the menu button.
  */
 function WalletListSwipeableLoadingRowComponent(props: Props) {
-  const { walletId } = props
+  const { navigation, walletId } = props
 
   const rowRef = useRef<SwipableRowRef>(null)
   const theme = useTheme()
@@ -34,8 +36,8 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     setTimeout(() => {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode="" isToken={false} walletId={walletId} />)
-  }, [walletId])
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode="" isToken={false} navigation={navigation} walletId={walletId} />)
+  }, [navigation, walletId])
 
   // rendering -----------------------------------------------------------
 

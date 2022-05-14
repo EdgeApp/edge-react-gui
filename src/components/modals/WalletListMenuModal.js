@@ -12,6 +12,7 @@ import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/Wallet
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyInfos, getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from '../themed/CurrencyIcon.js'
@@ -25,6 +26,7 @@ type Option = {
 
 type Props = {
   bridge: AirshipBridge<null>,
+  navigation: NavigationProp<'walletList'>,
 
   // Wallet identity:
   currencyCode?: string,
@@ -95,7 +97,7 @@ const getWalletOptions = async (params: {
 }
 
 export function WalletListMenuModal(props: Props) {
-  const { bridge, currencyCode, isToken, walletId } = props
+  const { bridge, currencyCode, isToken, navigation, walletId } = props
 
   const [options, setOptions] = useState([])
 
@@ -113,9 +115,9 @@ export function WalletListMenuModal(props: Props) {
 
   const optionAction = (option: WalletListMenuKey) => {
     if (currencyCode == null && edgeWallet != null) {
-      dispatch(walletListMenuAction(walletId, option, edgeWallet.currencyInfo.currencyCode))
+      dispatch(walletListMenuAction(navigation, walletId, option, edgeWallet.currencyInfo.currencyCode))
     } else {
-      dispatch(walletListMenuAction(walletId, option, currencyCode))
+      dispatch(walletListMenuAction(navigation, walletId, option, currencyCode))
     }
     bridge.resolve(null)
   }
