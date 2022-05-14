@@ -66,14 +66,6 @@ export type PromotionLink = {
   type: 'promotion',
   installerId?: string
 }
-
-export type ReturnAddressLink = {
-  type: 'returnAddress',
-  currencyName: string,
-  sourceName?: string,
-  successUri?: string
-}
-
 export type RequestAddressLink = {
   type: 'requestAddress',
   assets: Array<{ nativeCode: string, tokenCode: string }>,
@@ -100,7 +92,6 @@ export type DeepLink =
   | PasswordRecoveryLink
   | PluginLink
   | PromotionLink
-  | ReturnAddressLink
   | RequestAddressLink
   | WalletConnectLink
   | SwapLink

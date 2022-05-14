@@ -1,8 +1,8 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Linking } from 'react-native'
+import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -10,67 +10,139 @@ import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.js'
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { upgradeCurrencyCodes, WalletListModal } from '../components/modals/WalletListModal'
+import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig.js'
-import { type ReturnAddressLink } from '../types/DeepLinkTypes.js'
+import { type RequestAddressLink } from '../types/DeepLinkTypes'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import { type GuiMakeSpendInfo } from '../types/types.js'
+import { type GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
-import { zeroString } from '../util/utils.js'
+import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils.js'
+import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
-export const doReturnAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, link: ReturnAddressLink) => {
-  const { currencyName, sourceName = '', successUri = '' } = link
+/**
+ * Handle Request for Address Links (WIP - pending refinement).
+ *
+ * Further refinement will be needed when the specs for the POST endpoint come
+ * out.
+ *
+ * Currently there are no known URI's that can be used in the POST query that
+ * will properly accept this payment address format.
+ * Specifying the POST
+ *
+ * At this point the feature should:
+ * - Recognize the Request for Address (reqaddr) URI's in either a QR code
+ *    or a deeplink as specified by the specification.
+ * - Recognize error cases
+ * - Allow the user to select multiple wallets, filtered by token and wallet
+ *    according to the reqaddr URI
+ * - Handle the 'redir' query in the reqaddr as another deeplink/scan after
+ *    validating the user satisfies the 'codes' query from the reqaddr.
+ * - Disallow reqaddr's that specify other reqaddr's in the 'redir' query (prevent
+ *    infinite redirect loops).
+ */
+export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
   dispatch({ type: 'DISABLE_SCAN' })
-  if (currencyName !== edgeWallet.currencyInfo.pluginId) {
-    // Mismatching currency
-    const body = sprintf(s.strings.currency_mismatch_popup_body, currencyName, currencyName)
-    setTimeout(
-      () =>
-        Alert.alert(s.strings.currency_mismatch_popup_title, body, [
-          {
-            text: s.strings.string_ok,
-            onPress: () => dispatch({ type: 'ENABLE_SCAN' })
-          }
-        ]),
-      500
-    )
-  } else {
-    // Currencies match. Ask user to confirm sending an address
-    const bodyString = sprintf(s.strings.request_crypto_address_modal_body, sourceName, currencyName) + '\n\n'
-    const { host } = new URL(successUri)
+  const { assets, post, redir, payer } = link
+  try {
+    // Check if all required fields are provided in the request
+    if (assets.length === 0) throw new Error(s.strings.reqaddr_error_no_currencies_found)
+    if ((post == null || post === '') && (redir == null || redir === '')) throw new Error(s.strings.reqaddr_error_post_redir)
+  } catch (e) {
+    showError(e.message)
+  }
 
-    setTimeout(() => {
-      Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.request_crypto_address_modal_title}
-          message={`${bodyString} ${host}`}
-          buttons={{
-            confirm: { label: s.strings.request_crypto_address_modal_send_address_button },
-            cancel: { label: s.strings.string_cancel_cap }
-          }}
-        />
-      ))
-        .then(async resolveValue => {
-          dispatch({ type: 'ENABLE_SCAN' })
-          if (resolveValue === 'confirm') {
-            // Build the URL
-            const addr = (await edgeWallet.getReceiveAddress()).publicAddress
-            const url = decodeURIComponent(successUri)
-            const finalUrl = url + '?address=' + encodeURIComponent(addr)
-            Linking.openURL(finalUrl)
-          }
-        })
-        .catch(e => {
-          dispatch({ type: 'ENABLE_SCAN' })
-        })
-    }, 1000)
+  // Present the request to the user for confirmation
+  const payerStr = payer ?? s.strings.reqaddr_application_fragment
+  const assetsStr = toListString(assets.map(asset => asset.tokenCode))
+  const confirmResult = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.reqaddr_confirm_modal_title}
+      message={sprintf(s.strings.reqaddr_confirm_modal_message, payerStr, assetsStr)}
+      buttons={{
+        yes: { label: s.strings.yes },
+        no: { label: s.strings.no }
+      }}
+    />
+  ))
+
+  const lookup = makeCurrencyCodeTable(account)
+  const supportedAssets: Array<{ nativeCode: string, tokenCode: string }> = []
+  if (confirmResult === 'yes') {
+    // Verify Edge supports at least some of the requested native assets
+    const unsupportedNativeCodes: string[] = []
+    assets.forEach(asset => {
+      const { nativeCode, tokenCode } = asset
+      const test = upgradeCurrencyCodes(lookup, [`${nativeCode}-${tokenCode}`]) ?? []
+      if (getPluginIdFromChainCode(nativeCode) == null || test.length === 0) unsupportedNativeCodes.push(tokenCode)
+      else supportedAssets.push({ ...asset })
+    })
+
+    // Show warnings or errors for unsupported native currencies
+    if (unsupportedNativeCodes.length > 0) {
+      const unsupportedMessage = sprintf(s.strings.reqaddr_error_unsupported_chains, config.appName, toListString(unsupportedNativeCodes))
+      if (unsupportedNativeCodes.length === assets.length) {
+        showError(unsupportedMessage) // All requested assets unsupported
+        return
+      } else showWarning(unsupportedMessage) // Some requested assets unsupported
+    }
+  }
+
+  // Show wallet picker(s) for supported assets
+  const jsonPayloadMap: { [currencyAndTokenCode: string]: string | null } = {}
+  for (const supportedAsset of supportedAssets) {
+    const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
+
+    await Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />).then(
+      async ({ walletId, currencyCode }) => {
+        if (walletId != null && currencyCode != null) {
+          const { currencyWallets } = account
+          const wallet = currencyWallets[walletId]
+
+          // TODO: Extend getReceiveAddress() to generate the full bitcion:XXXX address instead of using raw addresses here
+          const { publicAddress } = await wallet.getReceiveAddress({ currencyCode })
+          jsonPayloadMap[`${currencyWallets[walletId].currencyInfo.currencyCode}_${currencyCode}`] = publicAddress
+        }
+      }
+    )
+  }
+
+  // Handle POST and redir
+  if (Object.keys(jsonPayloadMap).length === 0) {
+    showError(s.strings.reqaddr_error_no_wallets_selected)
+  } else {
+    if (post != null && post !== '') {
+      // Setup and POST the JSON payload
+      // TODO: Fetch header and proper response error handling, after the POST recipient spec is defined.
+      const initOpts = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jsonPayloadMap)
+      }
+      try {
+        const response = await fetch(post, initOpts)
+        if (!response.ok) showError(s.strings.fio_get_requests_error)
+      } catch (e) {
+        showError(e.message)
+      }
+    }
+    if (redir != null && redir !== '') {
+      // Make sure this isn't some malicious link to cause an infinite redir loop
+      const deepLink = parseDeepLink(redir)
+      if (deepLink.type === 'requestAddress' && deepLink.redir != null) throw new Error(s.strings.reqaddr_error_invalid_redir)
+
+      const url = new URL(redir, true)
+      url.set('query', { ...url.query, ...jsonPayloadMap })
+
+      await openBrowserUri(cleanQueryFlags(url.href))
+    }
   }
 }
 
@@ -131,13 +203,8 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       case 'other':
         // Handle this link type below:
         break
-      case 'returnAddress':
-        try {
-          return doReturnAddress(dispatch, edgeWallet, deepLink)
-        } catch (e) {
-          console.log(e)
-        }
-        break
+      case 'requestAddress':
+        return await doRequestAddress(account, dispatch, deepLink)
       case 'edgeLogin':
       case 'bitPay':
       default:

@@ -39,7 +39,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   openUrl = () => {
     const { url } = this.props
     if (url == null || url === '') return
-    openBrowserUri({ uri: url, isSafariView: true })
+    openBrowserUri(url)
   }
 
   openProveUrl = () => {
@@ -47,7 +47,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     const recipientAddress = this.getRecipientAddress()
     if (recipientAddress === '' || txid === '' || txSecret == null) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
-    openBrowserUri({ uri: url, isSafariView: true })
+    openBrowserUri(url)
   }
 
   renderFeeOptions(): string {
