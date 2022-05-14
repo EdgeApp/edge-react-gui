@@ -5,7 +5,14 @@ import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenominat
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getSymbolFromCurrency,
+  SPECIAL_CURRENCY_INFO
+} from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
@@ -540,6 +547,32 @@ export function unixToLocaleDateTime(unixDate: number): { date: string, time: st
     time: toLocaleTime(date),
     dateTime: toLocaleDateTime(date)
   }
+}
+
+/**
+ * Returns a list string representation of the string array.
+ *
+ * toListString(['1', '2']) === '1 and 2'
+ * toListString(['1','2','3']) === '1, 2, and 3'
+ */
+export const toListString = (elements: string[]): string => {
+  if (elements.length === 0) return ''
+  if (elements.length === 1) return elements[0]
+  if (elements.length === 2) return elements.join(` ${s.strings.and} `)
+
+  const firstPart = elements.slice(0, elements.length - 1)
+  const lastPart = `, ${s.strings.and} ${elements[elements.length - 1]}`
+  return firstPart.join(', ') + lastPart
+}
+
+/**
+ * Returns the wallet plugin ID based on a chain/native asset currency code
+ * Returns null if Edge does not support the specified chain.
+ * Not case sensitive.
+ */
+export const getPluginIdFromChainCode = (chainCode: string): string | void => {
+  const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(key => SPECIAL_CURRENCY_INFO[key].chainCode === chainCode.toUpperCase())
+  return pluginId
 }
 
 export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, tokenIds: string[]): string[] {
