@@ -23,8 +23,22 @@ exports[`WalletListFooter should render with loading props 1`] = `
       }
     }
   >
-    <TouchableOpacity
-      onPress={[Function]}
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
     >
       <View
         style={
@@ -37,37 +51,60 @@ exports[`WalletListFooter should render with loading props 1`] = `
           }
         }
       >
-        <Icon
+        <Text
           allowFontScaling={false}
-          color="#66EDA8"
-          name="md-add"
-          size={34}
-          style={
-            Object {
-              "color": "#66EDA8",
-              "fontFamily": "Quicksand-Medium",
-              "margin": 6,
-            }
-          }
-        />
-        <WithTheme(EdgeTextComponent)
           style={
             Array [
+              Object {
+                "color": "#66EDA8",
+                "fontSize": 34,
+              },
               Object {
                 "color": "#66EDA8",
                 "fontFamily": "Quicksand-Medium",
                 "margin": 6,
               },
               Object {
-                "flexShrink": 1,
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
               },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Array [
+                Object {
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Medium",
+                  "margin": 6,
+                },
+                Object {
+                  "flexShrink": 1,
+                },
+              ],
+              null,
             ]
           }
         >
           Add Wallet
-        </WithTheme(EdgeTextComponent)>
+        </Text>
       </View>
-    </TouchableOpacity>
+    </View>
   </View>
   <View
     style={
@@ -76,8 +113,22 @@ exports[`WalletListFooter should render with loading props 1`] = `
       }
     }
   >
-    <TouchableOpacity
-      onPress={[Function]}
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
     >
       <View
         style={
@@ -90,37 +141,60 @@ exports[`WalletListFooter should render with loading props 1`] = `
           }
         }
       >
-        <Icon
+        <Text
           allowFontScaling={false}
-          color="#66EDA8"
-          name="md-add"
-          size={34}
-          style={
-            Object {
-              "color": "#66EDA8",
-              "fontFamily": "Quicksand-Medium",
-              "margin": 6,
-            }
-          }
-        />
-        <WithTheme(EdgeTextComponent)
           style={
             Array [
+              Object {
+                "color": "#66EDA8",
+                "fontSize": 34,
+              },
               Object {
                 "color": "#66EDA8",
                 "fontFamily": "Quicksand-Medium",
                 "margin": 6,
               },
               Object {
-                "flexShrink": 1,
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
               },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Array [
+                Object {
+                  "color": "#66EDA8",
+                  "fontFamily": "Quicksand-Medium",
+                  "margin": 6,
+                },
+                Object {
+                  "flexShrink": 1,
+                },
+              ],
+              null,
             ]
           }
         >
           Add Token
-        </WithTheme(EdgeTextComponent)>
+        </Text>
       </View>
-    </TouchableOpacity>
+    </View>
   </View>
 </View>
 `;
