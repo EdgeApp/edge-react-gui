@@ -33,8 +33,8 @@ export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurr
     denomination,
     fiatDenomination,
     isoFiatCurrencyCode,
-    assetToFiatRate: !zeroString(assetFiatPrice) ? assetFiatPrice : '1',
-    usdToWalletFiatRate: !zeroString(usdFiatPrice) ? usdFiatPrice : '1',
-    assetToYestFiatRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '1'
+    assetToFiatRate: !zeroString(assetFiatPrice) ? assetFiatPrice : '0',
+    usdToWalletFiatRate: !zeroString(usdFiatPrice) ? usdFiatPrice : '0',
+    assetToYestFiatRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '0'
   }
 }
