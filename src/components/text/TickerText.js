@@ -18,11 +18,12 @@ type Props = {|
 
 const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, assetToYestFiatRate: string, usdToWalletFiatRate: string, theme: Theme) => {
   const yesterdayExchangeRate = mul(assetToYestFiatRate, usdToWalletFiatRate)
-  const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
-  const yesterdayDeltaPct = mul(div(yesterdayDelta, yesterdayExchangeRate, 3), '100')
 
   // Blank string if yesterday's exchange rate does not exist
   if (zeroString(yesterdayExchangeRate)) return { percentString: '', deltaColorStyle: theme.secondaryText }
+
+  const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
+  const yesterdayDeltaPct = mul(div(yesterdayDelta, yesterdayExchangeRate, 3), '100')
 
   // Neutral zero for no historical delta
   if (zeroString(yesterdayDeltaPct)) return { percentString: '0.00', deltaColorStyle: theme.secondaryText }

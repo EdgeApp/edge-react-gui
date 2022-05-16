@@ -15,7 +15,7 @@ export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurr
   const { allTokens } = currencyConfig
   const isoFiatCurrencyCode = fixFiatCurrencyCode(wallet.fiatCurrencyCode)
 
-  // Get currencyCode and deomination from token
+  // Get currencyCode and denomination from token
   const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
   const [denomination] = denominations
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
@@ -33,8 +33,8 @@ export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurr
     denomination,
     fiatDenomination,
     isoFiatCurrencyCode,
-    assetToFiatRate: !zeroString(assetFiatPrice) ? assetFiatPrice : '1',
-    usdToWalletFiatRate: !zeroString(usdFiatPrice) ? usdFiatPrice : '1',
-    assetToYestFiatRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '1'
+    assetToFiatRate: !zeroString(assetFiatPrice) ? assetFiatPrice : '0',
+    usdToWalletFiatRate: !zeroString(usdFiatPrice) ? usdFiatPrice : '0',
+    assetToYestFiatRate: !zeroString(assetFiatYestPrice) ? assetFiatYestPrice : '0'
   }
 }

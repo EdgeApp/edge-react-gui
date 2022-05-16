@@ -36,7 +36,7 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
 
   const accountIsoFiat = state.ui.settings.defaultIsoFiat
 
-  const exchangeRates = []
+  const exchangeRates: Array<{ currency_pair: string, date?: string }> = []
   const yesterdayDate = getYesterdayDateRoundDownHour()
   if (accountIsoFiat !== 'iso:USD') {
     exchangeRates.push({ currency_pair: `iso:USD_${accountIsoFiat}` })
@@ -62,9 +62,12 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
     }
   }
 
-  const serverRates: GuiExchangeRates = {}
-  while (exchangeRates.length > 0) {
-    const query = exchangeRates.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
+  // Remove duplicates
+  const filteredExchangeRates = exchangeRates.filter((v, i, a) => a.findIndex(v2 => v2.currency_pair === v.currency_pair && v2.date === v.date) === i)
+
+  const serverRates: GuiExchangeRates = { 'iso:USD_iso:USD': '1' }
+  while (filteredExchangeRates.length > 0) {
+    const query = filteredExchangeRates.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
     let tries = 5
     do {
       const url = pickRandom(RATES_SERVERS) ?? ''
