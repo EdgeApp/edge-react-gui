@@ -81,12 +81,19 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
   }
 
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
-    const { currencyCode } = data.item
+    const { currencyCode, pluginId } = data.item
     // Ripple hack:
     let { currencyName } = data.item
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
-    return <CreateWalletSelectCryptoRow currencyCode={currencyCode} walletName={currencyName} onPress={() => this.handleSelectWalletType(data.item)} />
+    return (
+      <CreateWalletSelectCryptoRow
+        currencyCode={currencyCode}
+        pluginId={pluginId}
+        walletName={currencyName}
+        onPress={() => this.handleSelectWalletType(data.item)}
+      />
+    )
   }
 
   keyExtractor = (item: CreateWalletType, index: number): string => {
