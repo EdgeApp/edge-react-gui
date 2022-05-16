@@ -1,5 +1,6 @@
 // @flow
 
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
@@ -189,4 +190,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Slider = withTheme(SliderComponent)
+export const Slider = wrap(withTheme(SliderComponent))
