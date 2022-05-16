@@ -92,8 +92,8 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('newTransactions', transactions => {
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        refreshTransactionsRequest(wallet.id, transactions)
-        newTransactionsRequest(wallet.id, transactions)
+        dispatch(refreshTransactionsRequest(wallet.id, transactions))
+        dispatch(newTransactionsRequest(wallet.id, transactions))
         addWallet(wallet)
 
         // Check if password recovery is set up:
@@ -106,7 +106,7 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('transactionsChanged', transactions => {
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        refreshTransactionsRequest(wallet.id, transactions)
+        dispatch(refreshTransactionsRequest(wallet.id, transactions))
         addWallet(wallet)
       }),
 
