@@ -133,7 +133,8 @@ export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref
   const canPanLeft = renderLeft !== undefined
   const canPanRight = renderRight !== undefined
   const panGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
+    .hitSlop({ right: -20 }) // To prevent grabbing the row when the user grab the side menu
+    .activeOffsetX([-20, 20])
     .onBegin(e => {
       panStart.value = pan.value
     })
