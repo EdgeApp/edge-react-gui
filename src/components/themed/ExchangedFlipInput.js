@@ -1,6 +1,7 @@
 // @flow
 
 import { div, log10, mul } from 'biggystring'
+import { hook } from 'cavy'
 import * as React from 'react'
 
 import type { GuiCurrencyInfo } from '../../types/types.js'
@@ -117,7 +118,7 @@ function propsToState(props: Props): State {
   return { primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount }
 }
 
-export class ExchangedFlipInput extends React.Component<Props, State> {
+export class ExchangedFlipInputComponent extends React.Component<Props, State> {
   flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   static defaultProps = {
@@ -193,3 +194,4 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
     )
   }
 }
+export const ExchangedFlipInput = hook(ExchangedFlipInputComponent)

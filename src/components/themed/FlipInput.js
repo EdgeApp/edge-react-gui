@@ -1,16 +1,20 @@
 // @flow
-
 import Clipboard from '@react-native-clipboard/clipboard'
 import { div, eq, mul } from 'biggystring'
+import { hook } from 'cavy'
 import * as React from 'react'
-import { type Event, Animated, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Platform } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
+// import { type TestReferee, makeTestReferee } from '../../hooks/useTestReferee.js'
+// import { makeTestReferee,  } from '../../hooks/useTestReferee.js'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { forwardRef } from '../../types/reactHooks.js'
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from '../../types/reactNative.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
@@ -79,7 +83,7 @@ export type FlipInputOwnProps = {
   onError?: (error: string | void) => void
 }
 
-type Props = FlipInputOwnProps & ThemeProps
+type Props = FlipInputOwnProps & ThemeProps & TestProps
 
 type Amounts = {
   primaryDecimalAmount: string,
@@ -160,7 +164,7 @@ const getInitialState = (props: Props) => {
   return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
 }
 
-export class FlipInputComponent extends React.PureComponent<Props, State> {
+export class FlipInputComponent extends React.PureComponent<Props & TestProps, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value
@@ -490,12 +494,17 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
             autoCorrect={false}
             keyboardType="numeric"
             returnKeyType={topReturnKeyType || 'done'}
-            ref={ref}
+            // ref={ref}
             onFocus={onFocus}
             onBlur={onBlur}
             editable={isEditable}
             onSubmitEditing={onNext}
             inputAccessoryViewID={inputAccessoryViewID || null}
+            // ref={this.props.makeTestReferee('FlipInput.SendEnterFiatAmount', ref.current)}
+            // ref={makeTestReferee(this.props.generateTestHook, 'Flip', ref.current)}
+
+            ref={this.props.generateTestHook('FlipInput.SendEnterFiatAmount', ref.current)}
+            // ref={this.props.generateTestHook(`FlipInput.${this.props.topReturnKeyType}`, ref.current)}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -667,6 +676,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FlipInputThemed = withTheme(FlipInputComponent)
+const FlipInputThemed = hook(withTheme(FlipInputComponent))
 
 export const FlipInput = forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />)

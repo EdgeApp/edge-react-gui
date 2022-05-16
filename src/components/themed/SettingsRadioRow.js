@@ -1,5 +1,6 @@
 // @flow
 
+import { wrap } from 'cavy'
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -46,4 +47,4 @@ function SettingsRadioRowComponent(props: Props): React.Node {
   )
 }
 
-export const SettingsRadioRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsRadioRowComponent)
+export const SettingsRadioRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = wrap(withTheme(SettingsRadioRowComponent))
