@@ -80,15 +80,10 @@ export function WalletListSwipeable(props: Props) {
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
       data={searchedWalletList}
       keyboardShouldPersistTaps="handled"
-      keyExtractor={keyExtractor}
       ListFooterComponent={footer}
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
     />
   )
-}
-
-function keyExtractor(item: WalletListItem): string {
-  return item.key
 }
