@@ -141,7 +141,7 @@ export function WalletList(props: Props) {
     for (const createWalletCurrency of createWalletCurrencies) {
       const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
       out.push({
-        key: `create-${currencyCode}`,
+        key: `create-${pluginId}`,
         currencyCode,
         displayName: currencyName,
         pluginId,
@@ -161,7 +161,7 @@ export function WalletList(props: Props) {
         if (currencyCode === currencyInfo.currencyCode) continue
 
         out.push({
-          key: `create-${currencyInfo.currencyCode}-${tokenId}`,
+          key: `create-${currencyInfo.pluginId}-${tokenId}`,
           currencyCode,
           displayName,
           pluginId,
