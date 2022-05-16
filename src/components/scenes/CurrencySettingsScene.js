@@ -53,7 +53,7 @@ export function CurrencySettingsComponent(props: Props) {
 
   // Are the electrum servers enabled? What are they?
   const defaults = asMaybe(asElectrumDefaults)(defaultSettings)
-  const settings = asMaybe(asElectrumSettings)(userSettings)
+  const settings = asMaybe(asElectrumSettings, { electrumServers: [], disableFetchingServers: false })(userSettings)
 
   function renderCustomNodes(defaults: $Call<typeof asElectrumDefaults>, settings: $Call<typeof asElectrumSettings>) {
     const { electrumServers: defaultServers } = defaults
