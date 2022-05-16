@@ -155,6 +155,7 @@ function useEnabledWalletIds(account: EdgeAccount): EnabledTokenIds {
   })
 
   useWalletsSubscriber(account, wallet => {
+    setOut(out => ({ ...out, [wallet.id]: wallet.enabledTokenIds }))
     return wallet.watch('enabledTokenIds', enabledTokenIds => {
       setOut(out => ({ ...out, [wallet.id]: enabledTokenIds }))
     })
