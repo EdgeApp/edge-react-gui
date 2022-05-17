@@ -377,13 +377,15 @@ export const makeConnectWallets = (
     if (pluginId === 'fio') continue
 
     // Look for unique FIO network chain code
-    const currencyCode = getSpecialCurrencyInfo(pluginId).fioChainCode ?? cCode
+    const info = getSpecialCurrencyInfo(pluginId)
+    const currencyCode = info.fioChainCode ?? cCode
+    const walletName = wallet.name ?? info.initWalletName
     const fullCurrencyCode = `${currencyCode}:${currencyCode}`
     walletItems[`${wallet.id}-${currencyCode}`] = {
       key: `${wallet.id}-${currencyCode}`,
       id: wallet.id,
       edgeWallet: wallet,
-      name: wallets[walletKey].name,
+      name: walletName,
       currencyCode: currencyCode,
       chainCode: currencyCode,
       fullCurrencyCode,
@@ -399,7 +401,7 @@ export const makeConnectWallets = (
         key: `${wallet.id}-${token.currencyCode}`,
         id: wallet.id,
         edgeWallet: wallet,
-        name: wallet.name,
+        name: walletName,
         currencyCode: token.currencyCode,
         chainCode: currencyCode,
         fullCurrencyCode,
