@@ -6304,10 +6304,10 @@ edge-currency-accountbased@^0.15.11:
     xrpl "^2.1.1"
     yaob "^0.3.6"
 
-edge-currency-bitcoin@^4.9.21:
-  version "4.9.21"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.21.tgz#3d472f6ae3a79206edf8f868eb1f9bd19631abd6"
-  integrity sha512-jkUbx2o6iCBm6qaZk5PbWkbavQoTGAVKgPBUWhvk67yYNMH12g6CFHU/JqpXdSLVtHAe2a+t9/RPIM6pB183Fg==
+edge-currency-bitcoin@^4.9.22:
+  version "4.9.22"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.22.tgz#6d7ed09d580227dae667fd9c772ab6d3b38dd441"
+  integrity sha512-33w7ZQ9OwX+kLhcgFx5DW7/eSFWBKWSiB5ybG4I4n4cyuN72o7wuASjVqHh1tNq+rPXmvuZHVojlCPc8NfuWNw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
