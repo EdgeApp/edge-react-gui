@@ -31,16 +31,11 @@ export const getExchangeDenominationFromState = (pluginId: string, currencyCode:
  * This would match "BTC" but not "sats".
  */
 export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  const currencyConfig = state.core.account.currencyConfig[pluginId]
-  const { builtinTokens = {}, currencyInfo, customTokens = {} } = currencyConfig
+  const { allTokens, currencyInfo } = state.core.account.currencyConfig[pluginId]
 
   if (currencyInfo.currencyCode === currencyCode) return currencyInfo.denominations[0]
-  for (const tokenId of Object.keys(customTokens)) {
-    const token = customTokens[tokenId]
-    if (token.currencyCode === currencyCode) return token.denominations[0]
-  }
-  for (const tokenId of Object.keys(builtinTokens)) {
-    const token = builtinTokens[tokenId]
+  for (const tokenId of Object.keys(allTokens)) {
+    const token = allTokens[tokenId]
     if (token.currencyCode === currencyCode) return token.denominations[0]
   }
 
