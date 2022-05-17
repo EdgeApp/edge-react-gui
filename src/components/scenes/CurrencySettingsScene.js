@@ -1,7 +1,6 @@
 // @flow
 
 import { asArray, asBoolean, asMaybe, asObject, asOptional, asString } from 'cleaners'
-import type { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
@@ -9,28 +8,20 @@ import { setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import { useWatchCurrencyConfig } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
-type OwnProps = {
+type Props = {
   route: RouteProp<'currencySettings'>
 }
-type StateProps = {
-  account: EdgeAccount,
-  selectedDenominationMultiplier: string
-}
-type DispatchProps = {
-  selectDenomination: (pluginId: string, currencyCode: string, denomination: EdgeDenomination) => Promise<void>
-}
-type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 const asElectrumDefaults = asObject({
   electrumServers: asArray(asString)
@@ -41,12 +32,17 @@ const asElectrumSettings = asObject({
   electrumServers: asOptional(asArray(asString))
 })
 
-export function CurrencySettingsComponent(props: Props) {
-  const { account, selectDenomination, selectedDenominationMultiplier, theme, route } = props
+export function CurrencySettingsScene(props: Props) {
+  const { route } = props
   const { currencyInfo } = route.params
   const { currencyCode, defaultSettings, denominations, pluginId } = currencyInfo
-  const currencyConfig = account.currencyConfig[pluginId]
+  const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
+
+  const selectedDenominationMultiplier = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).multiplier)
+  const account = useSelector(state => state.core.account)
+  const currencyConfig = account.currencyConfig[pluginId]
 
   // Follow the on-disk currency settings:
   const userSettings = useWatchCurrencyConfig(currencyConfig, 'userSettings')
@@ -129,8 +125,12 @@ export function CurrencySettingsComponent(props: Props) {
         {denominations.map(denomination => {
           const key = denomination.multiplier
           const isSelected = key === selectedDenominationMultiplier
+          const handlePress = async () => {
+            await dispatch(setDenominationKeyRequest(pluginId, currencyCode, denomination))
+          }
+
           return (
-            <SettingsRadioRow key={denomination.multiplier} value={isSelected} onPress={() => selectDenomination(pluginId, currencyCode, denomination)}>
+            <SettingsRadioRow key={key} value={isSelected} onPress={handlePress}>
               <Text style={styles.labelText}>
                 <Text style={styles.symbolText}>{denomination.symbol}</Text>
                 {' - ' + denomination.name}
@@ -165,15 +165,3 @@ const getStyles = cacheStyles(theme => ({
     fontFamily: theme.fontFaceSymbols
   }
 }))
-
-export const CurrencySettingsScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => ({
-    account: state.core.account,
-    selectedDenominationMultiplier: getDisplayDenomination(state, params.currencyInfo.pluginId, params.currencyInfo.currencyCode).multiplier
-  }),
-  dispatch => ({
-    async selectDenomination(pluginId, currencyCode, denomination) {
-      await dispatch(setDenominationKeyRequest(pluginId, currencyCode, denomination))
-    }
-  })
-)(withTheme(CurrencySettingsComponent))
