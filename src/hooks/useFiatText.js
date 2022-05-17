@@ -38,6 +38,7 @@ export const useFiatText = (props: Props): string => {
     const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
     return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
+
   // Convert the amount to an internationalized string or '0'
   const fiatString =
     autoPrecision || !zeroString(fiatAmount)
@@ -53,25 +54,34 @@ export const useFiatText = (props: Props): string => {
   return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
-const formatFiatString = (props: { fiatAmount: string | number, minPrecision?: string | number, autoPrecision?: boolean, noGrouping?: boolean }): string => {
+const formatFiatString = (props: { autoPrecision?: boolean, fiatAmount: string, noGrouping?: boolean, minPrecision?: string }): string => {
   const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
 
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(' ', '').replace(',', '.')
+  // Use US locale delimeters for determining precision
+  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
   let precision: number = parseInt(minPrecision)
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
+    if (Math.log10(tempFiatAmount) >= 3) {
+      // Drop decimals if over '1000' of any fiat currency
+      precision = 0
+    }
     while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
       tempFiatAmount *= 10
       precision++
     }
   }
 
+  // Convert back to a localized fiat amount string with specified precision and grouping
   return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
 }
 
+/**
+ * Returns a localized fiat amount string
+ * */
 export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
   if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const initialAmount = fiatAmount.toFixed(precision)
   const absoluteAmount = abs(initialAmount)
-  return formatNumber(toFixed(absoluteAmount, 2, precision), { noGrouping })
+  return formatNumber(toFixed(absoluteAmount, precision, precision), { noGrouping })
 }

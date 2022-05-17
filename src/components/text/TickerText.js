@@ -8,7 +8,7 @@ import { Text } from 'react-native'
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { type Theme } from '../../types/Theme'
-import { truncateDecimals, zeroString } from '../../util/utils'
+import { zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
 
 type Props = {|
@@ -44,7 +44,7 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
     wallet
   })
 
-  let fiatText = useFiatText({
+  const fiatText = useFiatText({
     autoPrecision: true,
     cryptoCurrencyCode: currencyCode,
     cryptoExchangeMultiplier: denomination.multiplier,
@@ -52,9 +52,6 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
     isoFiatCurrencyCode,
     nativeCryptoAmount: denomination.multiplier
   })
-
-  // Drop decimals if over '1000' of any fiat currency
-  if (Math.log10(parseFloat(assetToFiatRate)) >= 3) fiatText = truncateDecimals(fiatText, 0)
 
   const theme = useTheme()
   const { percentString, deltaColorStyle } = getPercentDeltaString(currencyCode, assetToFiatRate, assetToYestFiatRate, usdToWalletFiatRate, theme)
