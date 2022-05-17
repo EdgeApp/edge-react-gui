@@ -1,10 +1,11 @@
 // @flow
-import { div } from 'biggystring'
+import { abs, div, toFixed } from 'biggystring'
 
 import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
+import { formatNumber } from '../locales/intl.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { useSelector } from '../types/reactRedux.js'
-import { DECIMAL_PRECISION, formatFiatString, zeroString } from '../util/utils'
+import { DECIMAL_PRECISION, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 type Props = {
@@ -50,4 +51,27 @@ export const useFiatText = (props: Props): string => {
   const fiatSymbol = `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}`
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
   return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
+}
+
+const formatFiatString = (props: { fiatAmount: string | number, minPrecision?: string | number, autoPrecision?: boolean, noGrouping?: boolean }): string => {
+  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
+
+  const fiatAmtCleanedDelim = fiatAmount.toString().replace(' ', '').replace(',', '.')
+  let precision: number = parseInt(minPrecision)
+  let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
+  if (autoPrecision) {
+    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
+      tempFiatAmount *= 10
+      precision++
+    }
+  }
+
+  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
+}
+
+export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
+  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+  const initialAmount = fiatAmount.toFixed(precision)
+  const absoluteAmount = abs(initialAmount)
+  return formatNumber(toFixed(absoluteAmount, 2, precision), { noGrouping })
 }

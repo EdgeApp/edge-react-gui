@@ -1,12 +1,12 @@
 // @flow
 
-import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
-import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
+import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
@@ -46,13 +46,6 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
   }
 }
 
-export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
-  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
-  const initialAmount = fiatAmount.toFixed(precision)
-  const absoluteAmount = abs(initialAmount)
-  return formatNumber(toFixed(absoluteAmount, 2, precision), { noGrouping })
-}
-
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
@@ -72,6 +65,7 @@ export const truncateDecimals = (input: string, precision: number = DEFAULT_TRUN
     return input
   }
   const [integers, decimals] = input.split('.')
+
   return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
@@ -537,22 +531,6 @@ export const convertTransactionFeeToDisplayFee = (
     cryptoAmount: '0',
     nativeCryptoAmount: '0'
   }
-}
-
-export function formatFiatString(props: { fiatAmount: string | number, minPrecision?: string | number, autoPrecision?: boolean, noGrouping?: boolean }) {
-  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
-
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
-  let precision: number = parseInt(minPrecision)
-  let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
-  if (autoPrecision) {
-    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
-      tempFiatAmount *= 10
-      precision++
-    }
-  }
-
-  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
 }
 
 export function unixToLocaleDateTime(unixDate: number): { date: string, time: string, dateTime: string } {
