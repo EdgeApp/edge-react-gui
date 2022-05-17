@@ -5,10 +5,7 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 // Stake Policy
 // -----------------------------------------------------------------------------
 
-export type AssetId = {
-  pluginId: string,
-  tokenId: string
-}
+export type AssetId = { pluginId: string, currencyCode: string }
 
 export type LpUid = {
   pluginId: string,
@@ -46,7 +43,7 @@ export type StakePolicy = {|
 export type ChangeQuoteRequest = {
   action: 'stake' | 'unstake' | 'claim',
   stakePolicyId: string,
-  tokenId: string,
+  currencyCode: string,
   nativeAmount: string,
   wallet: EdgeCurrencyWallet
 }
@@ -54,7 +51,7 @@ export type ChangeQuoteRequest = {
 export type QuoteAllocation = {
   allocationType: 'stake' | 'unstake' | 'claim' | 'fee',
   pluginId: string,
-  tokenId: string,
+  currencyCode: string,
   nativeAmount: string
 }
 
@@ -75,7 +72,7 @@ export type StakePositionRequest = {
 export type PositionAllocation = {
   // The type of asset for this allocation
   pluginId: string,
-  tokenId: string,
+  currencyCode: string,
   // The type of the allocation
   allocationType: 'staked' | 'unstaked' | 'earned',
   // Amount of the asset allocated

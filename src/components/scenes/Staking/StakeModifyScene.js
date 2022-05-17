@@ -65,7 +65,7 @@ export const StakeModifyScene = (props: Props) => {
   const [changeQuoteRequest, setChangeQuoteRequest] = useState<ChangeQuoteRequest>({
     action: modification,
     stakePolicyId: stakePolicy.stakePolicyId,
-    tokenId: '',
+    currencyCode: '',
     nativeAmount: '0',
     wallet: currencyWallet
   })
@@ -83,7 +83,11 @@ export const StakeModifyScene = (props: Props) => {
 
     // Initialize the claim row since the user would never modify the amount
     if (modification === 'claim' && changeQuoteRequest.nativeAmount === '0')
-      setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: stakePolicy.rewardAssets[0].tokenId, nativeAmount: existingAllocations.earned[0].nativeAmount })
+      setChangeQuoteRequest({
+        ...changeQuoteRequest,
+        currencyCode: stakePolicy.rewardAssets[0].currencyCode,
+        nativeAmount: existingAllocations.earned[0].nativeAmount
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -126,11 +130,11 @@ export const StakeModifyScene = (props: Props) => {
     // TODO: Move max amountlogic into stake plugin
     if (changeQuoteRequest != null) {
       if (modification === 'unstake') {
-        const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.tokenId === modCurrencyCode)
-        const modChangeQuoteRequest = { ...changeQuoteRequest, tokenId: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
+        const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.currencyCode === modCurrencyCode)
+        const modChangeQuoteRequest = { ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
         setChangeQuoteRequest(modChangeQuoteRequest)
       } else if (modification === 'stake' && existingStaked.length === 1) {
-        setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: modCurrencyCode, nativeAmount: currencyWallet.balances[modCurrencyCode] })
+        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: currencyWallet.balances[modCurrencyCode] })
       }
     }
   }
@@ -173,7 +177,7 @@ export const StakeModifyScene = (props: Props) => {
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
         // set the modified amount
-        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, tokenId: currencyCode, nativeAmount: nativeAmount })
+        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: currencyCode, nativeAmount: nativeAmount })
       })
       .catch(error => console.log(error))
   }
@@ -182,16 +186,16 @@ export const StakeModifyScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string, tokenId: string }) => {
-    const { pluginId, tokenId } = asset
+  const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string, currencyCode: string }) => {
+    const { pluginId, currencyCode } = asset
     const quoteAllocation: QuoteAllocation | void =
       changeQuote != null
         ? changeQuote.allocations.find(
-            allocation => allocationType === allocation.allocationType && allocation.pluginId === pluginId && allocation.tokenId === tokenId
+            allocation => allocationType === allocation.allocationType && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
           )
         : undefined
 
-    const quoteCurrencyCode = tokenId
+    const quoteCurrencyCode = currencyCode
     const quoteDenom = getDenominationFromCurrencyInfo(currencyWallet.currencyInfo, quoteCurrencyCode)
 
     const title =
@@ -208,7 +212,7 @@ export const StakeModifyScene = (props: Props) => {
     return (
       <EditableAmountTile
         title={title}
-        key={allocationType + pluginId + tokenId}
+        key={allocationType + pluginId + currencyCode}
         exchangeRates={guiExchangeRates}
         nativeAmount={isClaim ? earnedAmount : nativeAmount}
         currencyWallet={currencyWallet}
@@ -263,7 +267,7 @@ export const StakeModifyScene = (props: Props) => {
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={walletId}
-            tokenId={networkFeeQuote?.tokenId}
+            currencyCode={networkFeeQuote?.currencyCode}
             denomination={nativeAssetDenomination}
           />
         }

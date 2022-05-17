@@ -92,9 +92,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Metadata constants:
       const metadataName = 'Tomb Finance'
-      const nativeCurrencyCode = policyInfo.parentTokenId
-      const metadataStakeCurrencyCode = policyInfo.stakeAssets.map(asset => asset.tokenId)[0]
-      const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.tokenId)[0]
+      const nativeCurrencyCode = policyInfo.parentCurrencyCode
+      const metadataStakeCurrencyCode = policyInfo.stakeAssets.map(asset => asset.currencyCode)[0]
+      const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.currencyCode)[0]
 
       const signerSeed = getSeed(wallet)
 
@@ -113,14 +113,13 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       // Calculate the stake asset native amounts:
       if (action === 'stake' || action === 'unstake') {
         allocations.push(
-          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
-            // TODO: Replace this assertion with an algorithm to calculate each asset amount using the LP-pool ratio
-            if (tokenId !== request.tokenId) throw new Error(`Requested token '${request.tokenId}' to ${action} not found in policy`)
+          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
+            if (currencyCode !== request.currencyCode) throw new Error(`Requested token '${request.currencyCode}' to ${action} not found in policy`)
 
             return {
               allocationType: action,
               pluginId,
-              tokenId,
+              currencyCode,
               nativeAmount: request.nativeAmount
             }
           })
@@ -128,17 +127,17 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const earnedAmount = (await multipass(p => poolContract.connect(p).earned(signerAddress))).toString()
-
-        allocations.push(
-          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
-            return {
-              allocationType: 'claim',
-              pluginId,
-              tokenId,
-              nativeAmount: earnedAmount
-            }
-          })
+        const earnedAmount = (await multipass(p => poolContract.connect(p).earned(signerAddress))).toString()(
+          allocations.push(
+            ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
+              return {
+                allocationType: 'claim',
+                pluginId,
+                currencyCode,
+                nativeAmount: earnedAmount
+              }
+            })
+          )
         )
       }
 
@@ -157,7 +156,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
             return true
         }
       })()
-      if (!checkTxResponse) throw new Error(`Cannot ${action} for token '${request.tokenId}'`)
+      if (!checkTxResponse) throw new Error(`Cannot ${action} for token '${request.currencyCode}'`)
 
       // TODO: Change this algorithm to check the balance of every token in the stakeAllocations array when multiple assets are supported
       await Promise.all(
@@ -166,7 +165,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           const balanceResponse = await (async () => {
             switch (allocation.allocationType) {
               case 'stake': {
-                const tokenContract = makeContract(allocation.tokenId)
+                const tokenContract = makeContract(allocation.currencyCode)
                 return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
               }
               case 'unstake':
@@ -184,7 +183,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
           const balanceAmount = fromHex(balanceResponse._hex)
           const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
           if (!isBalanceEnough) {
-            throw new Error(sprintf(s.strings.stake_error_insufficient_s, request.tokenId))
+            throw new Error(sprintf(s.strings.stake_error_insufficient_s, request.currencyCode))
           }
         })
       )
@@ -218,7 +217,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
         allocations.map(async allocation => {
           // We don't need to approve the stake pool contract for the token earned token contract
           if (allocation.allocationType === 'claim') return
-          const tokenContract = makeContract(allocation.tokenId)
+          const tokenContract = makeContract(allocation.currencyCode)
           const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, poolContract.address))
           const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
           if (!isFullyAllowed) {
@@ -339,7 +338,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       allocations.push({
         allocationType: 'fee',
         pluginId: policyInfo.parentPluginId,
-        tokenId: policyInfo.parentTokenId,
+        currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee
       })
 
@@ -366,7 +365,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
       // Get the signer for the wallet
       const signerAddress = makeSigner(getSeed(wallet)).getAddress()
-      const tokenContract = makeContract(policyInfo.stakeAssets[0].tokenId)
+      const tokenContract = makeContract(policyInfo.stakeAssets[0].currencyCode)
 
       const [stakedAmount, stakeAllocationLockTime, earnedAmount, earnedAllocationsLockTime, tokenBalance] = await Promise.all([
         // Get the amount of staked tokens:
@@ -385,7 +384,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       const stakedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.stakeAssets[0].pluginId,
-          tokenId: policyInfo.stakeAssets[0].tokenId,
+          currencyCode: policyInfo.stakeAssets[0].currencyCode,
           allocationType: 'staked',
           nativeAmount: fromHex(stakedAmount._hex),
           locktime: stakeAllocationLockTime
@@ -396,7 +395,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
-          tokenId: policyInfo.rewardAssets[0].tokenId,
+          currencyCode: policyInfo.rewardAssets[0].currencyCode,
           allocationType: 'earned',
           nativeAmount: fromHex(earnedAmount._hex),
           locktime: earnedAllocationsLockTime

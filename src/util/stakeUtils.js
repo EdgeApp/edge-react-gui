@@ -15,7 +15,7 @@ export const stakePlugin = makeStakePlugin()
 /**
  * Returns an array of all currency codes for a particular asset type
  */
-const getAssetCurrencyCodes = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets') => stakePolicy[assetType].map(asset => asset.tokenId)
+const getAssetCurrencyCodes = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets') => stakePolicy[assetType].map(asset => asset.currencyCode)
 
 /**
  * Returns staked and earned allocations in a shape that makes sense for the GUI

@@ -38,7 +38,7 @@ export const StakeOverviewScene = (props: Props) => {
 
   const currencyWallet = useSelector((state: RootState) => state.core.account.currencyWallets[walletId])
   const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
-    denomMap[asset.tokenId] = dispatch(getDisplayDenominationFromState(currencyWallet.currencyInfo.pluginId, asset.tokenId))
+    denomMap[asset.currencyCode] = dispatch(getDisplayDenominationFromState(currencyWallet.currencyInfo.pluginId, asset.currencyCode))
     return denomMap
   }, {})
   const policyIcons = getPolicyIconUris(currencyWallet, stakePolicy)
@@ -87,12 +87,20 @@ export const StakeOverviewScene = (props: Props) => {
 
   // Renderers
   const renderCFAT = ({ item }) => {
-    const { allocationType, tokenId, nativeAmount } = item
+    const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
-    const title = `${sprintf(titleBase, tokenId)} ${getAllocationLocktimeMessage(item)}`
-    const denomination = displayDenomMap[tokenId]
+    const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
+    const denomination = displayDenomMap[currencyCode]
 
-    return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
+    return (
+      <CryptoFiatAmountTile
+        title={title}
+        nativeCryptoAmount={nativeAmount ?? '0'}
+        currencyCode={currencyCode}
+        denomination={denomination}
+        walletId={walletId}
+      />
+    )
   }
 
   if (stakeAllocations == null || rewardAllocations == null)
@@ -116,7 +124,7 @@ export const StakeOverviewScene = (props: Props) => {
       <FlatList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
-        keyExtractor={(allocation: PositionAllocation) => allocation.tokenId + allocation.allocationType}
+        keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}
       />
       <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={[0.5, 0.5, 0.25, 0.5]} />
       <MainButton
