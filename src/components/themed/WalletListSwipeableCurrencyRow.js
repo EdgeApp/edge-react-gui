@@ -8,8 +8,9 @@ import { type SharedValue } from 'react-native-reanimated'
 import { selectWallet } from '../../actions/WalletActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { memo, useCallback, useEffect, useRef } from '../../types/reactHooks.js'
+import { memo, useEffect, useRef } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -60,20 +61,20 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
 
-  const handleMenu = useCallback(() => {
+  const handleMenu = useHandler(() => {
     closeRow()
     Airship.show(bridge => (
       <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={tokenId != null} navigation={navigation} walletId={wallet.id} />
     ))
-  }, [currencyCode, navigation, tokenId, wallet])
+  })
 
-  const handleRequest = useCallback(() => {
+  const handleRequest = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
     navigation.navigate('request')
-  }, [dispatch, wallet, currencyCode, navigation])
+  })
 
-  const handleSelect = useCallback(() => {
+  const handleSelect = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true)).then(async () => {
       // Go to the transaction list, but only if the wallet exists
@@ -90,9 +91,9 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
         navigation.navigate('transactionList')
       }
     })
-  }, [currencyCode, dispatch, navigation, tokenId, wallet])
+  })
 
-  const handleSend = useCallback(() => {
+  const handleSend = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
     navigation.navigate('send', {
@@ -100,7 +101,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       selectedCurrencyCode: currencyCode,
       isCameraOpen: true
     })
-  }, [currencyCode, dispatch, navigation, wallet])
+  })
 
   // rendering -----------------------------------------------------------
 

@@ -6,10 +6,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
 import { useWatchCurrencyConfig, useWatchWallet } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
+import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type EdgeTokenId, type FlatListItem } from '../../types/types.js'
@@ -88,7 +89,7 @@ export function ManageTokensScene(props: Props) {
   }, [allTokens, searchValue, sortedTokenIds])
 
   // Shows the wallet picker modal:
-  const handleSelectWallet = useCallback(async () => {
+  const handleSelectWallet = useHandler(async () => {
     const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
       .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
       .map(pluginId => ({ pluginId }))
@@ -100,34 +101,31 @@ export function ManageTokensScene(props: Props) {
     if (walletId != null && currencyCode != null) {
       navigation.setParams({ walletId })
     }
-  }, [account, navigation])
+  })
 
   // Goes to the add token scene:
-  const handleAdd = useCallback(() => {
+  const handleAdd = useHandler(() => {
     navigation.navigate('editToken', {
       walletId
     })
-  }, [navigation, walletId])
+  })
 
   // Renders an individual token row within the list:
-  const renderRow = useCallback(
-    (item: FlatListItem<string>) => {
-      const tokenId = item.item
-      return (
-        <ManageTokensRow
-          // Scene stuff:
-          navigation={navigation}
-          wallet={wallet}
-          // Token stuff:
-          isCustom={customTokens[tokenId] != null}
-          isEnabled={enabledTokenSet.has(tokenId)}
-          token={allTokens[tokenId]}
-          tokenId={item.item}
-        />
-      )
-    },
-    [allTokens, customTokens, enabledTokenSet, navigation, wallet]
-  )
+  const renderRow = useHandler((item: FlatListItem<string>) => {
+    const tokenId = item.item
+    return (
+      <ManageTokensRow
+        // Scene stuff:
+        navigation={navigation}
+        wallet={wallet}
+        // Token stuff:
+        isCustom={customTokens[tokenId] != null}
+        isEnabled={enabledTokenSet.has(tokenId)}
+        token={allTokens[tokenId]}
+        tokenId={item.item}
+      />
+    )
+  })
 
   return (
     <SceneWrapper>

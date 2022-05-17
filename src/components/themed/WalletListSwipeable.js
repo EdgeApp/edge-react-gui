@@ -3,7 +3,8 @@
 import * as React from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 
-import { useCallback, useMemo } from '../../types/reactHooks.js'
+import { useHandler } from '../../hooks/useHandler.js'
+import { useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type FlatListItem, type WalletListItem } from '../../types/types.js'
@@ -54,28 +55,25 @@ export function WalletListSwipeable(props: Props) {
   }, [theme, onRefresh])
 
   // Renders a single row:
-  const renderRow = useCallback(
-    (item: FlatListItem<WalletListItem>) => {
-      const { token, tokenId, wallet, walletId } = item.item
+  const renderRow = useHandler((item: FlatListItem<WalletListItem>) => {
+    const { token, tokenId, wallet, walletId } = item.item
 
-      if (wallet != null) {
-        return (
-          <WalletListSwipeableCurrencyRow
-            navigation={navigation}
-            openTutorial={item.index === 0 && showSlidingTutorial}
-            token={token}
-            tokenId={tokenId}
-            wallet={wallet}
-          />
-        )
-      }
-      if (walletId != null) {
-        return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
-      }
-      return null
-    },
-    [navigation, showSlidingTutorial]
-  )
+    if (wallet != null) {
+      return (
+        <WalletListSwipeableCurrencyRow
+          navigation={navigation}
+          openTutorial={item.index === 0 && showSlidingTutorial}
+          token={token}
+          tokenId={tokenId}
+          wallet={wallet}
+        />
+      )
+    }
+    if (walletId != null) {
+      return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
+    }
+    return null
+  })
 
   return (
     <FlatList

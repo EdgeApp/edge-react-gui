@@ -7,8 +7,9 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import { usePendingPressAnimation } from '../../hooks/usePendingPress.js'
-import { memo, useCallback } from '../../types/reactHooks.js'
+import { memo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -38,7 +39,7 @@ export const ManageTokensRow = memo((props: Props) => {
   const disklet = useSelector(state => state.core.disklet)
 
   // Handle editing custom tokens:
-  const handleEdit = useCallback(() => {
+  const handleEdit = useHandler(() => {
     const { currencyCode, displayName, denominations, networkLocation } = token
     navigation.navigate('editToken', {
       currencyCode,
@@ -48,7 +49,7 @@ export const ManageTokensRow = memo((props: Props) => {
       tokenId,
       walletId: wallet.id
     })
-  }, [navigation, token, tokenId, wallet])
+  })
 
   // Handle toggling the token on or off:
   const [pending, handleToggle] = usePendingPressAnimation(async () => {

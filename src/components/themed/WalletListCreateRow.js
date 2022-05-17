@@ -9,8 +9,9 @@ import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner.js'
 import { showError } from '../../components/services/AirshipInstance.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { memo, useCallback } from '../../types/reactHooks.js'
+import { memo } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
@@ -41,14 +42,14 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handlePress = useCallback(() => {
+  const handlePress = useHandler(() => {
     const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
     } else if (pluginId != null) {
       dispatch(createAndSelectToken({ currencyCode, pluginId })).then(handleRes)
     }
-  }, [walletType, pluginId, onPress, currencyCode, dispatch])
+  })
 
   return (
     <TouchableOpacity style={styles.row} onPress={handlePress}>

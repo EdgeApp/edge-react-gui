@@ -3,8 +3,9 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
+import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { makeCurrencyCodeTable } from '../../util/utils.js'
@@ -72,21 +73,18 @@ export function WalletListModal(props: Props) {
     return [allowedAssets, excludeAssets]
   }, [account, allowedCurrencyCodes, excludeCurrencyCodes])
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = useHandler(() => {
     bridge.resolve({})
-  }, [bridge])
-  const handlePress = useCallback(
-    (walletId: string, currencyCode: string) => {
-      bridge.resolve({ walletId, currencyCode })
-    },
-    [bridge]
-  )
-  const handleSearchClear = useCallback(() => {
+  })
+  const handlePress = useHandler((walletId: string, currencyCode: string) => {
+    bridge.resolve({ walletId, currencyCode })
+  })
+  const handleSearchClear = useHandler(() => {
     setSearchText('')
     setSearching(false)
-  }, [])
-  const handleSearchUnfocus = useCallback(() => setSearching(searchText.length > 0), [searchText.length])
-  const handleSearchFocus = useCallback(() => setSearching(true), [])
+  })
+  const handleSearchUnfocus = useHandler(() => setSearching(searchText.length > 0))
+  const handleSearchFocus = useHandler(() => setSearching(true))
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
