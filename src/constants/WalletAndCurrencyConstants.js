@@ -119,6 +119,7 @@ type SpecialCurrencyInfo = {|
       },
 
   // Flags that could move to EdgeCurrencyInfo:
+  fioChainCode?: string,
   allowZeroTx?: boolean,
   isAccountActivationRequired?: boolean,
   isCustomTokensSupported?: boolean,
@@ -367,6 +368,7 @@ export const SPECIAL_CURRENCY_INFO: {
   binancesmartchain: {
     initWalletName: s.strings.string_first_binance_smart_chain_wallet_name,
     chainCode: 'BNB',
+    fioChainCode: 'BSC',
     allowZeroTx: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,

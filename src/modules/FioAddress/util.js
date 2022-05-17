@@ -5,7 +5,7 @@ import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord } from '../../types/types'
@@ -372,10 +372,12 @@ export const makeConnectWallets = (
     const wallet = wallets[walletKey]
     const {
       allTokens,
-      currencyInfo: { currencyCode, pluginId }
+      currencyInfo: { currencyCode: cCode, pluginId }
     } = wallet.currencyConfig
     if (pluginId === 'fio') continue
 
+    // Look for unique FIO network chain code
+    const currencyCode = getSpecialCurrencyInfo(pluginId).fioChainCode ?? cCode
     const fullCurrencyCode = `${currencyCode}:${currencyCode}`
     walletItems[`${wallet.id}-${currencyCode}`] = {
       key: `${wallet.id}-${currencyCode}`,
