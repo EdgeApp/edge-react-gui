@@ -271,13 +271,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
-    const wallets = state.ui.wallets.byId
     const edgeWallets = state.core.account.currencyWallets
     const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
     if (!ccWalletMap) return { walletItems: {}, loading: true }
 
-    const walletItems = makeConnectWallets(edgeWallets, wallets, ccWalletMap)
+    const walletItems = makeConnectWallets(edgeWallets, ccWalletMap)
 
     return {
       walletItems,
