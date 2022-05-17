@@ -83,7 +83,7 @@ export const StakeOptionsScene = (props: Props) => {
     const primaryText = getPolicyAssetName(item, 'stakeAssets')
     const secondaryText = getPolicyTitleName(item)
     const key = [primaryText, secondaryText].join()
-    const policyIcons = getPolicyIconUris(currencyWallet, item)
+    const policyIcons = getPolicyIconUris(currencyWallet.currencyInfo, item)
     return (
       <View key={key} style={styles.optionContainer}>
         <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>

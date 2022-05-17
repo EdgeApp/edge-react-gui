@@ -11,7 +11,6 @@ import { type PositionAllocation } from '../types'
 import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, StakePositionRequest } from '../types.js'
 import { makeBigAccumulator } from '../util/accumulator.js'
 import { makeBuilder } from '../util/builder.js'
-import { getSeed } from '../util/getSeed.js'
 import { fromHex, toHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
 
@@ -85,7 +84,7 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, wallet } = request
+      const { action, stakePolicyId, signerSeed } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -95,8 +94,6 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       const nativeCurrencyCode = policyInfo.parentCurrencyCode
       const metadataStakeCurrencyCode = policyInfo.stakeAssets.map(asset => asset.currencyCode)[0]
       const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.currencyCode)[0]
-
-      const signerSeed = getSeed(wallet)
 
       // Get the signer for the wallet
       const signerAddress = makeSigner(signerSeed).getAddress()
@@ -358,13 +355,13 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
     },
     // TODO: Implement support for multi-asset staking
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, wallet } = request
+      const { stakePolicyId, signerSeed } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
       // Get the signer for the wallet
-      const signerAddress = makeSigner(getSeed(wallet)).getAddress()
+      const signerAddress = makeSigner(signerSeed).getAddress()
       const tokenContract = makeContract(policyInfo.stakeAssets[0].currencyCode)
 
       const [stakedAmount, stakeAllocationLockTime, earnedAmount, earnedAllocationsLockTime, tokenBalance] = await Promise.all([

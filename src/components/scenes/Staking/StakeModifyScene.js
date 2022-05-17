@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings.js'
 import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
 import { type ChangeQuote, type ChangeQuoteRequest, type PositionAllocation, type QuoteAllocation } from '../../../plugins/stake-plugins'
+import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -67,7 +68,7 @@ export const StakeModifyScene = (props: Props) => {
     stakePolicyId: stakePolicy.stakePolicyId,
     currencyCode: '',
     nativeAmount: '0',
-    wallet: currencyWallet
+    signerSeed: getSeed(currencyWallet)
   })
 
   // Slider state
@@ -292,7 +293,7 @@ export const StakeModifyScene = (props: Props) => {
     unstake: s.strings.stake_unstake_claim
   }
 
-  const policyIcons = getPolicyIconUris(currencyWallet, stakePolicy)
+  const policyIcons = getPolicyIconUris(currencyWallet.currencyInfo, stakePolicy)
   const icon = modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />
 
   return (

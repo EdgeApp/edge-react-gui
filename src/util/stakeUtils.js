@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyInfo } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
@@ -59,22 +59,20 @@ export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => 
 /**
  * Returns the icon uris of stake and reward assets.
  */
-export const getPolicyIconUris = (currencyWallet: EdgeCurrencyWallet, stakePolicy: StakePolicy): { stakeAssetUris: string[], rewardAssetUris: string[] } => {
+export const getPolicyIconUris = (
+  { metaTokens, pluginId }: EdgeCurrencyInfo,
+  stakePolicy: StakePolicy
+): { stakeAssetUris: string[], rewardAssetUris: string[] } => {
   const stakeAssetNames = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
   const rewardAssetNames = getAssetCurrencyCodes(stakePolicy, 'rewardAssets')
 
-  const metaTokens = currencyWallet.currencyInfo.metaTokens
   const stakeContractAddresses = stakeAssetNames.map(stakeAssetName => metaTokens.find(metaToken => metaToken.currencyCode === stakeAssetName)?.contractAddress)
   const rewardContractAddresses = rewardAssetNames.map(
     rewardAssetName => metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
   )
 
-  const stakeAssetUris = stakeContractAddresses.map(
-    stakeContractAddress => getCurrencyIconUris(currencyWallet.currencyInfo.pluginId, stakeContractAddress).symbolImage
-  )
-  const rewardAssetUris = rewardContractAddresses.map(
-    rewardContractAddress => getCurrencyIconUris(currencyWallet.currencyInfo.pluginId, rewardContractAddress).symbolImage
-  )
+  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress).symbolImage)
+  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress).symbolImage)
 
   return { stakeAssetUris, rewardAssetUris }
 }

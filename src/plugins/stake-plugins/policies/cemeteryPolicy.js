@@ -15,7 +15,6 @@ import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, S
 import { makeBigAccumulator } from '../util/accumulator.js'
 import { round } from '../util/biggystringplus.js'
 import { makeBuilder } from '../util/builder.js'
-import { getSeed } from '../util/getSeed.js'
 import { fromHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
 
@@ -89,7 +88,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, wallet } = request
+      const { action, stakePolicyId, signerSeed } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -105,8 +104,6 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       // Metadata constants:
       const metadataName = 'Tomb Finance'
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
-
-      const signerSeed = getSeed(wallet)
 
       // Get the signer for the wallet
       const signerAddress = await makeSigner(signerSeed).getAddress()
@@ -591,7 +588,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, wallet } = request
+      const { stakePolicyId, signerSeed } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -600,7 +597,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
 
       // Get the signer for the wallet
-      const signerAddress = makeSigner(getSeed(wallet)).getAddress()
+      const signerAddress = makeSigner(signerSeed).getAddress()
 
       const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, tokenABalance, tokenBBalance, lpTokenBalance] = await Promise.all([
         // Get staked allocations:

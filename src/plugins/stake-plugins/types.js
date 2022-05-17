@@ -1,5 +1,4 @@
 // @flow
-import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Stake Policy
@@ -45,7 +44,7 @@ export type ChangeQuoteRequest = {
   stakePolicyId: string,
   currencyCode: string,
   nativeAmount: string,
-  wallet: EdgeCurrencyWallet
+  signerSeed: string
 }
 
 export type QuoteAllocation = {
@@ -66,7 +65,7 @@ export type ChangeQuote = {
 
 export type StakePositionRequest = {
   stakePolicyId: string,
-  wallet: EdgeCurrencyWallet
+  signerSeed: string
 }
 
 export type PositionAllocation = {
