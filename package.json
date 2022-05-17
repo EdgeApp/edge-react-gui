@@ -26,6 +26,7 @@
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && adb install android/app/build/outputs/apk/release/app-release.apk",
+    "cavy": "cavy run-ios",
     "cover": "jest --config jest.config.js --coverage",
     "fix": "npm run lint -- --fix",
     "flow": "flow",
