@@ -18,7 +18,11 @@ export const getDisplayDenominationFromState =
   }
 
 export const getDisplayDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  return state.ui.settings.denominationSettings[pluginId][currencyCode] ?? getExchangeDenomination(state, pluginId, currencyCode)
+  const pluginSettings = state.ui.settings.denominationSettings[pluginId]
+  if (pluginSettings != null && pluginSettings[currencyCode] != null) {
+    return pluginSettings[currencyCode]
+  }
+  return getExchangeDenomination(state, pluginId, currencyCode)
 }
 
 export const getExchangeDenominationFromState = (pluginId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {

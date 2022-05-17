@@ -1,98 +1,338 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CurrencySettings should render 1`] = `
-<SceneWrapper
-  background="theme"
-  hasTabs={false}
+<BVLinearGradient
+  colors={
+    Array [
+      4279050565,
+      4278994026,
+    ]
+  }
+  endPoint={
+    Object {
+      "x": 1,
+      "y": 0,
+    }
+  }
+  locations={null}
+  startPoint={
+    Object {
+      "x": 0,
+      "y": 0,
+    }
+  }
+  style={
+    Object {
+      "bottom": 0,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+    }
+  }
 >
-  <ScrollView>
-    <WithTheme(SettingsHeaderRowComponent)
-      label="Denominations"
-    />
-    <WithTheme(SettingsRadioRowComponent)
-      onPress={[Function]}
-      value={false}
-    >
-      <Text
-        style={
-          Object {
-            "color": "#FFFFFF",
-            "flexShrink": 1,
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          }
-        }
-      >
-        <Text
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "position": "absolute",
+        },
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "padding": 0,
+          "right": 0,
+          "top": 64,
+        },
+      ]
+    }
+  >
+    <RCTScrollView>
+      <View>
+        <View
           style={
             Object {
-              "fontFamily": "Quicksand-Regular",
+              "alignItems": "center",
+              "backgroundColor": "#0D2145",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
+              "minHeight": 62,
+              "padding": 22,
             }
           }
         >
-          ₿
-        </Text>
-         - BTG
-      </Text>
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
-      onPress={[Function]}
-      value={false}
-    >
-      <Text
-        style={
-          Object {
-            "color": "#FFFFFF",
-            "flexShrink": 1,
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          }
-        }
-      >
-        <Text
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
+            }
+          >
+            Denominations
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "fontFamily": "Quicksand-Regular",
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
             }
           }
         >
-          m₿
-        </Text>
-         - mBTG
-      </Text>
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
-      onPress={[Function]}
-      value={true}
-    >
-      <Text
-        style={
-          Object {
-            "color": "#FFFFFF",
-            "flexShrink": 1,
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          }
-        }
-      >
-        <Text
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "fontFamily": "Quicksand-Regular",
+                }
+              }
+            >
+              ₿
+            </Text>
+             - BTG
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 28,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "fontFamily": "Quicksand-Regular",
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
             }
           }
         >
-          ƀ
-        </Text>
-         - bits
-      </Text>
-    </WithTheme(SettingsRadioRowComponent)>
-  </ScrollView>
-</SceneWrapper>
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "fontFamily": "Quicksand-Regular",
+                }
+              }
+            >
+              m₿
+            </Text>
+             - mBTG
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 28,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "fontFamily": "Quicksand-Regular",
+                }
+              }
+            >
+              ƀ
+            </Text>
+             - bits
+          </Text>
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 28,
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</BVLinearGradient>
 `;
