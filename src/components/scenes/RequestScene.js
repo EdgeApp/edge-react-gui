@@ -584,6 +584,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    const { pluginId } = wallet.currencyInfo
     const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
@@ -593,6 +594,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: walletId,
+      pluginId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
