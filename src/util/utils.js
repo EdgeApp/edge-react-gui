@@ -1,7 +1,7 @@
 // @flow
 
 import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
@@ -198,28 +198,6 @@ export function fixFiatCurrencyCode(currencyCode: string) {
   if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
 
   return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
-}
-
-export const getCurrencyInfo = (allCurrencyInfos: EdgeCurrencyInfo[], currencyCode: string): EdgeCurrencyInfo | void => {
-  for (const info of allCurrencyInfos) {
-    for (const denomination of info.denominations) {
-      if (denomination.name === currencyCode) {
-        return info
-      }
-    }
-  }
-  // loop through metaTokens only after all top-level / parent
-  // cryptos have been looped through. Native / parent currency
-  // takes precedence over tokens
-  for (const info of allCurrencyInfos) {
-    for (const token of info.metaTokens) {
-      for (const denomination of token.denominations) {
-        if (denomination.name === currencyCode) {
-          return info
-        }
-      }
-    }
-  }
 }
 
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
