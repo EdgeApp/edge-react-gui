@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
 
@@ -8,6 +8,7 @@ import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux.js'
 import type { TransactionListTx } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { BuyCrypto } from '../themed/BuyCrypto.js'
@@ -27,6 +28,8 @@ type StateProps = {
   numTransactions: number,
   selectedWalletId: string,
   selectedCurrencyCode: string,
+  wallet: EdgeCurrencyWallet,
+  tokenId?: string,
   transactions: TransactionListTx[]
 }
 
@@ -130,8 +133,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
 
-  renderEmptyComponent = () =>
-    this.props.numTransactions ? <EmptyLoader /> : <BuyCrypto walletId={this.props.selectedWalletId} currencyCode={this.props.selectedCurrencyCode} />
+  renderEmptyComponent = () => (this.props.numTransactions ? <EmptyLoader /> : <BuyCrypto wallet={this.props.wallet} tokenId={this.props.tokenId} />)
 
   renderSectionHeader = (section: { section: Section }) => {
     const { filteredTransactions, loading, searching } = this.state
@@ -196,12 +198,15 @@ export const TransactionList = connect<StateProps, DispatchProps, {}>(
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[selectedWalletId]
     const { getTransactions } = currencyWallet
+    const tokenId = getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, selectedCurrencyCode)
 
     return {
       getTransactions,
       numTransactions: state.ui.scenes.transactionList.numTransactions,
       selectedCurrencyCode,
       selectedWalletId,
+      wallet: currencyWallet,
+      tokenId,
       transactions: state.ui.scenes.transactionList.transactions
     }
   },
