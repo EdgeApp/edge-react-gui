@@ -12,7 +12,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     withTopMargin={true}
   />
   <ScrollView>
-    <WithTheme(SettingsRadioRowComponent)
+    <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
       value={false}
@@ -29,8 +29,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Optimal"
       onPress={[Function]}
       value={true}
@@ -47,8 +47,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Low"
       onPress={[Function]}
       value={false}
@@ -65,8 +65,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Custom"
       onPress={[Function]}
       value={false}
@@ -83,7 +83,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
+    </Memo(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"
@@ -107,7 +107,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
     withTopMargin={true}
   />
   <ScrollView>
-    <WithTheme(SettingsRadioRowComponent)
+    <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
       value={false}
@@ -124,8 +124,8 @@ exports[`Change Mining Fees should render with high props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Optimal"
       onPress={[Function]}
       value={true}
@@ -142,8 +142,8 @@ exports[`Change Mining Fees should render with high props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Low"
       onPress={[Function]}
       value={false}
@@ -160,8 +160,8 @@ exports[`Change Mining Fees should render with high props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Custom"
       onPress={[Function]}
       value={false}
@@ -178,7 +178,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
+    </Memo(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"
@@ -202,7 +202,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
     withTopMargin={true}
   />
   <ScrollView>
-    <WithTheme(SettingsRadioRowComponent)
+    <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
       value={false}
@@ -219,8 +219,8 @@ exports[`Change Mining Fees should render with low props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Optimal"
       onPress={[Function]}
       value={true}
@@ -237,8 +237,8 @@ exports[`Change Mining Fees should render with low props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Low"
       onPress={[Function]}
       value={false}
@@ -255,8 +255,8 @@ exports[`Change Mining Fees should render with low props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Custom"
       onPress={[Function]}
       value={false}
@@ -273,7 +273,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
+    </Memo(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"
@@ -297,7 +297,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     withTopMargin={true}
   />
   <ScrollView>
-    <WithTheme(SettingsRadioRowComponent)
+    <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
       value={false}
@@ -314,8 +314,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Optimal"
       onPress={[Function]}
       value={true}
@@ -332,8 +332,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Low"
       onPress={[Function]}
       value={false}
@@ -350,8 +350,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </Memo(SettingsRadioRowComponent)>
+    <Memo(SettingsRadioRowComponent)
       label="Custom"
       onPress={[Function]}
       value={false}
@@ -368,7 +368,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           }
         }
       />
-    </WithTheme(SettingsRadioRowComponent)>
+    </Memo(SettingsRadioRowComponent)>
     <MainButton
       alignSelf="center"
       label="Done"

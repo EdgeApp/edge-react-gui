@@ -3,23 +3,22 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-type OwnProps = {
+type Props = {
   icon?: React.Node,
 
   // Insert a text node after the other children when set:
   label?: string
 }
 
-type Props = OwnProps & ThemeProps
-
 /**
  * A blue header row in a settings scene.
  */
-export function SettingsHeaderRowComponent(props: Props): React.Node {
-  const { icon, label, theme } = props
-  const styles = getStyles(theme)
+export const SettingsHeaderRowComponent = (props: Props): React.Node => {
+  const { icon, label } = props
+  const styles = getStyles(useTheme())
 
   return (
     <View style={styles.row}>
@@ -56,4 +55,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SettingsHeaderRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsHeaderRowComponent)
+export const SettingsHeaderRow = memo(SettingsHeaderRowComponent)
