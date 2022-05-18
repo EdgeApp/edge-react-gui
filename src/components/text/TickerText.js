@@ -1,14 +1,15 @@
 // @flow
 
-import { abs, div, gt, mul, sub } from 'biggystring'
+import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
+import { formatNumber } from '../../locales/intl'
 import { type Theme } from '../../types/Theme'
-import { truncateDecimals, zeroString } from '../../util/utils'
+import { zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
 
 type Props = {|
@@ -18,18 +19,15 @@ type Props = {|
 
 const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, assetToYestFiatRate: string, usdToWalletFiatRate: string, theme: Theme) => {
   const yesterdayExchangeRate = mul(assetToYestFiatRate, usdToWalletFiatRate)
-
-  // Blank string if yesterday's exchange rate does not exist
-  if (zeroString(yesterdayExchangeRate)) return { percentString: '', deltaColorStyle: theme.secondaryText }
-
   const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
-  const yesterdayDeltaPct = mul(div(yesterdayDelta, yesterdayExchangeRate, 3), '100')
+  // Avoid divide by zero if there's no exchange rate from yesterday
+  const yesterdayDeltaPct = zeroString(yesterdayExchangeRate) ? '0' : mul(div(yesterdayDelta, yesterdayExchangeRate, 3), '100')
 
-  // Neutral zero for no historical delta
-  if (zeroString(yesterdayDeltaPct)) return { percentString: '0.00', deltaColorStyle: theme.secondaryText }
+  // Blank string if yesterday's exchange rate does not exist or delta percent is close enough to 0 (rounding)
+  if (zeroString(yesterdayExchangeRate) || zeroString(yesterdayDeltaPct)) return { percentString: '', deltaColorStyle: theme.secondaryText }
 
   // Colored, signed percentString representing daily price delta
-  const percentString = abs(yesterdayDeltaPct)
+  const percentString = formatNumber(toFixed(abs(yesterdayDeltaPct), 0, 1), { noGrouping: true })
   if (gt(yesterdayDeltaPct, '0')) return { percentString: `+${percentString}%`, deltaColorStyle: theme.positiveText }
   return { percentString: `-${percentString}%`, deltaColorStyle: theme.negativeText }
 }
@@ -44,7 +42,7 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
     wallet
   })
 
-  let fiatText = useFiatText({
+  const fiatText = useFiatText({
     autoPrecision: true,
     cryptoCurrencyCode: currencyCode,
     cryptoExchangeMultiplier: denomination.multiplier,
@@ -52,9 +50,6 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
     isoFiatCurrencyCode,
     nativeCryptoAmount: denomination.multiplier
   })
-
-  // Drop decimals if over '1000' of any fiat currency
-  if (Math.log10(parseFloat(assetToFiatRate)) >= 3) fiatText = truncateDecimals(fiatText, 0)
 
   const theme = useTheme()
   const { percentString, deltaColorStyle } = getPercentDeltaString(currencyCode, assetToFiatRate, assetToYestFiatRate, usdToWalletFiatRate, theme)

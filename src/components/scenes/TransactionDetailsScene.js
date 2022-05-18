@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
+import { displayFiatAmount } from '../../hooks/useFiatText.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
@@ -23,7 +24,6 @@ import {
   capitalize,
   convertNativeToDisplay,
   convertNativeToExchange,
-  displayFiatAmount,
   isValidInput,
   splitTransactionCategory,
   truncateDecimals
