@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
+import { View } from 'react-native'
 
 import s from '../../locales/strings.js'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { Card } from '../cards/Card'
-import { CardContent } from '../cards/CardContent'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from './CurrencyIcon.js'
-import { DataRow } from './DataRow'
 import { EdgeText } from './EdgeText'
 
 type Props = {
@@ -25,21 +25,34 @@ type Props = {
 type State = {}
 
 export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemeProps, State> {
+  renderRow = (label: React.Node, value: React.Node, style: any = {}) => {
+    const styles = getStyles(this.props.theme)
+    return (
+      <View style={[styles.row, style]}>
+        <View style={styles.label}>{label}</View>
+        <View style={styles.value}>{value}</View>
+      </View>
+    )
+  }
+
   renderBottom = () => {
-    if (this.props.isTop) {
-      const styles = getStyles(this.props.theme)
-      const totalText = `${this.props.total || this.props.fiatCurrencyAmount} ${this.props.fiatCurrencyCode}`
+    const { theme, isTop, fiatCurrencyAmount, fiatCurrencyCode, total, miningFee } = this.props
+    if (isTop) {
+      const styles = getStyles(theme)
+      const totalText = `${total || fiatCurrencyAmount} ${fiatCurrencyCode}`
       return (
         <>
-          <DataRow
-            marginRem={[1, 0, 0]}
-            label={<EdgeText style={styles.bottomText}>{s.strings.mining_fee}</EdgeText>}
-            value={<EdgeText style={styles.bottomText}>{this.props.miningFee || '0'}</EdgeText>}
-          />
-          <DataRow
-            label={<EdgeText style={styles.bottomText}>{s.strings.string_total_amount}</EdgeText>}
-            value={<EdgeText style={styles.bottomText}>{totalText}</EdgeText>}
-          />
+          {this.renderRow(
+            <EdgeText style={styles.bottomText}>{s.strings.mining_fee}</EdgeText>,
+            <EdgeText style={styles.bottomText}>{miningFee || '0'}</EdgeText>,
+            {
+              ...sidesToMargin(mapSides(fixSides([1, 0, 0], 0), theme.rem))
+            }
+          )}
+          {this.renderRow(
+            <EdgeText style={styles.bottomText}>{s.strings.string_total_amount}</EdgeText>,
+            <EdgeText style={styles.bottomText}>{totalText}</EdgeText>
+          )}
         </>
       )
     }
@@ -47,15 +60,28 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
   }
 
   render() {
+    const styles = getStyles(this.props.theme)
+    const cryptoAmount = `${this.props.cryptoAmount} ${this.props.currencyCode}`
+    const fiatAmount = `${this.props.fiatCurrencyAmount} ${this.props.fiatCurrencyCode}`
+
     return (
       <Card marginRem={[0, 1]}>
-        <CardContent
-          image={<CurrencyIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />}
-          title={this.props.currency}
-          subTitle={this.props.walletName}
-          value={`${this.props.cryptoAmount} ${this.props.currencyCode}`}
-          subValue={`${this.props.fiatCurrencyAmount} ${this.props.fiatCurrencyCode}`}
-        />
+        <View style={styles.container}>
+          <View style={styles.iconContainer}>
+            <CurrencyIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />
+          </View>
+          <View style={styles.contentContainer}>
+            {this.renderRow(
+              <EdgeText style={styles.contentTitle}>{this.props.currency}</EdgeText>,
+              <EdgeText style={styles.contentValue}>{cryptoAmount}</EdgeText>
+            )}
+            {this.renderRow(
+              <EdgeText style={styles.contentSubTitle}>{this.props.walletName}</EdgeText>,
+              <EdgeText style={styles.contentSubValue}>{fiatAmount}</EdgeText>
+            )}
+          </View>
+        </View>
+
         {this.renderBottom()}
       </Card>
     )
@@ -63,6 +89,49 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: theme.rem(1)
+  },
+  contentContainer: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  contentTitle: {
+    fontFamily: theme.fontFaceMedium,
+    fontWeight: '600'
+  },
+  contentValue: {
+    fontWeight: '600',
+    textAlign: 'right'
+  },
+  contentSubTitle: {
+    flex: 1,
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  contentSubValue: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  label: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  value: {
+    marginLeft: theme.rem(0.25),
+    textAlign: 'right'
+  },
   bottomText: {
     fontWeight: '600',
     fontSize: theme.rem(0.75)
