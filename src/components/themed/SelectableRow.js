@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -103,4 +104,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SelectableRow = withTheme(SelectableRowComponent)
+export const SelectableRow = hook(withTheme(SelectableRowComponent))

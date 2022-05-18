@@ -1,14 +1,15 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { FlatList } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
@@ -25,14 +26,14 @@ type OwnProps = {
 type StateProps = {
   supportedFiats: GuiFiatType[]
 }
-type Props = OwnProps & StateProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps & TestProps
 
 type State = {
   searchTerm: string,
   selectedFiat: string
 }
 
-export class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
+export class CreateWalletSelectFiatComponent extends React.Component<Props & TestProps, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -112,6 +113,7 @@ export class CreateWalletSelectFiatComponent extends React.Component<Props, Stat
         subTitle={s.strings[`currency_label_${data.item.value}`]}
         title={data.item.value}
         onPress={() => this.handleSelectFiatType(data.item)}
+        ref={this.props.generateTestHook(data.item.value)}
       />
     )
   }
@@ -150,6 +152,7 @@ export class CreateWalletSelectFiatComponent extends React.Component<Props, Stat
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
+              ref={this.props.generateTestHook('CreateWalletSelectFiatScene.FiatList')}
             />
           </View>
         )}
@@ -174,7 +177,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectFiatScene = connect<StateProps, {}, OwnProps>(
+export const CreateWalletSelectFiatScene = connect<StateProps, {}, OwnProps & TestProps>(
   state => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
