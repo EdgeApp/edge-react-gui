@@ -28,18 +28,18 @@ export const pluginInfo: StakePluginInfo = {
     {
       stakePolicyId: '',
       parentPluginId: 'fantom',
-      parentTokenId: 'FTM',
+      parentCurrencyCode: 'FTM',
       policy: makeMasonryPolicy(),
       stakeAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         }
       ],
       rewardAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TOMB'
+          currencyCode: 'TOMB'
         }
       ],
       mustClaimRewards: true
@@ -48,7 +48,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: '',
       liquidityPool: spookySwapLiquidityPool,
       parentPluginId: 'fantom',
-      parentTokenId: 'FTM',
+      parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
         poolId: 0,
         lpTokenContract: makeContract('TOMB_WFTM_LP'),
@@ -60,17 +60,17 @@ export const pluginInfo: StakePluginInfo = {
       stakeAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TOMB'
+          currencyCode: 'TOMB'
         },
         {
           pluginId: 'fantom',
-          tokenId: 'FTM'
+          currencyCode: 'FTM'
         }
       ],
       rewardAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         }
       ],
       mustClaimRewards: true
@@ -79,7 +79,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: '',
       liquidityPool: spookySwapLiquidityPool,
       parentPluginId: 'fantom',
-      parentTokenId: 'FTM',
+      parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
         poolId: 1,
         lpTokenContract: makeContract('TSHARE_WFTM_LP'),
@@ -91,17 +91,17 @@ export const pluginInfo: StakePluginInfo = {
       stakeAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         },
         {
           pluginId: 'fantom',
-          tokenId: 'FTM'
+          currencyCode: 'FTM'
         }
       ],
       rewardAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         }
       ],
       mustClaimRewards: true
@@ -110,7 +110,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: '',
       liquidityPool: tombSwapLiquidityPool,
       parentPluginId: 'fantom',
-      parentTokenId: 'FTM',
+      parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
         poolId: 2,
         lpTokenContract: makeContract('TOMBSWAP_TOMB_MAI_LP'),
@@ -122,17 +122,17 @@ export const pluginInfo: StakePluginInfo = {
       stakeAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TOMB'
+          currencyCode: 'TOMB'
         },
         {
           pluginId: 'fantom',
-          tokenId: 'MAI'
+          currencyCode: 'MAI'
         }
       ],
       rewardAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         }
       ],
       mustClaimRewards: true
@@ -141,7 +141,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: '',
       liquidityPool: tombSwapLiquidityPool,
       parentPluginId: 'fantom',
-      parentTokenId: 'FTM',
+      parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
         poolId: 3,
         lpTokenContract: makeContract('TOMBSWAP_TOMB_WFTM_LP'),
@@ -153,17 +153,17 @@ export const pluginInfo: StakePluginInfo = {
       stakeAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TOMB'
+          currencyCode: 'TOMB'
         },
         {
           pluginId: 'fantom',
-          tokenId: 'FTM'
+          currencyCode: 'FTM'
         }
       ],
       rewardAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         }
       ],
       mustClaimRewards: true
@@ -172,7 +172,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: '',
       liquidityPool: tombSwapLiquidityPool,
       parentPluginId: 'fantom',
-      parentTokenId: 'FTM',
+      parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
         poolId: 4,
         lpTokenContract: makeContract('TOMBSWAP_TSHARE_MAI_LP'),
@@ -184,17 +184,17 @@ export const pluginInfo: StakePluginInfo = {
       stakeAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         },
         {
           pluginId: 'fantom',
-          tokenId: 'MAI'
+          currencyCode: 'MAI'
         }
       ],
       rewardAssets: [
         {
           pluginId: 'fantom',
-          tokenId: 'TSHARE'
+          currencyCode: 'TSHARE'
         }
       ],
       mustClaimRewards: true

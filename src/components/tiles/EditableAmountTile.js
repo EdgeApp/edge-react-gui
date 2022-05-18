@@ -16,7 +16,7 @@ type Props = {
   title: string,
   exchangeRates: GuiExchangeRates,
   nativeAmount: string,
-  currencyWallet: EdgeCurrencyWallet,
+  wallet: EdgeCurrencyWallet,
   currencyCode: string,
   exchangeDenomination: EdgeDenomination,
   displayDenomination: EdgeDenomination,
@@ -28,8 +28,8 @@ export const EditableAmountTile = (props: Props) => {
   let cryptoAmountSyntax
   let cryptoAmountStyle
   let fiatAmountSyntax
-  const { title, exchangeRates, nativeAmount, currencyWallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress } = props
-  const { isoFiatCurrencyCode } = getWalletFiat(currencyWallet)
+  const { title, exchangeRates, nativeAmount, wallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress } = props
+  const { isoFiatCurrencyCode } = getWalletFiat(wallet)
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
   const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
   const theme = useTheme()
