@@ -7,6 +7,10 @@ import { fixFiatCurrencyCode, getDenomFromIsoCode, getYesterdayDateRoundDownHour
 
 /**
  * Returns data from tokens relevant for display
+ * TODO: Break this up once crypto & fiat text display logic is centralized into the appropriate text hooks/components. The order of operations should always be as follows:
+ * 1. Numeric calculations
+ * 2. Display Denomination
+ * 3. Localization: commas, decimals, spaces
  * */
 
 export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurrencyWallet |}) => {
