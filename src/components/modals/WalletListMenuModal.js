@@ -49,13 +49,13 @@ const icons = {
 const getWalletOptions = async (params: {
   walletId: string,
   walletName?: string,
-  currencyCode?: string,
+  pluginId?: string,
   isToken?: boolean,
   account: EdgeAccount
 }): Promise<Option[]> => {
-  const { walletId, currencyCode, isToken, account } = params
+  const { walletId, pluginId, isToken, account } = params
 
-  if (!currencyCode) {
+  if (!pluginId) {
     return [
       { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
       { label: s.strings.string_archive_wallet, value: 'rawDelete' }
@@ -87,9 +87,9 @@ const getWalletOptions = async (params: {
   }
 
   for (const option of WALLET_LIST_MENU) {
-    const { currencyCodes, label, value } = option
+    const { pluginIds, label, value } = option
 
-    if (Array.isArray(currencyCodes) && !currencyCodes.includes(currencyCode)) continue
+    if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
     result.push({ label, value })
   }
@@ -104,6 +104,7 @@ export function WalletListMenuModal(props: Props) {
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const edgeWallet = account.currencyWallets[walletId]
+  const { pluginId } = edgeWallet.currencyInfo
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -123,7 +124,7 @@ export function WalletListMenuModal(props: Props) {
   }
 
   useEffect(() => {
-    getWalletOptions({ walletId, walletName, currencyCode, isToken, account }).then(options => setOptions(options))
+    getWalletOptions({ walletId, walletName, pluginId, isToken, account }).then(options => setOptions(options))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

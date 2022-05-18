@@ -119,6 +119,7 @@ type SpecialCurrencyInfo = {|
       },
 
   // Flags that could move to EdgeCurrencyInfo:
+  fioChainCode?: string,
   allowZeroTx?: boolean,
   isAccountActivationRequired?: boolean,
   isCustomTokensSupported?: boolean,
@@ -367,6 +368,7 @@ export const SPECIAL_CURRENCY_INFO: {
   binancesmartchain: {
     initWalletName: s.strings.string_first_binance_smart_chain_wallet_name,
     chainCode: 'BNB',
+    fioChainCode: 'BSC',
     allowZeroTx: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
@@ -560,7 +562,7 @@ export const SPECIAL_CURRENCY_INFO: {
  */
 export const WALLET_LIST_OPTIONS_ICON = '\u2026'
 export const WALLET_LIST_MENU: Array<{
-  currencyCodes?: string[],
+  pluginIds?: string[],
   label: string,
   value: WalletListMenuKey
 }> = [
@@ -581,37 +583,35 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getSeed'
   },
   {
-    currencyCodes: Object.keys(SPECIAL_CURRENCY_INFO)
-      .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
-      .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode),
+    pluginIds: Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported),
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },
   {
-    currencyCodes: [
-      'BCH',
-      'BSV',
-      'BTC',
-      'BTG',
-      'DASH',
-      'DGB',
-      'DOGE',
-      'EBST',
-      'EOS',
-      'FIRO',
-      'FTC',
-      'GRS',
-      'LTC',
-      'QTUM',
-      'RVN',
-      'SMART',
-      'TESTBTC',
-      'TLOS',
-      'UFO',
-      'VTC',
-      'WAX',
-      'XMR',
-      'ZEC'
+    pluginIds: [
+      'bitcoincash',
+      'bitcoinsv',
+      'bitcoin',
+      'bitcoingold',
+      'dash',
+      'digibyte',
+      'dogecoin',
+      'eboost',
+      'eos',
+      'zcoin',
+      'feathercoin',
+      'groestlcoin',
+      'litecoin',
+      'qtum',
+      'ravencoin',
+      'smartcash',
+      'bitcointestnet',
+      'telos',
+      'ufo',
+      'vertcoin',
+      'wax',
+      'monero',
+      'zcash'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'

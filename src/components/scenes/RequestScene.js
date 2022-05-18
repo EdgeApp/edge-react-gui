@@ -2,7 +2,7 @@
 
 import Clipboard from '@react-native-clipboard/clipboard'
 import { gt, lt, lte } from 'biggystring'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
@@ -21,7 +21,7 @@ import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers.js'
-import { convertNativeToDenomination, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
+import { convertNativeToDenomination, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { QrModal } from '../modals/QrModal.js'
@@ -41,7 +41,6 @@ type OwnProps = {
 }
 type StateProps = {
   currencyCode?: string,
-  currencyInfo?: EdgeCurrencyInfo,
   wallet?: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio?: string,
   fioAddressesExist?: boolean,
@@ -245,8 +244,8 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   handleAddressBlockExplorer = () => {
-    const { currencyInfo, useLegacyAddress } = this.props
-    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
+    const { wallet, useLegacyAddress } = this.props
+    const addressExplorer = wallet != null ? wallet.currencyInfo.addressExplorer : null
     const requestAddress = useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     Airship.show(bridge => (
@@ -418,7 +417,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shareMessage = async () => {
-    const { currencyCode, wallet, currencyInfo, useLegacyAddress } = this.props
+    const { currencyCode, wallet, useLegacyAddress } = this.props
     const { legacyAddress, publicAddress } = this.state
     if (!currencyCode || !wallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
@@ -443,7 +442,7 @@ export class RequestComponent extends React.Component<Props, State> {
       addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, config.appName)}\n\n`
     }
 
-    const subject = currencyInfo ? sprintf(s.strings.request_email_subject, config.appName, currencyInfo.displayName) : ''
+    const subject = wallet != null ? sprintf(s.strings.request_email_subject, config.appName, wallet.currencyInfo.displayName) : ''
     const message = `${sharedAddress}${addOnMessage}`
 
     const shareOptions = {
@@ -574,9 +573,6 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     const walletId = state.ui.wallets.selectedWalletId
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
-    const { allCurrencyInfos } = state.ui.settings.plugins
-    const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
-
     if (currencyCode == null) {
       return {
         account,
@@ -588,6 +584,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    const { pluginId } = wallet.currencyInfo
     const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
@@ -597,6 +594,7 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: walletId,
+      pluginId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
@@ -615,7 +613,6 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       currencyCode,
-      currencyInfo,
       wallet,
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,

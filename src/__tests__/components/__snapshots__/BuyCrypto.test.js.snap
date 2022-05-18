@@ -26,7 +26,6 @@ exports[`BuyCrypto should render with some props 1`] = `
         }
       >
         <Memo(CurrencyIconComponent)
-          currencyCode="BTC"
           marginRem={
             Array [
               0.25,
@@ -34,6 +33,7 @@ exports[`BuyCrypto should render with some props 1`] = `
             ]
           }
           sizeRem={2.25}
+          walletId="my wallet"
         />
         <WithTheme(EdgeTextComponent)
           style={
