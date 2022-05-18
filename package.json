@@ -120,6 +120,7 @@
     "react-native-check-version": "^1.0.5",
     "react-native-confetti-cannon": "^1.5.2",
     "react-native-contacts": "^7.0.4",
+    "react-native-custom-tabs": "https://github.com/adminphoeniixx/react-native-custom-tabs#develop",
     "react-native-device-info": "^8.7.1",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fast-crypto": "^2.2.0",

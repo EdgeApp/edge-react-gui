@@ -13,7 +13,8 @@ import type {
   JsonObject
 } from 'edge-core-js'
 import * as React from 'react'
-import { Linking } from 'react-native'
+import { Linking, Platform } from 'react-native'
+import { CustomTabs } from 'react-native-custom-tabs'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -444,8 +445,8 @@ export class EdgeProvider extends Bridgeable {
     }
   }
 
-  hasSafariView(): Promise<boolean> {
-    return SafariView.isAvailable()
+  hasSafariView(): boolean {
+    return true
   }
 
   // window.fetch.catch(console log then throw)
@@ -519,7 +520,8 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async openSafariView(url: string): Promise<mixed> {
-    SafariView.show({ url })
+    if (Platform.OS === 'ios') SafariView.show({ url })
+    else CustomTabs.openURL(url)
   }
 
   async displayError(error: Error | string) {
