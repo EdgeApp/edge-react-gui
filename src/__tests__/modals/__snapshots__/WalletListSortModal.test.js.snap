@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListSortModalComponent should render with loading props 1`] = `
-<WithTheme(ThemedModalComponent)
+<ListModal
   bridge={
     Object {
       "on": [Function],
@@ -11,42 +11,37 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
       "resolve": [Function],
     }
   }
-  onCancel={[Function]}
->
-  <ModalTitle>
-    Sort Wallets
-  </ModalTitle>
-  <Memo(SettingsTappableRowComponent)
-    label="Manual sort"
-    onPress={[Function]}
-  />
-  <Memo(SettingsRadioRowComponent)
-    label="Sort by name"
-    onPress={[Function]}
-    value={false}
-  />
-  <Memo(SettingsRadioRowComponent)
-    label="Sort by currency code"
-    onPress={[Function]}
-    value={false}
-  />
-  <Memo(SettingsRadioRowComponent)
-    label="Sort by currency name"
-    onPress={[Function]}
-    value={false}
-  />
-  <Memo(SettingsRadioRowComponent)
-    label="Sort by highest value"
-    onPress={[Function]}
-    value={false}
-  />
-  <Memo(SettingsRadioRowComponent)
-    label="Sort by lowest value"
-    onPress={[Function]}
-    value={false}
-  />
-  <ModalCloseArrow
-    onPress={[Function]}
-  />
-</WithTheme(ThemedModalComponent)>
+  fullScreen={false}
+  rowComponent={[Function]}
+  rowsData={
+    Array [
+      Array [
+        "manual",
+        "Manual sort",
+      ],
+      Array [
+        "name",
+        "Sort by name",
+      ],
+      Array [
+        "currencyCode",
+        "Sort by currency code",
+      ],
+      Array [
+        "currencyName",
+        "Sort by currency name",
+      ],
+      Array [
+        "highest",
+        "Sort by highest value",
+      ],
+      Array [
+        "lowest",
+        "Sort by lowest value",
+      ],
+    ]
+  }
+  textInput={false}
+  title="Sort Wallets"
+/>
 `;

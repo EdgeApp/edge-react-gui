@@ -225,7 +225,7 @@ Object {
           "isEnabled": false,
         },
       },
-      "walletsSort": "default",
+      "walletsSort": "manual",
     },
     "wallets": Object {
       "byId": Object {},
