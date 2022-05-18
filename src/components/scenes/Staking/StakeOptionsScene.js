@@ -62,7 +62,7 @@ export const StakeOptionsScene = (props: Props) => {
     }
   }, [currencyCode, navigation, walletId])
 
-  const currencyWallet = useSelector((state: RootState) => {
+  const wallet = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
     return currencyWallets[walletId]
   })
@@ -83,7 +83,7 @@ export const StakeOptionsScene = (props: Props) => {
     const primaryText = getPolicyAssetName(item, 'stakeAssets')
     const secondaryText = getPolicyTitleName(item)
     const key = [primaryText, secondaryText].join()
-    const policyIcons = getPolicyIconUris(currencyWallet.currencyInfo, item)
+    const policyIcons = getPolicyIconUris(wallet.currencyInfo, item)
     return (
       <View key={key} style={styles.optionContainer}>
         <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>

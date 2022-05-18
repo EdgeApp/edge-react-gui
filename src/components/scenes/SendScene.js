@@ -416,7 +416,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           title={s.strings.fio_request_amount}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? '0'}
-          currencyWallet={currencyWallets[this.state.selectedWalletId]}
+          wallet={currencyWallets[this.state.selectedWalletId]}
           currencyCode={selectedCurrencyCode}
           exchangeDenomination={cryptoExchangeDenomination}
           displayDenomination={cryptoDisplayDenomination}

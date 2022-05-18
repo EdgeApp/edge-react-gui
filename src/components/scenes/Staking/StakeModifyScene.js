@@ -42,14 +42,14 @@ export const StakeModifyScene = (props: Props) => {
   const { stakePolicyId } = stakePolicy
 
   // Hooks
-  const { currencyWallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
+  const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
     const { currencyWallets } = state.core.account
-    const currencyWallet = currencyWallets[walletId]
+    const wallet = currencyWallets[walletId]
     const guiExchangeRates = state.exchangeRates
 
-    const nativeAssetDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyWallet.currencyInfo.currencyCode)
+    const nativeAssetDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
     return {
-      currencyWallet,
+      wallet,
       guiExchangeRates,
       nativeAssetDenomination
     }
@@ -68,7 +68,7 @@ export const StakeModifyScene = (props: Props) => {
     stakePolicyId: stakePolicy.stakePolicyId,
     currencyCode: '',
     nativeAmount: '0',
-    signerSeed: getSeed(currencyWallet)
+    signerSeed: getSeed(wallet)
   })
 
   // Slider state
@@ -120,7 +120,7 @@ export const StakeModifyScene = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [modification, stakePolicyId, changeQuoteRequest, currencyWallet, existingAllocations, stakePolicy])
+  }, [modification, stakePolicyId, changeQuoteRequest, wallet, existingAllocations, stakePolicy])
 
   //
   // Handlers
@@ -135,7 +135,7 @@ export const StakeModifyScene = (props: Props) => {
         const modChangeQuoteRequest = { ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
         setChangeQuoteRequest(modChangeQuoteRequest)
       } else if (modification === 'stake' && existingStaked.length === 1) {
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: currencyWallet.balances[modCurrencyCode] })
+        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balances[modCurrencyCode] })
       }
     }
   }
@@ -168,7 +168,7 @@ export const StakeModifyScene = (props: Props) => {
         currencyCode={currencyCode}
         onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
-        headerText={sprintf(header, currencyWallet.name)}
+        headerText={sprintf(header, wallet.name)}
         hideMaxButton={
           /* TODO: Max button needs to be enabled after max calculation for 
           multi-asset staking is fully implemented and working in plugin */
@@ -197,7 +197,7 @@ export const StakeModifyScene = (props: Props) => {
         : undefined
 
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getDenominationFromCurrencyInfo(currencyWallet.currencyInfo, quoteCurrencyCode)
+    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, quoteCurrencyCode)
 
     const title =
       allocationType === 'stake'
@@ -216,7 +216,7 @@ export const StakeModifyScene = (props: Props) => {
         key={allocationType + pluginId + currencyCode}
         exchangeRates={guiExchangeRates}
         nativeAmount={isClaim ? earnedAmount : nativeAmount}
-        currencyWallet={currencyWallet}
+        wallet={wallet}
         currencyCode={quoteCurrencyCode}
         exchangeDenomination={quoteDenom}
         displayDenomination={quoteDenom}
@@ -249,8 +249,8 @@ export const StakeModifyScene = (props: Props) => {
     const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
     return (
       <View style={styles.amountTilesContainer}>
-        <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(currencyWallet.currencyInfo.pluginId).symbolImage}>
-          <EdgeText>{currencyWallet.name}</EdgeText>
+        <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
+          <EdgeText>{wallet.name}</EdgeText>
         </IconTile>
         {
           // Render stake/unstake amount tiles
@@ -293,7 +293,7 @@ export const StakeModifyScene = (props: Props) => {
     unstake: s.strings.stake_unstake_claim
   }
 
-  const policyIcons = getPolicyIconUris(currencyWallet.currencyInfo, stakePolicy)
+  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
   const icon = modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />
 
   return (
