@@ -84,7 +84,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props & T
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { currencyCode } = data.item
     // Ripple hack:
-    let { currencyName } = data.item
+    let { currencyName, walletType } = data.item
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
     return (
@@ -92,7 +92,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props & T
         currencyCode={currencyCode}
         walletName={currencyName}
         onPress={() => this.handleSelectWalletType(data.item)}
-        ref={this.props.generateTestHook(currencyCode)}
+        ref={this.props.generateTestHook(`CreateCryptoWalletScene.${walletType}Row`)}
       />
     )
   }
