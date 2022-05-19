@@ -58,7 +58,16 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       loanToValue: 55,
 
       async getAprQuote(tokenId?: string): Promise<number> {
-        return 0.0381
+        if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
+
+        const edgeToken = wallet.currencyConfig.allTokens[tokenId]
+        const tokenAddress: string | void = edgeToken?.networkLocation?.contractAddress
+
+        if (tokenAddress == null) throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
+
+        const { variableApr } = await aaveNetwork.getReserveTokenRates(tokenAddress)
+
+        return variableApr
       },
 
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
