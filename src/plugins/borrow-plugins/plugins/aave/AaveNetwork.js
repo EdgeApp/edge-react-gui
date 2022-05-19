@@ -1,5 +1,6 @@
 // @flow
 
+import { div } from 'biggystring'
 import { BigNumber, ethers } from 'ethers'
 
 import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
@@ -31,8 +32,16 @@ export type AaveNetwork = {
     sToken: any,
     vToken: any
   }>,
-  getReserveTokenBalances: (address: string) => Promise<Array<{ tokenId: string, aBalance: BigNumber, vBalance: BigNumber }>>
+  getReserveTokenBalances: (address: string) => Promise<Array<{ tokenId: string, aBalance: BigNumber, vBalance: BigNumber, variableApr: BigNumber }>>,
+  getReserveTokenRates: (tokenAddress: string) => Promise<{
+    variableApr: number,
+    stableApr: number
+  }>
 }
+
+const RAY = BigNumber.from('10').pow('27')
+const RAY_STR = RAY.toString()
+const MAX_PRECISION = 17
 
 export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
   const { provider, contractAddresses } = blueprint
@@ -71,11 +80,26 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         const { aToken, vToken } = await instance.getReserveTokenAddresses(token.address)
         const aBalance = await aToken.balanceOf(address)
         const vBalance = await vToken.balanceOf(address)
+        const { variableApr } = await instance.getReserveTokenRates(token.address)
 
-        return { tokenId: addressToTokenId(token.address), aBalance, vBalance }
+        return { tokenId: addressToTokenId(token.address), aBalance, vBalance, variableApr }
       })
-      const reserveTokenBalances: Array<{ tokenId: string, aBalance: BigNumber, vBalance: BigNumber }> = await Promise.all(whenReserveTokenBalances)
+      const reserveTokenBalances: Array<{ tokenId: string, aBalance: BigNumber, vBalance: BigNumber, variableApr: BigNumber }> = await Promise.all(
+        whenReserveTokenBalances
+      )
       return reserveTokenBalances
+    },
+
+    async getReserveTokenRates(tokenAddress) {
+      const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] = await lendingPool.getReserveData(tokenAddress)
+
+      const variableApr = parseFloat(div(variableBorrowRate.toString(), RAY_STR, MAX_PRECISION))
+      const stableApr = parseFloat(div(stableBorrowRate.toString(), RAY_STR, MAX_PRECISION))
+
+      return {
+        variableApr,
+        stableApr
+      }
     }
   }
   return instance
