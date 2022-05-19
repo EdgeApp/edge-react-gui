@@ -1,28 +1,59 @@
 // @flow
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { type ApprovableAction, type BorrowEngine, type BorrowRequest, type DepositRequest, type RepayRequest, type WithdrawRequest } from '../../types'
+import {
+  type ApprovableAction,
+  type BorrowCollateral,
+  type BorrowDebt,
+  type BorrowEngine,
+  type BorrowRequest,
+  type DepositRequest,
+  type RepayRequest,
+  type WithdrawRequest
+} from '../../types'
+import { type AaveNetwork } from './AaveNetwork'
 
-export type BorrowEngineBlueprint = {}
+export type BorrowEngineBlueprint = {
+  aaveNetwork: AaveNetwork
+}
 
-export const makeBorrowEngineFactory =
-  (blueprint: BorrowEngineBlueprint) =>
-  async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
-    return {
-      currencyWallet: wallet,
-      collaterals: [
-        {
-          tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-          nativeAmount: '100000000'
+export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
+  return async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
+    const { aaveNetwork } = blueprint
+
+    const walletAddress = (await wallet.getReceiveAddress()).publicAddress
+
+    //
+    // Collaterals and Debts
+    //
+
+    const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+    const collaterals: BorrowCollateral[] = reserveTokenBalances
+      .filter(({ aBalance }) => !aBalance.eq(0))
+      .map(({ tokenId, aBalance }) => {
+        return {
+          tokenId,
+          nativeAmount: aBalance.toString()
         }
-      ],
-      debts: [
-        {
-          tokenId: '6b175474e89094c44da98b954eedeac495271d0f',
-          nativeAmount: '60000000000000000000000',
+      })
+    const debts: BorrowDebt[] = reserveTokenBalances
+      .filter(({ vBalance }) => !vBalance.eq(0))
+      .map(({ tokenId, vBalance }) => {
+        return {
+          tokenId,
+          nativeAmount: vBalance.toString(),
           apr: 0.0825
         }
-      ],
+      })
+
+    //
+    // Engine Instance
+    //
+
+    return {
+      currencyWallet: wallet,
+      collaterals,
+      debts,
 
       loanToValue: 55,
 
@@ -77,3 +108,4 @@ export const makeBorrowEngineFactory =
       }
     }
   }
+}
