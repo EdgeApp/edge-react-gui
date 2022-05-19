@@ -75,20 +75,18 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
       const { context, initializeAccount } = this.props
       firstRun = false
-      setTimeout(() => {
-        if (YOLO_PIN != null) {
-          context
-            .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
-            .then(account => initializeAccount(account, dummyTouchIdInfo))
-            .catch(showError)
-        }
-        if (YOLO_PASSWORD != null) {
-          context
-            .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
-            .then(account => initializeAccount(account, dummyTouchIdInfo))
-            .catch(showError)
-        }
-      }, 500)
+      if (YOLO_PIN != null) {
+        context
+          .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
+          .then(account => initializeAccount(account, dummyTouchIdInfo))
+          .catch(showError)
+      }
+      if (YOLO_PASSWORD != null) {
+        context
+          .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
+          .then(account => initializeAccount(account, dummyTouchIdInfo))
+          .catch(showError)
+      }
     }
     const response = await checkVersion()
     const skipUpdate = (await this.getSkipUpdate()) === response.version
