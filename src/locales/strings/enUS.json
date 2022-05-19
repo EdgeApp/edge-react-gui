@@ -872,7 +872,6 @@
   "confirm_continue_modal_button_text": "I understand and agree to the terms",
   "gateway_agreement_modal_title": "%s Gateway Address Detected",
   "gateway_agreement_modal_body": "This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.",
-
   "util_s_and_s": "%1$s and %2$s",
   "util_truncate_delimeter": "...",
   "stake_estimated_return": "Estimated Return: %s",
