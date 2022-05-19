@@ -55,7 +55,7 @@ export type BorrowCollateral = {
 export type BorrowDebt = {
   tokenId?: string,
   nativeAmount: string,
-  apy: number
+  apr: number
 }
 
 export type BorrowEngine = {
