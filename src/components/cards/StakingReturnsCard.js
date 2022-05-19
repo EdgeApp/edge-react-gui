@@ -4,8 +4,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText.js'
-import { PairIcons } from './PairIcons.js'
+import { EdgeText } from '../themed/EdgeText'
+import { PairIcons } from '../themed/PairIcons'
 
 export function StakingReturnsCard({
   fromCurrencyLogos,
