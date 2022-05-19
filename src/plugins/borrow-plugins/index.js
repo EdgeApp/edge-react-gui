@@ -1,2 +1,2 @@
 // @flow
-export { makeAaveBorrowPlugin } from './plugins/aave'
+export { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from './plugins/aave'

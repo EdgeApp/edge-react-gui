@@ -1,28 +1,69 @@
 // @flow
+import { gt } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { type ApprovableAction, type BorrowEngine, type BorrowRequest, type DepositRequest, type RepayRequest, type WithdrawRequest } from '../../types'
+import {
+  type ApprovableAction,
+  type BorrowCollateral,
+  type BorrowDebt,
+  type BorrowEngine,
+  type BorrowRequest,
+  type DepositRequest,
+  type RepayRequest,
+  type WithdrawRequest
+} from '../../types'
+import { type AaveNetwork } from './AaveNetwork'
+import { addressToTokenId } from './util/addressToTokenId'
 
-export type BorrowEngineBlueprint = {}
+export type BorrowEngineBlueprint = {
+  aaveNetwork: AaveNetwork,
+  enabledTokens: {
+    [symbol: string]: {
+      isCollateral: boolean,
+      isDebt: boolean
+    }
+  }
+}
 
 export const makeBorrowEngineFactory =
   (blueprint: BorrowEngineBlueprint) =>
   async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
+    const { aaveNetwork, enabledTokens } = blueprint
+
+    const walletAddress = (await wallet.getReceiveAddress()).publicAddress
+
+    const reserveTokens = await aaveNetwork.getAllReservesTokens()
+    const collateralTokens = reserveTokens.filter(token => enabledTokens[token.symbol]?.isCollateral)
+    const debtTokens = reserveTokens.filter(token => enabledTokens[token.symbol]?.isDebt)
+
+    const whenCollaterals: Promise<BorrowCollateral>[] = collateralTokens.map(async token => {
+      const { aToken } = await aaveNetwork.getReserveTokensAddresses(token.address)
+      const balance = await aToken.balanceOf(walletAddress)
+
+      return {
+        tokenId: addressToTokenId(token.address),
+        nativeAmount: balance.toString()
+      }
+    })
+    const whenDebts: Promise<BorrowDebt>[] = debtTokens.map(async token => {
+      const { vToken } = await aaveNetwork.getReserveTokensAddresses(token.address)
+      const balance = await vToken.balanceOf(walletAddress)
+
+      return {
+        tokenId: addressToTokenId(token.address),
+        nativeAmount: balance.toString(),
+        apy: 0
+      }
+    })
+    await Promise.all([...whenCollaterals, ...whenDebts])
+
+    const collaterals: $PropertyType<BorrowEngine, 'collaterals'> = (await Promise.all(whenCollaterals)).filter(item => gt(item.nativeAmount, '0'))
+    const debts: $PropertyType<BorrowEngine, 'debts'> = (await Promise.all(whenDebts)).filter(item => gt(item.nativeAmount, '0'))
+
     return {
       currencyWallet: wallet,
-      collaterals: [
-        {
-          tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-          nativeAmount: '100000000'
-        }
-      ],
-      debts: [
-        {
-          tokenId: '6b175474e89094c44da98b954eedeac495271d0f',
-          nativeAmount: '60000000000000000000000',
-          apy: 0.0825
-        }
-      ],
+      collaterals,
+      debts,
 
       loanToValue: 55,
 
