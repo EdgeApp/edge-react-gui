@@ -4,8 +4,16 @@ import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
+import { sprintf } from 'sprintf-js'
 
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getSymbolFromCurrency,
+  SPECIAL_CURRENCY_INFO
+} from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
@@ -540,6 +548,32 @@ export function unixToLocaleDateTime(unixDate: number): { date: string, time: st
     time: toLocaleTime(date),
     dateTime: toLocaleDateTime(date)
   }
+}
+
+/**
+ * Returns a list string representation of the string array.
+ *
+ * toListString(['1', '2']) === '1 and 2'
+ * toListString(['1','2','3']) === '1, 2, and 3'
+ */
+export const toListString = (elements: string[]): string => {
+  if (elements.length === 0) return ''
+  if (elements.length === 1) return elements[0]
+  if (elements.length === 2) return sprintf(s.strings.util_s_and_s, elements[0], elements[1])
+
+  const firstPart = elements.slice(0, elements.length - 2)
+  const lastPart = sprintf(s.strings.util_s_and_s, elements[elements.length - 2], elements[elements.length - 1])
+  return firstPart.join(', ') + `, ${lastPart}`
+}
+
+/**
+ * Returns the wallet plugin ID based on a chain/native asset currency code
+ * Returns null if Edge does not support the specified chain.
+ * Not case sensitive.
+ */
+export const getPluginIdFromChainCode = (chainCode: string): string | void => {
+  const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(key => SPECIAL_CURRENCY_INFO[key].chainCode === chainCode.toUpperCase())
+  return pluginId
 }
 
 export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, tokenIds: string[]): string[] {

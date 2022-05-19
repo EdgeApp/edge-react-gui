@@ -92,11 +92,8 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       return true
     }
 
-    case 'returnAddress': {
-      if (!hasCurrentWallet) return false
-      // The code for dealing with this is a mess, so fake a barcode scan:
-      const edgeWallet = currencyWallets[selectedWalletId]
-      doRequestAddress(dispatch, edgeWallet, link)
+    case 'requestAddress': {
+      doRequestAddress(state.core.account, dispatch, link)
       return true
     }
 
