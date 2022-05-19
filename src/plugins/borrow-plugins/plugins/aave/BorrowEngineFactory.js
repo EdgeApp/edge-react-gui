@@ -1,7 +1,7 @@
 // @flow
 
 import { type Cleaner, asMaybe } from 'cleaners'
-import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 
 import {
   type ApprovableAction,
@@ -46,6 +46,25 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     }
 
     //
+    // Cleaners
+    //
+
+    const asEdgeToken = (tokenId: string) => {
+      const edgeToken = wallet.currencyConfig.allTokens[tokenId]
+      if (edgeToken == null) throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
+      return edgeToken
+    }
+    const asTokenAddress = (token: EdgeToken) => {
+      const tokenAddress = asMaybe(asTokenContractAddress)(token)
+      if (tokenAddress == null) throw new Error(`Unable to find contract address for ${token.displayName} (${token.currencyCode})`)
+      return tokenAddress
+    }
+    const asTokenIdParam = (tokenId?: string) => {
+      if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
+      return tokenId
+    }
+
+    //
     // Collaterals and Debts
     //
 
@@ -80,7 +99,16 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       loanToValue: 55,
 
       async getAprQuote(tokenId?: string): Promise<number> {
-        return 0.0381
+        tokenId = asTokenIdParam(tokenId)
+
+        const edgeToken = asEdgeToken(tokenId)
+        const tokenAddress = asTokenAddress(edgeToken)
+
+        if (tokenAddress == null) throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
+
+        const { variableApr } = await aaveNetwork.getReserveTokenRates(tokenAddress)
+
+        return variableApr
       },
 
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
