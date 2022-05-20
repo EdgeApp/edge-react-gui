@@ -170,7 +170,7 @@ export const StakeModifyScene = (props: Props) => {
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, wallet.name)}
         hideMaxButton={
-          /* TODO: Max button needs to be enabled after max calculation for 
+          /* TODO: Max button needs to be enabled after max calculation for
           multi-asset staking is fully implemented and working in plugin */
           existingStaked.length > 1
         }
