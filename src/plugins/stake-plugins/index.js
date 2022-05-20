@@ -1,5 +1,4 @@
 // @flow
-import '@ethersproject/shims'
 
 import { type Cleaner, asNumber, asObject, asString } from 'cleaners'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
