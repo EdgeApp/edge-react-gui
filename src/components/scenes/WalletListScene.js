@@ -1,29 +1,35 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
+import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal.js'
-import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
 import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListHeader } from '../themed/WalletListHeader.js'
 import { WalletListSortable } from '../themed/WalletListSortable.js'
+import { WalletListSwipeable } from '../themed/WalletListSwipeable.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
-type Props = {}
+type Props = {
+  navigation: NavigationProp<'walletList'>
+}
 
 export function WalletListScene(props: Props) {
+  const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -37,39 +43,74 @@ export function WalletListScene(props: Props) {
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
 
   // Subscribe to account state:
-  const [currencyWallets, setCurrencyWallets] = useState(account.currencyWallets)
-  useEffect(() => account.watch('currencyWallets', setCurrencyWallets), [account])
+  const currencyWallets = useWatchAccount(account, 'currencyWallets')
   const loading = Object.keys(currencyWallets).length <= 0
 
-  async function handleTutorialModal() {
-    const userTutorialList = await getWalletListSlideTutorial(disklet)
-    const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
-
-    if (tutorialCount < 2) {
-      Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
-      setShowTutorial(true)
-      userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
-      await setUserTutorialList(userTutorialList, disklet)
-    }
-  }
-
-  function handleSort(): void {
+  const handleSort = useCallback(() => {
     Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
       .then(sort => {
         if (sort === 'manual') setSorting(true)
       })
       .catch(showError)
-  }
+  }, [])
+
+  const handleRefresh = useCallback(() => {
+    setSearching(true)
+  }, [])
 
   // Show the tutorial or password reminder on mount:
-  useEffect(
-    () => {
-      if (needsPasswordCheck) Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
-      else handleTutorialModal().catch(showError)
+  useAsyncEffect(
+    async () => {
+      if (needsPasswordCheck) {
+        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+      } else {
+        const userTutorialList = await getWalletListSlideTutorial(disklet)
+        const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
+
+        if (tutorialCount < 2) {
+          Airship.show(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={s.strings.wallet_list_swipe_tutorial_title}
+              buttons={{
+                gotIt: { label: s.strings.string_got_it }
+              }}
+            >
+              <Image
+                source={theme.walletListSlideTutorialImage}
+                resizeMode="contain"
+                style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}
+              />
+            </ButtonsModal>
+          ))
+          setShowTutorial(true)
+          userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
+          await setUserTutorialList(userTutorialList, disklet)
+        }
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+
+  // rendering -------------------------------------------------------------
+
+  const footer = useMemo(() => {
+    return <WalletListFooter navigation={navigation} />
+  }, [navigation])
+
+  const header = useMemo(() => {
+    return (
+      <WalletListHeader
+        sorting={sorting}
+        searching={searching}
+        searchText={searchText}
+        openSortModal={handleSort}
+        onChangeSearchText={setSearchText}
+        onChangeSearchingState={setSearching}
+      />
+    )
+  }, [handleSort, searchText, searching, sorting])
 
   return (
     <SceneWrapper>
@@ -85,23 +126,15 @@ export function WalletListScene(props: Props) {
       <View style={styles.listStack}>
         <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-          <WalletList
+          <WalletListSwipeable
             key="fullList"
-            header={
-              <WalletListHeader
-                sorting={sorting}
-                searching={searching}
-                searchText={searchText}
-                openSortModal={handleSort}
-                onChangeSearchText={setSearchText}
-                onChangeSearchingState={setSearching}
-              />
-            }
-            footer={searching ? null : <WalletListFooter />}
+            header={header}
+            footer={searching ? null : footer}
+            navigation={navigation}
             searching={searching}
             searchText={searchText}
-            activateSearch={() => setSearching(true)}
             showSlidingTutorial={showSlidingTutorial}
+            onRefresh={handleRefresh}
           />
           <WalletListSortable key="sortList" />
         </CrossFade>

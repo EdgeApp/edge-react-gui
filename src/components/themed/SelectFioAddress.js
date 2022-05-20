@@ -19,7 +19,7 @@ import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile.js'
+import { Tile } from '../tiles/Tile'
 
 type OwnProps = {
   selected: string,

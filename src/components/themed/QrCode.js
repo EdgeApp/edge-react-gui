@@ -1,10 +1,10 @@
 // @flow
 
-import { Shape, Surface, Transform } from '@react-native-community/art'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
 import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
+import Svg, { Path } from 'react-native-svg'
 
 import { useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
@@ -46,7 +46,7 @@ export function QrCode(props: Props) {
 
   // Create a drawing transform to scale QR cells to device pixels:
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
-  const transform = new Transform().scale(size / sizeInCells)
+  const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -54,9 +54,9 @@ export function QrCode(props: Props) {
         <ActivityIndicator color={theme.iconTappable} />
         <Animated.View style={[styles.whiteBox, fadeStyle]}>
           {size <= 0 ? null : (
-            <Surface height={size} width={size} style={styles.surface}>
-              <Shape d={path} fill={theme.qrForegroundColor} transform={transform} />
-            </Surface>
+            <Svg height={size} width={size} viewBox={viewBox}>
+              <Path d={path} fill={theme.qrForegroundColor} />
+            </Svg>
           )}
         </Animated.View>
       </View>
@@ -81,8 +81,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     right: 0,
     top: 0
-  },
-  surface: {
-    backgroundColor: theme.qrBackgroundColor
   }
 }))

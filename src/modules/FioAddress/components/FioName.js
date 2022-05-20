@@ -37,7 +37,7 @@ const FioName = (props: FioNameProps & ThemeProps) => {
   }
 
   return (
-    <ClickableRow onPress={() => onPress()}>
+    <ClickableRow paddingRem={[0, 1]} onPress={() => onPress()}>
       <View style={styles.icon}>{icon}</View>
       <View style={styles.info}>
         <EdgeText style={styles.infoTitle}>{name}</EdgeText>

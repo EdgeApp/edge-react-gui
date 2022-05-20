@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { unpackEdges } from '../../util/edges'
+import { fixSides, mapSides, sidesToPadding } from '../../util/sides.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { DataRow } from './DataRow'
 import { EdgeText } from './EdgeText.js'
@@ -38,9 +38,10 @@ export class CardContentComponent extends React.PureComponent<Props & ThemeProps
   render() {
     const { image, subTitle, subValue, paddingRem, theme } = this.props
     const styles = getStyles(theme)
+    const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
     return (
-      <View style={[styles.container, paddingStyles(paddingRem, theme)]}>
+      <View style={[styles.container, padding]}>
         {image ? <View style={styles.iconContainer}>{image}</View> : null}
         <View style={styles.contentContainer}>
           <DataRow label={this.renderTitle()} value={this.renderValue()} />
@@ -51,17 +52,6 @@ export class CardContentComponent extends React.PureComponent<Props & ThemeProps
         </View>
       </View>
     )
-  }
-}
-
-function paddingStyles(paddingRem?: number[] | number, theme: Theme) {
-  const padding = unpackEdges(paddingRem == null ? 0 : paddingRem)
-
-  return {
-    paddingBottom: theme.rem(padding.bottom),
-    paddingLeft: theme.rem(padding.left),
-    paddingRight: theme.rem(padding.right),
-    paddingTop: theme.rem(padding.top)
   }
 }
 

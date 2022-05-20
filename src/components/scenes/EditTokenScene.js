@@ -1,151 +1,53 @@
 // @flow
 
+import { asMaybe, asObject, asString } from 'cleaners'
+import { type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView } from 'react-native'
 
-import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
-import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
-import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { connect } from '../../types/reactRedux.js'
-import { type RouteProp } from '../../types/routerTypes.js'
-import type { CustomTokenInfo } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
-import { decimalPlacesToDenomination, denominationToDecimalPlaces, mergeTokensRemoveInvisible } from '../../util/utils'
-import { FormField } from '../common/FormField.js'
+import { useCallback, useState } from '../../types/reactHooks.js'
+import { useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { MainButton } from '../themed/MainButton.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
 
-type OwnProps = {
+type Props = {
+  navigation: NavigationProp<'editToken'>,
   route: RouteProp<'editToken'>
 }
-type StateProps = {
-  customTokens: CustomTokenInfo[],
-  editCustomTokenProcessing: boolean
-}
-type DispatchProps = {
-  deleteCustomToken: (walletId: string, currencyCode: string) => Promise<void>,
-  editCustomToken: (
-    walletId: string,
-    currencyName: string,
-    currencyCode: string,
-    contractAddress: string,
-    denomination: string,
-    oldCurrencyCode: string
-  ) => void
-}
-type Props = StateProps & DispatchProps & OwnProps
 
-type State = {
-  currencyName: string,
-  currencyCode: string,
-  contractAddress: string,
-  decimalPlaces: string,
-  multiplier: string,
-  errorMessage: string,
-  enabled?: boolean
-}
+export function EditTokenScene(props: Props) {
+  const { navigation, route } = props
+  const { tokenId, walletId } = route.params
 
-export class EditTokenComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const { customTokens, route } = props
-    const { currencyCode } = route.params
-    const tokenInfoIndex = customTokens.findIndex(item => item.currencyCode === currencyCode)
-    if (tokenInfoIndex >= 0) {
-      const tokenInfo = props.customTokens[tokenInfoIndex]
-      const { currencyName, contractAddress, denomination } = tokenInfo
-      const decimalPlaces = denominationToDecimalPlaces(denomination)
-      this.state = {
-        currencyName,
-        contractAddress,
-        decimalPlaces,
-        multiplier: '',
-        currencyCode,
-        errorMessage: ''
-      }
-    } else {
-      Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_improper_token_load)
-    }
-  }
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const account = useSelector(state => state.core.account)
+  const wallet = account.currencyWallets[walletId]
 
-  render() {
-    const { editCustomTokenProcessing } = this.props
-    return (
-      <SceneWrapper avoidKeyboard background="body">
-        {gap => (
-          <ScrollView style={[styles.container, { marginBottom: -gap.bottom }]} contentContainerStyle={{ paddingBottom: gap.bottom }}>
-            <View style={styles.instructionalArea}>
-              <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
-            </View>
-            <View style={styles.nameArea}>
-              <FormField
-                value={this.state.currencyName}
-                onChangeText={this.onChangeName}
-                autoCapitalize="words"
-                label={s.strings.addtoken_name_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-              />
-            </View>
-            <View style={styles.currencyCodeArea}>
-              <FormField
-                value={this.state.currencyCode}
-                onChangeText={this.onChangeCurrencyCode}
-                autoCapitalize="characters"
-                label={s.strings.addtoken_currency_code_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-                maxLength={MAX_TOKEN_CODE_CHARACTERS}
-              />
-            </View>
-            <View style={styles.contractAddressArea}>
-              <FormField
-                value={this.state.contractAddress}
-                onChangeText={this.onChangeContractAddress}
-                label={s.strings.addtoken_contract_address_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-              />
-            </View>
-            <View style={styles.decimalPlacesArea}>
-              <FormField
-                value={this.state.decimalPlaces}
-                onChangeText={this.onChangeDecimalPlaces}
-                label={s.strings.addtoken_denomination_input_text}
-                autoCorrect={false}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={styles.errorMessageArea}>
-              <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
-            </View>
-            <View style={styles.buttonsArea}>
-              <TertiaryButton onPress={this.deleteToken} style={styles.deleteButton}>
-                <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
-              </TertiaryButton>
-              <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
-                {editCustomTokenProcessing ? (
-                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                ) : (
-                  <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
-                )}
-              </PrimaryButton>
-            </View>
-          </ScrollView>
-        )}
-      </SceneWrapper>
-    )
-  }
+  // Extract our initial state from the token:
+  const [currencyCode, setCurrencyCode] = useState(route.params.currencyCode ?? '')
+  const [displayName, setDisplayName] = useState(route.params.displayName ?? '')
+  const [contractAddress, setContractAddress] = useState<string>(() => {
+    const clean = asMaybeContractLocation(route.params.networkLocation)
+    if (clean == null) return ''
+    return clean.contractAddress
+  })
+  const [decimalPlaces, setDecimalPlaces] = useState<string>(() => {
+    const { multiplier } = route.params
+    if (multiplier == null || !/^10*$/.test(multiplier)) return '18'
+    return (multiplier.length - 1).toString()
+  })
 
-  deleteToken = () => {
-    const { deleteCustomToken, route } = this.props
-    const { walletId, currencyCode } = route.params
-    Airship.show(bridge => (
+  const handleDelete = useCallback(async () => {
+    if (tokenId == null) return
+    await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.string_delete}
@@ -154,7 +56,8 @@ export class EditTokenComponent extends React.Component<Props, State> {
           ok: {
             label: s.strings.string_delete,
             async onPress() {
-              await deleteCustomToken(walletId, currencyCode)
+              await wallet.currencyConfig.removeCustomToken(tokenId)
+              navigation.goBack()
               return true
             }
           },
@@ -162,142 +65,139 @@ export class EditTokenComponent extends React.Component<Props, State> {
         }}
       />
     ))
-  }
+  }, [navigation, tokenId, wallet])
 
-  onChangeName = (input: string) => {
-    this.setState({
-      currencyName: input
-    })
-  }
-
-  onChangeCurrencyCode = (input: string) => {
-    this.setState({
-      currencyCode: input
-    })
-  }
-
-  onChangeDecimalPlaces = (input: string) => {
-    this.setState({
-      decimalPlaces: input
-    })
-  }
-
-  onChangeContractAddress = (input: string) => {
-    this.setState({
-      contractAddress: input.trim()
-    })
-  }
-
-  _onSave = () => {
-    const currencyCode = this.state.currencyCode.toUpperCase()
-    this.setState(
-      {
-        currencyCode
-      },
-      () => {
-        const { currencyName, decimalPlaces, contractAddress } = this.state
-        if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-          const { route } = this.props
-          const { walletId, metaTokens } = route.params
-
-          const visibleTokens = mergeTokensRemoveInvisible(metaTokens, this.props.customTokens)
-          const indexInVisibleTokens = visibleTokens.findIndex(token => token.currencyCode === currencyCode)
-          if (currencyCode !== route.params.currencyCode) {
-            // if the currencyCode will change
-            if (indexInVisibleTokens >= 0) {
-              // if the new currency code is already taken / visible
-              Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
-            } else {
-              // not in the array of visible tokens, CASE 3
-              if (parseInt(decimalPlaces) !== 'NaN') {
-                const denomination = decimalPlacesToDenomination(decimalPlaces)
-                this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, route.params.currencyCode)
-              } else {
-                Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
-              }
-            }
-          } else {
-            if (parseInt(decimalPlaces) !== 'NaN') {
-              const denomination = decimalPlacesToDenomination(decimalPlaces)
-              this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, route.params.currencyCode)
-            } else {
-              Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
-            }
-          }
-        } else {
-          Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
-        }
-      }
-    )
-  }
-}
-
-const rawStyles = {
-  container: {
-    paddingHorizontal: scale(20),
-    backgroundColor: THEME.COLORS.GRAY_4
-  },
-
-  instructionalArea: {
-    paddingVertical: scale(16),
-    paddingHorizontal: scale(20)
-  },
-  instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center'
-  },
-
-  nameArea: {
-    height: scale(70)
-  },
-  currencyCodeArea: {
-    height: scale(70)
-  },
-  contractAddressArea: {
-    height: scale(70)
-  },
-  decimalPlacesArea: {
-    height: scale(70)
-  },
-  errorMessageArea: {
-    height: scale(16),
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  errorMessageText: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  buttonsArea: {
-    marginVertical: scale(16),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    paddingVertical: scale(4)
-  },
-  deleteButton: {
-    flex: 1,
-    marginRight: scale(1)
-  },
-  saveButton: {
-    flex: 1,
-    padding: scale(13),
-    marginLeft: scale(1)
-  }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export const EditTokenScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    customTokens: state.ui.settings.customTokens,
-    editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
-  }),
-  dispatch => ({
-    async deleteCustomToken(walletId: string, currencyCode: string) {
-      await dispatch(deleteCustomToken(walletId, currencyCode))
-    },
-    editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) {
-      dispatch(editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, oldCurrencyCode))
+  const handleSave = useCallback(async () => {
+    // Validate input:
+    const decimals = parseInt(decimalPlaces)
+    if (currencyCode === '' || displayName === '' || contractAddress === '') {
+      return await showMessage(s.strings.addtoken_invalid_information)
     }
-  })
-)(EditTokenComponent)
+    if (isNaN(decimals)) {
+      return await showMessage(s.strings.edittoken_invalid_decimal_places)
+    }
+    // TODO:
+    // We need to check for conflicts with the other tokens in the account,
+    // both for matching contract addresses and for currency codes.
+
+    const token: EdgeToken = {
+      currencyCode,
+      displayName,
+      denominations: [
+        {
+          multiplier: '1' + '0'.repeat(decimals),
+          name: currencyCode,
+          symbol: ''
+        }
+      ],
+      networkLocation: {
+        contractAddress
+      }
+    }
+
+    if (tokenId != null) {
+      await wallet.currencyConfig.changeCustomToken(tokenId, token)
+    } else {
+      const tokenId = await wallet.currencyConfig.addCustomToken(token)
+      await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
+    }
+    navigation.goBack()
+  }, [contractAddress, currencyCode, decimalPlaces, displayName, navigation, tokenId, wallet])
+
+  return (
+    <SceneWrapper avoidKeyboard>
+      <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
+        <OutlinedTextInput
+          autoCapitalize="characters"
+          autoCorrect={false}
+          autoFocus={false}
+          label={s.strings.addtoken_currency_code_input_text}
+          marginRem={marginRem}
+          value={currencyCode}
+          onChangeText={setCurrencyCode}
+        />
+        <OutlinedTextInput
+          autoCapitalize="words"
+          autoCorrect={false}
+          autoFocus={false}
+          label={s.strings.addtoken_name_input_text}
+          marginRem={marginRem}
+          value={displayName}
+          onChangeText={setDisplayName}
+        />
+        <OutlinedTextInput
+          autoCorrect={false}
+          autoFocus={false}
+          label={s.strings.addtoken_contract_address_input_text}
+          marginRem={marginRem}
+          value={contractAddress}
+          onChangeText={setContractAddress}
+        />
+        <OutlinedTextInput
+          autoCorrect={false}
+          autoFocus={false}
+          keyboardType="numeric"
+          label={s.strings.addtoken_denomination_input_text}
+          marginRem={marginRem}
+          value={decimalPlaces}
+          onChangeText={setDecimalPlaces}
+        />
+        <MainButton alignSelf="center" label={s.strings.string_save} marginRem={marginRem} onPress={handleSave} />
+        {tokenId == null ? null : (
+          <MainButton //
+            alignSelf="center"
+            label={s.strings.edittoken_delete_token}
+            marginRem={marginRem}
+            type="secondary"
+            onPress={handleDelete}
+          />
+        )}
+      </ScrollView>
+    </SceneWrapper>
+  )
+}
+
+/**
+ * Interprets a token location as a contract address.
+ * In the future this scene may need to handle other weird networks
+ * where the networkLocation has other contents.
+ */
+const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
+
+async function showMessage(message: string): Promise<void> {
+  Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      message={message}
+      buttons={{
+        ok: { label: s.strings.string_ok_cap }
+      }}
+    />
+  ))
+}
+
+// Nicely spaces the visual elements on the page:
+const marginRem = [0.5, 0.5, 1]
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  scroll: {
+    flexGrow: 1,
+    marginTop: theme.rem(-0.5)
+  },
+  scrollContainer: {
+    padding: theme.rem(1)
+  },
+  rightIcon: {
+    color: theme.iconTappable,
+    marginRight: theme.rem(1)
+  },
+  subTitle: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.85)
+  },
+  tokenList: {
+    marginTop: theme.rem(-0.5),
+    flex: 4
+  }
+}))

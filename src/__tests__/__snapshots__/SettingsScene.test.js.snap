@@ -1292,10 +1292,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "marginRight": 45,
                   "marginTop": 45,
                   "opacity": 1,
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
                 },
                 Object {
                   "borderRadius": 6,
@@ -1314,7 +1314,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#66EDA8",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 0,
+                  "paddingBottom": 11,
+                  "paddingLeft": 17,
+                  "paddingRight": 17,
+                  "paddingTop": 11,
                 }
               }
             >
@@ -2620,10 +2624,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "marginRight": 45,
                   "marginTop": 45,
                   "opacity": 1,
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
                 },
                 Object {
                   "borderRadius": 6,
@@ -2642,7 +2646,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#66EDA8",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                  "marginHorizontal": 11,
+                  "marginHorizontal": 0,
+                  "paddingBottom": 11,
+                  "paddingLeft": 17,
+                  "paddingRight": 17,
+                  "paddingTop": 11,
                 }
               }
             >

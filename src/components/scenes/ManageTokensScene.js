@@ -1,280 +1,178 @@
 // @flow
 
-import type { Disklet } from 'disklet'
-import type { EdgeCurrencyWallet, EdgeMetaToken } from 'edge-core-js'
-import { difference, keys, union } from 'lodash'
 import * as React from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { approveTokenTerms } from '../../actions/TokenTermsActions.js'
-import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
+import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useWalletName } from '../../hooks/useWalletName.js'
+import { useWatchCurrencyConfig, useWatchWallet } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
+import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { type CustomTokenInfo, type GuiWallet, asSafeDefaultGuiWallet } from '../../types/types.js'
-import { mergeTokensRemoveInvisible } from '../../util/utils'
+import { type EdgeTokenId, type FlatListItem } from '../../types/types.js'
+import { normalizeForSearch } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { WalletListModal } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
-import { DividerLine } from '../themed/DividerLine'
+import { WalletListModal } from '../modals/WalletListModal.js'
+import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { CurrencyIcon } from '../themed/CurrencyIcon.js'
+import { DividerLine } from '../themed/DividerLine.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
-import { ManageTokensHeader } from '../themed/ManageTokensHeader'
-import { ManageTokensRow } from '../themed/ManageTokensRow'
-import { SceneHeader } from '../themed/SceneHeader'
+import { ManageTokensRow } from '../themed/ManageTokensRow.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
+import { Title } from '../themed/Title.js'
 
-type OwnProps = {
+type Props = {
   navigation: NavigationProp<'manageTokens'>,
   route: RouteProp<'manageTokens'>
 }
-type DispatchProps = {
-  setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => void
-}
 
-type StateProps = {
-  disklet: Disklet,
-  wallets: { [walletId: string]: GuiWallet },
-  currencyWallets: { [walletId: string]: EdgeCurrencyWallet },
-  manageTokensPending: boolean,
-  enabledTokens: string[],
-  settingsCustomTokens: CustomTokenInfo[]
-}
+export function ManageTokensScene(props: Props) {
+  const { navigation, route } = props
+  const { walletId } = route.params
 
-type Props = OwnProps & DispatchProps & StateProps & ThemeProps
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const account = useSelector(state => state.core.account)
+  const wallet = account.currencyWallets[walletId]
+  const walletName = useWalletName(wallet)
+  const isCustomTokensSupported = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isCustomTokensSupported ?? false
 
-type State = {
-  walletId: string,
-  tokensToEnable: string[],
-  tokensToDisable: string[],
-  searchValue: string
-}
+  const [searchValue, setSearchValue] = useState('')
 
-class ManageTokensSceneComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const { route } = this.props
-    const { walletId } = route.params
+  // Subscribe to the account's token lists:
+  const { currencyConfig } = wallet
+  const allTokens = useWatchCurrencyConfig(currencyConfig, 'allTokens')
+  const customTokens = useWatchCurrencyConfig(currencyConfig, 'customTokens')
 
-    this.state = {
-      walletId,
-      tokensToEnable: [],
-      tokensToDisable: [],
-      searchValue: ''
-    }
-  }
+  // Subscribe to the wallet's enabled tokens:
+  const enabledTokenIds = useWatchWallet(wallet, 'enabledTokenIds')
 
-  getTokens(): EdgeMetaToken[] {
-    const { route, wallets, currencyWallets } = this.props
-    const { walletId } = route.params
-    const { metaTokens, type } = wallets[walletId]
-    const { pluginId } = currencyWallets[walletId].currencyInfo
+  // Optimize the enabled tokens:
+  const enabledTokenSet = useMemo(() => new Set(enabledTokenIds), [enabledTokenIds])
 
-    const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
-
-    const customTokens = this.props.settingsCustomTokens
-
-    const accountMetaTokenInfo: CustomTokenInfo[] = specialCurrencyInfo.isCustomTokensSupported ? [...customTokens] : []
-
-    const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
-      return token.walletType === type || token.walletType === undefined
-    })
-
-    const combinedTokenInfo = mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
-
-    const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
-      if (a.currencyCode < b.currencyCode) return -1
-      if (a === b) return 0
-      return 1
-    })
-
-    // put preferred tokens at the top
-    for (const cc of PREFERRED_TOKENS) {
-      const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
-      if (idx > -1) {
-        const tokenInfo = sortedTokenInfo[idx]
-        sortedTokenInfo.splice(idx, 1)
-        sortedTokenInfo.unshift(tokenInfo)
-      }
+  // Sort the token list:
+  const sortedTokenIds = useMemo(() => {
+    // Make a table of preferred tokenId's:
+    const preferredIds = new Set<string>()
+    for (const currencyCode of PREFERRED_TOKENS) {
+      const tokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === currencyCode)
+      if (tokenId != null) preferredIds.add(tokenId)
     }
 
-    return sortedTokenInfo
-  }
+    return Object.keys(allTokens).sort((id1, id2) => {
+      const token1 = allTokens[id1]
+      const token2 = allTokens[id2]
+      if (preferredIds.has(id1) && !preferredIds.has(id2)) return -1
+      if (!preferredIds.has(id1) && preferredIds.has(id2)) return 1
+      if (token1.currencyCode < token2.currencyCode) return -1
+      if (token1.currencyCode > token2.currencyCode) return 1
+      return 0
+    })
+  }, [allTokens])
 
-  getAllowedWalletCurrencyCodes(): string[] {
-    const { wallets } = this.props
-    return keys(wallets).reduce((acc, key: string) => {
-      const wallet = wallets[key]
-      const isKey = acc.length > 0 && acc.includes(wallet.currencyCode)
+  // Filter the list of tokens based on the search term:
+  const filteredTokenIds = useMemo(() => {
+    const target = normalizeForSearch(searchValue)
+    return sortedTokenIds.filter(tokenId => {
+      const token = allTokens[tokenId]
+      const currencyCode = normalizeForSearch(token.currencyCode)
+      const displayName = normalizeForSearch(token.displayName)
+      return currencyCode.includes(target) || displayName.includes(target)
+    })
+  }, [allTokens, searchValue, sortedTokenIds])
 
-      if (wallet.metaTokens.length > 0 && !isKey) {
-        acc.push(wallet.currencyCode)
-      }
+  // Shows the wallet picker modal:
+  const handleSelectWallet = useCallback(async () => {
+    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
+      .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
+      .map(pluginId => ({ pluginId }))
 
-      return acc
-    }, [])
-  }
-
-  getWalletIdsIfNotTokens(): string[] {
-    const { wallets } = this.props
-    return keys(wallets).filter((key: string) => wallets[key].metaTokens.length === 0)
-  }
-
-  onSelectWallet = async () => {
-    const { navigation } = this.props
     const { walletId, currencyCode } = await Airship.show(bridge => (
-      <WalletListModal
-        allowedCurrencyCodes={this.getAllowedWalletCurrencyCodes()}
-        excludeWalletIds={this.getWalletIdsIfNotTokens()}
-        bridge={bridge}
-        headerTitle={s.strings.select_wallet}
-      />
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} />
     ))
 
-    if (walletId && currencyCode) {
+    if (walletId != null && currencyCode != null) {
       navigation.setParams({ walletId })
     }
-  }
+  }, [account, navigation])
 
-  toggleToken = (currencyCode: string, enable: boolean) => {
-    if (enable) {
-      this.setState({
-        tokensToEnable: union(this.state.tokensToEnable, [currencyCode]),
-        tokensToDisable: difference(this.state.tokensToDisable, [currencyCode])
-      })
-    } else {
-      this.setState({
-        tokensToEnable: difference(this.state.tokensToEnable, [currencyCode]),
-        tokensToDisable: union(this.state.tokensToDisable, [currencyCode])
-      })
-    }
-  }
-
-  getFilteredTokens = (): EdgeMetaToken[] => {
-    const { searchValue } = this.state
-    const tokens = this.getTokens()
-
-    const RegexObj = new RegExp(searchValue, 'i')
-    return tokens.filter(({ currencyCode, currencyName }) => RegexObj.test(currencyCode) || RegexObj.test(currencyName))
-  }
-
-  changeSearchValue = value => {
-    this.setState({ searchValue: value })
-  }
-
-  saveEnabledTokenList = async () => {
-    const { disklet, navigation, route, wallets, enabledTokens } = this.props
-
-    const { walletId } = route.params
-    const { currencyCode, id } = wallets[walletId]
-    const newEnabledTokens = difference(union(this.state.tokensToEnable, enabledTokens), this.state.tokensToDisable)
-    if (newEnabledTokens.length > 0) await approveTokenTerms(disklet, currencyCode)
-
-    this.props.setEnabledTokensList(id, newEnabledTokens, [])
-    navigation.goBack()
-  }
-
-  goToAddTokenScene = () => {
-    const { navigation, route } = this.props
-    const { walletId } = route.params
-    navigation.navigate('addToken', {
+  // Goes to the add token scene:
+  const handleAdd = useCallback(() => {
+    navigation.navigate('editToken', {
       walletId
     })
-  }
+  }, [navigation, walletId])
 
-  goToEditTokenScene = (currencyCode: string) => {
-    const { navigation, route, wallets } = this.props
-    const { walletId } = route.params
-    const { id, metaTokens } = wallets[walletId]
-    navigation.navigate('editToken', {
-      walletId: id,
-      currencyCode,
-      metaTokens
-    })
-  }
-
-  render() {
-    const { route, manageTokensPending, theme, wallets, enabledTokens, currencyWallets } = this.props
-    const { searchValue } = this.state
-    const { walletId } = route.params
-    const { pluginId } = currencyWallets[walletId].currencyInfo
-    if (wallets[walletId] == null || currencyWallets[walletId] == null) return null
-    const { name, currencyCode } = wallets[walletId]
-    const { metaTokens } = currencyWallets[walletId].currencyInfo
-    const styles = getStyles(theme)
-    const tempEnabledTokens = difference(union(this.state.tokensToEnable, enabledTokens), this.state.tokensToDisable)
-
-    return (
-      <SceneWrapper>
-        <SceneHeader underline>
-          <ManageTokensHeader
-            walletName={name}
-            walletId={walletId}
-            currencyCode={currencyCode}
-            changeSearchValue={this.changeSearchValue}
-            onSelectWallet={this.onSelectWallet}
-            searchValue={searchValue}
-          />
-        </SceneHeader>
-        <FlatList
-          keyExtractor={item => item.currencyCode}
-          data={this.getFilteredTokens()}
-          renderItem={metaToken => (
-            <ManageTokensRow
-              pluginId={pluginId}
-              goToEditTokenScene={this.goToEditTokenScene}
-              metaToken={metaToken}
-              toggleToken={this.toggleToken}
-              enabledList={tempEnabledTokens}
-              metaTokens={metaTokens}
-            />
-          )}
-          style={styles.tokensArea}
+  // Renders an individual token row within the list:
+  const renderRow = useCallback(
+    (item: FlatListItem<string>) => {
+      const tokenId = item.item
+      return (
+        <ManageTokensRow
+          // Scene stuff:
+          navigation={navigation}
+          wallet={wallet}
+          // Token stuff:
+          isCustom={customTokens[tokenId] != null}
+          isEnabled={enabledTokenSet.has(tokenId)}
+          token={allTokens[tokenId]}
+          tokenId={item.item}
         />
-        <DividerLine marginRem={[0, 1]} />
-        <View style={styles.buttonsArea}>
-          <View style={styles.buttonWrapper}>
-            <MainButton label={s.strings.string_save} marginRem={0.5} spinner={manageTokensPending} type="secondary" onPress={this.saveEnabledTokenList} />
-          </View>
-          <View style={styles.buttonWrapper}>
-            <MainButton label={s.strings.addtoken_add} marginRem={0.5} type="secondary" onPress={this.goToAddTokenScene} />
-          </View>
-        </View>
-      </SceneWrapper>
-    )
-  }
+      )
+    },
+    [allTokens, customTokens, enabledTokenSet, navigation, wallet]
+  )
+
+  return (
+    <SceneWrapper>
+      <SceneHeader underline>
+        <TouchableOpacity onPress={handleSelectWallet}>
+          <Title
+            leftIcon={<CurrencyIcon sizeRem={1.5} walletId={wallet.id} />}
+            rightIcon={<FontAwesomeIcon name="angle-right" size={theme.rem(2)} style={styles.rightIcon} />}
+            text={walletName}
+          />
+        </TouchableOpacity>
+        <EdgeText style={styles.subTitle}>{s.strings.managetokens_top_instructions}</EdgeText>
+        <OutlinedTextInput
+          label={s.strings.search_tokens}
+          marginRem={[1, 2, 0, 1]}
+          returnKeyType="search"
+          searchIcon
+          value={searchValue}
+          onChangeText={setSearchValue}
+        />
+      </SceneHeader>
+      <FlatList data={filteredTokenIds} extraData={allTokens} keyExtractor={keyExtractor} renderItem={renderRow} style={styles.tokenList} />
+      {!isCustomTokensSupported ? null : (
+        <>
+          <DividerLine marginRem={[0, 1]} />
+          <MainButton alignSelf="center" label={s.strings.addtoken_add} marginRem={1} type="secondary" onPress={handleAdd} />
+        </>
+      )}
+    </SceneWrapper>
+  )
 }
 
+const keyExtractor = tokenId => tokenId
+
 const getStyles = cacheStyles((theme: Theme) => ({
-  tokensArea: {
+  rightIcon: {
+    color: theme.iconTappable,
+    marginRight: theme.rem(1)
+  },
+  subTitle: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.85)
+  },
+  tokenList: {
     marginTop: theme.rem(-0.5),
     flex: 4
-  },
-  buttonWrapper: {
-    flex: 1
-  },
-  buttonsArea: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: theme.rem(0.5)
   }
 }))
-
-export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => ({
-    disklet: state.core.disklet,
-    manageTokensPending: state.ui.wallets.manageTokensPending,
-    settingsCustomTokens: state.ui.settings.customTokens,
-    wallets: state.ui.wallets.byId,
-    currencyWallets: state.core.account.currencyWallets,
-    enabledTokens: asSafeDefaultGuiWallet(state.ui.wallets.byId[params.walletId]).enabledTokens
-  }),
-  dispatch => ({
-    setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
-      dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
-      dispatch(checkEnabledTokensArray(walletId, enabledTokens))
-    }
-  })
-)(withTheme(ManageTokensSceneComponent))

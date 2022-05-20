@@ -28,12 +28,13 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
 
     return (
       <SelectableRow
-        onPress={() => bridge.resolve(alpha)}
-        icon={<FastImage source={source} style={styles.image} />}
-        title={name}
-        subTitle={alpha}
         arrowTappable
         autoWidthContent
+        icon={<FastImage source={source} style={styles.image} />}
+        paddingRem={[0, 1]}
+        subTitle={alpha}
+        title={name}
+        onPress={() => bridge.resolve(alpha)}
       />
     )
   }

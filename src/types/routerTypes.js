@@ -1,12 +1,12 @@
 // @flow
 
-import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type JsonObject, type OtpError } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeTransaction, type JsonObject, type OtpError } from 'edge-core-js'
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
-import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
+import { type GuiPlugin } from './GuiPluginTypes.js'
 import {
   type CreateWalletType,
   type FeeOption,
@@ -18,6 +18,7 @@ import {
   type GuiSwapInfo,
   type WcConnectionInfo
 } from './types.js'
+import { type UriQueryMap } from './WebTypes'
 /**
  * Defines the acceptable route parameters for each scene key.
  */
@@ -27,13 +28,6 @@ export type ParamList = {
   login: void,
   edge: void,
   // Logged-in scenes:
-  addToken: {|
-    contractAddress?: string,
-    currencyCode?: string,
-    currencyName?: string,
-    decimalPlaces?: string,
-    walletId: string
-  |},
   changeMiningFee: {|
     guiMakeSpendInfo: GuiMakeSpendInfo,
     maxSpendSet: boolean,
@@ -87,8 +81,11 @@ export type ParamList = {
   defaultFiatSetting: void,
   edgeLogin: void,
   editToken: {|
-    currencyCode: string,
-    metaTokens: EdgeMetaToken[],
+    currencyCode?: string,
+    displayName?: string,
+    multiplier?: string,
+    networkLocation?: JsonObject,
+    tokenId?: string, // Acts like "add token" if this is missing
     walletId: string
   |},
   exchange: void,
@@ -181,7 +178,7 @@ export type ParamList = {
 
     // Set these to add stuff to the plugin URI:
     deepPath?: string,
-    deepQuery?: GuiPluginQuery
+    deepQuery?: UriQueryMap
   |},
   promotionSettings: void,
   request: void,

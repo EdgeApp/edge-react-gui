@@ -1,20 +1,25 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Keyboard, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
+import { cacheStyles } from 'react-native-patina'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
+import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import s from '../../locales/strings.js'
-import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
-import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
+import { type Theme } from '../../types/Theme'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
-import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SceneHeader } from '../themed/SceneHeader'
+import { SelectableRow } from '../themed/SelectableRow'
 
 type OwnProps = {
   navigation: NavigationProp<'defaultFiatSetting'>
@@ -25,7 +30,7 @@ type StateProps = {
 type DispatchProps = {
   onSelectFiat: (selectedDefaultFiat: string) => void
 }
-type Props = StateProps & DispatchProps & OwnProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 type State = {
   supportedFiats: GuiFiatType[],
@@ -49,22 +54,44 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     })
   }
 
+  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
+    const styles = getStyles(this.props.theme)
+    const fiatCountry = FIAT_COUNTRY[data.item.value]
+    if (!fiatCountry) {
+      return null
+    }
+
+    return (
+      <SelectableRow
+        icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        paddingRem={[0, 1]}
+        subTitle={s.strings[`currency_label_${data.item.value}`]}
+        title={data.item.value}
+        onPress={() => this.onSelectFiat(data.item)}
+      />
+    )
+  }
+
   render() {
+    const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
 
     return (
-      <SceneWrapper avoidKeyboard background="body" hasTabs={false}>
+      <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <FormField
-              autoFocus
+            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
+            <OutlinedTextInput
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
-              label={s.strings.settings_select_currency}
+              label={s.strings.fragment_wallets_addwallet_fiat_hint}
+              returnKeyType="search"
+              marginRem={[0, 1.75]}
+              searchIcon
             />
             <FlatList
               style={styles.resultList}
@@ -102,78 +129,25 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     return isValid
   }
 
-  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
-    return (
-      <View style={[styles.singleFiatTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight style={styles.singleFiatType} onPress={() => this.onSelectFiat(data.item)} underlayColor={stylesRaw.underlayColor.color}>
-          <View style={styles.fiatTypeInfoWrap}>
-            <View style={styles.fiatTypeLeft}>
-              <View style={styles.fiatTypeLeftTextWrap}>
-                <Text style={styles.fiatTypeName}>{data.item.label}</Text>
-              </View>
-            </View>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-
   keyExtractor = (item: GuiFiatType, index: string) => String(index)
 }
 
-const stylesRaw = {
+const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    backgroundColor: THEME.COLORS.WHITE,
     flex: 1,
-    paddingHorizontal: scale(20),
     paddingTop: scale(5)
   },
-  selectedItem: {},
   resultList: {
-    backgroundColor: THEME.COLORS.WHITE,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    borderTopWidth: 1,
-    flexGrow: 1,
-    flexShrink: 1
-  },
-  singleFiatType: {
-    height: scale(60),
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(15)
-  },
-  singleFiatTypeWrap: {
-    flexDirection: 'column',
     flex: 1
   },
-  fiatTypeInfoWrap: {
-    flexDirection: 'row',
-    height: scale(40),
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  fiatTypeLeft: {
-    flexDirection: 'row'
-  },
-  fiatTypeLogo: {
-    width: scale(40),
-    height: scale(40),
-    marginRight: scale(10)
-  },
-  fiatTypeLeftTextWrap: {
-    justifyContent: 'center'
-  },
-  fiatTypeName: {
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_1,
-    textAlignVertical: 'center'
-  },
-  underlayColor: {
-    color: THEME.COLORS.GRAY_4
+  cryptoTypeLogo: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(1),
+    marginLeft: theme.rem(0.25),
+    backgroundColor: theme.backgroundGradientColors[1]
   }
-}
-const styles: typeof stylesRaw = StyleSheet.create(stylesRaw)
+}))
 
 export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
@@ -184,4 +158,4 @@ export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, OwnPro
       dispatch(setDefaultFiatRequest(selectedDefaultFiat))
     }
   })
-)(DefaultFiatSettingComponent)
+)(withTheme(DefaultFiatSettingComponent))

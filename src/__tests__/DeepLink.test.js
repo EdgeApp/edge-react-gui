@@ -24,6 +24,104 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('requestAddress', () => {
+    makeLinkTests({
+      'edge://reqaddr?codes=eth-btc&post=https%3A%2F%2Fbitwage.com&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr&payer=bitwage': {
+        type: 'requestAddress',
+        assets: [
+          { nativeCode: 'ETH', tokenCode: 'ETH' },
+          { nativeCode: 'BTC', tokenCode: 'BTC' }
+        ],
+        post: 'https://bitwage.com',
+        redir: 'https://bitwage.com/getaddr',
+        payer: 'bitwage'
+      },
+      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr': {
+        type: 'requestAddress',
+        assets: [
+          { nativeCode: 'ETH', tokenCode: 'ETH' },
+          { nativeCode: 'BTC', tokenCode: 'BTC' }
+        ],
+        post: undefined,
+        redir: 'https://bitwage.com/getaddr',
+        payer: undefined
+      },
+      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%2F': {
+        type: 'requestAddress',
+        assets: [
+          { nativeCode: 'ETH', tokenCode: 'ETH' },
+          { nativeCode: 'BTC', tokenCode: 'BTC' }
+        ],
+        post: undefined,
+        redir: 'https://bitwage.com/getaddr/',
+        payer: undefined
+      },
+      'edge://reqaddr?codes=eth-btc&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%3F': {
+        type: 'requestAddress',
+        assets: [
+          { nativeCode: 'ETH', tokenCode: 'ETH' },
+          { nativeCode: 'BTC', tokenCode: 'BTC' }
+        ],
+        post: undefined,
+        redir: 'https://bitwage.com/getaddr?',
+        payer: undefined
+      },
+      'edge://reqaddr?codes=eth&post=https%3A%2F%2Fbitwage.com': {
+        type: 'requestAddress',
+        assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
+        post: 'https://bitwage.com',
+        redir: undefined,
+        payer: undefined
+      },
+      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr': {
+        type: 'requestAddress',
+        assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
+        post: undefined,
+        redir: 'https://bitwage.com/getaddr',
+        payer: undefined
+      },
+      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%3FnoValueQuery': {
+        type: 'requestAddress',
+        assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
+        post: undefined,
+        redir: 'https://bitwage.com?noValueQuery',
+        payer: undefined
+      },
+      'edge://reqaddr?codes=ETH&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr&post=https%3A%2F%2Fbitwage.com': {
+        type: 'requestAddress',
+        assets: [{ nativeCode: 'ETH', tokenCode: 'ETH' }],
+        post: 'https://bitwage.com',
+        redir: 'https://bitwage.com/getaddr',
+        payer: undefined
+      },
+      'edge://reqaddr?codes=ETH_usdc-BTC-DOGE_DOGE&redir=https://bitwage.com/getaddr%3Frequestid%3D123&payer=bitwage&post=https%3A%2F%2Fbitwage.com': {
+        type: 'requestAddress',
+        assets: [
+          { nativeCode: 'ETH', tokenCode: 'USDC' },
+          { nativeCode: 'BTC', tokenCode: 'BTC' },
+          { nativeCode: 'DOGE', tokenCode: 'DOGE' }
+        ],
+        post: 'https://bitwage.com',
+        redir: 'https://bitwage.com/getaddr?requestid=123',
+        payer: 'bitwage'
+      },
+      'reqaddr://?codes=ETH_usdc-BTC-DOGE_DOGE-LTC-ETH_UNI&post=https%3A%2F%2Fbitwage.com&redir=https%3A%2F%2Fbitwage.com%2Fgetaddr%3Frequestid%3D123%26otherquery':
+        {
+          type: 'requestAddress',
+          assets: [
+            { nativeCode: 'ETH', tokenCode: 'USDC' },
+            { nativeCode: 'BTC', tokenCode: 'BTC' },
+            { nativeCode: 'DOGE', tokenCode: 'DOGE' },
+            { nativeCode: 'LTC', tokenCode: 'LTC' },
+            { nativeCode: 'ETH', tokenCode: 'UNI' }
+          ],
+          post: 'https://bitwage.com',
+          redir: 'https://bitwage.com/getaddr?requestid=123&otherquery',
+          payer: undefined
+        }
+    })
+  })
+
   describe('edgeLogin', () => {
     makeLinkTests({
       'edge://edge/1234567890a': {
@@ -45,8 +143,8 @@ describe('parseDeepLink', function () {
     })
 
     it('Wrong host', () => {
-      const result = parseDeepLink('edge-ret://edgey/1234567890a')
-      expect(result.type).toBe('returnAddress')
+      const result = parseDeepLink('reqaddr://?codes=eth&post=https%3A%2F%2Fjgiugdfigfdiudhfd.com')
+      expect(result.type).toBe('requestAddress')
     })
   })
 
@@ -140,98 +238,6 @@ describe('parseDeepLink', function () {
         type: 'promotion',
         installerId: ''
       }
-    })
-  })
-
-  describe('returnAddress', function () {
-    it('bitwage', function () {
-      const uri =
-        'bitcoin-ret://x-callback-url/request-address?category=Income%3ASalary&max-number=100&x-error=https://www.bitwage.com/bitcoinret%2Ferror&x-source=Bitwage&x-success=https://www.bitwage.com/bitcoinret%2F5321947550318592%2F2%2Fadd%3Fcsrf%3D8040b2ac-61db-4d64-8705-9df856c3998a'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('bitcoin')
-      expect(result.sourceName).toBe('Bitwage')
-      expect(result.successUri).toBe('https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a')
-    })
-
-    it('cryptotip', function () {
-      const uri = 'bitcoin-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('bitcoin')
-      expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
-    })
-
-    it('cryptotip invalid currency', function () {
-      const uri = 'bitcoinz-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('bitcoinz')
-      expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
-    })
-
-    it('bitwage bitcoin', function () {
-      const uri =
-        'edge://x-callback-url/request-bitcoin-address?category=Income%3ASalary&max-number=100&x-error=https://www.bitwage.com/bitcoinret%2Ferror&x-source=Bitwage&x-success=https://www.bitwage.com/bitcoinret%2F5321947550318592%2F2%2Fadd%3Fcsrf%3D8040b2ac-61db-4d64-8705-9df856c3998a'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('bitcoin')
-      expect(result.sourceName).toBe('Bitwage')
-      expect(result.successUri).toBe('https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a')
-    })
-
-    it('cryptotip dash', function () {
-      const uri = 'edge://x-callback-url/request-dash-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('dash')
-      expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
-    })
-
-    it('cryptotip invalid currency', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('dashy')
-      expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
-    })
-
-    it('cryptotip missing source', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-sourcey=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('dashy')
-      expect(result.sourceName).toBe(undefined)
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
-    })
-
-    it('cryptotip missing callback-url', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip'
-      const result = parseDeepLink(uri)
-      expect(result.type).toBe('returnAddress')
-
-      if (result.type !== 'returnAddress') return
-      expect(result.currencyName).toBe('dashy')
-      expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe(undefined)
     })
   })
 

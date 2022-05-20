@@ -6,7 +6,6 @@ import { type AirshipBridge } from 'react-native-airship'
 import { getBundleId } from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
 
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
@@ -36,7 +35,7 @@ export function UpdateModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
       <View style={styles.titleContainer}>
-        <Image style={styles.titleImage} source={edgeLogo} />
+        <Image style={styles.titleImage} resizeMode="contain" source={theme.primaryLogo} />
         <ModalTitle>{s.strings.update_header}</ModalTitle>
       </View>
       <ModalMessage>{message}</ModalMessage>
@@ -50,11 +49,10 @@ export function UpdateModal(props: Props) {
 const getStyles = cacheStyles(theme => ({
   titleContainer: {
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'column'
   },
   titleImage: {
-    height: theme.rem(1.75),
-    margin: theme.rem(0.5),
-    width: theme.rem(1.75)
+    height: theme.rem(3),
+    margin: theme.rem(0.5)
   }
 }))

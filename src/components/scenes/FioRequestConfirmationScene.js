@@ -23,7 +23,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type StateProps = {
   exchangeSecondaryToPrimaryRatio: string,
@@ -347,12 +347,14 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: state.ui.wallets.selectedWalletId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
     const secondaryCurrencyInfo: GuiCurrencyInfo = {
+      walletId: state.ui.wallets.selectedWalletId,
       displayCurrencyCode: selectedWallet.fiatCurrencyCode.replace('iso:', ''),
       displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: secondaryExchangeCurrencyCode,

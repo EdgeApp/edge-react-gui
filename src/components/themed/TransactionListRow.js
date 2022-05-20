@@ -6,6 +6,7 @@ import * as React from 'react'
 
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
+import { displayFiatAmount } from '../../hooks/useFiatText.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -16,7 +17,6 @@ import {
   DECIMAL_PRECISION,
   decimalOrZero,
   DEFAULT_TRUNCATE_PRECISION,
-  displayFiatAmount,
   getDenomFromIsoCode,
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,

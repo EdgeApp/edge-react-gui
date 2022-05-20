@@ -10,6 +10,7 @@ import { CurrencyIcon } from '../../../components/themed/CurrencyIcon.js'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
 import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
 import { Actions } from '../../../types/routerTypes.js'
@@ -137,15 +138,17 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           ))
       const noWalletSymbol = '-'
 
+      // Convert back to Edge currency code to display the icon
+      const info = getSpecialCurrencyInfo(wallet.edgeWallet.currencyInfo.pluginId)
+      const currencyCode = wallet.currencyCode === info.fioChainCode ? info.chainCode : wallet.currencyCode
+
       return (
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]} underlayColor={theme.secondaryButton}>
           <View style={styles.rowContainerTop}>
-            <View style={styles.containerLeft}>
-              {wallet != null ? <CurrencyIcon currencyCode={wallet.currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
-            </View>
+            <View style={styles.containerLeft}>{wallet != null ? <CurrencyIcon currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}</View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
-                <EdgeText style={styles.walletDetailsRowCurrency}>{wallet.currencyCode}</EdgeText>
+                <EdgeText style={styles.walletDetailsRowCurrency}>{currencyCode}</EdgeText>
                 <EdgeText style={styles.walletDetailsRowName}>{wallet.name}</EdgeText>
               </View>
               <View style={styles.walletDetailsCol}>
@@ -241,7 +244,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   bottomSection: {
     flex: 2,
-    backgroundColor: theme.backgroundGradientRight,
+    backgroundColor: theme.backgroundGradientColors[1],
     padding: theme.rem(1)
   },
   btnDisabled: {
@@ -271,13 +274,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
-    const wallets = state.ui.wallets.byId
     const edgeWallets = state.core.account.currencyWallets
     const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
     if (!ccWalletMap) return { walletItems: {}, loading: true }
 
-    const walletItems = makeConnectWallets(edgeWallets, wallets, ccWalletMap)
+    const walletItems = makeConnectWallets(edgeWallets, ccWalletMap)
 
     return {
       walletItems,

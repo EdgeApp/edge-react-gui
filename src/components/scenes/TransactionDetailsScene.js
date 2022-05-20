@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
+import { displayFiatAmount } from '../../hooks/useFiatText.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
@@ -23,7 +24,6 @@ import {
   capitalize,
   convertNativeToDisplay,
   convertNativeToExchange,
-  displayFiatAmount,
   isValidInput,
   splitTransactionCategory,
   truncateDecimals
@@ -39,7 +39,7 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
-import { Tile } from '../themed/Tile.js'
+import { Tile } from '../tiles/Tile.js'
 
 type OwnProps = {
   route: RouteProp<'transactionDetails'>

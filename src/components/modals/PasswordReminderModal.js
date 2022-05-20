@@ -86,7 +86,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
         <ModalTitle>{s.strings.password_reminder_remember_your_password}</ModalTitle>
-        <ScrollView style={{ maxHeight: theme.rem(6.75) }}>
+        <ScrollView style={{ maxHeight: theme.rem(9) }}>
           <ModalMessage>{s.strings.password_reminder_you_will_need_your_password}</ModalMessage>
           <ModalMessage>{s.strings.password_reminder_enter_password_below}</ModalMessage>
         </ScrollView>

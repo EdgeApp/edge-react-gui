@@ -5,7 +5,7 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import SortableListView from 'react-native-sortable-listview'
 
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useWatchAccount } from '../../hooks/useWatch.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { showError } from '../services/AirshipInstance.js'
 import { WalletListSortableRow } from './WalletListSortableRow.js'
@@ -18,10 +18,9 @@ type Props = {}
 export function WalletListSortable(props: Props) {
   // Subscribe to account state:
   const account = useSelector(state => state.core.account)
-  const [currencyWallets, setCurrencyWallets] = useState(account.currencyWallets)
-  const [activeWalletIds, setActiveWalletIds] = useState(account.activeWalletIds)
-  useEffect(() => account.watch('currencyWallets', setCurrencyWallets), [account])
-  useEffect(() => account.watch('activeWalletIds', setActiveWalletIds), [account])
+
+  const currencyWallets = useWatchAccount(account, 'currencyWallets')
+  const activeWalletIds = useWatchAccount(account, 'activeWalletIds')
 
   const handleRowMoved = (action: { from: number, to: number }) => {
     const newOrder = [...activeWalletIds]

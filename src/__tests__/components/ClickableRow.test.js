@@ -19,9 +19,7 @@ describe('ClickableRow', () => {
       autoHeight: 11,
       children: 'String',
       underline: 11,
-      // eslint-disable-next-line react/no-unused-prop-types
       marginRem: 11,
-      // eslint-disable-next-line react/no-unused-prop-types
       paddingRem: 11,
       theme: getTheme()
     }

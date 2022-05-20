@@ -18,18 +18,16 @@ import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/uti
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { Alert } from '../themed/Alert'
-import { CryptoFiatAmountTile } from '../themed/CryptoFiatAmountTile.js'
 import { EdgeText } from '../themed/EdgeText'
-import { FiatAmountTile } from '../themed/FiatAmountTile.js'
-import { IconTile } from '../themed/IconTile'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
+import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
+import { FiatAmountTile } from '../tiles/FiatAmountTile'
+import { IconTile } from '../tiles/IconTile'
 
 type Props = {
   bridge: AirshipBridge<string | null>,
-  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
-  // eslint-disable-next-line react/no-unused-prop-types
   dApp: JsonObject,
   uri: string,
   payload: WcRpcPayload
@@ -59,8 +57,6 @@ export const WcSmartContractModal = (props: Props) => {
   }
   const { currencyCode: feeCurrencyCode, pluginId, metaTokens } = wallet.currencyInfo
 
-  const { isoFiatCurrencyCode } = guiWallet
-
   const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
   const feeCurrencyBalance = guiWallet.primaryNativeBalance
 
@@ -70,7 +66,7 @@ export const WcSmartContractModal = (props: Props) => {
     amountCrypto = hexToDecimal(params.value)
   }
   if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
-    networkFeeCrypto = hexToDecimal(mul(params.gas, params.gasPrice, 16))
+    networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
   }
 
   const amountDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, amountCurrencyCode)
@@ -107,7 +103,13 @@ export const WcSmartContractModal = (props: Props) => {
         type="warning"
       />
     ) : (
-      <Alert marginTop={0.5} title={s.strings.wc_smartcontract_warning_title} message={s.strings.wc_smartcontract_warning_text} type="warning" />
+      <Alert
+        numberOfLines={0}
+        marginTop={0.5}
+        title={s.strings.wc_smartcontract_warning_title}
+        message={s.strings.wc_smartcontract_warning_text}
+        type="warning"
+      />
     )
   }
 
@@ -135,9 +137,9 @@ export const WcSmartContractModal = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.string_amount}
             nativeCryptoAmount={amountCrypto}
-            cryptoCurrencyCode={amountCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={amountDenom}
+            walletId={walletId}
+            currencyCode={amountCurrencyCode}
           />
         )}
         {walletName != null && (
@@ -152,18 +154,17 @@ export const WcSmartContractModal = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeCrypto}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
             denomination={feeDenom}
+            walletId={walletId}
+            currencyCode={feeCurrencyCode}
           />
         )}
         {!zeroString(totalNativeCrypto) && (
           <FiatAmountTile
             title={s.strings.wc_smartcontract_max_total}
             nativeCryptoAmount={totalNativeCrypto}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={isoFiatCurrencyCode}
-            cryptoExchangeMultiplier={feeDenom.multiplier}
+            wallet={wallet}
+            currencyCode={amountCurrencyCode}
           />
         )}
         {slider}

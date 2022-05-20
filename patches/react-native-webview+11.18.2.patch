@@ -1,0 +1,54 @@
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java
+index c575db7..bf2fb7c 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java
+@@ -1240,6 +1240,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
+       }
+       WritableMap event = Arguments.createMap();
+       event.putDouble("target", webView.getId());
++      event.putString("url", webView.getUrl());
+       event.putString("title", webView.getTitle());
+       event.putString("url", url);
+       event.putBoolean("canGoBack", webView.canGoBack());
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java
+index 34fd44b..1b8e379 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java
+@@ -316,11 +316,6 @@ public class RNCWebViewModule extends ReactContextBaseJavaModule implements Acti
+   }
+ 
+   public boolean grantFileDownloaderPermissions() {
+-    // Permission not required for Android Q and above
+-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+-      return true;
+-    }
+-
+     boolean result = ContextCompat.checkSelfPermission(getCurrentActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+     if (!result && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+       PermissionAwareActivity activity = getPermissionAwareActivity();
+diff --git a/node_modules/react-native-webview/lib/WebView.android.js b/node_modules/react-native-webview/lib/WebView.android.js
+index c294831..46fa523 100644
+--- a/node_modules/react-native-webview/lib/WebView.android.js
++++ b/node_modules/react-native-webview/lib/WebView.android.js
+@@ -224,6 +224,8 @@ var WebView = /** @class */ (function (_super) {
+             if (onLoadProgress) {
+                 onLoadProgress(event);
+             }
++            // @ts-ignore
++            _this.updateNavigationState(event);
+         };
+         _this.onShouldStartLoadWithRequestCallback = function (shouldStart, url, lockIdentifier) {
+             if (lockIdentifier) {
+diff --git a/node_modules/react-native-webview/lib/WebViewShared.js b/node_modules/react-native-webview/lib/WebViewShared.js
+index aa2f7aa..a583aa3 100644
+--- a/node_modules/react-native-webview/lib/WebViewShared.js
++++ b/node_modules/react-native-webview/lib/WebViewShared.js
+@@ -17,7 +17,7 @@ var extractOrigin = function (url) {
+     return result === null ? '' : result[0];
+ };
+ var originWhitelistToRegex = function (originWhitelist) {
+-    return "^".concat(escapeStringRegexp(originWhitelist).replace(/\\\*/g, '.*'));
++    return "^" + escapeStringRegexp(originWhitelist).replace(/\\\*/g, '.*') + "$";
+ };
+ var passesWhitelist = function (compiledWhitelist, url) {
+     var origin = extractOrigin(url);

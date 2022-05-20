@@ -1,6 +1,6 @@
 // @flow
 
-import Clipboard from '@react-native-community/clipboard'
+import Clipboard from '@react-native-clipboard/clipboard'
 import { div, eq, mul } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'

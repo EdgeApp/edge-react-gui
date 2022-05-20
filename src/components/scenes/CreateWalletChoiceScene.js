@@ -1,19 +1,18 @@
 // @flow
 
 import * as React from 'react'
-import { Image, ScrollView, StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
-import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
+import CreateWalletSvg from '../../assets/images/create-wallet.svg'
+import { useLayout } from '../../hooks/useLayout.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { PLATFORM } from '../../theme/variables/platform.js'
+import { useCallback } from '../../types/reactHooks.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
-import { scale } from '../../util/scaling.js'
+import { SceneWrapper } from '../common/SceneWrapper'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { MainButton } from '../themed/MainButton.js'
+import { SceneHeader } from '../themed/SceneHeader'
 
 type OwnProps = {
   navigation: NavigationProp<'createWalletChoice'>,
@@ -22,90 +21,68 @@ type OwnProps = {
 
 type Props = OwnProps
 
-export class CreateWalletChoiceComponent extends React.PureComponent<Props> {
-  onSelectNew = () => {
-    const { navigation, route } = this.props
-    const { selectedWalletType } = route.params
+const mainButtonMarginRem = [1, 1]
+
+export const CreateWalletChoiceScene = (props: Props) => {
+  const { navigation, route } = props
+  const { selectedWalletType } = route.params
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const onSelectNew = useCallback(() => {
     navigation.navigate('createWalletSelectFiat', {
       selectedWalletType
     })
-  }
+  }, [navigation, selectedWalletType])
 
-  onSelectRestore = () => {
-    const { navigation, route } = this.props
-    const { selectedWalletType } = route.params
+  const onSelectRestore = useCallback(() => {
     navigation.navigate('createWalletImport', {
       selectedWalletType
     })
-  }
+  }, [navigation, selectedWalletType])
 
-  render() {
-    return (
-      <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <ScrollView>
-            <View style={styles.view}>
-              <Image source={WalletIcon} style={styles.currencyLogo} resizeMode="cover" />
-              <View style={styles.createWalletPromptArea}>
-                <Text style={styles.instructionalText}>{s.strings.create_wallet_choice_instructions}</Text>
-              </View>
-              <View style={styles.buttons}>
-                <PrimaryButton style={styles.next} onPress={this.onSelectNew}>
-                  <PrimaryButton.Text>{s.strings.create_wallet_choice_new_button}</PrimaryButton.Text>
-                </PrimaryButton>
-              </View>
-              <View style={styles.buttons}>
-                <SecondaryButton style={styles.next} onPress={this.onSelectRestore}>
-                  <SecondaryButton.Text>{s.strings.create_wallet_import_title}</SecondaryButton.Text>
-                </SecondaryButton>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
-      </SafeAreaView>
-    )
-  }
+  // Scale the icon to match the height of the first MainButton container for consistency
+  const [iconContainerLayout, setIconContainerLayout] = useLayout()
+  const svgHeightToWidthRatio = 62 / 58 // Original SVG height and width
+  const svgHeight = iconContainerLayout.height
+  const svgWidth = svgHeightToWidthRatio * svgHeight
+
+  return (
+    <SceneWrapper avoidKeyboard background="theme">
+      <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
+      <View style={styles.icon}>
+        <CreateWalletSvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+      </View>
+      <EdgeText style={styles.instructionalText} numberOfLines={2}>
+        {s.strings.create_wallet_choice_instructions}
+      </EdgeText>
+      <View onLayout={setIconContainerLayout}>
+        <MainButton
+          alignSelf="stretch"
+          label={s.strings.create_wallet_choice_new_button}
+          marginRem={mainButtonMarginRem}
+          type="secondary"
+          onPress={onSelectNew}
+        />
+      </View>
+      <MainButton alignSelf="stretch" label={s.strings.create_wallet_import_title} type="escape" onPress={onSelectRestore} />
+    </SceneWrapper>
+  )
 }
 
-const rawStyles = {
-  scene: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  gradient: {
-    height: THEME.HEADER,
-    width: '100%',
-    position: 'absolute'
-  },
-  view: {
-    position: 'relative',
-    top: THEME.HEADER,
-    paddingHorizontal: 20,
-    height: PLATFORM.usableHeight
-  },
-  currencyLogo: {
-    alignSelf: 'center',
-    marginTop: scale(24),
-    height: scale(64),
-    width: scale(64)
-  },
-  createWalletPromptArea: {
-    paddingTop: scale(16),
-    paddingBottom: scale(8)
+const getStyles = cacheStyles((theme: Theme) => ({
+  icon: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: theme.rem(1)
   },
   instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center',
-    color: THEME.COLORS.GRAY_1
-  },
-  buttons: {
-    marginTop: scale(24),
-    flexDirection: 'row'
-  },
-  next: {
-    marginLeft: scale(1),
-    flex: 1
+    fontSize: theme.rem(1),
+    color: theme.primaryText,
+    paddingHorizontal: theme.rem(1),
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(2),
+    marginHorizontal: theme.rem(2.5),
+    textAlign: 'center'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))

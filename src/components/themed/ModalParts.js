@@ -5,7 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import { unpackEdges } from '../../util/edges'
+import { fixSides, mapSides, sidesToPadding } from '../../util/sides.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
 type ModalTitleProps = {
@@ -16,23 +16,26 @@ type ModalTitleProps = {
 }
 
 export function ModalTitle(props: ModalTitleProps) {
-  const { icon = null } = props
+  const { center, children, icon = null, paddingRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
   return (
     <View style={styles.titleContainer}>
       {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
-      <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem, theme)]}>{props.children}</Text>
+      <Text style={[styles.titleText, center ? styles.titleCenter : null, padding]}>{children}</Text>
     </View>
   )
 }
 
 export function ModalMessage(props: { children: React.Node, paddingRem?: number[] | number, isWarning?: boolean }) {
+  const { children, isWarning, paddingRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
-  return <Text style={[styles.messageText, paddingStyles(props.paddingRem, theme), props.isWarning && styles.warningText]}>{props.children}</Text>
+  return <Text style={[styles.messageText, padding, isWarning && styles.warningText]}>{children}</Text>
 }
 
 export function ModalCloseArrow(props: { onPress: () => void }) {
@@ -44,17 +47,6 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
       <FontAwesome5 name="chevron-down" size={theme.rem(1.25)} color={theme.iconTappable} />
     </TouchableOpacity>
   )
-}
-
-function paddingStyles(paddingRem?: number[] | number, theme: Theme) {
-  const padding = unpackEdges(paddingRem == null ? 0 : paddingRem)
-
-  return {
-    paddingBottom: theme.rem(padding.bottom),
-    paddingLeft: theme.rem(padding.left),
-    paddingRight: theme.rem(padding.right),
-    paddingTop: theme.rem(padding.top)
-  }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

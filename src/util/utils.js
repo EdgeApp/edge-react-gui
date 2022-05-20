@@ -1,19 +1,26 @@
 // @flow
 
-import { abs, add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import { asArray, asEither, asMaybe, asObject, asOptional, asString } from 'cleaners'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
+import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
+import { sprintf } from 'sprintf-js'
 
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, FIAT_PRECISION, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
-import { formatNumber, toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getSymbolFromCurrency,
+  SPECIAL_CURRENCY_INFO
+} from '../constants/WalletAndCurrencyConstants'
+import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo, EdgeTokenIdExtended, GuiDenomination, TransactionListTx } from '../types/types.js'
-import { type GuiExchangeRates } from '../types/types.js'
+import type { GuiDenomination, TransactionListTx } from '../types/types.js'
+import { type EdgeTokenId, type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
 
 export const DECIMAL_PRECISION = 18
@@ -47,47 +54,6 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
   }
 }
 
-export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
-  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
-  const initialAmount = fiatAmount.toFixed(precision)
-  const absoluteAmount = abs(initialAmount)
-  return formatNumber(toFixed(absoluteAmount, 2, precision), { noGrouping })
-}
-
-// will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-export const mergeTokens = (
-  preferredEdgeMetaTokens: EdgeMetaToken[] | CustomTokenInfo[],
-  edgeMetaTokens: CustomTokenInfo[]
-): Array<EdgeMetaToken | CustomTokenInfo> => {
-  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  for (const x of edgeMetaTokens) {
-    // loops through the account-level array
-    let found = false // assumes it is not present in the currencyInfo from plugin
-    for (const val of tokensEnabled) {
-      // loops through currencyInfo array to see if already present
-      if (x.currencyCode === val.currencyCode) {
-        found = true // if present, then set 'found' to true
-      }
-    }
-    if (!found) tokensEnabled.push(x) // if not already in the currencyInfo, then add to tokensEnabled array
-  }
-  return tokensEnabled
-}
-
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToken[], edgeMetaTokens: CustomTokenInfo[]): EdgeMetaToken[] => {
-  const tokensEnabled: EdgeMetaToken[] = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  const tokensToAdd = []
-  for (const x of edgeMetaTokens) {
-    // loops through the account-level array
-    if (x.isVisible !== false && tokensEnabled.findIndex(walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
-      tokensToAdd.push(x)
-    }
-  }
-
-  // $FlowFixMe this is actually an error, but I don't know how to fix it:
-  return tokensEnabled.concat(tokensToAdd)
-}
-
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
@@ -107,6 +73,7 @@ export const truncateDecimals = (input: string, precision: number = DEFAULT_TRUN
     return input
   }
   const [integers, decimals] = input.split('.')
+
   return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
@@ -233,42 +200,6 @@ export function fixFiatCurrencyCode(currencyCode: string) {
   if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
 
   return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
-}
-
-export const getCurrencyInfo = (allCurrencyInfos: EdgeCurrencyInfo[], currencyCode: string): EdgeCurrencyInfo | void => {
-  for (const info of allCurrencyInfos) {
-    for (const denomination of info.denominations) {
-      if (denomination.name === currencyCode) {
-        return info
-      }
-    }
-  }
-  // loop through metaTokens only after all top-level / parent
-  // cryptos have been looped through. Native / parent currency
-  // takes precedence over tokens
-  for (const info of allCurrencyInfos) {
-    for (const token of info.metaTokens) {
-      for (const denomination of token.denominations) {
-        if (denomination.name === currencyCode) {
-          return info
-        }
-      }
-    }
-  }
-}
-
-export const denominationToDecimalPlaces = (denomination: string): string => {
-  const numberOfDecimalPlaces = (denomination.match(/0/g) || []).length
-  const decimalPlaces = numberOfDecimalPlaces.toString()
-  return decimalPlaces
-}
-
-export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
-  const numberOfDecimalPlaces: number = parseInt(decimalPlaces)
-  const denomination: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-
-  // will return, '1' at the very least
-  return denomination
 }
 
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
@@ -498,6 +429,20 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
   }
 }
 
+export async function fetchWaterfall(servers?: string[], path: string, options?: any): Promise<any> {
+  if (servers == null) return
+  const funcs = servers.map(server => async () => {
+    const result = await fetch(server + '/' + path, options)
+    if (typeof result !== 'object') {
+      const msg = `Invalid return value ${path} in ${server}`
+      console.log(msg)
+      throw new Error(msg)
+    }
+    return result
+  })
+  return asyncWaterfall(funcs)
+}
+
 export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {
@@ -535,61 +480,6 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
 
     if (callNow) func.apply(context, args)
   }
-}
-
-export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
-  const [parent, token] = fullCurrencyCode.split('-')
-  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
-  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
-  return checkToken || checkParent
-}
-
-const asEdgeTokenIdExtended = asObject({
-  pluginId: asString,
-  tokenId: asOptional(asString),
-  currencyCode: asOptional(asString)
-})
-
-const asCurrencyCodesArray = asMaybe(asArray(asEither(asString, asEdgeTokenIdExtended)), [])
-
-export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: any[], pluginId: string): boolean {
-  const cleanedArray = asCurrencyCodesArray(currencyCodesArray)
-  return !!cleanedArray.find(item => {
-    if (typeof item === 'string') {
-      return checkCurrencyCodes(item, currencyCode)
-    } else if (typeof item === 'object') {
-      return item.pluginId === pluginId && item.currencyCode === currencyCode.toUpperCase()
-    }
-    return undefined
-  })
-}
-
-export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string, pluginId: string }
-
-export function checkFilterWallet(
-  details: FilterDetailsType,
-  filterText: string,
-  allowedCurrencyCodes?: string[] | EdgeTokenIdExtended[],
-  excludeCurrencyCodes?: string[]
-): boolean {
-  const currencyCode = details.currencyCode.toLowerCase()
-
-  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes, details.pluginId)) {
-    return false
-  }
-
-  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes, details.pluginId)) {
-    return false
-  }
-
-  if (filterText === '') {
-    return true
-  }
-
-  const walletName = normalizeForSearch(details.name)
-  const currencyName = normalizeForSearch(details.currencyName)
-  const filterString = normalizeForSearch(filterText)
-  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
 
 export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
@@ -651,22 +541,6 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 
-export function formatFiatString(props: { fiatAmount: string | number, minPrecision?: string | number, autoPrecision?: boolean, noGrouping?: boolean }) {
-  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
-
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
-  let precision: number = parseInt(minPrecision)
-  let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
-  if (autoPrecision) {
-    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
-      tempFiatAmount *= 10
-      precision++
-    }
-  }
-
-  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
-}
-
 export function unixToLocaleDateTime(unixDate: number): { date: string, time: string, dateTime: string } {
   const date = new Date(unixDate * 1000)
   return {
@@ -676,8 +550,72 @@ export function unixToLocaleDateTime(unixDate: number): { date: string, time: st
   }
 }
 
-export function logPrefix(wallet: EdgeCurrencyWallet): string {
-  const prettyDate = new Date().toISOString().replace(/.*(\d\d-\d\d)T(\d\d:\d\d:\d\d).*/, '$1 $2')
-  const name = wallet.name ? wallet.name : 'NULL'
-  return `${prettyDate} ${wallet.currencyInfo.currencyCode}-${wallet.id.slice(0, 2)}-${name}`
+/**
+ * Returns a list string representation of the string array.
+ *
+ * toListString(['1', '2']) === '1 and 2'
+ * toListString(['1','2','3']) === '1, 2, and 3'
+ */
+export const toListString = (elements: string[]): string => {
+  if (elements.length === 0) return ''
+  if (elements.length === 1) return elements[0]
+  if (elements.length === 2) return sprintf(s.strings.util_s_and_s, elements[0], elements[1])
+
+  const firstPart = elements.slice(0, elements.length - 2)
+  const lastPart = sprintf(s.strings.util_s_and_s, elements[elements.length - 2], elements[elements.length - 1])
+  return firstPart.join(', ') + `, ${lastPart}`
+}
+
+/**
+ * Returns the wallet plugin ID based on a chain/native asset currency code
+ * Returns null if Edge does not support the specified chain.
+ * Not case sensitive.
+ */
+export const getPluginIdFromChainCode = (chainCode: string): string | void => {
+  const pluginId = Object.keys(SPECIAL_CURRENCY_INFO).find(key => SPECIAL_CURRENCY_INFO[key].chainCode === chainCode.toUpperCase())
+  return pluginId
+}
+
+export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, tokenIds: string[]): string[] {
+  const { builtinTokens = {}, customTokens = {} } = currencyConfig
+
+  const out: string[] = []
+  for (const tokenId of tokenIds) {
+    const token = customTokens[tokenId] ?? builtinTokens[tokenId]
+    if (token != null) out.push(token.currencyCode)
+  }
+  return out
+}
+
+/**
+ * Creates a function that returns all matching tokenId's for a currency code.
+ */
+export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: string) => EdgeTokenId[] {
+  const map = new Map<string, EdgeTokenId[]>()
+
+  function addMatch(currencyCode: string, location: EdgeTokenId): void {
+    const key = currencyCode.toLowerCase()
+    const list = map.get(key)
+    if (list != null) list.push(location)
+    else map.set(key, [location])
+  }
+
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    const { allTokens, currencyInfo } = currencyConfig
+
+    addMatch(currencyInfo.currencyCode, { pluginId })
+
+    for (const tokenId of Object.keys(allTokens)) {
+      const token = allTokens[tokenId]
+      addMatch(token.currencyCode, { pluginId, tokenId })
+    }
+  }
+
+  return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
+}
+
+export const pickRandom = <T>(array?: T[]): T | null => {
+  if (array == null || array.length === 0) return null
+  return array[Math.floor(Math.random() * array.length)]
 }

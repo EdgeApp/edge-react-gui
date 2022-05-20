@@ -1,9 +1,20 @@
 // @flow
 
 import { abs } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
+import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
+import type {
+  EdgeAccount,
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeNetworkFee,
+  EdgeReceiveAddress,
+  EdgeSpendTarget,
+  EdgeTransaction,
+  JsonObject
+} from 'edge-core-js'
 import * as React from 'react'
-import { Linking } from 'react-native'
+import { Linking, Platform } from 'react-native'
+import { CustomTabs } from 'react-native-custom-tabs'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -16,13 +27,15 @@ import { type WalletListResult, WalletListModal } from '../../../../components/m
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
-import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
+import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { Actions } from '../../../../types/routerTypes.js'
-import type { EdgeTokenIdExtended } from '../../../../types/types.js'
+import type { EdgeTokenId } from '../../../../types/types.js'
 import { type GuiMakeSpendInfo } from '../../../../types/types.js'
+import { type UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
+import { makeCurrencyCodeTable } from '../../../../util/utils.js'
 
 type WalletDetails = {
   name: string,
@@ -74,6 +87,15 @@ export type EdgeProviderSpendTarget = {
   otherParams?: JsonObject
 }
 
+const asEdgeTokenIdExtended = asObject({
+  pluginId: asString,
+  tokenId: asOptional(asString),
+  currencyCode: asOptional(asString)
+})
+
+const asCurrencyCodesArray = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
+type ExtendedCurrencyCode = string | $Call<typeof asEdgeTokenIdExtended>
+
 export class EdgeProvider extends Bridgeable {
   // Private properties:
   _plugin: GuiPlugin
@@ -82,7 +104,7 @@ export class EdgeProvider extends Bridgeable {
 
   // Public properties:
   deepPath: string | void
-  deepQuery: GuiPluginQuery | void
+  deepQuery: UriQueryMap | void
   promoCode: string | void
   restartPlugin: () => void
 
@@ -92,7 +114,7 @@ export class EdgeProvider extends Bridgeable {
     dispatch: Dispatch,
     restartPlugin: () => void,
     deepPath?: string,
-    deepQuery?: GuiPluginQuery,
+    deepQuery?: UriQueryMap,
     promoCode?: string
   ) {
     super()
@@ -106,7 +128,7 @@ export class EdgeProvider extends Bridgeable {
     this.restartPlugin = restartPlugin
   }
 
-  _updateState(state: RootState, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string): void {
+  _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
     this._state = state
     this.deepPath = deepPath
     this.deepQuery = deepQuery
@@ -117,20 +139,15 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  // $FlowFixMe // Default empty array is not typed
-  async chooseCurrencyWallet(allowedCurrencyCodes: string[] | EdgeTokenIdExtended[] = []): Promise<string> {
+  async chooseCurrencyWallet(allowedCurrencyCodes: ExtendedCurrencyCode[] | void): Promise<ExtendedCurrencyCode> {
+    // Sanity-check our untrusted input:
+    asCurrencyCodesArray(allowedCurrencyCodes)
+
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
         showCreateWallet
-        allowedCurrencyCodes={
-          this._plugin.filterPlugins != null
-            ? this.convertCurrencyCodesToEdgeTokenIds(
-                allowedCurrencyCodes.filter(code => typeof code === 'string'),
-                this._plugin.filterPlugins
-              )
-            : allowedCurrencyCodes
-        }
+        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
         headerTitle={s.strings.choose_your_wallet}
       />
     ))
@@ -139,16 +156,16 @@ export class EdgeProvider extends Bridgeable {
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
       // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
-      if (allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
+      if (allowedCurrencyCodes != null && allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
         const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
         const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
-        return Promise.resolve({
+        return {
           pluginId,
           tokenId,
           currencyCode
-        })
+        }
       }
-      return Promise.resolve(currencyCode)
+      return currencyCode
     }
 
     throw new Error(s.strings.user_closed_modal_no_wallet)
@@ -429,8 +446,8 @@ export class EdgeProvider extends Bridgeable {
     }
   }
 
-  hasSafariView(): Promise<boolean> {
-    return SafariView.isAvailable()
+  hasSafariView(): boolean {
+    return true
   }
 
   // window.fetch.catch(console log then throw)
@@ -503,25 +520,9 @@ export class EdgeProvider extends Bridgeable {
     return orderData
   }
 
-  // Convert an array of currency codes to an array of EdgeTokenIdExtended objects by creating all possible plugin/token combinations, ignoring any plugin passed as filterPlugins.
-  convertCurrencyCodesToEdgeTokenIds(currencyCodes: string[], filterPlugins?: string[] = []): EdgeTokenIdExtended[] {
-    const tokenIds: EdgeTokenIdExtended[] = []
-    for (const pluginId of Object.keys(this._state.core.account.currencyConfig).filter(plugin => !filterPlugins.includes(plugin))) {
-      const { currencyCode, metaTokens } = this._state.core.account.currencyConfig[pluginId].currencyInfo
-      if (currencyCodes.includes(currencyCode)) {
-        tokenIds.push({ pluginId, currencyCode })
-      }
-      for (const allowedCode of currencyCodes) {
-        if (metaTokens.find(token => token.currencyCode === allowedCode) != null) {
-          tokenIds.push({ pluginId, currencyCode: allowedCode })
-        }
-      }
-    }
-    return tokenIds
-  }
-
   async openSafariView(url: string): Promise<mixed> {
-    SafariView.show({ url })
+    if (Platform.OS === 'ios') SafariView.show({ url })
+    else CustomTabs.openURL(url)
   }
 
   async displayError(error: Error | string) {
@@ -531,4 +532,63 @@ export class EdgeProvider extends Bridgeable {
   async displayToast(arg: string) {
     showToast(arg)
   }
+}
+
+/**
+ * Precisely identifies the assets named by a currency-code array.
+ * Accepts plain currency codes, such as "ETH" or "REP",
+ * scoped currency codes like "ETH-REP",
+ * objects like `{ pluginId: 'ethereum', currencyCode: 'REP' }`,
+ * and regular EdgeTokenId objects.
+ *
+ * There is a similar routine for the `WalletListModal`,
+ * but we can delete that one once the app updates internally.
+ * This one serves a public-facing API,
+ * so it will potentially need to stick around forever.
+ */
+function upgradeExtendedCurrencyCodes(
+  account: EdgeAccount,
+  fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
+  currencyCodes?: ExtendedCurrencyCode[]
+): EdgeTokenId[] | void {
+  if (currencyCodes == null || currencyCodes.length === 0) return
+
+  // Grab all relevant tokens from the account:
+  const lookup = makeCurrencyCodeTable(account)
+
+  const out: EdgeTokenId[] = []
+  for (const code of currencyCodes) {
+    if (typeof code === 'string') {
+      const fixed = fixCurrencyCodes[code]
+      if (fixed != null) {
+        //  We have a tokenId for this code
+        out.push(fixed)
+        continue
+      }
+
+      const [parentCode, tokenCode] = code.split('-')
+
+      if (tokenCode == null) {
+        // It's a plain code, like "REP", so add all matches:
+        out.push(...lookup(parentCode))
+      } else {
+        // It's a scoped code, like "ETH-REP", so filter using the parent:
+        const parent = lookup(parentCode).find(match => match.tokenId == null)
+        if (parent == null) continue
+        out.push(...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
+      }
+    } else {
+      const { pluginId, tokenId, currencyCode } = code
+
+      if (currencyCode == null) {
+        // The object is already in the modern format:
+        out.push({ pluginId, tokenId })
+      } else {
+        // The object contains a scoped currency code:
+        out.push(...lookup(currencyCode).filter(match => match.pluginId === pluginId))
+      }
+    }
+  }
+
+  return out
 }

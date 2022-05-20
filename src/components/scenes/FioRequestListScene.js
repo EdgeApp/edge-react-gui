@@ -440,40 +440,19 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  pendingRequestHeaders = () => {
-    const { fioRequestsPending } = this.state
+  pendingRequestHeaders = () => this.requestHeaders(this.state.fioRequestsPending)
+
+  sentRequestHeaders = () => this.requestHeaders(this.state.fioRequestsSent)
+
+  requestHeaders = (fioRequests: FioRequest[]) => {
     const headers: Array<{ title: string, data: FioRequest[] }> = []
     let requestsInSection: FioRequest[] = []
     let previousTimestamp = 0
     let previousTitle = ''
-    if (fioRequestsPending) {
-      fioRequestsPending.forEach((fioRequest, i) => {
-        if (i === 0) {
-          requestsInSection = []
-          previousTimestamp = fioRequest.time_stamp
-        }
-        if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(fioRequest.time_stamp))) {
-          headers.push({ title: previousTitle, data: requestsInSection })
-          requestsInSection = []
-        }
-        requestsInSection.push(fioRequest)
-        previousTimestamp = fioRequest.time_stamp
-        previousTitle = formatDate(new Date(fioRequest.time_stamp), true)
-      })
-      headers.push({ title: previousTitle, data: requestsInSection })
-    }
-
-    return headers
-  }
-
-  sentRequestHeaders = () => {
-    const { fioRequestsSent } = this.state
-    const headers: Array<{ title: string, data: FioRequest[] }> = []
-    let requestsInSection: FioRequest[] = []
-    let previousTimestamp = 0
-    let previousTitle = ''
-    if (fioRequestsSent) {
-      fioRequestsSent.forEach((fioRequest, i) => {
+    if (fioRequests) {
+      // Sort newest to oldest
+      const sortedArrayFioRequests = fioRequests.sort((requestA, requestB) => Date.parse(requestB.time_stamp) - Date.parse(requestA.time_stamp))
+      sortedArrayFioRequests.forEach((fioRequest, i) => {
         if (i === 0) {
           requestsInSection = []
           previousTimestamp = fioRequest.time_stamp

@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native'
 
+import backgroundImage from '../../assets/images/backgrounds/login_bg.jpg'
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
@@ -37,6 +38,7 @@ const palette = {
   darkPurple3: '#210449',
   plainPurple: '#532499',
   glowPurple: '#FA00FF',
+  lightPurple: '#FAaaFF',
   royalBlue: '#003B65',
   darkBlue: '#0C446A',
   edgeNavy: '#0D2145',
@@ -79,13 +81,14 @@ export const testDark: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: true,
+  preferPrimaryButton: true,
 
   // Common border
   defaultBorderColor: palette.white,
 
   // Icons
   icon: palette.white,
-  iconTappable: palette.edgeMint,
+  iconTappable: palette.glowPurple,
   iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
@@ -93,8 +96,9 @@ export const testDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.deepPurple,
-  backgroundGradientRight: palette.darkPurple2,
+  backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
+  backgroundImageServerUrls: ['https://content-test.edge.app'],
+  backgroundImage,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
@@ -104,8 +108,14 @@ export const testDark: Theme = {
   // Modal
   modal: palette.edgeNavy,
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.darkBlue,
-  // modalFullGradientRight: palette.edgeNavy,
+  modalBorderColor: palette.glowPurple,
+  modalBorderWidth: 4,
+  modalBorderRadiusRem: 2,
+
+  sideMenuColor: palette.edgeNavy,
+  sideMenuBorderColor: palette.glowPurple,
+  sideMenuBorderWidth: 4,
+  sideMenuFont: palette.QuicksandBold,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
@@ -118,7 +128,7 @@ export const testDark: Theme = {
   walletListMutedBackground: palette.mutedBlue,
 
   // Text
-  primaryText: palette.white,
+  primaryText: palette.lightPurple,
   secondaryText: palette.blueGray,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
@@ -129,19 +139,41 @@ export const testDark: Theme = {
   // listHeaderText: palette.white,
 
   // Header
-  // headerText: palette.white,
-  // hamburgerButton: palette.white,
-  // backButton: palette.white,
+  headerIcon: fioAddressLogo,
 
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.5,
+  addButtonFont: palette.QuicksandBold,
+
+  keypadButtonOutline: palette.glowPurple,
+  keypadButtonOutlineWidth: 1.5,
+  keypadButton: [palette.plainPurple, palette.darkPurple1],
+  keypadButtonColorStart: { x: 0, y: 0 },
+  keypadButtonColorEnd: { x: 1, y: 1 },
+  keypadButtonText: palette.lightPurple,
+  keypadButtonTextShadow: {
+    textShadowColor: palette.edgeMint,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8
+  },
+  keypadButtonShadow: {
+    shadowColor: palette.edgeMint,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.7,
+    shadowRadius: 8,
+    elevation: 3
+  },
+  keypadButtonBorderRadiusRem: 0.5,
+  keypadButtonFontSizeRem: 2,
+  keypadButtonFont: palette.QuicksandMedium,
+
   primaryButtonOutline: palette.glowPurple,
   primaryButtonOutlineWidth: 2,
   primaryButton: [palette.plainPurple, palette.darkPurple1],
   primaryButtonColorStart: { x: 0.5, y: 0 },
   primaryButtonColorEnd: { x: 0.5, y: 1 },
-  primaryButtonText: palette.white,
+  primaryButtonText: palette.lightPurple,
   primaryButtonTextShadow: {
     textShadowColor: palette.edgeMint,
     textShadowOffset: { width: 0, height: 0 },
@@ -154,15 +186,19 @@ export const testDark: Theme = {
     shadowRadius: 8,
     elevation: 3
   },
+  primaryButtonFontSizeRem: 1.25,
+  primaryButtonFont: palette.QuicksandBold,
 
   secondaryButtonOutline: palette.glowPurple,
   secondaryButtonOutlineWidth: 2,
   secondaryButton: [palette.transparent, palette.transparent],
   secondaryButtonColorStart: { x: 0.5, y: 0 },
   secondaryButtonColorEnd: { x: 0.5, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.glowPurple,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
+  secondaryButtonFontSizeRem: 1,
+  secondaryButtonFont: palette.QuicksandLight,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -172,6 +208,25 @@ export const testDark: Theme = {
   escapeButtonText: palette.edgeMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
+  escapeButtonFontSizeRem: 1,
+  escapeButtonFont: palette.QuicksandRegular,
+
+  pinUsernameButtonOutline: palette.white,
+  pinUsernameButtonOutlineWidth: 0.5,
+  pinUsernameButton: [palette.edgeMint, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.accentRed,
+  pinUsernameButtonTextShadow: { textShadowColor: palette.edgeMint, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 },
+  pinUsernameButtonShadow: { shadowColor: palette.edgeMint, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.7, shadowRadius: 8, elevation: 3 },
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandRegular,
+
+  // Dropdown colors:
+  dropdownWarning: palette.accentOrange,
+  dropdownError: palette.accentRed,
+  dropdownText: palette.white,
 
   // Card
   // cardBackground: palette.edgeBlue,
@@ -180,7 +235,10 @@ export const testDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.edgeNavy,
+  tabBarBackground: [palette.edgeNavy, palette.edgeMint],
+  tabBarBackgroundStart: { x: 0, y: 0 },
+  tabBarBackgroundEnd: { x: 1, y: 1 },
+  tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeMint],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
@@ -219,6 +277,10 @@ export const testDark: Theme = {
   thinLineWidth: 1,
   mediumLineWidth: 2,
 
+  // DividerLine component
+  dividerLineHeight: 2,
+  dividerLineColors: [palette.edgeMint, palette.edgeNavy],
+
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
   // messageBanner: palette.grayOp80,
@@ -238,6 +300,8 @@ export const testDark: Theme = {
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.edgeNavy,
+  settingsRowHeaderFont: palette.QuicksandMedium,
+  settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
@@ -248,6 +312,7 @@ export const testDark: Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
+  walletProgressIconDone: palette.white,
 
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
@@ -282,8 +347,12 @@ export const testDark: Theme = {
 
   // Outline Text Input
   outlineTextInputColor: palette.darkPurple3,
-  outlineTextInputTextColor: palette.white,
+  outlineTextInputTextColor: palette.lightPurple,
   outlineTextInputBorderWidth: 1,
+  outlineTextInputBorderColor: palette.darkPurple1,
+  outlineTextInputBorderColorFocused: palette.glowPurple,
+  outlineTextInputLabelColor: palette.white,
+  outlineTextInputLabelColorFocused: palette.black,
 
   // Animation
   fadeDisable: palette.gray,
@@ -310,6 +379,7 @@ export const testDark: Theme = {
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
   fioAddressLogo: fioAddressLogo,
+  primaryLogo: paymentTypeLogoPayid,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoBitaccess: guiPluginLogoBitaccess,

@@ -3,6 +3,8 @@
 
 jest.useFakeTimers()
 
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler() {}
 }))
@@ -12,7 +14,7 @@ jest.mock('rn-qr-generator', () => () => {
   return Promise.detect({})
 })
 
-jest.mock('@react-native-community/async-storage', () => require('@react-native-community/async-storage/jest/async-storage-mock'))
+jest.mock('@react-native-async-storage/async-storage', () => require('@react-native-async-storage/async-storage/jest/async-storage-mock'))
 
 // force timezone to UTC
 jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
@@ -20,11 +22,6 @@ jest.mock('dateformat', () => (number, format) => require('dateformat')(number, 
 jest.mock('@react-native-firebase/analytics', () => () => ({
   logEvent() {},
   setUserId() {}
-}))
-jest.mock('@react-native-firebase/iid', () => () => ({
-  getToken() {
-    return Promise.resolve('testingToken')
-  }
 }))
 jest.mock('@react-native-firebase/messaging', () => () => ({
   requestPermission() {

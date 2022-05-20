@@ -2,6 +2,8 @@
 
 import { Platform } from 'react-native'
 
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
@@ -70,6 +72,7 @@ export const edgeLight: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: false,
+  preferPrimaryButton: false,
 
   // Common border
   defaultBorderColor: palette.white,
@@ -84,8 +87,9 @@ export const edgeLight: Theme = {
   buySellCustomPluginModalIcon: palette.white,
 
   // Background
-  backgroundGradientLeft: palette.lightestGray,
-  backgroundGradientRight: palette.lightestGray,
+  backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundImageServerUrls: ['https://content.edge.app'],
+  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,
@@ -96,8 +100,14 @@ export const edgeLight: Theme = {
   modal: palette.lightestGray,
   modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.white,
-  // modalFullGradientRight: palette.white,
+  modalBorderColor: palette.transparent,
+  modalBorderWidth: 0,
+  modalBorderRadiusRem: 1,
+
+  sideMenuColor: palette.lightestGray,
+  sideMenuBorderColor: palette.transparent,
+  sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.white,
@@ -121,13 +131,25 @@ export const edgeLight: Theme = {
   // listHeaderText: palette.black,
 
   // Header
-  // headerText: palette.black,
-  // hamburgerButton: palette.black,
-  // backButton: palette.black,
+  headerIcon: edgeMark,
 
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.25,
+  addButtonFont: palette.QuicksandMedium,
+
+  keypadButtonOutline: palette.edgeBlue,
+  keypadButtonOutlineWidth: 1,
+  keypadButton: [palette.transparent, palette.transparent],
+  keypadButtonColorStart: { x: 0, y: 0 },
+  keypadButtonColorEnd: { x: 1, y: 1 },
+  keypadButtonText: palette.edgeBlue,
+  keypadButtonTextShadow: textNoShadow,
+  keypadButtonShadow: themeNoShadow,
+  keypadButtonBorderRadiusRem: 0.25,
+  keypadButtonFontSizeRem: 1,
+  keypadButtonFont: palette.QuicksandMedium,
+
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 1,
   primaryButton: [palette.edgeBlue, palette.edgeBlue],
@@ -136,6 +158,8 @@ export const edgeLight: Theme = {
   primaryButtonText: palette.edgeBlue,
   primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: themeNoShadow,
+  primaryButtonFontSizeRem: 1,
+  primaryButtonFont: palette.QuicksandRegular,
 
   secondaryButtonOutline: palette.edgeBlue,
   secondaryButtonOutlineWidth: 1,
@@ -145,6 +169,8 @@ export const edgeLight: Theme = {
   secondaryButtonText: palette.edgeBlue,
   secondaryButtonTextShadow: textNoShadow,
   secondaryButtonShadow: themeNoShadow,
+  secondaryButtonFontSizeRem: 1,
+  secondaryButtonFont: palette.QuicksandRegular,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -154,6 +180,25 @@ export const edgeLight: Theme = {
   escapeButtonText: palette.edgeMint,
   escapeButtonTextShadow: textNoShadow,
   escapeButtonShadow: themeNoShadow,
+  escapeButtonFontSizeRem: 1,
+  escapeButtonFont: palette.QuicksandRegular,
+
+  pinUsernameButtonOutline: palette.transparent,
+  pinUsernameButtonOutlineWidth: 0,
+  pinUsernameButton: [palette.transparent, palette.transparent],
+  pinUsernameButtonColorStart: { x: 0, y: 0 },
+  pinUsernameButtonColorEnd: { x: 1, y: 1 },
+  pinUsernameButtonText: palette.edgeBlue,
+  pinUsernameButtonTextShadow: textNoShadow,
+  pinUsernameButtonShadow: themeNoShadow,
+  pinUsernameButtonBorderRadiusRem: 1,
+  pinUsernameButtonFontSizeRem: 1.5,
+  pinUsernameButtonFont: palette.QuicksandMedium,
+
+  // Dropdown colors:
+  dropdownWarning: palette.accentOrange,
+  dropdownError: palette.accentRed,
+  dropdownText: palette.white,
 
   // tertiaryButtonOutline: palette.edgeBlue,
   // tertiaryButton: palette.transparent,
@@ -175,7 +220,10 @@ export const edgeLight: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: palette.white,
+  tabBarBackground: [palette.white, palette.white],
+  tabBarBackgroundStart: { x: 0, y: 0 },
+  tabBarBackgroundEnd: { x: 1, y: 1 },
+  tabBarTopOutlineColors: [palette.white, palette.white],
   tabBarIcon: palette.gray,
   tabBarIconHighlighted: palette.edgeBlue,
 
@@ -214,6 +262,10 @@ export const edgeLight: Theme = {
   thinLineWidth: 1,
   mediumLineWidth: 2,
 
+  // DividerLine component
+  dividerLineHeight: 1,
+  dividerLineColors: [palette.edgeBlue, palette.edgeBlue],
+
   // Notifications
   // notificationBackground: palette.grayOp80,
   // messageBanner: palette.grayOp80,
@@ -233,6 +285,8 @@ export const edgeLight: Theme = {
   settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.lightGray,
+  settingsRowHeaderFont: palette.QuicksandMedium,
+  settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
 
   // Native iOS date modal:
@@ -243,6 +297,7 @@ export const edgeLight: Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
+  walletProgressIconDone: palette.white,
 
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
@@ -279,6 +334,10 @@ export const edgeLight: Theme = {
   outlineTextInputColor: palette.transparent,
   outlineTextInputTextColor: palette.black,
   outlineTextInputBorderWidth: 1,
+  outlineTextInputBorderColor: palette.gray,
+  outlineTextInputBorderColorFocused: palette.edgeBlue,
+  outlineTextInputLabelColor: palette.gray,
+  outlineTextInputLabelColorFocused: palette.edgeBlue,
 
   // Animation
   fadeDisable: palette.gray,
@@ -304,6 +363,7 @@ export const edgeLight: Theme = {
   paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
+  primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 

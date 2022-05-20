@@ -53,6 +53,17 @@ const strings = {
   azteco_invalid_code: 'Invalid Azteco code.',
   azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
   azteco_btc_only: 'Please choose a BTC wallet and scan again.',
+
+  // Request for Address Protocol
+  reqaddr_error_unsupported_chains: '%1$s does not support the following chains listed in the request: %2$s',
+  reqaddr_error_invalid_redir: `Invalid 'redir' query in request for payment address`,
+  reqaddr_error_no_currencies_found: 'No currencies found in request for payment address',
+  reqaddr_error_no_wallets_selected: 'No wallets selected for request for payment address',
+  reqaddr_error_post_redir: 'Post and redir address not found in request for payment address',
+  reqaddr_application_fragment: 'An application',
+  reqaddr_confirm_modal_title: 'Confirm request?',
+  reqaddr_confirm_modal_message: '%1$s is requesting a payment address for %2$s. Choose wallets for request?',
+
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
   access_wallet_description:
@@ -159,9 +170,9 @@ const strings = {
   wallet_list_referral_link_currency_loading: 'Hang tight. Creating wallet necessary for this promotion',
   wallet_list_referral_link_ask_wallet_creation: 'You need %s wallet for this promotion, do you want to create one?',
   wallet_list_referral_link_cancelled_wallet_creation: 'User did not approve creating wallet for the promotion',
-  wallet_list_swipe_tutorial_title: 'Slide wallets to show more options',
+  wallet_list_swipe_tutorial_title: 'Slide wallets or tap and hold on a wallet to see more options. Export transactions, Master Private Key, etc.',
   wallet_list_wallet_search: 'Search Wallets',
-  create_wallet_choice_instructions: 'Create a new wallet, or restore an existing wallet using the private seed?',
+  create_wallet_choice_instructions: 'Create a new wallet or import an existing wallet using the private seed',
   create_wallet_choice_new_button: 'Create New Wallet',
   create_wallet_import_title: 'Import Wallet',
   create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet',
@@ -418,6 +429,7 @@ const strings = {
   string_amount: 'Amount',
   string_tap_to_edit: 'Tap to edit',
   string_rate: 'Rate',
+  string_got_it: 'Got it!',
   exchange_rates_loading: 'Exchange Rates Loading...',
   exchange_rate_loading_singular: 'Exchange Rate Loading...',
   string_master_private_key: 'Master Private Key',
@@ -433,7 +445,6 @@ const strings = {
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
   title_export_transactions: 'Export Transactions',
-  title_default_fiat: 'Default Fiat',
   title_edge_login: 'Edge Login',
   title_exchange: 'Exchange',
   title_fio_sent_request_details: 'Sent Request Details',
@@ -952,6 +963,7 @@ const strings = {
     'This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.',
 
   // Util
+  util_s_and_s: '%1$s and %2$s',
   util_truncate_delimeter: '...',
 
   // Stake

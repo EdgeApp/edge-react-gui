@@ -6,7 +6,7 @@ import type { StakePolicy } from './types.js'
 export type StakePolicyInfo = {|
   stakePolicyId: string,
   parentPluginId: string,
-  parentTokenId: string,
+  parentCurrencyCode: string,
   policy: StakePluginPolicy,
   liquidityPool?: LiquidityPool,
   stakeAssets: AssetId[],
@@ -18,8 +18,8 @@ export type StakePolicyInfo = {|
 const deriveStakePolicyId = (policyInfo: StakePolicyInfo): string => {
   const { liquidityPool } = policyInfo
   const liquidityPoolPart = liquidityPool ? `${liquidityPool.pluginId}:${liquidityPool.lpId}/` : ''
-  const stakePart = policyInfo.stakeAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
-  const rewardPart = policyInfo.rewardAssets.map(asset => `${asset.pluginId}:${asset.tokenId}`).join('+')
+  const stakePart = policyInfo.stakeAssets.map(asset => `${asset.pluginId}:${asset.currencyCode}`).join('+')
+  const rewardPart = policyInfo.rewardAssets.map(asset => `${asset.pluginId}:${asset.currencyCode}`).join('+')
   return `${liquidityPoolPart}${stakePart}=${rewardPart}`.toLowerCase()
 }
 

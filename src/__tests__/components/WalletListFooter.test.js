@@ -1,22 +1,25 @@
+// @flow
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
-import { getTheme } from '../../components/services/ThemeContext.js'
-import { WalletListFooterComponent } from '../../components/themed/WalletListFooter.js'
+import { WalletListFooter } from '../../components/themed/WalletListFooter.js'
+import { rootReducer } from '../../reducers/RootReducer.js'
+import { fakeNavigation } from '../../util/fake/fakeNavigation.js'
 
 describe('WalletListFooter', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const store = createStore(rootReducer)
 
-    const props = {
-      wallets: 'GuiWallet',
-      theme: getTheme()
-    }
-    const actual = renderer.render(<WalletListFooterComponent {...props} />)
+    const actual = renderer.create(
+      <Provider store={store}>
+        <WalletListFooter navigation={fakeNavigation} />
+      </Provider>
+    )
 
-    expect(actual).toMatchSnapshot()
+    expect(actual.toJSON()).toMatchSnapshot()
   })
 })

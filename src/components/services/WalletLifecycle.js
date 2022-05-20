@@ -2,15 +2,17 @@
 
 import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { Platform } from 'react-native'
 
 import { connect } from '../../types/reactRedux.js'
-import { type GuiWallet } from '../../types/types.js'
+import { type GuiWallet, type WalletListItem } from '../../types/types.js'
 import { showError } from './AirshipInstance.js'
 
 type StateProps = {
   account: EdgeAccount,
   context: EdgeContext,
-  guiWallets: { [walletId: string]: GuiWallet }
+  guiWallets: { [walletId: string]: GuiWallet },
+  sortedWalletList: WalletListItem[]
 }
 type Props = StateProps
 
@@ -22,6 +24,8 @@ type WalletBoot = {
   complete: boolean,
   walletId: string
 }
+
+const BOOT_LIMIT = Platform.OS === 'ios' ? 8 : 3
 
 /**
  * Responsible for pausing & un-pausing wallets.
@@ -56,7 +60,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
    * Figures out what has changed and adapts.
    */
   handleChange = () => {
-    const { account, context, guiWallets } = this.props
+    const { account, context, guiWallets, sortedWalletList } = this.props
 
     // Check for login / logout:
     if (account !== this.edgeAccount || context !== this.edgeContext) {
@@ -77,7 +81,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
 
     // Grab the mutable core state:
     const { paused } = context
-    const { activeWalletIds, currencyWallets } = account
+    const { currencyWallets } = account
 
     // If we have become paused, shut down all wallets:
     if (paused && !this.paused) {
@@ -103,13 +107,13 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       return true
     })
 
-    // If the booting list has < 3 items, boot some wallets:
-    for (const walletId of activeWalletIds) {
-      if (this.booting.length >= 3) break
+    // Use the sortedWalletList to boot the wallets in the same order they appear in the list
+    for (const walletItem of sortedWalletList) {
+      if (this.booting.length >= BOOT_LIMIT) break
+      const { token, tokenId, wallet, walletId } = walletItem
 
-      // Ignore missing wallets, started wallets, and already-booting wallets:
-      const wallet = currencyWallets[walletId]
-      if (wallet == null || guiWallets[walletId] == null) continue
+      // Ignore missing wallets, token rows, started wallets, and already-booting wallets:
+      if (token != null || tokenId != null || wallet == null || guiWallets[walletId] == null) continue
       if (!wallet.paused) continue
       if (this.booting.find(boot => boot.walletId === walletId) != null) continue
 
@@ -188,7 +192,8 @@ export const WalletLifecycle = connect<StateProps, {}, {}>(
   state => ({
     account: state.core.account,
     context: state.core.context,
-    guiWallets: state.ui.wallets.byId
+    guiWallets: state.ui.wallets.byId,
+    sortedWalletList: state.sortedWalletList
   }),
   dispatch => ({})
 )(WalletLifecycleComponent)

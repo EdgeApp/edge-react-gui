@@ -1,84 +1,29 @@
 // @flow
 
-import * as React from 'react'
-import { AppState } from 'react-native'
-
 import { logoutRequest } from '../../actions/LoginActions.js'
-import { connect } from '../../types/reactRedux.js'
+import { useIsAppForeground } from '../../hooks/useIsAppForeground.js'
+import { useEffect, useRef } from '../../types/reactHooks.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 
-type AppStateType = 'active' | 'background' | 'inactive'
+export const AutoLogout = () => {
+  const dispatch = useDispatch()
+  const stateRef = useRef({ timestamp: new Date(), isAppForeground: true })
+  const loginStatus = useSelector(state => state.ui.settings.loginStatus ?? false)
+  const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
+  const isAppForeground = useIsAppForeground()
 
-type State = {
-  timestamp: Date,
-  appState: AppStateType
+  useEffect(() => {
+    // Check if app came back from background
+    const appForegrounded = !stateRef.current.isAppForeground && isAppForeground
+    // Check if time for logout has expired
+    const timestamp = new Date()
+    const differenceInSeconds = (timestamp - stateRef.current.timestamp) / 1000
+    const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
+    // Logout If all the conditions for autoLogout are met
+    if (appForegrounded && loginStatus && timeExpired) dispatch(logoutRequest())
+    // Update the new appState
+    stateRef.current = { timestamp, isAppForeground }
+  }, [autoLogoutTimeInSeconds, dispatch, isAppForeground, loginStatus])
+
+  return null
 }
-
-type StateProps = {
-  autoLogoutTimeInSeconds: ?number,
-  loginStatus: boolean
-}
-type DispatchProps = {
-  logout: () => void
-}
-type Props = StateProps & DispatchProps
-
-class AutoLogoutComponent extends React.Component<Props, State> {
-  state = {
-    timestamp: new Date(),
-    appState: 'active'
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange)
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this.handleAppStateChange)
-  }
-
-  handleAppStateChange = (nextAppState: AppStateType) => {
-    console.log(`APP STATE CHANGED ${this.state.appState} -> ${nextAppState}`)
-    const newTimestamp = new Date()
-    const oldTimeStamp = this.state.timestamp
-    const durationInSeconds = this.props.autoLogoutTimeInSeconds || Infinity
-    if (this.foregrounded(nextAppState) && this.props.loginStatus && this.isTimeExpired(durationInSeconds, newTimestamp, oldTimeStamp)) {
-      this.props.logout()
-    }
-
-    this.setState(state => ({
-      ...state,
-      timestamp: newTimestamp,
-      appState: nextAppState
-    }))
-  }
-
-  foregrounded(nextAppState: AppStateType): boolean {
-    return this.state.appState === 'background' && nextAppState === 'active'
-  }
-
-  backgrounded(nextAppState: AppStateType): boolean {
-    return this.state.appState === 'background' && nextAppState !== 'active'
-  }
-
-  isTimeExpired(durationInSeconds: number, newTimestamp: Date, oldTimeStamp: Date): boolean {
-    const differenceInMilliseconds: number = newTimestamp - oldTimeStamp
-    const differenceInSeconds: number = differenceInMilliseconds / 1000
-    return differenceInSeconds > durationInSeconds
-  }
-
-  render() {
-    return null
-  }
-}
-
-export const AutoLogout = connect<StateProps, DispatchProps, {}>(
-  state => ({
-    loginStatus: state.ui.settings.loginStatus ?? false,
-    autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds
-  }),
-  dispatch => ({
-    logout() {
-      dispatch(logoutRequest())
-    }
-  })
-)(AutoLogoutComponent)

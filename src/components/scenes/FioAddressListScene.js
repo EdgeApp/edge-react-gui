@@ -197,7 +197,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: 0,
     left: 0,
     position: 'absolute',
-    backgroundColor: theme.backgroundGradientRight,
+    backgroundColor: theme.backgroundGradientColors[1],
     width: '100%',
     height: PLATFORM.deviceHeight
   },

@@ -3,14 +3,14 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
 
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 export function EdgeLogoHeader() {
-  const styles = getStyles(useTheme())
+  const theme = useTheme()
+  const styles = getStyles(theme)
   return (
     <View style={styles.container}>
-      <Image style={styles.icon} source={edgeLogo} resizeMode="contain" />
+      <Image style={styles.icon} source={theme.headerIcon} resizeMode="contain" />
     </View>
   )
 }
@@ -23,8 +23,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center'
   },
   icon: {
-    width: theme.rem(1.25),
-    height: theme.rem(1.25),
+    width: theme.rem(7),
+    height: theme.rem(2),
     marginBottom: theme.rem(0.1875)
   }
 }))

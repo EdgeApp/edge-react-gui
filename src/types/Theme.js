@@ -1,4 +1,5 @@
 // @flow
+import { asNumber, asObject } from 'cleaners'
 
 type ThemeShadowParams = {
   shadowColor: string,
@@ -20,7 +21,13 @@ type TextShadowParams = {
   textShadowRadius: number
 }
 
-export const themeNoShadow = {
+const asGradientCoords = asObject({
+  x: asNumber,
+  y: asNumber
+})
+type GradientCoords = $Call<typeof asGradientCoords>
+
+export const themeNoShadow: ThemeShadowParams = {
   shadowColor: '#000000',
   shadowOffset: {
     width: 0,
@@ -31,7 +38,7 @@ export const themeNoShadow = {
   elevation: 0
 }
 
-export const textNoShadow = {
+export const textNoShadow: TextShadowParams = {
   textShadowColor: '#000000',
   textShadowOffset: {
     width: 0,
@@ -44,6 +51,11 @@ export const textNoShadow = {
 export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
+
+  // Prefer using at the Primary button style when there is only one button option on a
+  // scene or modal. Edge prefers the Secondary button style and uses the Primary button sparingly
+  // since it uses a loud solid mint color.
+  preferPrimaryButton: boolean,
 
   // Used to control the OS status bar, modal blur,
   // and other binary light / dark choices:
@@ -62,8 +74,9 @@ export type Theme = {
   buySellCustomPluginModalIcon: string,
 
   // Background
-  backgroundGradientLeft: string,
-  backgroundGradientRight: string,
+  backgroundGradientColors: string[],
+  backgroundImageServerUrls: string[],
+  backgroundImage?: string,
 
   // Camera Overlay
   cameraOverlayColor: string,
@@ -73,8 +86,14 @@ export type Theme = {
   // Modal
   modal: string,
   modalCloseIcon: string,
-  // modalFullGradientLeft: string,
-  // modalFullGradientRight: string,
+  modalBorderColor: string,
+  modalBorderWidth: number,
+  modalBorderRadiusRem: number,
+
+  sideMenuColor: string,
+  sideMenuBorderColor: string,
+  sideMenuBorderWidth: number,
+  sideMenuFont: string,
 
   // Tile
   // listHeaderBackground: string,
@@ -99,6 +118,8 @@ export type Theme = {
   settingsRowBackground: string,
   settingsRowPressed: string,
   settingsRowHeaderBackground: string,
+  settingsRowHeaderFont: string,
+  settingsRowHeaderFontSizeRem: number,
   settingsRowSubHeader: string,
 
   // Text
@@ -113,39 +134,73 @@ export type Theme = {
   // listHeaderText: string,
 
   // Header
-  // headerText: string,
-  // hamburgerButton: string,
-  // backButton: string,
+  headerIcon: string,
 
   // Buttons
   buttonBorderRadiusRem: number,
+  addButtonFont: string,
+
+  keypadButtonOutline: string,
+  keypadButtonOutlineWidth: number,
+  keypadButton: string[],
+  keypadButtonColorStart: GradientCoords,
+  keypadButtonColorEnd: GradientCoords,
+  keypadButtonText: string,
+  keypadButtonTextShadow: TextShadowParams,
+  keypadButtonShadow: ThemeShadowParams,
+  keypadButtonBorderRadiusRem: number,
+  keypadButtonFontSizeRem: number,
+  keypadButtonFont: string,
 
   primaryButtonOutline: string,
   primaryButtonOutlineWidth: number,
   primaryButton: string[],
-  primaryButtonColorStart: { x: number, y: number },
-  primaryButtonColorEnd: { x: number, y: number },
+  primaryButtonColorStart: GradientCoords,
+  primaryButtonColorEnd: GradientCoords,
   primaryButtonText: string,
   primaryButtonTextShadow: TextShadowParams,
   primaryButtonShadow: ThemeShadowParams,
+  primaryButtonFontSizeRem: number,
+  primaryButtonFont: string,
 
   secondaryButtonOutline: string,
   secondaryButtonOutlineWidth: number,
   secondaryButton: string[],
-  secondaryButtonColorStart: { x: number, y: number },
-  secondaryButtonColorEnd: { x: number, y: number },
+  secondaryButtonColorStart: GradientCoords,
+  secondaryButtonColorEnd: GradientCoords,
   secondaryButtonText: string,
   secondaryButtonTextShadow: TextShadowParams,
   secondaryButtonShadow: ThemeShadowParams,
+  secondaryButtonFontSizeRem: number,
+  secondaryButtonFont: string,
 
   escapeButtonOutline: string,
   escapeButtonOutlineWidth: number,
   escapeButton: string[],
-  escapeButtonColorStart: { x: number, y: number },
-  escapeButtonColorEnd: { x: number, y: number },
+  escapeButtonColorStart: GradientCoords,
+  escapeButtonColorEnd: GradientCoords,
   escapeButtonText: string,
   escapeButtonTextShadow: TextShadowParams,
   escapeButtonShadow: ThemeShadowParams,
+  escapeButtonFontSizeRem: number,
+  escapeButtonFont: string,
+
+  pinUsernameButtonOutline: string,
+  pinUsernameButtonOutlineWidth: number,
+  pinUsernameButton: string[],
+  pinUsernameButtonColorStart: GradientCoords,
+  pinUsernameButtonColorEnd: GradientCoords,
+  pinUsernameButtonText: string,
+  pinUsernameButtonTextShadow: TextShadowParams,
+  pinUsernameButtonShadow: ThemeShadowParams,
+  pinUsernameButtonBorderRadiusRem: number,
+  pinUsernameButtonFontSizeRem: number,
+  pinUsernameButtonFont: string,
+
+  // Dropdown colors:
+  dropdownWarning: string,
+  dropdownError: string,
+  dropdownText: string,
 
   // tertiaryButtonOutline: string,
   // tertiaryButton: string,
@@ -167,7 +222,10 @@ export type Theme = {
   cardBorderColor: string,
   cardBorderRadius: number,
 
-  tabBarBackground: string,
+  tabBarBackground: string[],
+  tabBarBackgroundStart: GradientCoords,
+  tabBarBackgroundEnd: GradientCoords,
+  tabBarTopOutlineColors: string[],
   tabBarIcon: string,
   tabBarIconHighlighted: string,
 
@@ -206,6 +264,10 @@ export type Theme = {
   thinLineWidth: number,
   mediumLineWidth: number,
 
+  // DividerLine component
+  dividerLineHeight: number,
+  dividerLineColors: string[],
+
   // Notifications
   // notificationBackground: string,
   // messageBanner: string,
@@ -229,6 +291,7 @@ export type Theme = {
 
   // Wallet Icon Progress
   walletProgressIconFill: string,
+  walletProgressIconDone: string,
 
   // Misc
   // pressedOpacity: number,
@@ -265,6 +328,10 @@ export type Theme = {
   outlineTextInputColor: string,
   outlineTextInputTextColor: string,
   outlineTextInputBorderWidth: number,
+  outlineTextInputBorderColor: string,
+  outlineTextInputBorderColorFocused: string,
+  outlineTextInputLabelColor: string,
+  outlineTextInputLabelColorFocused: string,
 
   // Animation
   fadeDisable: string,
@@ -290,6 +357,7 @@ export type Theme = {
   paymentTypeLogoSwish: string,
   paymentTypeLogoUpi: string,
 
+  primaryLogo: string,
   fioAddressLogo: string,
   walletListSlideTutorialImage: string,
 

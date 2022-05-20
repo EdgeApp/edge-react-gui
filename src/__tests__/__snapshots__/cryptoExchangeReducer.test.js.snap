@@ -20,6 +20,7 @@ Object {
       "multiplier": "1",
       "name": "",
     },
+    "walletId": "",
   },
   "genericShapeShiftError": null,
   "insufficientError": false,
@@ -40,6 +41,7 @@ Object {
       "multiplier": "1",
       "name": "",
     },
+    "walletId": "",
   },
 }
 `;

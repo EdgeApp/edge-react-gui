@@ -13,7 +13,6 @@ describe('DataRow', () => {
     const props = {
       label: 'string',
       value: 11,
-      // eslint-disable-next-line react/no-unused-prop-types
       marginRem: 11,
       theme: getTheme()
     }

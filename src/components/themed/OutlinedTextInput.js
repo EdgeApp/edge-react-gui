@@ -198,7 +198,15 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const getBorderColor = useCallback<(errorValue: number, focusValue: number) => string>(
     (errorValue, focusValue) => {
       'worklet'
-      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, theme.iconTappable])
+      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused])
+      return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
+    },
+    [theme]
+  )
+  const getLabelColor = useCallback<(errorValue: number, focusValue: number) => string>(
+    (errorValue, focusValue) => {
+      'worklet'
+      const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused])
       return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
     },
     [theme]
@@ -226,7 +234,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
-      color: getBorderColor(errorAnimation.value, focusAnimation.value),
+      color: getLabelColor(errorAnimation.value, focusAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
         { translateY: labelProgressAlt * labelTranslateY },
@@ -294,7 +302,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
           {...inputProps}
           autoFocus={autoFocus}
           multiline={multiline}
-          selectionColor={hasError ? theme.dangerText : theme.iconTappable}
+          selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
           style={[styles.textInput, textInputStyle]}
           textAlignVertical="top"
           value={value}

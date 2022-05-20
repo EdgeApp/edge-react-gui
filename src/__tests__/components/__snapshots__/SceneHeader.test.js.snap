@@ -1,36 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SceneHeader should render with loading props 1`] = `
-<View
-  style={
-    Array [
-      Object {
-        "justifyContent": "center",
-        "marginBottom": 11,
-        "marginLeft": 22,
-        "paddingBottom": 22,
-      },
-      Object {
-        "marginTop": 22,
-      },
-      Object {
-        "borderBottomColor": "rgba(255, 255, 255, .1)",
-        "borderBottomWidth": 1,
-      },
-      undefined,
-    ]
-  }
->
-  <WithTheme(EdgeTextComponent)
+<React.Fragment>
+  <View
+    style={
+      Array [
+        Object {
+          "justifyContent": "center",
+          "marginLeft": 22,
+          "paddingBottom": 22,
+        },
+        Object {
+          "marginTop": 22,
+        },
+        undefined,
+      ]
+    }
+  >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "fontFamily": "Quicksand-Medium",
+          "fontSize": 27,
+        }
+      }
+    >
+      string
+    </WithTheme(EdgeTextComponent)>
+    hello
+  </View>
+  <View
     style={
       Object {
-        "fontFamily": "Quicksand-Medium",
-        "fontSize": 27,
+        "marginBottom": 11,
+        "marginLeft": 22,
       }
     }
   >
-    string
-  </WithTheme(EdgeTextComponent)>
-  hello
-</View>
+    <DividerLine />
+  </View>
+</React.Fragment>
 `;

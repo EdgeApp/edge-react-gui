@@ -85,7 +85,7 @@ export function MainButton(props: Props) {
     alignSelf,
     opacity: disabled ? 0.3 : pending ? 0.7 : 1,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
-    ...sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+    ...sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
   }
 
   return (
@@ -113,9 +113,11 @@ const getStyles = cacheStyles((theme: Theme) => {
     minWidth: theme.rem(9)
   }
   const commonText = {
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    marginHorizontal: theme.rem(0.5)
+    marginHorizontal: theme.rem(0),
+    paddingTop: theme.rem(0.5),
+    paddingBottom: theme.rem(0.5),
+    paddingLeft: theme.rem(0.75),
+    paddingRight: theme.rem(0.75)
   }
 
   return {
@@ -137,6 +139,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     primaryText: {
       ...commonText,
       ...theme.primaryButtonTextShadow,
+      fontFamily: theme.primaryButtonFont,
+      fontSize: theme.rem(theme.primaryButtonFontSizeRem),
       color: theme.primaryButtonText
     },
 
@@ -149,6 +153,8 @@ const getStyles = cacheStyles((theme: Theme) => {
 
     secondaryText: {
       ...commonText,
+      fontFamily: theme.secondaryButtonFont,
+      fontSize: theme.rem(theme.secondaryButtonFontSizeRem),
       color: theme.secondaryButtonText
     },
 
@@ -161,6 +167,8 @@ const getStyles = cacheStyles((theme: Theme) => {
 
     escapeText: {
       ...commonText,
+      fontFamily: theme.escapeButtonFont,
+      fontSize: theme.rem(theme.escapeButtonFontSizeRem),
       color: theme.escapeButtonText
     },
 

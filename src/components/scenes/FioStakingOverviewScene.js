@@ -1,7 +1,7 @@
 // @flow
 
 import { add, gt } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeStakingStatus } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { getSymbolFromCurrency, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { useWatchWallet } from '../../hooks/useWatch.js'
 import { formatNumber, formatTimeDate } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -24,7 +25,7 @@ import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader.js'
-import { Tile } from '../themed/Tile.js'
+import { Tile } from '../tiles/Tile.js'
 
 type OwnProps = {
   route: RouteProp<'fioStakingOverview'>
@@ -62,14 +63,8 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     fiatSymbol
   } = props
   const styles = getStyles(theme)
-  const [stakingStatus, setStakingStatus] = useState<EdgeStakingStatus>(currencyWallet.stakingStatus)
   const [locks, setLocks] = useState<Lock[]>([])
-
-  useEffect(() => {
-    currencyWallet.watch('stakingStatus', (stakingStatus: EdgeStakingStatus) => {
-      setStakingStatus(stakingStatus)
-    })
-  }, [currencyWallet])
+  const stakingStatus = useWatchWallet(currencyWallet, 'stakingStatus')
 
   useEffect(() => {
     refreshAllFioAddresses()

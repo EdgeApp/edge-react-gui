@@ -6,13 +6,12 @@ import { type Reducer, combineReducers } from 'redux'
 import { FIO_WALLET_TYPE, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import type { Action } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
+import { tokenIdsToCurrencyCodes } from '../../util/utils.js'
 
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
   selectedWalletId: string,
   selectedCurrencyCode: string,
-  addTokenPending: boolean,
-  manageTokensPending: boolean,
   walletLoadingProgress: { [walletId: string]: number },
   fioWallets: EdgeCurrencyWallet[]
 }
@@ -23,141 +22,28 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
-        if (state[walletId]) {
-          const enabledTokensOnWallet = state[walletId].enabledTokens
-          tempWallet.enabledTokens = enabledTokensOnWallet
-          enabledTokensOnWallet.forEach(customToken => {
-            tempWallet.nativeBalances[customToken] = wallets[walletId].balances[customToken] ?? '0'
-          })
-          if (SPECIAL_CURRENCY_INFO[wallets[walletId].currencyInfo.pluginId]?.isStakingSupported) {
-            for (const cCodeKey in STAKING_BALANCES) {
-              const stakingCurrencyCode = `${tempWallet.currencyCode}${STAKING_BALANCES[cCodeKey]}`
-              tempWallet.nativeBalances[stakingCurrencyCode] = wallets[walletId].balances[stakingCurrencyCode] ?? '0'
-            }
-          }
-        }
         out[walletId] = {
           ...state[walletId],
-          ...tempWallet
+          ...schema(wallets[walletId])
         }
       }
 
       return out
-    }
-
-    case 'UPDATE_WALLET_ENABLED_TOKENS': {
-      const { walletId, tokens } = action.data
-      if (state[walletId] !== undefined) {
-        return {
-          ...state,
-          [walletId]: {
-            ...state[walletId],
-            enabledTokens: tokens
-          }
-        }
-      } else {
-        return state
-      }
-    }
-
-    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
-      const { enabledTokens, walletId } = action.data
-      if (state[walletId] !== undefined) {
-        return {
-          ...state,
-          [walletId]: {
-            ...state[walletId],
-            enabledTokens
-          }
-        }
-      } else {
-        return state
-      }
-    }
-
-    case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
-      const { coreWalletsToUpdate, oldCurrencyCode, tokenObj } = action.data
-      // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
-      // receiving token will have to take on sending tokens enabledness
-      // sending token will already be disabled because it was deleted
-      return coreWalletsToUpdate.reduce((state, wallet) => {
-        // just disable sending coin from relevant wallet
-        const guiWallet = state[wallet.id]
-        if (guiWallet.enabledTokens.indexOf(oldCurrencyCode) >= 0) {
-          // replace old code in enabledTokens with new code for each relevant wallet
-          const newEnabledTokens = guiWallet.enabledTokens.filter(currencyCode => currencyCode !== oldCurrencyCode).concat(tokenObj.currencyCode)
-          //   newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
-          //   newEnabledTokens.push(tokenObj.currencyCode)
-          return {
-            ...state,
-            [wallet.id]: {
-              ...guiWallet,
-              enabledTokens: newEnabledTokens
-            }
-          }
-        }
-        return state
-      }, state)
-    }
-
-    case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
-      // adjust enabled tokens
-      const { coreWalletsToUpdate, oldCurrencyCode } = action.data
-      // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
-      // receiving token will have to take on sending tokens enabledness
-      // sending token will already be disabled because it was deleted
-      return coreWalletsToUpdate.reduce((state, wallet) => {
-        // just disable sending coin from relevant wallet
-        const guiWallet = state[wallet.id]
-        const newEnabledTokens = guiWallet.enabledTokens.filter(currencyCode => currencyCode !== oldCurrencyCode)
-        return {
-          ...state,
-          [wallet.id]: {
-            ...guiWallet,
-            enabledTokens: newEnabledTokens
-          }
-        }
-      }, state)
     }
 
     case 'UI/WALLETS/UPSERT_WALLETS': {
       const { wallets } = action.data
       const out = { ...state }
       for (const wallet of wallets) {
-        if (!state || !state[wallet.id]) {
+        if (!state[wallet.id]) {
           continue
-        }
-        const guiWallet = schema(wallet)
-        const enabledTokensOnWallet = state[wallet.id].enabledTokens
-        guiWallet.enabledTokens = enabledTokensOnWallet
-        enabledTokensOnWallet.forEach(customToken => {
-          guiWallet.nativeBalances[customToken] = wallet.balances[customToken] ?? '0'
-        })
-
-        if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported) {
-          for (const cCodeKey in STAKING_BALANCES) {
-            const stakingCurrencyCode = `${guiWallet.currencyCode}${STAKING_BALANCES[cCodeKey]}`
-            guiWallet.nativeBalances[stakingCurrencyCode] = wallet.balances[stakingCurrencyCode] ?? '0'
-          }
         }
         out[wallet.id] = {
           ...state[wallet.id],
-          ...guiWallet
+          ...schema(wallet)
         }
       }
       return out
-    }
-
-    case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
-      const { walletId, receiveAddress } = action.data
-      return {
-        ...state,
-        [walletId]: {
-          ...state[walletId],
-          receiveAddress
-        }
-      }
     }
 
     default:
@@ -231,35 +117,6 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
   }
 }
 
-const addTokenPending = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'ADD_TOKEN_START':
-      return true
-
-    case 'ADD_NEW_CUSTOM_TOKEN_FAILURE':
-    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS':
-      return false
-
-    default:
-      return state
-  }
-}
-
-const manageTokensPending = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'MANAGE_TOKENS_START': {
-      return true
-    }
-
-    case 'MANAGE_TOKENS_SUCCESS': {
-      return false
-    }
-
-    default:
-      return state
-  }
-}
-
 function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   const { blockHeight, currencyInfo, id, type } = wallet
   const { currencyCode, metaTokens, pluginId } = currencyInfo
@@ -267,8 +124,7 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
 
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
-  // TODO: Fetch the token list asynchonously before dispatching `schema`:
-  const enabledTokens: string[] = []
+  const enabledTokens = tokenIdsToCurrencyCodes(wallet.currencyConfig, wallet.enabledTokenIds)
 
   const nativeBalances: { [currencyCode: string]: string } = {}
   // Add parent currency balance to balances
@@ -287,6 +143,15 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
     nativeBalances[currencyCode] = balance
     currencyNames[currencyCode] = currencyName
   })
+  enabledTokens.forEach(customToken => {
+    nativeBalances[customToken] = wallet.balances[customToken] ?? '0'
+  })
+  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
+    for (const cCodeKey in STAKING_BALANCES) {
+      const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
+      nativeBalances[stakingCurrencyCode] = wallet.balances[stakingCurrencyCode] ?? '0'
+    }
+  }
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
 
@@ -332,8 +197,6 @@ export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   selectedWalletId,
   selectedCurrencyCode,
-  addTokenPending,
-  manageTokensPending,
   walletLoadingProgress,
   fioWallets
 })

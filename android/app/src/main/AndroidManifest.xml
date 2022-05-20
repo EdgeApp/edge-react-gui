@@ -87,6 +87,7 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="edge-ret" />
         <data android:scheme="airbitz-ret" />
+        <data android:scheme="reqaddr" />
       </intent-filter>
       <intent-filter android:label="Payment Links">
         <action android:name="android.intent.action.VIEW" />

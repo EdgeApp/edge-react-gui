@@ -7,7 +7,7 @@ import type { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { asSortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
-import { type MostRecentWallet, type PasswordReminder, asCustomTokenInfo, asMostRecentWallet } from '../../../types/types.js'
+import { type MostRecentWallet, type PasswordReminder, asMostRecentWallet } from '../../../types/types.js'
 import { currencyPlugins } from '../../../util/corePlugins.js'
 import { categories } from './subcategories.js'
 
@@ -40,7 +40,6 @@ export const asSyncedAccountSettings = asObject({
   defaultIsoFiat: asOptional(asString, 'iso:USD'),
   preferredSwapPluginId: asOptional(asString, ''),
   countryCode: asOptional(asString, ''),
-  customTokens: asOptional(asArray(asCustomTokenInfo), []),
   mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
   passwordRecoveryRemindersShown: asOptional(
     asObject({

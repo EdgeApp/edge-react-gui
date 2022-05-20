@@ -6,9 +6,9 @@ import { type ViewStyle, StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 
 import { fixSides } from '../../util/sides.js'
-import { useTheme } from '../services/ThemeContext.js'
+import { type ThemeProps, useTheme, withTheme } from '../services/ThemeContext.js'
 
-type Props<T> = {
+type OwnProps<T> = {
   bridge: AirshipBridge<T>,
   children?: React.Node,
   onCancel: () => void,
@@ -22,10 +22,12 @@ type Props<T> = {
   paddingRem?: number[] | number
 }
 
+type Props<T> = OwnProps<T> & ThemeProps
+
 /**
  * The Airship modal, but connected to our theming system.
  */
-export function ThemedModal<T>(props: Props<T>) {
+function ThemedModalComponent<T>(props: Props<T>) {
   const { bridge, children = null, flexDirection, iconRem = 0, justifyContent, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()
@@ -36,7 +38,9 @@ export function ThemedModal<T>(props: Props<T>) {
     <AirshipModal
       bridge={bridge}
       backgroundColor={theme.modal}
-      borderRadius={theme.rem(1)}
+      borderRadius={theme.rem(theme.modalBorderRadiusRem)}
+      borderColor={theme.modalBorderColor}
+      borderWidth={theme.modalBorderWidth}
       flexDirection={flexDirection}
       justifyContent={justifyContent}
       margin={[theme.rem(iconRem / 2), 0, 0]}
@@ -48,3 +52,5 @@ export function ThemedModal<T>(props: Props<T>) {
     </AirshipModal>
   )
 }
+
+export const ThemedModal = withTheme(ThemedModalComponent)

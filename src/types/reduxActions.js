@@ -22,7 +22,6 @@ import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLinkTypes.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
 import {
-  type CustomTokenInfo,
   type FioAddress,
   type FioDomain,
   type FioObtRecord,
@@ -34,13 +33,12 @@ import {
   type MostRecentWallet,
   type SpendAuthType,
   type SpendingLimits,
-  type TransactionListTx
+  type TransactionListTx,
+  type WalletListItem
 } from './types.js'
 
 // Actions with no payload:
 type NoDataActionName =
-  | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
-  | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
   | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
@@ -49,13 +47,9 @@ type NoDataActionName =
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'EDGE_LOBBY_ACCEPT_FAILED'
-  | 'EDIT_CUSTOM_TOKEN_FAILURE'
-  | 'EDIT_CUSTOM_TOKEN_START'
   | 'ENABLE_SCAN'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   | 'INVALIDATE_EDGE_LOBBY'
-  | 'MANAGE_TOKENS_START'
-  | 'MANAGE_TOKENS_SUCCESS'
   | 'OPEN_SELECT_USER'
   | 'OTP_ERROR_SHOWN'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
@@ -84,27 +78,6 @@ export type Action =
   | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
-      type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
-      data: {
-        walletId: string,
-        tokenObj: CustomTokenInfo,
-        settings: Object,
-        enabledTokens: string[]
-      }
-    }
-  | {
-      type: 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS',
-      data: {
-        walletId: string,
-        code: string,
-        coreWalletsToUpdate: EdgeCurrencyWallet[],
-        enabledTokensOnWallet: string[],
-        oldCurrencyCode: string,
-        setSettings: Object,
-        tokenObj: CustomTokenInfo
-      }
-    }
-  | {
       type: 'CORE/CONTEXT/ADD_CONTEXT',
       data: { context: EdgeContext, disklet: Disklet }
     }
@@ -115,7 +88,6 @@ export type Action =
       }
     }
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
-  | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES', data: { exchangeRates: GuiExchangeRates } }
   | {
@@ -126,14 +98,6 @@ export type Action =
   | { type: 'LOGIN', data: EdgeAccount }
   | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
-  | {
-      type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
-      data: {
-        tokenObj: CustomTokenInfo,
-        oldCurrencyCode: string,
-        coreWalletsToUpdate: EdgeCurrencyWallet[]
-      }
-    }
   | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
   | { type: 'PROMOTION_ADDED', data: Promotion }
   | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
@@ -202,26 +166,12 @@ export type Action =
   | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED', data: { pinLoginEnabled: boolean } }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS', data: { settings: SettingsState } }
   | {
-      type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
-      data: {
-        walletId: string,
-        receiveAddress: EdgeReceiveAddress
-      }
-    }
-  | {
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { currencyCode: string, walletId: string }
     }
   | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
-  | {
-      type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
-      data: { tokenObj: CustomTokenInfo }
-    }
+  | { type: 'UPDATE_SORTED_WALLET_LIST', data: WalletListItem[] }
   | { type: 'UPDATE_SWAP_QUOTE', data: GuiSwapInfo }
-  | {
-      type: 'UPDATE_WALLET_ENABLED_TOKENS',
-      data: { walletId: string, tokens: string[] }
-    }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: number }
   | { type: 'UPDATE_WALLET_LOADING_PROGRESS', data: { walletId: string, addressLoadingProgress: number } }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }

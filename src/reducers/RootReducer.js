@@ -6,7 +6,7 @@ import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Action } from '../types/reduxTypes.js'
 import { type DeviceReferral } from '../types/ReferralTypes.js'
-import { type GuiContact, type GuiExchangeRates } from '../types/types.js'
+import { type GuiContact, type GuiExchangeRates, type WalletListItem } from '../types/types.js'
 import { type AccountState, account } from './AccountReducer.js'
 import { type CoreState, core } from './CoreReducer.js'
 import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReducer.js'
@@ -25,6 +25,9 @@ export type RootState = {
 
   // Deep link waiting to be fulfilled:
   +pendingDeepLink: DeepLink | null,
+
+  // The user's sorted wallet list:
+  +sortedWalletList: WalletListItem[],
 
   // Nested reducers:
   +account: AccountState,
@@ -72,6 +75,10 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
         return null
     }
     return state
+  },
+
+  sortedWalletList(state: WalletListItem[] = [], action: Action): WalletListItem[] {
+    return action.type === 'UPDATE_SORTED_WALLET_LIST' ? action.data : state
   },
 
   // Nested reducers:

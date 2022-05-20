@@ -25,9 +25,6 @@ test('initialState', () => {
       },
       walletAccountActivationQuoteError: ''
     },
-    editToken: {
-      editCustomTokenProcessing: false
-    },
     fioAddress: {
       fioAddresses: [],
       fioAddressesLoading: false,

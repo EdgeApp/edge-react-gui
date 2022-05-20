@@ -118,7 +118,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <ClickableRow onPress={onPress}>
+      <ClickableRow paddingRem={[0, 1]} onPress={onPress}>
         <View style={styles.iconContainer}>
           <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
             {thumbnailPath ? null : transactionIcon}

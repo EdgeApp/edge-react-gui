@@ -35,9 +35,9 @@ export const validatePassword =
     const { message, submitLabel, title = s.strings.confirm_password_text, warning } = opts
     const state = getState()
     const { account } = state.core
-
     const password = await Airship.show(bridge => (
       <TextInputModal
+        autoFocus={warning == null}
         autoCorrect={false}
         bridge={bridge}
         inputLabel={s.strings.enter_your_password}

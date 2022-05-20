@@ -5,7 +5,7 @@ import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { unpackEdges } from '../../util/edges.js'
+import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
@@ -17,18 +17,12 @@ type Props = {
   // eslint-disable-next-line react/no-unused-prop-types
   label?: string,
 
-  // If this is set, show a spinner:
-  // eslint-disable-next-line react/no-unused-prop-types
-  spinner?: boolean,
-
   // The gap around the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
-  // eslint-disable-next-line react/no-unused-prop-types
   marginRem?: number[] | number,
 
   // The gap inside the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `padding` property. Defaults to 0.5.
-  // eslint-disable-next-line react/no-unused-prop-types
   paddingRem?: number[] | number,
 
   // eslint-disable-next-line react/no-unused-prop-types
@@ -38,23 +32,27 @@ type Props = {
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
 
 export function ButtonBox(props: Props) {
-  const { children, onPress } = props
+  const { children, marginRem, paddingRem, onPress } = props
   const theme = useTheme()
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
 
   return (
-    <TouchableOpacity onPress={onPress} style={spacingStyles(props, theme)}>
+    <TouchableOpacity onPress={onPress} style={[margin, padding]}>
       {children}
     </TouchableOpacity>
   )
 }
 
 export function Radio(props: RadioButtonProps) {
-  const { children, value, right, onPress } = props
+  const { children, marginRem, paddingRem, value, right, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
 
   return (
-    <View style={spacingStyles(props, theme)}>
+    <View style={[margin, padding]}>
       <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.secondaryButton} onPress={onPress}>
         <View style={[styles.radio, right && styles.radioRight]}>
           <RadioIcon value={value} />
@@ -79,34 +77,19 @@ export function RadioIcon(props: { value: boolean }) {
 }
 
 export function RightChevronButton(props: { text: string, onPress: () => void, paddingRem?: number[] | number }) {
-  const { text, onPress, paddingRem = 0 } = props
+  const { text, onPress, paddingRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={[spacingStyles({ marginRem: [0, 1.25, 0, 0], paddingRem }, theme), styles.rightChevronContainer]}>
+      <View style={[padding, styles.rightChevronContainer]}>
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
         <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
       </View>
     </TouchableOpacity>
   )
-}
-
-function spacingStyles(props: Props, theme: Theme) {
-  const marginRem = unpackEdges(props.marginRem)
-  const paddingRem = unpackEdges(props.paddingRem ?? 0.5)
-
-  return {
-    marginBottom: theme.rem(marginRem.bottom),
-    marginLeft: theme.rem(marginRem.left),
-    marginRight: theme.rem(marginRem.right),
-    marginTop: theme.rem(marginRem.top),
-    paddingBottom: theme.rem(paddingRem.bottom),
-    paddingLeft: theme.rem(paddingRem.left),
-    paddingRight: theme.rem(paddingRem.right),
-    paddingTop: theme.rem(paddingRem.top)
-  }
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
@@ -135,6 +118,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       opacity: 0.7
     },
     rightChevronContainer: {
+      marginBottom: 0,
+      marginLeft: 0,
+      marginRight: theme.rem(1.25),
+      marginTop: 0,
       flexDirection: 'row',
       alignItems: 'center'
     },

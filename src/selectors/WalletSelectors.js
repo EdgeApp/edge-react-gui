@@ -3,8 +3,6 @@
 import { mul } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 
-import { FIAT_PRECISION } from '../constants/WalletAndCurrencyConstants.js'
-import { formatNumber } from '../locales/intl.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes'
 import { type GuiWallet } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
@@ -88,7 +86,7 @@ export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomin
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
   const { isoFiatCurrencyCode } = getWalletFiat(wallet)
   const fiatValue = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoAmount)
-  return formatNumber(fiatValue, { toFixed: FIAT_PRECISION }) || '0'
+  return fiatValue
 }
 
 export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {

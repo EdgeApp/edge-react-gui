@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FlipInputModalComponent should render with loading props 1`] = `
-<ThemedModal
+<WithTheme(ThemedModalComponent)
   bridge={
     Object {
       "on": [Function],
@@ -27,9 +27,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(CardComponent)
-        marginRem={0}
-      >
+      <WithTheme(CardComponent)>
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio="1000"
           forceUpdateGuiCounter={0}
@@ -141,13 +139,12 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             }
           >
             1 BTC 
+            (
             <FiatText
-              cryptoCurrencyCode="BTC"
-              cryptoExchangeMultiplier="100000000000"
-              isoFiatCurrencyCode="BTC"
+              currencyCode="BTC"
               nativeCryptoAmount="1"
-              parenthesisEnclosed={true}
             />
+            )
           </WithTheme(EdgeTextComponent)>
         </View>
         <View
@@ -168,7 +165,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
           >
             Rate
           </WithTheme(EdgeTextComponent)>
-          <WithTheme(ExchangeRateComponent)
+          <Memo(Connect(WithTheme(ExchangeRateComponent)))
             primaryInfo={
               Object {
                 "displayCurrencyCode": "BTC",
@@ -231,13 +228,12 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             }
           >
             0.0000001 BTC 
+            (
             <FiatText
-              cryptoCurrencyCode="BTC"
-              cryptoExchangeMultiplier="100000000000"
-              isoFiatCurrencyCode="BTC"
+              currencyCode="BTC"
               nativeCryptoAmount="10000"
-              parenthesisEnclosed={true}
             />
+            )
           </WithTheme(EdgeTextComponent)>
         </View>
         <WithTheme(EdgeTextComponent)
@@ -259,5 +255,5 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
       </View>
     </TouchableWithoutFeedback>
   </View>
-</ThemedModal>
+</WithTheme(ThemedModalComponent)>
 `;
