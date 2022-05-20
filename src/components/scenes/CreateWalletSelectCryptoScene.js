@@ -110,7 +110,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
     const sortedArray = getCreateWalletTypes(account)
     const filteredArray = sortedArray.filter(
       entry =>
-        !SPECIAL_CURRENCY_INFO[entry.walletType]?.keysOnlyMode &&
+        !SPECIAL_CURRENCY_INFO[entry.pluginId]?.keysOnlyMode &&
         (entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0)
     )
 
