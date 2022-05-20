@@ -1,6 +1,8 @@
 // @flow
+import { div } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
+import { MAX_FLOAT_PRECISION } from '../../constants'
 import {
   type ApprovableAction,
   type BorrowCollateral,
@@ -47,6 +49,14 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       })
 
     //
+    // Loan to value
+    //
+
+    const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
+    const { totalCollateralETH, totalDebtETH } = userData
+    const loanToValue = parseFloat(div(totalDebtETH.toString(), totalCollateralETH.toString(), MAX_FLOAT_PRECISION))
+
+    //
     // Engine Instance
     //
 
@@ -55,7 +65,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       collaterals,
       debts,
 
-      loanToValue: 55,
+      loanToValue,
 
       async getAprQuote(tokenId?: string): Promise<number> {
         if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
