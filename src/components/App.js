@@ -1,4 +1,5 @@
 // @flow
+import '@ethersproject/shims'
 
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
