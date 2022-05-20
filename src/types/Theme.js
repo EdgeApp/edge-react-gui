@@ -263,6 +263,7 @@ export type Theme = {
   // tileDivider: string,
   thinLineWidth: number,
   mediumLineWidth: number,
+  thickLineWidth: number,
 
   // DividerLine component
   dividerLineHeight: number,
