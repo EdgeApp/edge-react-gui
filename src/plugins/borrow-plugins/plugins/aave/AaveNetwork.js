@@ -3,6 +3,7 @@
 import { div } from 'biggystring'
 import { BigNumber, ethers } from 'ethers'
 
+import { MAX_JS_FLOAT_PRECISION } from '../../constants'
 import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
 import LENDING_POOL_ABI from './abi/LENDING_POOL_ABI.json'
 import PROTOCOL_DATA_PROVIDER_ABI from './abi/PROTOCOL_DATA_PROVIDER_ABI.json'
@@ -40,7 +41,6 @@ export type AaveNetwork = {
 
 const RAY = BigNumber.from('10').pow('27')
 const RAY_STR = RAY.toString()
-const MAX_PRECISION = 17
 
 export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
   const { provider, contractAddresses } = blueprint
@@ -92,8 +92,8 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     async getReserveTokenRates(tokenAddress) {
       const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] = await lendingPool.getReserveData(tokenAddress)
 
-      const variableApr = parseFloat(div(variableBorrowRate.toString(), RAY_STR, MAX_PRECISION))
-      const stableApr = parseFloat(div(stableBorrowRate.toString(), RAY_STR, MAX_PRECISION))
+      const variableApr = parseFloat(div(variableBorrowRate.toString(), RAY_STR, MAX_JS_FLOAT_PRECISION))
+      const stableApr = parseFloat(div(stableBorrowRate.toString(), RAY_STR, MAX_JS_FLOAT_PRECISION))
 
       return {
         variableApr,
