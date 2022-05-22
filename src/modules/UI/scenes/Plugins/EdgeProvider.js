@@ -7,6 +7,7 @@ import type {
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeNetworkFee,
+  EdgeParsedUri,
   EdgeReceiveAddress,
   EdgeSpendTarget,
   EdgeTransaction,
@@ -20,6 +21,7 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
 
+import { launchBitPay } from '../../../../actions/BitPayActions.js'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
@@ -349,9 +351,15 @@ export class EdgeProvider extends Bridgeable {
     console.log(`requestSpendUri ${uri}`)
     const { currencyWallets } = this._state.core.account
     const edgeWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-    const result = await edgeWallet.parseUri(uri)
 
+    const result: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(uri)
     const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
+
+    // Check is PaymentProtocolUri
+    if (result.paymentProtocolURL != null) {
+      await launchBitPay(result.paymentProtocolURL, { wallet: edgeWallet, metadata }).catch(showError)
+      return
+    }
 
     // Prepare the internal spend request:
     const info: GuiMakeSpendInfo = {
