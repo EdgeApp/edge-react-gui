@@ -90,7 +90,7 @@ const aaveLocalhostBlueprint: BorrowPluginBlueprint = {
   borrowInfo: {
     pluginId: 'aaveLocalhost',
     displayName: 'AAVE (Localhost)',
-    currencyPluginId: 'ethLocalhost',
+    currencyPluginId: 'ethDev',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
