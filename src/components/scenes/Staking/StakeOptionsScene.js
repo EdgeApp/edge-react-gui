@@ -52,7 +52,7 @@ export const StakeOptionsScene = (props: Props) => {
         })
         if (availableStakePolicies.length === 1) {
           // Transition to next scene immediately
-          navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
+          navigation.replace('stakeOverview', { walletId, stakePolicy: availableStakePolicies[0] })
         } else setStakePolicies(availableStakePolicies)
       })
       .catch(err => console.error(err))
