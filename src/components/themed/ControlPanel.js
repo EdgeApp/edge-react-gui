@@ -19,15 +19,14 @@ import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
 import { useWatchContext } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
-import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
@@ -56,15 +55,11 @@ export function ControlPanel(props: Props) {
 
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
-  const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
-  const selectedWallet = useSelector(state => state.core.account.currencyWallets[state.ui.wallets.selectedWalletId])
-  const guiWallet = useSelector(getSelectedWallet)
-  const metaTokens = guiWallet?.metaTokens ?? []
-  const contractAddress = metaTokens.find(token => token.currencyCode === selectedCurrencyCode)?.contractAddress
-  const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
-    guiWallet != null ? getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
-  )
-  const isoFiatCurrencyCode = selectedWallet != null ? getWalletFiat(selectedWallet).isoFiatCurrencyCode : null
+  const selectedWallet = useSelectedWallet()
+  const selectedDenomination = useSelector(state => {
+    if (selectedWallet == null) return
+    return getDisplayDenomination(state, selectedWallet.wallet.currencyInfo.pluginId, selectedWallet.currencyCode)
+  })
 
   /// ---- Local State ----
 
@@ -241,23 +236,23 @@ export function ControlPanel(props: Props) {
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
-          {isoFiatCurrencyCode === null ? (
+          {selectedWallet == null || selectedDenomination == null ? (
             <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
             <>
               <View style={styles.rowIconContainer}>
-                {guiWallet != null ? <CurrencyIcon pluginId={selectedWallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={contractAddress} /> : null}
+                <CurrencyIcon pluginId={selectedWallet.wallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={selectedWallet.tokenId} />
               </View>
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
-                  {`1 ${currencyDenomName} = `}
+                  {`1 ${selectedDenomination.name} = `}
                   <FiatText
-                    nativeCryptoAmount={currencyDenomMult}
-                    currencyCode={selectedCurrencyCode}
-                    wallet={selectedWallet}
-                    autoPrecision
                     appendFiatCurrencyCode
+                    autoPrecision
                     fiatSymbolSpace
+                    nativeCryptoAmount={selectedDenomination.multiplier}
+                    tokenId={selectedWallet.tokenId}
+                    wallet={selectedWallet.wallet}
                   />
                 </TitleText>
               </View>
