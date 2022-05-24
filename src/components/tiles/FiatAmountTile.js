@@ -13,21 +13,18 @@ type Props = {
   // The amount to show:
   nativeCryptoAmount: string,
   tokenId?: string,
-  wallet: EdgeCurrencyWallet,
-
-  // Deprecated. Use `tokenId` instead:
-  currencyCode?: string
+  wallet: EdgeCurrencyWallet
 }
 
 export const FiatAmountTile = (props: Props) => {
-  const { currencyCode, nativeCryptoAmount, title, tokenId, wallet } = props
+  const { nativeCryptoAmount, title, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
       <EdgeText style={styles.tileBodyText}>
-        <FiatText currencyCode={currencyCode} tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
+        <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
       </EdgeText>
     </Tile>
   )

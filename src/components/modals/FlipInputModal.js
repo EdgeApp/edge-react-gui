@@ -19,6 +19,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
@@ -57,7 +58,6 @@ type StateProps = {
   wallet: EdgeCurrencyWallet,
 
   // Fees
-  feeCurrencyCode: string,
   feeDisplayDenomination: EdgeDenomination,
   feeNativeAmount: string,
   feeAmount: string,
@@ -170,7 +170,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         <EdgeText style={styles.rateBalanceText}>
           {balance}
           (
-          <FiatText wallet={wallet} currencyCode={primaryInfo.displayCurrencyCode} nativeCryptoAmount={balanceCrypto} />)
+          <FiatText wallet={wallet} tokenId={primaryInfo.tokenId} nativeCryptoAmount={balanceCrypto} />)
         </EdgeText>
       </View>
     )
@@ -203,7 +203,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees = () => {
-    const { wallet, feeAmount, feeCurrencyCode, feeDisplayDenomination, feeNativeAmount, feeStyle, theme } = this.props
+    const { wallet, feeAmount, feeDisplayDenomination, feeNativeAmount, feeStyle, theme } = this.props
     const truncatedFeeAmount = truncateDecimals(feeAmount, DEFAULT_TRUNCATE_PRECISION, false)
     const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
@@ -217,7 +217,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          (<FiatText nativeCryptoAmount={feeNativeAmount} currencyCode={feeCurrencyCode} wallet={wallet} />)
+          (<FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} />)
         </EdgeText>
       </View>
     )
@@ -313,6 +313,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const name = getWalletName(wallet)
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
     const { pluginId } = wallet.currencyInfo
+    const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, pluginId, currencyCode)
@@ -324,6 +325,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
 
     const primaryInfo = {
       walletId: walletId,
+      tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: cryptoDenomination,
       exchangeCurrencyCode: cryptoExchangeDenomination.name,
@@ -374,7 +376,6 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       wallet,
 
       // Fees
-      feeCurrencyCode: wallet.currencyInfo.currencyCode,
       feeDisplayDenomination,
       feeExchangeDenomination,
       feeNativeAmount: transactionFee.nativeCryptoAmount,
