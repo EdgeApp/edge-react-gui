@@ -1,3 +1,3 @@
 // @flow
 
-export { makeAaveBorrowPlugin } from './plugins/aave'
+export { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin, makeAaveLocalhostPlugin } from './plugins/aave'
