@@ -1,5 +1,5 @@
 {
-  "bitpay_metadata_name": "BitPay Invoice ID: %s",
+  "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s 받음",
   "dialog_title": "자동 로그오프 시간을 설정",
   "share_subject": "Hey, I think you should try %s",
