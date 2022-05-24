@@ -5,6 +5,7 @@ import { BigNumber, ethers } from 'ethers'
 
 import { MAX_JS_FLOAT_PRECISION } from '../../constants'
 import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
+import ERC20_ABI from './abi/ERC20_ABI.json'
 import LENDING_POOL_ABI from './abi/LENDING_POOL_ABI.json'
 import PROTOCOL_DATA_PROVIDER_ABI from './abi/PROTOCOL_DATA_PROVIDER_ABI.json'
 import STABLE_DEBT_TOKEN_ABI from './abi/STABLE_DEBT_TOKEN_ABI.json'
@@ -21,6 +22,8 @@ export type AaveNetworkBlueprint = {
 }
 
 export type AaveNetwork = {
+  provider: ethers.Provider,
+
   // Contracts
   lendingPool: ethers.Contract,
   protocolDataProvider: ethers.Contract,
@@ -36,7 +39,8 @@ export type AaveNetwork = {
   getReserveTokenRates: (tokenAddress: string) => Promise<{
     variableApr: number,
     stableApr: number
-  }>
+  }>,
+  makeTokenContract: (tokenAddress: string) => ethers.Contract
 }
 
 const RAY = BigNumber.from('10').pow('27')
@@ -49,6 +53,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
   const protocolDataProvider = new ethers.Contract(contractAddresses.protocolDataProvider, PROTOCOL_DATA_PROVIDER_ABI, provider)
 
   const instance: AaveNetwork = {
+    provider,
     lendingPool,
     protocolDataProvider,
 
@@ -99,6 +104,9 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         variableApr,
         stableApr
       }
+    },
+    async makeTokenContract(tokenAddress) {
+      return new ethers.Contract(tokenAddress, ERC20_ABI, provider)
     }
   }
   return instance
