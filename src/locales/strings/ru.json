@@ -1,5 +1,5 @@
 {
-  "bitpay_metadata_name": "BitPay Invoice ID: %s",
+  "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s получено",
   "dialog_title": "Установить время автоматического выхода",
   "share_subject": "Эй, я думаю, вы должны попробовать %s",
