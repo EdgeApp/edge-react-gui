@@ -65,7 +65,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
       const cleanKey = /^c[0-9]$/.test(key) ? key.replace('c', 'CODE_') : key
       cleanQuery[cleanKey] = query[key]
     }
-    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}?${stringifyQuery(cleanQuery)}&ADDRESS=`
+    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}${stringifyQuery(cleanQuery)}&ADDRESS=`
     return {
       type: 'azteco',
       uri: aztecoLink

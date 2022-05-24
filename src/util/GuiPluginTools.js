@@ -79,6 +79,6 @@ export function makePluginUri(
   let uri = baseUri
   if (!lockUriPath) uri += deepPath
   const queryString = stringifyQuery(query)
-  if (queryString.length > 0) uri += `?${queryString}`
+  if (queryString.length > 0) uri += `${queryString}`
   return uri
 }
