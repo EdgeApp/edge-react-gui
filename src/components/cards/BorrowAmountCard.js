@@ -5,39 +5,45 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { Card } from './Card'
 
-export const BorrowAmountCard = ({
-  dAppIcon,
-  fiatCode,
+export const AmountLineIconCard = ({
+  currencyCode,
   formattedAmount,
+  iconUri,
   maxAmount,
   title
 }: {
-  dAppIcon: string,
-  fiatCode: string,
+  currencyCode: string,
   formattedAmount: string,
+  iconUri: string,
   maxAmount: string,
   title: string
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const [barWidth, setbarWidth] = useState<string>('')
+  const handleLayout = (event: any) => {
+    setbarWidth(mul(div(formattedAmount, maxAmount, DECIMAL_PRECISION), '100') + '%')
+  }
+
   return (
     <Card>
-      <View style={styles.cardContainer}>
+      <View style={styles.cardContainer} onLayout={handleLayout}>
         <View style={styles.leftContainer}>
-          <EdgeText style={{ fontFamily: theme.fontFaceMedium }}>{title}</EdgeText>
+          <EdgeText style={styles.title}>{title}</EdgeText>
           <View style={styles.valueContainer}>
             <EdgeText style={styles.valueFont}>{formattedAmount}</EdgeText>
-            <EdgeText>{fiatCode}</EdgeText>
+            <EdgeText>{currencyCode}</EdgeText>
           </View>
-          <View style={[styles.bar, { width: mul(div(formattedAmount, maxAmount, DECIMAL_PRECISION), '100') + '%' }]} />
+          {barWidth === '' ? null : <View style={[styles.bar, { width: barWidth }]} />}
         </View>
-        <FastImage style={styles.icon} source={{ uri: dAppIcon }} />
+        <FastImage style={styles.icon} source={{ uri: iconUri }} />
       </View>
     </Card>
   )
@@ -58,6 +64,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignSelf: 'flex-start'
   },
+  title: { fontFamily: theme.fontFaceMedium },
   icon: {
     height: theme.rem(4),
     width: theme.rem(4)
