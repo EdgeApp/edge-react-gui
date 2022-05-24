@@ -1,7 +1,7 @@
 // @flow
 
 import { type Cleaner, asArray, asBoolean, asDate, asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { type EdgeCurrencyWallet, type EdgeSpendInfo, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -68,7 +68,8 @@ export async function launchBitPay(
   uri: string,
   params: {
     wallet?: EdgeCurrencyWallet,
-    currencyWallets?: { [walletId: string]: EdgeCurrencyWallet }
+    currencyWallets?: { [walletId: string]: EdgeCurrencyWallet },
+    metadata?: EdgeMetadata
   }
 ): Promise<void> {
   // Fetch payment options
@@ -209,16 +210,16 @@ export async function launchBitPay(
   // Temp fix copies the calculation from the bitcoin plugin for paymentProtocol
   // fees into customNetworkFee.
   const spendTarget = spendInfo.spendTargets[0]
+  const metadata = params.metadata ?? {}
+  const paymentIdString = sprintf(s.strings.bitpay_metadata_name, paymentId)
+  metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
   const guiMakeSpendInfo = {
     selectedCurrencyCode,
     nativeAmount: spendTarget.nativeAmount,
     publicAddress: spendTarget.publicAddress,
     networkFeeOption: 'custom',
     customNetworkFee: { satPerByte: Math.ceil(parseFloat(requiredFeeRate) * 1.5) },
-    metadata: {
-      name: sprintf(s.strings.bitpay_metadata_name, paymentId),
-      notes: sprintf(s.strings.bitpay_metadata_name, paymentId)
-    },
+    metadata,
     lockInputs: true,
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
