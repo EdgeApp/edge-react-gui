@@ -1,5 +1,5 @@
 {
-  "bitpay_metadata_name": "BitPay Invoice ID: %s",
+  "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s Empfangen",
   "dialog_title": "Automatische Abmeldung einstellen",
   "share_subject": "Hey, ich denke, du solltest %s versuchen",
