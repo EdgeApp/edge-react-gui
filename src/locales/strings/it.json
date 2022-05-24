@@ -1,5 +1,5 @@
 {
-  "bitpay_metadata_name": "ID invoice BitPay: %s",
+  "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s ricevuti",
   "dialog_title": "Imposta il tempo di auto disconnessione",
   "share_subject": "Ehi, penso che dovresti provare %s",
