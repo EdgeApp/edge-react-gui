@@ -349,6 +349,19 @@ export const SPECIAL_CURRENCY_INFO: {
     isCustomTokensSupported: true,
     isBitPayProtocolSupported: false
   },
+  ethDev: {
+    initWalletName: s.strings.string_first_ethereum_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isBitPayProtocolSupported: false
+  },
   kovan: {
     initWalletName: s.strings.string_first_ethereum_wallet_name,
     chainCode: 'ETH',
