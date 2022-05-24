@@ -1,5 +1,10 @@
 // @flow
+
 import { type EdgeCurrencyWallet, type EdgeNetworkFee } from 'edge-core-js'
+
+// -----------------------------------------------------------------------------
+// Request Method Types
+// -----------------------------------------------------------------------------
 
 // Borrow more:
 export type BorrowRequest = {
@@ -43,9 +48,9 @@ export type ApprovableAction = {
   +approve: () => Promise<void>
 }
 
-//
+// -----------------------------------------------------------------------------
 // Engine
-//
+// -----------------------------------------------------------------------------
 
 export type BorrowCollateral = {
   tokenId?: string,
@@ -82,9 +87,9 @@ export type BorrowEngine = {
   close: () => Promise<ApprovableAction>
 }
 
-//
+// -----------------------------------------------------------------------------
 // Plugin Info
-//
+// -----------------------------------------------------------------------------
 
 export type BorrowPluginInfo = {
   pluginId: string,
@@ -97,9 +102,9 @@ export type BorrowPluginInfo = {
   maxLtvRatio: number
 }
 
-//
+// -----------------------------------------------------------------------------
 // Plugin
-//
+// -----------------------------------------------------------------------------
 
 export type BorrowPlugin = {
   borrowInfo: BorrowPluginInfo,
