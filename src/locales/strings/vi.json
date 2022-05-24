@@ -1,5 +1,5 @@
 {
-  "bitpay_metadata_name": "BitPay Invoice ID: %s",
+  "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s đã nhận được",
   "dialog_title": "Cài thời gian đăng xuất tự động",
   "share_subject": "Hey, I think you should try %s",
