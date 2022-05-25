@@ -53,7 +53,8 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
     if (walletIsoFiat !== 'iso:USD') {
       exchangeRates.push({ currency_pair: `iso:USD_${walletIsoFiat}` })
     }
-    for (const tokenCode of Object.keys(wallet.balances)) {
+    for (const tokenId of wallet.enabledTokenIds) {
+      const { currencyCode: tokenCode } = wallet.currencyConfig.allTokens[tokenId]
       if (tokenCode !== currencyCode) {
         exchangeRates.push({ currency_pair: `${tokenCode}_${walletIsoFiat}` })
         exchangeRates.push({ currency_pair: `${tokenCode}_${accountIsoFiat}` })
