@@ -13,7 +13,7 @@ import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurre
 import s from '../../locales/strings.js'
 import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { ResolutionError } from '../../types/ResolutionError.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -54,7 +54,7 @@ type State = {
   filteredFioAddresses: string[]
 }
 
-type Props = StateProps & OwnProps & DispatchProps & ThemeProps
+type Props = StateProps & OwnProps & DispatchProps & ThemeProps & TestProps
 
 export class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
@@ -328,7 +328,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           )}
           <MainButton label={s.strings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
         </View>
-        <ModalCloseArrow onPress={this.handleClose} />
+        <ModalCloseArrow onPress={this.handleClose} ref={this.props.generateTestHook('AddressModal.Close')} />
       </ThemedModal>
     )
   }
@@ -363,7 +363,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
+export const AddressModal = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, ownProps) => ({
     account: state.core.account,
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],

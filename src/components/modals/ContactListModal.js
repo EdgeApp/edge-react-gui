@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
 import { Image } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -20,9 +20,10 @@ type Props = {
   contacts: GuiContact[]
 }
 
-export function ContactListModal({ bridge, contactType, contacts, contactName }: Props) {
+export function TestableContactListModal({ bridge, contactType, contacts, contactName }: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   const rowComponent = ({ givenName, familyName, hasThumbnail, thumbnailPath }: GuiContact) => {
     const fullName = familyName ? `${givenName} ${familyName}` : givenName
@@ -62,6 +63,7 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
       rowsData={contacts}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      ref={generateTestHook('ContactListModal.Close')}
     />
   )
 }
@@ -76,3 +78,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(0.5)
   }
 }))
+export const ContactListModal = wrap(TestableContactListModal)

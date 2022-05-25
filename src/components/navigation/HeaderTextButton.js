@@ -1,9 +1,10 @@
 // @flow
 
+import { hook } from 'cavy'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 
 import s from '../../locales/strings.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { Actions } from '../../types/routerTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -14,12 +15,17 @@ type Props = {
   placement: 'left' | 'right'
 }
 
+type TestProps = {
+  generateTestHook: (id: string, ref: any) => void,
+  testId?: string
+}
+
 const title = {
   exit: s.strings.string_exit,
   help: s.strings.string_help
 }
 
-class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> {
+class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps & TestProps> {
   handlePress = () => {
     const { type } = this.props
     if (type === 'exit') {
@@ -32,7 +38,11 @@ class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> 
   render() {
     const styles = getStyles(this.props.theme)
     return (
-      <TouchableOpacity style={[styles.container, this.props.placement === 'left' ? styles.left : styles.right]} onPress={this.handlePress}>
+      <TouchableOpacity
+        style={[styles.container, this.props.placement === 'left' ? styles.left : styles.right]}
+        onPress={this.handlePress}
+        ref={this.props.generateTestHook(this.props.testId ?? '')}
+      >
         <EdgeText>{title[this.props.type]}</EdgeText>
       </TouchableOpacity>
     )
@@ -57,4 +67,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const HeaderTextButton = withTheme(HeaderTextButtonComponent)
+export const HeaderTextButton = hook(withTheme(HeaderTextButtonComponent))

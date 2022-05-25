@@ -8,7 +8,7 @@ import { type AirshipBridge } from 'react-native-airship'
 import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
 import { CHANGE_PASSWORD } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
@@ -37,7 +37,7 @@ type State = {
   spinning: boolean
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
 export class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -108,13 +108,13 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           <MainButton label={s.strings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
         )}
         <MainButton label={s.strings.password_reminder_forgot_password} marginRem={0.5} type="secondary" onPress={this.handleRequestChangePassword} />
-        <ModalCloseArrow onPress={this.handleCancel} />
+        <ModalCloseArrow onPress={this.handleCancel} ref={this.props.generateTestHook('PasswordReminderModal.Close')} />
       </ThemedModal>
     )
   }
 }
 
-export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps>(
+export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     account: state.core.account
   }),

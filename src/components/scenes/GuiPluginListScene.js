@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { asObject, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -17,7 +17,8 @@ import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { config } from '../../theme/appConfig.js'
 import { type GuiPluginRow, asGuiPluginJson } from '../../types/GuiPluginTypes.js'
-import { connect } from '../../types/reactRedux.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
@@ -78,7 +79,7 @@ type DispatchProps = {
   updateCountryCode: (countryCode: string) => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 type State = {
   developerUri: string
 }
@@ -264,7 +265,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <SceneWrapper background="header">
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
-        <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
+        <TouchableOpacity
+          style={styles.selectedCountryRow}
+          onPress={this._handleCountryPress}
+          ref={this.props.generateTestHook('GuiPluginListScene.OpenCountryList')}
+        >
           {countryData && (
             <FastImage
               source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
@@ -361,7 +366,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
+export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     account: state.core.account,
     accountPlugins: state.account.referralCache.accountPlugins,

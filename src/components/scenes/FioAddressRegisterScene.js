@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { type LayoutChangeEvent, Image, ScrollView, View } from 'react-native'
+import { type LayoutChangeEvent, Image, ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
@@ -11,7 +11,8 @@ import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT, FIO_STR } from '../../consta
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
-import { connect } from '../../types/reactRedux.js'
+import { View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
@@ -57,7 +58,7 @@ type DispatchProps = {
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
-type Props = StateProps & DispatchProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps & TestProps
 
 export class FioAddressRegister extends React.Component<Props, State> {
   fioCheckQueue: number = 0
@@ -549,7 +550,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-export const FioAddressRegisterScene = connect<StateProps, DispatchProps, OwnProps>(
+export const FioAddressRegisterScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio ?? typeHack,

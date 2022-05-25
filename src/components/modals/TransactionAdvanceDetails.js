@@ -1,5 +1,6 @@
 // @flow
 
+import { hook } from 'cavy'
 import type { EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { ScrollView, View } from 'react-native'
@@ -7,6 +8,7 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
 import { openBrowserUri } from '../../util/WebUtils.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
@@ -31,7 +33,7 @@ type OwnProps = {
   url?: string
 }
 
-type Props = OwnProps & ThemeProps
+type Props = OwnProps & ThemeProps & TestProps
 
 export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
@@ -113,7 +115,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
             {deviceDescription != null && <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={deviceDescription} />}
           </ScrollView>
         </View>
-        <ModalCloseArrow onPress={this.handleCancel} />
+        <ModalCloseArrow onPress={this.handleCancel} ref={this.props.generateTestHook('TransactionAdvanceDetails.close')} />
       </ThemedModal>
     )
   }
@@ -139,4 +141,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionAdvanceDetails = withTheme(TransactionAdvanceDetailsComponent)
+export const TransactionAdvanceDetails = hook(withTheme(TransactionAdvanceDetailsComponent))

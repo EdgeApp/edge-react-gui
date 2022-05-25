@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -21,7 +21,8 @@ import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/componen
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { config } from '../../theme/appConfig.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { connect } from '../../types/reactRedux.js'
+import { View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -60,7 +61,7 @@ type DispatchProps = {
   setWalletAccountActivationQuoteError: (message: string) => void
 }
 
-type Props = OwnProps & DispatchProps & StateProps
+type Props = OwnProps & DispatchProps & StateProps & TestProps
 
 type State = {
   isCreatingWallet: boolean,
@@ -163,7 +164,12 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
+          <PrimaryButton
+            disabled={isSelectWalletDisabled}
+            style={styles.next}
+            onPress={this.onPressSelect}
+            ref={this.props.generateTestHook('CreateWalletAccountSelectScene.SelectWallet')}
+          >
             {isSelectWalletDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
             ) : (
@@ -386,7 +392,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps>(
+export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, { route: { params } }) => {
     const { currencyWallets } = state.core.account
     const { existingWalletId } = params

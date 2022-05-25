@@ -1,5 +1,4 @@
 // @flow
-
 import { hook } from 'cavy'
 import * as React from 'react'
 import * as ReactRedux from 'react-redux'
@@ -7,7 +6,8 @@ import * as ReactRedux from 'react-redux'
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
 export type TestProps = {
-  generateTestHook: (id: string, ref: any) => void
+  generateTestHook: (id: string, ref: any) => void,
+  testId?: string
 }
 
 /**

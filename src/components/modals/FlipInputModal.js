@@ -17,7 +17,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
@@ -81,7 +81,7 @@ type State = {
   errorMessage?: string
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
 export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -227,7 +227,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
-      <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
+      <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal} ref={this.props.generateTestHook('FlipInputModal.Close')}>
         {/* Extra view needed here to fullscreen the modal on small devices */}
         <View style={styles.hackContainer}>
           <View style={styles.flipInput}>{this.renderFlipInput()}</View>
@@ -306,7 +306,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
+export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
     const wallet = state.core.account.currencyWallets[walletId]
