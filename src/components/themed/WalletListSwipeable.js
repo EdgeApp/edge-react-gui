@@ -1,9 +1,11 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
-import { FlatList, RefreshControl } from 'react-native'
+import { RefreshControl } from 'react-native'
 
 import { useCallback, useMemo } from '../../types/reactHooks.js'
+import { FlatList } from '../../types/reactNative.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type FlatListItem, type WalletListItem } from '../../types/types.js'
@@ -27,7 +29,7 @@ type Props = {|
 /**
  * The main wallet list used in a scene.
  */
-export function WalletListSwipeable(props: Props) {
+export function WalletListSwipeableComponent(props: Props) {
   const {
     footer,
     header,
@@ -43,6 +45,7 @@ export function WalletListSwipeable(props: Props) {
   // Subscriptions:
   const theme = useTheme()
   const sortedWalletList = useSelector(state => state.sortedWalletList)
+  const generateTestHook = useCavy()
 
   // Filter based on the search text:
   const searchedWalletList = useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
@@ -87,6 +90,7 @@ export function WalletListSwipeable(props: Props) {
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
+      ref={generateTestHook('WalletListSwipeable.WalletId')}
     />
   )
 }
@@ -94,3 +98,4 @@ export function WalletListSwipeable(props: Props) {
 function keyExtractor(item: WalletListItem): string {
   return item.key
 }
+export const WalletListSwipeable = wrap(WalletListSwipeableComponent)
