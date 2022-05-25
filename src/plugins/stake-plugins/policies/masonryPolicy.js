@@ -16,7 +16,15 @@ import { type StakePluginPolicy } from './types'
 
 const HOUR = 1000 * 60 * 60
 
-export const makeMasonryPolicy = (): StakePluginPolicy => {
+export type MasonryPolicyOptions = {
+  disableStake?: boolean,
+  disableUnstake?: boolean,
+  disableClaim?: boolean
+}
+
+export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPolicy => {
+  const { disableStake = false, disableUnstake = false, disableClaim = false } = options ?? {}
+
   // Get the pool contract necessary for the staking
   // TODO: Replace the hardcode with a configuration from initOptions
   const poolContract = makeContract('TOMB_MASONRY')
@@ -402,9 +410,9 @@ export const makeMasonryPolicy = (): StakePluginPolicy => {
       //
       // Action flags
       //
-      const canStake = gt(tokenBalance.toString(), '0')
-      const canUnstake = gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
-      const canClaim = gt(earnedAllocations[0].nativeAmount, '0') && earnedAllocations[0].locktime == null
+      const canStake = !disableStake && gt(tokenBalance.toString(), '0')
+      const canUnstake = !disableUnstake && gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
+      const canClaim = !disableClaim && gt(earnedAllocations[0].nativeAmount, '0') && earnedAllocations[0].locktime == null
 
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],

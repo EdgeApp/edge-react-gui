@@ -124,7 +124,13 @@ export const StakeOverviewScene = (props: Props) => {
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}
       />
-      <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={[0.5, 0.5, 0.25, 0.5]} />
+      <MainButton
+        label={s.strings.stake_stake_more_funds}
+        disabled={!stakePosition?.canStake}
+        type="primary"
+        onPress={handleModifyPress('stake')}
+        marginRem={[0.5, 0.5, 0.25, 0.5]}
+      />
       <MainButton
         label={s.strings.stake_claim_rewards}
         disabled={!stakePosition?.canClaim}

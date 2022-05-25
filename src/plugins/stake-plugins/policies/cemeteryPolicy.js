@@ -19,6 +19,9 @@ import { fromHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
 
 export type CemeteryPolicyOptions = {
+  disableStake?: boolean,
+  disableUnstake?: boolean,
+  disableClaim?: boolean,
   poolId: number,
   lpTokenContract: ethers.Contract,
   poolContract: ethers.Contract,
@@ -29,7 +32,16 @@ export type CemeteryPolicyOptions = {
 
 export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginPolicy => {
   // Declare contracts:
-  const { lpTokenContract, poolContract, swapRouterContract, tokenAContract, tokenBContract } = options
+  const {
+    disableStake = false,
+    disableUnstake = false,
+    disableClaim = false,
+    lpTokenContract,
+    poolContract,
+    swapRouterContract,
+    tokenAContract,
+    tokenBContract
+  } = options
 
   // Constants:
   const { poolId: POOL_ID } = options
@@ -648,13 +660,13 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       //
 
       // You can stake if you have balances in the paired assets, or some unstaked LP-Token balance
-      const canStake = (gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0')
+      const canStake = !disableStake && ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0'))
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
-      const canUnstake = gt(stakedLpTokenBalance, '0')
+      const canUnstake = !disableUnstake && gt(stakedLpTokenBalance, '0')
 
       // You can claim so long as there is some reward balance (there are no timelocks)
-      const canClaim = gt(rewardNativeAmount, '0')
+      const canClaim = !disableClaim && gt(rewardNativeAmount, '0')
 
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],
