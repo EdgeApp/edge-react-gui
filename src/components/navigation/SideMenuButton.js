@@ -1,23 +1,23 @@
 // @flow
-
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 
 import { openDrawer } from '../../actions/ScenesActions.js'
 import { Fontello } from '../../assets/vector/index.js'
-import { connect } from '../../types/reactRedux.js'
+import { useCallback } from '../../types/reactHooks'
+import { TouchableOpacity } from '../../types/reactNative.js'
+import { useDispatch } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-type DispatchProps = {
-  openDrawer: () => void
-}
-type Props = DispatchProps
-
-function SideMenuButtonComponent(props: Props) {
+function SideMenuButtonComponent(props: { testId?: string }) {
   const theme = useTheme()
   const { container } = getStyles(theme)
+  const dispatch = useDispatch()
+  const generateTestHook = useCavy()
+  const onPress = useCallback(() => dispatch(openDrawer()), [dispatch])
+
   return (
-    <TouchableOpacity onPress={props.openDrawer} style={container}>
+    <TouchableOpacity onPress={onPress} style={container} ref={generateTestHook(props.testId ?? '')}>
       <Fontello name="hamburgerButton" size={theme.rem(1)} color={theme.icon} />
     </TouchableOpacity>
   )
@@ -32,11 +32,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SideMenuButton = connect<{}, DispatchProps, {}>(
-  state => ({}),
-  dispatch => ({
-    openDrawer() {
-      dispatch(openDrawer())
-    }
-  })
-)(SideMenuButtonComponent)
+export const SideMenuButton = wrap(SideMenuButtonComponent)
