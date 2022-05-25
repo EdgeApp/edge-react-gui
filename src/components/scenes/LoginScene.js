@@ -44,20 +44,23 @@ type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   counter: number,
-  passwordRecoveryKey?: string,
-  backgroundImage: ImageSourcePropType | null
+  backgroundImage: ImageSourcePropType | null,
+  isYolo: boolean,
+  passwordRecoveryKey?: string
 }
 
-let firstRun = true
+// Flag to disallow YOLO logins more than once (after logout) after app startup.
+let isFirstRun = true
 
 class LoginSceneComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
-
+    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
     this.state = {
       counter: 0,
       needsUpdate: false,
-      backgroundImage: null
+      backgroundImage: null,
+      isYolo: YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null)
     }
   }
 
@@ -67,11 +70,11 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const { theme } = this.props
-    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
     let skipUpdate = true
-    if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
+    if (this.state.isYolo && isFirstRun) {
+      isFirstRun = false
       const { context, initializeAccount } = this.props
-      firstRun = false
+      const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
       if (YOLO_PIN != null) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
@@ -84,29 +87,32 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           .then(account => initializeAccount(account, dummyTouchIdInfo))
           .catch(showError)
       }
-    } else {
-      pickRandom(theme.backgroundImageServerUrls)
-      const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
-      getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
-        .then(backgroundImage => this.setState({ backgroundImage }))
-        .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
-      const response = await checkVersion()
-      skipUpdate = (await this.getSkipUpdate()) === response.version
-      if (response.needsUpdate && !skipUpdate) {
-        Airship.show(bridge => (
-          <UpdateModal
-            bridge={bridge}
-            onSkip={() => {
-              this.props.disklet.setText('ignoreUpdate.json', response.version)
-              bridge.resolve()
-            }}
-          />
-        ))
-      }
+      return // Skip the update checks and background image fetch if YOLOing
+    }
+
+    pickRandom(theme.backgroundImageServerUrls)
+    const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
+    getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
+      .then(backgroundImage => this.setState({ backgroundImage }))
+      .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
+    const response = await checkVersion()
+    skipUpdate = (await this.getSkipUpdate()) === response.version
+    if (response.needsUpdate && !skipUpdate) {
+      Airship.show(bridge => (
+        <UpdateModal
+          bridge={bridge}
+          onSkip={() => {
+            this.props.disklet.setText('ignoreUpdate.json', response.version)
+            bridge.resolve()
+          }}
+        />
+      ))
     }
   }
 
   componentDidUpdate(oldProps: Props) {
+    if (this.state.isYolo) return // Skip if YOLOing
+
     const { account, pendingDeepLink, theme } = this.props
     const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
 
