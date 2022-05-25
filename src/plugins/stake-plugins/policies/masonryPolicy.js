@@ -132,17 +132,16 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const earnedAmount = (await multipass(p => poolContract.connect(p).earned(signerAddress))).toString()(
-          allocations.push(
-            ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
-              return {
-                allocationType: 'claim',
-                pluginId,
-                currencyCode,
-                nativeAmount: earnedAmount
-              }
-            })
-          )
+        const earnedAmount = (await multipass(p => poolContract.connect(p).earned(signerAddress))).toString()
+        allocations.push(
+          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
+            return {
+              allocationType: 'claim',
+              pluginId,
+              currencyCode,
+              nativeAmount: earnedAmount
+            }
+          })
         )
       }
 
