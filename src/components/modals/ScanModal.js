@@ -1,4 +1,5 @@
 // @flow
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { Linking, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -46,6 +47,7 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 const Component = (props: Props) => {
   const { bridge, theme, title, enableScan, disableScan, scanEnabled, toggleEnableTorch, torchEnabled, cameraPermission } = props
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   const { width: windowWidth, height: windowHeight } = useWindowSize()
   const isLandscape = windowWidth > windowHeight
@@ -210,7 +212,7 @@ const Component = (props: Props) => {
       maxWidth={windowWidth}
     >
       {renderModalContent()}
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('ScanModal.Close')} />
     </AirshipModal>
   )
 }
