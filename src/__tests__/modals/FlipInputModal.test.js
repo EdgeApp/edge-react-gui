@@ -20,6 +20,7 @@ describe('FlipInputModalComponent', () => {
       balanceCrypto: '10000',
       flipInputHeaderText: 'Exchange Header',
       primaryInfo: {
+        tokenId: undefined,
         displayCurrencyCode: 'BTC',
         exchangeCurrencyCode: 'BTC',
         displayDenomination: { multiplier: '100000000000', name: 'BTC' },

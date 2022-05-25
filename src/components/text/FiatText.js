@@ -14,22 +14,15 @@ type Props = {|
   // Amount to show:
   nativeCryptoAmount: string,
   tokenId?: string,
-  wallet: EdgeCurrencyWallet,
-
-  // Deprecated. Use `tokenId` instead:
-  currencyCode?: string
+  wallet: EdgeCurrencyWallet
 |}
 
 /**
  * Return a formatted fiat text string representing the exchange rate of a
  * specific crypto asset and native amount.
  **/
-export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, currencyCode, fiatSymbolSpace, nativeCryptoAmount, tokenId, wallet }: Props) => {
-  const {
-    currencyCode: derivedCurrencyCode,
-    denomination,
-    isoFiatCurrencyCode
-  } = useTokenDisplayData({
+export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, fiatSymbolSpace, nativeCryptoAmount, tokenId, wallet }: Props) => {
+  const { currencyCode, denomination, isoFiatCurrencyCode } = useTokenDisplayData({
     tokenId,
     wallet
   })
@@ -37,7 +30,7 @@ export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, currencyCode, 
   return useFiatText({
     appendFiatCurrencyCode,
     autoPrecision,
-    cryptoCurrencyCode: currencyCode ?? derivedCurrencyCode,
+    cryptoCurrencyCode: currencyCode,
     cryptoExchangeMultiplier: denomination.multiplier,
     fiatSymbolSpace,
     isoFiatCurrencyCode,

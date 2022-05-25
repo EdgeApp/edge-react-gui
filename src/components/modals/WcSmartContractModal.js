@@ -119,6 +119,9 @@ export const WcSmartContractModal = (props: Props) => {
     <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
   )
 
+  // FIXME: HACK!!1! This is a shortcut so we can remove currency code from the fiat text component without completely refactoring this file
+  const tokenId = contractAddress != null ? contractAddress.toLowerCase().replace('0x', '') : undefined
+
   return (
     <ThemedModal
       bridge={bridge}
@@ -139,7 +142,7 @@ export const WcSmartContractModal = (props: Props) => {
             nativeCryptoAmount={amountCrypto}
             denomination={amountDenom}
             walletId={walletId}
-            currencyCode={amountCurrencyCode}
+            tokenId={tokenId}
           />
         )}
         {walletName != null && (
@@ -156,16 +159,10 @@ export const WcSmartContractModal = (props: Props) => {
             nativeCryptoAmount={networkFeeCrypto}
             denomination={feeDenom}
             walletId={walletId}
-            currencyCode={feeCurrencyCode}
           />
         )}
         {!zeroString(totalNativeCrypto) && (
-          <FiatAmountTile
-            title={s.strings.wc_smartcontract_max_total}
-            nativeCryptoAmount={totalNativeCrypto}
-            wallet={wallet}
-            currencyCode={amountCurrencyCode}
-          />
+          <FiatAmountTile title={s.strings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
         )}
         {slider}
       </ScrollView>

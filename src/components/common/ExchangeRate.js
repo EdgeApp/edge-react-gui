@@ -72,7 +72,7 @@ class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & Stat
     return (
       <EdgeText style={style}>
         {primaryText}
-        <FiatText nativeCryptoAmount={primaryInfo.displayDenomination.multiplier} currencyCode={primaryInfo.exchangeCurrencyCode} wallet={wallet} />
+        <FiatText nativeCryptoAmount={primaryInfo.displayDenomination.multiplier} tokenId={primaryInfo.tokenId} wallet={wallet} />
       </EdgeText>
     )
   }

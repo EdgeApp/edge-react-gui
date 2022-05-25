@@ -52,6 +52,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
                 "multiplier": "100000000000",
                 "name": "BTC",
               },
+              "tokenId": undefined,
             }
           }
           secondaryCurrencyInfo={
@@ -141,7 +142,6 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             1 BTC 
             (
             <FiatText
-              currencyCode="BTC"
               nativeCryptoAmount="1"
             />
             )
@@ -178,6 +178,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
                   "multiplier": "100000000000",
                   "name": "BTC",
                 },
+                "tokenId": undefined,
               }
             }
             secondaryDisplayAmount="1000"
@@ -230,7 +231,6 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             0.0000001 BTC 
             (
             <FiatText
-              currencyCode="BTC"
               nativeCryptoAmount="10000"
             />
             )

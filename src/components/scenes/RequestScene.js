@@ -20,6 +20,7 @@ import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertNativeToDenomination, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -313,7 +314,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 <FiatText
                   appendFiatCurrencyCode
                   nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
-                  currencyCode={primaryCurrencyInfo.displayCurrencyCode}
+                  tokenId={primaryCurrencyInfo.tokenId}
                   wallet={wallet}
                 />
               </EdgeText>
@@ -591,10 +592,12 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
+    const tokenId = getTokenId(state.core.account, pluginId, currencyCode)
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: walletId,
       pluginId,
+      tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,

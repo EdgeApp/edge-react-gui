@@ -50,6 +50,7 @@ export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
   walletId: string,
   pluginId?: string,
+  tokenId?: string,
   displayCurrencyCode: string,
   exchangeCurrencyCode: string,
   displayDenomination: GuiDenomination,
