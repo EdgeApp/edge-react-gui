@@ -5,13 +5,13 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { useState } from '../../types/reactHooks'
+import { memo, useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { Card } from './Card'
 
-export const AmountLineIconCard = ({
+const ValueBarCardComponent = ({
   currencyCode,
   formattedAmount,
   iconUri,
@@ -79,3 +79,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(0.5)
   }
 }))
+
+export const ValueBarCard = memo(ValueBarCardComponent)
