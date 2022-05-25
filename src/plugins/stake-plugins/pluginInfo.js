@@ -50,6 +50,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 0,
         lpTokenContract: makeContract('TOMB_WFTM_LP'),
         poolContract: makeContract('TSHARE_REWARD_POOL'),
@@ -81,6 +82,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 1,
         lpTokenContract: makeContract('TSHARE_WFTM_LP'),
         poolContract: makeContract('TSHARE_REWARD_POOL'),
