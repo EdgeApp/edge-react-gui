@@ -4,8 +4,8 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
+import { CardComponent } from '../../components/cards/Card.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { CardComponent } from '../../components/themed/Card.js'
 
 describe('Card', () => {
   it('should render with loading props', () => {
