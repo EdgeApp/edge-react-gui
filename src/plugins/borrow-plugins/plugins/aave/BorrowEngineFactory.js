@@ -32,6 +32,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     const walletAddress = (await wallet.getReceiveAddress()).publicAddress
 
     const REFERRAL_CODE = 0 // No referral code is used for AAVE contract calls
+    const INTEREST_RATE_MODE = 2 // Only variable is supported for now
 
     //
     // Private Methods
@@ -86,6 +87,16 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       tokenId: asTokenIdParam,
       nativeAmount: asString,
       toWallet: asWalletParam
+    })
+    const asBorrowRequest = asObject({
+      tokenId: asTokenIdParam,
+      nativeAmount: asString,
+      fromWallet: asWalletParam
+    })
+    const asRepayRequest = asObject({
+      tokenId: asTokenIdParam,
+      nativeAmount: asString,
+      fromWallet: asWalletParam
     })
 
     //
@@ -219,22 +230,60 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         })
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
-        return {
-          networkFee: {
-            currencyCode: wallet.currencyInfo.currencyCode,
-            nativeAmount: '2100000000000000'
-          },
-          approve: async () => {}
-        }
+        const { nativeAmount, tokenId, fromWallet } = asBorrowRequest(request)
+
+        const token = asEdgeToken(tokenId)
+        const tokenAddress = asTokenAddress(token)
+
+        const asset = tokenAddress
+        const amount = BigNumber.from(nativeAmount)
+        const onBehalfOf = (await fromWallet.getReceiveAddress()).publicAddress
+
+        const gasPrice = await aaveNetwork.provider.getGasPrice()
+
+        const borrowTx = await aaveNetwork.lendingPool.populateTransaction.borrow(asset, amount, INTEREST_RATE_MODE, REFERRAL_CODE, onBehalfOf, {
+          gasLimit: '800000',
+          gasPrice
+        })
+
+        return await makeApprovableCall({
+          tx: borrowTx,
+          wallet,
+          token,
+          metadata: {
+            name: 'AAVE',
+            category: 'transfer:borrow',
+            notes: `Borrow ${token.displayName} loan`
+          }
+        })
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        return {
-          networkFee: {
-            currencyCode: wallet.currencyInfo.currencyCode,
-            nativeAmount: '2100000000000000'
-          },
-          approve: async () => {}
-        }
+        const { nativeAmount, tokenId, fromWallet } = asRepayRequest(request)
+
+        const token = asEdgeToken(tokenId)
+        const tokenAddress = asTokenAddress(token)
+
+        const asset = tokenAddress
+        const amount = BigNumber.from(nativeAmount)
+        const onBehalfOf = (await fromWallet.getReceiveAddress()).publicAddress
+
+        const gasPrice = await aaveNetwork.provider.getGasPrice()
+
+        const repayTx = await aaveNetwork.lendingPool.populateTransaction.repay(asset, amount, INTEREST_RATE_MODE, onBehalfOf, {
+          gasLimit: '800000',
+          gasPrice
+        })
+
+        return await makeApprovableCall({
+          tx: repayTx,
+          wallet,
+          token,
+          metadata: {
+            name: 'AAVE',
+            category: 'transfer:repay',
+            notes: `Repay ${token.displayName} loan`
+          }
+        })
       },
       async close(): Promise<ApprovableAction> {
         return {
