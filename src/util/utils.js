@@ -366,11 +366,8 @@ export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: num
   return dateInSeconds
 }
 
-export const getYesterdayDateRoundDownHour = () => {
+export const getYesterdayDate = () => {
   const date = new Date()
-  date.setMinutes(0)
-  date.setSeconds(0)
-  date.setMilliseconds(0)
   const yesterday = date.setDate(date.getDate() - 1)
   return new Date(yesterday).toISOString()
 }
