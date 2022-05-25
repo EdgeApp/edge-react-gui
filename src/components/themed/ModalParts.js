@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -38,7 +38,7 @@ export function ModalMessage(props: { children: React.Node, paddingRem?: number[
   return <Text style={[styles.messageText, padding, isWarning && styles.warningText]}>{children}</Text>
 }
 
-export function ModalCloseArrow(props: { onPress: () => void }) {
+export function ModalCloseArrowComponent(props: { onPress: () => void }) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -48,7 +48,6 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
     </TouchableOpacity>
   )
 }
-
 const getStyles = cacheStyles((theme: Theme) => ({
   closeArrow: {
     alignItems: 'center',
@@ -82,3 +81,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'left'
   }
 }))
+export const ModalCloseArrow = wrap(ModalCloseArrowComponent)

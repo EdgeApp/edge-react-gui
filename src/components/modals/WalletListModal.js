@@ -1,5 +1,6 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -38,7 +39,7 @@ type Props = {|
   excludeCurrencyCodes?: string[]
 |}
 
-export function WalletListModal(props: Props) {
+export function WalletListModalComponent(props: Props) {
   const {
     bridge,
 
@@ -60,7 +61,7 @@ export function WalletListModal(props: Props) {
   const account = useSelector(state => state.core.account)
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
-
+  const generateTestHook = useCavy()
   // Upgrade deprecated props:
   const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
     if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
@@ -113,7 +114,7 @@ export function WalletListModal(props: Props) {
         showCreateWallet={showCreateWallet}
         onPress={handlePress}
       />
-      <ModalCloseArrow onPress={handleCancel} />
+      <ModalCloseArrow onPress={handleCancel} ref={generateTestHook('WalletListModal.Close')} />
     </ThemedModal>
   )
 }
@@ -147,3 +148,4 @@ export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeToken
   }
   return out
 }
+export const WalletListModal = wrap(WalletListModalComponent)
