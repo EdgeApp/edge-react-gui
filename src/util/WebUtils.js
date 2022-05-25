@@ -21,19 +21,12 @@ export const openBrowserUri = (uri: string) => {
 }
 
 /**
- * -Replaces reserved characters with escape sequences representing the UTF-8
- * encoding of the character.
- * -Joins each query with '&'
- * -Remove the '=' character from queries that are not key/value pairs.
- *  The URLSearchParams/url-parse library expects all queries to be made of key=value pairs only.
+ * Returns formatted query string ie. '?country=AU&payment_id=5035'
  */
 export const stringifyQuery = (query: UriQueryMap): string => {
-  const queryKeys = Object.keys(query)
-  if (queryKeys.length === 0) return ''
-  const nonNullQuery = queryKeys.map(key => [key, query[key] ?? ''])
-  const searchParams = new URLSearchParams(nonNullQuery)
-
-  return cleanQueryFlags(searchParams.toString())
+  const url = new URL('', true)
+  url.set('query', query)
+  return cleanQueryFlags(url.href)
 }
 
 /**
