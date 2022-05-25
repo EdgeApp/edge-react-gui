@@ -67,11 +67,8 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     const { theme } = this.props
-    const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
-    getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
-      .then(backgroundImage => this.setState({ backgroundImage }))
-      .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
+    let skipUpdate = true
     if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
       const { context, initializeAccount } = this.props
       firstRun = false
@@ -87,19 +84,25 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           .then(account => initializeAccount(account, dummyTouchIdInfo))
           .catch(showError)
       }
-    }
-    const response = await checkVersion()
-    const skipUpdate = (await this.getSkipUpdate()) === response.version
-    if (response.needsUpdate && !skipUpdate) {
-      Airship.show(bridge => (
-        <UpdateModal
-          bridge={bridge}
-          onSkip={() => {
-            this.props.disklet.setText('ignoreUpdate.json', response.version)
-            bridge.resolve()
-          }}
-        />
-      ))
+    } else {
+      pickRandom(theme.backgroundImageServerUrls)
+      const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
+      getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
+        .then(backgroundImage => this.setState({ backgroundImage }))
+        .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
+      const response = await checkVersion()
+      skipUpdate = (await this.getSkipUpdate()) === response.version
+      if (response.needsUpdate && !skipUpdate) {
+        Airship.show(bridge => (
+          <UpdateModal
+            bridge={bridge}
+            onSkip={() => {
+              this.props.disklet.setText('ignoreUpdate.json', response.version)
+              bridge.resolve()
+            }}
+          />
+        ))
+      }
     }
   }
 

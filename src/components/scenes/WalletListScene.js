@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 
+import ENV from '../../../env.json'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
@@ -61,31 +62,34 @@ export function WalletListScene(props: Props) {
   // Show the tutorial or password reminder on mount:
   useAsyncEffect(
     async () => {
-      if (needsPasswordCheck) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
-      } else {
-        const userTutorialList = await getWalletListSlideTutorial(disklet)
-        const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
+      // Skip if YOLOing.
+      if (ENV.YOLO_USERNAME == null) {
+        if (needsPasswordCheck) {
+          await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+        } else {
+          const userTutorialList = await getWalletListSlideTutorial(disklet)
+          const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
-        if (tutorialCount < 2) {
-          Airship.show(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={s.strings.wallet_list_swipe_tutorial_title}
-              buttons={{
-                gotIt: { label: s.strings.string_got_it }
-              }}
-            >
-              <Image
-                source={theme.walletListSlideTutorialImage}
-                resizeMode="contain"
-                style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}
-              />
-            </ButtonsModal>
-          ))
-          setShowTutorial(true)
-          userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
-          await setUserTutorialList(userTutorialList, disklet)
+          if (tutorialCount < 2) {
+            Airship.show(bridge => (
+              <ButtonsModal
+                bridge={bridge}
+                title={s.strings.wallet_list_swipe_tutorial_title}
+                buttons={{
+                  gotIt: { label: s.strings.string_got_it }
+                }}
+              >
+                <Image
+                  source={theme.walletListSlideTutorialImage}
+                  resizeMode="contain"
+                  style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}
+                />
+              </ButtonsModal>
+            ))
+            setShowTutorial(true)
+            userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
+            await setUserTutorialList(userTutorialList, disklet)
+          }
         }
       }
     },
