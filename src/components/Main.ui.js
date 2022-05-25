@@ -253,7 +253,7 @@ export class MainComponent extends React.Component<Props> {
         drawerBackgroundColor="none"
         key={EDGE}
         hideNavBar
-        contentComponent={ControlPanel}
+        contentComponent={ifLoggedIn(ControlPanel)}
         hideDrawerButton
         drawerPosition="right"
         drawerWidth={scale(270)}
