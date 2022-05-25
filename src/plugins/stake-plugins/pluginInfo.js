@@ -10,6 +10,12 @@ export type StakePluginInfo = {
   policyInfo: StakePolicyInfo[]
 }
 
+const spookySwapLiquidityPool: LiquidityPool = {
+  pluginId: 'fantom',
+  lpId: 'f491e7b69e4244ad4002bc14e878a34207e38c29',
+  displayName: 'SpookySwap'
+}
+
 const tombSwapLiquidityPool: LiquidityPool = {
   pluginId: 'fantom',
   lpId: '6d0176c5ea1e44b08d3dd001b0784ce42f47a3a7',
@@ -34,6 +40,68 @@ export const pluginInfo: StakePluginInfo = {
         {
           pluginId: 'fantom',
           currencyCode: 'TOMB'
+        }
+      ],
+      mustClaimRewards: true
+    },
+    {
+      stakePolicyId: '',
+      liquidityPool: spookySwapLiquidityPool,
+      parentPluginId: 'fantom',
+      parentCurrencyCode: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 0,
+        lpTokenContract: makeContract('TOMB_WFTM_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('SPOOKY_SWAP_ROUTER'),
+        tokenAContract: makeContract('TOMB'),
+        tokenBContract: makeContract('FTM')
+      }),
+      stakeAssets: [
+        {
+          pluginId: 'fantom',
+          currencyCode: 'TOMB'
+        },
+        {
+          pluginId: 'fantom',
+          currencyCode: 'FTM'
+        }
+      ],
+      rewardAssets: [
+        {
+          pluginId: 'fantom',
+          currencyCode: 'TSHARE'
+        }
+      ],
+      mustClaimRewards: true
+    },
+    {
+      stakePolicyId: '',
+      liquidityPool: spookySwapLiquidityPool,
+      parentPluginId: 'fantom',
+      parentCurrencyCode: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 1,
+        lpTokenContract: makeContract('TSHARE_WFTM_LP'),
+        poolContract: makeContract('TSHARE_REWARD_POOL'),
+        swapRouterContract: makeContract('SPOOKY_SWAP_ROUTER'),
+        tokenAContract: makeContract('TSHARE'),
+        tokenBContract: makeContract('FTM')
+      }),
+      stakeAssets: [
+        {
+          pluginId: 'fantom',
+          currencyCode: 'TSHARE'
+        },
+        {
+          pluginId: 'fantom',
+          currencyCode: 'FTM'
+        }
+      ],
+      rewardAssets: [
+        {
+          pluginId: 'fantom',
+          currencyCode: 'TSHARE'
         }
       ],
       mustClaimRewards: true

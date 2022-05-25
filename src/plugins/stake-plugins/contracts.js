@@ -37,6 +37,10 @@ const contractInfoMap: { [key: string]: ContractInfo } = {
     abi: ANYSWAP_V5_ERC20_ABI,
     address: '0xfB98B335551a418cD0737375a2ea0ded62Ea213b'
   },
+  SPOOKY_SWAP_ROUTER: {
+    abi: UNISWAP_V2_ROUTER_02,
+    address: '0xF491e7B69E4244ad4002BC14e878a34207E38c29'
+  },
   TOMB: {
     abi: TOMB_ABI,
     address: '0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7'
@@ -64,6 +68,14 @@ const contractInfoMap: { [key: string]: ContractInfo } = {
   TOMB_TREASURY: {
     abi: TOMB_TREASURY_ABI,
     address: '0xF50c6dAAAEC271B56FCddFBC38F0b56cA45E6f0d'
+  },
+  TOMB_WFTM_LP: {
+    abi: UNISWAP_V2_PAIR,
+    address: '0x2A651563C9d3Af67aE0388a5c8F89b867038089e'
+  },
+  TSHARE_WFTM_LP: {
+    abi: UNISWAP_V2_PAIR,
+    address: '0x4733bc45eF91cF7CcEcaeeDb794727075fB209F2'
   },
   TSHARE: {
     abi: TSHARE_ABI,
