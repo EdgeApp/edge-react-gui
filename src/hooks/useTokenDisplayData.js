@@ -3,7 +3,7 @@
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { useSelector } from '../types/reactRedux'
-import { fixFiatCurrencyCode, getDenomFromIsoCode, getYesterdayDateRoundDownHour, zeroString } from '../util/utils'
+import { fixFiatCurrencyCode, getDenomFromIsoCode, zeroString } from '../util/utils'
 
 /**
  * Returns data from tokens relevant for display
@@ -30,7 +30,12 @@ export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurr
   // - 'Yest' is an index for a historical price from 24 hours ago.
   const usdFiatPrice = useSelector(state => state.exchangeRates[`iso:USD_${isoFiatCurrencyCode}`])
   const assetFiatPrice = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
-  const assetFiatYestPrice = useSelector(state => state.exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`])
+  const assetFiatYestPrice = useSelector(state => {
+    // The extra _ at the end means there is yesterday's date string at the end of the key
+    const pair = Object.keys(state.exchangeRates).find(pair => pair.includes(`${currencyCode}_iso:USD_`))
+    if (pair != null) return state.exchangeRates[pair]
+    return '0'
+  })
 
   return {
     currencyCode,
