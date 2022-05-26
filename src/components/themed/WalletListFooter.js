@@ -34,7 +34,7 @@ export const WalletListFooter = (props: Props) => {
       .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
       .map(pluginId => ({ pluginId }))
 
-    Airship.show(bridge => <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} />)
+    Airship.show(bridge => <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} showCreateWallet />)
       .then(({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
           navigation.navigate('manageTokens', { walletId })
