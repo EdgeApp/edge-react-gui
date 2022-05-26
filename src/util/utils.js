@@ -316,6 +316,8 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   // loop through each of the walletId's
   for (const parentProp of Object.keys(wallets)) {
     const wallet = wallets[parentProp]
+    // If the GUI wallet exists without the core wallet being loaded, skip that wallet
+    if (state.core.account.currencyWallets[wallet.id] == null) continue
     // loop through all of the nativeBalances, which includes both parent currency and tokens
     for (const currencyCode of Object.keys(wallet.nativeBalances)) {
       // if there is no native balance for the currency / token then assume it's zero
