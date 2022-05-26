@@ -11,8 +11,8 @@ export type BorrowRequest = {
   tokenId?: string,
   nativeAmount: string,
 
-  // Optional wallet which will deposit on behalf of the borrow engine's currencyWallet
-  fromWallet?: string
+  // Optional source for the funds which will borrow on behalf of the borrow engine's currencyWallet
+  fromWallet?: EdgeCurrencyWallet
 }
 
 // Make payment:
@@ -20,8 +20,8 @@ export type RepayRequest = {
   tokenId?: string,
   nativeAmount: string,
 
-  // Optional wallet which will deposit on behalf of the borrow engine's currencyWallet
-  fromWallet?: string
+  // Optional source for the funds which will repay on behalf of the borrow engine's currencyWallet
+  fromWallet?: EdgeCurrencyWallet
 }
 
 // Deposit collateral:
@@ -29,8 +29,8 @@ export type DepositRequest = {
   tokenId?: string,
   nativeAmount: string,
 
-  // Optional wallet which will deposit on behalf of the borrow engine's currencyWallet
-  fromWallet?: string
+  // Optional source for the funds which will deposit on behalf of the borrow engine's currencyWallet
+  fromWallet?: EdgeCurrencyWallet
 }
 
 // Withdraw collateral:
@@ -39,7 +39,7 @@ export type WithdrawRequest = {
   nativeAmount: string,
 
   // Optional destination for the funds
-  toWallet?: string
+  toWallet?: EdgeCurrencyWallet
 }
 
 // General purpose approvable action
