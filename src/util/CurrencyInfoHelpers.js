@@ -8,6 +8,7 @@ import { type CreateWalletType } from '../types/types.js'
 const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired ?? false)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
+const keysOnlyModePlugins = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
 
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.
@@ -62,6 +63,8 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
   const out: CreateWalletType[] = []
   for (const currencyInfo of infos) {
     const { currencyCode, pluginId } = currencyInfo
+    // Prevent plugins that are "watch only" from being allowed to create new wallets
+    if (keysOnlyModePlugins.includes(pluginId)) continue
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
     // FIO disable changes

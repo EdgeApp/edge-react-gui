@@ -4,7 +4,7 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, FlatList, View } from 'react-native'
 
-import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -109,9 +109,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
     // Sort and filter the available types:
     const sortedArray = getCreateWalletTypes(account)
     const filteredArray = sortedArray.filter(
-      entry =>
-        !SPECIAL_CURRENCY_INFO[entry.pluginId]?.keysOnlyMode &&
-        (entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0)
+      entry => entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0
     )
 
     return (
