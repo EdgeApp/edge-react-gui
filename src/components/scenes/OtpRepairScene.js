@@ -5,6 +5,7 @@ import { OtpRepairScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 
+import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
@@ -27,7 +28,7 @@ class OtpRepairComponent extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <OtpRepairScreen account={account} context={context} onComplete={handleComplete} otpError={otpError} />
+        <OtpRepairScreen account={account} branding={{ appName: config.appName }} context={context} onComplete={handleComplete} otpError={otpError} />
       </View>
     )
   }
