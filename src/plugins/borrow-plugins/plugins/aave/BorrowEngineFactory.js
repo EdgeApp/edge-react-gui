@@ -102,7 +102,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Engine Instance
     //
 
-    return {
+    const instance = {
       currencyWallet: wallet,
       collaterals,
       debts,
@@ -307,15 +307,31 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions)
       },
       async close(): Promise<ApprovableAction> {
-        return {
-          networkFee: {
-            currencyCode: wallet.currencyInfo.currencyCode,
-            nativeAmount: '2100000000000000'
-          },
-          approve: async () => {}
-        }
+        const repayActions = await Promise.all(
+          debts.map(async debt => {
+            const { tokenId } = debt
+
+            return await instance.repay({
+              tokenId,
+              nativeAmount: ethers.constants.MaxUint256.toString()
+            })
+          })
+        )
+        const withdrawActions = await Promise.all(
+          collaterals.map(async collateral => {
+            const { tokenId } = collateral
+
+            return await instance.withdraw({
+              tokenId,
+              nativeAmount: ethers.constants.MaxUint256.toString()
+            })
+          })
+        )
+
+        return composeApprovableActions(...repayActions, ...withdrawActions)
       }
     }
+    return instance
   }
 }
 
