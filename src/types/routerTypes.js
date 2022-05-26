@@ -226,6 +226,8 @@ export type ParamList = {
     walletId: string
   },
   termsOfService: void,
+  testlab: void,
+  testScene: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string
