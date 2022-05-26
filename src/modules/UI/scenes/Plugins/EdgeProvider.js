@@ -26,6 +26,7 @@ import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
 import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND } from '../../../../constants/SceneKeys.js'
+import { SPECIAL_CURRENCY_INFO } from '../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../locales/strings'
 import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
@@ -93,6 +94,11 @@ const asEdgeTokenIdExtended = asObject({
   currencyCode: asOptional(asString)
 })
 
+// Prevent currencies that are "watch only" from being allowed to exchange
+const excludeAssets = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
+  .map(pluginId => ({ pluginId }))
+
 const asCurrencyCodesArray = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
 type ExtendedCurrencyCode = string | $Call<typeof asEdgeTokenIdExtended>
 
@@ -148,6 +154,7 @@ export class EdgeProvider extends Bridgeable {
         bridge={bridge}
         showCreateWallet
         allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
+        excludeAssets={excludeAssets}
         headerTitle={s.strings.choose_your_wallet}
       />
     ))
