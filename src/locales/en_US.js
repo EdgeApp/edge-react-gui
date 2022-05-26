@@ -480,6 +480,7 @@ const strings = {
   title_wallets: 'Wallets',
   title_buy: 'Buy',
   title_sell: 'Sell',
+  title_testlab: 'Testlab',
   title_use_legacy_address: 'Use Legacy Address',
   title_use_regular_address: 'Use Regular Address',
   no_exchanges_available: 'No Exchanges Enabled',

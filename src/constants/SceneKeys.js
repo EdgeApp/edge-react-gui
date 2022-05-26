@@ -5,6 +5,8 @@ export const ROOT = 'root'
 export const LOGIN = 'login'
 export const EDGE = 'edge'
 
+export const TEST_SCENE = 'testScene'
+
 // Logged-in scenes:
 export const CHANGE_MINING_FEE = 'changeMiningFee'
 export const CHANGE_PASSWORD = 'changePassword'

@@ -20,6 +20,7 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 const title: { [name: $Keys<ParamList>]: string } = {
+  testlab: s.strings.title_testlab,
   walletList: s.strings.title_wallets,
   pluginBuy: s.strings.title_buy,
   pluginSell: s.strings.title_sell,
@@ -27,8 +28,10 @@ const title: { [name: $Keys<ParamList>]: string } = {
 }
 
 export class MenuTabComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: 'walletList' | 'pluginBuy' | 'pluginSell' | 'exchange') => {
+  handleOnPress = (route: 'testlab' | 'walletList' | 'pluginBuy' | 'pluginSell' | 'exchange') => {
     switch (route) {
+      case 'testlab':
+        return Actions.jump('testScene')
       case 'walletList':
         return Actions.jump('walletListScene')
       case 'pluginBuy':
@@ -56,6 +59,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
           {state.routes.map((element, index) => {
             const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
             const icon = {
+              testlab: <Fontello name="beaker" size={theme.rem(1.25)} color={color} />,
               walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
               pluginBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
               pluginSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
