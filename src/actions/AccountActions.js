@@ -33,6 +33,7 @@ export const validatePassword =
   (opts: ValidatePasswordOptions = {}) =>
   async (dispatch: Dispatch, getState: GetState): Promise<boolean> => {
     const { message, submitLabel, title = s.strings.confirm_password_text, warning } = opts
+    // const dispatch = useDispatch()
     const state = getState()
     const { account } = state.core
     const password = await Airship.show(bridge => (

@@ -1,4 +1,5 @@
 // @flow
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -23,6 +24,7 @@ type Props = {
 }
 
 export const WcConnectionsScene = (props: Props) => {
+  const generateTestHook = useCavy()
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -127,6 +129,7 @@ export const WcConnectionsScene = (props: Props) => {
           marginRem={[1, 0.5]}
           onPress={() => handleNewConnectionPress()}
           alignSelf="center"
+          ref={generateTestHook('WcConnectionsScene.NewConnection')}
         />
         <EdgeText style={styles.listTitle}>{s.strings.wc_walletconnect_active_connections}</EdgeText>
         <View style={styles.list}>

@@ -442,6 +442,8 @@ PODS:
     - React
   - react-native-netinfo (8.3.0):
     - React-Core
+  - react-native-record-screen (0.4.0):
+    - React-Core
   - react-native-safari-view (1.0.0):
     - React
   - react-native-smart-splash-screen (2.3.5):
@@ -743,6 +745,7 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-record-screen (from `../node_modules/react-native-record-screen`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
@@ -920,6 +923,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-record-screen:
+    :path: "../node_modules/react-native-record-screen"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
@@ -1084,6 +1089,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: d5e67aca5f755ba87a4305e1a5861323b3b0a980
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-record-screen: ed8a11f81433022cb0383831ce7e79c42e000bb1
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1

@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -58,4 +58,4 @@ function SettingsTappableRowComponent(props: Props): React.Node {
   )
 }
 
-export const SettingsTappableRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsTappableRowComponent)
+export const SettingsTappableRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = wrap(withTheme(SettingsTappableRowComponent))

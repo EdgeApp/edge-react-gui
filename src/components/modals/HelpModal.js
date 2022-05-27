@@ -31,7 +31,7 @@ const HELP_URIS = {
 export function showHelpModal(): Promise<mixed> {
   return Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
-
+// refactor to funcitonal component
 function showWebViewModal(uri: string, title: string): void {
   Airship.show(bridge => <TestableHelpWebViewModal bridge={bridge} uri={uri} title={title} />)
 }
@@ -98,6 +98,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           title={s.strings.help_knowledge_base}
           underline
           onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
+          ref={this.props.generateTestHook('HelpModal.KnowledgeBase')}
         />
 
         <SelectableRow
@@ -109,6 +110,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           title={s.strings.help_support}
           underline
           onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
+          ref={this.props.generateTestHook('HelpModal.SupportTicket')}
         />
 
         <SelectableRow
@@ -130,6 +132,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           subTitle={helpSiteMoreInfoText}
           title={sprintf(s.strings.help_visit_site, config.appName)}
           onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
+          ref={this.props.generateTestHook('HelpModal.EdgeSite')}
         />
         <View style={styles.footer}>
           <EdgeText style={styles.version}>{versionText}</EdgeText>
@@ -166,4 +169,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const HelpModal = hook(withTheme(HelpModalComponent))
-// export const HelpWebViewModal = hook(TestableHelpWebViewModal)

@@ -103,8 +103,6 @@ export function MainButtonComponent(props: Props) {
   )
 }
 
-export const MainButton = wrap(MainButtonComponent)
-
 const getStyles = cacheStyles((theme: Theme) => {
   const commonButton = {
     alignItems: 'center',
@@ -181,3 +179,4 @@ const getStyles = cacheStyles((theme: Theme) => {
     }
   }
 })
+export const MainButton = wrap(MainButtonComponent)

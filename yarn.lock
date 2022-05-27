@@ -12468,6 +12468,11 @@ react-native-reanimated@^2.0.0, react-native-reanimated@^2.8.0:
     setimmediate "^1.0.5"
     string-hash-64 "^1.0.3"
 
+react-native-record-screen@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-record-screen/-/react-native-record-screen-0.4.0.tgz#184954d5d2fe15c4637bb6f239546aae048ebbb1"
+  integrity sha512-hbzTrB5slR/zTDoEIt00qAiZ3IqE/yCNvGaRvTThHz92qV2IY/eRJcJLZ9m/aZT9FeAgTPGYhDufKqCUoZVlUQ==
+
 react-native-router-flux@4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-4.0.6.tgz#e4723f5ce89cb5822e0c9bb6d0a8d4de6179eb58"

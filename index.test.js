@@ -1,6 +1,5 @@
 /* eslint-disable no-import-assign */
 // @flow
-
 import 'react-native-gesture-handler'
 import './src/app.js'
 
@@ -9,6 +8,7 @@ import React, { Component } from 'react'
 import * as ReactNative from 'react-native'
 import Animated from 'react-native-reanimated'
 
+// import RecordScreen from 'react-native-record-screen'
 import { name as appName } from './app.json'
 import AllNavigationSpec from './specs/AllNavigationSpec.js'
 // import NavigationBarSpec from './specs/NavigationBarSpec.js'

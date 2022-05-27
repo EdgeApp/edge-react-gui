@@ -2,7 +2,6 @@
 
 import { add, gt } from 'biggystring'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
@@ -16,7 +15,8 @@ import s from '../../locales/strings.js'
 import { type StakePolicy } from '../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { TouchableOpacity, View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { stakePlugin } from '../../util/stakeUtils.js'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -64,9 +64,9 @@ type State = {
   stakePolicies: StakePolicy[]
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
-export class TransactionListTopComponent extends React.PureComponent<Props, State> {
+export class TransactionListTopComponent extends React.PureComponent<Props & TestProps, State> {
   textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
@@ -239,12 +239,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               {this.renderBalanceBox()}
               {this.renderStakingBox()}
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
+                <TouchableOpacity onPress={this.handleRequest} style={styles.buttons} ref={this.props.generateTestHook('TransactionListTop.RequestButton')}>
                   <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
                 <View style={styles.buttonsDivider} />
-                <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
+                <TouchableOpacity onPress={this.handleSend} style={styles.buttons} ref={this.props.generateTestHook('TransactionListTop.SendButton')}>
                   <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>
@@ -367,7 +367,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
+export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const { currencyInfo } = state.core.account.currencyWallets[selectedWalletId]

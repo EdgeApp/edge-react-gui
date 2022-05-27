@@ -20,7 +20,7 @@ import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { config } from '../../theme/appConfig.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -58,7 +58,7 @@ type DispatchProps = {
   showUnlockSettingsModal: () => void,
   toggleDeveloperMode: (developerModeOn: boolean) => void
 }
-type Props = StateProps & DispatchProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps & TestProps
 
 type State = {
   touchIdText: string,
@@ -66,7 +66,7 @@ type State = {
   defaultLogLevel: EdgeLogType | 'silent'
 }
 
-export class SettingsSceneComponent extends React.Component<Props, State> {
+export class SettingsSceneComponent extends React.Component<Props & TestProps, State> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
@@ -228,6 +228,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             action={isLocked ? 'lock' : 'unlock'}
             label={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
             onPress={this.handleUnlock}
+            ref={this.props.generateTestHook('SettingsScene.UnlockSettings')}
           />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
@@ -235,17 +236,39 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
-          <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
-          <SettingsTappableRow label={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
-          <SettingsLabelRow right={autoLogoutRightText} label={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
-          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
+          <SettingsTappableRow
+            label={s.strings.settings_exchange_settings}
+            onPress={this.handleExchangeSettings}
+            ref={this.props.generateTestHook('SettingsScene.OpenExchangeSettings')}
+          />
+          <SettingsTappableRow
+            label={s.strings.spending_limits}
+            onPress={this.handleSpendingLimits}
+            ref={this.props.generateTestHook('SettingsScene.OpenSpendingLimits')}
+          />
+          <SettingsLabelRow
+            right={autoLogoutRightText}
+            label={s.strings.settings_title_auto_logoff}
+            onPress={this.handleAutoLogout}
+            ref={this.props.generateTestHook('SettingsScene.OpenAutoLogout')}
+          />
+          <SettingsLabelRow
+            right={this.props.defaultFiat.replace('iso:', '')}
+            label={s.strings.settings_title_currency}
+            onPress={this.handleDefaultFiat}
+            ref={this.props.generateTestHook('SettingsScene.OpenDefaultCurrency')}
+          />
 
           <SettingsSwitchRow key="pinRelogin" label={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
           {this.props.supportsTouchId && (
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsTappableRow label={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
+          <SettingsTappableRow
+            label={s.strings.settings_notifications}
+            onPress={this.handleNotificationSettings}
+            ref={this.props.generateTestHook('SettingsScene.OpenNotificationSettings')}
+          />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
@@ -287,7 +310,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 }
 
-export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+export const SettingsScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,

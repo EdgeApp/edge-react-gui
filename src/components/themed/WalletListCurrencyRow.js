@@ -1,11 +1,13 @@
 // @flow
+import { useCavy } from 'cavy'
 import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useWalletBalance } from '../../hooks/useWalletBalance.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
 import { memo, useCallback } from '../../types/reactHooks.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CryptoText } from '../text/CryptoText'
@@ -38,6 +40,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   // Currency code and wallet name for display:
   const { currencyCode } = token == null ? wallet.currencyInfo : token
@@ -52,7 +55,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   }, [currencyCode, onPress, wallet])
 
   return (
-    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
+    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress} ref={generateTestHook(wallet.id)}>
       <CurrencyIcon marginRem={1} sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
       <View style={styles.nameColumn}>
         <View style={styles.currencyRow}>

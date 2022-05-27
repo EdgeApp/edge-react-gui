@@ -1,8 +1,8 @@
 // @flow
-
 import { Picker } from '@react-native-picker/picker'
+import { hook } from 'cavy'
 import * as React from 'react'
-import { Appearance, Platform, Text, View } from 'react-native'
+import { Appearance, Platform, Text } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -11,6 +11,8 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { View } from '../../types/reactNative.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { type DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime.js'
 import { AirshipModal } from '../common/AirshipModal.js'
 import { ContentArea } from '../common/ContentArea.js'
@@ -25,9 +27,9 @@ type OwnProps = {
 
 type State = DisplayTime
 
-type Props = OwnProps & ThemeProps
+type Props = OwnProps & ThemeProps & TestProps
 
-export class AutoLogoutModalComponent extends React.Component<Props, State> {
+export class AutoLogoutModalComponent extends React.Component<Props & TestProps, State> {
   constructor(props: Props) {
     super(props)
     const { autoLogoutTimeInSeconds } = this.props
@@ -90,7 +92,7 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
               <SecondaryButton onPress={this.handleCancel} style={{ flex: 1 }}>
                 <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
               </SecondaryButton>
-              <PrimaryButton onPress={this.handleDone} style={{ flex: 1 }}>
+              <PrimaryButton onPress={this.handleDone} style={{ flex: 1 }} ref={this.props.generateTestHook('AutoLogoutModal.Close')}>
                 <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
               </PrimaryButton>
             </LadderLayout>
@@ -101,4 +103,4 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
   }
 }
 
-export const AutoLogoutModal = withTheme(AutoLogoutModalComponent)
+export const AutoLogoutModal = hook(withTheme(AutoLogoutModalComponent))
