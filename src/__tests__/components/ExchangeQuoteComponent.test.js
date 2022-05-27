@@ -18,6 +18,7 @@ describe('ExchangeQuote', () => {
       currencyCode: 'BTC',
       fiatCurrencyCode: 'USD',
       fiatCurrencyAmount: '40000',
+      walletId: '123456789',
       walletName: 'myWallet',
       total: '40001',
       miningFee: '1',

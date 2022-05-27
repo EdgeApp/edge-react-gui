@@ -14,6 +14,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
       <Memo(CurrencyIconComponent)
         currencyCode="BTC"
         sizeRem={1.5}
+        walletId="123456789"
       />
     }
     subTitle="myWallet"
