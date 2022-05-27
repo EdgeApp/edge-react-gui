@@ -118,6 +118,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             isTop
             miningFee={fee}
             total={fromTotalFiat}
+            walletId={request.fromWallet.id}
             walletName={request.fromWallet.name || ''}
           />
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
@@ -127,6 +128,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             currencyCode={toDenomination}
             fiatCurrencyAmount={toFiat}
             fiatCurrencyCode={request.toWallet.fiatCurrencyCode.replace('iso:', '')}
+            walletId={request.toWallet.id}
             walletName={request.toWallet.name || ''}
           />
           <View style={styles.pluginRowPoweredByRow}>
