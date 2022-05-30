@@ -164,17 +164,18 @@ export class EdgeProvider extends Bridgeable {
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
+      const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
+      const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
+
       // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
       if (allowedCurrencyCodes != null && allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
-        const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
-        const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
         return {
           pluginId,
           tokenId,
           currencyCode
         }
       }
-      return currencyCode
+      return unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId) ?? currencyCode
     }
 
     throw new Error(s.strings.user_closed_modal_no_wallet)
@@ -606,4 +607,8 @@ function upgradeExtendedCurrencyCodes(
   }
 
   return out
+}
+
+function unfixCurrencyCode(fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {}, pluginId: string, tokenId?: string): string | void {
+  return Object.keys(fixCurrencyCodes).find(uid => fixCurrencyCodes[uid].pluginId === pluginId && fixCurrencyCodes[uid].tokenId === tokenId)
 }
