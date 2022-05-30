@@ -5,7 +5,7 @@ import { asArray, asEither, asNull, asObject, asString } from 'cleaners'
 
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../types/types.js'
-import { DECIMAL_PRECISION, getYesterdayDate, pickRandom } from '../util/utils.js'
+import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour, pickRandom } from '../util/utils.js'
 
 const RATES_SERVERS = ['https://rates2.edge.app']
 const RATES_SERVER_MAX_QUERY_SIZE = 100
@@ -37,7 +37,7 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
   const accountIsoFiat = state.ui.settings.defaultIsoFiat
 
   const exchangeRates: Array<{ currency_pair: string, date?: string }> = []
-  const yesterdayDate = getYesterdayDate()
+  const yesterdayDate = getYesterdayDateRoundDownHour()
   if (accountIsoFiat !== 'iso:USD') {
     exchangeRates.push({ currency_pair: `iso:USD_${accountIsoFiat}` })
   }
