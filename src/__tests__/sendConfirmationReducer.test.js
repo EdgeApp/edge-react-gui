@@ -208,15 +208,4 @@ describe('sendConfirmation reducer', () => {
 
     expect(actual).toMatchSnapshot()
   })
-
-  test('pending', () => {
-    const action = {
-      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-      data: { pending: true }
-    }
-    const initialStateClone = cloneDeep(initialState)
-    const actual = sendConfirmation(initialStateClone, action)
-
-    expect(actual).toMatchSnapshot()
-  })
 })
