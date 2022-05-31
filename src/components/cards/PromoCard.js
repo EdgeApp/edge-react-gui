@@ -12,8 +12,8 @@ import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText.js'
-import { ButtonBox } from './ThemedButtons.js'
+import { EdgeText } from '../themed/EdgeText'
+import { ButtonBox } from '../themed/ThemedButtons'
 
 type StateProps = {
   accountMessages: MessageTweak[],

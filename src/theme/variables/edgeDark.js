@@ -250,6 +250,7 @@ export const edgeDark: Theme = {
   // tileDivider: palette.blueGray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
+  thickLineWidth: 3,
 
   // DividerLine component
   dividerLineHeight: 1,
