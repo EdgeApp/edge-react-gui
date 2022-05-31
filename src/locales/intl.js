@@ -186,8 +186,11 @@ export function formatToNativeNumber(value: string, options?: IntlNumberFormatOp
  * Returns date string depending on locale
  */
 export function formatDate(date: Date, monthShort: boolean = false): string {
+  const { localeIdentifier } = locale
+
   try {
-    return format(date, monthShort ? 'PP' : 'PPP', { locale: locales[locale.localeIdentifier.replace('_', '-')] })
+    const dateFormattingLocale = locales[localeIdentifier.replace('_', '-')] ?? locales[localeIdentifier.split('-')?.[0]]
+    return format(date, monthShort ? 'PP' : 'PPP', { locale: dateFormattingLocale })
   } catch (e) {
     //
   }
@@ -198,8 +201,10 @@ export function formatDate(date: Date, monthShort: boolean = false): string {
  * Returns h:mm am/pm time string depending on locale
  */
 export function formatTime(date: Date): string {
+  const { localeIdentifier } = locale
+
   try {
-    return format(date, 'p', { locale: locales[locale.localeIdentifier.replace('_', '-')] })
+    return format(date, 'p', { locale: locales[localeIdentifier.replace('_', '-')] })
   } catch (e) {
     //
   }
@@ -225,7 +230,7 @@ export function setIntlLocale(l: IntlLocaleType): void {
 }
 
 export function toLocaleDate(date: Date): string {
-  return format(date, 'MMM d, yyyy')
+  return formatDate(date, true)
 }
 
 export function toLocaleTime(date: Date): string {
