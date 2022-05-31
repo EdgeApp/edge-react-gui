@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { memo } from '../../types/reactHooks.js'
@@ -14,41 +14,57 @@ import { Card } from './Card'
  * right side of the card.
  */
 const TappableCardComponent = ({
-  nonTappable = false,
   leftChildren,
+  nonTappable = false,
+  onPress,
   rightChildren
 }: {
-  nonTappable?: boolean,
   leftChildren: React.Node,
+  nonTappable?: boolean,
+  onPress?: any => void | (any => Promise<void>),
   rightChildren?: React.Node
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <Card>
-      <View style={styles.cardContainer}>
-        <View style={styles.leftContainer}>{leftChildren}</View>
-        <View style={styles.rightContainer}>{rightChildren}</View>
-        {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}
-      </View>
-    </Card>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onPress}>
+        <Card>
+          <View style={styles.cardContainer}>
+            <View style={styles.spacedContainer}>
+              <View style={styles.leftContainer}>{leftChildren}</View>
+              <View style={styles.rightContainer}>{rightChildren}</View>
+            </View>
+            {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}
+          </View>
+        </Card>
+      </TouchableOpacity>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    margin: theme.rem(0.5)
+  },
   cardContainer: {
+    flexDirection: 'row'
+  },
+  spacedContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flex: 1
   },
   leftContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'flex-start'
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   rightContainer: {
-    flex: 1,
-    alignSelf: 'flex-end',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'flex-end'
   },
   chevron: {
