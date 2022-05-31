@@ -9,19 +9,15 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
-import { useCallback, useEffect, useState } from '../../../../types/reactHooks.js'
+import { useCallback, useState } from '../../../../types/reactHooks.js'
 
 const COMPLETE_POINT: number = 3
 
 type OwnProps = {
   onSlidingComplete(reset: () => void): mixed,
   parentStyle?: any,
-  showSpinner?: boolean,
   completePoint?: number,
   width?: number,
-
-  // Reset logic:
-  reset?: boolean,
 
   // Disabled logic:
   disabledText?: string,
@@ -36,23 +32,13 @@ const clamp = (value, lowerBound, upperBound) => {
 }
 
 export const SmartSliderComponent = (props: Props) => {
-  const {
-    disabledText,
-    disabled,
-    reset,
-    showSpinner,
-    onSlidingComplete,
-    parentStyle,
-    completePoint = COMPLETE_POINT,
-    theme,
-    width = props.theme.confirmationSliderWidth
-  } = props
+  const { disabledText, disabled, onSlidingComplete, parentStyle, completePoint = COMPLETE_POINT, theme, width = props.theme.confirmationSliderWidth } = props
   const styles = getStyles(theme)
   const [completed, setCompleted] = useState(false)
 
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
-  const sliderDisabled = disabled || showSpinner
+  const sliderDisabled = disabled || completed
   const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
@@ -106,15 +92,6 @@ export const SmartSliderComponent = (props: Props) => {
     }
   })
 
-  // Reset slider state conditions:
-  useEffect(() => {
-    // Reset prop set by parent
-    if (reset) resetSlider()
-    // Completed prop set by parent and no longer showing spinner
-    else if (completed && !showSpinner) resetSlider()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetSlider, reset, showSpinner])
-
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
       <View style={[styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
@@ -125,7 +102,7 @@ export const SmartSliderComponent = (props: Props) => {
             <Entypo style={styles.thumbIcon} name="chevron-left" size={theme.rem(1.5)} />
           </Animated.View>
         </PanGestureHandler>
-        {showSpinner ? (
+        {completed ? (
           <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
         ) : (
           <EdgeText style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</EdgeText>
