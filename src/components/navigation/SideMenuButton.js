@@ -1,23 +1,22 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 
 import { openDrawer } from '../../actions/ScenesActions.js'
 import { Fontello } from '../../assets/vector/index.js'
-import { connect } from '../../types/reactRedux.js'
+import { useHandler } from '../../hooks/useHandler.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
+import { useDispatch } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-type DispatchProps = {
-  openDrawer: () => void
-}
-type Props = DispatchProps
-
-function SideMenuButtonComponent(props: Props) {
+export const SideMenuButton = () => {
   const theme = useTheme()
+  const dispatch = useDispatch()
   const { container } = getStyles(theme)
+  const onPress = useHandler(() => dispatch(openDrawer()))
+
   return (
-    <TouchableOpacity onPress={props.openDrawer} style={container}>
+    <TouchableOpacity onPress={onPress} style={container}>
       <Fontello name="hamburgerButton" size={theme.rem(1)} color={theme.icon} />
     </TouchableOpacity>
   )
@@ -31,12 +30,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(2.5)
   }
 }))
-
-export const SideMenuButton = connect<{}, DispatchProps, {}>(
-  state => ({}),
-  dispatch => ({
-    openDrawer() {
-      dispatch(openDrawer())
-    }
-  })
-)(SideMenuButtonComponent)
