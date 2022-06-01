@@ -12,13 +12,13 @@ import { useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName, stakePlugin } from '../../../util/stakeUtils.js'
+import { StakingOptionCard } from '../../cards/StakingOptionCard.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { CurrencyIcon } from '../../themed/CurrencyIcon.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
-import { StakingOptionCard } from '../../themed/StakingOptionCard.js'
 
 type Props = {
   route: RouteProp<'stakeOptions'>,

@@ -15,12 +15,12 @@ import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
+import { StakingReturnsCard } from '../../cards/StakingReturnsCard.js'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { MainButton } from '../../themed/MainButton.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
-import { StakingReturnsCard } from '../../themed/StakingReturnsCard.js'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile.js'
 
 type Props = {

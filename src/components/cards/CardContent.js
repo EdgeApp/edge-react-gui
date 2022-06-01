@@ -5,8 +5,8 @@ import { View } from 'react-native'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { DataRow } from './DataRow'
-import { EdgeText } from './EdgeText.js'
+import { DataRow } from '../themed/DataRow'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
   image?: React.Node,

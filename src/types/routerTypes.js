@@ -161,6 +161,8 @@ export type ParamList = {
   fioSentRequestDetails: {|
     selectedFioSentRequest: FioRequest
   |},
+  loanDashboard: void,
+  loanDetails: void,
   manageTokens: {|
     walletId: string
   |},
