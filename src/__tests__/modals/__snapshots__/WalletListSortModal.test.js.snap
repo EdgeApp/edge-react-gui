@@ -20,27 +20,27 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
     label="Manual sort"
     onPress={[Function]}
   />
-  <WithTheme(SettingsRadioRowComponent)
+  <SettingsRadioRow
     label="Sort by name"
     onPress={[Function]}
     value={false}
   />
-  <WithTheme(SettingsRadioRowComponent)
+  <SettingsRadioRow
     label="Sort by currency code"
     onPress={[Function]}
     value={false}
   />
-  <WithTheme(SettingsRadioRowComponent)
+  <SettingsRadioRow
     label="Sort by currency name"
     onPress={[Function]}
     value={false}
   />
-  <WithTheme(SettingsRadioRowComponent)
+  <SettingsRadioRow
     label="Sort by highest value"
     onPress={[Function]}
     value={false}
   />
-  <WithTheme(SettingsRadioRowComponent)
+  <SettingsRadioRow
     label="Sort by lowest value"
     onPress={[Function]}
     value={false}

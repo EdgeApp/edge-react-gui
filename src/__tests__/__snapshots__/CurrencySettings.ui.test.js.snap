@@ -9,7 +9,7 @@ exports[`CurrencySettings should render 1`] = `
     <WithTheme(SettingsHeaderRowComponent)
       label="Denominations"
     />
-    <WithTheme(SettingsRadioRowComponent)
+    <SettingsRadioRow
       onPress={[Function]}
       value={false}
     >
@@ -36,8 +36,8 @@ exports[`CurrencySettings should render 1`] = `
         </Text>
          - BTG
       </Text>
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </SettingsRadioRow>
+    <SettingsRadioRow
       onPress={[Function]}
       value={false}
     >
@@ -64,8 +64,8 @@ exports[`CurrencySettings should render 1`] = `
         </Text>
          - mBTG
       </Text>
-    </WithTheme(SettingsRadioRowComponent)>
-    <WithTheme(SettingsRadioRowComponent)
+    </SettingsRadioRow>
+    <SettingsRadioRow
       onPress={[Function]}
       value={true}
     >
@@ -92,7 +92,7 @@ exports[`CurrencySettings should render 1`] = `
         </Text>
          - bits
       </Text>
-    </WithTheme(SettingsRadioRowComponent)>
+    </SettingsRadioRow>
   </ScrollView>
 </SceneWrapper>
 `;

@@ -3,10 +3,10 @@
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { useTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
-type OwnProps = {
+type Props = {
   children?: React.Node,
 
   // Show with a dim style when set. Defaults to false:
@@ -24,14 +24,12 @@ type OwnProps = {
   onPress?: () => void | Promise<void>
 }
 
-type Props = OwnProps & ThemeProps
-
 /**
  * A settings row with a radio selector on the right side.
  */
-function SettingsRadioRowComponent(props: Props): React.Node {
-  const { children, disabled = false, label, theme, value, onPress } = props
-
+export const SettingsRadioRow = (props: Props): React.Node => {
+  const { children, disabled = false, label, value, onPress } = props
+  const theme = useTheme()
   const style = {
     color: disabled ? theme.iconDeactivated : theme.iconTappable,
     fontSize: theme.rem(1.25),
@@ -45,5 +43,3 @@ function SettingsRadioRowComponent(props: Props): React.Node {
     </SettingsRow>
   )
 }
-
-export const SettingsRadioRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsRadioRowComponent)
