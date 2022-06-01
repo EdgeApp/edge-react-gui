@@ -1,4 +1,5 @@
 // @flow
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { Linking, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -42,6 +43,7 @@ export const ScanModal = (props: Props) => {
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [scanEnabled, setScanEnabled] = useState(false)
 
+  const generateTestHook = useCavy()
   const handleFlash = () => setTorchEnabled(!torchEnabled)
 
   // Mount effects
@@ -200,7 +202,7 @@ export const ScanModal = (props: Props) => {
       maxWidth={windowWidth}
     >
       {renderModalContent()}
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('ScanModal.Close')} />
     </AirshipModal>
   )
 }
