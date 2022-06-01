@@ -5,10 +5,10 @@ import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
+import type { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord } from '../../types/types'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -364,44 +364,48 @@ export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], f
 }
 
 export const makeConnectWallets = (
-  edgeWallets: { [walletId: string]: EdgeCurrencyWallet },
-  wallets: { [walletId: string]: GuiWallet },
+  wallets: { [walletId: string]: EdgeCurrencyWallet },
   ccWalletMap: CcWalletMap
 ): { [key: string]: FioConnectionWalletItem } => {
   const walletItems = {}
   for (const walletKey of Object.keys(wallets)) {
-    if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
-    const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
-    walletItems[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
-      key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
-      id: wallets[walletKey].id,
-      edgeWallet: edgeWallets[wallets[walletKey].id],
-      name: wallets[walletKey].name,
-      currencyCode: wallets[walletKey].currencyCode,
-      chainCode: wallets[walletKey].currencyCode,
+    const wallet = wallets[walletKey]
+    const {
+      allTokens,
+      currencyInfo: { currencyCode: cCode, pluginId }
+    } = wallet.currencyConfig
+    if (pluginId === 'fio') continue
+
+    // Look for unique FIO network chain code
+    const info = getSpecialCurrencyInfo(pluginId)
+    const currencyCode = info.fioChainCode ?? cCode
+    const walletName = wallet.name ?? info.initWalletName
+    const fullCurrencyCode = `${currencyCode}:${currencyCode}`
+    walletItems[`${wallet.id}-${currencyCode}`] = {
+      key: `${wallet.id}-${currencyCode}`,
+      id: wallet.id,
+      edgeWallet: wallet,
+      name: walletName,
+      currencyCode: currencyCode,
+      chainCode: currencyCode,
       fullCurrencyCode,
-      isConnected: ccWalletMap[fullCurrencyCode] === wallets[walletKey].id
+      isConnected: ccWalletMap[fullCurrencyCode] === wallet.id
     }
-    if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
-      for (const enabledToken: string of wallets[walletKey].enabledTokens) {
-        let tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
-        if (!tokenData) {
-          tokenData = {
-            currencyCode: enabledToken,
-            contractAddress: undefined
-          }
-        }
-        const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
-        walletItems[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
-          key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
-          id: wallets[walletKey].id,
-          edgeWallet: edgeWallets[wallets[walletKey].id],
-          name: wallets[walletKey].name,
-          currencyCode: tokenData.currencyCode,
-          chainCode: wallets[walletKey].currencyCode,
-          fullCurrencyCode,
-          isConnected: ccWalletMap[fullCurrencyCode] === wallets[walletKey].id
-        }
+
+    for (const enabledTokenId of wallet.enabledTokenIds) {
+      const token = allTokens[enabledTokenId]
+      if (token == null) continue
+
+      const fullCurrencyCode = `${currencyCode}:${token.currencyCode}`
+      walletItems[`${wallet.id}-${token.currencyCode}`] = {
+        key: `${wallet.id}-${token.currencyCode}`,
+        id: wallet.id,
+        edgeWallet: wallet,
+        name: walletName,
+        currencyCode: token.currencyCode,
+        chainCode: currencyCode,
+        fullCurrencyCode,
+        isConnected: ccWalletMap[fullCurrencyCode] === wallet.id
       }
     }
   }

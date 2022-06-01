@@ -1,0 +1,225 @@
+diff --git a/node_modules/react-native-fs/FS.common.js b/node_modules/react-native-fs/FS.common.js
+index 62b7ba7..97315cb 100755
+--- a/node_modules/react-native-fs/FS.common.js
++++ b/node_modules/react-native-fs/FS.common.js
+@@ -74,7 +74,7 @@ type DownloadFileOptions = {
+   progressDivider?: number;
+   begin?: (res: DownloadBeginCallbackResult) => void;
+   progress?: (res: DownloadProgressCallbackResult) => void;
+-  resumable?: () => void;    // only supported on iOS yet
++  resumable?: (res: any) => void;    // only supported on iOS yet
+   connectionTimeout?: number; // only supported on Android yet
+   readTimeout?: number;       // supported on Android and iOS
+   backgroundTimeout?: number; // Maximum time (in milliseconds) to download an entire resource (iOS only, useful for timing out background downloads)
+@@ -161,7 +161,7 @@ function readFileGeneric(filepath: string, encodingOrOptions: ?string, command:
+     var contents;
+ 
+     if (options.encoding === 'utf8') {
+-      contents = utf8.decode(base64.decode(b64));
++      contents = b64;
+     } else if (options.encoding === 'ascii') {
+       contents = base64.decode(b64);
+     } else if (options.encoding === 'base64') {
+@@ -327,7 +327,7 @@ var RNFS = {
+       var contents;
+ 
+       if (options.encoding === 'utf8') {
+-        contents = utf8.decode(base64.decode(b64));
++        contents = b64;
+       } else if (options.encoding === 'ascii') {
+         contents = base64.decode(b64);
+       } else if (options.encoding === 'base64') {
+@@ -412,7 +412,7 @@ var RNFS = {
+     }
+ 
+     if (options.encoding === 'utf8') {
+-      b64 = base64.encode(utf8.encode(contents));
++      b64 = contents;
+     } else if (options.encoding === 'ascii') {
+       b64 = base64.encode(contents);
+     } else if (options.encoding === 'base64') {
+@@ -440,7 +440,7 @@ var RNFS = {
+     }
+ 
+     if (options.encoding === 'utf8') {
+-      b64 = base64.encode(utf8.encode(contents));
++      b64 = contents;
+     } else if (options.encoding === 'ascii') {
+       b64 = base64.encode(contents);
+     } else if (options.encoding === 'base64') {
+@@ -468,7 +468,7 @@ var RNFS = {
+     }
+ 
+     if (options.encoding === 'utf8') {
+-      b64 = base64.encode(utf8.encode(contents));
++      b64 = contents;
+     } else if (options.encoding === 'ascii') {
+       b64 = base64.encode(contents);
+     } else if (options.encoding === 'base64') {
+@@ -501,19 +501,19 @@ var RNFS = {
+ 
+     if (options.begin) {
+       subscriptions.push(RNFS_NativeEventEmitter.addListener('DownloadBegin', (res) => {
+-        if (res.jobId === jobId) options.begin(res);
++        if (res.jobId === jobId && options.begin != null) options.begin(res);
+       }));
+     }
+ 
+     if (options.progress) {
+       subscriptions.push(RNFS_NativeEventEmitter.addListener('DownloadProgress', (res) => {
+-        if (res.jobId === jobId) options.progress(res);
++        if (res.jobId === jobId && options.progress != null) options.progress(res);
+       }));
+     }
+ 
+     if (options.resumable) {
+       subscriptions.push(RNFS_NativeEventEmitter.addListener('DownloadResumable', (res) => {
+-        if (res.jobId === jobId) options.resumable(res);
++        if (res.jobId === jobId && options.resumable != null) options.resumable(res);
+       }));
+     }
+ 
+diff --git a/node_modules/react-native-fs/RNFSManager.m b/node_modules/react-native-fs/RNFSManager.m
+index 5ddd941..634000e 100755
+--- a/node_modules/react-native-fs/RNFSManager.m
++++ b/node_modules/react-native-fs/RNFSManager.m
+@@ -112,12 +112,12 @@ + (BOOL)requiresMainQueueSetup
+ }
+ 
+ RCT_EXPORT_METHOD(writeFile:(NSString *)filepath
+-                  contents:(NSString *)base64Content
++                  contents:(NSString *)contents
+                   options:(NSDictionary *)options
+                   resolver:(RCTPromiseResolveBlock)resolve
+                   rejecter:(RCTPromiseRejectBlock)reject)
+ {
+-  NSData *data = [[NSData alloc] initWithBase64EncodedString:base64Content options:NSDataBase64DecodingIgnoreUnknownCharacters];
++  NSData *data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+ 
+   NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+ 
+@@ -135,11 +135,11 @@ + (BOOL)requiresMainQueueSetup
+ }
+ 
+ RCT_EXPORT_METHOD(appendFile:(NSString *)filepath
+-                  contents:(NSString *)base64Content
++                  contents:(NSString *)contents
+                   resolver:(RCTPromiseResolveBlock)resolve
+                   rejecter:(RCTPromiseRejectBlock)reject)
+ {
+-  NSData *data = [[NSData alloc] initWithBase64EncodedString:base64Content options:NSDataBase64DecodingIgnoreUnknownCharacters];
++  NSData *data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+ 
+   NSFileManager *fM = [NSFileManager defaultManager];
+ 
+@@ -174,12 +174,12 @@ + (BOOL)requiresMainQueueSetup
+ }
+ 
+ RCT_EXPORT_METHOD(write:(NSString *)filepath
+-                  contents:(NSString *)base64Content
++                  contents:(NSString *)contents
+                   position:(NSInteger)position
+                   resolver:(RCTPromiseResolveBlock)resolve
+                   rejecter:(RCTPromiseRejectBlock)reject)
+ {
+-  NSData *data = [[NSData alloc] initWithBase64EncodedString:base64Content options:NSDataBase64DecodingIgnoreUnknownCharacters];
++  NSData *data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+ 
+   NSFileManager *fM = [NSFileManager defaultManager];
+ 
+@@ -288,9 +288,9 @@ + (BOOL)requiresMainQueueSetup
+   }
+ 
+   NSData *content = [[NSFileManager defaultManager] contentsAtPath:filepath];
+-  NSString *base64Content = [content base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
++  NSString *newStr = [[NSString alloc] initWithData:content encoding:NSUTF8StringEncoding];
+ 
+-  resolve(base64Content);
++  resolve(newStr);
+ }
+ 
+ RCT_EXPORT_METHOD(read:(NSString *)filepath
+@@ -333,9 +333,9 @@ + (BOOL)requiresMainQueueSetup
+         content = [file readDataToEndOfFile];
+     }
+ 
+-    NSString *base64Content = [content base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
++    NSString *newStr = [[NSString alloc] initWithData:content encoding:NSUTF8StringEncoding];
+ 
+-    resolve(base64Content);
++    resolve(newStr);
+ }
+ 
+ RCT_EXPORT_METHOD(hash:(NSString *)filepath
+diff --git a/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java b/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java
+index 351ac06..d2f63e4 100755
+--- a/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java
++++ b/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java
+@@ -34,6 +34,7 @@ import java.io.InputStream;
+ import java.io.OutputStream;
+ import java.io.RandomAccessFile;
+ import java.net.URL;
++import java.nio.charset.StandardCharsets;
+ import java.security.MessageDigest;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+@@ -154,9 +155,9 @@ public class RNFSManager extends ReactContextBaseJavaModule {
+   }
+ 
+   @ReactMethod
+-  public void writeFile(String filepath, String base64Content, ReadableMap options, Promise promise) {
++  public void writeFile(String filepath, String content, ReadableMap options, Promise promise) {
+     try {
+-      byte[] bytes = Base64.decode(base64Content, Base64.DEFAULT);
++      byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+ 
+       OutputStream outputStream = getOutputStream(filepath, false);
+       outputStream.write(bytes);
+@@ -170,9 +171,9 @@ public class RNFSManager extends ReactContextBaseJavaModule {
+   }
+ 
+   @ReactMethod
+-  public void appendFile(String filepath, String base64Content, Promise promise) {
++  public void appendFile(String filepath, String content, Promise promise) {
+     try {
+-      byte[] bytes = Base64.decode(base64Content, Base64.DEFAULT);
++      byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+ 
+       OutputStream outputStream = getOutputStream(filepath, true);
+       outputStream.write(bytes);
+@@ -186,9 +187,9 @@ public class RNFSManager extends ReactContextBaseJavaModule {
+   }
+ 
+   @ReactMethod
+-  public void write(String filepath, String base64Content, int position, Promise promise) {
++  public void write(String filepath, String content, int position, Promise promise) {
+     try {
+-      byte[] bytes = Base64.decode(base64Content, Base64.DEFAULT);
++      byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+ 
+       if (position < 0) {
+         OutputStream outputStream = getOutputStream(filepath, true);
+@@ -224,9 +225,9 @@ public class RNFSManager extends ReactContextBaseJavaModule {
+     try {
+       InputStream inputStream = getInputStream(filepath);
+       byte[] inputData = getInputStreamBytes(inputStream);
+-      String base64Content = Base64.encodeToString(inputData, Base64.NO_WRAP);
++      String content = new String(inputData, StandardCharsets.UTF_8);
+ 
+-      promise.resolve(base64Content);
++      promise.resolve(content);
+     } catch (Exception ex) {
+       ex.printStackTrace();
+       reject(promise, filepath, ex);
+@@ -241,9 +242,9 @@ public class RNFSManager extends ReactContextBaseJavaModule {
+       inputStream.skip(position);
+       int bytesRead = inputStream.read(buffer, 0, length);
+ 
+-      String base64Content = Base64.encodeToString(buffer, 0, bytesRead, Base64.NO_WRAP);
++      String content = new String(buffer, StandardCharsets.UTF_8);
+ 
+-      promise.resolve(base64Content);
++      promise.resolve(content);
+     } catch (Exception ex) {
+       ex.printStackTrace();
+       reject(promise, filepath, ex);

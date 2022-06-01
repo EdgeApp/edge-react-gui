@@ -25,13 +25,10 @@ import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader.js'
 
-type OwnProps = {
+type OwnProps = {|
   bridge: AirshipBridge<string | void>,
-  title: string,
-  isFlash?: boolean,
-  isAlbum?: boolean,
-  isTextInput?: boolean
-}
+  title: string
+|}
 
 type StateProps = {
   cameraPermission: PermissionStatus,
@@ -47,20 +44,7 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 const Component = (props: Props) => {
-  const {
-    bridge,
-    theme,
-    title,
-    enableScan,
-    disableScan,
-    scanEnabled,
-    toggleEnableTorch,
-    torchEnabled,
-    cameraPermission,
-    isAlbum = true,
-    isFlash = true,
-    isTextInput
-  } = props
+  const { bridge, theme, title, enableScan, disableScan, scanEnabled, toggleEnableTorch, torchEnabled, cameraPermission } = props
   const styles = getStyles(theme)
 
   const { width: windowWidth, height: windowHeight } = useWindowSize()
@@ -188,24 +172,18 @@ const Component = (props: Props) => {
             <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
               <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
-                {isFlash ? (
-                  <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                    <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
-                    <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
-                  </TouchableOpacity>
-                ) : null}
-                {isAlbum ? (
-                  <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
-                    <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
-                    <EdgeText>{s.strings.fragment_send_album}</EdgeText>
-                  </TouchableOpacity>
-                ) : null}
-                {isTextInput ? (
-                  <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
-                    <Ionicon style={styles.icon} name="pencil-outline" size={theme.rem(1.5)} />
-                    <EdgeText>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
-                  </TouchableOpacity>
-                ) : null}
+                <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
+                  <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
+                  <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
+                  <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
+                  <EdgeText>{s.strings.fragment_send_album}</EdgeText>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
+                  <Ionicon style={styles.icon} name="pencil-outline" size={theme.rem(1.5)} />
+                  <EdgeText>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

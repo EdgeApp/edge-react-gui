@@ -1,0 +1,13 @@
+diff --git a/node_modules/edge-currency-bitcoin/lib/react-native-io.js b/node_modules/edge-currency-bitcoin/lib/react-native-io.js
+index 4cd7e3a..64d640f 100644
+--- a/node_modules/edge-currency-bitcoin/lib/react-native-io.js
++++ b/node_modules/edge-currency-bitcoin/lib/react-native-io.js
+@@ -3,7 +3,7 @@
+ // before sending it across the bridge to the core side.
+ 
+ import { pbkdf2, secp256k1 } from 'react-native-fast-crypto'
+-import { Socket } from 'react-native-tcp'
++import { Socket } from 'react-native-tcp-socket'
+ import { bridgifyObject } from 'yaob'
+ 
+ import {

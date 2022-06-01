@@ -175,6 +175,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'LetsExchange',
+    hasThumbnail: true,
+    thumbnailPath: 'letsexchange-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'SideShift.ai',
     hasThumbnail: true,
     thumbnailPath: 'sideshift-logo.png',

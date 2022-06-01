@@ -15,11 +15,13 @@ import type { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePosition, S
 import { makeBigAccumulator } from '../util/accumulator.js'
 import { round } from '../util/biggystringplus.js'
 import { makeBuilder } from '../util/builder.js'
-import { getSeed } from '../util/getSeed.js'
 import { fromHex } from '../util/hex.js'
 import { type StakePluginPolicy } from './types'
 
 export type CemeteryPolicyOptions = {
+  disableStake?: boolean,
+  disableUnstake?: boolean,
+  disableClaim?: boolean,
   poolId: number,
   lpTokenContract: ethers.Contract,
   poolContract: ethers.Contract,
@@ -30,7 +32,16 @@ export type CemeteryPolicyOptions = {
 
 export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginPolicy => {
   // Declare contracts:
-  const { lpTokenContract, poolContract, swapRouterContract, tokenAContract, tokenBContract } = options
+  const {
+    disableStake = false,
+    disableUnstake = false,
+    disableClaim = false,
+    lpTokenContract,
+    poolContract,
+    swapRouterContract,
+    tokenAContract,
+    tokenBContract
+  } = options
 
   // Constants:
   const { poolId: POOL_ID } = options
@@ -40,12 +51,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: AssetId) => `${assetId.pluginId}:${assetId.tokenId}`
+  const serializeAssetId = (assetId: AssetId) => `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
     policyInfo: StakePolicyInfo,
     lpTokenAmount: string
-  ): Promise<{ [assetId: string]: { pluginId: string, tokenId: string, nativeAmount: string } }> {
+  ): Promise<{ [assetId: string]: { pluginId: string, currencyCode: string, nativeAmount: string } }> {
     // 1. Get the total supply of LP-tokens in the LP-pool contract
     const lpTokenSupply = (await multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
     // 2. Get the amount of each token reserve in the LP-pool contract
@@ -54,7 +65,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     return policyInfo.stakeAssets.reduce((acc, assetId, index) => {
       const address = assetToContractAddress(policyInfo, assetId)
       const reserve = reservesMap[address]
-      if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.tokenId}`)
+      if (reserve == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`)
       const nativeAmount = div(mul(reserve, lpTokenAmount), lpTokenSupply)
       return { ...acc, [serializeAssetId(assetId)]: { nativeAmount } }
     }, {})
@@ -82,31 +93,29 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   }
 
   function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: AssetId): string {
-    const contractInfo = getContractInfo(assetId.tokenId)
+    const contractInfo = getContractInfo(assetId.currencyCode)
     const { address } = contractInfo
     return address.toLowerCase()
   }
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, wallet } = request
+      const { action, stakePolicyId, signerSeed } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
-      const requestAsset = [...policyInfo.stakeAssets, ...policyInfo.rewardAssets].find(asset => asset.tokenId === request.tokenId)
-      if (requestAsset == null) throw new Error(`Asset '${request.tokenId}' not found in policy '${stakePolicyId}'`)
+      const requestAsset = [...policyInfo.stakeAssets, ...policyInfo.rewardAssets].find(asset => asset.currencyCode === request.currencyCode)
+      if (requestAsset == null) throw new Error(`Asset '${request.currencyCode}' not found in policy '${stakePolicyId}'`)
 
-      const parentCurrencyCode = policyInfo.parentTokenId
-      const tokenACurrencyCode = policyInfo.stakeAssets[0].tokenId
-      const tokenBCurrencyCode = policyInfo.stakeAssets[1].tokenId
+      const parentCurrencyCode = policyInfo.parentCurrencyCode
+      const tokenACurrencyCode = policyInfo.stakeAssets[0].currencyCode
+      const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
       const isTokenBNative = tokenBCurrencyCode === parentCurrencyCode
 
       // Metadata constants:
       const metadataName = 'Tomb Finance'
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
-
-      const signerSeed = getSeed(wallet)
 
       // Get the signer for the wallet
       const signerAddress = await makeSigner(signerSeed).getAddress()
@@ -127,14 +136,14 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const requestTokenReserves = reservesMap[requestTokenContractAddress]
 
         allocations.push(
-          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ pluginId, tokenId }, index) => {
-            const tokenContractAddress = assetToContractAddress(policyInfo, { pluginId, tokenId })
+          ...policyInfo.stakeAssets.map<QuoteAllocation>(({ pluginId, currencyCode }, index) => {
+            const tokenContractAddress = assetToContractAddress(policyInfo, { pluginId, currencyCode })
             const tokenReserves = reservesMap[tokenContractAddress]
             const nativeAmount = div(mul(tokenReserves, request.nativeAmount), requestTokenReserves)
             return {
               allocationType: action,
               pluginId,
-              tokenId,
+              currencyCode,
               nativeAmount
             }
           })
@@ -144,11 +153,11 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       if (action === 'claim' || action === 'unstake') {
         const rewardNativeAmount = (await multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
         allocations.push(
-          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ tokenId, pluginId }) => {
+          ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
             return {
               allocationType: 'claim',
               pluginId,
-              tokenId,
+              currencyCode,
               nativeAmount: rewardNativeAmount
             }
           })
@@ -189,11 +198,11 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             .filter(allocation => allocation.allocationType === 'stake')
             .map(async allocation => {
               const balanceResponse = await (async () => {
-                const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
+                const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
                 if (isNativeToken) {
                   return await multipass(p => p.getBalance(signerAddress))
                 }
-                const tokenAContract = makeContract(allocation.tokenId)
+                const tokenAContract = makeContract(allocation.currencyCode)
                 return await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
               })()
               const balanceAmount = fromHex(balanceResponse._hex)
@@ -201,7 +210,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const totalBalance = add(balanceAmount, fromLpToken)
               const isBalanceEnough = lte(allocation.nativeAmount, totalBalance)
               if (!isBalanceEnough) {
-                throw new Error(sprintf(s.strings.stake_error_insufficient_s, allocation.tokenId))
+                throw new Error(sprintf(s.strings.stake_error_insufficient_s, allocation.currencyCode))
               }
             })
         )
@@ -212,10 +221,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             // We don't need to approve the stake pool contract for the token earned token contract
             if (allocation.allocationType === 'claim') return
             // We don't need to approve the native token asset
-            const isNativeToken = allocation.tokenId === policyInfo.parentTokenId
+            const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
             if (isNativeToken) return
 
-            const tokenAContract = makeContract(allocation.tokenId)
+            const tokenAContract = makeContract(allocation.currencyCode)
             const spenderAddress = swapRouterContract.address
             const allowanceResponse = await multipass(p => tokenAContract.connect(p).allowance(signerAddress, spenderAddress))
             const isFullyAllowed = allowanceResponse.sub(allocation.nativeAmount).gte(0)
@@ -243,8 +252,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           ((gasLimit, lpTokenBalance) =>
             async function addLiquidity({ signer }) {
-              const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenACurrencyCode)
-              const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenBCurrencyCode)
+              const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenACurrencyCode)
+              const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenBCurrencyCode)
 
               if (tokenAAllocation == null) throw new Error(`Contract token ${tokenACurrencyCode} not found in asset pair`)
               if (tokenBAllocation == null) throw new Error(`Contract token ${tokenBCurrencyCode} not found in asset pair`)
@@ -402,8 +411,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       if (action === 'unstake') {
         const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
 
-        const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenACurrencyCode)
-        const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.tokenId === tokenBCurrencyCode)
+        const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenACurrencyCode)
+        const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenBCurrencyCode)
 
         if (tokenAAllocation == null) throw new Error(`Contract token ${tokenACurrencyCode} not found in asset pair`)
         if (tokenBAllocation == null) throw new Error(`Contract token ${tokenBCurrencyCode} not found in asset pair`)
@@ -436,7 +445,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               })
               // Reward transaction metadata
               policyInfo.rewardAssets
-                .map(asset => asset.tokenId)
+                .map(asset => asset.currencyCode)
                 .forEach(currencyCode => {
                   cacheTxMetadata(result.hash, currencyCode, {
                     name: metadataName,
@@ -546,7 +555,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               })
 
               policyInfo.rewardAssets
-                .map(asset => asset.tokenId)
+                .map(asset => asset.currencyCode)
                 .forEach(currencyCode => {
                   cacheTxMetadata(result.hash, currencyCode, {
                     name: metadataName,
@@ -572,7 +581,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       allocations.push({
         allocationType: 'fee',
         pluginId: policyInfo.parentPluginId,
-        tokenId: policyInfo.parentTokenId,
+        currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee
       })
 
@@ -591,16 +600,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, wallet } = request
+      const { stakePolicyId, signerSeed } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
-      const tokenBCurrencyCode = policyInfo.stakeAssets[1].tokenId
-      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentTokenId
+      const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
+      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
 
       // Get the signer for the wallet
-      const signerAddress = makeSigner(getSeed(wallet)).getAddress()
+      const signerAddress = makeSigner(signerSeed).getAddress()
 
       const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, tokenABalance, tokenBBalance, lpTokenBalance] = await Promise.all([
         // Get staked allocations:
@@ -624,11 +633,11 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       // 3. Use the conversion amounts to create the staked allocations
       const stakedAllocations: PositionAllocation[] = policyInfo.stakeAssets.map((assetId, index) => {
         const { nativeAmount } = assetAmountsFromLp[serializeAssetId(assetId)]
-        if (nativeAmount == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.tokenId}`)
+        if (nativeAmount == null) throw new Error(`Could not find reserve amount in liquidity pool for ${assetId.currencyCode}`)
 
         return {
           pluginId: assetId.pluginId,
-          tokenId: assetId.tokenId,
+          currencyCode: assetId.currencyCode,
           allocationType: 'staked',
           nativeAmount,
           locktime: undefined
@@ -639,7 +648,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const earnedAllocations: PositionAllocation[] = [
         {
           pluginId: policyInfo.rewardAssets[0].pluginId,
-          tokenId: policyInfo.rewardAssets[0].tokenId,
+          currencyCode: policyInfo.rewardAssets[0].currencyCode,
           allocationType: 'earned',
           nativeAmount: rewardNativeAmount,
           locktime: undefined
@@ -651,13 +660,13 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       //
 
       // You can stake if you have balances in the paired assets, or some unstaked LP-Token balance
-      const canStake = (gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0')
+      const canStake = !disableStake && ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0'))
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
-      const canUnstake = gt(stakedLpTokenBalance, '0')
+      const canUnstake = !disableUnstake && gt(stakedLpTokenBalance, '0')
 
       // You can claim so long as there is some reward balance (there are no timelocks)
-      const canClaim = gt(rewardNativeAmount, '0')
+      const canClaim = !disableClaim && gt(rewardNativeAmount, '0')
 
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],

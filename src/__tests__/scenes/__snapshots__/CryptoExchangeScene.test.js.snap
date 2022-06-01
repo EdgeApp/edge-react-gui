@@ -68,6 +68,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
             "name": "USD",
             "symbol": "$",
           },
+          "walletId": "",
         }
       }
       walletId=""
@@ -132,6 +133,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
             "name": "USD",
             "symbol": "$",
           },
+          "walletId": "",
         }
       }
       walletId=""

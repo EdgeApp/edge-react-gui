@@ -15,7 +15,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type LocalState = {
   showAddBundledTxs: boolean,

@@ -15,7 +15,7 @@ import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type OwnProps = {
   route: RouteProp<'wcDisconnect'>,

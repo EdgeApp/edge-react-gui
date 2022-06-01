@@ -17,7 +17,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type OwnProps = {
   navigation: NavigationProp<'createWalletReview'>,
@@ -77,6 +77,7 @@ export class CreateWalletReviewComponent extends React.Component<Props, State> {
     const { selectedWalletType, selectedFiat, walletName } = route.params
     const { isAnimationVisible } = this.state
     const styles = getStyles(theme)
+    const buttonType = theme.preferPrimaryButton ? 'primary' : 'secondary'
 
     return (
       <SceneWrapper background="theme">
@@ -98,7 +99,7 @@ export class CreateWalletReviewComponent extends React.Component<Props, State> {
               alignSelf="center"
               label={s.strings.fragment_create_wallet_create_wallet}
               marginRem={[2, 1]}
-              type="secondary"
+              type={buttonType}
               onPress={this.handleSubmit}
             />
           </View>

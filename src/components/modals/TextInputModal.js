@@ -32,6 +32,7 @@ type Props = {|
 
   // Text input options:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
+  autoFocus?: boolean,
   autoCorrect?: boolean,
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
@@ -43,6 +44,7 @@ type Props = {|
 export function TextInputModal(props: Props) {
   const {
     autoCapitalize,
+    autoFocus = true,
     autoCorrect,
     bridge,
     initialValue = '',
@@ -95,6 +97,7 @@ export function TextInputModal(props: Props) {
       <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}
+        autoFocus={autoFocus}
         autoCorrect={autoCorrect}
         keyboardType={keyboardType}
         label={inputLabel}

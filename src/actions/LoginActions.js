@@ -19,15 +19,16 @@ import {
 } from '../modules/Core/Account/settings.js'
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer.js'
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
+import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
-import { type CustomTokenInfo, type GuiTouchIdInfo } from '../types/types.js'
+import { type GuiTouchIdInfo } from '../types/types.js'
 import { runWithTimeout } from '../util/utils.js'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions.js'
 import { attachToUser } from './DeviceIdActions.js'
 import { expiredFioNamesCheckDates } from './FioActions.js'
 import { trackAccountEvent } from './TrackingActions.js'
-import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens, updateWalletsEnabledTokens, updateWalletsRequest } from './WalletActions.js'
+import { updateWalletsRequest } from './WalletActions.js'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:
@@ -70,7 +71,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     autoLogoutTimeInSeconds: 3600,
     countryCode: '',
     currencyCode: '',
-    customTokens: [],
     defaultFiat: '',
     defaultIsoFiat: '',
     denominationSettings: {},
@@ -141,19 +141,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     }
     accountInitObject.denominationSettings = { ...mergedDenominationSettings }
 
-    accountInitObject.customTokens.forEach(token => {
-      if (token.walletType != null) {
-        const pluginId = token.walletType.replace('wallet:', '')
-        const denom = token.denominations.find(denom => denom.name === token.currencyCode)
-        if (denom != null) {
-          if (accountInitObject.denominationSettings[pluginId] == null) {
-            accountInitObject.denominationSettings[pluginId] = {}
-          }
-          accountInitObject.denominationSettings[pluginId][token.currencyCode] = denom
-        }
-      }
-    })
-
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject }
@@ -177,10 +164,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
 
     dispatch(expiredFioNamesCheckDates())
     await updateWalletsRequest()(dispatch, getState)
-    for (const wId of activeWalletIds) {
-      await getEnabledTokens(wId)(dispatch, getState)
-    }
-    updateWalletsEnabledTokens(getState)
   } catch (error) {
     showError(error)
   }
@@ -224,18 +207,6 @@ export const mergeSettings = (
     } else {
       finalSettings[key] = loadedSettings[key]
     }
-  }
-
-  // Filter conflicting tokens out of synced settings:
-  if (finalSettings.customTokens && account != null) {
-    const { currencyConfig } = account
-    finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
-      for (const pluginId of Object.keys(currencyConfig)) {
-        const { currencyInfo } = currencyConfig[pluginId]
-        if (customToken.currencyCode === currencyInfo.currencyCode) return false
-      }
-      return true
-    })
   }
 
   return {
@@ -289,6 +260,8 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
 
 /**
  * Creates the custom default wallets inside a new account.
+ * The `currencyCodes` are in the format "ETH:DAI",
+ * so we may need to enable tokens on some of the created wallets.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
   const currencyInfos = []
@@ -312,8 +285,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
       const [parent, child] = code.split(':')
       if (parent === currencyInfo.currencyCode && child != null) tokenCodes.push(child)
       if (tokenCodes.length > 0) {
-        dispatch(setWalletEnabledTokens(wallet.id, tokenCodes, []))
-        dispatch(checkEnabledTokensArray(wallet.id, tokenCodes))
+        await wallet.changeEnabledTokens(tokenCodes)
       }
     }
   }
@@ -324,17 +296,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
  */
 async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
   // TODO: Run these in parallel once the Core has safer locking:
-  if (!account.allKeys.find(({ type }) => type === 'wallet:bitcoin')) {
-    await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
-  }
-
-  if (!account.allKeys.find(({ type }) => type === 'wallet:bitcoincash')) {
-    await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
-  }
-
-  if (!account.allKeys.find(({ type }) => type === 'wallet:ethereum')) {
-    await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
-  }
+  await createCustomWallets(account, fiatCurrencyCode, config.defaultWallets, dispatch)
 
   dispatch(trackAccountEvent('SignupWalletsCreated'))
 }

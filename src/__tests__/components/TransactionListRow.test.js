@@ -21,9 +21,7 @@ describe('TransactionListRow', () => {
       selectedCurrencyName: 'Bitcoin',
       thumbnailPath: 'wyre.png',
       walletBlockHeight: 11,
-      // eslint-disable-next-line react/no-unused-prop-types
       walletId: '3dfgbA347...',
-      // eslint-disable-next-line react/no-unused-prop-types
       currencyCode: 'BTC',
       transaction: '12ser4hh...',
       theme: getTheme()

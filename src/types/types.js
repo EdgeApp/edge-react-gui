@@ -1,6 +1,6 @@
 // @flow
 
-import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asObject, asOptional, asString } from 'cleaners'
 import {
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -9,6 +9,7 @@ import {
   type EdgeSpendTarget,
   type EdgeSwapQuote,
   type EdgeSwapRequest,
+  type EdgeToken,
   type EdgeTransaction
 } from 'edge-core-js/types'
 
@@ -47,7 +48,9 @@ export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
 
 export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
+  walletId: string,
   pluginId?: string,
+  tokenId?: string,
   displayCurrencyCode: string,
   exchangeCurrencyCode: string,
   displayDenomination: GuiDenomination,
@@ -90,45 +93,11 @@ export type ExchangeData = {
   secondaryCurrencyCode: string
 }
 
-const asEdgeDenomination = asObject({
-  name: asString,
-  multiplier: asString,
-  symbol: asOptional(asString)
-})
-
-export const asCustomTokenInfo = asObject({
-  currencyName: asString,
-  currencyCode: asString,
-  contractAddress: asString,
-  multiplier: asString,
-  denomination: asString,
-  isVisible: asOptional(asBoolean),
-  denominations: asArray(asEdgeDenomination),
-  walletType: asOptional(asString)
-})
-
-export type CustomTokenInfo = {
-  currencyName: string,
-  currencyCode: string,
-  contractAddress: string,
-  multiplier: string,
-  denomination: string, // eventually change to mandatory
-  isVisible?: boolean, // eventually change to mandatory,
-  denominations: EdgeDenomination[],
-  walletType?: string
-}
-
 export type CreateWalletType = {
   currencyName: string,
   walletType: string,
   pluginId: string,
   currencyCode: string
-}
-
-export type CreateTokenType = {
-  currencyCode: string,
-  currencyName: string,
-  pluginId: string
 }
 
 export type CustomNodeSetting = {
@@ -193,6 +162,7 @@ export const emptyGuiDenomination: GuiDenomination = {
   currencyCode: ''
 }
 export const emptyCurrencyInfo: GuiCurrencyInfo = {
+  walletId: '',
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
   displayDenomination: emptyGuiDenomination,
@@ -342,26 +312,42 @@ export type wcGetConnection = {
   uri: string,
   timeConnected: number
 }
-
 export type AppConfig = {
   configName: string,
+  appId?: string,
   appName: string,
   appNameShort: string,
   darkTheme: Theme,
   lightTheme: Theme,
+  referralServers?: string[],
+  notificationServers: string[],
   supportsEdgeLogin: boolean,
   knowledgeBase: string,
   supportSite: string,
   phoneNumber: string,
   website: string,
-  appStore: string
+  termsOfServiceSite: string,
+  appStore: string,
+  defaultWallets: string[]
 }
+
+/**
+ * We maintain a sorted wallet list in redux,
+ * since it's quite expensive to calculate.
+ */
+export type WalletListItem = {|
+  key: string,
+
+  // These will be set for token rows:
+  token?: EdgeToken,
+  tokenId?: string,
+
+  // The wallet will be present once it loads:
+  wallet?: EdgeCurrencyWallet,
+  walletId: string
+|}
 
 export type EdgeTokenId = {
   pluginId: string,
   tokenId?: string
-}
-
-export type EdgeTokenIdExtended = EdgeTokenId & {
-  currencyCode?: string
 }

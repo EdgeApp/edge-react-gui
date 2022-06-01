@@ -46,13 +46,13 @@ export const StakeOptionsScene = (props: Props) => {
         if (abort) return
         const availableStakePolicies = stakePolicies.filter(stakePolicy => {
           return (
-            stakePolicy.stakeAssets.some(stakeAsset => stakeAsset.tokenId === currencyCode) ||
-            stakePolicy.rewardAssets.some(rewardAssets => rewardAssets.tokenId === currencyCode)
+            stakePolicy.stakeAssets.some(stakeAsset => stakeAsset.currencyCode === currencyCode) ||
+            stakePolicy.rewardAssets.some(rewardAssets => rewardAssets.currencyCode === currencyCode)
           )
         })
         if (availableStakePolicies.length === 1) {
           // Transition to next scene immediately
-          navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
+          navigation.replace('stakeOverview', { walletId, stakePolicy: availableStakePolicies[0] })
         } else setStakePolicies(availableStakePolicies)
       })
       .catch(err => console.error(err))
@@ -62,7 +62,7 @@ export const StakeOptionsScene = (props: Props) => {
     }
   }, [currencyCode, navigation, walletId])
 
-  const currencyWallet = useSelector((state: RootState) => {
+  const wallet = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
     return currencyWallets[walletId]
   })
@@ -83,7 +83,7 @@ export const StakeOptionsScene = (props: Props) => {
     const primaryText = getPolicyAssetName(item, 'stakeAssets')
     const secondaryText = getPolicyTitleName(item)
     const key = [primaryText, secondaryText].join()
-    const policyIcons = getPolicyIconUris(currencyWallet, item)
+    const policyIcons = getPolicyIconUris(wallet.currencyInfo, item)
     return (
       <View key={key} style={styles.optionContainer}>
         <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>

@@ -1,7 +1,8 @@
 // @flow
+/* eslint-disable react-native/no-raw-text */
 
 import { div, eq } from 'biggystring'
-import { type EdgeDenomination, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeDenomination, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -18,14 +19,15 @@ import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { FiatText } from '../text/FiatText.js'
 import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput'
-import { FiatText } from '../themed/FiatText.js'
 import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -53,11 +55,10 @@ type StateProps = {
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   pluginId: string,
+  wallet: EdgeCurrencyWallet,
 
   // Fees
-  feeCurrencyCode: string,
   feeDisplayDenomination: EdgeDenomination,
-  feeExchangeDenomination: EdgeDenomination,
   feeNativeAmount: string,
   feeAmount: string,
   feeStyle?: string,
@@ -159,7 +160,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalance = () => {
-    const { balanceCrypto, primaryInfo, currencyCode, secondaryInfo, theme } = this.props
+    const { wallet, balanceCrypto, primaryInfo, theme } = this.props
     const styles = getStyles(theme)
     const { multiplier, name } = primaryInfo.displayDenomination
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
@@ -168,13 +169,8 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
         <EdgeText style={styles.rateBalanceText}>
           {balance}
-          <FiatText
-            nativeCryptoAmount={balanceCrypto}
-            cryptoCurrencyCode={currencyCode}
-            isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
-            cryptoExchangeMultiplier={primaryInfo.exchangeDenomination.multiplier}
-            parenthesisEnclosed
-          />
+          (
+          <FiatText wallet={wallet} tokenId={primaryInfo.tokenId} nativeCryptoAmount={balanceCrypto} />)
         </EdgeText>
       </View>
     )
@@ -184,7 +180,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const { flipInputHeaderText, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
-      <Card marginRem={0}>
+      <Card>
         <ExchangedFlipInput
           headerText={headerText ?? flipInputHeaderText}
           primaryCurrencyInfo={{ ...primaryInfo }}
@@ -207,11 +203,12 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFees = () => {
-    const { feeAmount, feeCurrencyCode, feeDisplayDenomination, feeExchangeDenomination, feeNativeAmount, feeStyle, secondaryInfo, theme } = this.props
+    const { wallet, feeAmount, feeDisplayDenomination, feeNativeAmount, feeStyle, theme } = this.props
     const truncatedFeeAmount = truncateDecimals(feeAmount, DEFAULT_TRUNCATE_PRECISION, false)
     const feeCryptoText = `${truncatedFeeAmount} ${feeDisplayDenomination.name} `
     const styles = getStyles(theme)
     const feeTextStyle = feeStyle === 'dangerText' ? styles.feeTextDanger : feeStyle === 'warningText' ? styles.feeTextWarning : styles.feeTextDefault
+
     return (
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
@@ -220,13 +217,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          <FiatText
-            nativeCryptoAmount={feeNativeAmount}
-            cryptoCurrencyCode={feeCurrencyCode}
-            isoFiatCurrencyCode={secondaryInfo.exchangeCurrencyCode}
-            cryptoExchangeMultiplier={feeExchangeDenomination.multiplier}
-            parenthesisEnclosed
-          />
+          (<FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} />)
         </EdgeText>
       </View>
     )
@@ -322,6 +313,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const name = getWalletName(wallet)
     const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
     const { pluginId } = wallet.currencyInfo
+    const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, pluginId, currencyCode)
@@ -332,6 +324,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
     const primaryInfo = {
+      walletId: walletId,
+      tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: cryptoDenomination,
       exchangeCurrencyCode: cryptoExchangeDenomination.name,
@@ -339,6 +333,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const secondaryInfo = {
+      walletId: walletId,
       displayCurrencyCode: fiatCurrencyCode,
       displayDenomination: fiatDenomination,
       exchangeCurrencyCode: isoFiatCurrencyCode,
@@ -378,9 +373,9 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       overridePrimaryExchangeAmount,
       forceUpdateGuiCounter,
       pluginId,
+      wallet,
 
       // Fees
-      feeCurrencyCode: wallet.currencyInfo.currencyCode,
       feeDisplayDenomination,
       feeExchangeDenomination,
       feeNativeAmount: transactionFee.nativeCryptoAmount,

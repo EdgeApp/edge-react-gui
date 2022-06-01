@@ -12,7 +12,7 @@ import type { Theme, ThemeProps } from '../../../components/services/ThemeContex
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
-import { Tile } from '../../../components/themed/Tile'
+import { Tile } from '../../../components/tiles/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'

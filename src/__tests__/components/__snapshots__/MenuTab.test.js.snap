@@ -21,8 +21,15 @@ exports[`MenuTab should render with loading props 1`] = `
   }
   theme={
     Object {
-      "backgroundGradientLeft": "#0D2145",
-      "backgroundGradientRight": "#0C446A",
+      "addButtonFont": "Quicksand-Medium",
+      "backgroundGradientColors": Array [
+        "#0D2145",
+        "#0C446A",
+      ],
+      "backgroundImage": undefined,
+      "backgroundImageServerUrls": Array [
+        "https://content.edge.app",
+      ],
       "buttonBorderRadiusRem": 0.25,
       "buySellCustomPluginModalIcon": "#0C446A",
       "cameraOverlayColor": "#000000",
@@ -47,6 +54,14 @@ exports[`MenuTab should render with loading props 1`] = `
       "dateModalTextLight": "#0073D9",
       "deactivatedText": "#87939E",
       "defaultBorderColor": "#FFFFFF",
+      "dividerLineColors": Array [
+        "rgba(255, 255, 255, .1)",
+        "rgba(255, 255, 255, .1)",
+      ],
+      "dividerLineHeight": 1,
+      "dropdownError": "#E85466",
+      "dropdownText": "#FFFFFF",
+      "dropdownWarning": "#F1AA19",
       "escapeButton": Array [
         "rgba(255, 255, 255, 0)",
         "rgba(255, 255, 255, 0)",
@@ -59,6 +74,8 @@ exports[`MenuTab should render with loading props 1`] = `
         "x": 0,
         "y": 0,
       },
+      "escapeButtonFont": "Quicksand-Regular",
+      "escapeButtonFontSizeRem": 1,
       "escapeButtonOutline": "rgba(255, 255, 255, 0)",
       "escapeButtonOutlineWidth": 0,
       "escapeButtonShadow": Object {
@@ -95,6 +112,9 @@ exports[`MenuTab should render with loading props 1`] = `
       "guiPluginLogoMoonpay": Object {
         "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
       },
+      "headerIcon": Object {
+        "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_Icon.png",
+      },
       "icon": "#FFFFFF",
       "iconDeactivated": "rgba(255, 255, 255, .75)",
       "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
@@ -103,13 +123,56 @@ exports[`MenuTab should render with loading props 1`] = `
       "inputAccessoryBackground": "#FFFFFF",
       "inputAccessoryText": "#0073D9",
       "isDark": true,
+      "keypadButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "keypadButtonBorderRadiusRem": 0.25,
+      "keypadButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "keypadButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "keypadButtonFont": "Quicksand-Medium",
+      "keypadButtonFontSizeRem": 1,
+      "keypadButtonOutline": "#66EDA8",
+      "keypadButtonOutlineWidth": 1,
+      "keypadButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "keypadButtonText": "#66EDA8",
+      "keypadButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "lineDivider": "rgba(255, 255, 255, .1)",
       "mediumLineWidth": 2,
       "modal": "#0D2145",
+      "modalBorderColor": "rgba(255, 255, 255, 0)",
+      "modalBorderRadiusRem": 1,
+      "modalBorderWidth": 0,
       "modalCloseIcon": "#66EDA8",
       "negativeText": "#E85466",
+      "outlineTextInputBorderColor": "#A4C7DF",
+      "outlineTextInputBorderColorFocused": "#66EDA8",
       "outlineTextInputBorderWidth": 1,
       "outlineTextInputColor": "rgba(255, 255, 255, 0)",
+      "outlineTextInputLabelColor": "#A4C7DF",
+      "outlineTextInputLabelColorFocused": "#66EDA8",
       "outlineTextInputTextColor": "#FFFFFF",
       "paymentTypeLogoApplePay": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
@@ -164,7 +227,44 @@ exports[`MenuTab should render with loading props 1`] = `
       },
       "pickerTextDark": "#FFFFFF",
       "pickerTextLight": "#000000",
+      "pinUsernameButton": Array [
+        "rgba(255, 255, 255, 0)",
+        "rgba(255, 255, 255, 0)",
+      ],
+      "pinUsernameButtonBorderRadiusRem": 1,
+      "pinUsernameButtonColorEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "pinUsernameButtonColorStart": Object {
+        "x": 0,
+        "y": 0,
+      },
+      "pinUsernameButtonFont": "Quicksand-Regular",
+      "pinUsernameButtonFontSizeRem": 1.5,
+      "pinUsernameButtonOutline": "rgba(255, 255, 255, 0)",
+      "pinUsernameButtonOutlineWidth": 0,
+      "pinUsernameButtonShadow": Object {
+        "elevation": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      },
+      "pinUsernameButtonText": "#FFFFFF",
+      "pinUsernameButtonTextShadow": Object {
+        "textShadowColor": "#000000",
+        "textShadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "textShadowRadius": 0,
+      },
       "positiveText": "#77C513",
+      "preferPrimaryButton": false,
       "primaryButton": Array [
         "#66EDA8",
         "#66EDA8",
@@ -177,6 +277,8 @@ exports[`MenuTab should render with loading props 1`] = `
         "x": 0,
         "y": 0,
       },
+      "primaryButtonFont": "Quicksand-Regular",
+      "primaryButtonFontSizeRem": 1,
       "primaryButtonOutline": "rgba(255, 255, 255, 0)",
       "primaryButtonOutlineWidth": 1,
       "primaryButtonShadow": Object {
@@ -198,6 +300,9 @@ exports[`MenuTab should render with loading props 1`] = `
         },
         "textShadowRadius": 0,
       },
+      "primaryLogo": Object {
+        "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+      },
       "primaryText": "#FFFFFF",
       "qrBackgroundColor": "#FFFFFF",
       "qrForegroundColor": "#000000",
@@ -215,6 +320,8 @@ exports[`MenuTab should render with loading props 1`] = `
         "x": 0,
         "y": 0,
       },
+      "secondaryButtonFont": "Quicksand-Regular",
+      "secondaryButtonFontSizeRem": 1,
       "secondaryButtonOutline": "#66EDA8",
       "secondaryButtonOutlineWidth": 1,
       "secondaryButtonShadow": Object {
@@ -239,14 +346,35 @@ exports[`MenuTab should render with loading props 1`] = `
       "secondaryText": "#A4C7DF",
       "settingsRowBackground": "rgba(255, 255, 255, 0)",
       "settingsRowHeaderBackground": "#0D2145",
+      "settingsRowHeaderFont": "Quicksand-Medium",
+      "settingsRowHeaderFontSizeRem": 1,
       "settingsRowPressed": "rgba(255, 255, 255, 0)",
       "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
+      "sideMenuBorderColor": "rgba(255, 255, 255, 0)",
+      "sideMenuBorderWidth": 0,
+      "sideMenuColor": "#0D2145",
+      "sideMenuFont": "Quicksand-Medium",
       "sliderTabMore": "#0073D9",
       "sliderTabRequest": "#77C513",
       "sliderTabSend": "#E85466",
-      "tabBarBackground": "#0D2145",
+      "tabBarBackground": Array [
+        "#0D2145",
+        "#0D2145",
+      ],
+      "tabBarBackgroundEnd": Object {
+        "x": 1,
+        "y": 1,
+      },
+      "tabBarBackgroundStart": Object {
+        "x": 0,
+        "y": 0,
+      },
       "tabBarIcon": "#FFFFFF",
       "tabBarIconHighlighted": "#66EDA8",
+      "tabBarTopOutlineColors": Array [
+        "#0D2145",
+        "#0D2145",
+      ],
       "textLink": "#66EDA8",
       "thinLineWidth": 1,
       "tileBackground": "rgba(255, 255, 255, 0)",
@@ -263,6 +391,7 @@ exports[`MenuTab should render with loading props 1`] = `
       "walletListSlideTutorialImage": Object {
         "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
       },
+      "walletProgressIconDone": "#FFFFFF",
       "walletProgressIconFill": "#66EDA8",
       "warningIcon": "#F1AA19",
       "warningText": "#F1AA19",

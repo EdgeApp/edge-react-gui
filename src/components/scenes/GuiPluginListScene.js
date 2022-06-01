@@ -1,6 +1,6 @@
 // @flow
 
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { asObject, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'

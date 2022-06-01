@@ -7,7 +7,6 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
-import { refreshWallet } from './WalletActions.js'
 
 export const showSplitWalletModal = (walletId: string, currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -40,7 +39,10 @@ export const showSplitWalletModal = (walletId: string, currencyCode: string) => 
   if (resolveValue === 'confirm') {
     try {
       await account.splitWalletInfo(walletId, newWalletType)
-      dispatch(refreshWallet(walletId))
+      dispatch({
+        type: 'UI/WALLETS/UPSERT_WALLETS',
+        data: { wallets: [edgeWallet] }
+      })
     } catch (error) {
       showError(error)
     }

@@ -4,7 +4,7 @@ import { mul } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Animated, { type SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { type SharedValue } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
@@ -15,10 +15,11 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../types/types.js'
-import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow.js'
 import { EdgeText } from './EdgeText.js'
 import { type SwipableRowRef, SwipeableRow } from './SwipeableRow.js'
+import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 
 type OwnProps = {
   // The request:
@@ -87,7 +88,9 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
 
     const fiatValue = `${fiatSymbol} ${fiatAmount}`
     const currencyValue = `${displayDenomination.symbol || ''} ${fioRequest.content.amount}`
-    const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
+    // time_stamp is returned as UTC but doesn't always include the zulu
+    const safeDate = fioRequest.time_stamp.includes('Z') ? fioRequest.time_stamp : `${fioRequest.time_stamp}Z`
+    const dateValue = `${formatTime(new Date(safeDate))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
     return (
       <SwipeableRow
         ref={this.rowRef}
@@ -96,14 +99,18 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
           isSentFioRequest(fioRequest.status) || isRejectedFioRequest(fioRequest.status)
             ? undefined
             : (isActive: SharedValue<boolean>) => (
-                <Underlay isActive={isActive} label={isSent ? s.strings.string_cancel_cap : s.strings.swap_terms_reject_button} onPress={this.onSwipe} />
+                <TouchableOpacity style={styles.underlay} onPress={this.onSwipe}>
+                  <SwipeableRowIcon isActive={isActive} minWidth={theme.rem(7)}>
+                    <EdgeText>{isSent ? s.strings.string_cancel_cap : s.strings.swap_terms_reject_button}</EdgeText>
+                  </SwipeableRowIcon>
+                </TouchableOpacity>
               )
         }
         rightDetent={theme.rem(7)}
-        rightThreshold={theme.rem(7)}
+        rightThreshold={theme.rem(7.5)}
         onRightSwipe={this.onSwipe}
       >
-        <ClickableRow onPress={this.onPress} highlight gradient>
+        <ClickableRow gradient highlight paddingRem={[0, 1]} onPress={this.onPress}>
           <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 
           <View style={styles.requestRight}>
@@ -123,28 +130,6 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
       </SwipeableRow>
     )
   }
-}
-
-/**
- * Helper component to render the expanding labels in the underlay.
- * The only reason this needs to be a component is to get access
- * to the `useAnimatedStyle` hook.
- */
-function Underlay(props: { isActive: SharedValue<boolean>, label: string, onPress: () => void }) {
-  const { isActive, label, onPress } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const style = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(isActive.value ? 1.5 : 1) }]
-  }))
-  return (
-    <TouchableOpacity style={styles.underlay} onPress={onPress}>
-      <Animated.View style={[styles.underlayText, style]}>
-        <EdgeText>{label}</EdgeText>
-      </Animated.View>
-    </TouchableOpacity>
-  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -199,11 +184,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.sliderTabSend,
     flexDirection: 'row',
     justifyContent: 'flex-end'
-  },
-  underlayText: {
-    width: theme.rem(7),
-    alignItems: 'center',
-    justifyContent: 'center'
   }
 }))
 

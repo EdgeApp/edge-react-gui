@@ -241,7 +241,6 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
-        label={s.strings.wallet_list_wallet_search}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
@@ -261,6 +260,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     let fromSecondaryInfo: GuiCurrencyInfo
     if (fromFiatCurrencyCode !== '') {
       fromSecondaryInfo = {
+        walletId: defaultFromWalletInfo.fromWalletId,
         displayCurrencyCode: fromFiatCurrencyCode,
         exchangeCurrencyCode: fromIsoFiatCurrencyCode,
         displayDenomination: getDenomFromIsoCode(fromFiatCurrencyCode),
@@ -273,6 +273,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     let toSecondaryInfo: GuiCurrencyInfo
     if (toFiatCurrencyCode !== '') {
       toSecondaryInfo = {
+        walletId: defaultToWalletInfo.toWalletId,
         displayCurrencyCode: toFiatCurrencyCode,
         exchangeCurrencyCode: toIsoFiatCurrencyCode,
         displayDenomination: getDenomFromIsoCode(toFiatCurrencyCode),

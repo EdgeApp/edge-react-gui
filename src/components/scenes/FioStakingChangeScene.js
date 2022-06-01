@@ -28,7 +28,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader.js'
 import { ThemedModal } from '../themed/ThemedModal'
-import { Tile } from '../themed/Tile.js'
+import { Tile } from '../tiles/Tile.js'
 
 type OwnProps = {
   route: RouteProp<'fioStakingChange'>,

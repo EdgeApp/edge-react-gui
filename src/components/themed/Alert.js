@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { useSpacing } from '../../hooks/useSpacing'
+import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -52,6 +52,8 @@ export const useAlertTypeIcon = (type: AlerType, color: string, size: number, st
 
 export function Alert({ type, title, message, numberOfLines = 2, marginRem, paddingRem, onPress, children }: Props) {
   const theme = useTheme()
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 1), theme.rem))
 
   const typeColor = useAlertTypeColor(type)
 
@@ -59,10 +61,8 @@ export function Alert({ type, title, message, numberOfLines = 2, marginRem, padd
 
   const icon = useAlertTypeIcon(type, typeColor, theme.rem(1.25), styles.icon)
 
-  const spacingStyles = useSpacing(marginRem, paddingRem, theme)
-
   const result = (
-    <View style={[styles.alert, spacingStyles]}>
+    <View style={[styles.alert, margin, padding]}>
       <View style={styles.header}>
         {icon}
         <EdgeText style={styles.title}>{title}</EdgeText>
@@ -82,8 +82,6 @@ export function Alert({ type, title, message, numberOfLines = 2, marginRem, padd
 const getStyles = (theme: Theme, { typeColor }: StylesOptions) =>
   cacheStyles((theme: Theme) => ({
     alert: {
-      margin: theme.rem(1),
-      padding: theme.rem(1),
       borderWidth: theme.cardBorder,
       borderColor: typeColor,
       borderRadius: theme.cardBorderRadius,

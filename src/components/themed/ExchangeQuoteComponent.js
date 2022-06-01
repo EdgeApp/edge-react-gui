@@ -17,6 +17,7 @@ type Props = {
   currencyCode: string,
   fiatCurrencyCode: string,
   fiatCurrencyAmount: string,
+  walletId: string,
   walletName: string,
   total?: string,
   miningFee?: string | null
@@ -47,9 +48,9 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
 
   render() {
     return (
-      <Card>
+      <Card marginRem={[0, 1]}>
         <CardContent
-          image={<CurrencyIcon currencyCode={this.props.currencyCode} sizeRem={1.5} />}
+          image={<CurrencyIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />}
           title={this.props.currency}
           subTitle={this.props.walletName}
           value={`${this.props.cryptoAmount} ${this.props.currencyCode}`}

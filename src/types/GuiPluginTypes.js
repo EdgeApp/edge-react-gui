@@ -3,15 +3,8 @@
 import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 import { type Permission } from '../reducers/PermissionsReducer.js'
-
-/**
- * A set of query parameters to pass to a plugin.
- */
-export type GuiPluginQuery = {
-  // Use a string for key/value queries, like `?foo=bar`
-  // Use null for key-only queries, like `?baz`
-  [key: string]: string | null
-}
+import { type EdgeTokenId } from '../types/types.js'
+import { type UriQueryMap } from './WebTypes'
 
 /**
  * A unique WebView-based plugin.
@@ -34,7 +27,7 @@ export type GuiPlugin = {
   // The URI to show in the WebView.
   // Both the plugin list & deep links can add stuff to the end of this:
   baseUri: string,
-  baseQuery?: GuiPluginQuery,
+  baseQuery?: UriQueryMap,
 
   // Don't append the deep path to the URI when set:
   lockUriPath?: true,
@@ -55,8 +48,8 @@ export type GuiPlugin = {
   permissions?: Permission[],
   mandatoryPermissions?: boolean,
 
-  // Temp HACK
-  filterPlugins?: string[]
+  // Sometimes plugins pass weird strings for their currency codes:
+  fixCurrencyCodes?: { [badString: string]: EdgeTokenId }
 }
 
 /**
@@ -65,7 +58,7 @@ export type GuiPlugin = {
 export type GuiPluginRow = {
   pluginId: string,
   deepPath: string,
-  deepQuery: GuiPluginQuery,
+  deepQuery: UriQueryMap,
 
   title: string,
   description: string,

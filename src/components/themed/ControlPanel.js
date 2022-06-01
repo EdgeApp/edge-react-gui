@@ -14,28 +14,27 @@ import { deleteLocalAccount } from '../../actions/AccountActions.js'
 import { logoutRequest } from '../../actions/LoginActions.js'
 import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_S.png'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
+import { useWatchContext } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
-import { getWalletFiat } from '../../util/CurrencyWalletHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+import { FiatText } from '../text/FiatText'
 import { DividerLine } from './DividerLine'
-import { FiatText } from './FiatText.js'
 import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
@@ -56,24 +55,17 @@ export function ControlPanel(props: Props) {
 
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
-  const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
-  const selectedWallet = useSelector(state => state.core.account.currencyWallets[state.ui.wallets.selectedWalletId])
-  const guiWallet = useSelector(getSelectedWallet)
-  const metaTokens = guiWallet?.metaTokens ?? []
-  const contractAddress = metaTokens.find(token => token.currencyCode === selectedCurrencyCode)?.contractAddress
-  const { name: currencyDenomName, multiplier: currencyDenomMult } = useSelector(state =>
-    guiWallet != null ? getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
-  )
-  const isoFiatCurrencyCode = selectedWallet != null ? getWalletFiat(selectedWallet).isoFiatCurrencyCode : null
-  const { multiplier: selectedCurrencyCodeExchangeMultiplier } = useSelector(state =>
-    guiWallet != null ? getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode) : { name: '', multiplier: '1' }
-  )
+  const selectedWallet = useSelectedWallet()
+  const selectedDenomination = useSelector(state => {
+    if (selectedWallet == null) return
+    return getDisplayDenomination(state, selectedWallet.wallet.currencyInfo.pluginId, selectedWallet.currencyCode)
+  })
 
   /// ---- Local State ----
 
   // Maintain the list of usernames:
-  const [usernames, setUsernames] = useState(arrangeUsers(context.localUsers, activeUsername))
-  useEffect(() => context.watch('localUsers', localUsers => setUsernames(arrangeUsers(context.localUsers, activeUsername))))
+  const localUsers = useWatchContext(context, 'localUsers')
+  const usernames = useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = useState(false)
@@ -118,7 +110,7 @@ export function ControlPanel(props: Props) {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
-        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isTextInput />)
+        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | void) => {
             if (result) {
               dispatch(qrCodeScanned(result))
@@ -131,7 +123,7 @@ export function ControlPanel(props: Props) {
 
   const handleLoginQr = () => {
     Actions.drawerClose()
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} isAlbum={false} />)
+    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
           dispatch(parseScannedUri(result))
@@ -241,26 +233,26 @@ export function ControlPanel(props: Props) {
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
-        <Image style={styles.logoImage} source={edgeLogo} resizeMode="contain" />
+        <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
-          {isoFiatCurrencyCode === null ? (
+          {selectedWallet == null || selectedDenomination == null ? (
             <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
             <>
               <View style={styles.rowIconContainer}>
-                {guiWallet != null ? <CurrencyIcon pluginId={selectedWallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={contractAddress} /> : null}
+                <CurrencyIcon pluginId={selectedWallet.wallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={selectedWallet.tokenId} />
               </View>
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
-                  {`1 ${currencyDenomName} = `}
+                  {`1 ${selectedDenomination.name} = `}
                   <FiatText
-                    nativeCryptoAmount={currencyDenomMult}
-                    cryptoCurrencyCode={selectedCurrencyCode}
-                    isoFiatCurrencyCode={isoFiatCurrencyCode}
-                    autoPrecision
                     appendFiatCurrencyCode
-                    cryptoExchangeMultiplier={selectedCurrencyCodeExchangeMultiplier}
+                    autoPrecision
+                    fiatSymbolSpace
+                    nativeCryptoAmount={selectedDenomination.multiplier}
+                    tokenId={selectedWallet.tokenId}
+                    wallet={selectedWallet.wallet}
                   />
                 </TitleText>
               </View>
@@ -365,14 +357,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Containers/Panels
   topPanel: {
     backgroundColor: theme.modal,
-    borderTopLeftRadius: theme.rem(2),
+    borderTopLeftRadius: theme.rem(1),
+    borderTopColor: theme.sideMenuBorderColor,
+    borderLeftColor: theme.sideMenuBorderColor,
+    borderTopWidth: theme.sideMenuBorderWidth,
+    borderLeftWidth: theme.sideMenuBorderWidth,
     height: theme.rem(10.5)
   },
   bottomPanel: {
     flex: 1,
     flexGrow: 1,
     backgroundColor: theme.modal,
-    borderBottomLeftRadius: theme.rem(2)
+    borderBottomColor: theme.sideMenuBorderColor,
+    borderLeftColor: theme.sideMenuBorderColor,
+    borderBottomWidth: theme.sideMenuBorderWidth,
+    borderLeftWidth: theme.sideMenuBorderWidth,
+    borderBottomLeftRadius: theme.rem(1)
   },
   rowsContainer: {
     flex: 1,
@@ -428,7 +428,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5)
   },
   text: {
-    fontFamily: theme.fontFaceMedium,
+    fontFamily: theme.sideMenuFont,
     marginLeft: theme.rem(0.5)
   },
   invisibleTapper: {

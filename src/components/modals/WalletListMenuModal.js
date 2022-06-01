@@ -12,6 +12,7 @@ import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/Wallet
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyInfos, getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from '../themed/CurrencyIcon.js'
@@ -25,6 +26,7 @@ type Option = {
 
 type Props = {
   bridge: AirshipBridge<null>,
+  navigation: NavigationProp<'walletList'>,
 
   // Wallet identity:
   currencyCode?: string,
@@ -47,13 +49,13 @@ const icons = {
 const getWalletOptions = async (params: {
   walletId: string,
   walletName?: string,
-  currencyCode?: string,
+  pluginId?: string,
   isToken?: boolean,
   account: EdgeAccount
 }): Promise<Option[]> => {
-  const { walletId, currencyCode, isToken, account } = params
+  const { walletId, pluginId, isToken, account } = params
 
-  if (!currencyCode) {
+  if (!pluginId) {
     return [
       { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
       { label: s.strings.string_archive_wallet, value: 'rawDelete' }
@@ -85,9 +87,9 @@ const getWalletOptions = async (params: {
   }
 
   for (const option of WALLET_LIST_MENU) {
-    const { currencyCodes, label, value } = option
+    const { pluginIds, label, value } = option
 
-    if (Array.isArray(currencyCodes) && !currencyCodes.includes(currencyCode)) continue
+    if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
     result.push({ label, value })
   }
@@ -95,13 +97,14 @@ const getWalletOptions = async (params: {
 }
 
 export function WalletListMenuModal(props: Props) {
-  const { bridge, currencyCode, isToken, walletId } = props
+  const { bridge, currencyCode, isToken, navigation, walletId } = props
 
   const [options, setOptions] = useState([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const edgeWallet = account.currencyWallets[walletId]
+  const { pluginId } = edgeWallet.currencyInfo
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -113,15 +116,15 @@ export function WalletListMenuModal(props: Props) {
 
   const optionAction = (option: WalletListMenuKey) => {
     if (currencyCode == null && edgeWallet != null) {
-      dispatch(walletListMenuAction(walletId, option, edgeWallet.currencyInfo.currencyCode))
+      dispatch(walletListMenuAction(navigation, walletId, option, edgeWallet.currencyInfo.currencyCode))
     } else {
-      dispatch(walletListMenuAction(walletId, option, currencyCode))
+      dispatch(walletListMenuAction(navigation, walletId, option, currencyCode))
     }
     bridge.resolve(null)
   }
 
   useEffect(() => {
-    getWalletOptions({ walletId, walletName, currencyCode, isToken, account }).then(options => setOptions(options))
+    getWalletOptions({ walletId, walletName, pluginId, isToken, account }).then(options => setOptions(options))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

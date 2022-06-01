@@ -26,7 +26,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type State = {
   selectedWallet: EdgeCurrencyWallet | null,

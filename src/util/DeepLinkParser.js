@@ -4,7 +4,7 @@ import URL from 'url-parse'
 
 import ENV from '../../env.json'
 import { type DeepLink, type PromotionLink } from '../types/DeepLinkTypes.js'
-import { parseQuery, stringifyQuery } from './GuiPluginTools'
+import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
  * Parse a link into the app, identifying special
@@ -46,18 +46,15 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     return parseEdgeProtocol(url)
   }
 
+  if (url.protocol === 'reqaddr:') {
+    return parseRequestAddress(url)
+  }
+
   // Handle the wallet connect:
   if (url.protocol === 'wc:') {
     const { key } = parseQuery(url.query)
     const isSigning = key == null
     return { type: 'walletConnect', isSigning, uri }
-  }
-
-  // Handle address requests:
-  if (/^[a-z]+-ret:$/.test(url.protocol)) {
-    // Extract the coin name from the protocol:
-    const coin = url.protocol.slice(0, url.protocol.indexOf('-ret:'))
-    return parseReturnAddress(url, coin)
   }
 
   // Handle Azte.co URLs
@@ -68,7 +65,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
       const cleanKey = /^c[0-9]$/.test(key) ? key.replace('c', 'CODE_') : key
       cleanQuery[cleanKey] = query[key]
     }
-    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}?${stringifyQuery(cleanQuery)}&ADDRESS=`
+    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${aztecoApiKey}${stringifyQuery(cleanQuery)}&ADDRESS=`
     return {
       type: 'azteco',
       uri: aztecoLink
@@ -129,12 +126,8 @@ function parseEdgeProtocol(url: URL): DeepLink {
       return { type: 'walletConnect', isSigning, uri }
     }
 
-    case 'x-callback-url': {
-      const currencyNameMatch = /^\/request-([a-z]+)-address/.exec(url.pathname)
-      if (currencyNameMatch == null) {
-        throw new SyntaxError('No request-address field')
-      }
-      return parseReturnAddress(url, currencyNameMatch[1])
+    case 'reqaddr': {
+      return parseRequestAddress(url)
     }
 
     case 'https': {
@@ -155,15 +148,30 @@ function parseDownloadLink(url: URL): PromotionLink {
 }
 
 /**
- * Handles requests for a payment address, like
- * `edge://x-callback-url/request-litecoin-address` or
- * `litecoin-ret://x-callback-url/request-address`
+ * Parse a request for address link.
  */
-function parseReturnAddress(url: URL, currencyName: string): DeepLink {
+function parseRequestAddress(url: URL): DeepLink {
   const query = parseQuery(url.query)
-  const sourceName = query['x-source'] ?? undefined
-  const successUri = query['x-success'] ?? undefined
-  return { type: 'returnAddress', currencyName, sourceName, successUri }
+  const codesString = query.codes ?? undefined
+
+  const redir = query.redir != null ? decodeURI(query.redir) : undefined
+  const post = query.post != null ? decodeURI(query.post) : undefined
+  const payer = query.payer ?? undefined
+
+  if (codesString == null) throw new SyntaxError('No currency codes found in request for address')
+
+  // Split the asset codes by '-'
+  const codes = codesString.split('-')
+
+  // Split each asset code by '_'
+  const assets = codes.map(codePair => {
+    const splitCodes = codePair.split('_')
+    const nativeCode = splitCodes[0].toUpperCase()
+    const tokenCode = splitCodes.length > 1 ? splitCodes[1].toUpperCase() : nativeCode
+    return { nativeCode, tokenCode }
+  })
+
+  return { type: 'requestAddress', assets, redir, post, payer }
 }
 
 const prefixes: Array<[string, string]> = [
@@ -178,5 +186,6 @@ const prefixes: Array<[string, string]> = [
 
   // Alternative schemes:
   ['https://deep.edge.app/', 'edge://'],
-  ['airbitz://', 'edge://']
+  ['airbitz://', 'edge://'],
+  ['reqaddr://', 'edge://reqaddr']
 ]

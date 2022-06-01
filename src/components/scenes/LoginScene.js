@@ -5,20 +5,19 @@ import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { type ImageSourcePropType, Keyboard, StatusBar, StyleSheet, View } from 'react-native'
+import { type ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions.js'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions.js'
-import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
-import { type ThemeProps, withTheme } from '../../components/services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
 import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLinkTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiTouchIdInfo } from '../../types/types.js'
+import { pickRandom } from '../../util/utils'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -51,7 +50,7 @@ type State = {
 
 let firstRun = true
 
-class LoginSceneComponent extends React.Component<Props, State> {
+class LoginSceneComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -67,19 +66,27 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    getBackgroundImage(this.props.disklet)
+    const { theme } = this.props
+    const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
+    getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
       .then(backgroundImage => this.setState({ backgroundImage }))
-      .catch(e => console.log(e?.message ?? ''))
-    const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
-    if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
+      .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
+    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
+    if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
       const { context, initializeAccount } = this.props
       firstRun = false
-      setTimeout(() => {
+      if (YOLO_PIN != null) {
+        context
+          .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
+          .then(account => initializeAccount(account, dummyTouchIdInfo))
+          .catch(showError)
+      }
+      if (YOLO_PASSWORD != null) {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
           .then(account => initializeAccount(account, dummyTouchIdInfo))
           .catch(showError)
-      }, 500)
+      }
     }
     const response = await checkVersion()
     const skipUpdate = (await this.getSkipUpdate()) === response.version
@@ -97,7 +104,19 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   componentDidUpdate(oldProps: Props) {
-    const { account, pendingDeepLink } = this.props
+    const { account, pendingDeepLink, theme } = this.props
+    const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
+
+    getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
+      .then(backgroundImage => {
+        if (backgroundImage != null && this.state.backgroundImage != null) {
+          if (backgroundImage.uri === this.state.backgroundImage.uri) {
+            return
+          }
+        }
+        this.setState({ backgroundImage })
+      })
+      .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
 
     // Did we get a new recovery link?
     if (pendingDeepLink !== oldProps.pendingDeepLink && pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
@@ -125,11 +144,13 @@ class LoginSceneComponent extends React.Component<Props, State> {
   render() {
     const { context, handleSendLogs, theme, username } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
+    const styles = getStyles(theme)
 
     return this.props.account.username == null ? (
       <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
           username={username}
+          appId={config.appId}
           accountOptions={{ pauseWallets: true }}
           context={context}
           recoveryLogin={passwordRecoveryKey}
@@ -138,7 +159,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
           key={String(counter)}
           appName={config.appNameShort}
           backgroundImage={backgroundImage}
-          primaryLogo={edgeLogo}
+          primaryLogo={theme.primaryLogo}
           primaryLogoCallback={handleSendLogs}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
           skipSecurityAlerts
@@ -155,15 +176,14 @@ const dummyTouchIdInfo: GuiTouchIdInfo = {
   isTouchSupported: false
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     position: 'relative',
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: THEME.COLORS.PRIMARY
+    backgroundColor: theme.backgroundGradientColors[0]
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const LoginScene = connect<StateProps, DispatchProps, {}>(
   state => ({

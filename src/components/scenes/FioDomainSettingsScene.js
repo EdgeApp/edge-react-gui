@@ -18,7 +18,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton.js'
-import { Tile } from '../themed/Tile'
+import { Tile } from '../tiles/Tile'
 
 type State = {
   showRenew: boolean,

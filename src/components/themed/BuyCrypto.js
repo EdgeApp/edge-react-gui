@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -7,55 +8,51 @@ import { sprintf } from 'sprintf-js'
 import { PLUGIN_BUY } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { useCallback } from '../../types/reactHooks.js'
 import { Actions } from '../../types/routerTypes.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
-const allowedCurrencies = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
+const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto)
 
 type OwnProps = {
-  // eslint-disable-next-line react/no-unused-prop-types
-  walletId: string,
-  currencyCode: string
+  wallet: EdgeCurrencyWallet,
+  tokenId?: string
 }
 
-type StateProps = { currencyName: string }
+type Props = OwnProps
 
-type Props = OwnProps & StateProps & ThemeProps
+export const BuyCrypto = (props: Props) => {
+  const { wallet, tokenId } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-export class BuyCryptoComponent extends React.PureComponent<Props> {
-  handlePress = (): void => {
+  const handlePress = useCallback(() => {
     Actions.push(PLUGIN_BUY, { direction: 'buy' })
-  }
+  }, [])
 
-  render() {
-    const { currencyCode, currencyName, theme } = this.props
-    const styles = getStyles(theme)
+  const { displayName, pluginId } = wallet.currencyInfo
 
-    return (
-      <>
-        {allowedCurrencies.includes(currencyCode) && (
-          <ButtonBox onPress={this.handlePress} paddingRem={1}>
-            <View style={styles.container}>
-              <View style={styles.buyCrypto}>
-                <CurrencyIcon currencyCode={currencyCode} marginRem={[0.25, 0]} sizeRem={2.25} />
+  return (
+    <>
+      {allowedPluginIds.includes(pluginId) && tokenId == null && (
+        <ButtonBox onPress={handlePress} paddingRem={1}>
+          <View style={styles.container}>
+            <View style={styles.buyCrypto}>
+              <CurrencyIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
-                <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, currencyName)}</EdgeText>
-              </View>
+              <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
             </View>
-          </ButtonBox>
-        )}
-        <View style={styles.noTransactionContainer}>
-          <EdgeText style={styles.noTransactionText}>{s.strings.transaction_list_no_tx_yet}</EdgeText>
-        </View>
-      </>
-    )
-  }
+          </View>
+        </ButtonBox>
+      )}
+      <View style={styles.noTransactionContainer}>
+        <EdgeText style={styles.noTransactionText}>{s.strings.transaction_list_no_tx_yet}</EdgeText>
+      </View>
+    </>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -85,11 +82,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.25)
   }
 }))
-
-export const BuyCrypto = connect<StateProps, {}, OwnProps>(
-  (state, { walletId, currencyCode }) => {
-    const guiWallet = state.ui.wallets.byId[walletId]
-    return { currencyName: guiWallet.currencyNames[currencyCode] }
-  },
-  dispatch => ({})
-)(withTheme(BuyCryptoComponent))

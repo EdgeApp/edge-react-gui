@@ -1,6 +1,6 @@
 // @flow
 
-import iid from '@react-native-firebase/iid'
+import messaging from '@react-native-firebase/messaging'
 import { Platform } from 'react-native'
 import { getBuildNumber, getUniqueId, getUserAgent, getVersion } from 'react-native-device-info'
 
@@ -18,7 +18,7 @@ export const registerDevice = () => async (dispatch: Dispatch, getState: GetStat
 
     const deviceId = getUniqueId()
     const deviceIdEncoded = encodeURIComponent(deviceId)
-    const tokenId = await iid()
+    const tokenId = await messaging()
       .getToken()
       .catch(() => console.log('Failed to fetch firebase device token.'))
     const deviceDescription = await getUserAgent()
