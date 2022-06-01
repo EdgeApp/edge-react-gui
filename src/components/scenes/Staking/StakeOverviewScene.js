@@ -96,9 +96,7 @@ export const StakeOverviewScene = (props: Props) => {
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = guessFromCurrencyCode(account, { currencyCode, pluginId: wallet.currencyInfo.pluginId }).tokenId
-    return tokenId != null ? (
-      <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
-    ) : null
+    return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
   }
 
   if (stakeAllocations == null || rewardAllocations == null)
