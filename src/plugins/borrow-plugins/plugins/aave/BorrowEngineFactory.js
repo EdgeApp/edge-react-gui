@@ -60,11 +60,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       })
     const debts: BorrowDebt[] = reserveTokenBalances
       .filter(({ vBalance }) => !vBalance.eq(0))
-      .map(({ address, vBalance }) => {
+      .map(({ address, vBalance, variableApr }) => {
         return {
           tokenId: addressToTokenId(address),
           nativeAmount: vBalance.toString(),
-          apr: 0.0825
+          apr: variableApr
         }
       })
 
