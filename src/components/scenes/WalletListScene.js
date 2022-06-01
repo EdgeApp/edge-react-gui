@@ -4,9 +4,10 @@ import * as React from 'react'
 import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { useCallback, useMemo, useState } from '../../types/reactHooks.js'
+import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -46,17 +47,17 @@ export function WalletListScene(props: Props) {
   const currencyWallets = useWatchAccount(account, 'currencyWallets')
   const loading = Object.keys(currencyWallets).length <= 0
 
-  const handleSort = useCallback(() => {
+  const handleSort = useHandler(() => {
     Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
       .then(sort => {
         if (sort === 'manual') setSorting(true)
       })
       .catch(showError)
-  }, [])
+  })
 
-  const handleRefresh = useCallback(() => {
+  const handleRefresh = useHandler(() => {
     setSearching(true)
-  }, [])
+  })
 
   // Show the tutorial or password reminder on mount:
   useAsyncEffect(

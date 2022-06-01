@@ -4,8 +4,9 @@ import * as React from 'react'
 import { FlatList, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings'
-import { useCallback, useMemo } from '../../types/reactHooks.js'
+import { useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import type { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
@@ -223,28 +224,25 @@ export function WalletList(props: Props) {
 
   // rendering -------------------------------------------------------------
 
-  const renderRow = useCallback(
-    (item: FlatListItem<any>) => {
-      if (item.item.walletId == null) {
-        const createItem: WalletCreateItem = item.item
-        const { currencyCode, displayName, pluginId, walletType } = createItem
-        return <WalletListCreateRow currencyCode={currencyCode} currencyName={displayName} pluginId={pluginId} walletType={walletType} onPress={handlePress} />
-      }
+  const renderRow = useHandler((item: FlatListItem<any>) => {
+    if (item.item.walletId == null) {
+      const createItem: WalletCreateItem = item.item
+      const { currencyCode, displayName, pluginId, walletType } = createItem
+      return <WalletListCreateRow currencyCode={currencyCode} currencyName={displayName} pluginId={pluginId} walletType={walletType} onPress={handlePress} />
+    }
 
-      const walletItem: WalletListItem = item.item
-      const { token, tokenId, wallet } = walletItem
+    const walletItem: WalletListItem = item.item
+    const { token, tokenId, wallet } = walletItem
 
-      if (wallet == null) {
-        return <WalletListLoadingRow />
-      }
-      return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
-    },
-    [handlePress]
-  )
+    if (wallet == null) {
+      return <WalletListLoadingRow />
+    }
+    return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
+  })
 
-  const renderSectionHeader = useCallback((section: { section: Section }) => {
+  const renderSectionHeader = useHandler((section: { section: Section }) => {
     return <WalletListSectionHeader title={section.section.title} />
-  }, [])
+  })
 
   return sectionList == null ? (
     <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />

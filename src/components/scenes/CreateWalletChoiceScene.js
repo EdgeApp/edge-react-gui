@@ -4,9 +4,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import CreateWalletSvg from '../../assets/images/create-wallet.svg'
+import { useHandler } from '../../hooks/useHandler.js'
 import { useLayout } from '../../hooks/useLayout.js'
 import s from '../../locales/strings.js'
-import { useCallback } from '../../types/reactHooks.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -29,17 +29,17 @@ export const CreateWalletChoiceScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const onSelectNew = useCallback(() => {
+  const onSelectNew = useHandler(() => {
     navigation.navigate('createWalletSelectFiat', {
       selectedWalletType
     })
-  }, [navigation, selectedWalletType])
+  })
 
-  const onSelectRestore = useCallback(() => {
+  const onSelectRestore = useHandler(() => {
     navigation.navigate('createWalletImport', {
       selectedWalletType
     })
-  }, [navigation, selectedWalletType])
+  })
 
   // Scale the icon to match the height of the first MainButton container for consistency
   const [iconContainerLayout, setIconContainerLayout] = useLayout()

@@ -5,8 +5,9 @@ import { type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { useCallback, useState } from '../../types/reactHooks.js'
+import { useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -45,7 +46,7 @@ export function EditTokenScene(props: Props) {
     return (multiplier.length - 1).toString()
   })
 
-  const handleDelete = useCallback(async () => {
+  const handleDelete = useHandler(async () => {
     if (tokenId == null) return
     await Airship.show(bridge => (
       <ButtonsModal
@@ -65,9 +66,9 @@ export function EditTokenScene(props: Props) {
         }}
       />
     ))
-  }, [navigation, tokenId, wallet])
+  })
 
-  const handleSave = useCallback(async () => {
+  const handleSave = useHandler(async () => {
     // Validate input:
     const decimals = parseInt(decimalPlaces)
     if (currencyCode === '' || displayName === '' || contractAddress === '') {
@@ -102,7 +103,7 @@ export function EditTokenScene(props: Props) {
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
     }
     navigation.goBack()
-  }, [contractAddress, currencyCode, decimalPlaces, displayName, navigation, tokenId, wallet])
+  })
 
   return (
     <SceneWrapper avoidKeyboard>
