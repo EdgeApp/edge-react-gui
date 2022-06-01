@@ -34,7 +34,7 @@ export const currencyPlugins = {
   telos: true,
   wax: true,
   ethereum: ENV.ETHEREUM_INIT,
-  kovan: ENV.ETHEREUM_INIT,
+  kovan: ENV.KOVAN_INIT,
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT || true,
