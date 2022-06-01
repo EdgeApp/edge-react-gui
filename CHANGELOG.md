@@ -1,5 +1,98 @@
 # edge-react-gui
 
+## 2.15.0 (2022-06-01)
+
+- Massive performance improvements and reduced resource usage
+- Rewrite account callback management
+- Add new swap partner LetsExchange
+- MoonPay: Enable MATIC
+- MoonPay: Enable Google Pay support
+- Many theming customizations and improvements
+- Deprecate exchange rate plugins and use new rates2 server
+- Move token management to the core
+- Re-Enable Spooky for TOMB Staking
+- Implement Request for Payment Address (RPA) Protocol
+- Implement new hook useCryptoText
+- Implement new FiatText, CryptoText and TickerText components
+- FIO: Update Binance Smart Chain currency code
+- Always show flash, album, and enter address buttons on scan modal
+- Increase number of simultaneous wallets loading on login
+- Re-theme edge-login-ui-rn security modals
+- FIO: Fix request list order
+- Pass branding to password recovery and OTP repair scenes
+- Re-theme CreateWalletOptionsScene
+- Re-theme DefaultFiatSettingScene
+- Redesign the Preferred Exchange modal
+- Banxa: Re-enable PayID and POLi payment methods
+- Changelly: Disable KNC
+- Simplex: Hardcode $50-$20k min and max amounts
+- Fix startup crash on Android 12
+- Fix Buy Cryptocurrency button possible undefined label
+- Add workaround for old Android device PBKDF2 failures
+- Update several components to use tokenId
+- Various text and visual fixes
+- Update translations
+- Upgrade edge-core-js to v0.19.18
+  - added: EdgeCurrencyConfig.allTokens.
+  - added: EdgeCurrencyWallet.currencyConfig.
+  - added: EdgeCurrencyConfig.addCustomToken.
+  - added: EdgeCurrencyConfig.changeCustomToken.
+  - added: EdgeCurrencyConfig.removeCustomToken.
+  - added: EdgeCurrencyWallet.changeEnabledTokenIds
+  - added: EdgeCurrencyWallet.enabledTokenIds
+  - added: Optional EdgeCurrencyEngine.changeCustomTokens
+  - added: Optional EdgeCurrencyEngine.changeEnabledTokenIds
+  - added: Optional EdgeCurrencyTools.getTokenId
+  - changed: Save custom tokens to disk.
+  - changed: Save enabled tokens to disk.
+  - changed: Update the token API for currency plugins. Plugins should implement the new methods, then turn the old methods to no-ops.
+  - fixed: Do not uselessly re-save the custom tokens on every login.
+  - fixed: Correctly load custom tokens (regression from last release).
+  - fixed: Correctly load tokens from the legacy settings file.
+  - fixed: Correctly report errors when adding invalid custom tokens.
+  - fixed: Do not erroneously enable tokens when editing their currency codes.
+  - fixed: Never return undefined for EdgeCurrencyConfig.customTokens.
+  - fixed: Handle token edits that change the tokenId or currencyCode.
+  - deprecated: EdgeCurrencyWallet.addCustomToken.
+  - deprecated: EdgeCurrencyWallet.changeEnabledTokens
+  - deprecated: EdgeCurrencyWallet.disableTokens
+  - deprecated: EdgeCurrencyWallet.enableTokens
+  - deprecated: EdgeCurrencyWallet.getEnabledTokens
+  - deprecated: EdgeCurrencyEngine.addCustomToken
+  - deprecated: EdgeCurrencyEngine.disableTokens
+  - deprecated: EdgeCurrencyEngine.enableTokens
+  - deprecated: EdgeCurrencyEngine.getEnabledTokens
+  - deprecated: EdgeCurrencyEngine.getTokenStatus
+  - removed: Do not treat parent currencies as tokens. This logic was unused, so update the documentation.
+- Upgrade edge-currency-accountbased to v0.16.0
+  - Remove the enabledTokens from the cached data (walletLocalData) and filter unknown tokens out
+  - Remove RPC node that returns false zero balances
+  - Add getTokenId to ethereum and eos plugins
+- Upgrade edge-core-js to v0.19.15
+  - Upgrade @binance-chain/javascript-sdk to v4.2.0
+  - Replaced eos checkAddress internal loop with regex
+  - Fix XRP disconnect method
+  - Fix tests
+  - Fix plugin imports
+  - Always initialize FIO sdk with a baseUrl
+  - Fix FTM network fees test
+  - Fix ftmInfo.js filename
+  - Add timeout to getSupportedCurrencies test to prevent hanging
+Upgrade edge-currency-bitcoin to v4.9.23
+  - DASH: Recognize the Instantlock for incoming Dash transactions
+  - Work around Android PBKDF2 failures
+- Upgrade edge-currency-monero to v0.4.1
+  - Fix syncing when the user settings are empty
+- Upgrade edge-login-ui-rn to v0.10.2
+  - rn: Accept Branding props in OtpRepairScreen and PasswordRecoveryScreen to populate appName
+  - rn: Allow passing a Theme object to the LoginUiProvider to provide custom theming of colors and fonts.
+  - rn: Remove hardcoded uses of "Edge" and use appName parameter
+  - rn: Upgrade to cleaners 0.3.12
+  - rn: Upgrade Airship to 0.2.9
+  - rn: Add dependency on react-native-svg which needs to be installed in parent application
+  - rn: Fix incorrect logic for when Notification and Background App Refresh permissions as requested
+  - rn: Fix the pin-login error message height
+
 ## 2.14.1 (2022-05-02)
 
 - Use explicit gasPrice value for all transactions in stake workflow
