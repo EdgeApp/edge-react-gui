@@ -449,8 +449,8 @@ const getStyles = cacheStyles(theme => {
     errorText: {
       ...footerCommon,
       color: theme.dangerText,
-      left: theme.rem(0.75),
-      bottom: -theme.rem(0.875)
+      left: theme.rem(1.25),
+      bottom: -theme.rem(1.25)
     },
 
     // The counter text splits the bottom right border line:
