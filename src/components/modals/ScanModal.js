@@ -163,15 +163,15 @@ export const ScanModal = (props: Props) => {
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
               <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
                 <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                  <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
+                  <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
                   <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
-                  <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
+                  <Ionicon style={styles.icon} name="albums-outline" />
                   <EdgeText>{s.strings.fragment_send_album}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
-                  <Ionicon style={styles.icon} name="pencil-outline" size={theme.rem(1.5)} />
+                  <Ionicon style={styles.icon} name="pencil-outline" />
                   <EdgeText>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
                 </TouchableOpacity>
               </View>
