@@ -34,10 +34,6 @@ test('initialState', () => {
       useLegacyAddress: false,
       uniqueLegacyAddress: false
     },
-    scan: {
-      scanEnabled: false,
-      torchEnabled: false
-    },
     sendConfirmation: SendConfirmationInitialState,
     transactionDetails: {
       subcategories: []
