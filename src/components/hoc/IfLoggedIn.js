@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 
-import { LoadingScene } from '../../../../components/scenes/LoadingScene.js'
-import { connect } from '../../../../types/reactRedux.js'
+import { connect } from '../../types/reactRedux.js'
+import { LoadingScene } from '../scenes/LoadingScene.js'
 
 type StateProps = {
   loginStatus: boolean
