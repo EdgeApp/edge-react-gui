@@ -7,6 +7,7 @@ const strings = {
   share_subject: 'Hey, I think you should try %s',
   share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
+  drawer_borrow_dollars: 'Borrow Dollars',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_request: 'Request',
@@ -902,6 +903,21 @@ const strings = {
   select_fio_address_address_from: 'Send from FIO Crypto Handle',
   select_fio_address_address_memo: 'FIO Memo',
   select_fio_address_address_memo_error: 'FIO Memo Error',
+
+  // Loan
+  loan_borrow_amount_title: 'Amount to borrow',
+  loan_dashboard_title: 'Loan Dashboard',
+  loan_details_collateral_required: 'Collateral Amount Required',
+  loan_details_collateral_source: 'Source of Collateral',
+  loan_details_destination: 'Fund Destination',
+  loan_details_title: 'Borrow With Aave',
+  loan_details_actions_title: 'Actions',
+  loan_details_breakdown_title: 'Loan Breakdown',
+  loan_details_insufficient_funds_warning:
+    'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
+  loan_details_new_loan: 'New Loan',
+  loan_details_select_s_wallet: 'Please select a %s wallet',
+  loan_details_select_receiving_wallet: 'Please select a receiving wallet',
 
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',

@@ -48,7 +48,7 @@ type State = {
   backgroundImage: ImageSourcePropType | null
 }
 
-let firstRun = true
+const firstRun = true
 
 class LoginSceneComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -74,7 +74,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
     if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
       const { context, initializeAccount } = this.props
-      firstRun = false
+      // firstRun = false
       if (YOLO_PIN != null) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)

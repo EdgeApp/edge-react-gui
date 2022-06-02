@@ -261,6 +261,7 @@ export const edgeLight: Theme = {
   // tileDivider: palette.gray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
+  thickLineWidth: 3,
 
   // DividerLine component
   dividerLineHeight: 1,
