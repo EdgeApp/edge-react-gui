@@ -366,50 +366,6 @@ Object {
 }
 `;
 
-exports[`sendConfirmation reducer pending 1`] = `
-Object {
-  "address": "",
-  "authRequired": "none",
-  "error": null,
-  "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
-      "amountFiat": 0,
-      "bizId": 0,
-      "category": "",
-      "name": "",
-      "notes": "",
-    },
-    "nativeAmount": "",
-    "networkFeeOption": "standard",
-    "publicAddress": "",
-  },
-  "isEditable": true,
-  "isSendUsingFioAddress": false,
-  "maxSpendSet": false,
-  "nativeAmount": "",
-  "pending": true,
-  "pin": "",
-  "spendInfo": null,
-  "toggleCryptoOnTop": 0,
-  "transaction": Object {
-    "blockHeight": -1,
-    "currencyCode": "",
-    "date": 0,
-    "metadata": Object {},
-    "nativeAmount": "",
-    "networkFee": "",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [],
-    "parentNetworkFee": "",
-    "signedTx": "",
-    "txid": "",
-  },
-  "transactionMetadata": null,
-}
-`;
-
 exports[`sendConfirmation reducer pin 1`] = `
 Object {
   "address": "",

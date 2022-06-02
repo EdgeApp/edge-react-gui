@@ -20,7 +20,6 @@ import { selectWallet } from '../../actions/WalletActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
@@ -38,6 +37,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText'
 import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
+import { SmartSlider } from '../themed/SmartSlider'
 import { AddressTile } from '../tiles/AddressTile.js'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
@@ -53,7 +53,6 @@ type StateProps = {
   error: Error | null,
   exchangeRates: GuiExchangeRates,
   nativeAmount: string | null,
-  pending: boolean,
   pin: string,
   resetSlider: boolean,
   sliderDisabled: boolean,
@@ -90,14 +89,13 @@ type WalletStates = {
 
 type State = {
   recipientAddress: string,
-  loading: boolean,
-  resetSlider: boolean,
   fioSender: FioSenderInfo
 } & WalletStates
 
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: AddressTile | void
   pinInput: { current: TextInput | null } = React.createRef()
+  resetSliderFunc: void | Function = undefined
 
   constructor(props: Props) {
     super(props)
@@ -106,8 +104,6 @@ class SendComponent extends React.PureComponent<Props, State> {
     const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
     this.state = {
       recipientAddress: '',
-      loading: false,
-      resetSlider: false,
       fioSender: {
         fioAddress: fioPendingRequest?.payer_fio_address ?? '',
         fioWallet: null,
@@ -152,13 +148,11 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (prevProps.route.params.guiMakeSpendInfo == null && this.props.route.params.guiMakeSpendInfo != null) {
       this.updateSendConfirmationTx(this.props.route.params.guiMakeSpendInfo)
     }
-    if (prevProps.pending && !this.props.pending) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ resetSlider: true })
-    }
-    if (!prevProps.pending && !this.props.pending && this.state.resetSlider) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ resetSlider: false })
+    if (!prevProps.resetSlider && this.props.resetSlider) {
+      if (this.resetSliderFunc != null) {
+        this.resetSliderFunc()
+        this.resetSliderFunc = undefined
+      }
     }
   }
 
@@ -329,12 +323,11 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  submit = async () => {
+  submit = async (doResetSlider: Function) => {
+    this.resetSliderFunc = doResetSlider
     const { isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { selectedWalletId, selectedCurrencyCode } = this.state
-
-    this.setState({ loading: true })
 
     const isFioPendingRequest = !!guiMakeSpendInfo?.fioPendingRequest
 
@@ -343,8 +336,6 @@ class SendComponent extends React.PureComponent<Props, State> {
     } else {
       await signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode)
     }
-
-    this.setState({ loading: false })
   }
 
   renderSelectedWallet() {
@@ -576,8 +567,8 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   // Render
   render() {
-    const { pending, resetSlider, sliderDisabled, theme } = this.props
-    const { loading, recipientAddress, resetSlider: localResetSlider } = this.state
+    const { sliderDisabled, theme } = this.props
+    const { recipientAddress } = this.state
     const styles = getStyles(theme)
 
     return (
@@ -593,11 +584,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderUniqueIdentifier()}
           {this.renderInfoTiles()}
           {this.renderAuthentication()}
-          <View style={styles.footer}>
-            {!!recipientAddress && !localResetSlider && (
-              <Slider onSlidingComplete={this.submit} reset={resetSlider || localResetSlider} disabled={sliderDisabled} showSpinner={loading || pending} />
-            )}
-          </View>
+          <View style={styles.footer}>{!!recipientAddress && <SmartSlider onSlidingComplete={this.submit} disabled={sliderDisabled} />}</View>
         </KeyboardAwareScrollView>
       </SceneWrapper>
     )
@@ -632,7 +619,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
+    const { nativeAmount, transaction, transactionMetadata, error, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
 
     return {
       account: state.core.account,
@@ -642,10 +629,9 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       error,
       exchangeRates: state.exchangeRates,
       nativeAmount,
-      pending,
       pin: state.ui.scenes.sendConfirmation.pin,
       resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
-      sliderDisabled: !transaction || !!error || !!pending,
+      sliderDisabled: !transaction || !!error,
       transaction,
       transactionMetadata,
       isSendUsingFioAddress,
