@@ -15,6 +15,7 @@ const strings = {
   drawer_wallets: 'Wallets',
   drawer_fio_names: 'FIO Names',
   drawer_fio_requests: 'FIO Requests',
+  drawer_ionia: '%s Mastercard',
 
   network_alert_title: 'No Internet connection',
   fio_network_alert_text: 'FIO functionality requires internet connection.',

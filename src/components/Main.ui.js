@@ -253,7 +253,7 @@ export class MainComponent extends React.Component<Props> {
         drawerBackgroundColor="none"
         key={EDGE}
         hideNavBar
-        contentComponent={ifLoggedIn(ControlPanel)}
+        contentComponent={withNavigation(ifLoggedIn(ControlPanel))}
         hideDrawerButton
         drawerPosition="right"
         drawerWidth={scale(270)}
@@ -775,6 +775,17 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
+          <Stack key="guiPluginView">
+            <Scene
+              key="guiPluginView"
+              component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+              navTransparent
+              renderTitle={props => <HeaderTitle title={props?.route?.params?.plugin?.displayName} />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+              hideTabBar
+            />
+          </Stack>
           <Stack key={FIO_ADDRESS_SETTINGS}>
             <Scene
               key={FIO_ADDRESS_SETTINGS}

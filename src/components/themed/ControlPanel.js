@@ -6,6 +6,7 @@ import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Share from 'react-native-share'
+// import EntypoIcon from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
@@ -17,7 +18,8 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
-import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
+import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, PLUGIN_VIEW, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
 import { useWatchContext } from '../../hooks/useWatch.js'
@@ -190,6 +192,11 @@ export function ControlPanel(props: Props) {
   /// ---- Row Data ----
 
   const rowDatas: any[] = [
+    {
+      pressHandler: () => handleGoToScene(PLUGIN_VIEW, { plugin: guiPlugins.ionia }),
+      iconName: 'cp-fio-names',
+      title: sprintf(s.strings.drawer_ionia, config.appName)
+    },
     {
       pressHandler: () => handleGoToScene(FIO_ADDRESS_LIST),
       iconName: 'cp-fio-names',
