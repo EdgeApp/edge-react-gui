@@ -6,7 +6,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import { useHandler } from '../../../../hooks/useHandler.js'
 import s from '../../../../locales/strings.js'
@@ -14,7 +14,7 @@ import { useEffect, useState } from '../../../../types/reactHooks.js'
 
 const COMPLETE_POINT: number = 3
 
-type OwnProps = {
+type Props = {
   onSlidingComplete(reset: () => void): mixed,
   parentStyle?: any,
   showSpinner?: boolean,
@@ -29,14 +29,15 @@ type OwnProps = {
   disabled: boolean
 }
 
-type Props = OwnProps & ThemeProps
-
 const clamp = (value, lowerBound, upperBound) => {
   'worklet'
   return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
 export const SliderComponent = (props: Props) => {
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const [completed, setCompleted] = useState(false)
   const {
     disabledText,
     disabled,
@@ -45,11 +46,8 @@ export const SliderComponent = (props: Props) => {
     onSlidingComplete,
     parentStyle,
     completePoint = COMPLETE_POINT,
-    theme,
-    width = props.theme.confirmationSliderWidth
+    width = theme.confirmationSliderWidth
   } = props
-  const styles = getStyles(theme)
-  const [completed, setCompleted] = useState(false)
 
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
@@ -189,5 +187,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
-
-export const Slider = withTheme(SliderComponent)
