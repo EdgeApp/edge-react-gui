@@ -6,6 +6,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import s from '../../locales/strings.js'
+import { useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { Card } from '../cards/Card'
@@ -44,9 +45,11 @@ export const WcDisconnectScene = (props: Props) => {
     navigation.navigate('wcConnections')
   }
 
+  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
+
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
+      {sceneHeader}
       <View style={styles.container}>
         <Card paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BalanceBox should render with loading props 1`] = `
-<WithTheme(SceneHeaderComponent)
+<Memo(SceneHeaderComponent)
   underline={true}
 >
   <TouchableOpacity
@@ -35,5 +35,5 @@ exports[`BalanceBox should render with loading props 1`] = `
       </WithTheme(EdgeTextComponent)>
     </React.Fragment>
   </TouchableOpacity>
-</WithTheme(SceneHeaderComponent)>
+</Memo(SceneHeaderComponent)>
 `;

@@ -4,7 +4,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
 <SceneWrapper
   background="theme"
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Exchange"
     underline={true}
     withTopMargin={true}

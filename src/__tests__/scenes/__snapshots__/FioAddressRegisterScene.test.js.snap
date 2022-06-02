@@ -4,7 +4,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
 <SceneWrapper
   background="theme"
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     style={
       Object {
         "flexDirection": "row-reverse",
@@ -30,7 +30,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       }
     />
-  </WithTheme(SceneHeaderComponent)>
+  </Memo(SceneHeaderComponent)>
   <ScrollView>
     <View
       style={

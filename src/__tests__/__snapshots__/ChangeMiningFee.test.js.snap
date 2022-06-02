@@ -6,7 +6,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
   background="theme"
   hasTabs={false}
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Change Mining Fee"
     underline={true}
     withTopMargin={true}
@@ -101,7 +101,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
   background="theme"
   hasTabs={false}
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Change Mining Fee"
     underline={true}
     withTopMargin={true}
@@ -196,7 +196,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
   background="theme"
   hasTabs={false}
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Change Mining Fee"
     underline={true}
     withTopMargin={true}
@@ -291,7 +291,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
   background="theme"
   hasTabs={false}
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Change Mining Fee"
     underline={true}
     withTopMargin={true}

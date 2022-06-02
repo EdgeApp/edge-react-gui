@@ -131,8 +131,8 @@ export function ManageTokensScene(props: Props) {
   const extraData = useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
   const handleItemLayout = useRowLayout()
 
-  return (
-    <SceneWrapper>
+  const sceneHeader = useMemo(
+    () => (
       <SceneHeader underline>
         <TouchableOpacity onPress={handleSelectWallet}>
           <Title
@@ -151,6 +151,13 @@ export function ManageTokensScene(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
+    ),
+    [handleSelectWallet, searchValue, styles.rightIcon, styles.subTitle, theme, wallet.id, walletName]
+  )
+
+  return (
+    <SceneWrapper>
+      {sceneHeader}
       <FlatList
         getItemLayout={handleItemLayout}
         data={filteredTokenIds}

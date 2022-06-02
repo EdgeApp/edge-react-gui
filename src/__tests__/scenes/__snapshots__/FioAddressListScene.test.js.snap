@@ -12,7 +12,7 @@ exports[`FioAddressList should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(SceneHeaderComponent)
+      <Memo(SceneHeaderComponent)
         title="FIO Crypto Handles"
         underline={true}
       />
@@ -427,7 +427,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           }
         />
       </View>
-      <WithTheme(SceneHeaderComponent)
+      <Memo(SceneHeaderComponent)
         title="FIO Domains"
         underline={true}
         withTopMargin={true}
