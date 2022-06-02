@@ -4,25 +4,23 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { connect } from '../../types/reactRedux.js'
+import { useSelector } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
 
-type OwnProps = {
+type Props = {
   walletId: string,
   isEmpty: boolean,
   searching: boolean,
   onChangeSortingState: (isSearching: boolean) => void,
   onSearchTransaction: (searchString: string) => void
 }
-type StateProps = {
-  loading: boolean
-}
-type Props = OwnProps & StateProps
 
-function TopComponent(props: Props) {
-  return props.loading ? (
+export const Top = (props: Props) => {
+  const loading = useSelector(state => !state.ui.wallets.byId[props.walletId])
+
+  return loading ? (
     <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
   ) : (
     <TransactionListTop
@@ -35,7 +33,7 @@ function TopComponent(props: Props) {
   )
 }
 
-export function EmptyLoader() {
+export const EmptyLoader = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
@@ -45,7 +43,7 @@ export function EmptyLoader() {
   )
 }
 
-export function SectionHeader(props: { title?: string }) {
+export const SectionHeader = (props: { title?: string }) => {
   const styles = getStyles(useTheme())
   return (
     <Gradient style={styles.headerContainer}>
@@ -54,7 +52,7 @@ export function SectionHeader(props: { title?: string }) {
   )
 }
 
-export function SectionHeaderCentered(props: { title?: string, loading: boolean }) {
+export const SectionHeaderCentered = (props: { title?: string, loading: boolean }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
@@ -90,10 +88,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium
   }
 }))
-
-export const Top = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => ({
-    loading: !state.ui.wallets.byId[ownProps.walletId]
-  }),
-  dispatch => ({})
-)(TopComponent)
