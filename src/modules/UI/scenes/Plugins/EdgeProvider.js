@@ -235,11 +235,19 @@ export class EdgeProvider extends Bridgeable {
 
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
-  async writeData(data: { [key: string]: string }) {
+  async writeData(data: { [key: string]: string | void }) {
     const { account } = this._state.core
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
-    await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.storeId, key, data[key])))
+    await Promise.all(
+      Object.keys(data).map(key => {
+        if (data[key] != null) {
+          return store.setItem(this._plugin.storeId, key, data[key])
+        } else {
+          return store.deleteItem(this._plugin.storeId, key)
+        }
+      })
+    )
     console.log('edgeProvider writeData Success')
     return { success: true }
   }
