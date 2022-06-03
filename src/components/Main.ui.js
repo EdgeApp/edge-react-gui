@@ -82,9 +82,6 @@ import {
   NOTIFICATION_SETTINGS,
   OTP_REPAIR_SCENE,
   OTP_SETUP,
-  PLUGIN_BUY,
-  PLUGIN_SELL,
-  PLUGIN_VIEW,
   PROMOTION_SETTINGS,
   RECOVER_PASSWORD,
   REQUEST,
@@ -253,7 +250,7 @@ export class MainComponent extends React.Component<Props> {
         drawerBackgroundColor="none"
         key={EDGE}
         hideNavBar
-        contentComponent={ifLoggedIn(ControlPanel)}
+        contentComponent={withNavigation(ifLoggedIn(ControlPanel))}
         hideDrawerButton
         drawerPosition="right"
         drawerWidth={scale(270)}
@@ -416,9 +413,9 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderEmptyButton()}
               />
             </Stack>
-            <Stack key={PLUGIN_BUY}>
+            <Stack key="pluginListBuy">
               <Scene
-                key={PLUGIN_BUY}
+                key="pluginListBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
@@ -427,7 +424,7 @@ export class MainComponent extends React.Component<Props> {
                 route={{ params: { direction: 'buy' } }}
               />
               <Scene
-                key={PLUGIN_VIEW}
+                key="pluginViewBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
@@ -436,9 +433,9 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
               />
             </Stack>
-            <Stack key={PLUGIN_SELL}>
+            <Stack key="pluginListSell">
               <Scene
-                key={PLUGIN_SELL}
+                key="pluginListSell"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
@@ -447,7 +444,7 @@ export class MainComponent extends React.Component<Props> {
                 route={{ params: { direction: 'sell' } }}
               />
               <Scene
-                key={PLUGIN_VIEW}
+                key="pluginViewSell"
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
@@ -657,9 +654,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={PLUGIN_VIEW} hideDrawerButton>
+          <Stack key="pluginView" hideDrawerButton>
             <Scene
-              key={PLUGIN_VIEW}
+              key="pluginView"
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
@@ -902,7 +899,7 @@ export class MainComponent extends React.Component<Props> {
       Actions.popTo(EXCHANGE_SCENE)
       return true
     }
-    if (this.isCurrentScene(PLUGIN_VIEW)) {
+    if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
       handlePluginBack()
       return true
     }

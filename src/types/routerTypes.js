@@ -19,6 +19,15 @@ import {
   type WcConnectionInfo
 } from './types.js'
 import { type UriQueryMap } from './WebTypes'
+
+type PluginViewParams = {|
+  // The GUI plugin we are showing the user:
+  plugin: GuiPlugin,
+
+  // Set these to add stuff to the plugin URI:
+  deepPath?: string,
+  deepQuery?: UriQueryMap
+|}
 /**
  * Defines the acceptable route parameters for each scene key.
  */
@@ -161,6 +170,15 @@ export type ParamList = {
   fioSentRequestDetails: {|
     selectedFioSentRequest: FioRequest
   |},
+  fioStakingChange: {
+    change: 'add' | 'remove',
+    currencyCode: string,
+    walletId: string
+  },
+  fioStakingOverview: {
+    currencyCode: string,
+    walletId: string
+  },
   manageTokens: {|
     walletId: string
   |},
@@ -170,16 +188,11 @@ export type ParamList = {
   |},
   otpSetup: void,
   passwordRecovery: void,
-  pluginBuy: {| direction: 'buy' |},
-  pluginSell: {| direction: 'sell' |},
-  pluginView: {|
-    // The GUI plugin we are showing the user:
-    plugin: GuiPlugin,
-
-    // Set these to add stuff to the plugin URI:
-    deepPath?: string,
-    deepQuery?: UriQueryMap
-  |},
+  pluginListBuy: {| direction: 'buy' |},
+  pluginListSell: {| direction: 'sell' |},
+  pluginViewBuy: PluginViewParams,
+  pluginViewSell: PluginViewParams,
+  pluginView: PluginViewParams,
   promotionSettings: void,
   request: void,
   scan: {|
@@ -216,15 +229,6 @@ export type ParamList = {
   stakeClaim: { walletId: string, stakePolicy: StakePolicy },
   stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
-  fioStakingChange: {
-    change: 'add' | 'remove',
-    currencyCode: string,
-    walletId: string
-  },
-  fioStakingOverview: {
-    currencyCode: string,
-    walletId: string
-  },
   termsOfService: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,

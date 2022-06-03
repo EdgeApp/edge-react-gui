@@ -21,20 +21,20 @@ type Props = OwnProps & ThemeProps
 
 const title: { [name: $Keys<ParamList>]: string } = {
   walletList: s.strings.title_wallets,
-  pluginBuy: s.strings.title_buy,
-  pluginSell: s.strings.title_sell,
+  pluginListBuy: s.strings.title_buy,
+  pluginListSell: s.strings.title_sell,
   exchange: s.strings.title_exchange
 }
 
 export class MenuTabComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: 'walletList' | 'pluginBuy' | 'pluginSell' | 'exchange') => {
+  handleOnPress = (route: 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange') => {
     switch (route) {
       case 'walletList':
         return Actions.jump('walletListScene')
-      case 'pluginBuy':
-        return Actions.jump('pluginBuy', { direction: 'buy' })
-      case 'pluginSell':
-        return Actions.jump('pluginSell', { direction: 'sell' })
+      case 'pluginListBuy':
+        return Actions.jump('pluginListBuy', { direction: 'buy' })
+      case 'pluginListSell':
+        return Actions.jump('pluginListSell', { direction: 'sell' })
       case 'exchange':
         return Actions.jump('exchange')
     }
@@ -57,8 +57,8 @@ export class MenuTabComponent extends React.PureComponent<Props> {
             const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
             const icon = {
               walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-              pluginBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-              pluginSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+              pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+              pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
               exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
             }
             return (
