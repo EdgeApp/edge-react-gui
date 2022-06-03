@@ -108,11 +108,5 @@ export type StakePlugin = {
 // -----------------------------------------------------------------------------
 
 export type InfoServerResponse = {
-  _id: string,
-  _rev: string,
   policies: { [string]: number }
 }
-
-// sats
-// multiplier: 100000000
-// fiatDenomination.multiplier: 100
