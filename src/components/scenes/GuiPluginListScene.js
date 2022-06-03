@@ -37,12 +37,12 @@ const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPlugin
 const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
-  credit: 'paymentTypeLogoCreditCard',
-  auspost: 'paymentTypeLogoAuspost',
   applepay: 'paymentTypeLogoApplePay',
+  auspost: 'paymentTypeLogoAuspost',
   bank: 'paymentTypeLogoBankTransfer',
   bankgirot: 'paymentTypeLogoBankgirot',
   cash: 'paymentTypeLogoCash',
+  credit: 'paymentTypeLogoCreditCard',
   debit: 'paymentTypeLogoDebitCard',
   fasterPayments: 'paymentTypeLogoFasterPayments',
   giftcard: 'paymentTypeLogoGiftCard',
