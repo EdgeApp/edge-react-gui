@@ -14,6 +14,7 @@ describe('WalletListSortModalComponent', () => {
 
     const props = {
       bridge: fakeAirshipBridge,
+      generateTestHook: () => undefined,
       sortOption: [{ key: 'manual' }, { key: 'name' }, { key: 'currencyCode' }, { key: 'currencyName' }, { key: 'highest' }, { key: 'lowest' }],
       updateWalletsSort: sortOption => undefined,
       theme: getTheme()

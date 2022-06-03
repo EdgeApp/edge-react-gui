@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 import { check, openSettings } from 'react-native-permissions'
@@ -40,12 +40,13 @@ export function PermissionsSettingModal(props: {
   }
 
   const handleClose = () => bridge.resolve(mandatory)
+  const generateTestHook = useCavy()
 
   return (
     <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleClose}>
       <ModalMessage>{message}</ModalMessage>
       <MainButton label={s.strings.string_ok_cap} marginRem={0.5} type="primary" onPress={handlePress} />
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('PermissionSettingModal.Close')} />
     </ThemedModal>
   )
 }

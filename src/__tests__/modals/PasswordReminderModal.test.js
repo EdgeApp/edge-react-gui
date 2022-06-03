@@ -19,6 +19,7 @@ describe('PasswordReminderModal', () => {
       onSuccess: () => undefined,
       onPostpone: () => undefined,
       onRequestChangePassword: () => undefined,
+      generateTestHook: () => undefined,
       password: {
         needsPasswordCheck: true,
         lastPasswordUseDate: 112120,

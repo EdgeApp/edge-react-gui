@@ -1,7 +1,8 @@
 // @flow
 
+import { useCavy } from 'cavy'
 import * as React from 'react'
-import { Image, Keyboard, Linking, View } from 'react-native'
+import { Image, Keyboard, Linking } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
@@ -11,6 +12,8 @@ import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
+import { View } from '../../types/reactNative.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -39,26 +42,22 @@ type Props = {
   bridge: AirshipBridge<void>
 }
 
-class HelpWebViewModal extends React.Component<Props & { uri: string, title: string }> {
-  webview: WebView | void
-  handleClose = () => this.props.bridge.resolve()
+export const HelpWebViewModal = (props: Props & { uri: string, title: string }) => {
+  const handleClose = () => props.bridge.resolve()
+  const { bridge, uri, title } = props
+  const generateTestHook = useCavy()
+  return (
+    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
+      <ModalTitle center paddingRem={[0, 1, 1]}>
+        {title}
+      </ModalTitle>
+      <WebView source={{ uri }} />
 
-  render() {
-    const { bridge, uri, title } = this.props
-    return (
-      <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
-        <ModalTitle center paddingRem={[0, 1, 1]}>
-          {title}
-        </ModalTitle>
-        <WebView ref={element => (this.webview = element)} source={{ uri }} />
-
-        <ModalCloseArrow onPress={this.handleClose} />
-      </ThemedModal>
-    )
-  }
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('HelpModal.CloseHelpWebViewModal')} />
+    </ThemedModal>
+  )
 }
-
-export class HelpModalComponent extends React.Component<Props & ThemeProps> {
+export class HelpModalComponent extends React.Component<Props & ThemeProps & TestProps> {
   handleClose = () => this.props.bridge.resolve()
 
   componentDidMount() {
@@ -131,7 +130,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           <EdgeText style={styles.version}>{buildText}</EdgeText>
         </View>
 
-        <ModalCloseArrow onPress={this.handleClose} />
+        <ModalCloseArrow onPress={this.handleClose} ref={this.props.generateTestHook('HelpModal.Close')} />
       </ThemedModal>
     )
   }
@@ -160,4 +159,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const HelpModal = withTheme(HelpModalComponent)
+const HelpModal = withTheme(props => <HelpModalComponent {...props} />)

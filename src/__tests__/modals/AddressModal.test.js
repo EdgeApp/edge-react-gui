@@ -20,6 +20,7 @@ describe('AddressModalComponent', () => {
       isFioOnly: true,
       useUserFioAddressesOnly: true,
       checkAddressConnected: true,
+      generateTestHook: () => undefined,
       account: {
         disklet: {
           getText: async path => {}

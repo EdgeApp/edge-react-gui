@@ -14,6 +14,7 @@ describe('HelpModal', () => {
 
     const props = {
       bridge: fakeAirshipBridge,
+      generateTestHook: () => undefined,
       theme: getTheme()
     }
     const actual = renderer.render(<HelpModalComponent {...props} />)

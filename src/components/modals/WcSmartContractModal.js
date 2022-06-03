@@ -1,5 +1,6 @@
 // @flow
 import { abs, add, div, gt, mul } from 'biggystring'
+import { useCavy } from 'cavy'
 import { type JsonObject } from 'edge-core-js/types'
 import { WcRpcPayload } from 'edge-currency-accountbased'
 import * as React from 'react'
@@ -45,6 +46,7 @@ export const WcSmartContractModal = (props: Props) => {
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const wallet = currencyWallets[walletId]
   const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
+  const generateTestHook = useCavy()
 
   if (wallet == null) return null
   const walletName = wallet.name
@@ -170,6 +172,7 @@ export const WcSmartContractModal = (props: Props) => {
         onPress={() => {
           handleClose().catch(showError)
         }}
+        ref={generateTestHook('WcSmartContractModal.Close')}
       />
     </ThemedModal>
   )
