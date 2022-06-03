@@ -281,9 +281,9 @@ export type ParamList = {
     stakePosition: StakePosition
     modification: ChangeQuoteRequest['action']
   }
-  stakeClaim: { walletId: string; stakePolicy: StakePolicy }
-  stakeOptions: { walletId: string; currencyCode: string }
-  stakeOverview: { walletId: string; stakePolicy: StakePolicy }
+  stakeClaim: { stakePolicy: StakePolicy; walletId: string }
+  stakeOptions: { currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
+  stakeOverview: { stakePolicy: StakePolicy; walletId: string }
   termsOfService: {}
   testScene: {}
   transactionDetails: {
