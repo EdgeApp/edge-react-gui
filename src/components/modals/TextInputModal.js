@@ -106,7 +106,7 @@ export function TextInputModal(props: Props) {
         multiline={multiline}
         // Our props:
         error={errorMessage}
-        marginRem={[1, 0.5]}
+        marginRem={[1, 0.5, 1.5, 0.5]}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
         value={text}
