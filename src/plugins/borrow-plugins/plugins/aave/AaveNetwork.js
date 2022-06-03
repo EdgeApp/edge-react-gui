@@ -15,7 +15,8 @@ export type AaveNetworkBlueprint = {
   contractAddresses: {
     lendingPool: string,
     protocolDataProvider: string
-  }
+  },
+  enabledTokens: { [currencyCode: string]: boolean }
 }
 
 export type AaveNetwork = {
@@ -34,7 +35,7 @@ export type AaveNetwork = {
 }
 
 export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
-  const { provider, contractAddresses } = blueprint
+  const { provider, contractAddresses, enabledTokens } = blueprint
 
   const lendingPool = new ethers.Contract(contractAddresses.lendingPool, LENDING_POOL_ABI, provider)
   const protocolDataProvider = new ethers.Contract(contractAddresses.protocolDataProvider, PROTOCOL_DATA_PROVIDER_ABI, provider)
@@ -51,7 +52,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     async getAllReservesTokens() {
       const reserveTokens: Array<[string, string]> = await protocolDataProvider.getAllReservesTokens()
       const out: Array<{ symbol: string, address: string }> = reserveTokens.map(([symbol, address]) => ({ symbol, address }))
-      return out
+      return out.filter(reserveToken => enabledTokens[reserveToken.symbol])
     },
 
     // TODO: Cache the response for this function
