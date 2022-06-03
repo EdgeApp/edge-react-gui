@@ -31,8 +31,14 @@ export type AaveNetwork = {
     sToken: any,
     vToken: any
   }>,
-  getReserveTokenBalances: (address: string) => Promise<Array<{ address: string, aBalance: BigNumber, vBalance: BigNumber }>>
+  getReserveTokenBalances: (address: string) => Promise<Array<{ address: string, aBalance: BigNumber, vBalance: BigNumber, variableApr: BigNumber }>>,
+  getReserveTokenRates: (tokenAddress: string) => Promise<{
+    variableApr: number,
+    stableApr: number
+  }>
 }
+
+const RAY = BigNumber.from('10').pow('27')
 
 export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
   const { provider, contractAddresses, enabledTokens } = blueprint
@@ -71,11 +77,26 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         const { aToken, vToken } = await instance.getReserveTokenAddresses(token.address)
         const aBalance = await aToken.balanceOf(address)
         const vBalance = await vToken.balanceOf(address)
+        const { variableApr } = await instance.getReserveTokenRates(token.address)
 
-        return { address: token.address, aBalance, vBalance }
+        return { address: token.address, aBalance, vBalance, variableApr }
       })
-      const reserveTokenBalances: Array<{ address: string, aBalance: BigNumber, vBalance: BigNumber }> = await Promise.all(whenReserveTokenBalances)
+      const reserveTokenBalances: Array<{ address: string, aBalance: BigNumber, vBalance: BigNumber, variableApr: BigNumber }> = await Promise.all(
+        whenReserveTokenBalances
+      )
       return reserveTokenBalances
+    },
+
+    async getReserveTokenRates(tokenAddress) {
+      const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] = await lendingPool.getReserveData(tokenAddress)
+
+      const variableApr = parseFloat(variableBorrowRate.toString()) / parseFloat(RAY.toString())
+      const stableApr = parseFloat(stableBorrowRate.toString()) / parseFloat(RAY.toString())
+
+      return {
+        variableApr,
+        stableApr
+      }
     }
   }
   return instance
