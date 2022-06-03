@@ -80,6 +80,14 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       })
 
     //
+    // Loan to value
+    //
+
+    const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
+    const { totalCollateralETH, totalDebtETH } = userData
+    const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+
+    //
     // Engine Instance
     //
 
@@ -88,7 +96,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       collaterals,
       debts,
 
-      loanToValue: 55,
+      loanToValue,
 
       async getAprQuote(tokenId?: string): Promise<number> {
         const token = getToken(tokenId)
