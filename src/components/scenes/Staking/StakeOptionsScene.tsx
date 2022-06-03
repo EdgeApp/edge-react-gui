@@ -33,20 +33,13 @@ export const StakeOptionsScene = (props: Props) => {
   // Stake Policies
   //
 
-  const availableStakePolicies = stakePolicies.filter(stakePolicy => {
-    return (
-      stakePolicy.stakeAssets.some(stakeAsset => stakeAsset.currencyCode === currencyCode) ||
-      stakePolicy.rewardAssets.some(rewardAssets => rewardAssets.currencyCode === currencyCode)
-    )
-  })
-
   useEffect(() => {
-    if (availableStakePolicies.length === 1) {
+    if (stakePolicies.length === 1) {
       // Transition to next scene immediately
-      navigation.replace('stakeOverview', { walletId, stakePolicy: availableStakePolicies[0] })
+      navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
     }
     return undefined
-  }, [availableStakePolicies, navigation, walletId])
+  }, [stakePolicies, navigation, walletId])
 
   const wallet = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
@@ -95,7 +88,7 @@ export const StakeOptionsScene = (props: Props) => {
       {renderSceneHeader()}
       <View style={styles.optionsContainer}>
         <EdgeText>{s.strings.stake_select_options}</EdgeText>
-        <FlatList data={availableStakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
+        <FlatList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
       </View>
     </SceneWrapper>
   )

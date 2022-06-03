@@ -1,9 +1,8 @@
 import { add, gt } from 'biggystring'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
@@ -59,7 +58,7 @@ type DispatchProps = {
 
 type State = {
   input: string
-  stakePolicies: StakePolicy[]
+  stakePolicies: StakePolicy[] | null
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -71,7 +70,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     super(props)
     this.state = {
       input: '',
-      stakePolicies: []
+      stakePolicies: null
     }
   }
 
@@ -83,7 +82,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   componentDidMount() {
     stakePlugin.getStakePolicies().then(stakePolicies => {
-      this.setState({ stakePolicies })
+      const { currencyCode, pluginId } = this.props
+      const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
+        return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+      })
+      this.setState({ stakePolicies: filteredStatePolicies })
     })
   }
 
@@ -131,30 +134,34 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
-  renderStakingBox() {
-    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
+  /**
+   * If the parent chain supports staking, query the info server if staking is
+   * supported for this specific asset. While waiting for the query, show a
+   * spinner.
+   */
+  renderStakedBalance() {
+    const { theme, currencyCode, stakingBalances } = this.props
     const styles = getStyles(theme)
-    const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? {}
 
-    return lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
+    const lockedBalance = stakingBalances != null ? stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`] : null
+
+    return lockedBalance != null && lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
-          {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
+          sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)
         </EdgeText>
       </View>
     ) : null
   }
 
-  hasStaking = () => {
+  isStakingAvailable = (): boolean => {
     const { currencyCode, pluginId } = this.props
     const { stakePolicies } = this.state
-
-    const isStakingPolicyAvailable = stakePolicies.some(stakePolicy => {
-      return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
-    })
+    const isStakingPolicyAvailable = stakePolicies != null && stakePolicies.length > 0
 
     // Special case for FIO because it uses it's own staking plugin
-    return SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && (isStakingPolicyAvailable || currencyCode === 'FIO')
+    const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && (isStakingPolicyAvailable || currencyCode === 'FIO')
+    return isStakingSupported
   }
 
   handleOnChangeText = (input: string) => {
@@ -186,8 +193,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleStakePress = () => {
     const { currencyCode, walletId } = this.props
-    if (currencyCode === 'FIO') Actions.push(FIO_STAKING_OVERVIEW, { currencyCode, walletId })
-    else Actions.push(STAKE_OPTIONS, { walletId, currencyCode, stakePolicies: this.state.stakePolicies })
+    const { stakePolicies } = this.state
+
+    // Handle FIO staking
+    if (currencyCode === 'FIO') Actions.push('fioStakingOverview', { currencyCode, walletId })
+
+    // Handle StakePlugin staking
+    if (stakePolicies != null && stakePolicies.length > 0) {
+      Actions.push('stakeOptions', { walletId, currencyCode, stakePolicies })
+    }
   }
 
   clearText = () => {
@@ -200,8 +214,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   render() {
     const { isEmpty, searching, theme } = this.props
+    const { stakePolicies } = this.state
+    const isStakePoliciesLoaded = stakePolicies !== null
+    const isStakingAvailable = this.isStakingAvailable()
     const styles = getStyles(theme)
-    const hasStaking = this.hasStaking()
 
     return (
       <>
@@ -232,7 +248,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           {!searching && (
             <>
               {this.renderBalanceBox()}
-              {hasStaking && this.renderStakingBox()}
+              {isStakingAvailable && this.renderStakedBalance()}
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
                   <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
@@ -242,11 +258,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>
-                {hasStaking && (
-                  <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
-                    <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                    <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
-                  </TouchableOpacity>
+                {!isStakePoliciesLoaded ? (
+                  <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
+                ) : (
+                  isStakingAvailable && (
+                    <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+                      <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
+                      <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
+                    </TouchableOpacity>
+                  )
                 )}
               </View>
             </>
@@ -349,6 +369,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     maxWidth: '70%',
     fontSize: theme.rem(1)
+  },
+  stakingButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingRight: theme.rem(1)
   }
 }))
 
