@@ -12,6 +12,7 @@
   "drawer_wallets": "Carteiras",
   "drawer_fio_names": "FIO Names",
   "drawer_fio_requests": "FIO Requests",
+  "drawer_ionia": "%s Mastercard®",
   "network_alert_title": "Sem ligação à Internet",
   "fio_network_alert_text": "A funcionalidade FIO requer ligação à Internet.",
   "fio_address_choose_label": "Choose a FIO Crypto Handle",
