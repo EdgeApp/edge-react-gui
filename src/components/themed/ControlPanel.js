@@ -17,6 +17,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
@@ -190,6 +191,11 @@ export function ControlPanel(props: Props) {
   /// ---- Row Data ----
 
   const rowDatas: any[] = [
+    {
+      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      iconName: 'cp-mastercard',
+      title: sprintf(s.strings.drawer_ionia, config.appName)
+    },
     {
       pressHandler: () => handleGoToScene(FIO_ADDRESS_LIST),
       iconName: 'cp-fio-names',

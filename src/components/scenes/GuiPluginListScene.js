@@ -48,6 +48,7 @@ const paymentTypeLogosById = {
   giftcard: 'paymentTypeLogoGiftCard',
   ideal: 'paymentTypeLogoIdeal',
   interac: 'paymentTypeLogoInterac',
+  mastercard: 'paymentTypeLogoMastercard',
   newsagent: 'paymentTypeLogoNewsagent',
   payid: 'paymentTypeLogoPayid',
   poli: 'paymentTypeLogoPoli',
