@@ -12,7 +12,7 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { upgradeCurrencyCodes, WalletListModal } from '../components/modals/WalletListModal'
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
-import { EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
+import { EXCHANGE_SCENE, SEND } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
@@ -408,7 +408,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       ))
     }
     if (threeButtonModal === 'buy') {
-      Actions.jump(PLUGIN_BUY, { direction: 'buy' })
+      Actions.jump('pluginListBuy', { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions.jump(EXCHANGE_SCENE)

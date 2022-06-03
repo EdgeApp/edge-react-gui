@@ -5,7 +5,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { PLUGIN_BUY } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { useCallback } from '../../types/reactHooks.js'
@@ -30,7 +29,7 @@ export const BuyCrypto = (props: Props) => {
   const styles = getStyles(theme)
 
   const handlePress = useCallback(() => {
-    Actions.push(PLUGIN_BUY, { direction: 'buy' })
+    Actions.push('pluginListBuy', { direction: 'buy' })
   }, [])
 
   const { displayName, pluginId } = wallet.currencyInfo

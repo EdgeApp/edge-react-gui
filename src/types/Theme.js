@@ -351,6 +351,7 @@ export type Theme = {
   paymentTypeLogoGiftCard: string,
   paymentTypeLogoIdeal: string,
   paymentTypeLogoInterac: string,
+  paymentTypeLogoMastercard: string,
   paymentTypeLogoNewsagent: string,
   paymentTypeLogoPayid: string,
   paymentTypeLogoPoli: string,
