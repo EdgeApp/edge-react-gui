@@ -31,6 +31,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     const walletAddress = (await wallet.getReceiveAddress()).publicAddress
 
     const REFERRAL_CODE = 0 // No referral code is used for AAVE contract calls
+    const INTEREST_RATE_MODE = 2 // Only variable is supported for now
 
     //
     // Private Methods
@@ -211,22 +212,99 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         })
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
-        return {
-          networkFee: {
-            currencyCode: wallet.currencyInfo.currencyCode,
-            nativeAmount: '2100000000000000'
-          },
-          approve: async () => {}
-        }
+        const { nativeAmount, tokenId, fromWallet = wallet } = request
+
+        const token = getToken(tokenId)
+        const tokenAddress = getTokenAddress(token)
+
+        const asset = tokenAddress
+        const amount = BigNumber.from(nativeAmount)
+        const onBehalfOf = (await fromWallet.getReceiveAddress()).publicAddress
+
+        const gasPrice = await aaveNetwork.provider.getGasPrice()
+
+        const borrowTx = asGracefulTxInfo(
+          await aaveNetwork.lendingPool.populateTransaction.borrow(asset, amount, INTEREST_RATE_MODE, REFERRAL_CODE, onBehalfOf, {
+            gasLimit: '800000',
+            gasPrice
+          })
+        )
+
+        return await makeApprovableCall({
+          tx: borrowTx,
+          wallet,
+          metadata: {
+            name: 'AAVE',
+            category: 'transfer',
+            notes: `Borrow ${token.displayName} loan`
+          }
+        })
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        return {
-          networkFee: {
-            currencyCode: wallet.currencyInfo.currencyCode,
-            nativeAmount: '2100000000000000'
-          },
-          approve: async () => {}
+        const { nativeAmount, tokenId, fromWallet = wallet } = request
+
+        const token = getToken(tokenId)
+        const tokenAddress = getTokenAddress(token)
+
+        const spenderAddress = (await wallet.getReceiveAddress()).publicAddress
+
+        const asset = tokenAddress
+        const amount = BigNumber.from(nativeAmount)
+        const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress()).publicAddress
+        const amountToCover = amount.eq(ethers.constants.MaxUint256) ? BigNumber.from(debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0) : amount
+
+        const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
+
+        // Check balance of token
+        const balance = await tokenContract.balanceOf(spenderAddress)
+        if (amountToCover.gt(balance)) {
+          throw new Error(`Insufficient funds to repay ${token.displayName} loan`)
         }
+
+        const gasPrice = await aaveNetwork.provider.getGasPrice()
+        const txCallInfos: CallInfo[] = []
+
+        const allowance = await tokenContract.allowance(onBehalfOf, aaveNetwork.lendingPool.address)
+        if (!allowance.sub(amountToCover).gte(0)) {
+          const approveTx = asGracefulTxInfo(
+            await tokenContract.populateTransaction.approve(aaveNetwork.lendingPool.address, ethers.constants.MaxUint256, {
+              gasLimit: '500000',
+              gasPrice
+            })
+          )
+          txCallInfos.push({
+            tx: approveTx,
+            wallet,
+            spendToken: token,
+            metadata: {
+              name: 'AAVE',
+              category: 'expense',
+              notes: `AAVE contract approval`
+            }
+          })
+        }
+
+        const repayTx = asGracefulTxInfo(
+          await aaveNetwork.lendingPool.populateTransaction.repay(asset, amount, INTEREST_RATE_MODE, onBehalfOf, {
+            gasLimit: '800000',
+            gasPrice
+          })
+        )
+
+        txCallInfos.push({
+          tx: repayTx,
+          wallet,
+          spendToken: token,
+          metadata: {
+            name: 'AAVE',
+            category: 'transfer',
+            notes: `Repay ${token.displayName} loan`
+          }
+        })
+
+        const actions = await makeTxCalls(txCallInfos)
+
+        return composeApprovableActions(...actions)
       },
       async close(): Promise<ApprovableAction> {
         return {
