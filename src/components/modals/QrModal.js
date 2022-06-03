@@ -1,6 +1,7 @@
 // @flow
 
 import { BlurView } from '@react-native-community/blur'
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -19,6 +20,7 @@ export function QrModal(props: Props) {
   const theme = useTheme()
   const windowSize = useWindowSize()
   const maxSize = Math.min(windowSize.width, windowSize.height)
+  const generateTestHook = useCavy()
 
   const handleCancel = () => bridge.resolve(undefined)
 
@@ -32,7 +34,7 @@ export function QrModal(props: Props) {
       onCancel={handleCancel}
       underlay={<BlurView blurType={theme.isDark ? 'light' : 'dark'} style={StyleSheet.absoluteFill} />}
     >
-      <QrCode data={data} onPress={handleCancel} />
+      <QrCode data={data} onPress={handleCancel} ref={generateTestHook('QrModal.Close')} />
     </AirshipModal>
   )
 }

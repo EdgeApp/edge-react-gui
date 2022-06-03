@@ -6,6 +6,7 @@ import { ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { openBrowserUri } from '../../util/WebUtils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -33,7 +34,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
+export class TransactionAdvanceDetailsComponent extends PureComponent<Props & TestProps> {
   getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
 
   openUrl = () => {
@@ -113,7 +114,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
             {deviceDescription != null && <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={deviceDescription} />}
           </ScrollView>
         </View>
-        <ModalCloseArrow onPress={this.handleCancel} />
+        <ModalCloseArrow onPress={this.handleCancel} ref={this.props.generateTestHook('TransactionAdvanceDetails.close')} />
       </ThemedModal>
     )
   }
@@ -139,4 +140,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionAdvanceDetails = withTheme(TransactionAdvanceDetailsComponent)
+export const TransactionAdvanceDetails = withTheme<Props & TestProps>(TransactionAdvanceDetailsComponent)

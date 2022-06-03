@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import { type EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
@@ -108,6 +108,7 @@ export function WalletListMenuModal(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   // Look up the image and name:
   const walletName = edgeWallet?.name ?? ''
@@ -152,7 +153,7 @@ export function WalletListMenuModal(props: Props) {
           <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
         </TouchableOpacity>
       ))}
-      <ModalCloseArrow onPress={handleCancel} />
+      <ModalCloseArrow onPress={handleCancel} ref={generateTestHook('WalletListMenuModal.Close')} />
     </ThemedModal>
   )
 }

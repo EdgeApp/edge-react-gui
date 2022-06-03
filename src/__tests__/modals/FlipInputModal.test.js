@@ -19,6 +19,7 @@ describe('FlipInputModalComponent', () => {
       onFeesChange: () => undefined,
       balanceCrypto: '10000',
       flipInputHeaderText: 'Exchange Header',
+      generateTestHook: () => undefined,
       primaryInfo: {
         tokenId: undefined,
         displayCurrencyCode: 'BTC',

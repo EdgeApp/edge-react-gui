@@ -1,9 +1,9 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
-import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { View } from '../../types/reactNative.js'
 import { showError } from '../services/AirshipInstance.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -45,6 +45,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
 |}) {
   const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
   const theme = useTheme()
+  const generateTestHook = useCavy()
 
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
 
@@ -91,7 +92,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
 
           return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
         })}
-        {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
+        {closeArrow ? <ModalCloseArrow onPress={handleCancel} ref={generateTestHook('ButtonsModal.Close')} /> : null}
       </View>
     </ThemedModal>
   )

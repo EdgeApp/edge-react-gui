@@ -1,5 +1,5 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -64,6 +64,7 @@ export function TextInputModal(props: Props) {
   const [errorMessage, setErrorMessage] = useState<string | void>()
   const [spinning, setSpinning] = useState(false)
   const [text, setText] = useState(initialValue)
+  const generateTestHook = useCavy()
 
   const handleChangeText = (text: string) => {
     setText(text)
@@ -121,7 +122,7 @@ export function TextInputModal(props: Props) {
       ) : (
         <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="secondary" />
       )}
-      <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
+      <ModalCloseArrow onPress={() => bridge.resolve(undefined)} ref={generateTestHook('TextInputModal.close')} />
     </ThemedModal>
   )
 }

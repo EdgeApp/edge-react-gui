@@ -14,6 +14,7 @@ describe('TransactionAdvanceDetailsComponent', () => {
 
     const props = {
       bridge: fakeAirshipBridge,
+      generateTestHook: () => undefined,
       transaction: {
         blockHeight: 0,
         currencyCode: 'BCH',

@@ -9,7 +9,7 @@ import { playSendSound } from '../../actions/SoundActions.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
@@ -33,7 +33,7 @@ type DispatchProps = {
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination,
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
-type Props = OwnProps & StateProps & ThemeProps & DispatchProps
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps & TestProps
 
 type State = {
   edgeUnsignedTransaction?: EdgeTransaction,
@@ -206,7 +206,7 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
                 disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
               />
             </View>
-            <ModalCloseArrow onPress={this.closeModal} />
+            <ModalCloseArrow onPress={this.closeModal} ref={this.props.generateTestHook('AccelerateTxModal.Close')} />
           </>
         ) : (
           <View style={styles.loadingContianer}>
@@ -239,7 +239,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModel = connect<StateProps, DispatchProps, OwnProps>(
+export const AccelerateTxModel = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   (state, ownProps) => ({
     exchangeRates: state.exchangeRates
   }),
