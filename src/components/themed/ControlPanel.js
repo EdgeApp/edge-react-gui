@@ -194,7 +194,7 @@ export function ControlPanel(props: Props) {
     {
       pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
       iconName: 'cp-mastercard',
-      title: sprintf(s.strings.drawer_ionia, config.appName)
+      title: sprintf(s.strings.prepaid_card_name, config.appName)
     },
     {
       pressHandler: () => handleGoToScene(FIO_ADDRESS_LIST),
