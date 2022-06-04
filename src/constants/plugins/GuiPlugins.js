@@ -135,6 +135,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'ionia',
     storeId: 'ionia',
     baseUri: 'https://ioniaedge.web.app',
+    poweredBy: 'Ionia',
     displayName: 'Edge Mastercard'
   },
   custom: {

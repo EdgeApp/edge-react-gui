@@ -220,6 +220,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
     const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
+    const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
       <View style={styles.pluginRowContainer}>
@@ -237,7 +238,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
             <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-            <EdgeText style={styles.footerText}>{' ' + plugin.displayName}</EdgeText>
+            <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
           </View>
         </TouchableOpacity>
       </View>
