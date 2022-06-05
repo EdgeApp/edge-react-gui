@@ -1,11 +1,12 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
@@ -39,14 +40,27 @@ type Props = {|
   spinner?: boolean,
 
   // Which visual style to use. Defaults to primary (solid):
-  type?: 'primary' | 'secondary' | 'escape'
+  type?: 'primary' | 'secondary' | 'escape',
+
+  testId?: string
 |}
 
 /**
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function MainButton(props: Props) {
-  const { alignSelf = 'auto', children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, spinner = false } = props
+  const {
+    alignSelf = 'auto',
+    children,
+    disabled = false,
+    label,
+    marginRem,
+    onPress,
+    type = 'primary',
+    paddingRem,
+    spinner = false,
+    testId = 'ButtonsModal'
+  } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -54,7 +68,7 @@ export function MainButton(props: Props) {
   // Styles:
   const theme = useTheme()
   const styles = getStyles(theme)
-
+  const generateTestHook = useCavy()
   let touchableStyle, textStyle, spinnerColor, colors, start, end, buttonShadow
   if (type === 'primary') {
     touchableStyle = styles.primaryButton
@@ -89,7 +103,7 @@ export function MainButton(props: Props) {
   }
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={buttonShadow} onPress={handlePress}>
+    <TouchableOpacity disabled={disabled || pending} style={buttonShadow} onPress={handlePress} ref={generateTestHook(testId)}>
       <LinearGradient colors={colors} start={start} end={end} style={[touchableStyle, dynamicStyles, styles.linearGradient]}>
         {pending ? null : children}
         {pending || label == null ? null : (

@@ -41,9 +41,10 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   buttons: Buttons,
   closeArrow?: boolean,
   disableCancel?: boolean,
-  fullScreen?: boolean
+  fullScreen?: boolean,
+  testId?: string
 |}) {
-  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
+  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false, testId = 'ButtonsModal' } = props
   const theme = useTheme()
   const generateTestHook = useCavy()
 
@@ -90,7 +91,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
             )
           }
 
-          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
+          return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} testId={`${testId}.${key}`} />
         })}
         {closeArrow ? <ModalCloseArrow onPress={handleCancel} ref={generateTestHook('ButtonsModal.Close')} /> : null}
       </View>

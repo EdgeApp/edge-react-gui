@@ -53,14 +53,29 @@ require('./reactPatcher/index').Cavify(React, {
     'WalletListSortModalComponent',
     'MainButton',
     'QrCode',
-    'SelectableRowComponent',
     'ThemedModalComponent',
     'HelpModalComponent',
+    'HelpModal',
     'MainComponent',
     'WalletListFooter',
     'CryptoExchangeComponent',
     'SettingsTappableRow',
     'TextInputModal',
-    'Tile'
+    'Tile',
+    'HeaderTextButtonComponent',
+    'HelpWebViewModal',
+    'GuiPluginList',
+    'CryptoExchangeScene',
+    'CryptoExchangeFlipInputWrapperComponent',
+    'TransactionListTopComponent',
+    'RequestComponent',
+    'AddressTileComponent',
+    'SendComponent',
+    'EditableAmountTile',
+    'SettingsScene',
+    'SettingsSceneComponent',
+    'AutoLogoutModalComponent',
+    'PrimaryButton'
+    
   ]
 })
