@@ -10,6 +10,7 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatchAccount } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
+import { getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
@@ -27,6 +28,7 @@ import { Alert } from '../../themed/Alert'
 import { CurrencyIcon } from '../../themed/CurrencyIcon'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { Tile } from '../../tiles/Tile'
 
 type SrcDest = 'source' | 'destination'
@@ -47,7 +49,7 @@ export const LoanDetailsConfirmationScene = (props: Props) => {
 
   const { borrowAmount, destTokenId, destWalletId, srcTokenId, srcWalletId } = props.route.params
 
-  const srcAssetName = srcToken != null ? srcToken.displayName : ''
+  const state = useSelector(state => state)
   const account = useSelector(state => state.core.account)
   const wallets = useWatchAccount(account, 'currencyWallets')
   const srcWallet = wallets[srcWalletId]
@@ -140,8 +142,18 @@ export const LoanDetailsConfirmationScene = (props: Props) => {
 
           {/* Source of Collateral / Source Wallet */}
           <WalletCardComponent isSrc walletId={srcWalletId} tokenId={srcTokenId} />
+
           {/* Fund Destination */}
           <WalletCardComponent isSrc={false} walletId={destWalletId} tokenId={destTokenId} />
+
+          {/* Fee */}
+          <CryptoFiatAmountTile
+            title={s.strings.wc_smartcontract_network_fee}
+            nativeCryptoAmount="10000000000000000"
+            walletId={srcWalletId}
+            currencyCode={srcWallet.currencyInfo.currencyCode}
+            denomination={getDisplayDenomination(state, srcWallet.currencyInfo.pluginId, srcWallet.currencyInfo.currencyCode)}
+          />
         </View>
       </ScrollView>
     </SceneWrapper>
