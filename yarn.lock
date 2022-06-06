@@ -1330,6 +1330,14 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@craftzdog/react-native-buffer@^6.0.4":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@craftzdog/react-native-buffer/-/react-native-buffer-6.0.4.tgz#b9ac7d3c492bfc119e1d52e00ff734b8eda8f561"
+  integrity sha512-2cWejr0rCyALjXJ8UVZjvRIalzJZzGAqsGiCOb7CSgOULqP+yhT+f9PdLQsNE4+ZT3/+8DFrF7S9ZPHrY9RtWg==
+  dependencies:
+    ieee754 "^1.2.1"
+    react-native-quick-base64 "^2.0.0"
+
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.6.tgz#d5e0706cf8c6acd8c6032f8d54070af261bbbb2f"
@@ -12272,6 +12280,13 @@ react-native-airship@^0.2.9:
   dependencies:
     yavent "^0.1.1"
 
+react-native-bignumber@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/react-native-bignumber/-/react-native-bignumber-0.1.7.tgz#ed06283bb81a7c797c52cf820acd647e6f989337"
+  integrity sha512-HNKiWScRrnRmnqsbH1TBgKKVtQKZuehTG4hM/u0z+8YnOVhdXJs0AG+yKU7pirgAFyQuPs3P5UIrN+i73RAeug==
+  dependencies:
+    "@craftzdog/react-native-buffer" "^6.0.4"
+
 "react-native-camera@https://github.com/EdgeApp/react-native-camera.git#edge-fixes":
   version "1.13.1"
   resolved "https://github.com/EdgeApp/react-native-camera.git#2ff75ebbacc0062b5fccbcc951f41db5c6c38c11"
@@ -12446,6 +12461,13 @@ react-native-popup-menu@0.13.3:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
+
+react-native-quick-base64@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-quick-base64/-/react-native-quick-base64-2.0.2.tgz#1d2af8ddab8f548d89e66208201fe6ce377b1fc5"
+  integrity sha512-bLIAOUhQ0JaVQ9RSQoQdt/lV5/XHpq982J1UwN+Gj42A2GfNtqT8kJzaLjJLO6rWhMZ7iVJeFJIVcTf90pWoJQ==
+  dependencies:
+    base64-js "^1.5.1"
 
 react-native-reanimated@^2.0.0, react-native-reanimated@^2.8.0:
   version "2.8.0"
