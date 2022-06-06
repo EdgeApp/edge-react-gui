@@ -12,7 +12,7 @@
   "drawer_wallets": "Кошельки",
   "drawer_fio_names": "FIO Имена",
   "drawer_fio_requests": "Запросы FIO",
-  "drawer_ionia": "%s Mastercard®",
+  "prepaid_card_name": "%s Mastercard®",
   "network_alert_title": "Нет связи с интернетом",
   "fio_network_alert_text": "Функциональность FIO требует подключения к интернету.",
   "fio_address_choose_label": "Choose a FIO Crypto Handle",
