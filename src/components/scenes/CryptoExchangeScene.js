@@ -11,7 +11,7 @@ import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type GuiCurrencyInfo, emptyCurrencyInfo } from '../../types/types.js'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
@@ -66,7 +66,7 @@ type DispatchProps = {
   getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void,
   exchangeMax: () => Promise<void>
 }
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & TestProps
 
 type State = {
   whichWalletFocus: 'from' | 'to', // Which wallet FlipInput was last focused and edited
@@ -306,6 +306,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
             onNext={this.getQuote}
+            testId="CryptoExchangeScene.FromWalletList"
           >
             {this.props.hasMaxSpend && (
               <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
@@ -326,6 +327,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isToFocused}
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
+            testId="CryptoExchangeScene.ToWalletList"
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderAlert()}
@@ -352,7 +354,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
+export const CryptoExchangeScene = connect<StateProps, DispatchProps, TestProps>(
   state => {
     const { currencyWallets } = state.core.account
     const { cryptoExchange } = state

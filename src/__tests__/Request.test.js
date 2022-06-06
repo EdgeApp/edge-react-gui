@@ -12,6 +12,7 @@ describe('Request', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => undefined,
       currencyCode: null,
       currentScene: 'request',
       wallet: null,
@@ -35,6 +36,7 @@ describe('Request', () => {
     const renderer = new ShallowRenderer()
 
     const props = {
+      generateTestHook: () => undefined,
       currencyCode: 'BTC',
       wallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
       exchangeSecondaryToPrimaryRatio: {},

@@ -92,6 +92,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           title={s.strings.help_knowledge_base}
           underline
           onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
+          ref={this.props.generateTestHook('HelpModal.KnowledgeBase')}
         />
 
         <SelectableRow
@@ -103,6 +104,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           title={s.strings.help_support}
           underline
           onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
+          ref={this.props.generateTestHook('HelpModal.SupportTicket')}
         />
 
         <SelectableRow
@@ -124,6 +126,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           subTitle={helpSiteMoreInfoText}
           title={sprintf(s.strings.help_visit_site, config.appName)}
           onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
+          ref={this.props.generateTestHook('HelpModal.EdgeSite')}
         />
         <View style={styles.footer}>
           <EdgeText style={styles.version}>{versionText}</EdgeText>

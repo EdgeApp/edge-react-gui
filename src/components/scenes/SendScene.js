@@ -11,7 +11,7 @@ import {
   asMaybeNoAmountSpecifiedError
 } from 'edge-core-js'
 import * as React from 'react'
-import { TextInput, View } from 'react-native'
+import { TextInput } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -22,7 +22,8 @@ import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo } from '../../types/types.js'
 import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
@@ -79,7 +80,7 @@ type OwnProps = {
   navigation: NavigationProp<'send'>,
   route: RouteProp<'send'>
 }
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps & TestProps
 
 type WalletStates = {
   selectedWalletId: string,
@@ -422,6 +423,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           displayDenomination={cryptoDisplayDenomination}
           lockInputs={lockInputs || (lockTilesMap.amount ?? false)}
           onPress={this.handleFlipInputModal}
+          ref={this.props.generateTestHook('SendScene.OpenFlipInput')}
         />
       )
     }
@@ -630,7 +632,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
+export const SendScene = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => {
     const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
 

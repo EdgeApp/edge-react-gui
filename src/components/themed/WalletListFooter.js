@@ -1,12 +1,13 @@
 // @flow
-
+import { useCavy } from 'cavy'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type EdgeTokenId } from '../../types/types.js'
@@ -24,7 +25,7 @@ export const WalletListFooter = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const account = useSelector(state => state.core.account)
-
+  const generateTestHook = useCavy()
   const handleAddWallet = useHandler(() => {
     navigation.navigate('createWalletSelectCrypto')
   })
@@ -45,11 +46,11 @@ export const WalletListFooter = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleAddWallet} style={styles.addButtonsContainer}>
+      <TouchableOpacity onPress={handleAddWallet} style={styles.addButtonsContainer} ref={generateTestHook('WalletListFooter.AddWallet')}>
         <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
         <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.wallet_list_add_wallet}</EdgeText>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleAddToken} style={styles.addButtonsContainer}>
+      <TouchableOpacity onPress={handleAddToken} style={styles.addButtonsContainer} ref={generateTestHook('WalletListFooter.AddToken')}>
         <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
         <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.wallet_list_add_token}</EdgeText>
       </TouchableOpacity>
