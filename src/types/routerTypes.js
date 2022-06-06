@@ -179,6 +179,16 @@ export type ParamList = {
     currencyCode: string,
     walletId: string
   },
+
+  loanDashboard: void,
+  loanDetails: void,
+  loanDetailsConfirmation: {|
+    borrowAmount: string,
+    destTokenId: string,
+    destWalletId: string,
+    srcTokenId: string,
+    srcWalletId: string
+  |},
   manageTokens: {|
     walletId: string
   |},

@@ -2,7 +2,7 @@
 
 import { div, mul } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { memo, useState } from '../../types/reactHooks'
@@ -16,12 +16,14 @@ const ValueBarCardComponent = ({
   formattedAmount,
   iconUri,
   maxAmount,
+  onPress,
   title
 }: {
   currencyCode: string,
   formattedAmount: string,
   iconUri: string,
   maxAmount: string,
+  onPress?: any => void | (any => Promise<void>),
   title: string
 }) => {
   const theme = useTheme()
@@ -33,19 +35,23 @@ const ValueBarCardComponent = ({
   }
 
   return (
-    <Card>
-      <View style={styles.cardContainer} onLayout={handleLayout}>
-        <View style={styles.leftContainer}>
-          <EdgeText style={styles.title}>{title}</EdgeText>
-          <View style={styles.valueContainer}>
-            <EdgeText style={styles.valueFont}>{formattedAmount}</EdgeText>
-            <EdgeText>{currencyCode}</EdgeText>
+    <View style={styles.container} onLayout={handleLayout}>
+      <TouchableHighlight onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
+        <Card>
+          <View style={styles.cardContainer}>
+            <View style={styles.leftContainer}>
+              <EdgeText style={styles.title}>{title}</EdgeText>
+              <View style={styles.valueContainer}>
+                <EdgeText style={styles.valueFont}>{formattedAmount}</EdgeText>
+                <EdgeText>{currencyCode}</EdgeText>
+              </View>
+              {barWidth === '' ? null : <View style={[styles.bar, { width: barWidth }]} />}
+            </View>
+            <FastImage style={styles.icon} source={{ uri: iconUri }} />
           </View>
-          {barWidth === '' ? null : <View style={[styles.bar, { width: barWidth }]} />}
-        </View>
-        <FastImage style={styles.icon} source={{ uri: iconUri }} />
-      </View>
-    </Card>
+        </Card>
+      </TouchableHighlight>
+    </View>
   )
 }
 
@@ -54,6 +60,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderColor: theme.walletProgressIconFill,
     borderTopWidth: theme.thickLineWidth,
     zIndex: 100
+  },
+  container: {
+    margin: theme.rem(0.5)
   },
   cardContainer: {
     flexDirection: 'row',

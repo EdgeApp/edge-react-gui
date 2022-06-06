@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { memo } from '../../types/reactHooks.js'
@@ -27,14 +27,14 @@ const TappableCardComponent = ({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableHighlight onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
         <Card>
           <View style={styles.cardContainer}>
             <View style={styles.spacedContainer}>{children}</View>
             {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}
           </View>
         </Card>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   )
 }

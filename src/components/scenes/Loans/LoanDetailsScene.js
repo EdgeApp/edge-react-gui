@@ -11,8 +11,9 @@ import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatchAccount } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { useState } from '../../../types/reactHooks.js'
+import { useCallback, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
+import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { makeCurrencyCodeTable, zeroString } from '../../../util/utils'
@@ -20,6 +21,7 @@ import { Card } from '../../cards/Card'
 import { TappableCard } from '../../cards/TappableCard'
 import { ValueBarCard } from '../../cards/ValueBarCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { TextInputModal } from '../../modals/TextInputModal'
 import { upgradeCurrencyCodes, WalletListModal } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
@@ -33,7 +35,12 @@ import { SceneHeader } from '../../themed/SceneHeader'
 
 type SrcDest = 'source' | 'destination'
 
-export const LoanDetailsScene = () => {
+type Props = {
+  navigation: NavigationProp<'loanDetails'>
+}
+
+export const LoanDetailsScene = (props: Props) => {
+  const navigation = props.navigation
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -47,6 +54,8 @@ export const LoanDetailsScene = () => {
 
   const account = useSelector(state => state.core.account)
   const wallets = useWatchAccount(account, 'currencyWallets')
+
+  const [borrowAmount, setBorrowAmount] = useState('0.00')
 
   // To satisfy hook rules and the 'useXXX' api, a dummy wallet is always passed
   // while a null token ID is being used to represent an initial scene state where
@@ -91,11 +100,11 @@ export const LoanDetailsScene = () => {
           if (isSrc) {
             setSrcCurrencyCode(currencyCode)
             setSrcWalletId(walletId)
-            setSrcTokenId(token.tokenId)
+            setSrcTokenId(token.tokenId ?? '')
           } else {
             setDestCurrencyCode(currencyCode)
             setDestWalletId(walletId)
-            setDestTokenId(token.tokenId)
+            setDestTokenId(token.tokenId ?? '')
           }
         }
       })
@@ -105,13 +114,17 @@ export const LoanDetailsScene = () => {
   /**
    * Render the 'Source of Collateral' or 'Fund Destination' cards
    * */
-  const renderWalletCard = ({ emptyLabel, srcDest, tokenId, walletId }: { emptyLabel: string, srcDest: SrcDest, tokenId?: string, walletId?: string }) => {
+  type WalletCardComponentProps = { emptyLabel: string, srcDest: SrcDest, tokenId?: string, walletId?: string }
+  const WalletCardComponent = (props: WalletCardComponentProps) => {
+    // eslint-disable-next-line react/prop-types
+    const { emptyLabel, srcDest, tokenId, walletId } = props
+    const ucShowWalletPickerModal = useCallback(() => showWalletPickerModal(srcDest), [srcDest])
+
     // Looking only at tokenId existence guarantees wallet has not yet been set
     if (tokenId != null) {
       const isSrc = srcDest === 'source'
       const currencyCode = isSrc ? srcCurrencyCode ?? '' : destCurrencyCode ?? ''
       const balance = isSrc ? srcBalance : destBalance
-
       return (
         <TappableCard
           leftChildren={
@@ -139,7 +152,7 @@ export const LoanDetailsScene = () => {
               </>
             ) : null
           }
-          onPress={() => showWalletPickerModal(srcDest)}
+          onPress={ucShowWalletPickerModal}
         />
       )
     } else {
@@ -151,33 +164,36 @@ export const LoanDetailsScene = () => {
             </View>
           }
           rightChildren={null}
-          onPress={() => showWalletPickerModal(srcDest)}
+          onPress={ucShowWalletPickerModal}
         />
       )
     }
   }
 
-  const appName = config.appName
-  console.log(
-    '\x1b[34m\x1b[43m' +
-      `{srcAssetName, srcWalletName, srcCurrencyCode, config.appName}: ${JSON.stringify({ srcAssetName, srcWalletName, srcCurrencyCode, appName }, null, 2)}` +
-      '\x1b[0m'
-  )
-
+  const isNextDisabled = srcTokenId == null || destTokenId == null || borrowAmount == null
   return (
     <SceneWrapper>
       <SceneHeader underline textTitle={s.strings.loan_details_title} />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <View style={styles.sceneContainer}>
           {/* Amount to borrow */}
-          <ValueBarCard currencyCode="USD" formattedAmount="100.00" iconUri={harBarCardIconUri} maxAmount="200" title={s.strings.loan_details_title} />
+          <ValueBarCard
+            currencyCode="USD"
+            formattedAmount={borrowAmount ?? '0.00'}
+            iconUri={harBarCardIconUri}
+            maxAmount="200"
+            title={s.strings.loan_details_title}
+            onPress={useCallback(() => {
+              Airship.show(bridge => <TextInputModal bridge={bridge} title="Enter Loan Amount (USD)" />).then(bridge => setBorrowAmount(bridge))
+            }, [])}
+          />
           <View style={styles.cardContainer}>
             <Card paddingRem={[0.5, 1]}>
               <EdgeText>{hardApr}</EdgeText>
             </Card>
           </View>
 
-          {/* Collateral required */}
+          {/* Collateral Amount Required / Collateral Amount */}
           {/* TODO: Pending design update, USD icon(?) */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_details_collateral_required}</EdgeText>
           <TappableCard
@@ -195,14 +211,14 @@ export const LoanDetailsScene = () => {
             nonTappable
           />
 
-          {/* Source of Collateral */}
+          {/* Source of Collateral / Source Wallet */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_details_collateral_source}</EdgeText>
-          {renderWalletCard({
-            emptyLabel: sprintf(s.strings.loan_details_select_s_wallet, hardSrcCc),
-            srcDest: 'source',
-            walletId: srcWalletId,
-            tokenId: srcTokenId
-          })}
+          <WalletCardComponent
+            emptyLabel={sprintf(s.strings.loan_details_select_s_wallet, hardSrcCc)}
+            srcDest="source"
+            walletId={srcWalletId}
+            tokenId={srcTokenId}
+          />
 
           {/* Insufficient Collateral Warning Card */}
           {zeroString(srcBalance) ? (
@@ -210,20 +226,35 @@ export const LoanDetailsScene = () => {
               numberOfLines={0}
               marginTop={0.5}
               title={s.strings.wc_smartcontract_warning_title}
-              message={sprintf(s.strings.loan_details_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, appName)}
+              message={sprintf(s.strings.loan_details_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName)}
               type="warning"
             />
           ) : null}
 
           {/* Fund Destination */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_details_destination}</EdgeText>
-          {renderWalletCard({
-            emptyLabel: s.strings.loan_details_select_receiving_wallet,
-            srcDest: 'destination',
-            walletId: destWalletId,
-            tokenId: destTokenId
-          })}
-          <MainButton label={s.strings.string_next_capitalized} type="secondary" onPress={() => {}} marginRem={[1.5, 6, 6, 6]} />
+
+          <WalletCardComponent
+            emptyLabel={s.strings.loan_details_select_receiving_wallet}
+            srcDest="destination"
+            walletId={destWalletId}
+            tokenId={destTokenId}
+          />
+          <MainButton
+            label={s.strings.string_next_capitalized}
+            disabled={isNextDisabled}
+            type="secondary"
+            onPress={() => {
+              navigation.navigate('loanDetailsConfirmation', {
+                borrowAmount,
+                destTokenId: destTokenId ?? '', // tokenIds will always be set by the time the button is available
+                destWalletId,
+                srcTokenId: srcTokenId ?? '',
+                srcWalletId
+              })
+            }}
+            marginRem={[1.5, 6, 6, 6]}
+          />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
@@ -278,6 +309,11 @@ const getStyles = cacheStyles(theme => {
       flexDirection: 'column',
       margin: theme.rem(0.5),
       marginTop: theme.rem(0)
+    },
+    spacedContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flex: 1
     }
   }
 })
