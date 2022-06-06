@@ -12,7 +12,7 @@
   "drawer_wallets": "Portafogli",
   "drawer_fio_names": "Nomi FIO",
   "drawer_fio_requests": "Richieste FIO",
-  "drawer_ionia": "%s Mastercard®",
+  "prepaid_card_name": "%s Mastercard®",
   "network_alert_title": "Nessuna connessione Internet",
   "fio_network_alert_text": "La funzionalità FIO richiede la connessione internet.",
   "fio_address_choose_label": "Scegli un FIO Crypto Handle",
