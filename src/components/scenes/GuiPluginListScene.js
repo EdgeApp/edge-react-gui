@@ -144,6 +144,29 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     if (!countryCode) this.showCountrySelectionModal().catch(showError)
   }
 
+  onLongPressItem = async (listRow: GuiPluginRow) => {
+    const { dataStore } = this.props.account
+    const { pluginId } = listRow
+    const plugin = guiPlugins[pluginId]
+    const storeId = plugin.storeId
+    const result = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.plugin_delete_data_modal_title}
+        message={s.strings.plugin_delete_data_modal_message}
+        buttons={{
+          yes: { label: s.strings.plugin_delete_data_modal_button_yes },
+          cancel: { label: s.strings.string_cancel_cap }
+        }}
+      />
+    ))
+    if (result === 'yes') {
+      const itemIds: string[] = await dataStore.listItemIds(storeId)
+      const promises = itemIds.map(itemId => dataStore.deleteItem(storeId, itemId))
+      await Promise.all(promises)
+    }
+  }
+
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
@@ -223,7 +246,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.pluginRowContainer}>
-        <TouchableOpacity onPress={() => this.openPlugin(item).catch(showError)}>
+        <TouchableOpacity onPress={() => this.openPlugin(item).catch(showError)} delayLongPress={5000} onLongPress={() => this.onLongPressItem(item)}>
           <View style={styles.pluginRowLogoAndInfo}>
             <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
             <View style={styles.pluginTextContainer}>
