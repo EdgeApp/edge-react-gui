@@ -41,6 +41,9 @@ export type GuiPlugin = {
   // Scene title to display when inside the plugin:
   displayName: string,
 
+  // Name to show next to Powered by. Uses displayName if missing
+  poweredBy?: string,
+
   // The WebView won't navigate to hostnames outside of this list:
   originWhitelist?: string[],
 
