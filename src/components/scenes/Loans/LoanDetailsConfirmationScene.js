@@ -78,7 +78,7 @@ export const LoanDetailsConfirmationScene = (props: Props) => {
 
     const leftChildren = (
       <View style={styles.halfContainer}>
-        <CurrencyIcon sizeRem={2.5} marginRem={[0, 1, 0, 0]} tokenId={tokenId} walletId={walletId} />
+        <CurrencyIcon sizeRem={2} marginRem={[0, 1, 0, 0]} tokenId={tokenId} walletId={walletId} />
         <View style={styles.columnLeft}>
           <EdgeText style={styles.textCardHeader}>{currencyCode}</EdgeText>
           <EdgeText style={styles.textSecondary}>{isSrc ? srcWalletName : destWalletName}</EdgeText>
