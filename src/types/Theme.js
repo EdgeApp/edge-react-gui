@@ -263,6 +263,7 @@ export type Theme = {
   // tileDivider: string,
   thinLineWidth: number,
   mediumLineWidth: number,
+  thickLineWidth: number,
 
   // DividerLine component
   dividerLineHeight: number,
@@ -350,6 +351,7 @@ export type Theme = {
   paymentTypeLogoGiftCard: string,
   paymentTypeLogoIdeal: string,
   paymentTypeLogoInterac: string,
+  paymentTypeLogoMastercard: string,
   paymentTypeLogoNewsagent: string,
   paymentTypeLogoPayid: string,
   paymentTypeLogoPoli: string,

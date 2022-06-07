@@ -37,17 +37,18 @@ const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPlugin
 const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
-  credit: 'paymentTypeLogoCreditCard',
-  auspost: 'paymentTypeLogoAuspost',
   applepay: 'paymentTypeLogoApplePay',
+  auspost: 'paymentTypeLogoAuspost',
   bank: 'paymentTypeLogoBankTransfer',
   bankgirot: 'paymentTypeLogoBankgirot',
   cash: 'paymentTypeLogoCash',
+  credit: 'paymentTypeLogoCreditCard',
   debit: 'paymentTypeLogoDebitCard',
   fasterPayments: 'paymentTypeLogoFasterPayments',
   giftcard: 'paymentTypeLogoGiftCard',
   ideal: 'paymentTypeLogoIdeal',
   interac: 'paymentTypeLogoInterac',
+  mastercard: 'paymentTypeLogoMastercard',
   newsagent: 'paymentTypeLogoNewsagent',
   payid: 'paymentTypeLogoPayid',
   poli: 'paymentTypeLogoPoli',
@@ -62,8 +63,8 @@ const pluginPartnerLogos = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp<'pluginBuy'> | NavigationProp<'pluginSell'>,
-  route: RouteProp<'pluginBuy'> | RouteProp<'pluginSell'>
+  navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>,
+  route: RouteProp<'pluginListBuy'> | RouteProp<'pluginListSell'>
 }
 
 type StateProps = {
@@ -147,7 +148,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, navigation } = this.props
+    const { countryCode, navigation, route } = this.props
     const { pluginId, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -183,7 +184,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    navigation.navigate('pluginView', {
+    navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
       plugin,
       deepPath,
       deepQuery
@@ -219,6 +220,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
     const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
+    const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
       <View style={styles.pluginRowContainer}>
@@ -236,7 +238,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
             <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-            <EdgeText style={styles.footerText}>{' ' + plugin.displayName}</EdgeText>
+            <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
           </View>
         </TouchableOpacity>
       </View>

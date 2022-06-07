@@ -8,8 +8,9 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
+import { useHandler } from '../../../../hooks/useHandler.js'
 import s from '../../../../locales/strings.js'
-import { useCallback, useEffect, useState } from '../../../../types/reactHooks.js'
+import { useEffect, useState } from '../../../../types/reactHooks.js'
 
 const COMPLETE_POINT: number = 3
 
@@ -58,13 +59,13 @@ export const SliderComponent = (props: Props) => {
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
 
-  const resetSlider = useCallback(() => {
+  const resetSlider = useHandler(() => {
     translateX.value = withTiming(upperBound, {
       duration: 500,
       easing: Easing.inOut(Easing.exp)
     })
     setCompleted(false)
-  }, [translateX, setCompleted, upperBound])
+  })
   const complete = () => {
     onSlidingComplete(() => resetSlider())
     setCompleted(true)

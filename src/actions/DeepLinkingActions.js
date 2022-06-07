@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import { EDGE_LOGIN, EXCHANGE_SCENE, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -77,7 +77,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push(PLUGIN_VIEW, {
+      Actions.push('pluginView', {
         plugin,
         deepPath: path,
         deepQuery: query

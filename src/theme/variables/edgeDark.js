@@ -18,6 +18,7 @@ import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paym
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
+import paymentTypeLogoMastercard from '../../assets/images/paymentTypes/paymentTypeLogoMastercard.png'
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
@@ -250,6 +251,7 @@ export const edgeDark: Theme = {
   // tileDivider: palette.blueGray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
+  thickLineWidth: 3,
 
   // DividerLine component
   dividerLineHeight: 1,
@@ -345,6 +347,7 @@ export const edgeDark: Theme = {
   paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
   paymentTypeLogoIdeal: paymentTypeLogoIdeal,
   paymentTypeLogoInterac: paymentTypeLogoInterac,
+  paymentTypeLogoMastercard: paymentTypeLogoMastercard,
   paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
   paymentTypeLogoPayid: paymentTypeLogoPayid,
   paymentTypeLogoPoli: paymentTypeLogoPoli,

@@ -21,7 +21,7 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_QUOTE_PROCESSING_SCENE, EXCHANGE_QUOTE_SCENE, EXCHANGE_SCENE, EXCHANGE_SUCCESS_SCENE, PLUGIN_BUY } from '../constants/SceneKeys.js'
+import { EXCHANGE_QUOTE_PROCESSING_SCENE, EXCHANGE_QUOTE_SCENE, EXCHANGE_SCENE, EXCHANGE_SUCCESS_SCENE } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
@@ -92,7 +92,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
       ))
       switch (result) {
         case 'buy':
-          Actions.jump(PLUGIN_BUY, { direction: 'buy' })
+          Actions.jump('pluginListBuy', { direction: 'buy' })
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })

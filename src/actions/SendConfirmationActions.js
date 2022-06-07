@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_SCENE, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/SceneKeys.js'
+import { EXCHANGE_SCENE, TRANSACTION_DETAILS } from '../constants/SceneKeys.js'
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, recordSend } from '../modules/FioAddress/util'
@@ -133,7 +133,7 @@ export const sendConfirmationUpdateTx =
           ))
           switch (result) {
             case 'buy':
-              Actions.jump(PLUGIN_BUY, { direction: 'buy' })
+              Actions.jump('pluginListBuy', { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
@@ -194,7 +194,7 @@ export const updateMaxSpend =
   }
 
 export const signBroadcastAndSave =
-  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
+  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
@@ -218,23 +218,11 @@ export const signBroadcastAndSave =
     const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
 
     if (guiMakeSpendInfo.beforeTransaction) {
-      dispatch({
-        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-        data: { pending: true }
-      })
       try {
         guiMakeSpendInfo.beforeTransaction && (await guiMakeSpendInfo.beforeTransaction())
       } catch (e) {
-        dispatch({
-          type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-          data: { pending: false }
-        })
         return
       }
-      dispatch({
-        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-        data: { pending: false }
-      })
     }
 
     if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
@@ -265,10 +253,6 @@ export const signBroadcastAndSave =
       }
     }
 
-    dispatch({
-      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-      data: { pending: true }
-    })
     let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
     try {
       if (authRequired === 'pin') {
@@ -355,10 +339,6 @@ export const signBroadcastAndSave =
           }
         }
       }
-      dispatch({
-        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-        data: { pending: false }
-      })
 
       playSendSound().catch(error => console.log(error)) // Fail quietly
       if (!guiMakeSpendInfo.dismissAlert) {
@@ -379,12 +359,19 @@ export const signBroadcastAndSave =
         })
       }
     } catch (e) {
+      resetSlider()
       console.log(e)
-      dispatch({
-        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
-        data: { pending: false }
-      })
       let message = sprintf(s.strings.transaction_failure_message, e.message)
+      e.message = 'broadcastError'
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+        data: {
+          error: e,
+          forceUpdateGui: false,
+          guiMakeSpendInfo,
+          transaction: edgeUnsignedTransaction
+        }
+      })
       if (e.name === 'ErrorEosInsufficientCpu') {
         message = s.strings.send_confirmation_eos_error_cpu
       } else if (e.name === 'ErrorEosInsufficientNet') {

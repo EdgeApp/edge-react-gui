@@ -3,9 +3,9 @@
 import * as React from 'react'
 
 import s from '../../locales/strings.js'
+import { Card } from '../cards/Card'
+import { CardContent } from '../cards/CardContent'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Card } from './Card'
-import { CardContent } from './CardContent'
 import { CurrencyIcon } from './CurrencyIcon.js'
 import { DataRow } from './DataRow'
 import { EdgeText } from './EdgeText'

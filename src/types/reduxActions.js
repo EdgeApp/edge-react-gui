@@ -140,7 +140,6 @@ export type Action =
         authRequired: SpendAuthType
       }
     }
-  | { type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING', data: { pending: boolean } }
   | {
       type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
       data: {

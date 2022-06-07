@@ -3,9 +3,10 @@ import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
+import { useHandler } from '../../hooks/useHandler.js'
 import { useWalletBalance } from '../../hooks/useWalletBalance.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
-import { memo, useCallback } from '../../types/reactHooks.js'
+import { memo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CryptoText } from '../text/CryptoText'
@@ -47,9 +48,9 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
   const balance = useWalletBalance(wallet, tokenId)
 
-  const handlePress = useCallback(() => {
+  const handlePress = useHandler(() => {
     if (onPress != null) onPress(wallet.id, currencyCode)
-  }, [currencyCode, onPress, wallet])
+  })
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>

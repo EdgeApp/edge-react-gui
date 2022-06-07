@@ -19,7 +19,6 @@ export type SendConfirmationState = {
   guiMakeSpendInfo: GuiMakeSpendInfo,
   spendInfo: EdgeSpendInfo | null,
 
-  pending: boolean,
   transaction: EdgeTransaction | null,
   error: Error | null,
 
@@ -141,7 +140,7 @@ const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'none' | 
 const transactionMetadata = (state: EdgeMetadata | null = null, action: Action): EdgeMetadata | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
-      if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata || !action.data.guiMakeSpendInfo.metadata.name) return state
+      if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata) return state
 
       return action.data.guiMakeSpendInfo.metadata || null
     }
@@ -174,17 +173,6 @@ const pin = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_PIN': {
       return action.data.pin
-    }
-
-    default:
-      return state
-  }
-}
-
-const pending = (state: boolean = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING': {
-      return action.data.pending
     }
 
     default:
@@ -257,7 +245,6 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
     ...legacySendConfirmation,
     error: error(state.error, action),
     pin: pin(state.pin, action),
-    pending: pending(state.pending, action),
     transaction: transaction(state.transaction, action),
     transactionMetadata: transactionMetadata(state.transactionMetadata, action),
     spendInfo: spendInfo(state.spendInfo, action),

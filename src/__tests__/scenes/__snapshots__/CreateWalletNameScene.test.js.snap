@@ -225,6 +225,9 @@ exports[`createWalletName should render with loading props 1`] = `
       "paymentTypeLogoInterac": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
       },
+      "paymentTypeLogoMastercard": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoMastercard.png",
+      },
       "paymentTypeLogoNewsagent": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoNewsagent.png",
       },
@@ -394,6 +397,7 @@ exports[`createWalletName should render with loading props 1`] = `
         "#0D2145",
       ],
       "textLink": "#66EDA8",
+      "thickLineWidth": 3,
       "thinLineWidth": 1,
       "tileBackground": "rgba(255, 255, 255, 0)",
       "tileBackgroundMuted": "rgba(255, 255, 255, 0)",
