@@ -135,8 +135,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
   },
-  ionia: {
-    pluginId: 'ionia',
+  card: {
+    pluginId: 'card',
     storeId: 'ionia',
     baseUri: 'https://ioniaedge.web.app',
     poweredBy: 'Ionia',
