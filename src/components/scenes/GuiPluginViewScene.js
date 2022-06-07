@@ -6,7 +6,7 @@ import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { Bridge, onMethod } from 'yaob'
 
-import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
+import { EdgeProvider } from '../../plugins/EdgeProvider.js'
 import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
