@@ -84,10 +84,10 @@ const aaveKovanBlueprint: BorrowPluginBlueprint = {
 export const makeAaveKovanBorrowPlugin = makeBorrowPluginFactory(aaveKovanBlueprint)
 
 // -----------------------------------------------------------------------------
-// Localhost
+// Development
 // -----------------------------------------------------------------------------
 
-const aaveLocalhostNetwork = makeAaveNetworkFactory({
+const aaveDevNetwork = makeAaveNetworkFactory({
   provider: ethers.getDefaultProvider('http://localhost:8545'),
 
   contractAddresses: {
@@ -102,15 +102,15 @@ const aaveLocalhostNetwork = makeAaveNetworkFactory({
   }
 })
 
-const aaveLocalhostBlueprint: BorrowPluginBlueprint = {
+const aaveDevBlueprint: BorrowPluginBlueprint = {
   borrowInfo: {
-    pluginId: 'aaveLocalhost',
-    displayName: 'AAVE (Localhost)',
-    currencyPluginId: 'ethLocalhost',
+    pluginId: 'aaveDev',
+    displayName: 'AAVE (Dev)',
+    currencyPluginId: 'ethDev',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
-    aaveNetwork: aaveLocalhostNetwork,
+    aaveNetwork: aaveDevNetwork,
     asTokenContractAddress: asEthTokenContractAddress,
     enabledTokens: {
       DAI: {
@@ -125,4 +125,4 @@ const aaveLocalhostBlueprint: BorrowPluginBlueprint = {
   })
 }
 
-export const makeAaveLocalhostPlugin = makeBorrowPluginFactory(aaveLocalhostBlueprint)
+export const makeAaveDevPlugin = makeBorrowPluginFactory(aaveDevBlueprint)
