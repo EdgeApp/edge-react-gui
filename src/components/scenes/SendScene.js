@@ -54,7 +54,6 @@ type StateProps = {
   exchangeRates: GuiExchangeRates,
   nativeAmount: string | null,
   pin: string,
-  resetSlider: boolean,
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
   transactionMetadata: EdgeMetadata | null,
@@ -67,7 +66,7 @@ type StateProps = {
 type DispatchProps = {
   reset: () => void,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void,
-  signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => Promise<void>,
+  signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => Promise<void>,
   onChangePin: (pin: string) => void,
   selectWallet: (walletId: string, currencyCode: string) => void,
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination,
@@ -95,7 +94,6 @@ type State = {
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: AddressTile | void
   pinInput: { current: TextInput | null } = React.createRef()
-  resetSliderFunc: void | Function = undefined
 
   constructor(props: Props) {
     super(props)
@@ -147,12 +145,6 @@ class SendComponent extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props): void {
     if (prevProps.route.params.guiMakeSpendInfo == null && this.props.route.params.guiMakeSpendInfo != null) {
       this.updateSendConfirmationTx(this.props.route.params.guiMakeSpendInfo)
-    }
-    if (!prevProps.resetSlider && this.props.resetSlider) {
-      if (this.resetSliderFunc != null) {
-        this.resetSliderFunc()
-        this.resetSliderFunc = undefined
-      }
     }
   }
 
@@ -290,7 +282,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  submitFio = async (isFioPendingRequest: boolean) => {
+  submitFio = async (isFioPendingRequest: boolean, resetSlider: () => void) => {
     const { fioSender } = this.state
     const { signBroadcastAndSave } = this.props
     const { selectedWalletId, selectedCurrencyCode } = this.state
@@ -299,7 +291,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       if (fioSender?.fioWallet != null && fioSender?.fioAddress != null && !isFioPendingRequest) {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
-      await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
+      await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider)
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
         const answer = await Airship.show(bridge => (
@@ -315,7 +307,7 @@ class SendComponent extends React.PureComponent<Props, State> {
         ))
         if (answer === 'ok') {
           fioSender.skipRecord = true
-          await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)
+          await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider)
         }
       } else {
         showError(e)
@@ -323,8 +315,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  submit = async (doResetSlider: Function) => {
-    this.resetSliderFunc = doResetSlider
+  submit = async (resetSlider: () => void) => {
     const { isSendUsingFioAddress, signBroadcastAndSave, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { selectedWalletId, selectedCurrencyCode } = this.state
@@ -332,9 +323,9 @@ class SendComponent extends React.PureComponent<Props, State> {
     const isFioPendingRequest = !!guiMakeSpendInfo?.fioPendingRequest
 
     if (isSendUsingFioAddress || isFioPendingRequest) {
-      await this.submitFio(isFioPendingRequest)
+      await this.submitFio(isFioPendingRequest, resetSlider)
     } else {
-      await signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode)
+      await signBroadcastAndSave(undefined, selectedWalletId, selectedCurrencyCode, resetSlider)
     }
   }
 
@@ -630,8 +621,7 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       exchangeRates: state.exchangeRates,
       nativeAmount,
       pin: state.ui.scenes.sendConfirmation.pin,
-      resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
-      sliderDisabled: !transaction || !!error,
+      sliderDisabled: !transaction,
       transaction,
       transactionMetadata,
       isSendUsingFioAddress,
@@ -647,8 +637,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
-    async signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      await dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
+    async signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) {
+      await dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider))
     },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })

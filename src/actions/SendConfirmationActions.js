@@ -194,7 +194,7 @@ export const updateMaxSpend =
   }
 
 export const signBroadcastAndSave =
-  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
+  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
@@ -359,6 +359,7 @@ export const signBroadcastAndSave =
         })
       }
     } catch (e) {
+      resetSlider()
       console.log(e)
       let message = sprintf(s.strings.transaction_failure_message, e.message)
       e.message = 'broadcastError'
@@ -368,7 +369,7 @@ export const signBroadcastAndSave =
           error: e,
           forceUpdateGui: false,
           guiMakeSpendInfo,
-          transaction: null
+          transaction: edgeUnsignedTransaction
         }
       })
       if (e.name === 'ErrorEosInsufficientCpu') {
