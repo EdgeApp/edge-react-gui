@@ -1,7 +1,7 @@
 [
   {
-    "id": "ionia",
-    "pluginId": "ionia",
+    "id": "card",
+    "pluginId": "card",
     "paymentTypes": [
       "bank"
     ],

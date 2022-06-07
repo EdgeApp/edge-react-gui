@@ -282,7 +282,7 @@ Limit: $1,000 per day",
     "paymentTypes": Array [
       "bank",
     ],
-    "pluginId": "ionia",
+    "pluginId": "card",
     "title": "Edge Mastercard®",
   },
   Object {
