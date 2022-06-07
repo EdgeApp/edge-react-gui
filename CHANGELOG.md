@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 2.16.0 (2022-06-07)
+
+- Add Edge Mastercard support
+- Replace Slider with SmartSlider component to prevent accidental duplicate sends
+- Add `useHandler` hook as an optimized version of `useCallback`
+- Fix manual wallet sort not saving order
+- Minor visual and text fixes
+
 ## 2.15.0 (2022-06-01)
 
 - Massive performance improvements and reduced resource usage
