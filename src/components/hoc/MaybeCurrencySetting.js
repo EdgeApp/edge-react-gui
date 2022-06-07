@@ -4,8 +4,9 @@ import { type Cleaner, asMaybe, uncleaner } from 'cleaners'
 import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 
+import { useHandler } from '../../hooks/useHandler.js'
 import { useWatchCurrencyConfig } from '../../hooks/useWatch.js'
-import { useCallback, useMemo } from '../../types/reactHooks.js'
+import { useMemo } from '../../types/reactHooks.js'
 
 /**
  * Specific settings sections will receive these cleaned props.
@@ -48,13 +49,11 @@ export function maybeCurrencySetting<T, X>(
     const userSettings = useWatchCurrencyConfig(currencyConfig, 'userSettings')
     const setting = useMemo(() => asMaybeSetting(userSettings), [userSettings])
 
-    const handleUpdate = useCallback(
-      async settings =>
-        currencyConfig.changeUserSettings({
-          ...currencyConfig.userSettings,
-          ...wasSetting(settings)
-        }),
-      [currencyConfig]
+    const handleUpdate = useHandler(async settings =>
+      currencyConfig.changeUserSettings({
+        ...currencyConfig.userSettings,
+        ...wasSetting(settings)
+      })
     )
 
     return defaultSetting == null ? null : (
