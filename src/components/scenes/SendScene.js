@@ -444,13 +444,13 @@ class SendComponent extends React.PureComponent<Props, State> {
     return null
   }
 
-  renderMetadata() {
+  renderMetadataNotes() {
     const { transactionMetadata } = this.props
 
-    if (transactionMetadata && transactionMetadata.name) {
+    if (transactionMetadata && transactionMetadata.notes) {
       return (
         <Tile type="static" title={s.strings.send_scene_metadata_name_title}>
-          <EdgeText>{transactionMetadata.name}</EdgeText>
+          <EdgeText>{transactionMetadata.notes}</EdgeText>
         </Tile>
       )
     }
@@ -570,7 +570,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderAmount()}
           {this.renderError()}
           {this.renderFees()}
-          {this.renderMetadata()}
+          {this.renderMetadataNotes()}
           {this.renderSelectFioAddress()}
           {this.renderUniqueIdentifier()}
           {this.renderInfoTiles()}

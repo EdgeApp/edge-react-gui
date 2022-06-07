@@ -271,7 +271,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
-  "transactionMetadata": null,
+  "transactionMetadata": Object {},
 }
 `;
 
