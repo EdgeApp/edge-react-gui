@@ -140,7 +140,7 @@ const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'none' | 
 const transactionMetadata = (state: EdgeMetadata | null = null, action: Action): EdgeMetadata | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
-      if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata || !action.data.guiMakeSpendInfo.metadata.name) return state
+      if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata) return state
 
       return action.data.guiMakeSpendInfo.metadata || null
     }
