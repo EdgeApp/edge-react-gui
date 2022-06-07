@@ -192,7 +192,7 @@ export function ControlPanel(props: Props) {
 
   const rowDatas: any[] = [
     {
-      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.card }),
       iconName: 'cp-mastercard',
       title: sprintf(s.strings.prepaid_card_name, config.appName)
     },
