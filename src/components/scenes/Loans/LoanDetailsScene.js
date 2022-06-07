@@ -125,47 +125,43 @@ export const LoanDetailsScene = (props: Props) => {
       const isSrc = srcDest === 'source'
       const currencyCode = isSrc ? srcCurrencyCode ?? '' : destCurrencyCode ?? ''
       const balance = isSrc ? srcBalance : destBalance
+      const leftChildren = (
+        <View style={styles.halfContainer}>
+          <CurrencyIcon sizeRem={2.5} marginRem={[0, 1, 0, 0]} tokenId={tokenId} walletId={walletId} />
+          <View style={styles.columnLeft}>
+            <EdgeText style={styles.textCardHeader}>{currencyCode}</EdgeText>
+            <EdgeText style={styles.textSecondary}>{isSrc ? srcWalletName : destWalletName}</EdgeText>
+          </View>
+        </View>
+      )
+
+      const rightChildren = walletId ? (
+        <>
+          <View style={styles.columnRight}>
+            <EdgeText style={styles.textCardHeader}>
+              {/* TODO: Fold appendCurrencyCode into CryptoText? */}
+              <CryptoText nativeAmount={balance} tokenId={tokenId} wallet={wallets[walletId]} />
+              {' ' + currencyCode}
+            </EdgeText>
+            <EdgeText style={styles.textSecondary}>
+              <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallets[walletId]} />
+            </EdgeText>
+          </View>
+        </>
+      ) : null
       return (
-        <TappableCard
-          leftChildren={
-            <>
-              <CurrencyIcon sizeRem={2.5} marginRem={[0, 1, 0, 0]} tokenId={tokenId} walletId={walletId} />
-              <View style={styles.columnLeft}>
-                <EdgeText style={styles.textCardHeader}>{currencyCode}</EdgeText>
-                <EdgeText style={styles.textSecondary}>{isSrc ? srcWalletName : destWalletName}</EdgeText>
-              </View>
-            </>
-          }
-          rightChildren={
-            walletId ? (
-              <>
-                <View style={styles.columnRight}>
-                  <EdgeText style={styles.textCardHeader}>
-                    {/* TODO: Fold appendCurrencyCode into CryptoText? */}
-                    <CryptoText nativeAmount={balance} tokenId={tokenId} wallet={wallets[walletId]} />
-                    {' ' + currencyCode}
-                  </EdgeText>
-                  <EdgeText style={styles.textSecondary}>
-                    <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallets[walletId]} />
-                  </EdgeText>
-                </View>
-              </>
-            ) : null
-          }
-          onPress={ucShowWalletPickerModal}
-        />
+        <TappableCard onPress={ucShowWalletPickerModal}>
+          {leftChildren}
+          {rightChildren}
+        </TappableCard>
       )
     } else {
       return (
-        <TappableCard
-          leftChildren={
-            <View style={styles.columnLeft}>
-              <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText>
-            </View>
-          }
-          rightChildren={null}
-          onPress={ucShowWalletPickerModal}
-        />
+        <TappableCard onPress={ucShowWalletPickerModal}>
+          <View style={styles.columnLeft}>
+            <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText>
+          </View>
+        </TappableCard>
       )
     }
   }
@@ -184,7 +180,9 @@ export const LoanDetailsScene = (props: Props) => {
             maxAmount="200"
             title={s.strings.loan_details_title}
             onPress={useCallback(() => {
-              Airship.show(bridge => <TextInputModal bridge={bridge} title="Enter Loan Amount (USD)" />).then(bridge => setBorrowAmount(bridge))
+              Airship.show(bridge => <TextInputModal bridge={bridge} title="Enter Loan Amount (USD)" />).then(amount => {
+                if (amount != null) setBorrowAmount(amount)
+              })
             }, [])}
           />
           <View style={styles.cardContainer}>
@@ -196,20 +194,18 @@ export const LoanDetailsScene = (props: Props) => {
           {/* Collateral Amount Required / Collateral Amount */}
           {/* TODO: Pending design update, USD icon(?) */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_details_collateral_required}</EdgeText>
-          <TappableCard
-            leftChildren={
-              <>
-                <CurrencyIcon sizeRem={2} marginRem={[0, 1, 0, 0]} pluginId="bitcoin" />
-                <EdgeText style={styles.textCardHeader}>{hardBtc}</EdgeText>
-              </>
-            }
-            rightChildren={
-              <View style={styles.rowRight}>
-                <EdgeText style={styles.textCardHeader}>{hardUsd}</EdgeText>
-              </View>
-            }
-            nonTappable
-          />
+          <TappableCard nonTappable>
+            <View style={styles.halfContainer}>
+              <CurrencyIcon sizeRem={2} marginRem={[0, 1, 0, 0]} pluginId="bitcoin" />
+              <EdgeText style={styles.textCardHeader}>{hardBtc}</EdgeText>
+            </View>
+
+            {/* <View style={styles.halfContainer}> */}
+            <View style={styles.rowRight}>
+              <EdgeText style={styles.textCardHeader}>{hardUsd}</EdgeText>
+            </View>
+            {/* </View> */}
+          </TappableCard>
 
           {/* Source of Collateral / Source Wallet */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_details_collateral_source}</EdgeText>
@@ -302,7 +298,12 @@ const getStyles = cacheStyles(theme => {
       textAlign: 'left'
     },
     rowRight: {
+      alignSelf: 'center',
       alignItems: 'flex-end'
+    },
+    halfContainer: {
+      alignItems: 'center',
+      flexDirection: 'row'
     },
     sceneContainer: {
       flex: 1,
