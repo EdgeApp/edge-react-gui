@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm b/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm
+index 9c25dbc..0cdae0c 100644
+--- a/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm
++++ b/node_modules/react-native-mymonero-core/ios/MyMoneroCore.mm
+@@ -36,6 +36,11 @@ RCT_REMAP_METHOD(
+   );
+ }
+ 
+++ (BOOL)requiresMainQueueSetup
++{
++  return YES;
++}
++
+ - (NSDictionary *)constantsToExport
+ {
+   NSMutableArray *out = [NSMutableArray arrayWithCapacity:myMoneroMethodCount];

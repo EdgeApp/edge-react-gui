@@ -109,18 +109,23 @@ index 0000000..1d15b8d
 +  }
 +}
 diff --git a/node_modules/@react-native-community/blur/src/BlurView.android.js b/node_modules/@react-native-community/blur/src/BlurView.android.js
-index a192476..3a9c5b3 100644
+index a192476..62526fa 100644
 --- a/node_modules/@react-native-community/blur/src/BlurView.android.js
 +++ b/node_modules/@react-native-community/blur/src/BlurView.android.js
-@@ -5,6 +5,7 @@ import {
+@@ -4,9 +4,11 @@ import {
+   View,
    requireNativeComponent,
    DeviceEventEmitter,
-   ViewPropTypes,
+-  ViewPropTypes,
 +  Platform,
    StyleSheet,
  } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
++
  
-@@ -65,6 +66,14 @@ class BlurView extends Component {
+ const OVERLAY_COLORS = {
+   light: 'rgba(255, 255, 255, 0.2)',
+@@ -65,6 +67,14 @@ class BlurView extends Component {
    render() {
      const { style } = this.props;
  
@@ -135,7 +140,7 @@ index a192476..3a9c5b3 100644
      return (
        <NativeBlurView
          blurRadius={this.blurRadius()}
-@@ -81,6 +90,7 @@ class BlurView extends Component {
+@@ -81,6 +91,7 @@ class BlurView extends Component {
  
  const styles = StyleSheet.create({
    transparent: { backgroundColor: 'transparent' },
@@ -143,3 +148,17 @@ index a192476..3a9c5b3 100644
  });
  
  BlurView.propTypes = {
+diff --git a/node_modules/@react-native-community/blur/src/BlurView.ios.js b/node_modules/@react-native-community/blur/src/BlurView.ios.js
+index f675bf9..7dabda1 100644
+--- a/node_modules/@react-native-community/blur/src/BlurView.ios.js
++++ b/node_modules/@react-native-community/blur/src/BlurView.ios.js
+@@ -1,7 +1,7 @@
+ import React, { Component } from 'react';
+ import PropTypes from 'prop-types';
+-import {View, requireNativeComponent, ViewPropTypes, StyleSheet} from 'react-native';
+-
++import {View, requireNativeComponent, StyleSheet} from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ class BlurView extends Component {
+   setNativeProps = nativeProps => {
+     if (this._root) {

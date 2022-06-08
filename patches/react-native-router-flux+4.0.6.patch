@@ -1,0 +1,72 @@
+diff --git a/node_modules/react-native-router-flux/examples/expo/components/DrawerContent.js b/node_modules/react-native-router-flux/examples/expo/components/DrawerContent.js
+index 96a3acb..553eb10 100644
+--- a/node_modules/react-native-router-flux/examples/expo/components/DrawerContent.js
++++ b/node_modules/react-native-router-flux/examples/expo/components/DrawerContent.js
+@@ -1,8 +1,9 @@
+ import React from 'react';
+ import PropTypes from 'prop-types';
+-import { StyleSheet, Text, View, ViewPropTypes } from 'react-native';
++import { StyleSheet, Text, View } from 'react-native';
+ import Button from 'react-native-button';
+ import { Actions } from 'react-native-router-flux';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const styles = StyleSheet.create({
+   container: {
+diff --git a/node_modules/react-native-router-flux/examples/react-native/components/CustomNavBarView.js b/node_modules/react-native-router-flux/examples/react-native/components/CustomNavBarView.js
+index e6b5a39..abfef85 100644
+--- a/node_modules/react-native-router-flux/examples/react-native/components/CustomNavBarView.js
++++ b/node_modules/react-native-router-flux/examples/react-native/components/CustomNavBarView.js
+@@ -1,8 +1,9 @@
+ import React from 'react';
+ import PropTypes from 'prop-types';
+-import { StyleSheet, Text, View, ViewPropTypes } from 'react-native';
++import { StyleSheet, Text, View } from 'react-native';
+ import Button from 'react-native-button';
+ import { Actions } from 'react-native-router-flux';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const propTypes = {
+   name: PropTypes.string,
+diff --git a/node_modules/react-native-router-flux/examples/react-native/components/TabView.js b/node_modules/react-native-router-flux/examples/react-native/components/TabView.js
+index c8ac97f..b02ab95 100644
+--- a/node_modules/react-native-router-flux/examples/react-native/components/TabView.js
++++ b/node_modules/react-native-router-flux/examples/react-native/components/TabView.js
+@@ -1,8 +1,9 @@
+ import React from 'react';
+ import PropTypes from 'prop-types';
+-import { StyleSheet, Text, View, ViewPropTypes } from 'react-native';
++import { StyleSheet, Text, View } from 'react-native';
+ import Button from 'react-native-button';
+ import { Actions } from 'react-native-router-flux';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const propTypes = {
+   name: PropTypes.string.isRequired,
+diff --git a/node_modules/react-native-router-flux/examples/react-native/components/drawer/DrawerContent.js b/node_modules/react-native-router-flux/examples/react-native/components/drawer/DrawerContent.js
+index bce0343..c49a3ec 100644
+--- a/node_modules/react-native-router-flux/examples/react-native/components/drawer/DrawerContent.js
++++ b/node_modules/react-native-router-flux/examples/react-native/components/drawer/DrawerContent.js
+@@ -1,6 +1,8 @@
+ import React from 'react';
+ import PropTypes from 'prop-types';
+-import { StyleSheet, Text, View, ViewPropTypes } from 'react-native';
++import { StyleSheet, Text, View } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
++
+ import Button from 'react-native-button';
+ import { Actions } from 'react-native-router-flux';
+ 
+diff --git a/node_modules/react-native-router-flux/src/Router.js b/node_modules/react-native-router-flux/src/Router.js
+index 27c3402..160eb4f 100644
+--- a/node_modules/react-native-router-flux/src/Router.js
++++ b/node_modules/react-native-router-flux/src/Router.js
+@@ -1,5 +1,7 @@
+ import React from 'react';
+-import { ViewPropTypes, BackHandler, Linking } from 'react-native';
++import { BackHandler, Linking } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
++
+ import PropTypes from 'prop-types';
+ import navigationStore from './navigationStore';
+ import pathParser from './pathParser';
