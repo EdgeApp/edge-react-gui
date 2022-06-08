@@ -72,7 +72,7 @@ export type BorrowEngine = {
 
   loanToValue: number,
 
-  // Returns the APR for borrow a particular token
+  // Returns the APR for borrow a particular debt token
   getAprQuote: (tokenId?: string) => Promise<number>,
 
   // Collateral modification

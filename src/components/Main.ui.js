@@ -262,7 +262,7 @@ export class MainComponent extends React.Component<Props> {
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
             <Stack key="testlab">
-              <Scene
+              {/* <Scene
                 key="loanDetails"
                 component={withNavigation(ifLoggedIn(LoanDetailsScene))}
                 navTransparent
@@ -270,15 +270,15 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
-              />
-              {/* <Scene
-                key={TEST_SCENE}
+              /> */}
+              <Scene
+                key="testScene"
                 component={withNavigation(ifLoggedIn(TestScene))}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
-              /> */}
+              />
             </Stack>
             <Stack key={WALLET_LIST}>
               <Scene

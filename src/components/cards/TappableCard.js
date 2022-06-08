@@ -4,7 +4,7 @@ import * as React from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import { memo } from '../../types/reactHooks.js'
+import { memo, useMemo } from '../../types/reactHooks'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { Card } from './Card'
 
@@ -24,13 +24,14 @@ const TappableCardComponent = ({
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const memodChildren = useMemo(() => children, [children])
 
   return (
     <View style={styles.container}>
       <TouchableHighlight onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
         <Card>
           <View style={styles.cardContainer}>
-            <View style={styles.spacedContainer}>{children}</View>
+            <View style={styles.spacedContainer}>{memodChildren}</View>
             {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}
           </View>
         </Card>

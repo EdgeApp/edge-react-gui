@@ -16,6 +16,7 @@ import { cacheStyles, getTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MiniButton } from '../themed/MiniButton'
 
+// TODO: What is the purpose here?
 function usePromise<T>(promise: Promise<T>): [T | void, Error | void] {
   const [result, setResult] = useState<T | void>()
   const [error, setError] = useState<Error | void>()
@@ -32,12 +33,15 @@ const borrowPlugins = {
   test: [makeAaveKovanBorrowPlugin()],
   dev: [makeAaveDevPlugin()],
   all: [makeAaveBorrowPlugin(), makeAaveKovanBorrowPlugin(), makeAaveDevPlugin()]
-}.test
+}.production
 
 const mapTokenNameToTokenId = {
-  DAI: 'ff795577d9ac8bd7d90ee22b6c1703490b6512fd',
-  WBTC: 'd1b98b6607330172f1d991521145a22bce793277',
-  WETH: 'd0a1e359811322d97991e03f863a0c30c2cf029c'
+  DAI: '6b175474e89094c44da98b954eedeac495271d0f',
+  WBTC: '2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+  WETH: 'c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+  // DAI: 'ff795577d9ac8bd7d90ee22b6c1703490b6512fd',
+  // WBTC: 'd1b98b6607330172f1d991521145a22bce793277',
+  // WETH: 'd0a1e359811322d97991e03f863a0c30c2cf029c'
 }
 // $FlowFixMe
 const mapTokenNameIdToName: { [key: string]: string } = Object.entries(mapTokenNameToTokenId).reduce((acc, [key, value]) => ({ ...acc, [value]: key }), {})
@@ -57,6 +61,7 @@ export function TestScene(props: Props) {
   useEffect(() => {
     if (borrowEngines != null || borrowEnginesError != null) {
       setLoading(false)
+      console.log('\x1b[34m\x1b[43m' + `borrowEngines: ${JSON.stringify(borrowEngines, null, 2)}` + '\x1b[0m')
     }
   }, [borrowEngines, borrowEnginesError])
 

@@ -18,6 +18,7 @@ const aaveNetwork = makeAaveNetworkFactory({
     lendingPool: '0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9',
     protocolDataProvider: '0x057835ad21a177dbdd3090bb1cae03eacf78fc6d'
   },
+  // TODO: categorize into collateral/loan
   enabledTokens: {
     DAI: true,
     WBTC: true
@@ -69,6 +70,7 @@ const aaveKovanBlueprint: BorrowPluginBlueprint = {
     aaveNetwork: aaveKovanNetwork,
     asTokenContractAddress: asEthTokenContractAddress,
     enabledTokens: {
+      // TODO:Make use of this?
       DAI: {
         isCollateral: false,
         isDebt: true
