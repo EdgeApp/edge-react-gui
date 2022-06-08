@@ -14,6 +14,13 @@
 #import <React/RCTGIFImageDecoder.h>
 #import <React/RCTLocalAssetImageLoader.h>
 
+#ifdef RN_FABRIC_ENABLED
+#import <React/RCTFabricSurfaceHostingProxyRootView.h>
+#import <React/RCTSurfacePresenter.h>
+#import <React/RCTSurfacePresenterBridgeAdapter.h>
+#import <react/config/ReactNativeConfig.h>
+#endif
+
 #import "RCTSplashScreen.h"
 #import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
@@ -47,6 +54,12 @@ static void InitializeFlipper(UIApplication *application) {
 
 RCTTurboModuleManager *_turboModuleManager;
 
+#ifdef RN_FABRIC_ENABLED
+  RCTSurfacePresenterBridgeAdapter *_bridgeAdapter;
+  std::shared_ptr<const facebook::react::ReactNativeConfig> _reactNativeConfig;
+  facebook::react::ContextContainer::Shared _contextContainer;
+#endif
+
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
@@ -78,15 +91,33 @@ RCTTurboModuleManager *_turboModuleManager;
     [FIRApp configure];
   }
 
-#if DEBUG
-  InitializeFlipper(application);
-#endif
+  #if DEBUG
+    InitializeFlipper(application);
+  #endif
 
   RCTEnableTurboModule(YES);
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                   moduleName:@"edge"
-                                            initialProperties:nil];
+
+  #ifdef RN_FABRIC_ENABLED
+    _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
+    _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
+
+    _contextContainer->insert("ReactNativeConfig", _reactNativeConfig);
+
+    _bridgeAdapter = [[RCTSurfacePresenterBridgeAdapter alloc]
+          initWithBridge:bridge
+        contextContainer:_contextContainer];
+
+    bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
+
+    UIView *rootView =
+        [[RCTFabricSurfaceHostingProxyRootView alloc] initWithBridge:bridge
+          moduleName:<#moduleName#>
+        initialProperties:@{}];
+  #else
+    RCTRootView *rootView =
+        [[RCTRootView alloc] initWithBridge:bridge moduleName:@"edge" initialProperties:nil];
+  #endif
 
   [RCTSplashScreen open:rootView withImageNamed:@"splash"];
   if (@available(iOS 13.0, *)) {
