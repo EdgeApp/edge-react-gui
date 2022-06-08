@@ -228,12 +228,32 @@ export class SettingsSceneComponent extends React.Component<Props & TestProps, S
             action={isLocked ? 'lock' : 'unlock'}
             label={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
             onPress={this.handleUnlock}
-            ref={this.props.generateTestHook('SettingsScene.UnlockSettings')}
+            ref={this.props.generateTestHook('SettingsScene.UnlockAccountSettings')}
           />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+          <SettingsTappableRow
+            disabled={this.props.isLocked}
+            label={s.strings.settings_button_change_password}
+            onPress={this.handleChangePassword}
+            ref={this.props.generateTestHook('SettingsScene.ChangePasswordSetting')}
+          />
+          <SettingsTappableRow
+            disabled={this.props.isLocked}
+            label={s.strings.settings_button_pin}
+            onPress={this.handleChangePin}
+            ref={this.props.generateTestHook('SettingsScene.ChangePinSetting')}
+          />
+          <SettingsTappableRow
+            disabled={this.props.isLocked}
+            label={s.strings.settings_button_setup_two_factor}
+            onPress={this.handleChangeOtp}
+            ref={this.props.generateTestHook('SettingsScene.SetUpTwoFactor')}
+          />
+          <SettingsTappableRow
+            disabled={this.props.isLocked}
+            label={s.strings.settings_button_password_recovery}
+            onPress={this.handleChangeRecovery}
+            ref={this.props.generateTestHook('SettingsScene.SetUpPasswordRecovery')}
+          />
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
           <SettingsTappableRow
@@ -264,11 +284,7 @@ export class SettingsSceneComponent extends React.Component<Props & TestProps, S
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsTappableRow
-            label={s.strings.settings_notifications}
-            onPress={this.handleNotificationSettings}
-            ref={this.props.generateTestHook('SettingsScene.OpenNotificationSettings')}
-          />
+          <SettingsTappableRow label={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
@@ -279,8 +295,13 @@ export class SettingsSceneComponent extends React.Component<Props & TestProps, S
               })
 
             return (
-              <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-                <CryptoIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
+              <SettingsTappableRow
+                key={pluginId}
+                label={displayName}
+                onPress={onPress}
+                ref={this.props.generateTestHook(`SettingsScene.CurrencySettings.${pluginId}`)}
+              >
+                <CurrencyIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
               </SettingsTappableRow>
             )
           })}
