@@ -1,0 +1,352 @@
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/AspectRatio.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/AspectRatio.java
+index d7f841d..e15398d 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/AspectRatio.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/AspectRatio.java
+@@ -18,8 +18,8 @@ package com.google.android.cameraview;
+ 
+ import android.os.Parcel;
+ import android.os.Parcelable;
+-import android.support.annotation.NonNull;
+-import android.support.v4.util.SparseArrayCompat;
++import androidx.annotation.NonNull;
++import androidx.collection.SparseArrayCompat;
+ 
+ /**
+  * Immutable class for describing proportional relationship between width and height.
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera1.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera1.java
+index b834b0b..bb94232 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera1.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera1.java
+@@ -22,7 +22,7 @@ import android.hardware.Camera;
+ import android.media.CamcorderProfile;
+ import android.media.MediaRecorder;
+ import android.os.Build;
+-import android.support.v4.util.SparseArrayCompat;
++import androidx.collection.SparseArrayCompat;
+ import android.view.SurfaceHolder;
+ 
+ import com.facebook.react.bridge.ReadableMap;
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera2.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera2.java
+index 7016ed5..a8e3903 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera2.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Camera2.java
+@@ -34,7 +34,7 @@ import android.media.CamcorderProfile;
+ import android.media.Image;
+ import android.media.ImageReader;
+ import android.media.MediaRecorder;
+-import android.support.annotation.NonNull;
++import androidx.annotation.NonNull;
+ import android.util.Log;
+ import android.util.SparseIntArray;
+ import android.view.Surface;
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/CameraView.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/CameraView.java
+index 260068b..5400a1c 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/CameraView.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/CameraView.java
+@@ -22,12 +22,12 @@ import android.media.CamcorderProfile;
+ import android.os.Build;
+ import android.os.Parcel;
+ import android.os.Parcelable;
+-import android.support.annotation.IntDef;
+-import android.support.annotation.NonNull;
+-import android.support.annotation.Nullable;
+-import android.support.v4.os.ParcelableCompat;
+-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
+-import android.support.v4.view.ViewCompat;
++import androidx.annotation.IntDef;
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.core.os.ParcelableCompat;
++import androidx.core.os.ParcelableCompatCreatorCallbacks;
++import androidx.core.view.ViewCompat;
+ import android.util.AttributeSet;
+ import android.view.View;
+ import android.widget.FrameLayout;
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Size.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Size.java
+index d80a12d..26f52b5 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Size.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/Size.java
+@@ -18,7 +18,7 @@ package com.google.android.cameraview;
+ 
+ import android.os.Parcel;
+ import android.os.Parcelable;
+-import android.support.annotation.NonNull;
++import androidx.annotation.NonNull;
+ 
+ /**
+  * Immutable class for describing width and height dimensions in pixels.
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SizeMap.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SizeMap.java
+index b6772fb..ae8fbf1 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SizeMap.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SizeMap.java
+@@ -16,7 +16,7 @@
+ 
+ package com.google.android.cameraview;
+ 
+-import android.support.v4.util.ArrayMap;
++import androidx.collection.ArrayMap;
+ 
+ import java.util.Set;
+ import java.util.SortedSet;
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SurfaceViewPreview.java b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SurfaceViewPreview.java
+index 78872a5..4541317 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SurfaceViewPreview.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/google/android/cameraview/SurfaceViewPreview.java
+@@ -17,7 +17,7 @@
+ package com.google.android.cameraview;
+ 
+ import android.content.Context;
+-import android.support.v4.view.ViewCompat;
++import androidx.core.view.ViewCompat;
+ import android.view.Surface;
+ import android.view.SurfaceHolder;
+ import android.view.SurfaceView;
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/MutableImage.java b/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/MutableImage.java
+index 5bcd635..f069d11 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/MutableImage.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/MutableImage.java
+@@ -3,7 +3,7 @@ package com.lwansbrough.RCTCamera;
+ import android.graphics.Bitmap;
+ import android.graphics.BitmapFactory;
+ import android.graphics.Matrix;
+-import android.support.media.ExifInterface;
++import androidx.exifinterface.media.ExifInterface;
+ import android.util.Base64;
+ import android.util.Log;
+ 
+diff --git a/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/RCTCameraViewManager.java b/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/RCTCameraViewManager.java
+index aa75d76..913794b 100644
+--- a/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/RCTCameraViewManager.java
++++ b/node_modules/react-native-camera/android/src/main/java/com/lwansbrough/RCTCamera/RCTCameraViewManager.java
+@@ -1,6 +1,6 @@
+ package com.lwansbrough.RCTCamera;
+ 
+-import android.support.annotation.Nullable;
++import androidx.annotation.Nullable;
+ 
+ import com.facebook.infer.annotation.Assertions;
+ import com.facebook.react.bridge.ReadableArray;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/CameraViewManager.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/CameraViewManager.java
+index 7f651c6..766c71e 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/CameraViewManager.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/CameraViewManager.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera;
+ 
+-import android.support.annotation.Nullable;
++import androidx.annotation.Nullable;
+ import com.facebook.react.bridge.ReadableArray;
+ import com.facebook.react.common.MapBuilder;
+ import com.facebook.react.uimanager.ThemedReactContext;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java
+index 572d099..6a9d11d 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java
+@@ -7,7 +7,7 @@ import android.graphics.Color;
+ import android.media.CamcorderProfile;
+ import android.media.MediaActionSound;
+ import android.os.Build;
+-import android.support.v4.content.ContextCompat;
++import androidx.core.content.ContextCompat;
+ import android.util.SparseArray;
+ import android.view.View;
+ import android.os.AsyncTask;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraViewHelper.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraViewHelper.java
+index dc95323..a97108e 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraViewHelper.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraViewHelper.java
+@@ -6,7 +6,7 @@ import android.graphics.Color;
+ import android.graphics.Paint;
+ import android.media.CamcorderProfile;
+ import android.os.Build;
+-import android.support.media.ExifInterface;
++import androidx.exifinterface.media.ExifInterface;
+ import android.util.SparseArray;
+ import android.view.ViewGroup;
+ import com.facebook.react.bridge.Arguments;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarCodeReadEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarCodeReadEvent.java
+index 3f4c1ea..52f82fc 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarCodeReadEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarCodeReadEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ 
+ import org.reactnative.camera.CameraViewManager;
+ import com.facebook.react.bridge.Arguments;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodeDetectionErrorEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodeDetectionErrorEvent.java
+index 9328e03..e6db6d4 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodeDetectionErrorEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodeDetectionErrorEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ import com.facebook.react.bridge.Arguments;
+ import com.facebook.react.bridge.WritableMap;
+ import com.facebook.react.uimanager.events.Event;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodesDetectedEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodesDetectedEvent.java
+index 1a35188..333cbe9 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodesDetectedEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/BarcodesDetectedEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ import android.util.SparseArray;
+ import com.facebook.react.bridge.Arguments;
+ import com.facebook.react.bridge.WritableArray;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraMountErrorEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraMountErrorEvent.java
+index 3a6d802..5f7c160 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraMountErrorEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraMountErrorEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ import com.facebook.react.bridge.Arguments;
+ import com.facebook.react.bridge.WritableMap;
+ import com.facebook.react.uimanager.events.Event;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraReadyEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraReadyEvent.java
+index 43cb863..7e1eb13 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraReadyEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/CameraReadyEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ 
+ import org.reactnative.camera.CameraViewManager;
+ import com.facebook.react.bridge.Arguments;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FaceDetectionErrorEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FaceDetectionErrorEvent.java
+index 55d5d66..72f7a66 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FaceDetectionErrorEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FaceDetectionErrorEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ import com.facebook.react.bridge.Arguments;
+ import com.facebook.react.bridge.WritableMap;
+ import com.facebook.react.uimanager.events.Event;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FacesDetectedEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FacesDetectedEvent.java
+index 2e5e0d3..671a06f 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FacesDetectedEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/FacesDetectedEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ import android.util.SparseArray;
+ 
+ import org.reactnative.camera.CameraViewManager;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureSavedEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureSavedEvent.java
+index 3ca6443..305c543 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureSavedEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureSavedEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ 
+ import com.facebook.react.bridge.WritableMap;
+ import com.facebook.react.uimanager.events.Event;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureTakenEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureTakenEvent.java
+index aad1ded..4a8bb5a 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureTakenEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/PictureTakenEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ 
+ import org.reactnative.camera.CameraViewManager;
+ import com.facebook.react.bridge.Arguments;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/TextRecognizedEvent.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/TextRecognizedEvent.java
+index bdb8686..ed2bed3 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/TextRecognizedEvent.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/events/TextRecognizedEvent.java
+@@ -1,6 +1,6 @@
+ package org.reactnative.camera.events;
+ 
+-import android.support.v4.util.Pools;
++import androidx.core.util.Pools;
+ import android.util.SparseArray;
+ 
+ import com.facebook.react.bridge.Arguments;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/tasks/ResolveTakenPictureAsyncTask.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/tasks/ResolveTakenPictureAsyncTask.java
+index 4e71325..86b68f9 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/tasks/ResolveTakenPictureAsyncTask.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/tasks/ResolveTakenPictureAsyncTask.java
+@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
+ import android.graphics.Matrix;
+ import android.net.Uri;
+ import android.os.AsyncTask;
+-import android.support.media.ExifInterface;
++import androidx.exifinterface.media.ExifInterface;
+ import android.util.Base64;
+ 
+ import org.reactnative.camera.RNCameraViewHelper;
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/facedetector/tasks/FileFaceDetectionAsyncTask.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/facedetector/tasks/FileFaceDetectionAsyncTask.java
+index b7c431a..2793966 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/facedetector/tasks/FileFaceDetectionAsyncTask.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/facedetector/tasks/FileFaceDetectionAsyncTask.java
+@@ -3,7 +3,7 @@ package org.reactnative.facedetector.tasks;
+ import android.content.Context;
+ import android.graphics.Bitmap;
+ import android.graphics.BitmapFactory;
+-import android.support.media.ExifInterface;
++import androidx.exifinterface.media.ExifInterface;
+ import android.net.Uri;
+ import android.os.AsyncTask;
+ import android.util.Log;
+diff --git a/node_modules/react-native-camera/src/Camera.js b/node_modules/react-native-camera/src/Camera.js
+index 9ef36a8..fc4393c 100644
+--- a/node_modules/react-native-camera/src/Camera.js
++++ b/node_modules/react-native-camera/src/Camera.js
+@@ -9,13 +9,13 @@ import {
+   StyleSheet,
+   findNodeHandle,
+   requireNativeComponent,
+-  ViewPropTypes,
+   ActivityIndicator,
+   View,
+   Text,
+   UIManager,
+   PermissionsAndroid,
+ } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const requestPermissions = async (
+   hasVideoAndAudio,
+diff --git a/node_modules/react-native-camera/src/RNCamera.js b/node_modules/react-native-camera/src/RNCamera.js
+index b1a7d97..12db7cf 100644
+--- a/node_modules/react-native-camera/src/RNCamera.js
++++ b/node_modules/react-native-camera/src/RNCamera.js
+@@ -5,7 +5,7 @@ import {
+   findNodeHandle,
+   Platform,
+   NativeModules,
+-  ViewPropTypes,
++
+   requireNativeComponent,
+   View,
+   ActivityIndicator,
+@@ -13,6 +13,7 @@ import {
+   StyleSheet,
+   PermissionsAndroid,
+ } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ import type { FaceFeature } from './FaceDetector';
+ 

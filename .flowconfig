@@ -9,8 +9,12 @@
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
 .*/node_modules/react-native/.*
+.*/node_modules/@react-native-community/datetimepicker/src/.*
 .*/node_modules/@react-native-community/async-storage/jest/.*
 .*/node_modules/react-native-fast-image/dist/index.cjs.js.flow
+.*/node_modules/metro-react-native-babel-transformer/node_modules/hermes-parser/dist/.*
+.*/node_modules/hermes-estree/dist/generated/HermesESTreeSelectorTypes.js.flow
+.*/node_modules/babel-plugin-macros/node_modules/resolve/test/resolver/malformed_package_json/package.json
 ; We fork some components by platform
 .*/*[.]android.js
 

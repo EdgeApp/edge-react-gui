@@ -1,7 +1,8 @@
 // @flow
 
+import { ViewPropTypes } from 'deprecated-react-native-prop-types'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 

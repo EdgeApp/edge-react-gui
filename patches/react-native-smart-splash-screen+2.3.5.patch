@@ -1,3 +1,19 @@
+diff --git a/node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen/RCTSplashScreen.m b/node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen/RCTSplashScreen.m
+index 278fefd..3354fe5 100644
+--- a/node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen/RCTSplashScreen.m
++++ b/node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen/RCTSplashScreen.m
+@@ -11,6 +11,11 @@ static RCTRootView *rootView = nil;
+
+ RCT_EXPORT_MODULE(SplashScreen)
+
+++ (BOOL)requiresMainQueueSetup
++{
++    return YES;
++}
++
+
+ + (void)open:(RCTRootView *)v {
+     [RCTSplashScreen open:v withImageNamed:@"splash"];
 diff --git a/node_modules/react-native-smart-splash-screen/react-native-smart-splash-screen.podspec b/node_modules/react-native-smart-splash-screen/react-native-smart-splash-screen.podspec
 new file mode 100644
 index 0000000..b72b297
