@@ -304,6 +304,7 @@ export class EdgeProvider extends Bridgeable {
         nativeAmount: tx.nativeAmount,
         networkFee: tx.networkFee,
         parentNetworkFee: tx.parentNetworkFee,
+        confirmations: tx.confirmations,
         blockHeight: tx.blockHeight,
         date: tx.date,
         signedTx: '',
