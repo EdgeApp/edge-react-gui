@@ -2,6 +2,8 @@
 // globals spec
 // import ENV from '../env.json'
 
+import { DocumentDirectoryPath } from 'react-native-fs'
+import { captureScreen } from 'react-native-view-shot'
 type fiatList = {
   value: string,
   label: string

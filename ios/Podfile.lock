@@ -449,6 +449,8 @@ PODS:
   - react-native-tcp-socket (5.6.1):
     - CocoaAsyncSocket
     - React-Core
+  - react-native-view-shot (3.2.1):
+    - React-Core
   - react-native-webview (11.18.2):
     - React-Core
   - react-native-zcash (0.2.2):
@@ -761,6 +763,7 @@ DEPENDENCIES:
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
+  - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -940,6 +943,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-smart-splash-screen"
   react-native-tcp-socket:
     :path: "../node_modules/react-native-tcp-socket"
+  react-native-view-shot:
+    :path: "../node_modules/react-native-view-shot"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   react-native-zcash:
@@ -1099,6 +1104,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
+  react-native-view-shot: 64cdb7c17b645ac75b7342f74fa8332b2f1ed379
   react-native-webview: 8ec7ddf9eb4ddcd92b32cee7907efec19a9ec7cb
   react-native-zcash: c6ef38f1b3f2cbd3eb5986e095b45399f0e7bb66
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db

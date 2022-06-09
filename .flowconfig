@@ -5,6 +5,7 @@
 .*/node_modules/metro/.*
 .*/node_modules/metro-config/.*
 .*/node_modules/react-native-confetti-cannon/.*
+.*/node_modules/react-native-view-shot/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
