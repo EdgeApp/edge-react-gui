@@ -6277,10 +6277,10 @@ edge-core-js@^0.19.18:
     yaob "^0.3.7"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.16.0.tgz#66037e1a2b40ec09a27d18b0fd10b9e9c20ca8a5"
-  integrity sha512-7Ablcxc1N0hFANeFenwCghcBhv2r4bh8lbeQZgkiH5jyhlwaUgvje8d3T9WgzMMfIGn8+SC5xqDErUKoTCunvg==
+edge-currency-accountbased@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.16.1.tgz#7a8a3c46b600f96cae300013b1bd696ce138bedd"
+  integrity sha512-BfCAgSK/Ry0TksmrmtBcIsQHKxmXXLso9C9gZKNbXpjHq0iHxeLVyOoPK3rzSxoTweRPBvO/Psci0w3Lw9Js2w==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -12601,10 +12601,10 @@ react-native-webview@^11.18.1:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.2.1.tgz#263db70e85268981ccf7b5394f9f045ad7ea601d"
-  integrity sha512-K+/LLCvIv3w7bB0ib+y8qIH74BHNu9GKnXqwnlBzz+p1KsegfUhoUK0CHg2fLbS28eaIKoohkK1hCdSlG/v0nA==
+react-native-zcash@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.2.2.tgz#7c0c1bd49b600dc65734fe0126abb9cfe11ee5e1"
+  integrity sha512-oD0jKMFh5nEP0RcklXZMRmxLn09H1G2Qh+j1jzDON9jA7dBHt3NWo09lUsjxAw9B4ALK8PMdi1R5UkcKPcZoqQ==
   dependencies:
     rfc4648 "^1.3.0"
 
