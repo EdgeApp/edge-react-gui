@@ -120,6 +120,10 @@ export function ControlPanel(props: Props) {
     })
   }
 
+  const handleBorrow = () => {
+    handleGoToScene('loanDashboard')
+  }
+
   const handleLoginQr = () => {
     Actions.drawerClose()
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
@@ -210,6 +214,8 @@ export function ControlPanel(props: Props) {
       title: s.strings.drawer_scan_qr_send
     },
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars },
+
     {
       pressHandler: () => handleGoToScene('termsOfService'),
       iconName: 'control-panel-tos',
