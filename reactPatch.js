@@ -79,6 +79,6 @@ require('./reactPatcher/index').Cavify(React, {
     'WalletListSwipeable',
     'WalletListSwipeableRow',
     'OutlinedTextInput',
-    'OutlinedTextInputRef'
+    'CountryListModal'
   ]
 })
