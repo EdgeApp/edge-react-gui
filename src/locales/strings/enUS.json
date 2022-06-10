@@ -834,6 +834,10 @@
   "select_fio_address_address_from": "Send from FIO Crypto Handle",
   "select_fio_address_address_memo": "FIO Memo",
   "select_fio_address_address_memo_error": "FIO Memo Error",
+
+  "loan_collateral_value": "Collateral Value",
+  "loan_interest_rate": "Interest Rate",
+
   "loan_borrow_amount_title": "Amount to borrow",
   "loan_dashboard_title": "Loan Dashboard",
   "loan_details_collateral_required": "Collateral Amount Required",

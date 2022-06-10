@@ -1,6 +1,7 @@
 // @flow
 
 import { mul } from 'biggystring'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -8,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { formatFiatString } from '../../../hooks/useFiatText'
+import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatchAccount } from '../../../hooks/useWatch'
@@ -21,13 +23,13 @@ import { useCallback, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { zeroString } from '../../../util/utils'
+import { makeCurrencyCodeTable, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { TappableCard } from '../../cards/TappableCard'
 import { ValueBarCard } from '../../cards/ValueBarCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
-import { WalletListModal } from '../../modals/WalletListModal'
+import { upgradeCurrencyCodes, WalletListModal } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
@@ -107,33 +109,43 @@ export const LoanDetailsScene = () => {
     const isSrc = srcDest === 'source'
 
     // TODO: Integrate provided plugin token data
-    const currencyCode = `ETH-${isSrc ? hardSrcCc : hardDestCc}`
-    const token = guessFromCurrencyCode(account, { currencyCode, pluginId: hardWalletPluginId })
+    // const currencyCode = `ETH-${isSrc ? hardSrcCc : hardDestCc}`
 
     // TODO: HACK: Disable wallet filter for Kovan testing
     // Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={token.tokenId} showCreateWallet />)
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />)
       .then(async ({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
+          const token = guessFromCurrencyCode(account, { currencyCode, pluginId: hardWalletPluginId })
+
+          // // TODO: Integrate provided plugin token data
+          // const lookup = makeCurrencyCodeTable(account)
+          // const tokenId = upgradeCurrencyCodes(lookup, [`ETH-${isSrc ? hardSrcCc : hardDestCc}`])
+
+          // Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />)
+          //   .then(async ({ walletId, currencyCode }) => {
+          //     if (walletId != null && currencyCode != null) {
+          //       const token = guessFromCurrencyCode(account, { currencyCode, pluginId: hardWalletPluginId })
           // TODO: We can't actually set different wallets without Action Queue?
           if (isSrc) {
-            setSrcCurrencyCode(currencyCode)
-            setSrcWalletId(walletId)
-            setSrcTokenId(token.tokenId ?? '')
+            // setSrcCurrencyCode(currencyCode)
+            // setSrcWalletId(walletId)
+            setSrcTokenId(token.tokenId ?? '') // TODO: WTF WHY
+            // if (token.tokenId != null) Test(token.tokenId, wallets[walletId])
           } else {
             setDestCurrencyCode(currencyCode)
             setDestWalletId(walletId)
             setDestTokenId(token.tokenId ?? '')
           }
-          try {
-            setIsLoading(true)
-            setBorrowEngine(await getAaveBorrowEngine(makeAaveBorrowPlugin(), wallets[walletId]))
-          } catch (err) {
-            showError(err)
-          } finally {
-            setIsLoading(false)
-            if (borrowEngine != null) setApr(await borrowEngine.getAprQuote())
-          }
+          // try {
+          //   setIsLoading(true)
+          //   setBorrowEngine(await getAaveBorrowEngine(makeAaveBorrowPlugin(), wallets[walletId]))
+          // } catch (err) {
+          //   showError(err)
+          // } finally {
+          //   setIsLoading(false)
+          //   if (borrowEngine != null) setApr(await borrowEngine.getAprQuote())
+          // }
         }
       })
       .catch(e => showError(e.message))
@@ -181,7 +193,7 @@ export const LoanDetailsScene = () => {
             <EdgeText style={styles.textCardHeader}>
               {/* TODO: Fold appendCurrencyCode into CryptoText? */}
               <CryptoText nativeAmount={balance} tokenId={tokenId} wallet={wallets[walletId]} />
-              {' ' + currencyCode}
+              {/* {' ' + currencyCode} */}
             </EdgeText>
             <EdgeText style={styles.textSecondary}>
               <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallets[walletId]} />
@@ -263,7 +275,7 @@ export const LoanDetailsScene = () => {
           />
 
           {/* Insufficient Collateral Warning Card */}
-          {zeroString(srcBalance) ? (
+          {srcTokenId != null && zeroString(srcBalance) ? (
             <Alert
               numberOfLines={0}
               marginTop={0.5}

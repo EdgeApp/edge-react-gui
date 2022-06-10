@@ -909,8 +909,14 @@ const strings = {
   select_fio_address_address_memo_error: 'FIO Memo Error',
 
   // Loan
-  loan_borrow_amount_title: 'Amount to borrow',
+  loan_collateral_value: 'Collateral Value',
+  loan_interest_rate: 'Interest Rate',
+  loan_dashboard_active_loans_title: 'Active Loans',
   loan_dashboard_title: 'Loan Dashboard',
+  loan_dashboard_new_loan: 'New Loan',
+
+  loan_borrow_amount_title: 'Amount to borrow',
+
   loan_details_collateral_required: 'Collateral Amount Required',
   loan_details_collateral_source: 'Source of Collateral',
   loan_details_destination: 'Fund Destination',

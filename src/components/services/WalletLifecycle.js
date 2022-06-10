@@ -4,6 +4,8 @@ import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet } from 'edg
 import * as React from 'react'
 import { Platform } from 'react-native'
 
+import { makeAaveBorrowPlugin } from '../../plugins/borrow-plugins/plugins/aave/index'
+import { getAaveBorrowEngine } from '../../plugins/helpers/getAaveBorrowPlugins.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiWallet, type WalletListItem } from '../../types/types.js'
 import { showError } from './AirshipInstance.js'
@@ -163,6 +165,9 @@ function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot 
   wallet
     .changePaused(false)
     .then(() => {
+      // Initialize borrow plugin
+      // getAaveBorrowEngine(makeAaveBorrowPlugin(), wallet).then(borrowEngine => (wallet.otherMethods.borrowEngine = borrowEngine))
+
       // Check the already-closed and already-synced cases:
       if (out.complete) return
       if (wallet.syncRatio >= 1) {

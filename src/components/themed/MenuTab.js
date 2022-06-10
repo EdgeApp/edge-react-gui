@@ -31,7 +31,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
   handleOnPress = (route: 'testlab' | 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange') => {
     switch (route) {
       case 'testlab':
-        return Actions.jump('loanDetails')
+        return Actions.jump('loanDashboard')
       case 'walletList':
         return Actions.jump('walletListScene')
       case 'pluginListBuy':

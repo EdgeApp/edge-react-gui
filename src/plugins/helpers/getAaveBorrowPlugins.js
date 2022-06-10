@@ -25,9 +25,9 @@ export const getAaveBorrowEngines = async (plugins: BorrowPlugin[], account: Edg
 }
 
 export const getAaveBorrowEngine = async (plugin: BorrowPlugin, wallet: EdgeCurrencyWallet): Promise<BorrowEngine | void> => {
-    return plugin.makeBorrowEngine(wallet).catch(err => {
-      showError(err)
-    })
+  return plugin.makeBorrowEngine(wallet).catch(_err => {
+    // showError(err)
+  })
 }
 
 // export const filterActiveBorrowEngines = (engines: BorrowEngine[]): BorrowEngine[] => engines.filter(engine => engine.collaterals.length !== 0)
