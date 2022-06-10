@@ -7,6 +7,7 @@ const strings = {
   share_subject: 'Hey, I think you should try %s',
   share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
+  drawer_borrow_dollars: 'Borrow Dollars',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_scan_qr_send: 'Scan QR',
@@ -847,6 +848,13 @@ const strings = {
   select_fio_address_address_from: 'Send from FIO Crypto Handle',
   select_fio_address_address_memo: 'FIO Memo',
   select_fio_address_address_memo_error: 'FIO Memo Error',
+
+  // Loan
+  loan_collateral_value: 'Collateral Value',
+  loan_dashboard_active_loans_title: 'Active Loans',
+  loan_dashboard_new_loan: 'New Loan',
+  loan_dashboard_title: 'Loan Dashboard',
+  loan_interest_rate: 'Interest Rate',
 
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
