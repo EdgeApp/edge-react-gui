@@ -13,6 +13,7 @@ type Props = {
   autoPrecision?: boolean,
   cryptoCurrencyCode: string,
   cryptoExchangeMultiplier?: string,
+  fiatSymbol?: boolean,
   fiatSymbolSpace?: boolean,
   isoFiatCurrencyCode?: string,
   nativeCryptoAmount?: string,
@@ -25,6 +26,7 @@ export const useFiatText = (props: Props): string => {
     autoPrecision,
     cryptoCurrencyCode,
     cryptoExchangeMultiplier = defaultMultiplier,
+    fiatSymbol,
     fiatSymbolSpace,
     isoFiatCurrencyCode = USD_FIAT,
     nativeCryptoAmount = cryptoExchangeMultiplier,
@@ -49,9 +51,9 @@ export const useFiatText = (props: Props): string => {
         })
       : '0'
 
-  const fiatSymbol = `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}`
+  const walletFiatSymbol = fiatSymbol ? `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}` : ''
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
+  return `${walletFiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
 export const formatFiatString = (props: { autoPrecision?: boolean, fiatAmount: string, noGrouping?: boolean, minPrecision?: string }): string => {
@@ -79,7 +81,7 @@ export const formatFiatString = (props: { autoPrecision?: boolean, fiatAmount: s
 /**
  * Returns a localized fiat amount string
  * */
-export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
+export const displayFiatAmount = (fiatAmount?: number, precision?: number = 20, noGrouping?: boolean = true) => {
   if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const initialAmount = fiatAmount.toFixed(precision)
   const absoluteAmount = abs(initialAmount)

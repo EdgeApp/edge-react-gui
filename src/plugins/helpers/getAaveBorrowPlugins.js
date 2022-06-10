@@ -30,5 +30,4 @@ export const getAaveBorrowEngine = async (plugin: BorrowPlugin, wallet: EdgeCurr
   })
 }
 
-// export const filterActiveBorrowEngines = (engines: BorrowEngine[]): BorrowEngine[] => engines.filter(engine => engine.collaterals.length !== 0)
-export const filterActiveBorrowEngines = (engines: BorrowEngine[]): BorrowEngine[] => engines.filter(engine => engine.collaterals.length >= 0)
+export const filterActiveBorrowEngines = (engines: BorrowEngine[]): BorrowEngine[] => engines.filter(engine => engine.collaterals.length !== 0)
