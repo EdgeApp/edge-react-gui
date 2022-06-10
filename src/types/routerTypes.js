@@ -179,6 +179,7 @@ export type ParamList = {
     currencyCode: string,
     walletId: string
   },
+  loanDashboard: void,
   manageTokens: {|
     walletId: string
   |},
@@ -230,6 +231,7 @@ export type ParamList = {
   stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   termsOfService: void,
+  testScene: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string
