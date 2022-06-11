@@ -2,14 +2,10 @@
 
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
-import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/en_US.js'
-import { config } from '../../theme/appConfig.js'
 import { type GuiPlugin, type GuiPluginRow } from '../../types/GuiPluginTypes.js'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
-const cardName = sprintf(s.prepaid_card_name, config.appName)
 
 export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   libertyx: {
@@ -134,13 +130,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: 'https://edge.bitaccessbtm.com',
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
-  },
-  card: {
-    pluginId: 'card',
-    storeId: 'ionia',
-    baseUri: 'https://ioniaedge.web.app',
-    poweredBy: 'Ionia',
-    displayName: cardName
   },
   custom: {
     pluginId: 'custom',

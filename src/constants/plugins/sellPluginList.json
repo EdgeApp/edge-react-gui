@@ -1,26 +1,5 @@
 [
   {
-    "id": "card",
-    "pluginId": "card",
-    "paymentTypes": [
-      "bank"
-    ],
-    "description": "Anonymous, no fees, completely private transactions\nLimit: $1,000 per day",
-    "title": "Edge Mastercard®",
-    "partnerIconPath": "ionia-logo-square-small.png",
-    "forCountries": [
-      "US"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "DASH",
-      "BCH",
-      "LTC",
-      "DOGE"
-    ],
-    "paymentTypeLogoKey": "mastercard"
-  },
-  {
     "id": "wyre",
     "pluginId": "wyre",
     "paymentTypes": [
