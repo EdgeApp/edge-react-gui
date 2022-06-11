@@ -10,7 +10,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { useEffect, useRef, useState } from '../../types/reactHooks.js'
+import { useEffect, useMemo, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
@@ -134,9 +134,11 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
+  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
+
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.wc_confirm_title} />
+      {sceneHeader}
       <ScrollView style={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}

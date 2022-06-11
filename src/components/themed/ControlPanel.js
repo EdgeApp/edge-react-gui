@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { deleteLocalAccount } from '../../actions/AccountActions.js'
 import { logoutRequest } from '../../actions/LoginActions.js'
-import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions.js'
+import { parseScannedUri } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
@@ -113,7 +113,7 @@ export function ControlPanel(props: Props) {
         Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | void) => {
             if (result) {
-              dispatch(qrCodeScanned(result))
+              dispatch(parseScannedUri(result))
             }
           })
           .catch(showError)

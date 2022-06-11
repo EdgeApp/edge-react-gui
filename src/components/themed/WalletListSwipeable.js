@@ -4,6 +4,7 @@ import * as React from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler.js'
+import { useRowLayout } from '../../hooks/useRowLayout.js'
 import { useMemo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -75,20 +76,18 @@ export function WalletListSwipeable(props: Props) {
     return null
   })
 
+  const handleItemLayout = useRowLayout()
+
   return (
     <FlatList
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
       data={searchedWalletList}
       keyboardShouldPersistTaps="handled"
-      keyExtractor={keyExtractor}
       ListFooterComponent={footer}
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
+      getItemLayout={handleItemLayout}
     />
   )
-}
-
-function keyExtractor(item: WalletListItem): string {
-  return item.key
 }

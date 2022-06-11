@@ -3,10 +3,11 @@
 import * as React from 'react'
 import { Switch, View } from 'react-native'
 
-import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { useTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
-type OwnProps = {
+type Props = {
   children?: React.Node,
 
   // Show with a dim style when set. Defaults to false:
@@ -24,13 +25,12 @@ type OwnProps = {
   onPress?: () => void | Promise<void>
 }
 
-type Props = OwnProps & ThemeProps
-
 /**
  * A settings row with a switch component on the right side.
  */
-function SettingsSwitchRowComponent(props: Props): React.Node {
-  const { children, disabled, label, theme, value, onPress } = props
+const SettingsSwitchRowComponent = (props: Props): React.Node => {
+  const { children, disabled, label, value, onPress } = props
+  const theme = useTheme()
 
   const style = {
     marginHorizontal: theme.rem(0.5),
@@ -58,4 +58,4 @@ function SettingsSwitchRowComponent(props: Props): React.Node {
   )
 }
 
-export const SettingsSwitchRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsSwitchRowComponent)
+export const SettingsSwitchRow = memo(SettingsSwitchRowComponent)

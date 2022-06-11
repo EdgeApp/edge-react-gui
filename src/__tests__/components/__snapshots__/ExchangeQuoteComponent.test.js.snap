@@ -9,22 +9,168 @@ exports[`ExchangeQuote should render with loading props 1`] = `
     ]
   }
 >
-  <WithTheme(CardContentComponent)
-    image={
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "marginRight": 22,
+        }
+      }
+    >
       <Memo(CurrencyIconComponent)
         currencyCode="BTC"
         sizeRem={1.5}
         walletId="123456789"
       />
-    }
-    subTitle="myWallet"
-    subValue="40000 USD"
-    title="BTC"
-    value="1 BTC"
-  />
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            },
+            Object {},
+          ]
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flex": 1,
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontFamily": "Quicksand-Medium",
+                "fontWeight": "600",
+              }
+            }
+          >
+            BTC
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
+          style={
+            Object {
+              "marginLeft": 6,
+              "textAlign": "right",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontWeight": "600",
+                "textAlign": "right",
+              }
+            }
+          >
+            1 BTC
+          </WithTheme(EdgeTextComponent)>
+        </View>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            },
+            Object {},
+          ]
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flex": 1,
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#A4C7DF",
+                "flex": 1,
+                "fontSize": 17,
+              }
+            }
+          >
+            myWallet
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
+          style={
+            Object {
+              "marginLeft": 6,
+              "textAlign": "right",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "color": "#A4C7DF",
+                "fontSize": 17,
+              }
+            }
+          >
+            40000 USD
+          </WithTheme(EdgeTextComponent)>
+        </View>
+      </View>
+    </View>
+  </View>
   <React.Fragment>
-    <WithTheme(DataRowComponent)
-      label={
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          },
+          Object {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 22,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "row",
+          }
+        }
+      >
         <WithTheme(EdgeTextComponent)
           style={
             Object {
@@ -35,15 +181,15 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           Max network fee
         </WithTheme(EdgeTextComponent)>
-      }
-      marginRem={
-        Array [
-          1,
-          0,
-          0,
-        ]
-      }
-      value={
+      </View>
+      <View
+        style={
+          Object {
+            "marginLeft": 6,
+            "textAlign": "right",
+          }
+        }
+      >
         <WithTheme(EdgeTextComponent)
           style={
             Object {
@@ -54,10 +200,28 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           1
         </WithTheme(EdgeTextComponent)>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          },
+          Object {},
+        ]
       }
-    />
-    <WithTheme(DataRowComponent)
-      label={
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "row",
+          }
+        }
+      >
         <WithTheme(EdgeTextComponent)
           style={
             Object {
@@ -68,8 +232,15 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           Total Amount
         </WithTheme(EdgeTextComponent)>
-      }
-      value={
+      </View>
+      <View
+        style={
+          Object {
+            "marginLeft": 6,
+            "textAlign": "right",
+          }
+        }
+      >
         <WithTheme(EdgeTextComponent)
           style={
             Object {
@@ -80,8 +251,8 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           40001 USD
         </WithTheme(EdgeTextComponent)>
-      }
-    />
+      </View>
+    </View>
   </React.Fragment>
 </WithTheme(CardComponent)>
 `;

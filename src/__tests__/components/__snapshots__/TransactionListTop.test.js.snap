@@ -212,7 +212,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
       </View>
     </React.Fragment>
   </View>
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     underline={true}
   >
     <WithTheme(EdgeTextComponent)
@@ -224,6 +224,6 @@ exports[`TransactionListTop should render with loading props 1`] = `
     >
       Transactions
     </WithTheme(EdgeTextComponent)>
-  </WithTheme(SceneHeaderComponent)>
+  </Memo(SceneHeaderComponent)>
 </React.Fragment>
 `;

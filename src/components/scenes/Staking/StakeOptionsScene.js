@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings.js'
 import { type StakePolicy } from '../../../plugins/stake-plugins'
 import { type RootState } from '../../../reducers/RootReducer'
-import { useEffect, useState } from '../../../types/reactHooks.js'
+import { useEffect, useMemo, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
@@ -30,7 +30,7 @@ export const StakeOptionsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const icon = <CurrencyIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />
+  const icon = useMemo(() => <CurrencyIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />, [])
 
   //
   // Stake Policies
@@ -98,6 +98,15 @@ export const StakeOptionsScene = (props: Props) => {
     )
   }
 
+  const sceneHeader = useMemo(
+    () => (
+      <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
+        {icon}
+      </SceneHeader>
+    ),
+    [currencyCode, icon, styles.sceneHeader]
+  )
+
   if (stakePolicies.length === 0)
     return (
       <SceneWrapper background="theme">
@@ -107,9 +116,7 @@ export const StakeOptionsScene = (props: Props) => {
 
   return (
     <SceneWrapper scroll background="theme">
-      <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
-        {icon}
-      </SceneHeader>
+      {sceneHeader}
       <View style={styles.optionsContainer}>
         <EdgeText>{s.strings.stake_select_options}</EdgeText>
         <FlatList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />

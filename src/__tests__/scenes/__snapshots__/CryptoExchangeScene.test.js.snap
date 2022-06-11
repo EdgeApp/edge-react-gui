@@ -4,7 +4,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
 <SceneWrapper
   background="theme"
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Exchange"
     underline={true}
     withTopMargin={true}
@@ -29,7 +29,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     }
     viewIsInsideTabBar={false}
   >
-    <WithTheme(LineTextDividerComponent)
+    <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="From"
     />
@@ -86,7 +86,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         onPress={[Function]}
       />
     </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
-    <WithTheme(LineTextDividerComponent)
+    <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="To"
     />

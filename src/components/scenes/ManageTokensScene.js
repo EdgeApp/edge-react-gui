@@ -7,6 +7,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useHandler } from '../../hooks/useHandler.js'
+import { useRowLayout } from '../../hooks/useRowLayout.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
 import { useWatchCurrencyConfig, useWatchWallet } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
@@ -128,9 +129,10 @@ export function ManageTokensScene(props: Props) {
   })
 
   const extraData = useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
+  const handleItemLayout = useRowLayout()
 
-  return (
-    <SceneWrapper>
+  const sceneHeader = useMemo(
+    () => (
       <SceneHeader underline>
         <TouchableOpacity onPress={handleSelectWallet}>
           <Title
@@ -149,7 +151,21 @@ export function ManageTokensScene(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-      <FlatList data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} style={styles.tokenList} />
+    ),
+    [handleSelectWallet, searchValue, styles.rightIcon, styles.subTitle, theme, wallet.id, walletName]
+  )
+
+  return (
+    <SceneWrapper>
+      {sceneHeader}
+      <FlatList
+        getItemLayout={handleItemLayout}
+        data={filteredTokenIds}
+        extraData={extraData}
+        keyExtractor={keyExtractor}
+        renderItem={renderRow}
+        style={styles.tokenList}
+      />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />

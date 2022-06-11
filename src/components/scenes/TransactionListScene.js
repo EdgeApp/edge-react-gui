@@ -160,6 +160,9 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   )
 
   keyExtractor = (item: TransactionListTx) => String(item.key)
+
+  getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
+
   render() {
     const { filteredTransactions, loading, reset, searching } = this.state
     const transactions = reset ? [] : searching ? filteredTransactions : this.props.transactions
@@ -183,6 +186,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
             ) : undefined
           }
           keyboardShouldPersistTaps="handled"
+          getItemLayout={this.getItemLayout}
         />
       </SceneWrapper>
     )

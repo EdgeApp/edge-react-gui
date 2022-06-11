@@ -3,7 +3,8 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { DividerLine } from './DividerLine.js'
 import { EdgeText } from './EdgeText.js'
 
@@ -15,20 +16,19 @@ type Props = {
   style?: StyleSheet.Styles
 }
 
-export class SceneHeaderComponent extends React.PureComponent<Props & ThemeProps> {
-  render() {
-    const { title, underline, withTopMargin, children, theme, style } = this.props
-    const styles = getStyles(theme)
-    return (
-      <>
-        <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
-          {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
-          {children}
-        </View>
-        <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
-      </>
-    )
-  }
+export const SceneHeaderComponent = (props: Props) => {
+  const { title, underline, withTopMargin, children, style } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  return (
+    <>
+      <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
+        {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+        {children}
+      </View>
+      <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
+    </>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -50,4 +50,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SceneHeader = withTheme(SceneHeaderComponent)
+export const SceneHeader = memo(SceneHeaderComponent)

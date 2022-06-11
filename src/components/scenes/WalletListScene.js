@@ -3,12 +3,13 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 
+import { updateWalletsSort } from '../../actions/WalletListActions.js'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useMemo, useState } from '../../types/reactHooks.js'
-import { useSelector } from '../../types/reactRedux.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
@@ -33,6 +34,7 @@ export function WalletListScene(props: Props) {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const [sorting, setSorting] = useState(false)
   const [searching, setSearching] = useState(false)
@@ -42,14 +44,17 @@ export function WalletListScene(props: Props) {
   const account = useSelector(state => state.core.account)
   const disklet = useSelector(state => state.core.disklet)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+  const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   // Subscribe to account state:
   const currencyWallets = useWatchAccount(account, 'currencyWallets')
   const loading = Object.keys(currencyWallets).length <= 0
 
   const handleSort = useHandler(() => {
-    Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
+    Airship.show(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
       .then(sort => {
+        if (sort == null) return
+        if (sort !== sortOption) dispatch(updateWalletsSort(sort))
         if (sort === 'manual') setSorting(true)
       })
       .catch(showError)

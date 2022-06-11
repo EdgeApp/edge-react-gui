@@ -52,7 +52,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isAccountBalanceVisible: true,
-  walletsSort: 'default',
+  walletsSort: 'manual',
   mostRecentWallets: [],
   spendingLimits: {
     transaction: {

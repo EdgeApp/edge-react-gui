@@ -3,7 +3,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {
@@ -12,19 +13,18 @@ type Props = {
   lowerCased?: boolean
 }
 
-export class LineTextDividerComponent extends React.PureComponent<Props & ThemeProps> {
-  render() {
-    const { title, children, theme } = this.props
-    const styles = getStyles(theme)
-    return (
-      <View style={styles.container}>
-        <View style={styles.line} />
-        {title ? <EdgeText style={[styles.title, this.props.lowerCased ? styles.lowerCase : null]}>{title}</EdgeText> : null}
-        {children}
-        <View style={styles.line} />
-      </View>
-    )
-  }
+export const LineTextDividerComponent = (props: Props) => {
+  const { title, children, lowerCased } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  return (
+    <View style={styles.container}>
+      <View style={styles.line} />
+      {title ? <EdgeText style={[styles.title, lowerCased ? styles.lowerCase : null]}>{title}</EdgeText> : null}
+      {children}
+      <View style={styles.line} />
+    </View>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -52,4 +52,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const LineTextDivider = withTheme(LineTextDividerComponent)
+export const LineTextDivider = memo(LineTextDividerComponent)

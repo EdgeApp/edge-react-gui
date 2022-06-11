@@ -143,6 +143,23 @@ PODS:
     - GoogleUtilities/Logger (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleMLKit/BarcodeScanning (3.0.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitBarcodeScanning (~> 2.0.0)
+  - GoogleMLKit/MLKitCore (3.0.0):
+    - MLKitCommon (~> 6.0.0)
+  - GoogleToolboxForMac/DebugUtils (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - GoogleToolboxForMac/Defines (2.3.2)
+  - GoogleToolboxForMac/Logger (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSData+zlib (2.3.2)":
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.3.2)":
+    - GoogleToolboxForMac/DebugUtils (= 2.3.2)
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
   - GoogleUtilities/AppDelegateSwizzler (7.7.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -162,6 +179,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
+  - GoogleUtilitiesComponents (1.1.0):
+    - GoogleUtilities/Logger
   - gRPC-Swift (1.0.0):
     - CGRPCZlib (= 1.0.0)
     - Logging (< 2.0.0, >= 1.4.0)
@@ -171,6 +190,7 @@ PODS:
     - SwiftNIOSSL (< 3.0.0, >= 2.8.0)
     - SwiftNIOTransportServices (< 2.0.0, >= 1.6.0)
     - SwiftProtobuf (< 2.0.0, >= 1.9.0)
+  - GTMSessionFetcher/Core (1.7.2)
   - hermes-engine (0.9.0)
   - libevent (2.1.12)
   - libwebp (1.2.1):
@@ -184,6 +204,26 @@ PODS:
   - libwebp/webp (1.2.1)
   - libzcashlc (0.0.3)
   - Logging (1.4.0)
+  - MLImage (1.0.0-beta2)
+  - MLKitBarcodeScanning (2.0.0):
+    - MLKitCommon (~> 6.0)
+    - MLKitVision (~> 4.0)
+  - MLKitCommon (6.0.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - GoogleUtilities/UserDefaults (~> 7.0)
+    - GoogleUtilitiesComponents (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.12)
+  - MLKitVision (4.0.0):
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - GTMSessionFetcher/Core (~> 1.1)
+    - MLImage (= 1.0.0-beta2)
+    - MLKitCommon (~> 6.0)
+    - Protobuf (~> 3.12)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -203,6 +243,7 @@ PODS:
   - Permission-Notifications (3.3.1):
     - RNPermissions
   - PromisesObjC (2.1.0)
+  - Protobuf (3.20.1)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -425,14 +466,6 @@ PODS:
     - React-Core
     - ReactCommon/turbomodule/core
   - react-native-blur (0.8.0):
-    - React
-  - react-native-camera (1.13.1):
-    - React
-    - react-native-camera/RCT (= 1.13.1)
-    - react-native-camera/RN (= 1.13.1)
-  - react-native-camera/RCT (1.13.1):
-    - React
-  - react-native-camera/RN (1.13.1):
     - React
   - react-native-contacts (7.0.4):
     - React-Core
@@ -683,6 +716,13 @@ PODS:
     - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
   - SwiftProtobuf (1.19.0)
+  - vision-camera-code-scanner (0.2.0):
+    - GoogleMLKit/BarcodeScanning
+    - React-Core
+  - VisionCamera (2.13.3):
+    - React
+    - React-callinvoker
+    - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -757,7 +797,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-bignumber (from `../node_modules/react-native-bignumber`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
-  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
@@ -802,6 +841,8 @@ DEPENDENCIES:
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - vision-camera-code-scanner (from `../node_modules/vision-camera-code-scanner`)
+  - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
   - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`, commit `74f3ae20f26748e162c051e5fa343c71febc4294`)
 
@@ -835,16 +876,25 @@ SPEC REPOS:
     - fmt
     - GoogleAppMeasurement
     - GoogleDataTransport
+    - GoogleMLKit
+    - GoogleToolboxForMac
     - GoogleUtilities
+    - GoogleUtilitiesComponents
     - gRPC-Swift
+    - GTMSessionFetcher
     - hermes-engine
     - libevent
     - libwebp
     - libzcashlc
     - Logging
+    - MLImage
+    - MLKitBarcodeScanning
+    - MLKitCommon
+    - MLKitVision
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
+    - Protobuf
     - SDWebImage
     - SDWebImageWebPCoder
     - SQLite.swift
@@ -927,8 +977,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-bignumber"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
-  react-native-camera:
-    :path: "../node_modules/react-native-camera"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
   react-native-fast-crypto:
@@ -1017,6 +1065,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  vision-camera-code-scanner:
+    :path: "../node_modules/vision-camera-code-scanner"
+  VisionCamera:
+    :path: "../node_modules/react-native-vision-camera"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
   ZcashLightClientKit:
@@ -1067,13 +1119,21 @@ SPEC CHECKSUMS:
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   GoogleAppMeasurement: 4c19f031220c72464d460c9daa1fb5d1acce958e
   GoogleDataTransport: f6eab2486453329104995371bc08d4cafbe3da1f
+  GoogleMLKit: 69ae034947ca5220c842a3096d574765c9b6b8b8
+  GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
   gRPC-Swift: 77154009a019e97f8c4bd8f2bb75fe9726801157
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   libzcashlc: 1dfab6ecf157d60e58349906842f370bc65a5962
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
+  MLImage: a454f9f8ecfd537783a12f9488f5be1a68820829
+  MLKitBarcodeScanning: 05aaf6edc24417fa195a4e5d5dcb11550e80fb92
+  MLKitCommon: 534d2b24c1f8676db247bd7ee5733eca1b52968b
+  MLKitVision: 5e393f4d8a28be57b6384a3665f5f041deff9c2e
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
@@ -1083,6 +1143,7 @@ SPEC CHECKSUMS:
   Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
   Permission-Notifications: 4b21cfdd5e8aab2cbb1f117aaa17b44e1f5736c4
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
+  Protobuf: b60ec2f51ad74765f44d0c09d2e0579d7de21745
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: cd47794163052d2b8318c891a7a14fcfaccc75ab
   RCTTypeSafety: 393bb40b3e357b224cde53d3fec26813c52428b1
@@ -1098,7 +1159,6 @@ SPEC CHECKSUMS:
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
   react-native-bignumber: 981f405cd46d64f0728dd5bc0d155e5d406ec728
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: 1bff4c47816d611f26b06fa8b3eaf2db4d1b2c86
   react-native-fast-crypto: 5943c42466b86ad70be60d3a5f64bd22251e5d9e
   react-native-flipper: df8e2a7e5dcc857033d925ad8c7e8c52760b8e06
@@ -1160,6 +1220,8 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 1b8290ec775238ccc714ed842d929494df95a2c2
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
+  vision-camera-code-scanner: dda884a7f3ec8243a2a6d6489b91860648371bca
+  VisionCamera: a4b6e0f84d07c2253f54b96e6d3ee13ebe6536e1
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZcashLightClientKit: 82bfa46e9cf6667261912b0cf99510a61645131b

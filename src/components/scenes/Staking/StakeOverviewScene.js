@@ -9,7 +9,7 @@ import s from '../../../locales/strings.js'
 import { type ChangeQuoteRequest, type PositionAllocation, type StakePolicy, type StakePosition } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors.js'
-import { useEffect, useState } from '../../../types/reactHooks.js'
+import { useEffect, useMemo, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
@@ -99,6 +99,11 @@ export const StakeOverviewScene = (props: Props) => {
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
   }
 
+  const sceneHeader = useMemo(
+    () => <SceneHeader style={styles.sceneHeader} title={getPolicyTitleName(stakePolicy)} withTopMargin />,
+    [stakePolicy, styles.sceneHeader]
+  )
+
   if (stakeAllocations == null || rewardAllocations == null)
     return (
       <SceneWrapper background="theme">
@@ -109,7 +114,7 @@ export const StakeOverviewScene = (props: Props) => {
   const estimatedReturnMsg = stakePolicy.apy > 0 ? toFixed(stakePolicy.apy.toString(), 1, 1) + '% APR' : 'N/A'
   return (
     <SceneWrapper scroll background="theme">
-      <SceneHeader style={styles.sceneHeader} title={getPolicyTitleName(stakePolicy)} withTopMargin />
+      {sceneHeader}
       <View style={styles.card}>
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}

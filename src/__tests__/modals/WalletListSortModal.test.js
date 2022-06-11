@@ -4,8 +4,7 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { WalletListSortModalComponent } from '../../components/modals/WalletListSortModal'
-import { getTheme } from '../../components/services/ThemeContext.js'
+import { WalletListSortModal } from '../../components/modals/WalletListSortModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge.js'
 
 describe('WalletListSortModalComponent', () => {
@@ -14,11 +13,9 @@ describe('WalletListSortModalComponent', () => {
 
     const props = {
       bridge: fakeAirshipBridge,
-      sortOption: [{ key: 'manual' }, { key: 'name' }, { key: 'currencyCode' }, { key: 'currencyName' }, { key: 'highest' }, { key: 'lowest' }],
-      updateWalletsSort: sortOption => undefined,
-      theme: getTheme()
+      sortOption: 'name'
     }
-    const actual = renderer.render(<WalletListSortModalComponent {...props} />)
+    const actual = renderer.render(<WalletListSortModal {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
