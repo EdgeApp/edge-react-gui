@@ -231,9 +231,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeLogoInterac": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
               },
-              "paymentTypeLogoMastercard": Object {
-                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoMastercard.png",
-              },
               "paymentTypeLogoNewsagent": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoNewsagent.png",
               },
@@ -646,9 +643,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "paymentTypeLogoInterac": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
-              },
-              "paymentTypeLogoMastercard": Object {
-                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoMastercard.png",
               },
               "paymentTypeLogoNewsagent": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoNewsagent.png",
