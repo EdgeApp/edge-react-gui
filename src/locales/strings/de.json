@@ -12,7 +12,6 @@
   "drawer_wallets": "Wallets",
   "drawer_fio_names": "FIO Names",
   "drawer_fio_requests": "FIO-Anfragen",
-  "prepaid_card_name": "%s Mastercard®",
   "network_alert_title": "Keine Internetverbindung",
   "fio_network_alert_text": "FIO-Funktionalität erfordert eine Internetverbindung.",
   "fio_address_choose_label": "Choose a FIO Crypto Handle",
