@@ -33,6 +33,7 @@ export const currencyPlugins = {
   eos: true,
   telos: true,
   wax: true,
+  polkadot: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,

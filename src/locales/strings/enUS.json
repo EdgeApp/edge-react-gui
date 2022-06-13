@@ -357,6 +357,7 @@
   "string_first_doge_wallet_name": "My Doge",
   "string_first_fantom_wallet_name": "My Fantom",
   "string_first_hedera_wallet_name": "My Hedera",
+  "string_first_polkadot_wallet_name": "My Polkadot",
   "string_first_polygon_wallet_name": "My Polygon",
   "string_first_avalanche_wallet_name": "My Avalanche",
   "my_crypto_wallet_name": "My %s",

@@ -51,6 +51,7 @@ export const CURRENCY_SETTINGS_KEYS = [
  * Use `sortCurrencyInfos` to actually do the sorting.
  */
 export const WALLET_TYPE_ORDER = [
+  'wallet:polkadot',
   'wallet:bitcoin',
   'wallet:bitcoincash',
   'wallet:monero',
@@ -520,6 +521,11 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierName: s.strings.unique_identifier_memo,
       keyboardType: 'default'
     }
+  },
+  polkadot: {
+    initWalletName: s.strings.string_first_polkadot_wallet_name,
+    chainCode: 'DOT',
+    noChangeMiningFee: true
   },
   zcash: {
     initWalletName: s.strings.string_first_zcash_wallet_name,

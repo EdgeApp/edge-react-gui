@@ -36,17 +36,18 @@ module.exports = {
               options: { transforms: [] }
             }
           : {
-              loader: 'babel-loader',
-              options: {
-                babelrc: false,
-                presets: ['@babel/preset-env'],
-                plugins: [
-                  ['@babel/plugin-transform-for-of', { assumeArray: true }],
-                  // Work around metro-react-native-babel-preset issue:
-                  ['@babel/plugin-proposal-class-properties', { loose: false }]
-                ],
-                cacheDirectory: true
-              }
+              // loader: 'babel-loader',
+              loader: require.resolve('@open-wc/webpack-import-meta-loader')
+              // options: {
+              //   babelrc: false,
+              //   presets: ['@babel/preset-env'],
+              //   plugins: [
+              //     ['@babel/plugin-transform-for-of', { assumeArray: true }],
+              //     // Work around metro-react-native-babel-preset issue:
+              //     ['@babel/plugin-proposal-class-properties', { loose: false }]
+              //   ],
+              //   cacheDirectory: true
+              // }
             }
       }
     ]
