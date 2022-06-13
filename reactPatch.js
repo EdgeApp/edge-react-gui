@@ -81,6 +81,8 @@ require('./reactPatcher/index').Cavify(React, {
     'CreateWalletSelectCryptoComponent',
     'MiniButton',
     'WalletListCurrencyRow',
-    'CountryListModal'
+    'CountryListModal',
+    'CreateWalletSelectCryptoRow',
+    'CreateWalletSelectCryptoScene'
   ]
 })

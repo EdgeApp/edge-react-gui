@@ -196,7 +196,13 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
-          <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+          <MiniButton
+            alignSelf="center"
+            label={s.strings.string_max_cap}
+            marginRem={[1.2, 0, 0]}
+            onPress={this.handleSendMaxAmount}
+            ref={this.props.generateTestHook('FlipInputModal.SendMaxButton')}
+          />
         ) : null}
       </Card>
     )

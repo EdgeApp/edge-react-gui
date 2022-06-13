@@ -35,7 +35,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       }
     }
   >
-    <ForwardRef
+    <Wrap(Component)
       autoCapitalize="none"
       autoCorrect={false}
       label="Address"

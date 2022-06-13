@@ -1,6 +1,6 @@
 // @flow
-
 import { BlurView } from '@react-native-community/blur'
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { type ViewStyle, StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
@@ -50,3 +50,5 @@ export const ThemedModal = <T>(props: Props<T>) => {
     </AirshipModal>
   )
 }
+
+export const ThemedModal = wrap(withTheme(ThemedModalComponent))

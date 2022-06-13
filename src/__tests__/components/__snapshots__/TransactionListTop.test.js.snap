@@ -28,7 +28,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
           }
         }
       >
-        <ForwardRef
+        <Wrap(Component)
           label="Search Transactions"
           marginRem={0}
           onBlur={[Function]}

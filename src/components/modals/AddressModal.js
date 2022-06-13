@@ -312,6 +312,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
             value={uri}
             marginRem={[0, 1]}
             error={fieldError}
+            ref={this.props.generateTestHook('AddressModal.EnterAddress')}
           />
           {!userFioAddressesLoading ? (
             <FlatList
