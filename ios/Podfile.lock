@@ -182,7 +182,7 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
-  - libzcashlc (0.0.2)
+  - libzcashlc (0.0.3)
   - Logging (1.4.0)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -451,9 +451,9 @@ PODS:
     - React-Core
   - react-native-webview (11.18.2):
     - React-Core
-  - react-native-zcash (0.2.1):
+  - react-native-zcash (0.2.2):
     - React
-    - ZcashLightClientKit (= 0.13.0-beta.2)
+    - ZcashLightClientKit (= 0.14.0-beta)
   - React-perflogger (0.67.2)
   - React-RCTActionSheet (0.67.2):
     - React-Core/RCTActionSheetHeaders (= 0.67.2)
@@ -615,8 +615,17 @@ PODS:
   - SwiftNIOEmbedded (2.32.3):
     - _NIODataStructures (= 2.32.3)
     - SwiftNIOCore (= 2.32.3)
-  - SwiftNIOExtras (1.10.2):
+  - SwiftNIOExtras (1.11.0):
+    - _NIODataStructures (< 3, >= 2.32.0)
+    - CNIOAtomics (< 3, >= 2.32.0)
+    - CNIODarwin (< 3, >= 2.32.0)
+    - CNIOLinux (< 3, >= 2.32.0)
+    - CNIOWindows (< 3, >= 2.32.0)
     - SwiftNIO (< 3, >= 2.32.0)
+    - SwiftNIOConcurrencyHelpers (< 3, >= 2.32.0)
+    - SwiftNIOCore (< 3, >= 2.32.0)
+    - SwiftNIOEmbedded (< 3, >= 2.32.0)
+    - SwiftNIOPosix (< 3, >= 2.32.0)
   - SwiftNIOFoundationCompat (2.32.3):
     - SwiftNIO (= 2.32.3)
     - SwiftNIOCore (= 2.32.3)
@@ -654,18 +663,26 @@ PODS:
   - SwiftNIOTLS (2.32.3):
     - SwiftNIO (= 2.32.3)
     - SwiftNIOCore (= 2.32.3)
-  - SwiftNIOTransportServices (1.11.3):
+  - SwiftNIOTransportServices (1.12.0):
+    - _NIODataStructures (< 3, >= 2.32.0)
+    - CNIOAtomics (< 3, >= 2.32.0)
+    - CNIODarwin (< 3, >= 2.32.0)
+    - CNIOLinux (< 3, >= 2.32.0)
+    - CNIOWindows (< 3, >= 2.32.0)
     - SwiftNIO (< 3, >= 2.32.0)
     - SwiftNIOConcurrencyHelpers (< 3, >= 2.32.0)
+    - SwiftNIOCore (< 3, >= 2.32.0)
+    - SwiftNIOEmbedded (< 3, >= 2.32.0)
     - SwiftNIOFoundationCompat (< 3, >= 2.32.0)
+    - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
   - SwiftProtobuf (1.19.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
-  - ZcashLightClientKit (0.13.0-beta.2):
-    - gRPC-Swift (= 1.0.0)
-    - libzcashlc (= 0.0.2)
+  - ZcashLightClientKit (0.14.0-beta):
+    - gRPC-Swift (~> 1.0)
+    - libzcashlc (= 0.0.3)
     - SQLite.swift (~> 0.12.2)
 
 DEPENDENCIES:
@@ -779,7 +796,7 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
-  - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`, tag `0.13.0-beta.2`)
+  - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`, commit `74f3ae20f26748e162c051e5fa343c71febc4294`)
 
 SPEC REPOS:
   trunk:
@@ -994,13 +1011,13 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
   ZcashLightClientKit:
+    :commit: 74f3ae20f26748e162c051e5fa343c71febc4294
     :git: https://github.com/zcash/ZcashLightClientKit.git
-    :tag: 0.13.0-beta.2
 
 CHECKOUT OPTIONS:
   ZcashLightClientKit:
+    :commit: 74f3ae20f26748e162c051e5fa343c71febc4294
     :git: https://github.com/zcash/ZcashLightClientKit.git
-    :tag: 0.13.0-beta.2
 
 SPEC CHECKSUMS:
   _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
@@ -1046,7 +1063,7 @@ SPEC CHECKSUMS:
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  libzcashlc: d32ab47e7676905990610e999fc5d15d062061d5
+  libzcashlc: 1dfab6ecf157d60e58349906842f370bc65a5962
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
@@ -1083,7 +1100,7 @@ SPEC CHECKSUMS:
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
   react-native-webview: 8ec7ddf9eb4ddcd92b32cee7907efec19a9ec7cb
-  react-native-zcash: febe4cb0f4b4953a91eda20c2754658e9931cc84
+  react-native-zcash: c6ef38f1b3f2cbd3eb5986e095b45399f0e7bb66
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
   React-RCTActionSheet: 052606483045a408693aa7e864410b4a052f541a
   React-RCTAnimation: 08d4cac13222bb1348c687a0158dfd3b577cdb63
@@ -1123,7 +1140,7 @@ SPEC CHECKSUMS:
   SwiftNIOConcurrencyHelpers: ca2594e10749655f42baf5468212be83d2f94fe3
   SwiftNIOCore: 9deed6620f80c7c82e8e2c2ffb9864495416d892
   SwiftNIOEmbedded: b7ccf12b402dff35a5d4356990a6253621e4337d
-  SwiftNIOExtras: 70f09aa8eca3ab6baeaf1993da9c855b6e95e97f
+  SwiftNIOExtras: 481f74d6bf0b0ef699905ed66439cb019c4975c9
   SwiftNIOFoundationCompat: d3b888766e7c67354a4e4e145d38edf9586efa0c
   SwiftNIOHPACK: 5692b7d669e954adf9920432a8a3e279aceee55e
   SwiftNIOHTTP1: 349a16aae363250cd49f430a9fdb93cff518adfa
@@ -1131,12 +1148,12 @@ SPEC CHECKSUMS:
   SwiftNIOPosix: e4988a8dcfd5a6319bde219d7a3d0acc5fbe7a89
   SwiftNIOSSL: 7c2ddcbcbb2a8188468b7fe9c2bc6124df4b3772
   SwiftNIOTLS: 1b8290ec775238ccc714ed842d929494df95a2c2
-  SwiftNIOTransportServices: 1fbbdb58510af3c53a838a1dbea98f18132dc952
+  SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
-  ZcashLightClientKit: ac11c62951bc8130abbce780705956fb7fb54fd9
+  ZcashLightClientKit: 82bfa46e9cf6667261912b0cf99510a61645131b
 
-PODFILE CHECKSUM: 43e575f690a092786bd6fd86e8696d48bfdb3991
+PODFILE CHECKSUM: 24ae58d0b9317e831b041481df6192f3444a2445
 
 COCOAPODS: 1.11.3

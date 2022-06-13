@@ -52,5 +52,5 @@ target 'edge' do
   pod 'CNIOHTTPParser', :modular_headers => true
   pod 'CNIOWindows', :modular_headers => true
   pod 'CGRPCZlib', :modular_headers => true
-  pod 'ZcashLightClientKit', :git => 'https://github.com/zcash/ZcashLightClientKit.git', :tag => '0.13.0-beta.2'
+  pod 'ZcashLightClientKit', :git => 'https://github.com/zcash/ZcashLightClientKit.git', :commit => '74f3ae20f26748e162c051e5fa343c71febc4294'
 end
