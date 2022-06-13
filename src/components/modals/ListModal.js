@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from 'react'
 import { FlatList, Keyboard } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -56,6 +55,7 @@ export function ListModal<T>({
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem = ({ item }) => (rowComponent ? rowComponent(item) : null)
   const handleCancel = () => bridge.resolve()
+
   const handleChangeText = (text: string) => {
     setText(text)
     setFilteredRows(text)

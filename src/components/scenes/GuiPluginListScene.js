@@ -266,11 +266,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <SceneWrapper background="header">
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
-        <TouchableOpacity
-          style={styles.selectedCountryRow}
-          onPress={this._handleCountryPress}
-          ref={this.props.generateTestHook('GuiPluginListScene.OpenCountryList')}
-        >
+        <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress} ref={this.props.generateTestHook('PluginScene.OpenCountryList')}>
           {countryData && (
             <FastImage
               source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}

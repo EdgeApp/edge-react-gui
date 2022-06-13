@@ -36,6 +36,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
         subTitle={alpha}
         title={name}
         onPress={() => bridge.resolve(alpha)}
+        ref={generateTestHook(`${alpha}.Select`)}
       />
     )
   }
@@ -73,7 +74,6 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
       onSubmitEditing={handleSubmitEditing}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
-      ref={generateTestHook('CounrtyListModal.Close')}
     />
   )
 }
