@@ -6,8 +6,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { useHandler } from '../../hooks/useHandler.js'
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from '../../types/reactHooks.js'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { cacheStyles, useTheme } from '../services/ThemeContext.js'
 
@@ -196,16 +195,13 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   }
 
   // Animated styles:
-  const getBorderColor = useHandler<(errorValue: number, focusValue: number) => string>((errorValue, focusValue) => {
-    'worklet'
-    const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused])
-    return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
-  })
-  const getLabelColor = useHandler<(errorValue: number, focusValue: number) => string>((errorValue, focusValue) => {
-    'worklet'
-    const interFocusColor = interpolateColor(focusValue, [0, 1], [theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused])
-    return interpolateColor(errorValue, [0, 1], [interFocusColor, theme.dangerText])
-  })
+  const getBorderColor = useMemo(
+    () => getIterpolatedColor(theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused, theme.dangerText),
+    [theme]
+  )
+
+  const getLabelColor = useMemo(() => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText), [theme])
+
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
@@ -456,3 +452,9 @@ const getStyles = cacheStyles(theme => {
     }
   }
 })
+
+const getIterpolatedColor = (fromColor, toColor, errorColor) => (errorValue, focusValue) => {
+  'worklet'
+  const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
+  return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+}
