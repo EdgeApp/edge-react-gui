@@ -3,6 +3,7 @@
 ## 2.16.2 (2022-06-10)
 
 - ZEC: Add NU5 support
+- Remove Edge Mastercard support
 - Upgrade edge-currency-accountbased to v0.16.1
   - ETH: Break out testnets into their own plugins
   - ZEC: Upgrade react-native-zcash to v0.2.2
