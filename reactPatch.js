@@ -77,6 +77,8 @@ require('./reactPatcher/index').Cavify(React, {
     'PrimaryButton',
     'MainButton',
     'WalletListSwipeable',
-    'WalletListSwipeableRow'
+    'WalletListSwipeableRow',
+    'OutlinedTextInput',
+    'OutlinedTextInputRef'
   ]
 })

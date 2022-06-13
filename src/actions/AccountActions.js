@@ -46,6 +46,7 @@ export const validatePassword =
         submitLabel={submitLabel}
         title={title}
         warning={warning}
+        testId="AccountSettings"
         onSubmit={async password => {
           const isOk = await account.checkPassword(password)
           if (!isOk) return s.strings.password_reminder_invalid
