@@ -11,7 +11,7 @@ import * as ReactNative from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { name as appName } from './app.json'
-import exchangeSceneSpec from './specs/exchangeSceneSpec.js'
+import requestSceneSpec from './specs/requestSceneSpec.js'
 import { App } from './src/components/App.js'
 
 // See https://github.com/software-mansion/react-native-reanimated/issues/1794#issuecomment-898393331
@@ -22,7 +22,7 @@ const testHookStore = new TestHookStore()
 class AppWrapper extends Component<any, any> {
   render() {
     return (
-      <Tester specs={[exchangeSceneSpec]} store={testHookStore}>
+      <Tester specs={[requestSceneSpec]} store={testHookStore}>
         <App />
       </Tester>
     )
