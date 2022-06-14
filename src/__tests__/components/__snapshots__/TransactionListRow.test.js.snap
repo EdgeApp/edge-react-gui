@@ -12,6 +12,5 @@ exports[`TransactionListRow should render with loading props 1`] = `
   selectedCurrencyName="Bitcoin"
   thumbnailPath="wyre.png"
   transaction="12ser4hh..."
-  walletBlockHeight={11}
 />
 `;

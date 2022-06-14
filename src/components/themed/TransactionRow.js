@@ -23,8 +23,7 @@ type OwnProps = {
   requiredConfirmations: number,
   selectedCurrencyName: string,
   thumbnailPath?: string,
-  transaction: TransactionListTx,
-  walletBlockHeight: number
+  transaction: TransactionListTx
 }
 
 type Props = OwnProps & ThemeProps
@@ -45,8 +44,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
       selectedCurrencyName,
       theme,
       thumbnailPath,
-      transaction,
-      walletBlockHeight
+      transaction
     } = this.props
     const styles = getStyles(theme)
 
@@ -70,25 +68,18 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     // Pending Text and Style
-    const currentConfirmations = walletBlockHeight && transaction.blockHeight > 0 ? walletBlockHeight - transaction.blockHeight + 1 : 0
-    let pendingText, pendingStyle
-    if (walletBlockHeight === 0) {
-      pendingText = s.strings.fragment_transaction_list_tx_synchronizing
-      pendingStyle = styles.partialTime
-    } else if (transaction.blockHeight < 0) {
-      pendingText = s.strings.fragment_transaction_list_tx_dropped
-      pendingStyle = styles.partialTime
-    } else if (currentConfirmations <= 0) {
-      // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (transaction block height larger than wallet block height)
-      pendingText = s.strings.fragment_wallet_unconfirmed
-      pendingStyle = styles.pendingTime
-    } else if (currentConfirmations < requiredConfirmations) {
-      pendingText = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-      pendingStyle = styles.partialTime
-    } else {
-      pendingText = transaction.time
-      pendingStyle = styles.completedTime
-    }
+    const currentConfirmations = transaction.confirmations
+    const pendingText =
+      currentConfirmations === 'confirmed'
+        ? transaction.time
+        : currentConfirmations === 'unconfirmed'
+        ? s.strings.fragment_wallet_unconfirmed
+        : currentConfirmations === 'dropped'
+        ? s.strings.fragment_transaction_list_tx_dropped
+        : currentConfirmations == null
+        ? s.strings.fragment_transaction_list_tx_synchronizing
+        : sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+    const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
 
     // Transaction Category
     let categoryText

@@ -35,8 +35,7 @@ type StateProps = {
   isSentTransaction: boolean,
   requiredConfirmations: number,
   selectedCurrencyName: string,
-  thumbnailPath?: string,
-  walletBlockHeight: number
+  thumbnailPath?: string
 }
 
 type OwnProps = {
@@ -74,7 +73,6 @@ export class TransactionListRowComponent extends React.PureComponent<Props> {
         selectedCurrencyName={this.props.selectedCurrencyName}
         thumbnailPath={this.props.thumbnailPath}
         transaction={this.props.transaction}
-        walletBlockHeight={this.props.walletBlockHeight}
       />
     )
   }
@@ -130,7 +128,6 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
       cryptoAmount: cryptoAmountFormat,
       fiatAmount: displayFiatAmount(amountFiat),
       fiatSymbol: getSymbolFromCurrency(fiatCurrencyCode),
-      walletBlockHeight: guiWallet.blockHeight || 0,
       denominationSymbol: displayDenomination.symbol,
       requiredConfirmations,
       selectedCurrencyName: guiWallet.currencyNames[currencyCode] || currencyCode,
