@@ -23,7 +23,7 @@ Edge Wallet is:
 
 ### Prepare React Native Development Tools
 
-The React Native documentation contains [detailed instructions on how to prepare your computer for React Native development](https://reactnative.dev/docs/0.64/environment-setup). Follow the instructions in the "React Native CLI Quickstart" for your specific platform.
+The React Native documentation contains [detailed instructions on how to prepare your computer for React Native development](https://reactnative.dev/docs/0.67/environment-setup). Follow the instructions in the "React Native CLI Quickstart" for your specific platform.
 
 If you are using a Mac, follow both the iOS and Android target instructions. Otherwise, you only need the Android target instructions.
 
