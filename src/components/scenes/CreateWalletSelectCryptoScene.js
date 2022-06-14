@@ -2,11 +2,12 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, FlatList, View } from 'react-native'
+import { Alert } from 'react-native'
 
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { FlatList, View } from '../../types/reactNative.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
@@ -22,14 +23,14 @@ type OwnProps = {
 type StateProps = {
   account: EdgeAccount
 }
-type Props = StateProps & OwnProps & ThemeProps
+type Props = StateProps & OwnProps & ThemeProps & TestProps
 
 type State = {
   selectedWalletType: string,
   searchTerm: string
 }
 
-export class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
+export class CreateWalletSelectCryptoComponent extends React.Component<Props & TestProps, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -83,7 +84,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { currencyCode, pluginId } = data.item
     // Ripple hack:
-    let { currencyName } = data.item
+    let { currencyName, walletType } = data.item
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
     return (
@@ -92,6 +93,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
         pluginId={pluginId}
         walletName={currencyName}
         onPress={() => this.handleSelectWalletType(data.item)}
+        ref={this.props.generateTestHook(`CreateCryptoWalletScene.${walletType}Row`)}
       />
     )
   }
@@ -139,6 +141,7 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
               keyExtractor={this.keyExtractor}
               renderItem={this.renderWalletTypeResult}
               getItemLayout={this.getItemLayout}
+              ref={this.props.generateTestHook('CreateWalletSelectCryptoScene.CurrencyCodeList')}
             />
           </View>
         )}
@@ -156,7 +159,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoScene = connect<StateProps, {}, OwnProps>(
+export const CreateWalletSelectCryptoScene = connect<StateProps, {}, OwnProps & TestProps>(
   state => ({
     account: state.core.account
   }),

@@ -78,11 +78,10 @@ require('./reactPatcher/index').Cavify(React, {
     'WalletListSwipeableRow',
     'OutlinedTextInput',
     'CreateWalletNameComponent',
-    'CreateWalletSelectCryptoComponent',
     'MiniButton',
     'WalletListCurrencyRow',
     'CountryListModal',
-    'CreateWalletSelectCryptoRow',
-    'CreateWalletSelectCryptoScene'
+    'CreateWalletSelectCryptoComponent',
+    'CreateWalletSelectFiatComponent'
   ]
 })

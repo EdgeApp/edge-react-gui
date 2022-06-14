@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
+import { type TestProps } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
@@ -17,12 +18,12 @@ export type CreateWalletNameOwnProps = {
   navigation: NavigationProp<'createWalletName'>,
   route: RouteProp<'createWalletName'>
 }
-type Props = CreateWalletNameOwnProps & ThemeProps
+type Props = CreateWalletNameOwnProps & ThemeProps & TestProps
 type State = {
   walletName: string
 }
 
-class CreateWalletNameComponent extends React.Component<Props, State> {
+class CreateWalletNameComponent extends React.Component<Props & TestProps, State> {
   constructor(props: Props) {
     super(props)
     const { route } = props
@@ -85,7 +86,14 @@ class CreateWalletNameComponent extends React.Component<Props, State> {
           label={s.strings.fragment_wallets_addwallet_name_hint}
           marginRem={[0, 1.75]}
         />
-        <MainButton alignSelf="center" label={s.strings.string_next_capitalized} marginRem={[3, 1]} type={buttonType} onPress={this.onNext} />
+        <MainButton
+          alignSelf="center"
+          label={s.strings.string_next_capitalized}
+          marginRem={[3, 1]}
+          type={buttonType}
+          onPress={this.onNext}
+          ref={this.props.generateTestHook('CreateWalletNameScene.NextButton')}
+        />
       </SceneWrapper>
     )
   }

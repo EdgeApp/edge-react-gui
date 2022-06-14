@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -84,4 +84,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoRow = memo(CreateWalletSelectCryptoRowComponent)
+export const CreateWalletSelectCryptoRow = memo(wrap(CreateWalletSelectCryptoRowComponent))
