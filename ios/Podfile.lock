@@ -459,12 +459,6 @@ PODS:
   - React-jsinspector (0.67.2)
   - React-logger (0.67.2):
     - glog
-  - react-native-bignumber (0.1.7):
-    - OpenSSL-Universal (~> 1.1.180)
-    - React
-    - React-callinvoker
-    - React-Core
-    - ReactCommon/turbomodule/core
   - react-native-blur (0.8.0):
     - React
   - react-native-contacts (7.0.4):
@@ -795,7 +789,6 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
-  - react-native-bignumber (from `../node_modules/react-native-bignumber`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
@@ -973,8 +966,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
-  react-native-bignumber:
-    :path: "../node_modules/react-native-bignumber"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-contacts:
@@ -1157,7 +1148,6 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 52beb652bbc61201bd70cbe4f0b8edb607e8da4f
   React-jsinspector: 595f76eba2176ebd8817a1fffd47b84fbdab9383
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
-  react-native-bignumber: 981f405cd46d64f0728dd5bc0d155e5d406ec728
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-contacts: 1bff4c47816d611f26b06fa8b3eaf2db4d1b2c86
   react-native-fast-crypto: 5943c42466b86ad70be60d3a5f64bd22251e5d9e

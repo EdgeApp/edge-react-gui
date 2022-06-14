@@ -116,7 +116,6 @@
     "react": "17.0.2",
     "react-native": "^0.67.2",
     "react-native-airship": "^0.2.9",
-    "react-native-bignumber": "^0.1.7",
     "react-native-check-version": "^1.0.5",
     "react-native-confetti-cannon": "^1.5.2",
     "react-native-contacts": "^7.0.4",

@@ -6,7 +6,6 @@
  */
 
 const { getDefaultConfig } = require('metro-config')
-const path = require('path')
 
 module.exports = (async () => {
   const {
@@ -24,10 +23,7 @@ module.exports = (async () => {
     },
     resolver: {
       assetExts: assetExts.filter(ext => ext !== 'svg'),
-      sourceExts: [...sourceExts, 'svg'],
-      extraNodeModules: {
-        'bn.js': path.resolve(__dirname, './node_modules/react-native-bignumber')
-      }
+      sourceExts: [...sourceExts, 'svg']
     }
   }
 })()
