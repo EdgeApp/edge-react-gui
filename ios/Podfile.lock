@@ -18,7 +18,7 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (0.19.18):
+  - edge-core-js (0.19.19):
     - React-Core
   - edge-login-ui-rn (0.10.2):
     - React
@@ -1096,7 +1096,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  edge-core-js: 0350e07d2b28102beaf63b3f7ac1eec2aeedf70d
+  edge-core-js: 62f656d7513cd0c268574a65aa231be38cbb018d
   edge-login-ui-rn: 006faf7f8a04653a9ad50a9f39a2df65315afcac
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
   FBReactNativeSpec: c94002c1d93da3658f4d5119c6994d19961e3d52
