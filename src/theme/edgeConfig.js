@@ -12,6 +12,7 @@ export const edgeConfig: AppConfig = {
   darkTheme: edgeDark,
   lightTheme: edgeLight,
   supportsEdgeLogin: true,
+  infoServer: 'https://info1.edge.app',
   referralServers: ['https://referral1.edge.app'],
   notificationServers: ['https://notif1.edge.app'],
   knowledgeBase: 'https://support.edge.app/support/home',
