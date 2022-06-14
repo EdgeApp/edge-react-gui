@@ -788,6 +788,11 @@ const strings = {
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
+  // Update notices
+  update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
+  update_notice_deprecate_electrum_servers_message:
+    '%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.',
+
   error_boundary_title: 'Oops!',
   error_boundary_message:
     "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
