@@ -1,10 +1,11 @@
 // @flow
-
+import { hook } from 'cavy'
 import * as React from 'react'
-import { Platform, TouchableOpacity } from 'react-native'
+import { Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 
 const isIos = Platform.OS === 'ios'
 
@@ -58,4 +59,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const BackButton = withTheme(BackButtonComponent)
+export const BackButton = hook(withTheme(BackButtonComponent))
