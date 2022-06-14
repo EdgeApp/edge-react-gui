@@ -25,7 +25,7 @@ export const useActivePromotions = () => {
 }
 
 export const testPromoFlags = (appFlags: { [key: string]: boolean }, promoFlags: { [key: string]: boolean }) => {
-  if (!promoFlags) return true
+  if (promoFlags == null) return true
   for (const key of Object.keys(promoFlags)) {
     if (promoFlags[key] !== appFlags[key]) return false
   }
