@@ -30,7 +30,6 @@ export function useFetch<T>(
   // Allows for fetching a deferred fetch or for re-fetching the data
   const fetchData = useHandler((deferedFetchOpts = {}) => {
     fetchOpts.current = { ...fetchOpts.current, deferedFetchOpts }
-    setShouldFetch(false)
     setShouldFetch(true)
   })
 
@@ -51,6 +50,7 @@ export function useFetch<T>(
       error.current = asError(e)
     } finally {
       setLoading(false)
+      setShouldFetch(false)
     }
   }, [shouldFetch])
 
