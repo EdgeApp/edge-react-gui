@@ -1,3 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PromoCard should render with loading props 1`] = `null`;
+exports[`PromoCard should render with loading props 1`] = `
+<ButtonBox
+  marginRem={1}
+  onPress={[Function]}
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "borderColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 4,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "padding": 11,
+      }
+    }
+  >
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={0}
+      style={
+        Object {
+          "flex": 1,
+          "margin": 11,
+        }
+      }
+    >
+      MessageTweak
+    </WithTheme(EdgeTextComponent)>
+    <TouchableOpacity
+      onPress={[Function]}
+    >
+      <Icon
+        allowFontScaling={false}
+        color="#66EDA8"
+        name="close"
+        size={22}
+        style={
+          Object {
+            "padding": 11,
+          }
+        }
+      />
+    </TouchableOpacity>
+  </View>
+</ButtonBox>
+`;

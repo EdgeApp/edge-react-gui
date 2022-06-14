@@ -10,11 +10,11 @@ import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
 import { useEffect, useRef } from '../../types/reactHooks.js'
 import { Actions } from '../../types/routerTypes.js'
-import { PromoCard } from '../cards/PromoCard.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
 import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
+import { PromoBanner } from './PromoBanner.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -86,7 +86,7 @@ export const WalletListHeader = (props: Props) => {
           </View>
         </View>
       )}
-      {!searching && <PromoCard />}
+      {!searching && <PromoBanner />}
     </>
   )
 }
