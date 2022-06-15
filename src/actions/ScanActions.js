@@ -12,7 +12,6 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { upgradeCurrencyCodes, WalletListModal } from '../components/modals/WalletListModal'
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
-import { EXCHANGE_SCENE, SEND } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
@@ -241,7 +240,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     // LEGACY ADDRESS URI
     if (parsedUri.legacyAddress != null) {
       const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-      Actions.push(SEND, {
+      Actions.push('send', {
         guiMakeSpendInfo,
         selectedWalletId,
         selectedCurrencyCode: currencyCode
@@ -260,7 +259,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
 
       if (guiMakeSpendInfo != null) {
-        Actions.push(SEND, {
+        Actions.push('send', {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -294,7 +293,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       nativeAmount
     }
 
-    Actions.push(SEND, {
+    Actions.push('send', {
       guiMakeSpendInfo,
       selectedWalletId,
       selectedCurrencyCode: currencyCode
@@ -404,7 +403,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       Actions.jump('pluginListBuy', { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-      Actions.jump(EXCHANGE_SCENE)
+      Actions.jump('exchangeScene')
     }
   } catch (e) {
     // Don't bother the user with this error, but log it quietly:

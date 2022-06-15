@@ -6,7 +6,6 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { CREATE_WALLET_ACCOUNT_SELECT, CREATE_WALLET_ACCOUNT_SETUP } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings.js'
@@ -82,7 +81,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
     const selectedWalletType = makeCreateWalletType(currencyInfo)
     const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
     if (specialCurrencyInfo.skipAccountNameValidation) {
-      Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
+      Actions.push('createWalletAccountSelect', {
         selectedFiat: selectedFiat,
         selectedWalletType,
         accountName: walletName,
@@ -96,7 +95,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
         isReactivation: true,
         existingWalletId: walletId
       }
-      Actions.push(CREATE_WALLET_ACCOUNT_SETUP, createWalletAccountSetupSceneProps)
+      Actions.push('createWalletAccountSetup', createWalletAccountSetupSceneProps)
     }
 
     Airship.show(bridge => (

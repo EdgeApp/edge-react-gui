@@ -7,7 +7,6 @@ import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
 import { selectWallet } from '../../actions/WalletActions'
-import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -53,7 +52,7 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode)
-        Actions.push(TRANSACTION_DETAILS, {
+        Actions.push('transactionDetails', {
           edgeTransaction: tx
         })
       }}

@@ -5,7 +5,6 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { RECOVER_PASSWORD } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
@@ -56,5 +55,5 @@ async function showReminderModal(level: number, account: EdgeAccount) {
       }}
     />
   ))
-  if (reply === 'ok') Actions.push(RECOVER_PASSWORD)
+  if (reply === 'ok') Actions.push('passwordRecovery')
 }

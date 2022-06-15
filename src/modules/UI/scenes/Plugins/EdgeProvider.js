@@ -27,7 +27,6 @@ import { selectWallet } from '../../../../actions/WalletActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
 import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
-import { SEND } from '../../../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../locales/strings'
 import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
@@ -422,7 +421,7 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.onBack = () => {
         resolve()
       }
-      Actions.push(SEND, {
+      Actions.push('send', {
         guiMakeSpendInfo,
         selectedWalletId: coreWallet.id,
         selectedCurrencyCode

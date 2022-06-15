@@ -17,7 +17,6 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
-import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
 import { useWatchContext } from '../../hooks/useWatch.js'
@@ -191,12 +190,12 @@ export function ControlPanel(props: Props) {
 
   const rowDatas: any[] = [
     {
-      pressHandler: () => handleGoToScene(FIO_ADDRESS_LIST),
+      pressHandler: () => handleGoToScene('fioAddressList'),
       iconName: 'cp-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
-      pressHandler: () => handleGoToScene(FIO_REQUEST_LIST),
+      pressHandler: () => handleGoToScene('fioRequestList'),
       iconName: 'cp-fio',
       title: s.strings.drawer_fio_requests
     },
@@ -212,13 +211,13 @@ export function ControlPanel(props: Props) {
     },
     { pressHandler: handleSweep, iconName: 'cp-sweep', title: s.strings.drawer_sweep_private_key },
     {
-      pressHandler: () => handleGoToScene(TERMS_OF_SERVICE),
+      pressHandler: () => handleGoToScene('termsOfService'),
       iconName: 'cp-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      pressHandler: () => handleGoToScene(SETTINGS_OVERVIEW_TAB),
+      pressHandler: () => handleGoToScene('settingsOverviewTab'),
       iconName: 'cp-settings',
       title: s.strings.settings_title
     },

@@ -5,7 +5,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
@@ -183,7 +182,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
           />
         ))
         if (answer === 'ok') {
-          return Actions.push(FIO_ADDRESS_SETTINGS, {
+          return Actions.push('fioAddressSettings', {
             showAddBundledTxs: true,
             fioWallet,
             fioAddressName: fioAddress

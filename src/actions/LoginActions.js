@@ -8,7 +8,6 @@ import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
 import { USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import {
@@ -85,9 +84,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
 
   dispatch({ type: 'LOGIN', data: account })
 
-  Actions.push(EDGE)
+  Actions.push('edge')
   if (hasSecurityAlerts(account)) {
-    Actions.push(SECURITY_ALERTS_SCENE)
+    Actions.push('securityAlerts')
   }
 
   const state = getState()
@@ -250,7 +249,7 @@ export const mergeSettings = (
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(LOGIN)
+  Actions.popTo('login')
   Airship.clear()
   const state = getState()
   const { account } = state.core

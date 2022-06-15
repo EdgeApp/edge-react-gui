@@ -12,7 +12,6 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
-import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
@@ -114,7 +113,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
   registerNewDomain = () => {
     this.props.bridge.resolve(null)
-    Actions.push(FIO_DOMAIN_REGISTER)
+    Actions.push('fioDomainRegister')
   }
 
   selectItem = (value: any) => this.props.bridge.resolve(value)
