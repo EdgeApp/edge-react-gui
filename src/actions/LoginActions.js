@@ -2,9 +2,11 @@
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
+import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
+import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
 import { USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
@@ -50,6 +52,37 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 }
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
+  // Show a notice for deprecated electrum server settings
+  const pluginIdsNeedingUserAction: string[] = []
+  for (const pluginId in account.currencyConfig) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    const { userSettings } = currencyConfig
+    if (userSettings == null) continue
+    if (userSettings.disableFetchingServers === true && userSettings.enableCustomServers == null) {
+      userSettings.enableCustomServers = true
+      userSettings.blockbookServers = []
+      userSettings.electrumServers = []
+      pluginIdsNeedingUserAction.push(pluginId)
+    }
+  }
+  if (pluginIdsNeedingUserAction.length > 0) {
+    await Airship.show(bridge => (
+      <ConfirmContinueModal
+        bridge={bridge}
+        title={s.strings.update_notice_deprecate_electrum_servers_title}
+        body={sprintf(s.strings.update_notice_deprecate_electrum_servers_message, config.appName)}
+      />
+    ))
+      .finally(async () => {
+        for (const pluginId of pluginIdsNeedingUserAction) {
+          const currencyConfig = account.currencyConfig[pluginId]
+          const { userSettings = {} } = currencyConfig
+          await currencyConfig.changeUserSettings(userSettings)
+        }
+      })
+      .catch(err => showError(err))
+  }
+
   dispatch({ type: 'LOGIN', data: account })
 
   Actions.push(EDGE)

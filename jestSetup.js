@@ -8,7 +8,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler() {}
 }))
-jest.mock('edge-currency-bitcoin', () => () => ({}))
 
 jest.mock('rn-qr-generator', () => () => {
   return Promise.detect({})
