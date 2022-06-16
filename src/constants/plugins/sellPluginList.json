@@ -487,6 +487,48 @@
       "payment_id": "5006"
     }
   },
+  {
+    "id": "banxa.bank",
+    "pluginId": "banxa",
+    "forCountries": [
+      "GB"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "deepQuery": {
+      "sellMode": null,
+      "country": "GB",
+      "payment_id": "6058"
+    },
+    "title": "Faster Payments",
+    "paymentTypeLogoKey": "fasterPayments",
+    "description": "Fee: 5.5% / Settlement: Instant - 1 hour\nLimit: £6000",
+    "sortIndex": 1
+  },
+  {
+    "id": "banxa.bank",
+    "pluginId": "banxa",
+    "forCountries": [
+      "CA"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "LTC",
+      "ETH",
+      "USDT"
+    ],
+    "deepQuery": {
+      "sellMode": null,
+      "country": "CA",
+      "payment_id": "6061"
+    },
+    "title": "Interac e-Transfer",
+    "paymentTypeLogoKey": "interac",
+    "description": "Fee: 3% / Settlement: 1 - 2 days\nDaily Limit: $10000\nMonthly Limit: $70000",
+    "sortIndex": 1
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
