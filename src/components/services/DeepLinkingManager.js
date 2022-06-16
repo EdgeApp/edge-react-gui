@@ -5,6 +5,7 @@ import { Linking } from 'react-native'
 
 import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions.js'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useEffect } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
@@ -28,23 +29,24 @@ export function DeepLinkingManager(props: Props) {
     requestAnimationFrame(() => dispatch(retryPendingDeepLink()))
   }, [accountReferralLoaded, dispatch, pendingDeepLink, wallets])
 
+  const handleUrl = url => {
+    try {
+      dispatch(launchDeepLink(parseDeepLink(url)))
+    } catch (error) {
+      showError(error)
+    }
+  }
+
   // Startup tasks:
-  useEffect(() => {
-    const listener = Linking.addEventListener('url', event => {
-      try {
-        dispatch(launchDeepLink(parseDeepLink(event.url)))
-      } catch (error) {
-        showError(error)
-      }
-    })
-    Linking.getInitialURL()
-      .then(url => {
-        if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
-        if (url != null) dispatch(launchDeepLink(parseDeepLink(url)))
-      })
-      .catch(showError)
+  useAsyncEffect(async () => {
+    const listener = Linking.addEventListener('url', event => handleUrl(event.url))
+
+    let url = await Linking.getInitialURL()
+    if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
+    if (url != null) handleUrl(url)
+
     return () => listener.remove()
-  }, [dispatch])
+  })
 
   return null
 }
