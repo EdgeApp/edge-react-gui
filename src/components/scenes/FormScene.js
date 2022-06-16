@@ -24,7 +24,7 @@ export const FormScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const sceneHeader = useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} underline />, [headerText, styles.sceneHeader])
+  const sceneHeader = useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} withTopMargin />, [headerText, styles.sceneHeader])
 
   return (
     <SceneWrapper background="theme">
@@ -46,8 +46,6 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   footer: {
-    margin: theme.rem(2),
-    justifyContent: 'center',
-    alignItems: 'center'
+    marginBottom: theme.rem(2)
   }
 }))
