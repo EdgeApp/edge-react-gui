@@ -315,6 +315,7 @@ Array [
       </Text>
       <TextInput
         autoFocus={false}
+        editable={true}
         multiline={false}
         onBlur={[Function]}
         onChangeText={[Function]}
