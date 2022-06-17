@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -21,6 +21,7 @@ type Props = {|
   marginRem?: number | number[], // Defaults to 0.5
   multiline?: boolean, // Defaults to 'false'
   searchIcon?: boolean, // Defaults to 'false'
+  showSpinner?: boolean, // Defaults to 'false'
 
   // Callbacks:
   onBlur?: () => void,
@@ -71,6 +72,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
     marginRem,
     multiline = false,
     searchIcon = false,
+    showSpinner = false,
 
     // Callbacks:
     onBlur,
@@ -256,6 +258,9 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
+  const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
+  const textStyle = numpad ? styles.numberInput : styles.textInput
+
   return (
     <TouchableWithoutFeedback onPress={() => focus()}>
       <View style={[styles.container, containerStyle]}>
@@ -275,11 +280,17 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
           {charLimitLabel}
         </Animated.Text>
         {searchIcon ? <AntDesignIcon name="search1" style={styles.searchIcon} /> : null}
-        {clearIcon && hasValue && !secureTextEntry ? (
+        {clearIcon && hasValue && !showSpinner && !secureTextEntry ? (
           <TouchableOpacity style={styles.clearTapArea} onPress={() => clear()}>
             <AntDesignIcon name="close" style={styles.clearIcon} />
           </TouchableOpacity>
         ) : null}
+        {showSpinner && !secureTextEntry ? (
+          <View style={styles.clearTapArea}>
+            <ActivityIndicator style={styles.spinnerIcon} />
+          </View>
+        ) : null}
+
         {secureTextEntry ? (
           <TouchableWithoutFeedback onPress={handleHidePassword}>
             <View style={styles.clearTapArea}>
@@ -294,7 +305,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
           autoFocus={autoFocus}
           multiline={multiline}
           selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-          style={[styles.textInput, textInputStyle]}
+          style={[textStyle, textInputStyle]}
           textAlignVertical="top"
           value={value}
           secureTextEntry={hidePassword}
@@ -371,6 +382,13 @@ const getStyles = cacheStyles(theme => {
       fontSize: theme.rem(1),
       padding: 0
     },
+    numberInput: {
+      alignSelf: 'stretch',
+      color: theme.outlineTextInputTextColor,
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1.5),
+      padding: 0
+    },
 
     // We render our border in four pieces, so we can animate the top gap:
     bottomLine: {
@@ -415,6 +433,10 @@ const getStyles = cacheStyles(theme => {
     clearIcon: {
       color: theme.iconDeactivated,
       fontSize: theme.rem(1),
+      padding: theme.rem(1)
+    },
+    spinnerIcon: {
+      color: theme.icon,
       padding: theme.rem(1)
     },
     eyeIcon: {
