@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
@@ -25,7 +25,8 @@ type Status = 'confirming' | 'sending' | 'sent'
 type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
-  wallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet,
+  navigation: NavigationProp<'accelerateTxModelComponent'>
 }
 type StateProps = {
   exchangeRates: GuiExchangeRates
@@ -109,7 +110,7 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
   }
 
   signBroadcastAndSaveRbf = async () => {
-    const { wallet } = this.props
+    const { wallet, navigation } = this.props
     const { edgeUnsignedTransaction } = this.state
 
     if (edgeUnsignedTransaction) {
@@ -130,7 +131,7 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
 
           showToast(s.strings.transaction_success_message)
 
-          Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+          navigation.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
         } else {
           showWarning(s.strings.transaction_success_message)
         }
@@ -252,4 +253,4 @@ export const AccelerateTxModel = connect<StateProps, DispatchProps, OwnProps>(
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
     }
   })
-)(withTheme(AccelerateTxModelComponent))
+)(withTheme(withNavigation(AccelerateTxModelComponent)))

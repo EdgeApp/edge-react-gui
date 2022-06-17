@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, getNavigation } from '../../types/routerTypes.js'
 import { BackButton } from './BackButton.js'
 
 // The scene holds a ref to the webview:
@@ -18,7 +18,8 @@ export function renderPluginBackButton() {
 }
 
 export function handlePluginBack() {
+  const navigation: NavigationProp<'edge'> = getNavigation()
   if (currentPlugin == null || !currentPlugin.goBack()) {
-    Actions.pop()
+    navigation.pop()
   }
 }
