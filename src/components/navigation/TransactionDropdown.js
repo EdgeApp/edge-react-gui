@@ -11,7 +11,7 @@ import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { FlashNotification } from './FlashNotification.js'
@@ -46,6 +46,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 export function TransactionDropdown(props: Props) {
   const { bridge, message, tx, walletId, selectWallet } = props
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
   return (
     <FlashNotification
@@ -53,7 +54,7 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode)
-        Actions.push(TRANSACTION_DETAILS, {
+        navigation.push(TRANSACTION_DETAILS, {
           edgeTransaction: tx
         })
       }}

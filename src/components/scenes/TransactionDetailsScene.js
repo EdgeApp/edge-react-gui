@@ -17,7 +17,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp, withNavigation } from '../../types/routerTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import {
   autoCorrectDate,
@@ -42,8 +42,10 @@ import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../tiles/Tile.js'
 
 type OwnProps = {
-  route: RouteProp<'transactionDetails'>
+  route: RouteProp<'transactionDetails'>,
+  navigation: NavigationProp<'transactionDetailsComponent'> | NavigationProp<'accelerateTxModelComponent'>
 }
+
 type StateProps = {
   contacts: GuiContact[],
   currencyCode: string,
@@ -214,12 +216,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { route } = this.props
+    const { route, navigation } = this.props
     const { edgeTransaction } = route.params
     const { wallet } = edgeTransaction
 
     if (wallet) {
-      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
+      Airship.show(bridge => <AccelerateTxModel navigation={navigation} bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }
@@ -425,7 +427,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { currencyInfo, guiWallet, theme, route } = this.props
+    const { currencyInfo, guiWallet, theme, route, navigation } = this.props
     const { edgeTransaction } = route.params
     const { direction, amountFiat, contactName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
@@ -501,7 +503,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <MainButton onPress={Actions.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
+            <MainButton onPress={() => navigation.pop()} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
           </View>
         </ScrollView>
       </SceneWrapper>
@@ -614,4 +616,4 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
       dispatch(setTransactionDetails(transaction, edgeMetadata))
     }
   })
-)(withTheme(TransactionDetailsComponent))
+)(withTheme(withNavigation(TransactionDetailsComponent)))

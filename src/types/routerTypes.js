@@ -175,6 +175,14 @@ export type ParamList = {
     currencyCode: string,
     walletId: string
   },
+  passwordReminderModalComponent: void,
+  accelerateTxModelComponent: void,
+  headerTextButtonComponent: void,
+  transactionDetailsComponent: void,
+  selectFioAddressComponent: void,
+  transactionListRowComponent: void,
+  transactionListTopComponent: void,
+  walletListHeaderComponent: void,
   fioStakingOverview: {
     currencyCode: string,
     walletId: string
@@ -312,7 +320,7 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
   navigate: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   push: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   replace: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  setParams: (params: $ElementType<ParamList, Name>) => void,
+  setParams: <Name: $Keys<ParamList>>(params: $ElementType<ParamList, Name>) => void,
 
   // Returning:
   goBack: () => void,
@@ -325,7 +333,8 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
   toggleDrawer: () => void,
 
   // Internals nobody should need to touch:
-  state: mixed
+  state: mixed,
+  currentScene: mixed
 }
 
 /**
@@ -385,6 +394,11 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
 
       get state() {
         return props.navigation.state
+      },
+
+      get currentScene() {
+        // $FlowFixMe
+        return Flux.Actions.currentScene
       }
     }
 
@@ -393,4 +407,96 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
   const displayName = Component.displayName ?? Component.name ?? 'Component'
   WithNavigation.displayName = `WithNavigation(${displayName})`
   return WithNavigation
+}
+
+export const useNavigation = <Name: $Keys<ParamList>>() => {
+  const navigation: NavigationProp<Name> = {
+    addListener(event, callback) {
+      // TODO
+      return () => {}
+    },
+    isFocused() {
+      // TODO
+      return false
+    },
+
+    navigate(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
+    push(name, params) {
+      // $FlowFixMe
+      Flux.Actions.push(name, { route: { name, params } })
+    },
+    replace(name, params) {
+      // $FlowFixMe
+      Flux.Actions.replace(name, { route: { name, params } })
+    },
+    setParams(params) {},
+    goBack() {},
+    pop() {
+      // $FlowFixMe
+      Flux.Actions.pop()
+    },
+    popToTop() {},
+
+    closeDrawer() {},
+    openDrawer() {},
+    toggleDrawer() {},
+
+    get state() {},
+    get currentScene() {
+      // $FlowFixMe
+      return Flux.Actions.currentScene
+    }
+  }
+  return navigation
+}
+
+/*
+  A non react-hook version of the navigation function
+  To be consumed by normal functions
+*/
+export const getNavigation = <Name: $Keys<ParamList>>() => {
+  const navigation: NavigationProp<Name> = {
+    addListener(event, callback) {
+      // TODO
+      return () => {}
+    },
+    isFocused() {
+      // TODO
+      return false
+    },
+
+    navigate(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
+    push(name, params) {
+      // $FlowFixMe
+      Flux.Actions.push(name, { route: { name, params } })
+    },
+    replace(name, params) {
+      // $FlowFixMe
+      Flux.Actions.replace(name, { route: { name, params } })
+    },
+    setParams(params) {},
+    goBack() {},
+    pop() {
+      // $FlowFixMe
+      Flux.Actions.pop()
+    },
+    popToTop() {},
+
+    closeDrawer() {},
+    openDrawer() {},
+    toggleDrawer() {},
+
+    get state() {},
+    get currentScene() {
+      // $FlowFixMe
+      return Flux.Actions.currentScene
+    }
+  }
+  return navigation
 }

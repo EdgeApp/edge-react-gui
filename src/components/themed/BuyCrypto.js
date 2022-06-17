@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
@@ -27,9 +27,9 @@ export const BuyCrypto = (props: Props) => {
   const { wallet, tokenId } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-
+  const navigation: NavigationProp<'edge'> = useNavigation()
   const handlePress = useHandler(() => {
-    Actions.push('pluginListBuy', { direction: 'buy' })
+    navigation.push('pluginListBuy', { direction: 'buy' })
   })
 
   const { displayName, pluginId } = wallet.currencyInfo
