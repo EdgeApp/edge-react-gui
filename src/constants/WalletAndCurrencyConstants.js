@@ -547,12 +547,20 @@ export const SPECIAL_CURRENCY_INFO: {
   eboost: {
     initWalletName: s.strings.string_first_eboost_wallet_name,
     chainCode: 'EBST',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true,
     keysOnlyMode: true
   },
   ufo: {
     initWalletName: s.strings.string_first_ufo_wallet_name,
     chainCode: 'ufo',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
     isPrivateKeySweepable: true
   },
   fantom: {
