@@ -3622,9 +3622,9 @@ ajv@^8.0.1:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-"altcoin-js@https://github.com/EdgeApp/altcoin-js.git#master":
+"altcoin-js@git+https://github.com/EdgeApp/altcoin-js.git#master":
   version "5.1.10"
-  resolved "https://github.com/EdgeApp/altcoin-js.git#b0a16589b50c1a88482bb98930b13d14088b44f4"
+  resolved "git+https://github.com/EdgeApp/altcoin-js.git#b0a16589b50c1a88482bb98930b13d14088b44f4"
   dependencies:
     bech32 "^1.1.4"
     big-integer "^1.6.44"
@@ -6414,10 +6414,10 @@ edge-currency-monero@^0.4.1:
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^1.0.0-rc.1:
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.0.0-rc.1.tgz#27e4b70e131e38730f37c8304e94bdbf571ef2ad"
-  integrity sha512-pJC30bTB9QRMY8IyAAPELlwoQhKobGV4y6nlOL98/pR2TQU/B/m736292o+e/gQyMg/3tgFHLz+HZ0614v3v3A==
+edge-currency-plugins@^1.0.0-rc.2:
+  version "1.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.0.0-rc.2.tgz#1ca727e2c6dc39950ff020ce264bb4251a2f358b"
+  integrity sha512-uF/xiGnJKttgsj2dDp+UmczjqSlOlvhv3iaAER2jY9Dnrd83DZfqSGMwXrZcRPA/TfvaWlfm30qVOVfUz4MWOw==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
