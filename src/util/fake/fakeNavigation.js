@@ -23,5 +23,6 @@ export const fakeNavigation: NavigationProp<any> = {
   openDrawer() {},
   toggleDrawer() {},
 
-  state: {}
+  state: {},
+  currentScene: {}
 }
