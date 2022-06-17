@@ -120,8 +120,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
         }
       })
 
-      if (bestQuote == null) showUi.popScene()
       showUi.popScene()
+      if (bestQuote == null) {
+        return
+      }
+      bestQuote.approveQuote({ showUi })
     }
   }
   return fiatPlugin
