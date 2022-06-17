@@ -1,12 +1,15 @@
 // @flow
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
+import { Platform } from 'react-native'
+import { CustomTabs } from 'react-native-custom-tabs'
+import SafariView from 'react-native-safari-view'
 
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal'
 import { Airship, showError } from '../../components/services/AirshipInstance'
 import { type GuiPlugin } from '../../types/GuiPluginTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse } from './fiatPluginTypes'
+import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse, type FiatPluginUi } from './fiatPluginTypes'
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
@@ -16,8 +19,11 @@ export const executePlugin = async (params: {
   const { guiPlugin, navigation, account } = params
   const { pluginId } = guiPlugin
 
-  const showUi = {
-    openWebView: async params => {},
+  const showUi: FiatPluginUi = {
+    openWebView: async (params): Promise<void> => {
+      if (Platform.OS === 'ios') SafariView.show({ url: params.url })
+      else CustomTabs.openURL(params.url)
+    },
     walletPicker: async (params): Promise<WalletListResult> => {
       const { headerTitle, allowedAssets } = params
       const walletListResult = await Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={headerTitle} allowedAssets={allowedAssets} />)
