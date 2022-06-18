@@ -1,59 +1,81 @@
 // @flow
 
-import { div, mul } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { useLayout } from '../../hooks/useLayout'
+import s from '../../locales/strings'
 import { memo, useState } from '../../types/reactHooks'
-import { DECIMAL_PRECISION } from '../../util/utils'
+import { zeroString } from '../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { Card } from './Card'
 
-const ValueBarCardComponent = ({
-  currencyCode,
-  formattedAmount,
-  iconUri,
-  maxAmount,
-  title
-}: {
+const ValueBarCardComponent = (props: {
   currencyCode: string,
+  emptyPlaceholder?: string,
   formattedAmount: string,
   iconUri: string,
-  maxAmount: string,
+  onPress?: any => void | (any => Promise<void>),
   title: string
 }) => {
+  const { currencyCode, emptyPlaceholder = s.strings.string_amount, formattedAmount, iconUri, onPress, title } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const [barWidth, setbarWidth] = useState<string>('')
-  const handleLayout = (event: any) => {
-    setbarWidth(mul(div(formattedAmount, maxAmount, DECIMAL_PRECISION), '100') + '%')
+  const [baseTextLayout, handleBaseTextLayout] = useLayout()
+  // HACK: EdgeText doesn't seem to work with useLayout, so instead subtract the
+  // exponent width from the total valueContainer view width to get the textBase
+  // width.
+  const [exponentTextWidth, setExponentTextWidth] = useState(1)
+  const handleExponentLayout = (event: any) => {
+    setExponentTextWidth(event.nativeEvent.layout.width)
   }
 
   return (
-    <Card>
-      <View style={styles.cardContainer} onLayout={handleLayout}>
-        <View style={styles.leftContainer}>
-          <EdgeText style={styles.title}>{title}</EdgeText>
-          <View style={styles.valueContainer}>
-            <EdgeText style={styles.valueFont}>{formattedAmount}</EdgeText>
-            <EdgeText>{currencyCode}</EdgeText>
+    <View style={styles.container}>
+      <TouchableHighlight onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
+        <Card>
+          <View style={styles.cardContainer}>
+            <View style={styles.leftContainer}>
+              <EdgeText style={styles.textTitle}>{title}</EdgeText>
+              <View style={styles.valueContainer} onLayout={handleBaseTextLayout}>
+                {zeroString(formattedAmount) ? (
+                  <>
+                    <EdgeText style={styles.textBaseSecondary}>{emptyPlaceholder}</EdgeText>
+                    <EdgeText style={styles.textExponentSecondary} onLayout={handleExponentLayout}>
+                      {currencyCode}
+                    </EdgeText>
+                  </>
+                ) : (
+                  <>
+                    <EdgeText style={styles.textBasePrimary}>{formattedAmount}</EdgeText>
+                    <EdgeText style={styles.textExponentPrimary} onLayout={handleExponentLayout}>
+                      {currencyCode}
+                    </EdgeText>
+                  </>
+                )}
+              </View>
+              <View style={[styles.bar, { width: baseTextLayout.width - exponentTextWidth }]} />
+            </View>
+            <FastImage style={styles.icon} source={{ uri: iconUri }} />
           </View>
-          {barWidth === '' ? null : <View style={[styles.bar, { width: barWidth }]} />}
-        </View>
-        <FastImage style={styles.icon} source={{ uri: iconUri }} />
-      </View>
-    </Card>
+        </Card>
+      </TouchableHighlight>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   bar: {
     borderColor: theme.walletProgressIconFill,
-    borderTopWidth: theme.thickLineWidth,
+    borderRadius: 1.5,
+    borderTopWidth: 3,
     zIndex: 100
+  },
+  container: {
+    margin: theme.rem(0.5)
   },
   cardContainer: {
     flexDirection: 'row',
@@ -64,7 +86,24 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignSelf: 'flex-start'
   },
-  title: { fontFamily: theme.fontFaceMedium },
+  textTitle: { fontFamily: theme.fontFaceMedium },
+  textBasePrimary: {
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(2),
+    marginRight: theme.rem(0.25)
+  },
+  textBaseSecondary: {
+    color: theme.deactivatedText,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(2),
+    marginRight: theme.rem(0.25)
+  },
+  textExponentPrimary: {
+    marginTop: theme.rem(0.25)
+  },
+  textExponentSecondary: {
+    color: theme.deactivatedText
+  },
   icon: {
     height: theme.rem(4),
     width: theme.rem(4)
@@ -72,11 +111,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   valueContainer: {
     flexDirection: 'row',
     alignSelf: 'flex-start'
-  },
-  valueFont: {
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(2),
-    marginRight: theme.rem(0.5)
   }
 }))
 
