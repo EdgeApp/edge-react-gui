@@ -89,6 +89,10 @@ export type ParamList = {
   |},
   defaultFiatSetting: void,
   edgeLogin: void,
+  edgeContextCallbackManagerComponent: void,
+  flipInputModalComponent: void,
+  headerTitleComponent: void,
+  transactionDropdown: void,
   editToken: {|
     currencyCode?: string,
     displayName?: string,
@@ -321,7 +325,7 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
   push: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   replace: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   setParams: <Name: $Keys<ParamList>>(params: $ElementType<ParamList, Name>) => void,
-
+  jumpTo: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   // Returning:
   goBack: () => void,
   pop: () => void,
@@ -370,6 +374,10 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
       },
       setParams(params) {
         props.navigation.setParams({ route: { name: Actions.currentScene, params } })
+      },
+      jumpTo(name, params) {
+        // $FlowFixMe
+        Flux.Actions.jump(name, { route: { name, params } })
       },
 
       goBack() {
@@ -432,7 +440,14 @@ export const useNavigation = <Name: $Keys<ParamList>>() => {
       // $FlowFixMe
       Flux.Actions.replace(name, { route: { name, params } })
     },
-    setParams(params) {},
+    setParams(params) {
+      // $FlowFixMe
+      Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
+    },
+    jumpTo(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
     goBack() {},
     pop() {
       // $FlowFixMe
@@ -441,7 +456,10 @@ export const useNavigation = <Name: $Keys<ParamList>>() => {
     popToTop() {},
 
     closeDrawer() {},
-    openDrawer() {},
+    openDrawer() {
+      // $FlowFixMe
+      Flux.Actions.drawerOpen()
+    },
     toggleDrawer() {},
 
     get state() {},
@@ -480,7 +498,14 @@ export const getNavigation = <Name: $Keys<ParamList>>() => {
       // $FlowFixMe
       Flux.Actions.replace(name, { route: { name, params } })
     },
-    setParams(params) {},
+    setParams(params) {
+      // $FlowFixMe
+      Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
+    },
+    jumpTo(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
     goBack() {},
     pop() {
       // $FlowFixMe
@@ -489,7 +514,10 @@ export const getNavigation = <Name: $Keys<ParamList>>() => {
     popToTop() {},
 
     closeDrawer() {},
-    openDrawer() {},
+    openDrawer() {
+      // $FlowFixMe
+      Flux.Actions.drawerOpen()
+    },
     toggleDrawer() {},
 
     get state() {},

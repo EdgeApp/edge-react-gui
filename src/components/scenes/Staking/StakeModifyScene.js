@@ -42,6 +42,7 @@ export const StakeModifyScene = (props: Props) => {
   const { stakePolicyId } = stakePolicy
 
   // Hooks
+
   const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[walletId]

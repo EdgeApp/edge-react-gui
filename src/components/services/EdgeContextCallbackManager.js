@@ -5,6 +5,7 @@ import * as React from 'react'
 
 import { handleOtpError } from '../../actions/AccountActions.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { makeErrorLog, translateError } from '../../util/translateError.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 import { Airship, yellowText } from './AirshipInstance.js'
@@ -13,17 +14,20 @@ type StateProps = {
   context: EdgeContext
 }
 type DispatchProps = {
-  onOtpError: (otpError: OtpError) => void
+  onOtpError: (otpError: OtpError, navigation: NavigationProp<'edgeContextCallbackManagerComponent'>) => void
+}
+type OwnProps = {
+  navigation: NavigationProp<'edgeContextCallbackManagerComponent'>
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OwnProps
 
 class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
     super(props)
-    const { context } = props
+    const { context, navigation } = props
 
     let errorShown = false
     this.cleanups.push(
@@ -32,7 +36,7 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
 
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
-          return this.props.onOtpError(otpError)
+          return this.props.onOtpError(otpError, navigation)
         }
 
         if (!errorShown) {
@@ -63,14 +67,14 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   }
 }
 
-export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, {}>(
+export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, OwnProps, {}>(
   state => ({
     account: state.core.account,
     context: state.core.context
   }),
-  dispatch => ({
-    onOtpError(otpError: OtpError) {
-      dispatch(handleOtpError(otpError))
+  (dispatch, props) => ({
+    onOtpError(otpError: OtpError, navigation: NavigationProp<'edgeContextCallbackManagerComponent'>) {
+      dispatch(handleOtpError(otpError, navigation))
     }
   })
-)(EdgeContextCallbackManagerComponent)
+)(withNavigation(EdgeContextCallbackManagerComponent))

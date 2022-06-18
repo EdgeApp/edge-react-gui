@@ -6,6 +6,7 @@ import { View } from 'react-native'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -14,7 +15,9 @@ import { EdgeText } from '../themed/EdgeText.js'
 
 type OwnProps = {
   showWalletNameOnly?: boolean,
-  title?: string
+  title?: string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  navigation: NavigationProp<'headerTitleComponent'>
 }
 
 type StateProps = {
@@ -86,9 +89,9 @@ export const HeaderTitle = connect<StateProps, DispatchProps, OwnProps>(
       selectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode
     }
   },
-  dispatch => ({
+  (dispatch, props) => ({
     onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+      dispatch(selectWalletFromModal(walletId, currencyCode, props.navigation))
     }
   })
-)(withTheme(HeaderTitleComponent))
+)(withTheme(withNavigation(HeaderTitleComponent)))

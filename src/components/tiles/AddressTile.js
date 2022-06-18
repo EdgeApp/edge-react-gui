@@ -22,6 +22,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
+import { withNavigation, type }
 
 type OwnProps = {
   coreWallet: EdgeCurrencyWallet,
@@ -130,7 +131,8 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         if (ercTokenStandard === 'ERC20') {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          const sendSceneRouteParams = await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          navigation.push('send', sendSceneRouteParams)
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
@@ -261,6 +263,6 @@ const AddressTileConnector = connect<StateProps, {}, OwnProps>(
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
-)(withTheme(AddressTileComponent))
+)(withTheme(withNavigation(AddressTileComponent)))
 
 export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)

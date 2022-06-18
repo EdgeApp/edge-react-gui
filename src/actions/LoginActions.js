@@ -23,7 +23,7 @@ import { initialState as passwordReminderInitialState } from '../reducers/Passwo
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
 import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import { type GuiTouchIdInfo } from '../types/types.js'
 import { runWithTimeout } from '../util/utils.js'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions.js'
@@ -54,6 +54,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
   // Show a notice for deprecated electrum server settings
   const pluginIdsNeedingUserAction: string[] = []
+  const navigation: NavigationProp<'edge'> = useNavigation()
   for (const pluginId in account.currencyConfig) {
     const currencyConfig = account.currencyConfig[pluginId]
     const { userSettings } = currencyConfig
@@ -85,9 +86,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
 
   dispatch({ type: 'LOGIN', data: account })
 
-  Actions.push(EDGE)
+  navigation.push(EDGE)
   if (hasSecurityAlerts(account)) {
-    Actions.push(SECURITY_ALERTS_SCENE)
+    navigation.push(SECURITY_ALERTS_SCENE)
   }
 
   const state = getState()
@@ -250,7 +251,8 @@ export const mergeSettings = (
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(LOGIN)
+  const navigation: NavigationProp<'edge'> = useNavigation()
+  navigation.navigate(LOGIN)
   Airship.clear()
   const state = getState()
   const { account } = state.core

@@ -7,13 +7,15 @@ import { openDrawer } from '../../actions/ScenesActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useDispatch } from '../../types/reactRedux.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 export const SideMenuButton = () => {
   const theme = useTheme()
   const dispatch = useDispatch()
   const { container } = getStyles(theme)
-  const onPress = useHandler(() => dispatch(openDrawer()))
+  const navigation: NavigationProp<'edge'> = useNavigation()
+  const onPress = useHandler(() => dispatch(openDrawer(navigation)))
 
   return (
     <TouchableOpacity onPress={onPress} style={container}>

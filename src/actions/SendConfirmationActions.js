@@ -17,7 +17,7 @@ import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutSt
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, type ParamList } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types.js'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
@@ -38,28 +38,30 @@ export type FioSenderInfo = {
 }
 
 const updateAmount =
-  (
+  <Name: $Keys<ParamList>>(
     nativeAmount: string,
     exchangeAmount: string,
     fiatPerCrypto: string,
     forceUpdateGui?: boolean = false,
     selectedWalletId?: string,
-    selectedCurrencyCode?: string
+    selectedCurrencyCode?: string,
+    navigation: NavigationProp<Name>
   ) =>
   (dispatch: Dispatch, getState: GetState) => {
     const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
-    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
+    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode, false, navigation))
   }
 
 export const sendConfirmationUpdateTx =
-  (
+  <Name: $Keys<ParamList>>(
     guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
     forceUpdateGui?: boolean = true,
     selectedWalletId?: string,
     selectedCurrencyCode?: string,
-    isFeeChanged: boolean = false
+    isFeeChanged: boolean = false,
+    navigation: NavigationProp<Name>
   ) =>
   async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -97,7 +99,7 @@ export const sendConfirmationUpdateTx =
       })
 
     if (maxSpendSet && isFeeChanged) {
-      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
+      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone, navigation))
     }
     await edgeWallet
       .makeSpend(spendInfo)
@@ -133,11 +135,11 @@ export const sendConfirmationUpdateTx =
           ))
           switch (result) {
             case 'buy':
-              Actions.jump('pluginListBuy', { direction: 'buy' })
+              navigation.jumpTo('pluginListBuy', { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              Actions.jump(EXCHANGE_SCENE)
+              navigation.jumpTo(EXCHANGE_SCENE)
               break
           }
         }
@@ -155,7 +157,8 @@ export const sendConfirmationUpdateTx =
   }
 
 export const updateMaxSpend =
-  (selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
+  <Name: $Keys<ParamList>>(selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo, navigation: NavigationProp<Name>) =>
+  (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
@@ -188,13 +191,20 @@ export const updateMaxSpend =
           data: true
         })
 
-        dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
+        dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode, navigation))
       })
       .catch(showError)
   }
 
 export const signBroadcastAndSave =
-  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  <Name: $Keys<ParamList>>(
+    fioSender?: FioSenderInfo,
+    walletId?: string,
+    selectedCurrencyCode?: string,
+    resetSlider: () => void,
+    navigation: NavigationProp<Name>
+  ) =>
+  async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
@@ -353,8 +363,9 @@ export const signBroadcastAndSave =
 
       if (guiMakeSpendInfo.onDone) {
         guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
+        navigation.pop()
       } else {
-        Actions.replace(TRANSACTION_DETAILS, {
+        navigation.replace(TRANSACTION_DETAILS, {
           edgeTransaction: edgeSignedTransaction
         })
       }
