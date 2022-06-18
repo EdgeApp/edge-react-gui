@@ -33,7 +33,17 @@ const aaveBlueprint: BorrowPluginBlueprint = {
   },
   makeBorrowEngine: makeBorrowEngineFactory({
     aaveNetwork,
-    asTokenContractAddress: asEthTokenContractAddress
+    asTokenContractAddress: asEthTokenContractAddress,
+    enabledTokens: {
+      DAI: {
+        isCollateral: false,
+        isDebt: true
+      },
+      WBTC: {
+        isCollateral: true,
+        isDebt: false
+      }
+    }
   })
 }
 
