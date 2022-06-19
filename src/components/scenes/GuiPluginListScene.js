@@ -15,6 +15,7 @@ import { COUNTRY_CODES } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
+import { executePlugin } from '../../plugins/gui/fiatPlugin.js'
 import { config } from '../../theme/appConfig.js'
 import { type GuiPluginRow, asGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
@@ -147,7 +148,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, navigation, route } = this.props
+    const { countryCode, navigation, route, account } = this.props
     const { pluginId, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -182,12 +183,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
-    // Launch!
-    navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
-      plugin,
-      deepPath,
-      deepQuery
-    })
+    if (plugin.nativePlugin != null) {
+      executePlugin({ guiPlugin: plugin, navigation, account })
+    } else {
+      // Launch!
+      navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
+        plugin,
+        deepPath,
+        deepQuery
+      })
+    }
   }
 
   async showCountrySelectionModal() {
