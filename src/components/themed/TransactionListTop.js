@@ -282,14 +282,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   balanceBoxWalletNameCurrencyContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   balanceBoxWalletNameContainer: {
-    flex: 1,
+    flexShrink: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginRight: theme.rem(0.5)
   },
   balanceBoxWalletName: {
+    flexShrink: 1,
     marginRight: theme.rem(0.25),
     fontSize: theme.rem(1.25)
   },

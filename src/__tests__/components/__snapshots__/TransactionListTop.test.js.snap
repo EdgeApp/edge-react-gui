@@ -68,6 +68,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
               style={
                 Object {
                   "flexDirection": "row",
+                  "justifyContent": "space-between",
                 }
               }
             >
@@ -76,14 +77,16 @@ exports[`TransactionListTop should render with loading props 1`] = `
                 style={
                   Object {
                     "alignItems": "center",
-                    "flex": 1,
                     "flexDirection": "row",
+                    "flexShrink": 1,
+                    "marginRight": 11,
                   }
                 }
               >
                 <WithTheme(EdgeTextComponent)
                   style={
                     Object {
+                      "flexShrink": 1,
                       "fontSize": 28,
                       "marginRight": 6,
                     }
