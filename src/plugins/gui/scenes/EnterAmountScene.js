@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import { Image, Text, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../../../components/services/ThemeContext.js'
@@ -11,11 +13,14 @@ import { SceneHeader } from '../../../components/themed/SceneHeader.js'
 import s from '../../../locales/strings'
 import { memo, useCallback, useRef, useState } from '../../../types/reactHooks.js'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { getPartnerIconUri } from '../../../util/CdnUris.js'
 
 type Props = {
   route: RouteProp<'guiPluginEnterAmount'>,
   navigation: NavigationProp<'guiPluginEnterAmount'>
 }
+
+export type EnterAmountPoweredBy = { poweredByIcon: string, poweredByText: string, poweredByOnClick: () => Promise<void> | void }
 
 export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
   const theme = useTheme()
@@ -27,6 +32,7 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
   const [spinner2, setSpinner2] = useState<boolean>(false)
   const [statusTextContent, setStatusTextContent] = useState<string>('')
   const [statusTextType, setStatusTextType] = useState<'warning' | 'error' | void>()
+  const [poweredBy, setPoweredBy] = useState<EnterAmountPoweredBy | void>()
   const firstRun = useRef<boolean>(true)
   const lastUsed = useRef<number>(1)
 
@@ -36,7 +42,8 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
         const { statusText, options = {} } = params
         setStatusTextContent(statusText)
         setStatusTextType(options.textType)
-      }
+      },
+      setPoweredBy
     })
 
   if (firstRun.current && initialAmount1 != null) {
@@ -90,6 +97,8 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
   } else if (statusTextType === 'error') {
     statusTextStyle = styles.textError
   }
+
+  const poweredByIconPath = poweredBy != null ? { uri: getPartnerIconUri(poweredBy.poweredByIcon) } : {}
   return (
     <SceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme">
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
@@ -122,6 +131,14 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
         </View>
         {statusTextContent != null ? <Text style={statusTextStyle}>{statusTextContent}</Text> : null}
         <MainButton label={s.strings.string_next_capitalized} marginRem={[2, 0]} type="secondary" onPress={handleSubmit} />
+        {poweredBy != null ? (
+          <TouchableOpacity style={styles.poweredByContainer} onPress={poweredBy.poweredByOnClick}>
+            <Text style={styles.poweredByText}>{s.strings.plugin_powered_by + ' '}</Text>
+            <Image style={styles.poweredByIcon} source={poweredByIconPath} />
+            <Text style={styles.poweredByText}>{' ' + poweredBy.poweredByText}</Text>
+            <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        ) : null}
       </View>
     </SceneWrapper>
   )
@@ -159,6 +176,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1),
     includeFontPadding: false
+  },
+  poweredByContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  poweredByText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  poweredByIcon: {
+    aspectRatio: 1,
+    width: theme.rem(0.75),
+    height: theme.rem(0.75)
   },
   icon: {
     height: theme.rem(1.5),

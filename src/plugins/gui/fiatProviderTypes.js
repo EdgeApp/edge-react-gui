@@ -7,6 +7,9 @@ export type FiatProviderApproveQuoteParams = {
 }
 
 export type FiatProviderQuote = {
+  +pluginId: string,
+  +partnerIcon: string,
+  +pluginDisplayName: string,
   +tokenId: EdgeTokenId,
   +cryptoAmount: string,
   +isEstimate: boolean,
@@ -60,6 +63,8 @@ export type FiatProviderGetQuoteParams = {
 
 export type FiatProvider = {
   pluginId: string,
+  partnerIcon: string,
+  pluginDisplayName: string,
   getSupportedAssets: () => Promise<FiatProviderAssetMap>,
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }

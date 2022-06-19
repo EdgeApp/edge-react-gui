@@ -11,7 +11,9 @@ import {
   type FiatProviderQuote,
   FiatProviderError
 } from '../fiatProviderTypes'
-const pluginId = 'simplex'
+const pluginId = 'dummyprovider'
+const partnerIcon = 'simplex-logo-sm-square.png'
+const pluginDisplayName = 'Dummy Provider'
 
 const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
   avalanche: { AVAX: 'AVAX-C' },
@@ -127,6 +129,8 @@ export const dummyProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const out = {
       pluginId,
+      partnerIcon,
+      pluginDisplayName,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const MIN_USD = '50'
@@ -173,6 +177,9 @@ export const dummyProvider: FiatProviderFactory = {
         }
 
         const paymentQuote: FiatProviderQuote = {
+          pluginId,
+          partnerIcon,
+          pluginDisplayName,
           tokenId: params.tokenId,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
