@@ -139,7 +139,10 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
           const bestRate = div(bestQuote.fiatAmount, bestQuote.cryptoAmount, 16)
           const exchangeRateText = `1 ${currencyCode} = ${toFixed(bestRate, 0, 2)} ${FIAT_SUPPORTED}`
-          if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: exchangeRateText })
+          if (enterAmountMethods != null) {
+            enterAmountMethods.setStatusText({ statusText: exchangeRateText })
+            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick: () => {} })
+          }
           if (sourceFieldNum === 1) {
             return toFixed(bestQuote.cryptoAmount, 0, 6)
           } else {
