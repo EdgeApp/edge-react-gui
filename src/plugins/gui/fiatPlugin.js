@@ -5,11 +5,12 @@ import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import { RadioListModal } from '../../components/modals/RadioListModal'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal'
 import { Airship, showError } from '../../components/services/AirshipInstance'
 import { type GuiPlugin } from '../../types/GuiPluginTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse, type FiatPluginUi } from './fiatPluginTypes'
+import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse, type FiatPluginListModalParams, type FiatPluginUi } from './fiatPluginTypes'
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
@@ -31,6 +32,10 @@ export const executePlugin = async (params: {
     },
     errorDropdown: async (e: Error) => {
       showError(e)
+    },
+    listModal: async (params: FiatPluginListModalParams): Promise<string | void> => {
+      const result = await Airship.show(bridge => <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />)
+      return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
       const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params

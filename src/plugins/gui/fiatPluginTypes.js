@@ -2,10 +2,11 @@
 import { type EdgeAccount } from 'edge-core-js'
 
 import { type EdgeTokenId } from '../../types/types.js'
+import { type EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
 export type FiatPluginGetMethodsResponse = {
-  setStatusText: ({ statusText: string, options?: { textType?: 'warning' | 'error' } }) => void,
-  setPoweredBy: ({ poweredByIcon: string, poweredByText: string, poweredByOnClick: () => void }) => void
+  setStatusText: (params: { statusText: string, options?: { textType?: 'warning' | 'error' } }) => void,
+  setPoweredBy: (params: EnterAmountPoweredBy) => void
 }
 export type FiatPluginEnterAmountParams = {
   headerTitle: string,
@@ -17,6 +18,13 @@ export type FiatPluginEnterAmountParams = {
   headerIconUri?: string
 }
 
+// export type FiatPluginListModalRow = { icon: string | number, name: string }
+export type FiatPluginListModalParams = {
+  title: string,
+  items: Array<{ icon: string | number | React.Node, name: string, text?: string }>, // Icon strings are image uri, numbers are local files
+  selected?: string // Must match one of the name param in the items array
+}
+
 export type FiatPluginEnterAmountResponse = { lastUsed: number, value1: string, value2: string }
 export type FiatPluginOpenWebViewParams = { url: string }
 export type FiatPluginUi = {
@@ -26,6 +34,7 @@ export type FiatPluginUi = {
     currencyCode: string | void
   }>,
   errorDropdown: (error: Error) => Promise<void>,
+  listModal: (params: FiatPluginListModalParams) => Promise<string | void>,
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>,
   popScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
