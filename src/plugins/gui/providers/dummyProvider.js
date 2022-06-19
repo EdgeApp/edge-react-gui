@@ -1,5 +1,5 @@
 // @flow
-import { mul } from 'biggystring'
+import { div, gt, lt, mul, toFixed } from 'biggystring'
 
 import {
   type FiatProvider,
@@ -8,7 +8,8 @@ import {
   type FiatProviderFactory,
   type FiatProviderFactoryParams,
   type FiatProviderGetQuoteParams,
-  type FiatProviderQuote
+  type FiatProviderQuote,
+  type FiatProviderQuoteError
 } from '../fiatProviderTypes'
 const pluginId = 'simplex'
 
@@ -127,7 +128,10 @@ export const dummyProvider: FiatProviderFactory = {
     const out = {
       pluginId,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
-      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote | void> => {
+      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote | FiatProviderQuoteError | void> => {
+        const MIN_USD = '50'
+        const MAX_USD = '20000'
+
         let pairCodes
         const url = 'https://rates2.edge.app/v1/exchangeRate?currency_pair='
         const { tokenId = 'BTC' } = params.tokenId
@@ -142,18 +146,30 @@ export const dummyProvider: FiatProviderFactory = {
         if (response == null || !response.ok) return
         const result = await response.json().catch(e => undefined)
 
+        let maxLimit: number
+        let minLimit: number
         if (params.amountType === 'fiat') {
           const rateShift = (1 - Math.random() * 0.05).toString() // Randomly apply a fee between 0-5%
           cryptoAmount = result?.exchangeRate ?? '0'
           cryptoAmount = mul(cryptoAmount, params.exchangeAmount)
           cryptoAmount = mul(cryptoAmount, rateShift)
           fiatAmount = params.exchangeAmount
+          maxLimit = parseFloat(MAX_USD)
+          minLimit = parseFloat(MIN_USD)
         } else {
           const rateShift = (1 + Math.random() * 0.05).toString() // Randomly apply a fee between 0-5%
           fiatAmount = result?.exchangeRate ?? '0'
           fiatAmount = mul(fiatAmount, params.exchangeAmount)
           fiatAmount = mul(fiatAmount, rateShift)
           cryptoAmount = params.exchangeAmount
+          maxLimit = parseFloat(toFixed(mul(MAX_USD, div(cryptoAmount, fiatAmount, 16)), 0, 6))
+          minLimit = parseFloat(toFixed(mul(MIN_USD, div(cryptoAmount, fiatAmount, 16)), 0, 6))
+        }
+        if (gt(fiatAmount, MAX_USD)) {
+          return { errorType: 'overLimit', errorAmount: maxLimit }
+        }
+        if (lt(fiatAmount, MIN_USD)) {
+          return { errorType: 'underLimit', errorAmount: minLimit }
         }
 
         const paymentQuote: FiatProviderQuote = {

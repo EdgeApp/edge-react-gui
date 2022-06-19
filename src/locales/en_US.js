@@ -938,6 +938,11 @@ const strings = {
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',
   fiat_plugin_amount_currencycode: 'Amount %s',
+  fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
+  fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
+  fiat_plugin_asset_unsupported: 'Asset Unsupported',
+  fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
+  fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
