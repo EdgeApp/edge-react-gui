@@ -935,6 +935,10 @@ const strings = {
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
 
+  fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
+  fiat_plugin_buy_currencycode: 'Buy %s',
+  fiat_plugin_amount_currencycode: 'Amount %s',
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

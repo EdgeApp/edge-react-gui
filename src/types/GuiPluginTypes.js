@@ -24,6 +24,9 @@ export type GuiPlugin = {
   // Also used for conversion tracking:
   storeId: string,
 
+  // Is a native plugin written in React Native
+  nativePlugin?: boolean,
+
   // The URI to show in the WebView.
   // Both the plugin list & deep links can add stuff to the end of this:
   baseUri: string,

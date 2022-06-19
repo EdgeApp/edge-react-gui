@@ -85,6 +85,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Banxa',
     permissions: ['camera']
   },
+  creditcard: {
+    pluginId: 'creditcard',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: true,
+    displayName: 'Credit Card'
+  },
   simplex: {
     pluginId: 'simplex',
     storeId: 'co.edgesecure.simplex',

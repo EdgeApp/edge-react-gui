@@ -6,10 +6,10 @@ import { type WalletListResult, WalletListModal } from '../../components/modals/
 import { Airship, showError } from '../../components/services/AirshipInstance'
 import { type GuiPlugin } from '../../types/GuiPluginTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
-// import { creditCardPlugin } from './creditCardPlugin'
+import { creditCardPlugin } from './creditCardPlugin'
 import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse } from './fiatPluginTypes'
 
-const pluginFactories = []
+const pluginFactories = [creditCardPlugin]
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
