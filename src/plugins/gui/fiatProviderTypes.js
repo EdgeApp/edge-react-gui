@@ -48,9 +48,8 @@ export class FiatProviderError extends Error {
 }
 
 export type FiatProviderAssetMap = {
-  [pluginId: string]: {
-    [tokenId: string]: boolean
-  }
+  crypto: { [pluginId: string]: { [tokenId: string]: boolean | Object } },
+  fiat: { [currencyCode: string]: boolean | Object }
 }
 
 export type FiatProviderGetQuoteParams = {

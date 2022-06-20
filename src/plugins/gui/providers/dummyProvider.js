@@ -114,13 +114,13 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const allowedCurrencyCodes: FiatProviderAssetMap = {}
+const allowedCurrencyCodes: FiatProviderAssetMap = { fiat: { 'iso:USD': true }, crypto: {} }
 
 for (const pluginId in SIMPLEX_ID_MAP) {
   const codesObject = SIMPLEX_ID_MAP[pluginId]
   for (const currencyCode in codesObject) {
-    if (allowedCurrencyCodes[pluginId] == null) allowedCurrencyCodes[pluginId] = {}
-    allowedCurrencyCodes[pluginId][currencyCode] = true
+    if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = {}
+    allowedCurrencyCodes.crypto[pluginId][currencyCode] = true
   }
 }
 
