@@ -15,6 +15,7 @@ import { rootReducer } from '../../reducers/RootReducer.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { type Action } from '../../types/reduxActions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { errorAlert } from '../../util/middleware/errorAlert.js'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
 import { perfLogger } from '../../util/middleware/perfLogger.js'
@@ -42,6 +43,7 @@ export function Services(props: Props) {
   const { context } = props
   const [account, setAccount] = useState<EdgeAccount | void>()
   const theme = useTheme()
+  const navigation: NavigationProp<'edgeContextCallbackManagerComponent'> | NavigationProp<'edge'> = useNavigation()
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.
@@ -85,7 +87,7 @@ export function Services(props: Props) {
       <LoginUiProvider themeOverride={theme}>
         <MenuProvider>
           <Airship>
-            <Main />
+            <Main navigation={navigation} />
           </Airship>
         </MenuProvider>
         <AutoLogout />
@@ -93,7 +95,7 @@ export function Services(props: Props) {
         <DeepLinkingManager />
         {account == null ? null : <AccountCallbackManager account={account} />}
         {account == null ? null : <SortedWalletList account={account} />}
-        <EdgeContextCallbackManager />
+        <EdgeContextCallbackManager navigation={navigation} />
         <PermissionsManager />
         <NetworkActivity />
         <PasswordReminderService />

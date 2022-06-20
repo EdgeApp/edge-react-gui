@@ -9,7 +9,7 @@ import { passwordReminderSuccess, postponePasswordReminder, requestChangePasswor
 import { CHANGE_PASSWORD } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextField } from '../themed/EdgeTextField.js'
@@ -18,7 +18,8 @@ import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<void>
+  bridge: AirshipBridge<void>,
+  navigation: NavigationProp<'passwordReminderModalComponent'>
 }
 
 type StateProps = {
@@ -56,7 +57,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.spinning) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
-      setTimeout(() => Actions.jump(CHANGE_PASSWORD), 10)
+      setTimeout(() => this.props.navigation.jumpTo(CHANGE_PASSWORD), 10)
     }
   }
 
@@ -129,4 +130,4 @@ export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps
       dispatch(postponePasswordReminder())
     }
   })
-)(withTheme(PasswordReminderModalComponent))
+)(withTheme(withNavigation(PasswordReminderModalComponent)))

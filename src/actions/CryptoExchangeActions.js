@@ -27,7 +27,7 @@ import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
@@ -40,7 +40,8 @@ export type SetNativeAmountInfo = {
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
-  Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
+  const navigation: NavigationProp<'edge'> = useNavigation()
+  navigation.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   const state = getState()
   const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -66,13 +67,13 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 
     const swapInfo = await fetchSwapQuote(state, request)
 
-    Actions.push(EXCHANGE_QUOTE_SCENE, {
+    navigation.push(EXCHANGE_QUOTE_SCENE, {
       swapInfo,
       onApprove
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    Actions.popTo(EXCHANGE_SCENE)
+    navigation.jumpTo(EXCHANGE_SCENE)
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
       const { currencyCode, networkFee = '' } = insufficientFunds
@@ -92,7 +93,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
       ))
       switch (result) {
         case 'buy':
-          Actions.jump('pluginListBuy', { direction: 'buy' })
+          navigation.jumpTo('pluginListBuy', { direction: 'buy' })
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })
@@ -107,18 +108,20 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 }
 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
-  if (Actions.currentScene !== EXCHANGE_QUOTE_SCENE) return
-  Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
+  const navigation: NavigationProp<'edge'> = useNavigation()
+
+  if (navigation.currentScene !== EXCHANGE_QUOTE_SCENE) return
+  navigation.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
   try {
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-    Actions.push(EXCHANGE_QUOTE_SCENE, {
+    navigation.push(EXCHANGE_QUOTE_SCENE, {
       swapInfo,
       onApprove
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    Actions.popTo(EXCHANGE_SCENE)
+    navigation.navigate(EXCHANGE_SCENE)
     dispatch(processSwapQuoteError(error))
   }
 }
@@ -314,6 +317,8 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
+  const navigation: NavigationProp<'edge'> = useNavigation()
+
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
   const { quote, request } = swapInfo
@@ -338,7 +343,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
       name,
       category
     }
-    Actions.push(EXCHANGE_SUCCESS_SCENE)
+    navigation.push(EXCHANGE_SUCCESS_SCENE)
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     // Dispatch the success action and callback

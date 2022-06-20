@@ -1,13 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuTab should render with loading props 1`] = `
-<MenuTabComponent
+<WithNavigation(MenuTabComponent)
   navigation={
     Object {
       "addListener": [Function],
       "closeDrawer": [Function],
+      "currentScene": Object {},
       "goBack": [Function],
       "isFocused": [Function],
+      "jumpTo": [Function],
       "navigate": [Function],
       "openDrawer": [Function],
       "pop": [Function],

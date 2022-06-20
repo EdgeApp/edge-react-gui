@@ -11,18 +11,18 @@ import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { FlashNotification } from './FlashNotification.js'
 
 let showing = false
 
-export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string) {
+export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string, navigation: NavigationProp<'transactionDropdown'>) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
-    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} walletId={walletId} />).then(() => {
+    Airship.show(bridge => <ConnectedTransactionDropdown navigation={navigation} bridge={bridge} tx={tx} walletId={walletId} />).then(() => {
       showing = false
     })
   }
@@ -31,7 +31,8 @@ export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string) 
 type OwnProps = {
   bridge: AirshipBridge<void>,
   tx: EdgeTransaction,
-  walletId?: string
+  walletId?: string,
+  navigation: NavigationProp<'transactionDropdown'>
 }
 
 type StateProps = {
@@ -45,7 +46,7 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps
 
 export function TransactionDropdown(props: Props) {
-  const { bridge, message, tx, walletId, selectWallet } = props
+  const { bridge, message, tx, walletId, selectWallet, navigation } = props
 
   return (
     <FlashNotification
@@ -53,7 +54,7 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode)
-        Actions.push(TRANSACTION_DETAILS, {
+        navigation.push(TRANSACTION_DETAILS, {
           edgeTransaction: tx
         })
       }}
@@ -87,9 +88,9 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
       }
     }
   },
-  dispatch => ({
+  (dispatch, ownProps) => ({
     selectWallet: (walletId: string, currencyCode: string) => {
-      dispatch(selectWallet(walletId, currencyCode))
+      dispatch(selectWallet(walletId, currencyCode, undefined))
     }
   })
-)(TransactionDropdown)
+)(withNavigation(TransactionDropdown))

@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -28,6 +28,7 @@ type OwnProps = {
   onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
   onMemoChange: (memo: string, memoError: string) => void,
   fioRequest?: FioRequest,
+  navigation: NavigationProp<'selectFioAddressComponent'>,
   isSendUsingFioAddress?: boolean
 }
 
@@ -144,7 +145,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
-    const { fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
+    const { fioWallets, fioAddresses, fioRequest, currencyCode, navigation } = this.props
     if (!fioWallet) {
       if (fioAddresses && fioAddress.length) {
         const selectedFioAddress = fioAddresses.find(({ name }) => name === fioAddress)
@@ -183,7 +184,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
           />
         ))
         if (answer === 'ok') {
-          return Actions.push(FIO_ADDRESS_SETTINGS, {
+          return navigation.push(FIO_ADDRESS_SETTINGS, {
             showAddBundledTxs: true,
             fioWallet,
             fioAddressName: fioAddress
@@ -283,4 +284,4 @@ export const SelectFioAddress = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(refreshAllFioAddresses())
     }
   })
-)(withTheme(SelectFioAddressComponent))
+)(withTheme(withNavigation(SelectFioAddressComponent)))

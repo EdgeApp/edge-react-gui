@@ -12,7 +12,7 @@ import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { useEffect, useMemo, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
-import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { zeroString } from '../../../util/utils.js'
@@ -30,18 +30,21 @@ import { EditableAmountTile } from '../../tiles/EditableAmountTile.js'
 import { ErrorTile } from '../../tiles/ErrorTile.js'
 import { IconTile } from '../../tiles/IconTile'
 
-type Props = {
-  navigation: NavigationProp<'stakeModify'>,
-  route: RouteProp<'stakeModify'>
+type OwnProps = {
+  navigation: NavigationProp<'stakeModify'>
 }
+
+type Props = {
+  route: RouteProp<'stakeModify'>
+} & OwnProps
 
 export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
   const { walletId, stakePolicy, stakePosition, modification } = props.route.params
   const { stakePolicyId } = stakePolicy
-
   // Hooks
+
   const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[walletId]

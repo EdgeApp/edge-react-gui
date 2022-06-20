@@ -386,12 +386,14 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       errorMessage
     }
   },
-  dispatch => ({
-    updateMaxSpend(walletId: string, currencyCode: string) {
-      dispatch(updateMaxSpend(walletId, currencyCode))
-    },
-    updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
-      dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
+  (dispatch, ownProps) => {
+    return {
+      updateMaxSpend(walletId: string, currencyCode: string) {
+        dispatch(updateMaxSpend(walletId, currencyCode, undefined))
+      },
+      updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
+        dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
+      }
     }
-  })
+  }
 )(withTheme(FlipInputModalComponent))

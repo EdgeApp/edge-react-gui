@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type ParamList } from '../../types/routerTypes.js'
 import { BackButton } from './BackButton.js'
 
 // The scene holds a ref to the webview:
@@ -13,12 +13,12 @@ export function setPluginScene(plugin: PluginScene | void) {
   currentPlugin = plugin
 }
 
-export function renderPluginBackButton() {
-  return <BackButton onPress={handlePluginBack} />
+export function renderPluginBackButton<Name: $Keys<ParamList>>(navigation: NavigationProp<Name>) {
+  return <BackButton onPress={() => handlePluginBack(navigation)} />
 }
 
-export function handlePluginBack() {
+export function handlePluginBack<Name: $Keys<ParamList>>(navigation: NavigationProp<Name>) {
   if (currentPlugin == null || !currentPlugin.goBack()) {
-    Actions.pop()
+    navigation.pop()
   }
 }

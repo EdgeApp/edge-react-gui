@@ -4,14 +4,15 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import s from '../../locales/strings.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
   type: 'exit' | 'help',
-  placement: 'left' | 'right'
+  placement: 'left' | 'right',
+  navigation: NavigationProp<'headerTextButtonComponent'>
 }
 
 const title = {
@@ -21,9 +22,9 @@ const title = {
 
 class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> {
   handlePress = () => {
-    const { type } = this.props
+    const { type, navigation } = this.props
     if (type === 'exit') {
-      Actions.pop()
+      navigation.pop()
     } else if (type === 'help') {
       showHelpModal()
     }
@@ -57,4 +58,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const HeaderTextButton = withTheme(HeaderTextButtonComponent)
+export const HeaderTextButton = withTheme(withNavigation(HeaderTextButtonComponent))

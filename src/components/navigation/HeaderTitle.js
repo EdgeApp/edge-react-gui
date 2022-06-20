@@ -86,7 +86,7 @@ export const HeaderTitle = connect<StateProps, DispatchProps, OwnProps>(
       selectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode
     }
   },
-  dispatch => ({
+  (dispatch, props) => ({
     onSelectWallet(walletId: string, currencyCode: string) {
       dispatch(selectWalletFromModal(walletId, currencyCode))
     }

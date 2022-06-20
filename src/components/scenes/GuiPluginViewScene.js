@@ -10,7 +10,7 @@ import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { type RouteProp } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp, withNavigation } from '../../types/routerTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { makePluginUri } from '../../util/GuiPluginTools.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -114,7 +114,8 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
 // Plugin scene --------------------------------------------------------
 
 type OwnProps = {
-  route: RouteProp<'pluginView'>
+  route: RouteProp<'pluginView'>,
+  navigation: NavigationProp<'edge'>
 }
 
 type DispatchProps = { dispatch: Dispatch }
@@ -195,7 +196,7 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   async checkPermissions() {
-    const { route, state } = this.props
+    const { route, state, navigation } = this.props
     const { plugin } = route.params
     const { permissions = [] } = plugin
     const { displayName, mandatoryPermissions } = plugin
@@ -203,7 +204,7 @@ class GuiPluginView extends React.Component<Props, State> {
     for (const permission of permissions) {
       const deniedPermission = await requestPermissionOnSettings(state.core.disklet, permission, displayName, mandatory)
       if (deniedPermission) {
-        handlePluginBack()
+        handlePluginBack(navigation)
         return
       }
     }
@@ -272,4 +273,4 @@ class GuiPluginView extends React.Component<Props, State> {
 export const GuiPluginViewScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({ state }),
   dispatch => ({ dispatch })
-)(GuiPluginView)
+)(withNavigation(GuiPluginView))

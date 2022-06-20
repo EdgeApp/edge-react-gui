@@ -11,7 +11,7 @@ import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.
 import s from '../locales/strings.js'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import { getSupportedFiats } from '../util/utils.js'
 import { refreshConnectedWallets } from './FioActions.js'
@@ -20,7 +20,6 @@ import { registerNotifications } from './NotificationActions.js'
 export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets } = state.core.account
-
   // Manually un-pause the wallet, if necessary:
   const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
   if (wallet.paused) wallet.changePaused(false).catch(showError)
@@ -60,6 +59,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
   } = wallet
   const walletName = name ?? ''
   const { publicAddress } = await wallet.getReceiveAddress()
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
   if (publicAddress !== '') {
     // already activated
@@ -82,7 +82,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
     const selectedWalletType = makeCreateWalletType(currencyInfo)
     const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
     if (specialCurrencyInfo.skipAccountNameValidation) {
-      Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
+      navigation.push(CREATE_WALLET_ACCOUNT_SELECT, {
         selectedFiat: selectedFiat,
         selectedWalletType,
         accountName: walletName,
@@ -96,7 +96,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
         isReactivation: true,
         existingWalletId: walletId
       }
-      Actions.push(CREATE_WALLET_ACCOUNT_SETUP, createWalletAccountSetupSceneProps)
+      navigation.push(CREATE_WALLET_ACCOUNT_SETUP, createWalletAccountSetupSceneProps)
     }
 
     Airship.show(bridge => (
@@ -111,7 +111,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
 }
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(selectWallet(walletId, currencyCode))
+  dispatch(selectWallet(walletId, currencyCode, undefined))
 }
 
 export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {

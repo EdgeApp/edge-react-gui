@@ -27,7 +27,7 @@ import { WalletListSwipeable } from '../themed/WalletListSwipeable.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type Props = {
-  navigation: NavigationProp<'walletList'>
+  navigation: NavigationProp<'walletList'> | NavigationProp<'passwordReminderModalComponent'>
 }
 
 export function WalletListScene(props: Props) {
@@ -68,7 +68,7 @@ export function WalletListScene(props: Props) {
   useAsyncEffect(
     async () => {
       if (needsPasswordCheck) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+        await Airship.show(bridge => <PasswordReminderModal navigation={navigation} bridge={bridge} />)
       } else {
         const userTutorialList = await getWalletListSlideTutorial(disklet)
         const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
