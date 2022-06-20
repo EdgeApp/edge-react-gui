@@ -2,6 +2,7 @@
 import { div, eq, gt, toFixed } from 'biggystring'
 import { sprintf } from 'sprintf-js'
 
+import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
@@ -27,7 +28,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const assetPromises = []
   const providerPromises = []
   for (const providerFactory of providerFactories) {
-    providerPromises.push(providerFactory.makeProvider({ io: {} }))
+    let apiKeys
+    if (ENV.PLUGIN_API_KEYS[providerFactory.pluginId] != null) {
+      apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
+    }
+    providerPromises.push(providerFactory.makeProvider({ io: {}, apiKeys }))
   }
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {

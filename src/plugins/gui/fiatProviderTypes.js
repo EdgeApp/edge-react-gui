@@ -69,7 +69,8 @@ export type FiatProvider = {
 }
 
 export type FiatProviderFactoryParams = {
-  io: {}
+  io: {},
+  apiKeys?: mixed
 }
 
 export type FiatProviderFactory = {
