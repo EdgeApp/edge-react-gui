@@ -18,7 +18,6 @@ import { dummyProvider } from './providers/dummyProvider'
 import { dummyProvider2 } from './providers/dummyProvider2'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
-const FIAT_SUPPORTED = 'USD'
 const providerFactories = [dummyProvider, dummyProvider2]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
@@ -42,14 +41,18 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       const assetArray = await fuzzyTimeout(assetPromises, 5000).catch(e => [])
 
       const allowedAssets: EdgeTokenId[] = []
+      const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       for (const assetMap of assetArray) {
         if (assetMap == null) continue
-        for (const currencyPluginId in assetMap) {
-          const currencyCodeMap = assetMap[currencyPluginId]
+        for (const currencyPluginId in assetMap.crypto) {
+          const currencyCodeMap = assetMap.crypto[currencyPluginId]
           for (const currencyCode in currencyCodeMap) {
             if (currencyCodeMap[currencyCode]) {
               allowedAssets.push({ pluginId: currencyPluginId, currencyCode })
             }
+          }
+          for (const fiatCode in assetMap.fiat) {
+            allowedFiats[fiatCode] = true
           }
         }
       }
@@ -72,12 +75,15 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       let bestQuote: FiatProviderQuote | void
       let goodQuotes: FiatProviderQuote[] = []
 
+      const fiatCurrencyCode = coreWallet.fiatCurrencyCode
+      const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
 
-        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, FIAT_SUPPORTED),
+        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
         getMethods: (methods: FiatPluginGetMethodsResponse) => {
@@ -93,7 +99,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
           if (sourceFieldNum === 1) {
             // User entered a fiat value. Convert to crypto
-            sourceFieldCurrencyCode = FIAT_SUPPORTED
+            sourceFieldCurrencyCode = displayFiatCurrencyCode
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
@@ -142,7 +148,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             return
           }
 
-          const exchangeRateText = getRateFromQuote(bestQuote)
+          const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
           if (enterAmountMethods != null) {
             const poweredByOnClick = async () => {
               // 1. Show modal with all the valid quotes
@@ -175,7 +181,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 if (bestQuote == null) return
 
                 // 3. Set the status text and powered by
-                const statusText = getRateFromQuote(bestQuote)
+                const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
                 enterAmountMethods.setStatusText({ statusText })
                 enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
               }
@@ -216,9 +222,9 @@ const ERROR_TEXT = {
   assetUnsupported: s.strings.fiat_plugin_asset_unsupported
 }
 
-const getRateFromQuote = (quote: FiatProviderQuote): string => {
+const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
-  const exchangeRateText = `1 ${quote.tokenId?.tokenId ?? ''} = ${toFixed(bestRate, 0, 2)} ${FIAT_SUPPORTED}`
+  const exchangeRateText = `1 ${quote.tokenId?.tokenId ?? ''} = ${toFixed(bestRate, 0, 2)} ${fiatCode}`
   return exchangeRateText
 }
 
