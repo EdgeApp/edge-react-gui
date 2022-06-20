@@ -16,7 +16,7 @@ import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
-import { Actions } from '../../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../../types/routerTypes.js'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 
 type Item = {
@@ -34,7 +34,8 @@ type StateProps = {
 
 type OwnProps = {
   bridge: AirshipBridge<FioDomain | null>,
-  publicDomains: FioDomain[]
+  publicDomains: FioDomain[],
+  navigation: NavigationProp<'domainListModalComponent'>
 }
 
 type State = {
@@ -114,7 +115,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
   registerNewDomain = () => {
     this.props.bridge.resolve(null)
-    Actions.push(FIO_DOMAIN_REGISTER)
+    this.props.navigation.push(FIO_DOMAIN_REGISTER)
   }
 
   selectItem = (value: any) => this.props.bridge.resolve(value)
@@ -218,4 +219,4 @@ export const DomainListModal = connect<StateProps, {}, OwnProps>(
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
-)(withTheme(DomainListModalComponent))
+)(withTheme(withNavigation(DomainListModalComponent)))

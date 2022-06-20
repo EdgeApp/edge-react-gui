@@ -32,7 +32,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../../../constants/WalletAndCurrencyCo
 import s from '../../../../locales/strings'
 import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
-import { Actions } from '../../../../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../../../../types/routerTypes.js'
 import type { EdgeTokenId } from '../../../../types/types.js'
 import { type GuiMakeSpendInfo } from '../../../../types/types.js'
 import { type UriQueryMap } from '../../../../types/WebTypes'
@@ -110,6 +110,8 @@ export class EdgeProvider extends Bridgeable {
   _dispatch: Dispatch
   _state: RootState
 
+  navigation: NavigationProp<'edge'>
+
   // Public properties:
   deepPath: string | void
   deepQuery: UriQueryMap | void
@@ -121,6 +123,7 @@ export class EdgeProvider extends Bridgeable {
     state: RootState,
     dispatch: Dispatch,
     restartPlugin: () => void,
+    navigation: NavigationProp<'edge'>,
     deepPath?: string,
     deepQuery?: UriQueryMap,
     promoCode?: string
@@ -129,6 +132,8 @@ export class EdgeProvider extends Bridgeable {
     this._plugin = plugin
     this._dispatch = dispatch
     this._state = state
+
+    this.navigation = navigation
 
     this.deepPath = deepPath
     this.deepQuery = deepQuery
@@ -267,7 +272,7 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async exitPlugin() {
-    Actions.pop()
+    this.navigation.pop()
   }
 
   async getWalletHistory() {
@@ -422,7 +427,8 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.onBack = () => {
         resolve()
       }
-      Actions.push(SEND, {
+      const navigation: NavigationProp<'edge'> = useNavigation()
+      navigation.push(SEND, {
         guiMakeSpendInfo,
         selectedWalletId: coreWallet.id,
         selectedCurrencyCode
@@ -435,7 +441,7 @@ export class EdgeProvider extends Bridgeable {
         await coreWallet.saveTxMetadata(transaction.txid, transaction.currencyCode, metadata)
       }
 
-      Actions.pop()
+      this.navigation.pop()
 
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
       this._dispatch(

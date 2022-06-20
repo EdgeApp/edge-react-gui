@@ -8,20 +8,21 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { OTP_REPAIR_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp, type ParamList } from '../types/routerTypes.js'
 
-export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account, otpErrorShown } = state.core
-  const navigation: NavigationProp<'edge'> = useNavigation()
+export const handleOtpError =
+  <Name: $Keys<ParamList>>(otpError: OtpError, navigation: NavigationProp<Name>) =>
+  (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account, otpErrorShown } = state.core
 
-  if (account.loggedIn && !otpErrorShown) {
-    dispatch({ type: 'OTP_ERROR_SHOWN' })
-    navigation.push(OTP_REPAIR_SCENE, {
-      otpError
-    })
+    if (account.loggedIn && !otpErrorShown) {
+      dispatch({ type: 'OTP_ERROR_SHOWN' })
+      navigation.push(OTP_REPAIR_SCENE, {
+        otpError
+      })
+    }
   }
-}
 
 type ValidatePasswordOptions = {
   message?: string,

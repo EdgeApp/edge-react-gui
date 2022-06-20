@@ -74,7 +74,7 @@ export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, Own
   }),
   (dispatch, props) => ({
     onOtpError(otpError: OtpError, navigation: NavigationProp<'edgeContextCallbackManagerComponent'>) {
-      dispatch(handleOtpError(otpError))
+      dispatch(handleOtpError(otpError, navigation))
     }
   })
 )(withNavigation(EdgeContextCallbackManagerComponent))

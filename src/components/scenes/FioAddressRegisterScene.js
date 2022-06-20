@@ -45,7 +45,7 @@ type State = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp<'fioAddressRegister'>
+  navigation: NavigationProp<'fioAddressRegister'> | NavigationProp<'domainListModalComponent'>
 }
 type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
@@ -309,13 +309,16 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   selectFioDomain = () => {
     const { domainsLoading } = this.state
+    const { navigation } = this.props
     if (domainsLoading) return
-    Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
-      if (response) {
-        this.setState({ selectedDomain: response })
-        this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
+    Airship.show(bridge => <DomainListModal navigation={navigation} bridge={bridge} publicDomains={this.state.publicDomains} />).then(
+      (response: FioDomain | null) => {
+        if (response) {
+          this.setState({ selectedDomain: response })
+          this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
+        }
       }
-    })
+    )
   }
 
   renderButton() {

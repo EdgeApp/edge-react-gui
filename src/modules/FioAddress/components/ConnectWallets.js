@@ -13,7 +13,7 @@ import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
-import { Actions } from '../../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../../types/routerTypes.js'
 import type { FioConnectionWalletItem } from '../../../types/types'
 import { makeConnectWallets } from '../util'
 
@@ -31,7 +31,8 @@ type StateProps = {
 type OwnProps = {
   fioAddressName: string,
   fioWallet: EdgeCurrencyWallet | null,
-  disabled: boolean
+  disabled: boolean,
+  navigation: NavigationProp<'connectWallets'>
 }
 
 type Props = StateProps & OwnProps & ThemeProps
@@ -66,7 +67,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   }
 
   _onContinuePress = (): void => {
-    const { fioAddressName, fioWallet, walletItems } = this.props
+    const { fioAddressName, fioWallet, walletItems, navigation } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const walletsToDisconnect = []
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
@@ -87,7 +88,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         }, {})
       })
       const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
-      Actions.push(FIO_CONNECT_TO_WALLETS_CONFIRM, {
+      navigation.push(FIO_CONNECT_TO_WALLETS_CONFIRM, {
         fioAddressName,
         fioWallet,
         walletsToConnect,
@@ -287,4 +288,4 @@ export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
     }
   },
   dispatch => ({})
-)(withTheme(ConnectWallets))
+)(withTheme(withNavigation(ConnectWallets)))

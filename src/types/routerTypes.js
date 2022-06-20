@@ -46,6 +46,7 @@ export type ParamList = {
   changePassword: void,
   changePin: void,
   controlPanel: void,
+  connectWallets: void,
   createWalletAccountSelect: {|
     accountName: string,
     existingWalletId?: string,
@@ -88,6 +89,7 @@ export type ParamList = {
     currencyInfo: EdgeCurrencyInfo
   |},
   defaultFiatSetting: void,
+  domainListModalComponent: void,
   edgeLogin: void,
   edgeContextCallbackManagerComponent: void,
   flipInputModalComponent: void,

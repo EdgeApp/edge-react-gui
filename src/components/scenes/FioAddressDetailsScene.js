@@ -22,7 +22,7 @@ type StateProps = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp<'fioAddressDetails'>,
+  navigation: NavigationProp<'fioAddressDetails'> | NavigationProp<'connectWallets'>,
   route: RouteProp<'fioAddressDetails'>
 }
 
@@ -103,7 +103,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { theme, route } = this.props
+    const { theme, route, navigation } = this.props
     const { fioAddressName, bundledTxs } = route.params
     const styles = getStyles(theme)
     const bundledTxsLabel = `${s.strings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
@@ -116,7 +116,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
           icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
           label={s.strings.fio_address_details_connect_to_wallets}
         />
-        <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
+        <ConnectWallets navigation={navigation} fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
       </SceneWrapper>
     )
   }

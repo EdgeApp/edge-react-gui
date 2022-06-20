@@ -139,7 +139,7 @@ class GuiPluginView extends React.Component<Props, State> {
   _webview: WebView | void
 
   constructor(props) {
-    const { route, dispatch, state } = props
+    const { route, dispatch, state, navigation } = props
     const { deepPath, deepQuery, plugin } = route.params
     super(props)
     setPluginScene(this)
@@ -152,7 +152,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
+    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, restartPlugin, navigation, deepPath, deepQuery, this._promoCode)
 
     // Set up the WebView bridge:
     this._canGoBack = false
