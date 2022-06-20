@@ -18,7 +18,6 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
@@ -41,9 +40,7 @@ type OwnProps = {
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
   overrideExchangeAmount?: string,
   headerText?: string,
-  hideMaxButton?: boolean,
-  // eslint-disable-next-line react/no-unused-prop-types
-  navigation: NavigationProp<'flipInputModalComponent'>
+  hideMaxButton?: boolean
 }
 
 type StateProps = {
@@ -390,14 +387,13 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   (dispatch, ownProps) => {
-    const { navigation } = ownProps
     return {
       updateMaxSpend(walletId: string, currencyCode: string) {
-        dispatch(updateMaxSpend(walletId, currencyCode, undefined, navigation))
+        dispatch(updateMaxSpend(walletId, currencyCode, undefined))
       },
       updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
         dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
       }
     }
   }
-)(withTheme(withNavigation(FlipInputModalComponent)))
+)(withTheme(FlipInputModalComponent))

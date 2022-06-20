@@ -8,7 +8,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, type ParamList } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 
 export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -23,32 +23,31 @@ export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState:
     })
 }
 
-export const lobbyLogin =
-  <Name: $Keys<ParamList>>(navigation: NavigationProp<Name>) =>
-  async (dispatch: Dispatch, getState: GetState) => {
-    const state = getState()
-    const { lobby } = state.core.edgeLogin
-    if (lobby == null) return
-    const { loginRequest } = lobby
-    if (loginRequest == null) return
+export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { lobby } = state.core.edgeLogin
+  if (lobby == null) return
+  const { loginRequest } = lobby
+  if (loginRequest == null) return
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
-    dispatch({ type: 'PROCESS_EDGE_LOGIN' })
-    try {
-      await loginRequest.approve()
-      dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
-      navigation.pop()
-      setTimeout(() => {
-        Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
-      }, 750)
-    } catch (e) {
-      dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
-      Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          buttons={{ ok: { label: s.strings.string_ok } }}
-          message={e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message}
-          title={s.strings.edge_login_failed}
-        />
-      ))
-    }
+  dispatch({ type: 'PROCESS_EDGE_LOGIN' })
+  try {
+    await loginRequest.approve()
+    dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
+    navigation.pop()
+    setTimeout(() => {
+      Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
+    }, 750)
+  } catch (e) {
+    dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+        message={e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message}
+        title={s.strings.edge_login_failed}
+      />
+    ))
   }
+}

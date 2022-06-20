@@ -90,7 +90,7 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
   },
   (dispatch, ownProps) => ({
     selectWallet: (walletId: string, currencyCode: string) => {
-      dispatch(selectWallet(walletId, currencyCode, undefined, ownProps.navigation))
+      dispatch(selectWallet(walletId, currencyCode, undefined))
     }
   })
 )(withNavigation(TransactionDropdown))

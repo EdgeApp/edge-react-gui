@@ -14,6 +14,7 @@ export const fakeNavigation: NavigationProp<any> = {
   push(name, params) {},
   replace(name, params) {},
   setParams(params) {},
+  jumpTo(name, params) {},
 
   goBack() {},
   pop() {},

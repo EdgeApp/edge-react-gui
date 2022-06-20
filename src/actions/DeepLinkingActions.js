@@ -126,7 +126,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
     }
 
     case 'bitPay': {
-      launchBitPay(link.uri, { currencyWallets }, navigation).catch(showError)
+      launchBitPay(link.uri, { currencyWallets }).catch(showError)
       return true
     }
 
@@ -146,7 +146,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
       for (const walletId of walletIds) {
         const wallet = byId[walletId]
         if (wallet.currencyCode !== currencyCode) continue
-        dispatch(selectWallet(wallet.id, wallet.currencyCode, undefined, navigation))
+        dispatch(selectWallet(wallet.id, wallet.currencyCode, undefined))
         dispatch(parseScannedUri(link.uri))
         return true
       }

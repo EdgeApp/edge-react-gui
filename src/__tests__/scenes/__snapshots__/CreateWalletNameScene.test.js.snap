@@ -9,6 +9,7 @@ exports[`createWalletName should render with loading props 1`] = `
       "currentScene": Object {},
       "goBack": [Function],
       "isFocused": [Function],
+      "jumpTo": [Function],
       "navigate": [Function],
       "openDrawer": [Function],
       "pop": [Function],

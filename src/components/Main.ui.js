@@ -104,7 +104,7 @@ import {
 import s from '../locales/strings.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
-import { Actions, withNavigation } from '../types/routerTypes.js'
+import { type NavigationProp, Actions, withNavigation } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -184,7 +184,11 @@ type DispatchProps = {
   showReEnableOtpModal: () => void
 }
 
-type Props = DispatchProps
+type OwnProps = {
+  navigation: NavigationProp<'edge'>
+}
+
+type Props = DispatchProps & OwnProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -428,7 +432,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={renderPluginBackButton(this.props.navigation)}
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
               />
@@ -448,7 +452,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={renderPluginBackButton(this.props.navigation)}
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
               />
@@ -660,7 +664,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              renderLeftButton={renderPluginBackButton()}
+              renderLeftButton={renderPluginBackButton(this.props.navigation)}
               renderRightButton={<HeaderTextButton type="exit" placement="right" />}
             />
           </Stack>
@@ -900,7 +904,7 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
-      handlePluginBack()
+      handlePluginBack(this.props.navigation)
       return true
     }
     if (this.isCurrentScene(FIO_ADDRESS_REGISTER)) {
@@ -920,7 +924,7 @@ export class MainComponent extends React.Component<Props> {
   }
 }
 
-export const Main = connect<{}, DispatchProps, {}>(
+export const Main = connect<{}, DispatchProps, OwnProps, {}>(
   state => ({}),
   dispatch => ({
     registerDevice() {
@@ -952,4 +956,4 @@ export const Main = connect<{}, DispatchProps, {}>(
       dispatch(showReEnableOtpModal())
     }
   })
-)(MainComponent)
+)(withNavigation(MainComponent))

@@ -27,7 +27,7 @@ import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import { type NavigationProp, type ParamList } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
@@ -39,93 +39,92 @@ export type SetNativeAmountInfo = {
   primaryNativeAmount: string
 }
 
-export const getQuoteForTransaction =
-  <Name: $Keys<ParamList>>(info: SetNativeAmountInfo, onApprove: () => void, navigation: NavigationProp<Name>) =>
-  async (dispatch: Dispatch, getState: GetState) => {
-    navigation.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
+export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  const navigation: NavigationProp<'edge'> = useNavigation()
+  navigation.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
 
-    const state = getState()
-    const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
-    try {
-      if (fromWalletId == null || toWalletId == null) {
-        throw new Error('No wallet selected') // Should never happen
-      }
-      if (fromCurrencyCode == null || toCurrencyCode == null) {
-        throw new Error('No currency selected') // Should never happen
-      }
-
-      const { currencyWallets } = state.core.account
-      const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
-      const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
-      const request: EdgeSwapRequest = {
-        fromCurrencyCode,
-        fromWallet: fromCoreWallet,
-        nativeAmount: info.primaryNativeAmount,
-        quoteFor: info.whichWallet,
-        toCurrencyCode,
-        toWallet: toCoreWallet
-      }
-
-      const swapInfo = await fetchSwapQuote(state, request)
-
-      navigation.push(EXCHANGE_QUOTE_SCENE, {
-        swapInfo,
-        onApprove
-      })
-      dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
-    } catch (error) {
-      navigation.jumpTo(EXCHANGE_SCENE)
-      const insufficientFunds = asMaybeInsufficientFundsError(error)
-      if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
-        const { currencyCode, networkFee = '' } = insufficientFunds
-        const multiplier = getExchangeDenomination(state, state.core.account.currencyWallets[fromWalletId].currencyInfo.pluginId, currencyCode).multiplier
-        const amountString = roundedFee(networkFee, 2, multiplier)
-        const result = await Airship.show(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={s.strings.buy_crypto_modal_title}
-            message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
-            buttons={{
-              buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-              exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-              cancel: { label: s.strings.buy_crypto_decline }
-            }}
-          />
-        ))
-        switch (result) {
-          case 'buy':
-            navigation.jumpTo('pluginListBuy', { direction: 'buy' })
-            return
-          case 'exchange':
-            dispatch({ type: 'SHIFT_COMPLETE' })
-            if (fromWalletId != null) {
-              dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
-            }
-            break
-        }
-      }
-      dispatch(processSwapQuoteError(error))
+  const state = getState()
+  const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
+  try {
+    if (fromWalletId == null || toWalletId == null) {
+      throw new Error('No wallet selected') // Should never happen
     }
-  }
-
-export const exchangeTimerExpired =
-  <Name: $Keys<ParamList>>(swapInfo: GuiSwapInfo, onApprove: () => void, navigation: NavigationProp<Name>) =>
-  async (dispatch: Dispatch, getState: GetState) => {
-    if (navigation.currentScene !== EXCHANGE_QUOTE_SCENE) return
-    navigation.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
-
-    try {
-      swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-      navigation.push(EXCHANGE_QUOTE_SCENE, {
-        swapInfo,
-        onApprove
-      })
-      dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
-    } catch (error) {
-      navigation.navigate(EXCHANGE_SCENE)
-      dispatch(processSwapQuoteError(error))
+    if (fromCurrencyCode == null || toCurrencyCode == null) {
+      throw new Error('No currency selected') // Should never happen
     }
+
+    const { currencyWallets } = state.core.account
+    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
+    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
+    const request: EdgeSwapRequest = {
+      fromCurrencyCode,
+      fromWallet: fromCoreWallet,
+      nativeAmount: info.primaryNativeAmount,
+      quoteFor: info.whichWallet,
+      toCurrencyCode,
+      toWallet: toCoreWallet
+    }
+
+    const swapInfo = await fetchSwapQuote(state, request)
+
+    navigation.push(EXCHANGE_QUOTE_SCENE, {
+      swapInfo,
+      onApprove
+    })
+    dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+  } catch (error) {
+    navigation.jumpTo(EXCHANGE_SCENE)
+    const insufficientFunds = asMaybeInsufficientFundsError(error)
+    if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
+      const { currencyCode, networkFee = '' } = insufficientFunds
+      const multiplier = getExchangeDenomination(state, state.core.account.currencyWallets[fromWalletId].currencyInfo.pluginId, currencyCode).multiplier
+      const amountString = roundedFee(networkFee, 2, multiplier)
+      const result = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.buy_crypto_modal_title}
+          message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
+          buttons={{
+            buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+            exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
+            cancel: { label: s.strings.buy_crypto_decline }
+          }}
+        />
+      ))
+      switch (result) {
+        case 'buy':
+          navigation.jumpTo('pluginListBuy', { direction: 'buy' })
+          return
+        case 'exchange':
+          dispatch({ type: 'SHIFT_COMPLETE' })
+          if (fromWalletId != null) {
+            dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
+          }
+          break
+      }
+    }
+    dispatch(processSwapQuoteError(error))
   }
+}
+
+export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  const navigation: NavigationProp<'edge'> = useNavigation()
+
+  if (navigation.currentScene !== EXCHANGE_QUOTE_SCENE) return
+  navigation.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
+
+  try {
+    swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
+    navigation.push(EXCHANGE_QUOTE_SCENE, {
+      swapInfo,
+      onApprove
+    })
+    dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+  } catch (error) {
+    navigation.navigate(EXCHANGE_SCENE)
+    dispatch(processSwapQuoteError(error))
+  }
+}
 
 export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -315,64 +314,64 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
   })
 }
 
-export const shiftCryptoCurrency =
-  <Name: $Keys<ParamList>>(swapInfo: GuiSwapInfo, onApprove: () => void, navigation: NavigationProp<Name>) =>
-  async (dispatch: Dispatch, getState: GetState) => {
-    const state = getState()
-    const { account } = state.core
-    dispatch({ type: 'START_SHIFT_TRANSACTION' })
+export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { account } = state.core
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
-    const { quote, request } = swapInfo
-    const { pluginId, toNativeAmount } = quote
-    const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-    try {
-      logEvent('SwapStart')
-      const result: EdgeSwapResult = await quote.approve()
-      await fromWallet.saveTx(result.transaction)
+  dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
-      const { swapInfo } = account.swapConfig[pluginId]
+  const { quote, request } = swapInfo
+  const { pluginId, toNativeAmount } = quote
+  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
+  try {
+    logEvent('SwapStart')
+    const result: EdgeSwapResult = await quote.approve()
+    await fromWallet.saveTx(result.transaction)
 
-      // Build the category string:
-      const isTransfer = pluginId === 'transfer'
-      const toWalletName = toWallet.name ?? ''
-      const name = isTransfer ? toWalletName : swapInfo.displayName
-      const swapType = isTransfer ? 'transfer' : 'exchange'
-      const swapTarget = isTransfer ? toWalletName : toCurrencyCode
-      const category = `${swapType}:${fromCurrencyCode} ${s.strings.word_to_in_convert_from_to_string} ${swapTarget}`
+    const { swapInfo } = account.swapConfig[pluginId]
 
-      const edgeMetaData: EdgeMetadata = {
-        name,
-        category
-      }
-      navigation.push(EXCHANGE_SUCCESS_SCENE)
-      await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
+    // Build the category string:
+    const isTransfer = pluginId === 'transfer'
+    const toWalletName = toWallet.name ?? ''
+    const name = isTransfer ? toWalletName : swapInfo.displayName
+    const swapType = isTransfer ? 'transfer' : 'exchange'
+    const swapTarget = isTransfer ? toWalletName : toCurrencyCode
+    const category = `${swapType}:${fromCurrencyCode} ${s.strings.word_to_in_convert_from_to_string} ${swapTarget}`
 
-      // Dispatch the success action and callback
-      dispatch({ type: 'SHIFT_COMPLETE' })
-      onApprove()
-
-      updateSwapCount(state)
-
-      const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
-      const trackConversionOpts: { [key: string]: any } = {
-        account,
-        pluginId,
-        currencyCode: toCurrencyCode,
-        exchangeAmount: Number(exchangeAmount)
-      }
-      if (result.orderId != null) {
-        trackConversionOpts.orderId = result.orderId
-      }
-      dispatch(trackConversion('SwapSuccess', trackConversionOpts))
-    } catch (error) {
-      console.log(error)
-      logEvent('SwapFailed')
-      dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
-      setTimeout(() => {
-        showError(`${s.strings.exchange_failed}. ${error.message}`)
-      }, 1)
+    const edgeMetaData: EdgeMetadata = {
+      name,
+      category
     }
+    navigation.push(EXCHANGE_SUCCESS_SCENE)
+    await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
+
+    // Dispatch the success action and callback
+    dispatch({ type: 'SHIFT_COMPLETE' })
+    onApprove()
+
+    updateSwapCount(state)
+
+    const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
+    const trackConversionOpts: { [key: string]: any } = {
+      account,
+      pluginId,
+      currencyCode: toCurrencyCode,
+      exchangeAmount: Number(exchangeAmount)
+    }
+    if (result.orderId != null) {
+      trackConversionOpts.orderId = result.orderId
+    }
+    dispatch(trackConversion('SwapSuccess', trackConversionOpts))
+  } catch (error) {
+    console.log(error)
+    logEvent('SwapFailed')
+    dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
+    setTimeout(() => {
+      showError(`${s.strings.exchange_failed}. ${error.message}`)
+    }, 1)
   }
+}
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction: 'from' | 'to') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

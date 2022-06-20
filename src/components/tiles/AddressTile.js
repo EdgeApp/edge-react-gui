@@ -14,6 +14,7 @@ import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
 import { forwardRef } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
 import { AddressModal } from '../modals/AddressModal'
@@ -22,7 +23,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
-import { withNavigation, type }
 
 type OwnProps = {
   coreWallet: EdgeCurrencyWallet,
@@ -34,7 +34,8 @@ type OwnProps = {
   lockInputs?: boolean,
   addressTileRef: any,
   isCameraOpen: boolean,
-  fioToAddress?: string
+  fioToAddress?: string,
+  navigation: NavigationProp<'send'>
 }
 type StateProps = {
   fioPlugin?: EdgeCurrencyConfig
@@ -132,7 +133,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
           const sendSceneRouteParams = await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
-          navigation.push('send', sendSceneRouteParams)
+          this.props.navigation.push('send', { ...sendSceneRouteParams })
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
