@@ -185,14 +185,16 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
   let fioAddress
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig.fio
-    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-    try {
-      const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
-      fioAddress = data.toLowerCase()
-      data = publicAddress
-    } catch (e) {
-      if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-        return showError(e)
+    if (fioPlugin != null) {
+      const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+      try {
+        const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
+        fioAddress = data.toLowerCase()
+        data = publicAddress
+      } catch (e) {
+        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
+          return showError(e)
+        }
       }
     }
   }
