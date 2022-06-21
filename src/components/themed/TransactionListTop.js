@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
-import { FIO_STAKING_OVERVIEW, REQUEST, SEND, STAKE_OPTIONS } from '../../constants/SceneKeys.js'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -176,11 +175,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    Actions.push(REQUEST)
+    Actions.push('request')
   }
 
   handleSend = (): void => {
-    Actions.push(SEND, {})
+    Actions.push('send', {})
   }
 
   handleSearchDone = () => {
@@ -192,8 +191,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleStakePress = () => {
     const { currencyCode, walletId } = this.props
-    if (currencyCode === 'FIO') Actions.push(FIO_STAKING_OVERVIEW, { currencyCode, walletId })
-    else Actions.push(STAKE_OPTIONS, { walletId, currencyCode })
+    if (currencyCode === 'FIO') Actions.push('fioStakingOverview', { currencyCode, walletId })
+    else Actions.push('stakeOptions', { walletId, currencyCode })
   }
 
   clearText = () => {

@@ -6,7 +6,6 @@ import { Platform, ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
-import { CHANGE_PASSWORD } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
@@ -56,7 +55,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.spinning) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
-      setTimeout(() => Actions.jump(CHANGE_PASSWORD), 10)
+      setTimeout(() => Actions.jump('changePassword'), 10)
     }
   }
 

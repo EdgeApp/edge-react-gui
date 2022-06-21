@@ -9,7 +9,6 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../co
 import { CurrencyIcon } from '../../../components/themed/CurrencyIcon.js'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
-import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
@@ -87,7 +86,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         }, {})
       })
       const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
-      Actions.push(FIO_CONNECT_TO_WALLETS_CONFIRM, {
+      Actions.push('fioConnectToWalletsConfirm', {
         fioAddressName,
         fioWallet,
         walletsToConnect,
