@@ -70,7 +70,7 @@ export type FiatProvider = {
 
 export type FiatProviderFactoryParams = {
   io: {},
-  apiKeys?: Object | string
+  apiKeys?: mixed
 }
 
 export type FiatProviderFactory = {
