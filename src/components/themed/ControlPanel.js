@@ -33,8 +33,8 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
+import { TitleText } from '../text/TitleText.js'
 import { DividerLine } from './DividerLine'
-import { TitleText } from './TitleText'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
