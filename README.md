@@ -51,7 +51,7 @@ This bundler process needs to run in the background, so feel free to run this in
 
 A public API key is built into the edge-core-js which can be used to build and test the Edge app. This key is severely rate limited and should not be used for production. For production use, get an API key by emailing info@edge.app.
 
-Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank.
+Change the `AIRBITZ_API_KEY` in `env.json` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank.
 
 ### Run the app in debug mode
 

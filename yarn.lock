@@ -5165,6 +5165,15 @@ clean-stack@^2.0.0:
   resolved "https://registry.yarnpkg.com/clean-stack/-/clean-stack-2.2.0.tgz#ee8472dbb129e727b31e8a10a427dee9dfe4008b"
   integrity sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==
 
+cleaner-config@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/cleaner-config/-/cleaner-config-0.1.8.tgz#c1c8ab584281c28701c0003385c80ddcab0fb8fc"
+  integrity sha512-XrxTEHQIdEyeJqoH4qUHYzdfb8rwvjudZQsbIzsF3B9LGkAMJ8BcrZ6U57/bb7tKojYiuhPGWf1RGlFcFspZuQ==
+  dependencies:
+    cleaners "^0.3.8"
+    minimist "^1.2.5"
+    sucrase "^3.17.1"
+
 cleaners@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.1.tgz#535849cfabc91e3ae1fc872b43d450446cd1a1a1"
@@ -5180,7 +5189,7 @@ cleaners@^0.3.11:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.11.tgz#7168178df8223965acfea1b81883250c574fedfe"
   integrity sha512-Iq/spAHw/Ca2O8+kRaYy60+XWQrnqYa7KuuHM7z+RV8wvrN2JTWtBpY0uZWfhVuooGY7SoaY6Cwvbqo8oE4OYQ==
 
-cleaners@^0.3.12:
+cleaners@^0.3.12, cleaners@^0.3.8:
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.12.tgz#0e99ef2460a59ed87550a60bdfc441b1696ff9cb"
   integrity sha512-bK7IvvYyhfy30S3VKmWi/YVWp0MUH1pEYfdtbjCpQiIzy8gmP9GCXv6AVZENDHbpcRHqMnZONs3ieyJMh3zvVw==
@@ -14358,6 +14367,18 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
+
+sucrase@^3.17.1:
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/sucrase/-/sucrase-3.21.0.tgz#6a5affdbe716b22e4dc99c57d366ad0d216444b9"
+  integrity sha512-FjAhMJjDcifARI7bZej0Bi1yekjWQHoEvWIXhLPwDhC6O4iZ5PtGb86WV56riW87hzpgB13wwBKO9vKAiWu5VQ==
+  dependencies:
+    commander "^4.0.0"
+    glob "7.1.6"
+    lines-and-columns "^1.1.6"
+    mz "^2.7.0"
+    pirates "^4.0.1"
+    ts-interface-checker "^0.1.9"
 
 sucrase@^3.20.0:
   version "3.20.0"
