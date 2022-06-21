@@ -3,11 +3,6 @@ import { type EdgeAccount } from 'edge-core-js'
 
 import { type EdgeTokenId } from '../../types/types.js'
 
-export type FiatPluginStore = {
-  writeData: (data: { [key: string]: string }) => Promise<{ [key: string]: boolean }>,
-  readData: (keys: string[]) => Promise<{ [key: string]: string }>
-}
-
 export type FiatPluginEnterAmountParams = {
   headerTitle: string,
   label1: string,
@@ -35,8 +30,6 @@ export type FiatPluginFactoryArgs = {
   // TODO:
   // io: {
   //   log: EdgeLog, // scoped logs
-  //   cacheStorage: Disklet, // Local cache, not synced
-  //   syncedStorage: ScopedStorage
   // }
   showUi: FiatPluginUi,
   account: EdgeAccount
