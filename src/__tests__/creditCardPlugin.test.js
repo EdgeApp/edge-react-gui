@@ -3,8 +3,8 @@
 import { sprintf } from 'sprintf-js'
 
 import s from '../locales/strings'
-import { getBestError } from '../plugins/gui/creditCardPlugin'
 import { FiatProviderError } from '../plugins/gui/fiatProviderTypes'
+import { getBestError } from '../plugins/gui/pluginUtils'
 
 describe('creditCardPlugin', function () {
   describe('getBestError', function () {
