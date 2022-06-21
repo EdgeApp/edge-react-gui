@@ -6423,10 +6423,10 @@ edge-currency-monero@^0.4.1:
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^1.0.0-rc.5:
-  version "1.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.0.0-rc.5.tgz#b41b5f9d8ef86c1af918a957d26fdcaeafb2256d"
-  integrity sha512-lqSF/YdLH35t3JnHRV+jG7NszEbfKshrmNHbLiG6I/2jc+eNIfEke+PfK/i75Mz1U9L9scfWqms5Y89CstuVUw==
+edge-currency-plugins@^1.0.0-rc.6:
+  version "1.0.0-rc.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.0.0-rc.6.tgz#d0bbd8e7a373fdbb5d56e5a7bca7fe6a5a0683ac"
+  integrity sha512-0Q5ptj8/vHYIEwFGIkqVIFhCZo1Du6OqOAcjvIJQEMpAdz2+XcSd6rrq3LXB/gRGw4F3kLNquawclUZxsddiYA==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
