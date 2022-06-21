@@ -12550,6 +12550,11 @@ react-native-popup-menu@0.13.3:
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
 
+react-native-reanimated-carousel@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.0.0.tgz#9d2d8a4f534ca32fb63022a4c1ee5f909aeabd57"
+  integrity sha512-9dUM6uVhpyokNkyYmG0/7qMEnl4RrMs9Rypjaxkl6aMYHrbmE8BcCSVE1xKpQJSKXZT0byWmh63aSiJohBAfOw==
+
 react-native-reanimated@^2.0.0, react-native-reanimated@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.8.0.tgz#93c06ca84d91fb3865110b0857c49a24e316130e"

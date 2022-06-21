@@ -3,6 +3,7 @@
 import { type Cleaner, asNumber, asObject } from 'cleaners'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 
+import { config } from '../../theme/appConfig.js'
 import { pluginInfo } from './pluginInfo.js'
 import { toStakePolicy } from './stakePolicy.js'
 import { type InfoServerResponse } from './types'
@@ -10,12 +11,10 @@ import type { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePolicy, StakePo
 
 export * from './types.js'
 
-const infoServerUri = 'https://info1.edge.app'
-
 export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   const instance: StakePlugin = {
     async getStakePolicies(): Promise<StakePolicy[]> {
-      const fetchResponse = await fetch(`${infoServerUri}/v1/apyValues`)
+      const fetchResponse = await fetch(`${config.infoServer}/v1/apyValues`)
         .then(async res => {
           if (!res.ok) {
             throw new Error(`Fetch APY invalid response: ${await res.text()}`)

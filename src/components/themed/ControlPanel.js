@@ -16,7 +16,6 @@ import { parseScannedUri } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
-import { EDGE_URL } from '../../constants/constantSettings.js'
 import { FIO_ADDRESS_LIST, FIO_REQUEST_LIST, SETTINGS_OVERVIEW_TAB, TERMS_OF_SERVICE } from '../../constants/SceneKeys'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
@@ -136,8 +135,8 @@ export function ControlPanel(props: Props) {
     const message = `${sprintf(s.strings.share_subject, config.appName)}\n\n${s.strings.share_message}\n\n`
 
     const shareOptions = {
-      message: Platform.OS === 'ios' ? message : message + EDGE_URL,
-      url: Platform.OS === 'ios' ? EDGE_URL : ''
+      message: Platform.OS === 'ios' ? message : message + config.website,
+      url: Platform.OS === 'ios' ? config.website : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
   }

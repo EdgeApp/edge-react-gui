@@ -12,6 +12,7 @@ export const testConfig: AppConfig = {
   darkTheme: testDark,
   lightTheme: testLight,
   supportsEdgeLogin: false,
+  infoServer: 'https://info1.testy.app',
   referralServers: ['https://referral1.testy.com'],
   notificationServers: ['https://notif1.edge.app'],
   knowledgeBase: 'https://support.testy.com/knowledge',

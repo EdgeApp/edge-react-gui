@@ -54,6 +54,7 @@ const palette = {
 
   whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp05: 'rgba(255, 255, 255, .05)',
+  whiteOp50: 'rgba(255, 255, 255, .50)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -208,6 +209,12 @@ export const edgeDark: Theme = {
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
+
+  // Promo Card
+  promoCardBackground: palette.edgeNavy,
+  promoCardBorderColorPressOut: palette.whiteOp50,
+  promoCardBorderColorPressIn: palette.whiteOp10,
+  promoCardBorderWidth: 1.5,
 
   tabBarBackground: [palette.edgeNavy, palette.edgeNavy],
   tabBarBackgroundStart: { x: 0, y: 0 },

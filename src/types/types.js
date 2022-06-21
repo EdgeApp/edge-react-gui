@@ -319,6 +319,7 @@ export type AppConfig = {
   appNameShort: string,
   darkTheme: Theme,
   lightTheme: Theme,
+  infoServer: string,
   referralServers?: string[],
   notificationServers: string[],
   supportsEdgeLogin: boolean,
