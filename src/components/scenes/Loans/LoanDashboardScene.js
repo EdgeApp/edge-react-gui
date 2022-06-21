@@ -12,11 +12,11 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatchAccount } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from '../../../plugins/borrow-plugins/plugins/aave/index'
-import { filterActiveBorrowEngines, getAaveBorrowEngines } from '../../../plugins/helpers/getAaveBorrowPlugins'
-import { useEffect, useState } from '../../../types/reactHooks'
+import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfo, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
+import { memo, useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type Theme } from '../../../types/Theme'
-import { type FlatListItem } from '../../../types/types'
+import { type FlatListItem, type GuiExchangeRates } from '../../../types/types'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
@@ -25,12 +25,12 @@ import { TappableCard } from '../../cards/TappableCard'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { WalletListModal } from '../../modals/WalletListModal'
-import { Airship, showError } from '../../services/AirshipInstance'
+import { Airship, redText, showError } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-export const LoanDashboardScene = () => {
+export const LoanDashboardSceneComponent = () => {
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
@@ -48,20 +48,21 @@ export const LoanDashboardScene = () => {
 
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
   const [isLoading, setIsLoading] = useState(true)
-  const [borrowEngines, setBorrowEngines] = useState([])
+  const [borrowInfos, setBorrowInfos] = useState([])
 
   useEffect(() => {
     // Initialize AAVE ETH and ETH Kovan borrow engines
     if (isWalletsLoaded && isLoading) {
-      getAaveBorrowEngines([makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()], account)
-        .then(filterActiveBorrowEngines)
-        .then(borrowEngines => {
-          setBorrowEngines(borrowEngines)
+      getAaveBorrowInfos([makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()], account)
+        .then(filterActiveBorrowInfos)
+        .then(borrowInfos => {
+          setBorrowInfos(borrowInfos)
           setIsLoading(false)
         })
     }
-  }, [account, borrowEngines, isLoading, isWalletsLoaded, wallets])
+  }, [account, isLoading, isWalletsLoaded, wallets])
 
+  // TODO: The spec does not allow for a way to specify which dApp/plugin to create a loan from...
   const handleAddLoan = useHandler(() => {
     Airship.show(bridge => (
       <WalletListModal
@@ -72,20 +73,19 @@ export const LoanDashboardScene = () => {
       />
     )).then(({ walletId }) => {
       if (walletId != null) {
-        getAaveBorrowEngines([makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()], account).then(borrowEngines => {
-          if (borrowEngines.length > 0) {
-            // TODO: After LoanDetailsScene implementation
-            // navigation.navigate('loanDetails', borrowEngines[0])
-          } else {
-            showError('Failed to initialize borrow engine')
-          }
-        })
+        const wallet = wallets[walletId]
+        getAaveBorrowInfo(wallet.currencyInfo.pluginId === hardWalletPluginId ? makeAaveBorrowPlugin() : makeAaveKovanBorrowPlugin(), wallet)
+          .then((borrowInfo: TempBorrowInfo) => {
+            // navigation.navigate('loanDetails', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
+          })
+          .catch(err => redText(err.message))
       }
     })
   })
 
   const renderLoanCard = useHandler((item: FlatListItem<any>) => {
-    const { currencyWallet: wallet, collaterals, debts } = item.item
+    const { borrowEngine } = item.item
+    const { currencyWallet: wallet, collaterals, debts } = borrowEngine
     const isoFiatCurrencyCode = wallet.fiatCurrencyCode
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
 
@@ -95,13 +95,13 @@ export const LoanDashboardScene = () => {
 
       // Calculate fiat totals
       const collateralTotal = collaterals.reduce((accumulator, collateral) => {
-        return add(accumulator, calculateFiatValue(wallet, collateral.tokenId, isoFiatCurrencyCode, collateral.nativeAmount) ?? '0')
+        return add(accumulator, calculateFiatValue(wallet, collateral.tokenId, isoFiatCurrencyCode, collateral.nativeAmount, exchangeRates) ?? '0')
       }, '0')
       const displayCollateralTotal = `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount: collateralTotal, noGrouping: true })}`
       const displayBorrowTotal = formatFiatString({
         autoPrecision: true,
         fiatAmount: debts.reduce((accumulator, debt) => {
-          return add(accumulator, calculateFiatValue(wallet, debt.tokenId, isoFiatCurrencyCode, debt.nativeAmount))
+          return add(accumulator, calculateFiatValue(wallet, debt.tokenId, isoFiatCurrencyCode, debt.nativeAmount, exchangeRates))
         }, '0'),
         noGrouping: true
       })
@@ -113,7 +113,7 @@ export const LoanDashboardScene = () => {
         <TappableCard
           onPress={() => {
             // TODO: After LoanDetailsScene implementation
-            // navigation.navigate('loanDashboard', item.item)
+            // navigation.navigate('loanDetails', { borrowEngine, borrowPlugin })
           }}
         >
           <View style={styles.cardContainer}>
@@ -141,28 +141,6 @@ export const LoanDashboardScene = () => {
     }
   })
 
-  const getToken = (wallet: EdgeCurrencyWallet, tokenIdStr: string) => {
-    const allTokens = wallet.currencyConfig.allTokens
-    if (!Object.keys(allTokens).find(tokenKey => tokenKey === tokenIdStr)) {
-      showError(`Could not find tokenId ${tokenIdStr}`)
-    } else {
-      return allTokens[tokenIdStr]
-    }
-  }
-
-  const calculateFiatValue = (wallet: EdgeCurrencyWallet, tokenIdStr: string, isoFiatCurrencyCode: string, nativeAmount: string) => {
-    const token = getToken(wallet, tokenIdStr)
-    if (token == null) return '0'
-    const { currencyCode, denominations } = token
-    const [denomination] = denominations
-    const cryptoAmount = div(nativeAmount, denomination.multiplier, DECIMAL_PRECISION)
-    const key = `${isoFiatCurrencyCode}_${currencyCode}`
-    const assetFiatPrice = Object.keys(exchangeRates).some(erKey => erKey === key) ? exchangeRates[key] : '0'
-
-    if (zeroString(assetFiatPrice)) showError(`No exchange rate for ${key}`)
-    return mul(cryptoAmount, assetFiatPrice)
-  }
-
   const footer = (
     <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
       <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
@@ -182,9 +160,37 @@ export const LoanDashboardScene = () => {
       <SceneWrapper background="theme" hasTabs={false}>
         <SceneHeader underline title={s.strings.loan_dashboard_title} />
         <EdgeText style={styles.textSectionHeader}>{s.strings.loan_dashboard_active_loans_title}</EdgeText>
-        <FlatList data={borrowEngines} keyboardShouldPersistTaps="handled" renderItem={renderLoanCard} style={margin} ListFooterComponent={footer} />
+        <FlatList data={borrowInfos} keyboardShouldPersistTaps="handled" renderItem={renderLoanCard} style={margin} ListFooterComponent={footer} />
       </SceneWrapper>
     )
+}
+
+export const getToken = (wallet: EdgeCurrencyWallet, tokenIdStr: string) => {
+  const allTokens = wallet.currencyConfig.allTokens
+  if (!Object.keys(allTokens).find(tokenKey => tokenKey === tokenIdStr)) {
+    showError(`Could not find tokenId ${tokenIdStr}`)
+  } else {
+    return allTokens[tokenIdStr]
+  }
+}
+
+export const calculateFiatValue = (
+  wallet: EdgeCurrencyWallet,
+  tokenIdStr: string,
+  isoFiatCurrencyCode: string,
+  nativeAmount: string,
+  exchangeRates: GuiExchangeRates
+) => {
+  const token = getToken(wallet, tokenIdStr)
+  if (token == null) return '0'
+  const { currencyCode, denominations } = token
+  const [denomination] = denominations
+  const cryptoAmount = div(nativeAmount, denomination.multiplier, DECIMAL_PRECISION)
+  const key = `${isoFiatCurrencyCode}_${currencyCode}`
+  const assetFiatPrice = Object.keys(exchangeRates).some(erKey => erKey === key) ? exchangeRates[key] : '0'
+
+  if (zeroString(assetFiatPrice)) showError(`No exchange rate for ${key}`)
+  return mul(cryptoAmount, assetFiatPrice)
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
@@ -248,3 +254,5 @@ const getStyles = cacheStyles((theme: Theme) => {
     }
   }
 })
+
+export const LoanDashboardScene = memo(LoanDashboardSceneComponent)
