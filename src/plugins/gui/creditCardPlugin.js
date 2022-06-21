@@ -1,11 +1,10 @@
 // @flow
 import { div, eq, gt, toFixed } from 'biggystring'
-import { type EdgeDataStore } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
-import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginStore } from './fiatPluginTypes'
+import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs } from './fiatPluginTypes'
 import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
 import { dummyProvider } from './providers/dummyProvider'
 
@@ -16,26 +15,6 @@ const promiseWithTimeout = <T>(promise: Promise<T>, timeoutMs: number = 5000): P
 
 const safePromise = <T>(promise: Promise<T>): Promise<T> | Promise<void> => promise.catch(e => undefined)
 
-const createStore = (store: EdgeDataStore, storeId: string): FiatPluginStore => {
-  return {
-    writeData: async (data: { [key: string]: string }): Promise<{ [success: string]: boolean }> => {
-      console.log(`${storeId}: fiatProvider writeData: `, JSON.stringify(data))
-      await Promise.all(Object.keys(data).map(key => store.setItem(storeId, key, data[key])))
-      console.log(`${storeId}: fiatProvider writeData Success`)
-      return { success: true }
-    },
-
-    readData: async (keys: string[]): Promise<{ [key: string]: string }> => {
-      const returnObj = {}
-      for (let i = 0; i < keys.length; i++) {
-        returnObj[keys[i]] = await store.getItem(storeId, keys[i]).catch(e => undefined)
-      }
-      console.log(`${storeId}: fiatProvider readData: `, JSON.stringify(returnObj))
-      return returnObj
-    }
-  }
-}
-
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
   const { showUi, account } = params
@@ -43,8 +22,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const assetPromises = []
   const providerPromises = []
   for (const providerFactory of providerFactories) {
-    const store = createStore(account.dataStore, providerFactory.pluginId)
-    providerPromises.push(providerFactory.makeProvider({ io: { store } }))
+    providerPromises.push(providerFactory.makeProvider({ io: {} }))
   }
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {

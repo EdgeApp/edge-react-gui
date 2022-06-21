@@ -40,9 +40,7 @@ export type FiatProvider = {
 }
 
 export type FiatProviderFactoryParams = {
-  io: {
-    store: Object
-  }
+  io: {}
 }
 
 export type FiatProviderFactory = {
