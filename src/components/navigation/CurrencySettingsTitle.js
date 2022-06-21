@@ -4,8 +4,8 @@ import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
@@ -18,7 +18,7 @@ export function CurrencySettingsTitle(props: Props) {
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>
-      <CurrencyIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.25} />
+      <CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.25} />
       <EdgeText style={styles.text}>{displayName}</EdgeText>
     </View>
   )

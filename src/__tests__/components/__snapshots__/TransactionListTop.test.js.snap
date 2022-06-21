@@ -101,7 +101,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   size={34}
                 />
               </TouchableOpacity>
-              <Memo(CurrencyIconComponent)
+              <Memo(CryptoIconComponent)
                 currencyCode="string"
                 sizeRem={1.5}
               />

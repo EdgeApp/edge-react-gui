@@ -8,11 +8,11 @@ import { useWalletBalance } from '../../hooks/useWalletBalance.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
 import { memo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText.js'
 import { TickerText } from '../text/TickerText.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {|
@@ -54,7 +54,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
-      <CurrencyIcon marginRem={1} sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
+      <CryptoIcon marginRem={1} sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
       <View style={styles.nameColumn}>
         <View style={styles.currencyRow}>
           <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>

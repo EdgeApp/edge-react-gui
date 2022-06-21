@@ -15,8 +15,8 @@ import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName, stakePlugin 
 import { StakingOptionCard } from '../../cards/StakingOptionCard.js'
 import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
+import { CryptoIcon } from '../../icons/CryptoIcon.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
-import { CurrencyIcon } from '../../themed/CurrencyIcon.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 
@@ -30,7 +30,7 @@ export const StakeOptionsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const icon = useMemo(() => <CurrencyIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />, [])
+  const icon = useMemo(() => <CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />, [])
 
   //
   // Stake Policies

@@ -24,10 +24,10 @@ import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type ThemeProps, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
@@ -257,7 +257,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
             return (
               <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-                <CurrencyIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
+                <CryptoIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
               </SettingsTappableRow>
             )
           })}

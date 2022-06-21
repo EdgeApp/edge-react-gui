@@ -12,8 +12,8 @@ import { usePendingPressAnimation } from '../../hooks/usePendingPress.js'
 import { memo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 export type Props = {
@@ -69,7 +69,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   return (
     <Pressable style={styles.row} onPress={handleToggle}>
-      <CurrencyIcon
+      <CryptoIcon
         marginRem={0.5}
         sizeRem={2}
         // Use the pluginId to avoid showing the wallet loading spinner:

@@ -15,8 +15,8 @@ import { memo } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 export type WalletListCreateRowProps = {|
@@ -53,7 +53,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
   return (
     <TouchableOpacity style={styles.row} onPress={handlePress}>
-      <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} />
+      <CryptoIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} />
       <View style={styles.nameColumn}>
         <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>

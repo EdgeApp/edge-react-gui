@@ -13,7 +13,7 @@ exports[`WalletListRow should render with loading props 1`] = `
     }
   }
 >
-  <Memo(CurrencyIconComponent)
+  <Memo(CryptoIconComponent)
     currencyCode="BTC"
     marginRem={1}
     sizeRem={2}

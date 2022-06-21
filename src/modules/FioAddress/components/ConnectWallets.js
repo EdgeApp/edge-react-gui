@@ -4,9 +4,9 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, ScrollView, Switch, View } from 'react-native'
 
+import { CryptoIcon } from '../../../components/icons/CryptoIcon.js'
 import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
-import { CurrencyIcon } from '../../../components/themed/CurrencyIcon.js'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton.js'
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants'
@@ -144,7 +144,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       return (
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]} underlayColor={theme.secondaryButton}>
           <View style={styles.rowContainerTop}>
-            <View style={styles.containerLeft}>{wallet != null ? <CurrencyIcon currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}</View>
+            <View style={styles.containerLeft}>{wallet != null ? <CryptoIcon currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}</View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
                 <EdgeText style={styles.walletDetailsRowCurrency}>{currencyCode}</EdgeText>

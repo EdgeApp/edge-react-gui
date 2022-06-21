@@ -15,7 +15,7 @@ import { logoutRequest } from '../../actions/LoginActions.js'
 import { parseScannedUri } from '../../actions/ScanActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
-import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
+import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
@@ -240,7 +240,7 @@ export function ControlPanel(props: Props) {
           ) : (
             <>
               <View style={styles.rowIconContainer}>
-                <CurrencyIcon pluginId={selectedWallet.wallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={selectedWallet.tokenId} />
+                <CryptoIcon pluginId={selectedWallet.wallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={selectedWallet.tokenId} />
               </View>
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>

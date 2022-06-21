@@ -11,8 +11,8 @@ import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { Card } from '../cards/Card'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
 import { ExchangedFlipInput } from './ExchangedFlipInput.js'
@@ -60,7 +60,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <CurrencyIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />
+        <CryptoIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />
       </View>
     )
   }

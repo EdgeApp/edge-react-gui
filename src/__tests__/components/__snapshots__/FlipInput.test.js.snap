@@ -13,7 +13,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
       }
     }
   >
-    <Memo(CurrencyIconComponent)
+    <Memo(CryptoIconComponent)
       marginRem={
         Array [
           0,
