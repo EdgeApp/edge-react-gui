@@ -2,18 +2,19 @@
 import { add, div, mul } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatchAccount } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from '../../../plugins/borrow-plugins/plugins/aave/index'
 import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfo, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
-import { memo, useEffect, useState } from '../../../types/reactHooks'
+import { memo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type Theme } from '../../../types/Theme'
 import { type FlatListItem, type GuiExchangeRates } from '../../../types/types'
@@ -21,6 +22,7 @@ import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
+import { Card } from '../../cards/Card'
 import { TappableCard } from '../../cards/TappableCard'
 import { FillLoader } from '../../common/FillLoader'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -47,20 +49,18 @@ export const LoanDashboardSceneComponent = () => {
   ).symbolImage
 
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
-  const [isLoading, setIsLoading] = useState(true)
   const [borrowInfos, setBorrowInfos] = useState([])
+  const [isSceneLoading, setIsSceneLoading] = useState(true)
+  const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     // Initialize AAVE ETH and ETH Kovan borrow engines
-    if (isWalletsLoaded && isLoading) {
-      getAaveBorrowInfos([makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()], account)
-        .then(filterActiveBorrowInfos)
-        .then(borrowInfos => {
-          setBorrowInfos(borrowInfos)
-          setIsLoading(false)
-        })
+    if (isWalletsLoaded && isSceneLoading) {
+      const borrowInfos = await getAaveBorrowInfos([makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()], account)
+      setBorrowInfos(filterActiveBorrowInfos(borrowInfos))
+      setIsSceneLoading(false)
     }
-  }, [account, isLoading, isWalletsLoaded, wallets])
+  }, [account, isSceneLoading, isWalletsLoaded, wallets])
 
   // TODO: The spec does not allow for a way to specify which dApp/plugin to create a loan from...
   const handleAddLoan = useHandler(() => {
@@ -74,11 +74,17 @@ export const LoanDashboardSceneComponent = () => {
     )).then(({ walletId }) => {
       if (walletId != null) {
         const wallet = wallets[walletId]
+        setIsNewLoanLoading(true)
+
         getAaveBorrowInfo(wallet.currencyInfo.pluginId === hardWalletPluginId ? makeAaveBorrowPlugin() : makeAaveKovanBorrowPlugin(), wallet)
           .then((borrowInfo: TempBorrowInfo) => {
+            setIsNewLoanLoading(false)
             // navigation.navigate('loanDetails', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
           })
-          .catch(err => redText(err.message))
+          .catch(err => {
+            redText(err.message)
+          })
+          .finally(() => setIsNewLoanLoading(false))
       }
     })
   })
@@ -135,20 +141,30 @@ export const LoanDashboardSceneComponent = () => {
           </View>
         </TappableCard>
       )
+
+      // return <Alert title={s.strings.wc_smartcontract_warning_title} message="test" type="warning" />
     } catch (err) {
       showError(err.message)
-      return null
+
+      // Render a failed card
+      return <Alert title={s.strings.wc_smartcontract_warning_title} message="test" type="error" />
     }
   })
 
-  const footer = (
+  const footer = isNewLoanLoading ? (
+    <View style={styles.cardEmptyContainer}>
+      <Card>
+        <FillLoader />
+      </Card>
+    </View>
+  ) : (
     <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
       <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
       <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_dashboard_new_loan}</EdgeText>
     </TouchableOpacity>
   )
 
-  if (isLoading)
+  if (isSceneLoading)
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <SceneHeader underline title={s.strings.loan_dashboard_title} />
@@ -160,7 +176,15 @@ export const LoanDashboardSceneComponent = () => {
       <SceneWrapper background="theme" hasTabs={false}>
         <SceneHeader underline title={s.strings.loan_dashboard_title} />
         <EdgeText style={styles.textSectionHeader}>{s.strings.loan_dashboard_active_loans_title}</EdgeText>
-        <FlatList data={borrowInfos} keyboardShouldPersistTaps="handled" renderItem={renderLoanCard} style={margin} ListFooterComponent={footer} />
+        <FlatList
+          data={borrowInfos}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderLoanCard}
+          style={margin}
+          ListFooterComponent={footer}
+          keyExtractor={(borrowInfo: TempBorrowInfo) => borrowInfo.borrowEngine.currencyWallet.id ?? '0'}
+        />
+        <Alert marginRem={[0, 1, 1, 1]} title={s.strings.wc_smartcontract_warning_title} message="test" numberOfLines={0} type="warning" />
       </SceneWrapper>
     )
 }
@@ -213,6 +237,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     cardContainer: {
       flex: 1
+    },
+    cardEmptyContainer: {
+      marginLeft: theme.rem(0.5),
+      marginRight: theme.rem(0.5)
     },
     column: {
       flexDirection: 'column',
