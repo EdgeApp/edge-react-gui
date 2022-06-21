@@ -21,11 +21,6 @@ type TermsUri = {
 }
 
 const pluginData: { [pluginId: string]: TermsUri } = {
-  changelly: {
-    termsUri: 'https://changelly.com/terms-of-use',
-    privacyUri: 'https://changelly.com/privacy-policy',
-    kycUri: 'https://changelly.com/aml-kyc'
-  },
   switchain: {
     termsUri: 'https://www.switchain.com/tos',
     privacyUri: 'https://www.switchain.com/policy',

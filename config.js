@@ -28,13 +28,6 @@ const asConfig = asObject({
     }),
     { apiKey: '' }
   ),
-  x_CHANGELLY_INIT: asOptional(
-    asObject({
-      apiKey: asOptional(asString, ''),
-      secret: asOptional(asString, '')
-    }),
-    { apiKey: '', secret: '' }
-  ),
   x_CURRENCYCONVERTERAPI_INIT: asOptional(
     asObject({
       apiKey: asOptional(asString, '')
