@@ -10,7 +10,7 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import {
   DECIMAL_PRECISION,
@@ -42,18 +42,19 @@ type OwnProps = {
   walletId: string,
   // eslint-disable-next-line react/no-unused-prop-types
   currencyCode: string,
-  transaction: TransactionListTx
+  transaction: TransactionListTx,
+  navigation: NavigationProp<'transactionListRowComponent'>
 }
 
 type Props = OwnProps & StateProps
 
 export class TransactionListRowComponent extends React.PureComponent<Props> {
   handlePress = () => {
-    const { transaction, thumbnailPath } = this.props
+    const { transaction, thumbnailPath, navigation } = this.props
     if (transaction == null) {
       return showError(s.strings.transaction_details_error_invalid)
     }
-    Actions.push('transactionDetails', {
+    navigation.push('transactionDetails', {
       edgeTransaction: transaction,
       thumbnailPath
     })
@@ -134,4 +135,4 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
     }
   },
   dispatch => ({})
-)(TransactionListRowComponent)
+)(withNavigation(TransactionListRowComponent))
