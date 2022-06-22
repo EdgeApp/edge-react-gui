@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
 import { useMemo, useState } from '../../types/reactHooks.js'
@@ -27,6 +28,7 @@ type Props = {|
   excludeAssets?: EdgeTokenId[],
   excludeWalletIds?: string[],
   filterActivation?: boolean,
+  allowKeysOnlyMode?: boolean,
 
   // Visuals:
   headerTitle: string,
@@ -39,6 +41,12 @@ type Props = {|
   excludeCurrencyCodes?: string[]
 |}
 
+const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
+  .map(pluginId => ({
+    pluginId
+  }))
+
 export function WalletListModal(props: Props) {
   const {
     bridge,
@@ -48,6 +56,7 @@ export function WalletListModal(props: Props) {
     excludeAssets,
     excludeWalletIds,
     filterActivation,
+    allowKeysOnlyMode = false,
 
     // Visuals:
     headerTitle,
@@ -86,6 +95,12 @@ export function WalletListModal(props: Props) {
   const handleSearchUnfocus = useHandler(() => setSearching(searchText.length > 0))
   const handleSearchFocus = useHandler(() => setSearching(true))
 
+  // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
+  const walletListExcludeAssets = useMemo(() => {
+    const result = excludeAssets ?? legacyExcludeAssets
+    return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
+  }, [allowKeysOnlyMode, excludeAssets, legacyExcludeAssets])
+
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{headerTitle}</ModalTitle>
@@ -102,7 +117,7 @@ export function WalletListModal(props: Props) {
       />
       <WalletList
         allowedAssets={allowedAssets ?? legacyAllowedAssets}
-        excludeAssets={excludeAssets ?? legacyExcludeAssets}
+        excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
         marginRem={listMargin}
