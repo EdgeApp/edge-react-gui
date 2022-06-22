@@ -14,6 +14,7 @@ import {
   getFioObtData,
   needToCheckExpired,
   refreshConnectedWalletsForFioAddress,
+  refreshFioNames,
   setFioExpiredCheckToDisklet
 } from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
