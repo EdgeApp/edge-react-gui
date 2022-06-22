@@ -119,20 +119,6 @@
       ]
     },
     {
-      "uid": "37613ecd580d565e9b792d4888a49b4e",
-      "css": "fioNames",
-      "code": 59399,
-      "src": "custom_icons",
-      "selected": true,
-      "svg": {
-        "path": "M335 516V691Q335 706 348 716L450 771Q455 774 459 771T463 761V582ZM342 497Q345 497 346 496L487 424 345 351 342 350Q337 350 335 357V487Q335 490 336 492 338 497 342 497ZM550 237L362 333Q352 338 343 344 347 344 349 345L490 418 495 420 550 392Q555 389 558 383.5T561 372V245Q561 239 558 237T550 237ZM550 456L495 428H494L350 502 343 504 346 506H347L550 610Q554 613 557.5 610.5T561 602V476Q561 462 550 456ZM1000 529L868 912 768 861 725 933 695 800 768 736 640 785 526 714ZM557 717L641 770 800 709 807 721 710 805 731 896 762 843 860 892 977 553ZM454 64Q334 64 232 124 132 182 74 282 14 384 14 504T74 726Q132 826 232 885 335 945 454.5 945T675 885L682 897Q577 959 454 959T225 897Q122 836 62 734 0 627 0 504T62 275Q122 172 225 112 331 50 454 50T684 112Q786 172 847 275 909 381 909 504H895Q895 385 835 282 776 182 676 124 574 64 454 64Z",
-        "width": 1000
-      },
-      "search": [
-        "fioNames"
-      ]
-    },
-    {
       "uid": "d6d68c3b06b3048aeeabdda254835074",
       "css": "security",
       "code": 59400,
@@ -266,7 +252,7 @@
     },
     {
       "uid": "448e6e7b5118521d8875d236d56f588b",
-      "css": "edge.addresbook",
+      "css": "address-book",
       "code": 59548,
       "src": "custom_icons",
       "selected": true,
@@ -275,12 +261,12 @@
         "width": 865
       },
       "search": [
-        "edge.addresbook"
+        "address-book"
       ]
     },
     {
       "uid": "8f022c27f51cd7db8ef88a878de46c85",
-      "css": "cp-account",
+      "css": "control-panel-account",
       "code": 59413,
       "src": "custom_icons",
       "selected": true,
@@ -289,12 +275,12 @@
         "width": 1000
       },
       "search": [
-        "cp-account"
+        "control-panel-account"
       ]
     },
     {
       "uid": "078bf075ad50e41c3847a9908c813347",
-      "css": "cp-logout",
+      "css": "control-panel-logout",
       "code": 59408,
       "src": "custom_icons",
       "selected": true,
@@ -303,12 +289,12 @@
         "width": 1000
       },
       "search": [
-        "cp-logout"
+        "control-panel-logout"
       ]
     },
     {
       "uid": "94b028dc195654a277935165d1e95de7",
-      "css": "cp-scan-qr",
+      "css": "control-panel-scan-qr",
       "code": 59409,
       "src": "custom_icons",
       "selected": true,
@@ -317,12 +303,12 @@
         "width": 1000
       },
       "search": [
-        "sp-scan-qr"
+        "control-panel-scan-qr"
       ]
     },
     {
       "uid": "ef1f18df21331ce10492859addfa5178",
-      "css": "cp-settings",
+      "css": "control-panel-settings",
       "code": 59410,
       "src": "custom_icons",
       "selected": true,
@@ -331,12 +317,12 @@
         "width": 1000
       },
       "search": [
-        "cp-settings"
+        "control-panel-settings"
       ]
     },
     {
       "uid": "d2a9b631d93d0befc73effaab9947886",
-      "css": "cp-share",
+      "css": "control-panel-share",
       "code": 59411,
       "src": "custom_icons",
       "selected": true,
@@ -345,12 +331,12 @@
         "width": 1000
       },
       "search": [
-        "cp-share"
+        "control-panel-share"
       ]
     },
     {
       "uid": "fab665203eadf55e85d9dbd78ec5dbeb",
-      "css": "cp-sweep",
+      "css": "control-panel-sweep",
       "code": 59412,
       "src": "custom_icons",
       "selected": true,
@@ -359,12 +345,12 @@
         "width": 1000
       },
       "search": [
-        "cp-sweep"
+        "control-panel-sweep"
       ]
     },
     {
       "uid": "9a8863f228165d78204df2e46ac2749e",
-      "css": "cp-tos",
+      "css": "control-panel-tos",
       "code": 59420,
       "src": "custom_icons",
       "selected": true,
@@ -373,12 +359,12 @@
         "width": 1000
       },
       "search": [
-        "cp-tos"
+        "control-panel-tos"
       ]
     },
     {
       "uid": "af352140b57add21ce480f4e69440bc3",
-      "css": "group-(2)",
+      "css": "FIO-share",
       "code": 59405,
       "src": "custom_icons",
       "selected": true,
@@ -387,12 +373,12 @@
         "width": 833
       },
       "search": [
-        "group-(2)"
+        "FIO-share"
       ]
     },
     {
       "uid": "df21dc29474db86e9cb28623454d1857",
-      "css": "cp-wallet-connect",
+      "css": "control-panel-wallet-connect",
       "code": 59421,
       "src": "custom_icons",
       "selected": true,
@@ -401,12 +387,12 @@
         "width": 1000
       },
       "search": [
-        "cp-wallet-connect"
+        "control-panel-wallet-connect"
       ]
     },
     {
       "uid": "a3510a28ddee25a6209bc9fce588740e",
-      "css": "cp-fio",
+      "css": "control-panel-fio",
       "code": 59422,
       "src": "custom_icons",
       "selected": true,
@@ -415,7 +401,7 @@
         "width": 1000
       },
       "search": [
-        "cp-fio"
+        "control-panel-fio"
       ]
     },
     {
@@ -434,7 +420,7 @@
     },
     {
       "uid": "3fc8e0aa838bb20075b9cd7eff0b5450",
-      "css": "cp-fio-names",
+      "css": "control-panel-fio-names",
       "code": 59414,
       "src": "custom_icons",
       "selected": true,
@@ -443,12 +429,12 @@
         "width": 1000
       },
       "search": [
-        "cp-fio-names"
+        "control-panel-fio-names"
       ]
     },
     {
       "uid": "8dc44dcd3176c6b710bc852da5e782dd",
-      "css": "cp-borrow",
+      "css": "control-panel-borrow",
       "code": 59423,
       "src": "custom_icons",
       "selected": true,
@@ -457,7 +443,7 @@
         "width": 1125
       },
       "search": [
-        "cp-borrow"
+        "control-panel-borrow"
       ]
     }
   ]
