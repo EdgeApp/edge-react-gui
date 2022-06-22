@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { type SetNativeAmountInfo, exchangeMax, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
-import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -76,11 +76,6 @@ type State = {
   fromAmountNative: string,
   toAmountNative: string
 }
-
-// Prevent currencies that are "watch only" from being allowed to exchange
-const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
@@ -243,7 +238,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
         bridge={bridge}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
-        excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
+        allowKeysOnlyMode={whichWallet === 'from'}
         filterActivation
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
