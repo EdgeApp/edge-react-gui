@@ -494,8 +494,7 @@
       "GB"
     ],
     "cryptoCodes": [
-      "BTC",
-      "ETH"
+      "BTC"
     ],
     "deepQuery": {
       "sellMode": null,
@@ -504,7 +503,7 @@
     },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: 5.5% / Settlement: Instant - 1 hour\nLimit: £6000",
+    "description": "Fee: 3% / Settlement: Instant\nDaily Limit: £6000\nMonthly Limit: £150000",
     "sortIndex": 1
   },
   {
@@ -514,10 +513,7 @@
       "CA"
     ],
     "cryptoCodes": [
-      "BTC",
-      "LTC",
-      "ETH",
-      "USDT"
+      "BTC"
     ],
     "deepQuery": {
       "sellMode": null,
@@ -526,7 +522,7 @@
     },
     "title": "Interac e-Transfer",
     "paymentTypeLogoKey": "interac",
-    "description": "Fee: 3% / Settlement: 1 - 2 days\nDaily Limit: $10000\nMonthly Limit: $70000",
+    "description": "Fee: 3% / Settlement: Instant\nDaily Limit: $10000\nMonthly Limit: $70000",
     "sortIndex": 1
   },
   "----- Sorting -----",
