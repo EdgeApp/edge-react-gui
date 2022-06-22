@@ -803,7 +803,7 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key="loanDetails">
+          <Stack key="loan">
             <Scene
               key="loanDashboard"
               component={withNavigation(ifLoggedIn(LoanDashboardScene))}
