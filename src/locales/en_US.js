@@ -852,6 +852,7 @@ const strings = {
   // Loan
   loan_collateral_value: 'Collateral Value',
   loan_dashboard_active_loans_title: 'Active Loans',
+  loan_dashboard_failed_loan: 'Failed to load loan data',
   loan_dashboard_new_loan: 'New Loan',
   loan_dashboard_title: 'Loan Dashboard',
   loan_interest_rate: 'Interest Rate',
