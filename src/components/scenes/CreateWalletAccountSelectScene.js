@@ -11,8 +11,8 @@ import {
   fetchAccountActivationInfo,
   fetchWalletAccountActivationPaymentInfo
 } from '../../actions/CreateWalletActions.js'
+import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
-import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -202,7 +202,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           </View>
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
-              <CurrencyIcon currencyCode={wallet.currencyCode} sizeRem={1.5} />
+              <CryptoIcon currencyCode={wallet.currencyCode} sizeRem={1.5} />
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
@@ -276,7 +276,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <CurrencyIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
+              <CryptoIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
 
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>

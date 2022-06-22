@@ -19,10 +19,10 @@ import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { stakePlugin } from '../../util/stakeUtils.js'
 import { convertNativeToDenomination } from '../../util/utils'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 import { SceneHeader } from './SceneHeader'
@@ -110,7 +110,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                 <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
-              <CurrencyIcon currencyCode={currencyCode} sizeRem={1.5} walletId={walletId} />
+              <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={walletId} />
             </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (

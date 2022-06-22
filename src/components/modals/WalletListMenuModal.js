@@ -14,8 +14,8 @@ import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyInfos, getTokenId } from '../../util/CurrencyInfoHelpers.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -133,7 +133,7 @@ export function WalletListMenuModal(props: Props) {
       {walletName ? <ModalTitle>{walletName}</ModalTitle> : null}
       <View style={styles.row}>
         {edgeWallet == null || currencyCode == null ? null : (
-          <CurrencyIcon
+          <CryptoIcon
             marginRem={[0, 0, 0, 0.5]}
             sizeRem={1}
             tokenId={getTokenId(account, edgeWallet.currencyInfo.pluginId, currencyCode)}

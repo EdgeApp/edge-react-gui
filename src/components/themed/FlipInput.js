@@ -12,9 +12,9 @@ import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPe
 import s from '../../locales/strings.js'
 import { forwardRef } from '../../types/reactHooks.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
@@ -523,7 +523,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <>
         <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
-          <CurrencyIcon pluginId={primaryInfo.pluginId} currencyCode={primaryInfo.currencyCode} marginRem={[0, 1, 0, 0]} sizeRem={1.5} />
+          <CryptoIcon pluginId={primaryInfo.pluginId} currencyCode={primaryInfo.currencyCode} marginRem={[0, 1, 0, 0]} sizeRem={1.5} />
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
         <View style={styles.clipboardContainer}>

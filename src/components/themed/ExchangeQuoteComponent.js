@@ -6,8 +6,8 @@ import { View } from 'react-native'
 import s from '../../locales/strings.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { Card } from '../cards/Card'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText'
 
 type Props = {
@@ -68,7 +68,7 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
       <Card marginRem={[0, 1]}>
         <View style={styles.container}>
           <View style={styles.iconContainer}>
-            <CurrencyIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />
+            <CryptoIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />
           </View>
           <View style={styles.contentContainer}>
             {this.renderRow(

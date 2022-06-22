@@ -15,11 +15,11 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../types/types.js'
+import { SwipeableRowIcon } from '../icons/SwipeableRowIcon.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow.js'
 import { EdgeText } from './EdgeText.js'
 import { type SwipableRowRef, SwipeableRow } from './SwipeableRow.js'
-import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 
 type OwnProps = {
   // The request:

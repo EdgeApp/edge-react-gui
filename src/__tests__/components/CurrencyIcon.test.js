@@ -5,14 +5,14 @@ import * as React from 'react'
 import * as reactRedux from 'react-redux'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { CurrencyIconComponent } from '../../components/themed/CurrencyIcon.js'
+import { CryptoIconComponent } from '../../components/icons/CryptoIcon.js'
 
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
   useDispatch: jest.fn()
 }))
 
-describe('CurrencyIcon', () => {
+describe('CryptoIcon', () => {
   beforeEach(() => {
     useDispatchMock.mockImplementation(() => () => {})
     useSelectorMock.mockImplementation(selector => selector(mockStore))
@@ -51,7 +51,7 @@ describe('CurrencyIcon', () => {
       marginRem: 1,
       paddingRem: [1, 2]
     }
-    const actual = renderer.render(<CurrencyIconComponent {...props} />)
+    const actual = renderer.render(<CryptoIconComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

@@ -4,7 +4,7 @@ import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ScrollView } from 'react-native'
 
-import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
+import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
@@ -106,7 +106,7 @@ class NotificationComponent extends React.Component<Props, State> {
 
               return (
                 <SettingsTappableRow disabled={!enabled} key={pluginId} label={displayName} onPress={onPress}>
-                  <CurrencyIcon pluginId={pluginId} />
+                  <CryptoIcon pluginId={pluginId} />
                 </SettingsTappableRow>
               )
             })}

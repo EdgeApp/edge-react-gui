@@ -17,11 +17,11 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { truncateString } from '../../util/utils.js'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { FlashNotification } from '../navigation/FlashNotification.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -124,7 +124,7 @@ export const WcConnectScene = (props: Props) => {
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
-        <CurrencyIcon tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} walletId={selectedWallet.walletId} />
+        <CryptoIcon tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} walletId={selectedWallet.walletId} />
       )
       const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
       return (

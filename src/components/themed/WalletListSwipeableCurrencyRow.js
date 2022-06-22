@@ -13,12 +13,12 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo, useEffect, useMemo, useRef } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
+import { SwipeableRowIcon } from '../icons/SwipeableRowIcon.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow.js'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow.js'
-import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 
 type Props = {|
   navigation: NavigationProp<'walletList'>,

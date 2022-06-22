@@ -18,7 +18,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
         }
       }
     >
-      <Memo(CurrencyIconComponent)
+      <Memo(CryptoIconComponent)
         currencyCode="BTC"
         marginRem={
           Array [

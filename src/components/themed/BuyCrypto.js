@@ -9,8 +9,8 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
 import { Actions } from '../../types/routerTypes.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
@@ -40,7 +40,7 @@ export const BuyCrypto = (props: Props) => {
         <ButtonBox onPress={handlePress} paddingRem={1}>
           <View style={styles.container}>
             <View style={styles.buyCrypto}>
-              <CurrencyIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+              <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
               <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
             </View>

@@ -5,8 +5,8 @@ import { TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { memo } from '../../types/reactHooks.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {|
@@ -40,7 +40,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
-      <CurrencyIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
