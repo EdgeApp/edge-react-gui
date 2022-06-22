@@ -195,41 +195,41 @@ export function ControlPanel(props: Props) {
   const rowDatas: any[] = [
     {
       pressHandler: () => handleGoToScene('fioAddressList'),
-      iconName: 'cp-fio-names',
+      iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
       pressHandler: () => handleGoToScene('fioRequestList'),
-      iconName: 'cp-fio',
+      iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
       pressHandler: () => handleGoToScene('wcConnections'),
-      iconName: 'cp-wallet-connect',
+      iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
     {
       pressHandler: () => handleLoginQr(),
-      iconName: 'cp-scan-qr',
+      iconName: 'control-panel-scan-qr',
       title: s.strings.drawer_scan_qr_send
     },
-    { pressHandler: handleSweep, iconName: 'cp-sweep', title: s.strings.drawer_sweep_private_key },
-    { pressHandler: handleBorrow, iconName: 'cp-borrow', title: s.strings.drawer_borrow_dollars },
+    { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars },
 
     {
       pressHandler: () => handleGoToScene('termsOfService'),
-      iconName: 'cp-tos',
+      iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
-    { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + config.appName },
+    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
       pressHandler: () => handleGoToScene('settingsOverviewTab'),
-      iconName: 'cp-settings',
+      iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
     {
       pressHandler: () => dispatch(logoutRequest()),
-      iconName: 'cp-logout',
+      iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
     }
   ]
@@ -267,7 +267,7 @@ export function ControlPanel(props: Props) {
         {/* ==== Rate Display End ==== */}
         <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
-            <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
             <TitleText style={styles.text}>{activeUsername}</TitleText>
