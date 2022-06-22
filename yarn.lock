@@ -3622,9 +3622,9 @@ ajv@^8.0.1:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-"altcoin-js@https://github.com/EdgeApp/altcoin-js.git#master":
+"altcoin-js@git+https://github.com/EdgeApp/altcoin-js.git#master":
   version "5.1.10"
-  resolved "https://github.com/EdgeApp/altcoin-js.git#b0a16589b50c1a88482bb98930b13d14088b44f4"
+  resolved "git+https://github.com/EdgeApp/altcoin-js.git#b0a16589b50c1a88482bb98930b13d14088b44f4"
   dependencies:
     bech32 "^1.1.4"
     big-integer "^1.6.44"
@@ -6348,10 +6348,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.19:
-  version "0.19.19"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.19.tgz#66df9fdb60e021e01a27dbfd90f74c90c25bd07c"
-  integrity sha512-FDeuzn5AlbafxotSdC9FMhErK1aNymrKGlgPrU25AJlwAOHPCgpLaoQ3p5X9fmd3ZIwQERkP/XPfJB1/kn7dyA==
+edge-core-js@^0.19.20:
+  version "0.19.20"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.20.tgz#b5f23339b183b24e3cc291840cc256ac02f7b053"
+  integrity sha512-sWPAKqVsBUnfDtT7RdULMR2iZdPetNzchQczbEhuv9fDa8kDvzGEmVcaI/lFEbaewQJvnHrngK4FLecuTKJlzA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -6423,10 +6423,10 @@ edge-currency-monero@^0.4.1:
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^1.0.0-rc.6:
-  version "1.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.0.0-rc.6.tgz#d0bbd8e7a373fdbb5d56e5a7bca7fe6a5a0683ac"
-  integrity sha512-0Q5ptj8/vHYIEwFGIkqVIFhCZo1Du6OqOAcjvIJQEMpAdz2+XcSd6rrq3LXB/gRGw4F3kLNquawclUZxsddiYA==
+edge-currency-plugins@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.0.0.tgz#f82b789efab1059b5b73525571380a601f89b439"
+  integrity sha512-n/X2gaTFVCqWkZOvSljkc21i71RHFMmmPdzfxyeOPEKnH+vipm/jeOisvyXrQ0izpfviK8uJQgdtESmFY7Q9fg==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -6443,7 +6443,7 @@ edge-currency-plugins@^1.0.0-rc.6:
     bs58smartcheck "^2.0.4"
     cleaners "^0.3.12"
     disklet "^0.4.5"
-    edge-core-js "^0.19.19"
+    edge-core-js "^0.19.20"
     memlet "^0.1.6"
     uri-js "^4.4.0"
     url-parse "^1.5.2"
