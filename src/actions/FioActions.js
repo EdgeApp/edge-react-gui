@@ -20,9 +20,6 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import type { FioDomain, FioObtRecord } from '../types/types'
 
-const EXPIRE_CHECK_TIMEOUT = 30000
-const INIT_EXPIRE_CHECK_TIMEOUT = 5000
-const MAX_OBT_DATA_CHECKS = 15
 let checkFioObtDataCounter = 0
 
 export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
