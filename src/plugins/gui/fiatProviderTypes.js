@@ -63,6 +63,13 @@ export type FiatProviderGetQuoteParams = {
   direction: 'buy' | 'sell'
 }
 
+export type FiatProviderStore = {
+  +deleteItem: (itemId: string) => Promise<void>,
+  +listItemIds: () => Promise<string[]>,
+  +getItem: (itemId: string) => Promise<string>,
+  +setItem: (itemId: string, value: string) => Promise<void>
+}
+
 export type FiatProvider = {
   pluginId: string,
   partnerIcon: string,
@@ -72,11 +79,12 @@ export type FiatProvider = {
 }
 
 export type FiatProviderFactoryParams = {
-  io: {},
+  io: { store: FiatProviderStore },
   apiKeys?: mixed
 }
 
 export type FiatProviderFactory = {
   pluginId: string,
+  storeId: string,
   makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>
 }

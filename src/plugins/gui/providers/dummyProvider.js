@@ -12,6 +12,7 @@ import {
   FiatProviderError
 } from '../fiatProviderTypes'
 const pluginId = 'dummyprovider'
+const storeId = 'com.dummyprovider'
 const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Dummy'
 
@@ -126,6 +127,7 @@ for (const pluginId in SIMPLEX_ID_MAP) {
 
 export const dummyProvider: FiatProviderFactory = {
   pluginId,
+  storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const out = {
       pluginId,

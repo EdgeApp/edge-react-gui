@@ -8,10 +8,8 @@ import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
 import { fuzzyTimeout } from '../../util/utils'
 import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginGetMethodsResponse } from './fiatPluginTypes'
-// import { dummyProvider } from './providers/dummyProvider'
-// import { dummyProvider2 } from './providers/dummyProvider2'
 import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
-import { getBestError, getRateFromQuote } from './pluginUtils'
+import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
@@ -29,7 +27,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     if (ENV.PLUGIN_API_KEYS[providerFactory.pluginId] != null) {
       apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
     }
-    providerPromises.push(providerFactory.makeProvider({ io: {}, apiKeys }))
+    const store = createStore(providerFactory.storeId, account.dataStore)
+    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
   }
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {

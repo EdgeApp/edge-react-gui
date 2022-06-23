@@ -4,7 +4,22 @@ import { type EdgeDataStore } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
-import { type FiatProviderQuote, type FiatProviderQuoteError, type FiatProviderQuoteErrorTypes, FiatProviderError } from './fiatProviderTypes'
+import {
+  type FiatProviderQuote,
+  type FiatProviderQuoteError,
+  type FiatProviderQuoteErrorTypes,
+  type FiatProviderStore,
+  FiatProviderError
+} from './fiatProviderTypes'
+
+export const createStore = (storeId: string, store: EdgeDataStore): FiatProviderStore => {
+  return {
+    deleteItem: (itemId: string) => store.deleteItem(storeId, itemId),
+    listItemIds: () => store.listItemIds(storeId),
+    getItem: (itemId: string) => store.getItem(storeId, itemId),
+    setItem: (itemId: string, value: string) => store.setItem(storeId, itemId, value)
+  }
+}
 
 const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
   underLimit: 1,

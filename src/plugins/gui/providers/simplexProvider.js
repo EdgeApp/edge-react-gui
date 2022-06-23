@@ -15,6 +15,7 @@ import {
   FiatProviderError
 } from '../fiatProviderTypes'
 const pluginId = 'simplex'
+const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
 
@@ -166,6 +167,7 @@ const asInfoJwtSignResponse = asObject({ token: asString })
 
 export const simplexProvider: FiatProviderFactory = {
   pluginId,
+  storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const { publicKey, partner } = asSimplexApiKeys(params.apiKeys)
     const out = {

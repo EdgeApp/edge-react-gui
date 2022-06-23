@@ -14,6 +14,7 @@ import {
   FiatProviderError
 } from '../fiatProviderTypes'
 const pluginId = 'moonpay'
+const storeId = 'com.moonpay'
 const partnerIcon = 'icon_black_small.png'
 const pluginDisplayName = 'Moonpay'
 
@@ -95,6 +96,7 @@ const TOKEN_MAP = {
 
 export const moonpayProvider: FiatProviderFactory = {
   pluginId,
+  storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
