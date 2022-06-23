@@ -46,7 +46,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
           Object {
             "height": 118,
             "marginRight": 22,
-            "marginVertical": 22,
+            "marginTop": 22,
           }
         }
       >
@@ -139,7 +139,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
         style={
           Object {
             "flexDirection": "row",
-            "marginBottom": 22,
+            "marginTop": 22,
           }
         }
       >
@@ -149,24 +149,24 @@ exports[`TransactionListTop should render with loading props 1`] = `
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "height": 67,
               "justifyContent": "center",
-              "width": 135,
+              "marginRight": 22,
+              "paddingVertical": 11,
             }
           }
         >
           <Icon
             allowFontScaling={false}
             color="#66EDA8"
-            name="arrow-down"
-            size={34}
+            name="arrowdown"
+            size={28}
           />
           <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#66EDA8",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
+                "fontSize": 28,
                 "marginLeft": 6,
               }
             }
@@ -174,37 +174,30 @@ exports[`TransactionListTop should render with loading props 1`] = `
             Request
           </WithTheme(EdgeTextComponent)>
         </TouchableOpacity>
-        <View
-          style={
-            Object {
-              "width": 45,
-            }
-          }
-        />
         <TouchableOpacity
           onPress={[Function]}
           style={
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "height": 67,
               "justifyContent": "center",
-              "width": 135,
+              "marginRight": 22,
+              "paddingVertical": 11,
             }
           }
         >
           <Icon
             allowFontScaling={false}
             color="#66EDA8"
-            name="arrow-up"
-            size={34}
+            name="arrowup"
+            size={28}
           />
           <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#66EDA8",
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
+                "fontSize": 28,
                 "marginLeft": 6,
               }
             }
