@@ -1,5 +1,32 @@
 # edge-react-gui
 
+## 2.17.0 (2022-06-22)
+
+- Replace edge-currency-bitcoin with more performant edge-currency-plugins v1.0.0 based on bitcoin.js
+- Replace Electrum backend with Blockbook
+- Add Litecoin and Dash as default wallets
+- Add import seed for bitcoin-based currencies
+- Deprecate Changelly swap plugin
+- Deprecate SMART, EBST, and FTC
+- Improve list-scrolling performance
+- Refactor the Scan Modal
+- Refactor the WalletListSortModal to use the ListModal
+- Refactor the SceneHeader into a memoized functional component
+- Refactor CurrencySettingsScene to pull directly from plugin currencyInfos
+- Update ExchangeQuoteComponent and remove unused DataRow and CardContent
+- Use theme hooks instead of higher order components
+- Fix deep link listener instability
+- Fix incorrect fiat display until restart for new wallets
+- Fix Invalid Password text alignment
+- Switch BSV block explorer to WhatsOnChain.com
+- Decrease swipeable row sensitivity
+- Remove edge-currency-bitcoin
+- Upgrade edge-core-js to v0.19.20
+  - fixed: Loosen constraint for checking tx confirmation status in 'getTransaction' and Make the condition identical to the condition in onBlockHeightChanged.
+  - added: New Confirmations API on EdgeTransaction type
+- Upgrade edge-exchange-plugins to v0.13.2
+  - Deprecate Changelly
+
 ## 2.16.2 (2022-06-10)
 
 - ZEC: Add NU5 support
