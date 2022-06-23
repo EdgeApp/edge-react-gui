@@ -847,6 +847,9 @@ const strings = {
   select_fio_address_address_memo: 'FIO Memo',
   select_fio_address_address_memo_error: 'FIO Memo Error',
 
+  // Loan
+  loan_loan_to_value_ratio: 'Loan-To-Value Ratio',
+
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
