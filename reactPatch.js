@@ -51,7 +51,6 @@ require('./reactPatcher/index').Cavify(React, {
     'TransactionAdvanceDetailsComponent',
     'TransactionDetailsCategoryInput',
     'WalletListSortModalComponent',
-    'MainButton',
     'QrCode',
     'ThemedModalComponent',
     'HelpModalComponent',
@@ -77,6 +76,7 @@ require('./reactPatcher/index').Cavify(React, {
     'PrimaryButton',
     'MainButton',
     'WalletListSwipeable',
-    'WalletListSwipeableRow'
+    'WalletListSwipeableRow',
+    'WalletListCurrencyRow'
   ]
 })
