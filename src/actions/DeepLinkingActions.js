@@ -158,6 +158,12 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       showError(noWalletMessage)
       return true
     }
+
+    case 'dev': {
+      // $FlowFixMe
+      Actions.push(link.sceneName)
+      return true
+    }
   }
 
   return false
