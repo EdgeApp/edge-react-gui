@@ -8,14 +8,15 @@ import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
 import { fuzzyTimeout } from '../../util/utils'
 import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginGetMethodsResponse } from './fiatPluginTypes'
-import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
-import { getBestError, getRateFromQuote } from './pluginUtils'
 // import { dummyProvider } from './providers/dummyProvider'
 // import { dummyProvider2 } from './providers/dummyProvider2'
+import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
+import { getBestError, getRateFromQuote } from './pluginUtils'
 import { moonpayProvider } from './providers/moonpayProvider'
+import { simplexProvider } from './providers/simplexProvider'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
-const providerFactories = [moonpayProvider]
+const providerFactories = [simplexProvider, moonpayProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
