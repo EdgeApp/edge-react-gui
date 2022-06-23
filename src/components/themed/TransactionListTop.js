@@ -3,8 +3,8 @@
 import { add, gt } from 'biggystring'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
@@ -130,7 +130,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
-  renderStakingBox() {
+  renderStakingButton() {
     const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode, pluginId } = this.props
     const { stakePolicies } = this.state
     const styles = getStyles(theme)
@@ -146,17 +146,16 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     return (
       <View>
-        <View style={styles.stakingBoxContainer}>
+        <View style={styles.stakingButtonContainer}>
+          <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+            <AntDesignIcon name="barschart" size={theme.rem(1.25)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
+          </TouchableOpacity>
           <EdgeText style={styles.stakingStatusText}>
             {lockedBalance.crypto != null && lockedBalance.crypto !== '0'
               ? sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)
               : null}
           </EdgeText>
-
-          <TouchableOpacity onPress={this.handleStakePress} style={styles.stakingButton}>
-            <EdgeText style={styles.stakingButtonText}>{s.strings.fragment_stake_label}</EdgeText>
-            <MaterialCommunityIcons name="chart-line" size={theme.rem(1)} color={theme.iconTappable} />
-          </TouchableOpacity>
         </View>
       </View>
     )
@@ -206,7 +205,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   render() {
     const { isEmpty, searching, theme } = this.props
     const styles = getStyles(theme)
-
     return (
       <>
         <View style={styles.container}>
@@ -236,22 +234,20 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           {!searching && (
             <>
               {this.renderBalanceBox()}
-              {this.renderStakingBox()}
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
-                  <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
+                  <AntDesignIcon name="arrowdown" size={theme.rem(1.25)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
-                <View style={styles.buttonsDivider} />
                 <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
-                  <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
+                  <AntDesignIcon name="arrowup" size={theme.rem(1.25)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>
+                {this.renderStakingButton()}
               </View>
             </>
           )}
         </View>
-
         {!isEmpty && !searching && (
           <SceneHeader underline>
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
@@ -272,7 +268,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Balance Box
   balanceBoxContainer: {
     height: theme.rem(5.25),
-    marginVertical: theme.rem(1),
+    marginTop: theme.rem(1),
     marginRight: theme.rem(1)
   },
   balanceBoxRow: {
@@ -309,21 +305,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   // Send/Receive Buttons
   buttonsContainer: {
-    flexDirection: 'row',
-    marginBottom: theme.rem(1)
+    marginTop: theme.rem(1),
+    flexDirection: 'row'
   },
   buttons: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: theme.rem(6),
-    height: theme.rem(3)
-  },
-  buttonsDivider: {
-    width: theme.rem(2)
+    marginRight: theme.rem(1),
+    paddingVertical: theme.rem(0.5)
   },
   buttonsText: {
-    fontSize: theme.rem(1),
+    fontSize: theme.rem(1.25),
     color: theme.textLink,
     fontFamily: theme.fontFaceMedium,
     marginLeft: theme.rem(0.25)
@@ -344,11 +337,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(0.75)
   },
 
-  // Staking Box
-  stakingBoxContainer: {
+  // Staking Button
+  stakingButtonContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginLeft: theme.rem(0.5)
   },
   stakingStatusText: {
     color: theme.secondaryText,
