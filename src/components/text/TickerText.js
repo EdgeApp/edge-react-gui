@@ -1,13 +1,13 @@
 // @flow
 
-import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
+import { abs, div, gt, mul, sub } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { formatNumber } from '../../locales/intl'
+import { toPercentString } from '../../locales/intl'
 import { type Theme } from '../../types/Theme'
 import { zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
@@ -21,15 +21,16 @@ const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, as
   const yesterdayExchangeRate = mul(assetToYestFiatRate, usdToWalletFiatRate)
   const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
   // Avoid divide by zero if there's no exchange rate from yesterday
-  const yesterdayDeltaPct = zeroString(yesterdayExchangeRate) ? '0' : mul(div(yesterdayDelta, yesterdayExchangeRate, 3), '100')
+  const yesterdayDeltaPct = zeroString(yesterdayExchangeRate) ? '0' : div(yesterdayDelta, yesterdayExchangeRate, 3)
 
   // Blank string if yesterday's exchange rate does not exist or delta percent is close enough to 0 (rounding)
   if (zeroString(yesterdayExchangeRate) || zeroString(yesterdayDeltaPct)) return { percentString: '', deltaColorStyle: theme.secondaryText }
 
-  // Colored, signed percentString representing daily price delta
-  const percentString = formatNumber(toFixed(abs(yesterdayDeltaPct), 0, 1), { noGrouping: true })
-  if (gt(yesterdayDeltaPct, '0')) return { percentString: `+${percentString}%`, deltaColorStyle: theme.positiveText }
-  return { percentString: `-${percentString}%`, deltaColorStyle: theme.negativeText }
+  // Colored, signed percentString representing daily price delta. Prepends a '+'
+  // symbol to the percent string if > 0.
+  const percentString = toPercentString(abs(yesterdayDeltaPct), { noGrouping: true })
+  if (gt(yesterdayDeltaPct, '0')) return { percentString: `+${percentString}`, deltaColorStyle: theme.positiveText }
+  return { percentString: `${percentString}`, deltaColorStyle: theme.negativeText }
 }
 
 /**
