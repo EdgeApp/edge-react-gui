@@ -6,8 +6,8 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { useCallback } from '../../types/reactHooks.js'
 import { Actions } from '../../types/routerTypes.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { CurrencyIcon } from '../themed/CurrencyIcon.js'
@@ -28,9 +28,9 @@ export const BuyCrypto = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handlePress = useCallback(() => {
+  const handlePress = useHandler(() => {
     Actions.push('pluginListBuy', { direction: 'buy' })
-  }, [])
+  })
 
   const { displayName, pluginId } = wallet.currencyInfo
 

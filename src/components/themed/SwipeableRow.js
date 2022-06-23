@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { I18nManager, StyleSheet, View } from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { type HitSlop, Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   type AnimationCallback,
   type SharedValue,
@@ -15,6 +15,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { forwardRef, useImperativeHandle } from '../../types/reactHooks.js'
+import { useTheme } from '../services/ThemeContext.js'
 
 type Props = {|
   // The content to render in the row.
@@ -45,7 +46,10 @@ type Props = {|
 
   // Actions triggered when sliding past the swipe threshold.
   onLeftSwipe?: () => void,
-  onRightSwipe?: () => void
+  onRightSwipe?: () => void,
+
+  // Gesture Slop Settings:
+  slopOpts?: HitSlop
 |}
 
 /**
@@ -91,9 +95,13 @@ export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref
 
     // Callbacks:
     onLeftSwipe = () => {},
-    onRightSwipe = () => {}
+    onRightSwipe = () => {},
+
+    // Gesture Slop Settings:
+    slopOpts = {}
   } = props
 
+  const theme = useTheme()
   const rtl = I18nManager.isRTL ? -1 : 1
 
   // Values driven by the pan gesture:
@@ -133,7 +141,8 @@ export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref
   const canPanLeft = renderLeft !== undefined
   const canPanRight = renderRight !== undefined
   const panGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
+    .hitSlop(slopOpts)
+    .activeOffsetX([-theme.rem(1.5), theme.rem(1.5)])
     .onBegin(e => {
       panStart.value = pan.value
     })

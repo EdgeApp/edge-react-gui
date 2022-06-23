@@ -453,7 +453,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const isAcceleratable = !!(
       edgeTransaction.spendTargets?.length &&
       currencyInfo?.canReplaceByFee === true &&
-      edgeTransaction.blockHeight === 0 &&
+      edgeTransaction.confirmations === 'unconfirmed' &&
       edgeTransaction.otherParams?.nonceUsed
     )
 

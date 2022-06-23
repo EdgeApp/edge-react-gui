@@ -4,13 +4,13 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
 <SceneWrapper
   background="theme"
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Exchange"
     underline={true}
     withTopMargin={true}
   />
   <ScrollView>
-    <WithTheme(LineTextDividerComponent)
+    <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="From"
     />
@@ -25,7 +25,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       isTop={true}
       walletName=""
     />
-    <WithTheme(LineTextDividerComponent)
+    <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="To"
     />

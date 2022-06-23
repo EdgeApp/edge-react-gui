@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
+import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
@@ -26,6 +27,7 @@ import { convertNativeToDenomination, getDenomFromIsoCode, getObjectDiff, trunca
 import { Card } from '../cards/Card.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { showWebViewModal } from '../modals/HelpModal.js'
 import { QrModal } from '../modals/QrModal.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
@@ -34,7 +36,9 @@ import { FiatText } from '../text/FiatText.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
 import { FlipInput } from '../themed/FlipInput.js'
+import { MainButton } from '../themed/MainButton.js'
 import { QrCode } from '../themed/QrCode'
+import { SceneHeader } from '../themed/SceneHeader.js'
 import { ShareButtons } from '../themed/ShareButtons.js'
 
 type OwnProps = {
@@ -280,6 +284,20 @@ export class RequestComponent extends React.Component<Props, State> {
 
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
+  handleKeysOnlyModePress = () => showWebViewModal(config.supportSite, s.strings.help_support)
+  renderKeysOnlyMode = () => {
+    const styles = getStyles(this.props.theme)
+    return (
+      <SceneWrapper background="theme" hasTabs={false}>
+        <SceneHeader withTopMargin underline title={sprintf(s.strings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} />
+        <Text style={styles.keysOnlyModeText}>{sprintf(s.strings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
+        <MainButton onPress={this.handleKeysOnlyModePress} label={s.strings.help_support} marginRem={2} type="secondary">
+          <Fontello name="help_headset" color={this.props.theme.iconTappable} size={this.props.theme.rem(1.5)} />
+        </MainButton>
+      </SceneWrapper>
+    )
+  }
+
   render() {
     const { exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
@@ -300,76 +318,73 @@ export class RequestComponent extends React.Component<Props, State> {
     // Selected denomination
     const denomString = `1 ${primaryCurrencyInfo.displayDenomination.name}`
 
-    return (
+    return keysOnlyMode ? (
+      this.renderKeysOnlyMode()
+    ) : (
       <SceneWrapper background="header" hasTabs={false}>
-        {keysOnlyMode !== true ? (
-          <View style={styles.container}>
-            <View style={styles.requestContainer}>
-              <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
-              <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
-            </View>
-            <View style={styles.balanceContainer}>
-              <EdgeText>{displayBalanceString}</EdgeText>
-              <EdgeText style={styles.exchangeRate}>
-                <FiatText
-                  appendFiatCurrencyCode
-                  nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
-                  tokenId={primaryCurrencyInfo.tokenId}
-                  wallet={wallet}
-                />
-              </EdgeText>
-            </View>
-
-            {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
-
-            <Card>
-              <ExchangedFlipInput
-                ref={this.flipInputRef}
-                headerText={flipInputHeaderText}
-                primaryCurrencyInfo={primaryCurrencyInfo}
-                secondaryCurrencyInfo={secondaryCurrencyInfo}
-                exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-                overridePrimaryExchangeAmount=""
-                forceUpdateGuiCounter={0}
-                onExchangeAmountChanged={this.onExchangeAmountChanged}
-                keyboardVisible={false}
-                isFiatOnTop
-                isFocus={false}
-                onNext={this.onNext}
-                topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
-                inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
-                headerCallback={this.handleOpenWalletListModal}
-                onError={this.onError}
-              />
-            </Card>
-
-            {Platform.OS === 'ios' ? (
-              <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
-                <View style={styles.accessoryView}>
-                  <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
-                    <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
-                    <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
-                  </TouchableOpacity>
-                </View>
-              </InputAccessoryView>
-            ) : null}
-            <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} />
-            <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
-              <View style={styles.rightChevronContainer}>
-                <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
-                <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </View>
-              <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
-            </TouchableOpacity>
+        <View style={styles.container}>
+          <View style={styles.requestContainer}>
+            <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+            <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </View>
-        ) : (
-          <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>
-        )}
-        {keysOnlyMode !== true && (
-          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
-        )}
+          <View style={styles.balanceContainer}>
+            <EdgeText>{displayBalanceString}</EdgeText>
+            <EdgeText style={styles.exchangeRate}>
+              <FiatText
+                appendFiatCurrencyCode
+                nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
+                tokenId={primaryCurrencyInfo.tokenId}
+                wallet={wallet}
+              />
+            </EdgeText>
+          </View>
+
+          {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
+
+          <Card>
+            <ExchangedFlipInput
+              ref={this.flipInputRef}
+              headerText={flipInputHeaderText}
+              primaryCurrencyInfo={primaryCurrencyInfo}
+              secondaryCurrencyInfo={secondaryCurrencyInfo}
+              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+              overridePrimaryExchangeAmount=""
+              forceUpdateGuiCounter={0}
+              onExchangeAmountChanged={this.onExchangeAmountChanged}
+              keyboardVisible={false}
+              isFiatOnTop
+              isFocus={false}
+              onNext={this.onNext}
+              topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
+              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
+              headerCallback={this.handleOpenWalletListModal}
+              onError={this.onError}
+            />
+          </Card>
+
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
+              <View style={styles.accessoryView}>
+                <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
+                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
+                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
+                </TouchableOpacity>
+              </View>
+            </InputAccessoryView>
+          ) : null}
+          <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} />
+          <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
+            <View style={styles.rightChevronContainer}>
+              <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
+              <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+            </View>
+            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
+          </TouchableOpacity>
+        </View>
+
+        <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
       </SceneWrapper>
     )
   }
@@ -512,6 +527,12 @@ export class RequestComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  keysOnlyModeText: {
+    padding: theme.rem(1),
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    color: theme.primaryText
+  },
   container: {
     flex: 1,
     justifyContent: 'flex-start',

@@ -257,11 +257,11 @@ Array [
         style={
           Array [
             Object {
-              "bottom": -20,
+              "bottom": -28,
               "color": "#E85466",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 17,
-              "left": 17,
+              "left": 28,
               "position": "absolute",
             },
             [MockFunction],
@@ -344,6 +344,7 @@ Array [
       data={Array []}
       getItem={[Function]}
       getItemCount={[Function]}
+      getItemLayout={[Function]}
       keyExtractor={[Function]}
       keyboardShouldPersistTaps="handled"
       onContentSizeChange={[Function]}

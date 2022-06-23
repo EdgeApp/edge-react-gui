@@ -137,11 +137,11 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       style={
         Array [
           Object {
-            "bottom": -20,
+            "bottom": -28,
             "color": "#E85466",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 17,
-            "left": 17,
+            "left": 28,
             "position": "absolute",
           },
           [MockFunction],

@@ -18,7 +18,11 @@ export const getDisplayDenominationFromState =
   }
 
 export const getDisplayDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  return state.ui.settings.denominationSettings[pluginId][currencyCode] ?? getExchangeDenomination(state, pluginId, currencyCode)
+  const pluginSettings = state.ui.settings.denominationSettings[pluginId]
+  if (pluginSettings != null && pluginSettings[currencyCode] != null) {
+    return pluginSettings[currencyCode]
+  }
+  return getExchangeDenomination(state, pluginId, currencyCode)
 }
 
 export const getExchangeDenominationFromState = (pluginId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -31,16 +35,11 @@ export const getExchangeDenominationFromState = (pluginId: string, currencyCode:
  * This would match "BTC" but not "sats".
  */
 export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  const currencyConfig = state.core.account.currencyConfig[pluginId]
-  const { builtinTokens = {}, currencyInfo, customTokens = {} } = currencyConfig
+  const { allTokens, currencyInfo } = state.core.account.currencyConfig[pluginId]
 
   if (currencyInfo.currencyCode === currencyCode) return currencyInfo.denominations[0]
-  for (const tokenId of Object.keys(customTokens)) {
-    const token = customTokens[tokenId]
-    if (token.currencyCode === currencyCode) return token.denominations[0]
-  }
-  for (const tokenId of Object.keys(builtinTokens)) {
-    const token = builtinTokens[tokenId]
+  for (const tokenId of Object.keys(allTokens)) {
+    const token = allTokens[tokenId]
     if (token.currencyCode === currencyCode) return token.denominations[0]
   }
 

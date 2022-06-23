@@ -4,9 +4,10 @@ import * as React from 'react'
 import { ActivityIndicator, Text, TouchableHighlight } from 'react-native'
 
 import { usePendingPress } from '../../hooks/usePendingPress.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-type OwnProps = {
+type Props = {
   children?: React.Node,
 
   // Show with a dim style when set. Defaults to false:
@@ -24,14 +25,13 @@ type OwnProps = {
   onPress?: () => void | Promise<void>
 }
 
-type Props = OwnProps & ThemeProps
-
 /**
  * A settings row places an interactive control next to a description,
  * which can be some combination of React children and a plain text label.
  */
-function SettingsRowComponent(props: Props): React$Element<any> {
-  const { children, disabled = false, label = '', theme, right, onPress } = props
+const SettingsRowComponent = (props: Props): React$Element<any> => {
+  const { children, disabled = false, label = '', right, onPress } = props
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   const [pending, handlePress] = usePendingPress(onPress)
@@ -81,4 +81,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const SettingsRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsRowComponent)
+export const SettingsRow = memo(SettingsRowComponent)

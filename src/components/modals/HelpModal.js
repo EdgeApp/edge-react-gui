@@ -31,7 +31,7 @@ export function showHelpModal(): Promise<mixed> {
   return Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 
-function showWebViewModal(uri: string, title: string): void {
+export function showWebViewModal(uri: string, title: string): void {
   Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
 }
 

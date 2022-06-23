@@ -10,7 +10,7 @@ import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { memo, useEffect, useRef } from '../../types/reactHooks.js'
+import { memo, useEffect, useMemo, useRef } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -133,6 +133,13 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
     </>
   )
 
+  const slopOpts = useMemo(
+    () => ({
+      right: -theme.rem(1.5)
+    }),
+    [theme]
+  )
+
   return (
     <SwipeableRow
       ref={rowRef}
@@ -144,6 +151,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       rightThreshold={theme.rem(7.5)}
       onLeftSwipe={handleRequest}
       onRightSwipe={handleSend}
+      slopOpts={slopOpts}
     >
       <Gradient>
         <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransactionAdvanceDetailsComponent should render with loading props 1`] = `
-<WithTheme(ThemedModalComponent)
+<ThemedModal
   bridge={
     Object {
       "on": [Function],
@@ -52,5 +52,5 @@ exports[`TransactionAdvanceDetailsComponent should render with loading props 1`]
   <ModalCloseArrow
     onPress={[Function]}
   />
-</WithTheme(ThemedModalComponent)>
+</ThemedModal>
 `;

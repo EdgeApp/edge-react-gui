@@ -31,7 +31,7 @@ export type Props = {
 const AnimatedSpinner = Animated.createAnimatedComponent(ActivityIndicator)
 const AnimatedSwitch = Animated.createAnimatedComponent(Switch)
 
-export const ManageTokensRow = memo((props: Props) => {
+export const ManageTokensRowComponent = (props: Props) => {
   const { navigation, wallet, isCustom, isEnabled, token, tokenId } = props
 
   const theme = useTheme()
@@ -99,7 +99,7 @@ export const ManageTokensRow = memo((props: Props) => {
       </View>
     </Pressable>
   )
-})
+}
 
 const getStyles = cacheStyles((theme: Theme) => ({
   row: {
@@ -142,3 +142,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginHorizontal: theme.rem(0.5)
   }
 }))
+
+export const ManageTokensRow = memo(ManageTokensRowComponent)

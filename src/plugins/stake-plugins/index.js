@@ -1,6 +1,6 @@
 // @flow
 
-import { type Cleaner, asNumber, asObject, asString } from 'cleaners'
+import { type Cleaner, asNumber, asObject } from 'cleaners'
 import type { EdgeCorePluginOptions } from 'edge-core-js'
 
 import { pluginInfo } from './pluginInfo.js'
@@ -55,7 +55,5 @@ export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
 // Cleaners
 // -----------------------------------------------------------------------------
 const asInfoServerResponse: Cleaner<InfoServerResponse> = asObject({
-  _id: asString,
-  _rev: asString,
   policies: asObject(asNumber)
 })

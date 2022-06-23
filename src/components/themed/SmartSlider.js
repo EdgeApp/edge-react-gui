@@ -9,12 +9,12 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
 import { useState } from '../../types/reactHooks.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
 
-type OwnProps = {
+type Props = {
   onSlidingComplete(reset: () => void): mixed,
   parentStyle?: any,
   completePoint?: number,
@@ -25,18 +25,19 @@ type OwnProps = {
   disabled: boolean
 }
 
-type Props = OwnProps & ThemeProps
-
 const clamp = (value, lowerBound, upperBound) => {
   'worklet'
   return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
-export const SmartSliderComponent = (props: Props) => {
-  const { disabledText, disabled, onSlidingComplete, parentStyle, completePoint = COMPLETE_POINT, theme, width = props.theme.confirmationSliderWidth } = props
+export const SmartSlider = (props: Props) => {
+  const { disabledText, disabled, onSlidingComplete, parentStyle, completePoint = COMPLETE_POINT } = props
+
+  const theme = useTheme()
   const styles = getStyles(theme)
   const [completed, setCompleted] = useState(false)
 
+  const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || completed
@@ -166,5 +167,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
-
-export const SmartSlider = withTheme(SmartSliderComponent)

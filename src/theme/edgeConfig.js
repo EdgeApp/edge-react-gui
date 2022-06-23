@@ -20,5 +20,5 @@ export const edgeConfig: AppConfig = {
   website: 'https://edge.app',
   termsOfServiceSite: 'https://edge.app/tos/',
   appStore: 'https://itunes.apple.com/app/id1344400091',
-  defaultWallets: ['BTC', 'BCH', 'ETH']
+  defaultWallets: ['BTC', 'ETH', 'LTC', 'BCH', 'DASH']
 }

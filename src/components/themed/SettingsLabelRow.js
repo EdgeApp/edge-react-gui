@@ -3,10 +3,11 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { memo } from '../../types/reactHooks.js'
+import { useTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
-type OwnProps = {
+type Props = {
   children?: React.Node,
 
   // Show with a dim style when set. Defaults to false:
@@ -24,14 +25,12 @@ type OwnProps = {
   onPress?: () => void | Promise<void>
 }
 
-type Props = OwnProps & ThemeProps
-
 /**
  * A settings row with a smaller text on the right side.
  */
-export function SettingsLabelRowComponent(props: Props): React.Node {
-  const { children, disabled, label, right, theme, onPress } = props
-
+export const SettingsLabelRowComponent = (props: Props): React.Node => {
+  const { children, disabled, label, right, onPress } = props
+  const theme = useTheme()
   const style = {
     color: disabled ? theme.deactivatedText : theme.textLink,
     fontFamily: theme.fontFaceDefault,
@@ -47,4 +46,4 @@ export function SettingsLabelRowComponent(props: Props): React.Node {
   )
 }
 
-export const SettingsLabelRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsLabelRowComponent)
+export const SettingsLabelRow = memo(SettingsLabelRowComponent)

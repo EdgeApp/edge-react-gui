@@ -10,7 +10,7 @@ import { Slider } from '../../../modules/UI/components/Slider/Slider.js'
 import { type ChangeQuote, type ChangeQuoteRequest, type PositionAllocation, type QuoteAllocation } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
-import { useEffect, useState } from '../../../types/reactHooks.js'
+import { useEffect, useMemo, useState } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -277,6 +277,30 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  const sceneTitleMap = useMemo(
+    () => ({
+      stake: getPolicyTitleName(stakePolicy),
+      claim: s.strings.stake_claim_rewards,
+      unstake: s.strings.stake_unstake_claim
+    }),
+    [stakePolicy]
+  )
+
+  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
+  const icon = useMemo(
+    () => (modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />),
+    [modification, policyIcons.rewardAssetUris, styles.icon]
+  )
+
+  const sceneHeader = useMemo(
+    () => (
+      <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
+        {icon}
+      </SceneHeader>
+    ),
+    [icon, modification, sceneTitleMap, styles.sceneHeader]
+  )
+
   if (stakePosition.allocations.length === 0) {
     return (
       <SceneWrapper background="theme">
@@ -287,21 +311,10 @@ export const StakeModifyScene = (props: Props) => {
 
   const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
-  const sceneTitleMap = {
-    stake: getPolicyTitleName(stakePolicy),
-    claim: s.strings.stake_claim_rewards,
-    unstake: s.strings.stake_unstake_claim
-  }
-
-  const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
-  const icon = modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />
-
   return (
     <SceneWrapper scroll background="theme">
       <ScrollView>
-        <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
-          {icon}
-        </SceneHeader>
+        {sceneHeader}
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
         <View style={styles.footer}>

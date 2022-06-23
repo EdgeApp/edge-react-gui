@@ -4,7 +4,6 @@ import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
 import { type EdgeContext, type EdgeContextOptions, type EdgeCrashReporter, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
-import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -41,7 +40,6 @@ const contextOptions: EdgeContextOptions = {
 const nativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
-      'edge-currency-bitcoin': makeBitcoinIo(),
       'edge-currency-monero': makeMoneroIo()
     }
   : {}

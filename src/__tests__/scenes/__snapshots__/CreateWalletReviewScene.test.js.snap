@@ -12,7 +12,7 @@ exports[`CreateWalletReviewComponent should render with loading props 1`] = `
       }
     }
   >
-    <WithTheme(SceneHeaderComponent)
+    <Memo(SceneHeaderComponent)
       title="Create Wallet"
       withTopMargin={true}
     />

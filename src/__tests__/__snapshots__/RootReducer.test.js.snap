@@ -132,10 +132,6 @@ Object {
         "uniqueLegacyAddress": false,
         "useLegacyAddress": false,
       },
-      "scan": Object {
-        "scanEnabled": false,
-        "torchEnabled": false,
-      },
       "sendConfirmation": Object {
         "address": "",
         "authRequired": "none",
@@ -229,7 +225,7 @@ Object {
           "isEnabled": false,
         },
       },
-      "walletsSort": "default",
+      "walletsSort": "manual",
     },
     "wallets": Object {
       "byId": Object {},

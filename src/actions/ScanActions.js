@@ -318,15 +318,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
   }
 }
 
-export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const isScanEnabled = state.ui.scenes.scan.scanEnabled
-  if (!isScanEnabled) return
-
-  dispatch({ type: 'DISABLE_SCAN' })
-  dispatch(parseScannedUri(data))
-}
-
 const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
 

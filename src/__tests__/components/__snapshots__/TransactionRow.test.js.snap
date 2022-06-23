@@ -40,6 +40,5 @@ exports[`Transaction List Row should render props 1`] = `
       },
     }
   }
-  walletBlockHeight={1688551}
 />
 `;

@@ -5,6 +5,7 @@ import { FlatList, SectionList } from 'react-native'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { useHandler } from '../../hooks/useHandler.js'
+import { useRowLayout } from '../../hooks/useRowLayout.js'
 import s from '../../locales/strings'
 import { useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
@@ -244,10 +245,19 @@ export function WalletList(props: Props) {
     return <WalletListSectionHeader title={section.section.title} />
   })
 
+  const handleItemLayout = useRowLayout()
+
   return sectionList == null ? (
-    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
+    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} getItemLayout={handleItemLayout} />
   ) : (
-    <SectionList keyboardShouldPersistTaps="handled" renderItem={renderRow} renderSectionHeader={renderSectionHeader} sections={sectionList} style={margin} />
+    <SectionList
+      keyboardShouldPersistTaps="handled"
+      renderItem={renderRow}
+      renderSectionHeader={renderSectionHeader}
+      sections={sectionList}
+      style={margin}
+      getItemLayout={handleItemLayout}
+    />
   )
 }
 

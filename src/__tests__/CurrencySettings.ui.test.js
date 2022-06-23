@@ -1,16 +1,16 @@
 // @flow
-/* globals jest describe it expect */
+/* globals describe it expect */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
-import { CurrencySettingsComponent } from '../components/scenes/CurrencySettingsScene.js'
-import { config } from '../theme/appConfig.js'
+import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
+import { rootReducer } from '../reducers/RootReducer.js'
 
 describe('CurrencySettings', () => {
   it('should render', () => {
-    const renderer = new ShallowRenderer()
-
     const currencyInfo: any = {
       currencyCode: 'BTG',
       defaultSettings: {},
@@ -30,18 +30,15 @@ describe('CurrencySettings', () => {
       name: 'currencySettings',
       params: { currencyInfo }
     }
+    const state: any = { core: { account } }
+    const store = createStore(rootReducer, state)
 
-    const actual = renderer.render(
-      <CurrencySettingsComponent
-        account={account}
-        currencyInfo={currencyInfo}
-        route={route}
-        selectDenomination={jest.fn()}
-        selectedDenominationMultiplier="100"
-        theme={config.darkTheme}
-      />
+    const actual = renderer.create(
+      <Provider store={store}>
+        <CurrencySettingsScene route={route} />
+      </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(actual.toJSON()).toMatchSnapshot()
   })
 })

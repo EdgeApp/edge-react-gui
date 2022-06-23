@@ -5,7 +5,7 @@ exports[`CreateWalletChoiceScene should render with loading props 1`] = `
   avoidKeyboard={true}
   background="theme"
 >
-  <WithTheme(SceneHeaderComponent)
+  <Memo(SceneHeaderComponent)
     title="Create Wallet"
     withTopMargin={true}
   />
