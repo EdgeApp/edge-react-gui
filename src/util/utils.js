@@ -431,7 +431,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
   }
 }
 
-export async function fetchWaterfall(servers?: string[], path: string, options?: any): Promise<any> {
+export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
   if (servers == null) return
   const funcs = servers.map(server => async () => {
     const result = await fetch(server + '/' + path, options)
@@ -442,7 +442,7 @@ export async function fetchWaterfall(servers?: string[], path: string, options?:
     }
     return result
   })
-  return asyncWaterfall(funcs)
+  return asyncWaterfall(funcs, timeout)
 }
 
 export async function openLink(url: string): Promise<void> {
@@ -621,6 +621,30 @@ export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (cu
   }
 
   return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
+}
+
+export const shuffleArray = <T>(array: T[]): T[] => {
+  let currentIndex = array.length
+  let temporaryValue, randomIndex
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
+  }
+
+  return array
+}
+
+export async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
+  if (servers == null) return
+  return fetchWaterfall(shuffleArray(servers), path, options, timeout)
 }
 
 export const pickRandom = <T>(array?: T[]): T | null => {
