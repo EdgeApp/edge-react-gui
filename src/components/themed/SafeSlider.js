@@ -30,7 +30,7 @@ const clamp = (value, lowerBound, upperBound) => {
   return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
-export const SmartSlider = (props: Props) => {
+export const SafeSlider = (props: Props) => {
   const { disabledText, disabled, onSlidingComplete, parentStyle, completePoint = COMPLETE_POINT } = props
 
   const theme = useTheme()

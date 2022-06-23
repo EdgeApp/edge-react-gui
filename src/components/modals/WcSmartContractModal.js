@@ -10,7 +10,6 @@ import { sprintf } from 'sprintf-js'
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification.js'
 import s from '../../locales/strings.js'
-import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { getCurrencyIconUris } from '../../util/CdnUris'
@@ -20,6 +19,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { SafeSlider } from '../themed/SafeSlider'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
@@ -79,15 +79,12 @@ export const WcSmartContractModal = (props: Props) => {
 
   const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
 
-  const handleSubmit = async () => {
-    try {
-      await wallet.otherMethods.wcRequestResponse(uri, true, payload)
-      Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />)
-    } catch (e) {
-      showError(e)
-    }
-    props.bridge.resolve(null)
-  }
+  const handleSubmit = reset =>
+    wallet.otherMethods
+      .wcRequestResponse(uri, true, payload)
+      .then(Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />))
+      .catch(showError)
+      .finally(props.bridge.resolve)
 
   const handleClose = async () => {
     props.bridge.resolve(null)
@@ -116,7 +113,7 @@ export const WcSmartContractModal = (props: Props) => {
   const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
   const walletImageUri = getCurrencyIconUris(pluginId, contractAddress).symbolImage
   const slider = isInsufficientBal ? null : (
-    <Slider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} />
+    <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} disabled={false} />
   )
 
   // FIXME: HACK!!1! This is a shortcut so we can remove currency code from the fiat text component without completely refactoring this file
