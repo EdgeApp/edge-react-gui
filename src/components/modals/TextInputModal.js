@@ -38,7 +38,8 @@ type Props = {|
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
   secureTextEntry?: boolean,
   multiline?: boolean,
-  maxLength?: number
+  maxLength?: number,
+  testId?: string
 |}
 
 export function TextInputModal(props: Props) {
@@ -58,7 +59,8 @@ export function TextInputModal(props: Props) {
     submitLabel = s.strings.submit,
     title,
     maxLength,
-    warning
+    warning,
+    testId = 'TextInputModal'
   } = props
 
   const [errorMessage, setErrorMessage] = useState<string | void>()
@@ -112,6 +114,7 @@ export function TextInputModal(props: Props) {
         onSubmitEditing={handleSubmit}
         value={text}
         maxLength={maxLength}
+        ref={generateTestHook(testId)}
       />
       {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
@@ -120,7 +123,14 @@ export function TextInputModal(props: Props) {
       {spinning ? (
         <MainButton alignSelf="center" disabled marginRem={0.5} type="secondary" spinner />
       ) : (
-        <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="secondary" />
+        <MainButton
+          alignSelf="center"
+          label={submitLabel}
+          marginRem={0.5}
+          onPress={handleSubmit}
+          type="secondary"
+          ref={generateTestHook('RenameWalletModal.SubmitName')}
+        />
       )}
       <ModalCloseArrow onPress={() => bridge.resolve(undefined)} ref={generateTestHook('TextInputModal.close')} />
     </ThemedModal>

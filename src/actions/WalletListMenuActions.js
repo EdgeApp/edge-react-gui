@@ -229,6 +229,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
               })
               return true
             }}
+            testId="WalletListMenuAction.RenameWallet"
           />
         ))
       }

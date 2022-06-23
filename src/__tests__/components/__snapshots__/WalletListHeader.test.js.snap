@@ -20,7 +20,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
         }
       }
     >
-      <ForwardRef
+      <Wrap(Component)
         label="Search Wallets"
         marginRem={
           Array [
