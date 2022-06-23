@@ -3,7 +3,7 @@
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
-import { multiFetch } from '../../../util/utils'
+import { makeUuid, multiFetch } from '../../../util/utils'
 import {
   type FiatProvider,
   type FiatProviderApproveQuoteParams,
@@ -169,7 +169,17 @@ export const simplexProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const { publicKey, partner } = asSimplexApiKeys(params.apiKeys)
+    const {
+      apiKeys,
+      io: { store }
+    } = params
+    let simplexUserId = await store.getItem('simplex_user_id').catch(e => undefined)
+    if (simplexUserId == null || simplexUserId === '') {
+      simplexUserId = makeUuid()
+      await store.setItem('simplex_user_id', simplexUserId)
+    }
+
+    const { publicKey, partner } = asSimplexApiKeys(apiKeys)
     const out = {
       pluginId,
       partnerIcon,
@@ -259,6 +269,7 @@ export const simplexProvider: FiatProviderFactory = {
 
             const data = {
               ts: Math.floor(Date.now() / 1000),
+              euid: simplexUserId,
               crad: receiveAddress.publicAddress,
               crcn: simplexCryptoCode,
               ficn: simplexFiatCode,
