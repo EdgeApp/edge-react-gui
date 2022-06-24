@@ -72,6 +72,7 @@ import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
+import { LoanBorrowDetailsScene } from './scenes/Loans/LoanBorrowDetailsScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsConfirmationScene } from './scenes/Loans/LoanDetailsConfirmationScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
@@ -888,7 +889,16 @@ export class MainComponent extends React.Component<Props> {
             />
             <Scene
               key="loanDetailsConfirmation"
-              component={withNavigation(ifLoggedIn(LoanDetailsConfirmationScene))}
+              component={withNavigation(ifLoggedIn(LoanBorrowDetailsScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanBorrowDetails"
+              component={withNavigation(ifLoggedIn(LoanBorrowDetailsScene))}
               navTransparent
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
