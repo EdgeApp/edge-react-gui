@@ -860,7 +860,13 @@ const strings = {
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
   loan_available_equity: 'Available Equity',
+  loan_close_loan_title: 'Close Loan',
+  loan_close_loan_message:
+    "Closing your loan will liquidate some of the collateral to pay of the remaining principle and interest of your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principle isn't repaid.",
+  loan_collateral_amount: 'Collateral Amount',
+  loan_collateral_destination: 'Collateral Destination',
   loan_collateral_value: 'Collateral Value',
+  loan_debt_amount_title: 'Principle Amount',
   loan_dashboard_active_loans_title: 'Active Loans',
   loan_dashboard_failed_loan: 'Failed to load loan data',
   loan_dashboard_new_loan: 'New Loan',
@@ -886,8 +892,10 @@ const strings = {
   loan_make_payment: 'Make Payment',
   loan_new_principle: 'New Principle',
   loan_interest_rate: 'Interest Rate',
+  loan_remaining_principle: 'Remaining Principle',
   loan_s_apr: '%1$s%% APR',
   loan_total_collateral_value: 'Total Collateral Value',
+  loan_transaction_error_title: 'Transaction Error',
   loan_withdraw_collateral: 'Withdraw Collateral',
 
   // Send Scene
