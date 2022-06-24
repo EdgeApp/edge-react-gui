@@ -848,6 +848,18 @@ const strings = {
   select_fio_address_address_memo: 'FIO Memo',
   select_fio_address_address_memo_error: 'FIO Memo Error',
 
+  // Loan
+  loan_add_collateral: 'Add Collateral',
+  loan_withdraw_collateral: 'Withdraw Collateral',
+  loan_make_payment: 'Make Payment',
+  loan_current_principle: 'Current Principle',
+  loan_new_principle: 'New Principle',
+  loan_total_collateral_value: 'Total Collateral Value',
+  loan_exchange_rate: 'Exchange Rate',
+  loan_add_from: 'Add from %s',
+  loan_estimate_fee: 'Estimate Fee',
+  loan_loan_to_value_ratio: 'Loan to Value Ratio',
+
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
