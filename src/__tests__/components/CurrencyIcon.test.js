@@ -5,7 +5,7 @@ import * as React from 'react'
 import * as reactRedux from 'react-redux'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { CryptoIconComponent } from '../../components/icons/CryptoIcon.js'
+import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
@@ -51,7 +51,7 @@ describe('CryptoIcon', () => {
       marginRem: 1,
       paddingRem: [1, 2]
     }
-    const actual = renderer.render(<CryptoIconComponent {...props} />)
+    const actual = renderer.render(<CryptoIcon {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
