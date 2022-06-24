@@ -30,9 +30,9 @@ const TappableCardComponent = ({
   return (
     <View style={styles.container}>
       <TouchableHighlight onPress={disabled ? null : onPress}>
-        <Card>
+        <Card paddingRem={[0.5, 0.5, 0.5, 0.5]}>
           <View style={styles.cardContainer}>
-            <View style={styles.spacedContainer}>{children}</View>
+            <View style={styles.childContainer}>{children}</View>
             {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}
           </View>
         </Card>
@@ -48,14 +48,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     flexDirection: 'row'
   },
-  spacedContainer: {
+  childContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignSelf: 'center',
     flex: 1
   },
   chevron: {
-    alignSelf: 'center',
-    marginLeft: theme.rem(1.25)
+    alignSelf: 'center'
   }
 }))
 
