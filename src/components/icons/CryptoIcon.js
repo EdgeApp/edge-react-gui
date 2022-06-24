@@ -25,7 +25,7 @@ type Props = {
   currencyCode?: string
 }
 
-export const CryptoIconComponent = (props: Props) => {
+const CryptoIconComponent = (props: Props) => {
   let { pluginId, tokenId } = props
   const { walletId, mono = false, sizeRem, marginRem, currencyCode } = props
 
