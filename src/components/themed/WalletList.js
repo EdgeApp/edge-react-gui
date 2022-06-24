@@ -34,7 +34,7 @@ type Props = {|
   showCreateWallet?: boolean,
 
   // Callbacks:
-  onPress?: (walletId: string, currencyCode: string) => void
+  onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
 |}
 
 type WalletCreateItem = {|

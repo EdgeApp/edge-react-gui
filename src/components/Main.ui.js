@@ -53,6 +53,7 @@ import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
+import { AddCollateralScene } from './scenes/AddCollateralScene.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
@@ -73,6 +74,7 @@ import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
 import { LoginScene } from './scenes/LoginScene.js'
+import { MakeLoanPaymentScene } from './scenes/MakeLoanPaymentScene.js'
 import { ManageTokensScene } from './scenes/ManageTokensScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene.js'
@@ -92,6 +94,7 @@ import { TransactionList } from './scenes/TransactionListScene.js'
 import { WcConnectionsScene } from './scenes/WcConnectionsScene'
 import { WcConnectScene } from './scenes/WcConnectScene'
 import { WcDisconnectScene } from './scenes/WcDisconnectScene'
+import { WithdrawCollateralScene } from './scenes/WithdrawCollateralScene'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
 
@@ -600,6 +603,39 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
               renderLeftButton={renderPluginBackButton()}
               renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+            />
+          </Stack>
+
+          <Stack key="addCollateralScene" hideDrawerButton>
+            <Scene
+              key="addCollateralScene"
+              component={withNavigation(ifLoggedIn(AddCollateralScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+          </Stack>
+
+          <Stack key="withdrawCollateralScene" hideDrawerButton>
+            <Scene
+              key="withdrawCollateralScene"
+              component={withNavigation(ifLoggedIn(WithdrawCollateralScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+          </Stack>
+
+          <Stack key="makeLoanPaymentScene" hideDrawerButton>
+            <Scene
+              key="makeLoanPaymentScene"
+              component={withNavigation(ifLoggedIn(MakeLoanPaymentScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
             />
           </Stack>
 

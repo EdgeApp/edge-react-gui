@@ -38,6 +38,9 @@ export type ParamList = {
   login: void,
   edge: void,
   // Logged-in scenes:
+  addCollateralScene: {|
+    borrowEngine: BorrowEngine
+  |},
   changeMiningFee: {|
     guiMakeSpendInfo: GuiMakeSpendInfo,
     maxSpendSet: boolean,
@@ -185,6 +188,9 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
+  makeLoanPaymentScene: {|
+    borrowEngine: BorrowEngine
+  |},
   manageTokens: {|
     walletId: string
   |},
@@ -252,6 +258,9 @@ export type ParamList = {
   wcDisconnect: {| wcConnectionInfo: WcConnectionInfo |},
   wcConnect: {|
     uri: string
+  |},
+  withdrawCollateralScene: {|
+    borrowEngine: BorrowEngine
   |}
 }
 
