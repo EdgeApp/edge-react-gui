@@ -3,16 +3,16 @@ import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { useWalletBalance } from '../../hooks/useWalletBalance.js'
-import { useWalletName } from '../../hooks/useWalletName.js'
-import { memo } from '../../types/reactHooks.js'
-import { useSelector } from '../../types/reactRedux.js'
-import { CryptoIcon } from '../icons/CryptoIcon'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CryptoText } from '../text/CryptoText'
-import { FiatText } from '../text/FiatText.js'
-import { TickerText } from '../text/TickerText.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { useWalletBalance } from '../../../hooks/useWalletBalance.js'
+import { useWalletName } from '../../../hooks/useWalletName.js'
+import { memo } from '../../../types/reactHooks.js'
+import { useSelector } from '../../../types/reactRedux.js'
+import { CryptoIcon } from '../../icons/CryptoIcon'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
+import { CryptoText } from '../../text/CryptoText'
+import { FiatText } from '../../text/FiatText.js'
+import { TickerText } from '../../text/TickerText.js'
+import { EdgeText } from '../../themed/EdgeText.js'
 
 type Props = {|
   showRate?: boolean,
@@ -24,7 +24,7 @@ type Props = {|
 // -----------------------------------------------------------------------------
 // A view representing the data from a wallet, used for rows, cards, etc.
 // -----------------------------------------------------------------------------
-const CurrencyGroupComponent = (props: Props) => {
+const CurrencyRowComponent = (props: Props) => {
   const { showRate = false, token, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -38,8 +38,8 @@ const CurrencyGroupComponent = (props: Props) => {
   const balance = useWalletBalance(wallet, tokenId)
 
   return (
-    <>
-      <CryptoIcon marginRem={1} sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
+    <View style={styles.container}>
+      <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
       <View style={styles.nameColumn}>
         <View style={styles.currencyRow}>
           <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
@@ -61,7 +61,7 @@ const CurrencyGroupComponent = (props: Props) => {
           </EdgeText>
         </View>
       ) : null}
-    </>
+    </View>
   )
 }
 
@@ -76,7 +76,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    marginRight: theme.rem(0.5)
+    marginRight: theme.rem(0.5),
+    marginLeft: theme.rem(1)
+  },
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: theme.rem(0.5)
   },
   currencyRow: {
     flexDirection: 'row',
@@ -106,4 +113,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CurrencyGroup = memo(CurrencyGroupComponent)
+export const CurrencyRow = memo(CurrencyRowComponent)
