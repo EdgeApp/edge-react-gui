@@ -72,6 +72,7 @@ import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoanAddCollateralScene } from './scenes/Loans/LoanAddCollateralScene.js'
 import { LoanBorrowDetailsScene } from './scenes/Loans/LoanBorrowDetailsScene'
+import { LoanCloseScene } from './scenes/Loans/LoanCloseScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
 import { LoanMakeLoanPaymentScene } from './scenes/Loans/LoanRepayScene.js'
@@ -859,6 +860,15 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={renderPluginBackButton()}
               renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanClose"
+              component={withNavigation(ifLoggedIn(LoanCloseScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
             />
           </Stack>
         </Scene>
