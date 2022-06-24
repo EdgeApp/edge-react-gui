@@ -5,6 +5,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import type { BorrowEngine } from '../plugins/borrow-plugins/types.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
 import {
@@ -37,6 +38,9 @@ export type ParamList = {
   login: void,
   edge: void,
   // Logged-in scenes:
+  addCollateralScene: {|
+    borrowEngine: BorrowEngine
+  |},
   changeMiningFee: {|
     guiMakeSpendInfo: GuiMakeSpendInfo,
     maxSpendSet: boolean,
@@ -179,6 +183,9 @@ export type ParamList = {
     currencyCode: string,
     walletId: string
   },
+  makeLoanPaymentScene: {|
+    borrowEngine: BorrowEngine
+  |},
   manageTokens: {|
     walletId: string
   |},
@@ -245,6 +252,9 @@ export type ParamList = {
   wcDisconnect: {| wcConnectionInfo: WcConnectionInfo |},
   wcConnect: {|
     uri: string
+  |},
+  withdrawCollateralScene: {|
+    borrowEngine: BorrowEngine
   |}
 }
 
