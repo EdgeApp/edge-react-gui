@@ -6,7 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../../assets/vector'
 import s from '../../../locales/strings'
-import { type RouteProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -20,13 +20,14 @@ import { SceneHeader } from '../../themed/SceneHeader'
 import { TappableRow } from '../../themed/TappableRow'
 
 type Props = {
-  route: RouteProp<'loanDetails'>
+  route: RouteProp<'loanDetails'>,
+  navigation: NavigationProp<'loanDetails'>
 }
 
 export const LoanDetailsScene = (props: Props) => {
-  const { route } = props
+  const { route, navigation } = props
   const { params } = route
-  const { borrowEngine } = params
+  const { borrowEngine, borrowPlugin } = params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -42,6 +43,10 @@ export const LoanDetailsScene = (props: Props) => {
   const availableEquity = '$3,000 USD'
   const dummyDaiAmount = '5,000 DAI'
   const dummyDaiApr = 'APR: 15%'
+
+  const handleBreakdownPress = () => {
+    navigation.navigate('loanBorrowDetails', { borrowEngine, borrowPlugin })
+  }
 
   return (
     <SceneWrapper>
@@ -73,7 +78,7 @@ export const LoanDetailsScene = (props: Props) => {
               <SectionHeading>{s.strings.loan_loan_breakdown_title}</SectionHeading>
             </Space>
             <Card>
-              <TappableRow>
+              <TappableRow onPress={() => handleBreakdownPress()}>
                 <Space right>
                   <CryptoIcon currencyCode="DAI" hideSecondary />
                 </Space>
