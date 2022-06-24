@@ -5,8 +5,8 @@ import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler.js'
 import { memo } from '../../types/reactHooks.js'
+import { CurrencyRow } from '../data/row/CurrencyRow.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyGroup } from '../shared/CurrencyGroup.js'
 
 type Props = {|
   showRate?: boolean,
@@ -42,7 +42,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
-      <CurrencyGroup showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />
+      <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />
     </TouchableOpacity>
   )
 }
@@ -53,7 +53,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    minHeight: theme.rem(4.25)
+    minHeight: theme.rem(4.25),
+    marginLeft: theme.rem(0.5)
   }
 }))
 
