@@ -4,6 +4,8 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler.js'
+import { useWalletName } from '../../hooks/useWalletName'
+import { getSeed } from '../../plugins/stake-plugins/util/getSeed'
 import { memo } from '../../types/reactHooks.js'
 import { CurrencyRow } from '../data/row/CurrencyRow.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -39,7 +41,9 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const handlePress = useHandler(() => {
     if (onPress != null) onPress(wallet.id, currencyCode, tokenId)
   })
-
+  const name = useWalletName(wallet)
+  const seed = getSeed(wallet)
+  console.log('\x1b[34m\x1b[43m' + `{name, seed}: ${JSON.stringify({ name, seed }, null, 2)}` + '\x1b[0m')
   return (
     <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
       <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />

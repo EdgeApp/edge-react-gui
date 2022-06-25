@@ -220,12 +220,13 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
         const onBehalfOf = (await fromWallet.getReceiveAddress()).publicAddress
+        console.log('\x1b[30m\x1b[42m' + `'here1': ${JSON.stringify('here', null, 2)}` + '\x1b[0m')
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
-
+        console.log('\x1b[30m\x1b[42m' + `'here2': ${JSON.stringify('here', null, 2)}` + '\x1b[0m')
         const borrowTx = asGracefulTxInfo(
           await aaveNetwork.lendingPool.populateTransaction.borrow(asset, amount, INTEREST_RATE_MODE, REFERRAL_CODE, onBehalfOf, {
-            gasLimit: '800000',
+            gasLimit: '700000',
             gasPrice
           })
         )

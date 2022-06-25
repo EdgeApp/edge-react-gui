@@ -1,6 +1,6 @@
 // @flow
 
-import { mul } from 'biggystring'
+import { div, mul } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useHandler } from '../../../hooks/useHandler'
+import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatchAccount } from '../../../hooks/useWatch'
@@ -15,10 +16,10 @@ import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useCallback, useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
-import { type RouteProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { truncateDecimals, zeroString } from '../../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { TappableCard } from '../../cards/TappableCard'
 import { ValueBarCard } from '../../cards/ValueBarCard'
@@ -35,11 +36,12 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 type Props = {
-  route: RouteProp<'loanDetails'>
+  route: RouteProp<'loanDetails'>,
+  navigation: NavigationProp<'loanDetails'>
 }
 
 export const LoanDetailsScene = (props: Props) => {
-  const { route } = props
+  const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
   const { currencyWallet: srcWallet, debts } = borrowEngine
 
@@ -54,24 +56,25 @@ export const LoanDetailsScene = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const wallets = useWatchAccount(account, 'currencyWallets')
   const { fiatCurrencyCode: isoFiatCurrencyCode, id: srcWalletId } = srcWallet
-  const [srcTokenId, setSrcTokenId] = useState()
-  const [srcCurrencyCode, setSrcCurrencyCode] = useState('')
+  const [srcTokenId, setSrcTokenId] = useState('d1b98b6607330172f1d991521145a22bce793277')
+  const [srcCurrencyCode, setSrcCurrencyCode] = useState('WBTC')
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const allTokens = useAllTokens(account)
 
   const srcPluginId = srcWallet.currencyInfo.pluginId
   const srcWalletName = useWalletName(srcWallet)
   const srcBalance = useWalletBalance(srcWallet, srcTokenId ?? undefined)
-  const srcToken = useMemo(() => (srcTokenId != null ? allTokens[srcPluginId][srcTokenId] : null), [allTokens, srcPluginId, srcTokenId])
+  const srcToken = useMemo(() => (srcTokenId != null ? allTokens[srcPluginId][srcTokenId] : {}), [allTokens, srcPluginId, srcTokenId])
   const srcAssetName = useMemo(() => (srcToken != null ? srcToken.displayName : ''), [srcToken])
 
   // TODO: Post-ActionQueue, the destination wallet can differ from source wallet.
   const destWalletId = srcWallet.id
   const destPluginId = srcPluginId
-  const [destTokenId, setDestTokenId] = useState()
+  const [destTokenId, setDestTokenId] = useState('ff795577d9ac8bd7d90ee22b6c1703490b6512fd')
+  const destWallet = wallets[destWalletId]
 
   // BorrowPlugin
-  const [borrowAmountFiat, setBorrowAmount] = useState('0')
+  const [borrowAmountFiat, setBorrowAmount] = useState('10000000000000000')
   const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
 
   const hardBarCardIconUri = useMemo(
@@ -212,10 +215,32 @@ export const LoanDetailsScene = (props: Props) => {
   })
 
   // Required Collateral
-  const requiredFiat = useMemo(() => mul(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
+  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
 
   // Next Button
   const isNextDisabled = srcTokenId == null || destTokenId == null || borrowAmountFiat == null
+
+  // Deposit + Borrow Request Data
+  // TODO: cleanup
+
+  // Convert collateral in fiat -> collateral in WBTC
+  const { denominations: srcDenoms } = srcToken
+  const srcExchangeMultiplier = srcDenoms[0].multiplier
+  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
+    tokenId: srcTokenId,
+    wallet: srcWallet
+  })
+  const nativeRequiredCrypto = truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
+
+  // Convert borrow amount fiat -> borrow amount DAI
+  const destToken = destWallet.currencyConfig.allTokens[destTokenId]
+  const { denominations: destDenoms } = destToken
+  const destExchangeMultiplier = destDenoms[0].multiplier
+  const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
+    tokenId: destTokenId,
+    wallet: destWallet
+  })
+  const nativeBorrowAmountCrypto = truncateDecimals(mul(destExchangeMultiplier, div(borrowAmountFiat, destToFiatRate, DECIMAL_PRECISION)), 0)
 
   /**
    * Main Scene Render
@@ -278,7 +303,18 @@ export const LoanDetailsScene = (props: Props) => {
             disabled={isNextDisabled}
             type="secondary"
             onPress={() => {
-              // TODO: after implementation of LoanDetailsConfirmationScene
+              if (destTokenId == null || srcTokenId == null) return
+
+              navigation.navigate('loanDetailsConfirmation', {
+                borrowAmountFiat,
+                nativeBorrowAmount: nativeBorrowAmountCrypto,
+                nativeCollateralAmount: nativeRequiredCrypto,
+                borrowEngine,
+                borrowPlugin,
+                destWallet: wallets[destWalletId],
+                destTokenId,
+                srcTokenId
+              })
             }}
             marginRem={[1.5, 6, 6, 6]}
           />

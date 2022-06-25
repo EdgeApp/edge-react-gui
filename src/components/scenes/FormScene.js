@@ -7,8 +7,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useMemo } from '../../types/reactHooks.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SmartSlider } from '../themed/SmartSlider'
 
 type OwnProps = {
   headerText: string,
@@ -32,7 +32,7 @@ export const FormScene = (props: Props) => {
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}
         <View style={styles.footer}>
-          <SmartSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} />
+          <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
