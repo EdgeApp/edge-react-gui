@@ -28,7 +28,7 @@ export type FiatProviderQuote = {
 }
 
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
-type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'regionRestricted'
+type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'regionRestricted' | 'paymentUnsupported'
 
 export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesOther
 

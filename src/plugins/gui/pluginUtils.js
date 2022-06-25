@@ -24,13 +24,15 @@ export const createStore = (storeId: string, store: EdgeDataStore): FiatProvider
 const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
   underLimit: 1,
   overLimit: 2,
-  regionRestricted: 3,
-  assetUnsupported: 4
+  paymentUnsupported: 3,
+  regionRestricted: 4,
+  assetUnsupported: 5
 }
 
 const ERROR_TEXT = {
   underLimit: s.strings.fiat_plugin_buy_amount_under_limit,
   overLimit: s.strings.fiat_plugin_buy_amount_over_limit,
+  paymentUnsupported: s.strings.fiat_plugin_payment_unsupported,
   regionRestricted: s.strings.fiat_plugin_buy_region_restricted,
   assetUnsupported: s.strings.fiat_plugin_asset_unsupported
 }
