@@ -855,6 +855,7 @@ const strings = {
   loan_dashboard_failed_loan: 'Failed to load loan data',
   loan_dashboard_new_loan: 'New Loan',
   loan_dashboard_title: 'Loan Dashboard',
+  loan_loan_to_value_ratio: 'Loan-To-Value Ratio',
   loan_interest_rate: 'Interest Rate',
 
   // Send Scene
