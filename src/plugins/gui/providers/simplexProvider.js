@@ -223,7 +223,7 @@ export const simplexProvider: FiatProviderFactory = {
             break
           }
         }
-        if (!foundPaymentType) throw new Error('Simplex unsupported payment type')
+        if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const ts = Math.floor(Date.now() / 1000)
         const simplexCryptoCode = SIMPLEX_ID_MAP[params.tokenId.pluginId][params.tokenId?.tokenId ?? '']

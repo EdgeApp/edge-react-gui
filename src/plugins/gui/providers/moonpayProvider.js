@@ -174,7 +174,7 @@ export const moonpayProvider: FiatProviderFactory = {
             break
           }
         }
-        if (!foundPaymentType) throw new Error('Moonpay unsupported payment type')
+        if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         let amountParam = ''
         const cryptoCurrencyObj = asMoonpayCurrency(allowedCurrencyCodes.crypto[params.tokenId.pluginId][params.tokenId?.tokenId ?? ''])
