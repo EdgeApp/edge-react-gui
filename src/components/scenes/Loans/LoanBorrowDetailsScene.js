@@ -6,7 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../../assets/vector'
 import s from '../../../locales/strings'
-import { type RouteProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -19,14 +19,13 @@ import { SceneHeader } from '../../themed/SceneHeader'
 import { TappableRow } from '../../themed/TappableRow'
 
 type Props = {
-  route: RouteProp<'loanDetails'>
+  route: RouteProp<'loanDetails'>,
+  navigation: NavigationProp<'loanDetails'>
 }
 
 export const LoanBorrowDetailsScene = (props: Props) => {
-  const { route } = props
+  const { route, navigation } = props
   const { borrowEngine, borrowPlugin } = route.params
-
-  console.log('TODO: Use these', { borrowEngine, borrowPlugin })
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -39,6 +38,10 @@ export const LoanBorrowDetailsScene = (props: Props) => {
   const borrowTotalValue = '10,000'
   const loanFiatValue = '$5,001 USD'
   const interestRate = '12.4%'
+
+  const handleRepayPress = () => {
+    navigation.navigate('loanRepayScene', { borrowEngine, borrowPlugin })
+  }
 
   return (
     <SceneWrapper>
@@ -79,7 +82,7 @@ export const LoanBorrowDetailsScene = (props: Props) => {
               </TappableRow>
             </Card>
             <Card marginRem={[0, 0, 1, 0]}>
-              <TappableRow sideways center>
+              <TappableRow sideways center onPress={handleRepayPress}>
                 <Space right>
                   <Fontello name="make-payment" size={theme.rem(1.5)} color={theme.iconTappable} />
                 </Space>
