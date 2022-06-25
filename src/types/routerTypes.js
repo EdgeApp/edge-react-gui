@@ -38,6 +38,7 @@ export type ParamList = {
   login: void,
   edge: void,
   // Logged-in scenes:
+
   changeMiningFee: {|
     guiMakeSpendInfo: GuiMakeSpendInfo,
     maxSpendSet: boolean,
@@ -189,6 +190,18 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin,
     tokenId: string
+  |},
+  loanAddCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanWithdrawCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanRepayScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
   |},
   manageTokens: {|
     walletId: string

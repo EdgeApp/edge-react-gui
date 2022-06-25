@@ -9,7 +9,7 @@ import { useRefresher } from '../../../hooks/useRefresher'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
-import { type RouteProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -23,14 +23,15 @@ import { SceneHeader } from '../../themed/SceneHeader'
 import { getToken, useFiatTotal } from './LoanDetailsScene'
 
 type Props = {
-  route: RouteProp<'loanBorrowDetails'>
+  route: RouteProp<'loanBorrowDetails'>,
+  navigation: NavigationProp<'loanDetails'>
 }
 
 export const LoanBorrowDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { route } = props
+  const { route, navigation } = props
   const { params } = route
   const { borrowPlugin } = params
 
@@ -55,6 +56,10 @@ export const LoanBorrowDetailsScene = (props: Props) => {
   const loanFiatValue = useFiatTotal(wallet, [selectedDebt])
   const debtCurrencyCode = selectedDebtToken.currencyCode
   const interestRate = `${(selectedApr * 100).toFixed(0)}%`
+
+  const handleRepayPress = () => {
+    navigation.navigate('loanRepayScene', { borrowEngine, borrowPlugin })
+  }
 
   return (
     <SceneWrapper>
@@ -92,7 +97,7 @@ export const LoanBorrowDetailsScene = (props: Props) => {
               </Space>
               <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
             </TappableCard>
-            <TappableCard marginRem={[0, 0, 1, 0]}>
+            <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
               <Space right>
                 <Fontello name="make-payment" size={theme.rem(1.5)} color={theme.iconTappable} />
               </Space>
