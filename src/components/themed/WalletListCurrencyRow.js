@@ -23,7 +23,7 @@ type Props = {|
 
   // Callbacks:
   onLongPress?: () => void,
-  onPress?: (walletId: string, currencyCode: string) => void
+  onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
 |}
 
 export const WalletListCurrencyRowComponent = (props: Props) => {
@@ -49,7 +49,7 @@ export const WalletListCurrencyRowComponent = (props: Props) => {
   const balance = useWalletBalance(wallet, tokenId)
 
   const handlePress = useHandler(() => {
-    if (onPress != null) onPress(wallet.id, currencyCode)
+    if (onPress != null) onPress(wallet.id, currencyCode, tokenId)
   })
 
   return (
