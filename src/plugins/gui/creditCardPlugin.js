@@ -3,6 +3,7 @@ import { div, eq, gt, toFixed } from 'biggystring'
 import { sprintf } from 'sprintf-js'
 
 import ENV from '../../../env.json'
+import { isValidInput } from '../../locales/intl'
 import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
@@ -100,6 +101,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           enterAmountMethods = methods
         },
         convertValue: async (sourceFieldNum: number, value: string): Promise<string | void> => {
+          if (!isValidInput(value)) {
+            if (enterAmountMethods != null)
+              enterAmountMethods.setStatusText({ statusText: s.strings.create_wallet_invalid_input, options: { textType: 'error' } })
+            return
+          }
           bestQuote = undefined
           goodQuotes = []
           if (eq(value, '0')) return ''

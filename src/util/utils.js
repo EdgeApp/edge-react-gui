@@ -58,7 +58,7 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
-  !isNaN(+input) || input === '.'
+  (!isNaN(+input) || input === '.') && input !== 'Infinity'
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
