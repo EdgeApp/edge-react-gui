@@ -70,6 +70,8 @@ import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
+import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
+import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
 import { LoginScene } from './scenes/LoginScene.js'
 import { ManageTokensScene } from './scenes/ManageTokensScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
@@ -796,6 +798,27 @@ export class MainComponent extends React.Component<Props> {
               key="wcConnect"
               component={withNavigation(ifLoggedIn(WcConnectScene))}
               navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="loan">
+            <Scene
+              key="loanDashboard"
+              component={withNavigation(ifLoggedIn(LoanDashboardScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanDetails"
+              component={withNavigation(ifLoggedIn(LoanDetailsScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
