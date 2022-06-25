@@ -234,17 +234,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
-              <EdgeText style={styles.subtitleText} numberOfLines={0}>
-                {item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}
-              </EdgeText>
               <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>
             </View>
           </View>
-          <View style={styles.pluginRowPoweredByRow}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-            <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
-          </View>
+          {poweredBy != null && item.partnerIconPath != null ? (
+            <View style={styles.pluginRowPoweredByRow}>
+              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+              <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
+              <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+            </View>
+          ) : null}
         </TouchableOpacity>
       </View>
     )
