@@ -212,6 +212,18 @@ export type ParamList = {
     initialAmount1?: string,
     headerIconUri?: string
   |},
+  loanAddCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanWithdrawCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanRepayScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
   manageTokens: {|
     walletId: string
   |},
