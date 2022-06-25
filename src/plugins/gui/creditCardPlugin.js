@@ -81,7 +81,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
       const coreWallet = account.currencyWallets[walletId]
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet) return showUi.errorDropdown(new Error(`Missing wallet with ID ${walletId}`))
+      if (!coreWallet) return showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
       let counter = 0
       let bestQuote: FiatProviderQuote | void

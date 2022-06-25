@@ -40,7 +40,7 @@ export type FiatPluginUi = {
     walletId: string | void,
     currencyCode: string | void
   }>,
-  errorDropdown: (error: Error) => Promise<void>,
+  showError: (error: Error) => Promise<void>,
   listModal: (params: FiatPluginListModalParams) => Promise<string | void>,
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>,
   popScene: () => {}
