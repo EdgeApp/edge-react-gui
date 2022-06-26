@@ -135,6 +135,7 @@ for (const pluginId in SIMPLEX_ID_MAP) {
 
 const asSimplexApiKeys = asObject({
   partner: asString,
+  jwtTokenProvider: asString,
   publicKey: asString
 })
 
@@ -183,7 +184,7 @@ export const simplexProvider: FiatProviderFactory = {
       await store.setItem('simplex_user_id', simplexUserId)
     }
 
-    const { publicKey, partner } = asSimplexApiKeys(apiKeys)
+    const { publicKey, partner, jwtTokenProvider } = asSimplexApiKeys(apiKeys)
     const out = {
       pluginId,
       partnerIcon,
@@ -307,7 +308,7 @@ export const simplexProvider: FiatProviderFactory = {
               fiam: goodQuote.fiat_money.amount
             }
 
-            const response = await multiFetch(INFO_SERVERS, 'v1/jwtSign/simplex', {
+            const response = await multiFetch(INFO_SERVERS, `v1/jwtSign/${jwtTokenProvider}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ data })
