@@ -76,7 +76,6 @@ export function WalletListSwipeable(props: Props) {
     }
     return null
   })
-
   return (
     <FlatList
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
