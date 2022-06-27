@@ -225,7 +225,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const borrowTx = asGracefulTxInfo(
           await aaveNetwork.lendingPool.populateTransaction.borrow(asset, amount, INTEREST_RATE_MODE, REFERRAL_CODE, onBehalfOf, {
-            gasLimit: '800000',
+            gasLimit: '700000',
             gasPrice
           })
         )
