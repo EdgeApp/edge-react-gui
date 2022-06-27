@@ -850,13 +850,33 @@ const strings = {
   select_fio_address_address_memo_error: 'FIO Memo Error',
 
   // Loan
+  loan_actions_title: 'Actions',
+  loan_action_add_collateral: 'Add Collateral',
+  loan_action_close_loan: 'Close Loan',
+  loan_action_withdraw_collateral: 'Withdraw Collateral',
+  loan_available_equity: 'Available Equity',
   loan_collateral_value: 'Collateral Value',
   loan_dashboard_active_loans_title: 'Active Loans',
   loan_dashboard_failed_loan: 'Failed to load loan data',
   loan_dashboard_new_loan: 'New Loan',
   loan_dashboard_title: 'Loan Dashboard',
+  loan_details_actions_title: 'Actions',
+  loan_details_breakdown_title: 'Loan Breakdown',
+  loan_details_collateral_required: 'Collateral Amount Required',
+  loan_details_collateral_source: 'Source of Collateral',
+  loan_details_destination: 'Fund Destination',
+  loan_details_enter_loan_amount_s: 'Enter Loan Amount (%1$s)',
+  loan_details_insufficient_funds_warning:
+    'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
+  loan_details_new_loan: 'New Loan',
+  loan_details_select_s_wallet: 'Please select a %s wallet',
+  loan_details_select_source_collateral: 'Please select a source of collateral',
+  loan_details_select_receiving_wallet: 'Please select a receiving wallet',
+  loan_details_title: 'Loan Details',
+  loan_loan_breakdown_title: 'Loan Breakdown',
   loan_loan_to_value_ratio: 'Loan-To-Value Ratio',
   loan_interest_rate: 'Interest Rate',
+  loan_s_apr: '%1$s%% APR',
 
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
