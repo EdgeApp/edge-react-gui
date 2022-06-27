@@ -1,6 +1,6 @@
 // @flow
 
-import { mul } from 'biggystring'
+import { div, mul } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useHandler } from '../../../hooks/useHandler'
+import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatchAccount } from '../../../hooks/useWatch'
@@ -15,10 +16,10 @@ import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useCallback, useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
-import { type RouteProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { truncateDecimals, zeroString } from '../../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { TappableCard } from '../../cards/TappableCard'
 import { ValueBarCard } from '../../cards/ValueBarCard'
@@ -35,11 +36,12 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 type Props = {
-  route: RouteProp<'loanDetails'>
+  route: RouteProp<'loanDetails'>,
+  navigation: NavigationProp<'loanDetails'>
 }
 
 export const LoanDetailsScene = (props: Props) => {
-  const { route } = props
+  const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
   const { currencyWallet: srcWallet, debts } = borrowEngine
 
@@ -62,11 +64,12 @@ export const LoanDetailsScene = (props: Props) => {
   const srcPluginId = srcWallet.currencyInfo.pluginId
   const srcWalletName = useWalletName(srcWallet)
   const srcBalance = useWalletBalance(srcWallet, srcTokenId ?? undefined)
-  const srcToken = useMemo(() => (srcTokenId != null ? allTokens[srcPluginId][srcTokenId] : null), [allTokens, srcPluginId, srcTokenId])
+  const srcToken = useMemo(() => (srcTokenId != null ? allTokens[srcPluginId][srcTokenId] : {}), [allTokens, srcPluginId, srcTokenId])
   const srcAssetName = useMemo(() => (srcToken != null ? srcToken.displayName : ''), [srcToken])
 
   // TODO: Post-ActionQueue, the destination wallet can differ from source wallet.
   const destWalletId = srcWallet.id
+  const destWallet = wallets[destWalletId]
   const destPluginId = srcPluginId
   const [destTokenId, setDestTokenId] = useState()
 
@@ -110,7 +113,7 @@ export const LoanDetailsScene = (props: Props) => {
     const walletPluginId = isSrc ? srcPluginId : destPluginId
 
     // Filter for only tokens on the active wallet
-    // TODO: Plugin change: return all the supported debt/col assets from some hard-coded data per dApp
+    // TODO: V2: Plugin change: return all the supported debt/col assets from some hard-coded data per dApp
     const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== (isSrc ? srcWalletId : destWalletId))
     const hardAllowedAsset = isSrc ? { pluginId: srcPluginId, tokenId: srcTokenAddr } : { pluginId: destPluginId, tokenId: destTokenAddr }
 
@@ -212,10 +215,34 @@ export const LoanDetailsScene = (props: Props) => {
   })
 
   // Required Collateral
-  const requiredFiat = useMemo(() => mul(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
+  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
 
   // Next Button
-  const isNextDisabled = srcTokenId == null || destTokenId == null || borrowAmountFiat == null
+  const isNextDisabled = srcTokenId == null || destTokenId == null || zeroString(borrowAmountFiat)
+
+  // Deposit + Borrow Request Data
+  // Convert collateral in fiat -> collateral crypto
+  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
+    tokenId: srcTokenId,
+    wallet: srcWallet
+  })
+  const { denominations: srcDenoms } = srcToken
+  const srcExchangeMultiplier = isNextDisabled ? '0' : srcDenoms[0].multiplier
+  const nativeRequiredCrypto = isNextDisabled ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
+
+  // Convert borrow amount fiat -> borrow amount crypto
+  const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
+    tokenId: destTokenId,
+    wallet: destTokenId == null ? srcWallet : destWallet // srcWallet will always exist.
+    // If the user has not yet selected a destWallet, we wouldn't be showing
+    // any exchange rate, anyway, so just pass srcWallet to allow this hook not to puke.
+  })
+  const destToken = destTokenId == null ? null : destWallet.currencyConfig.allTokens[destTokenId]
+  const { denominations: destDenoms } = destToken ?? {}
+  const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
+  const nativeBorrowAmountCrypto = isNextDisabled
+    ? '0'
+    : truncateDecimals(mul(destExchangeMultiplier, div(borrowAmountFiat, destToFiatRate, DECIMAL_PRECISION)), 0)
 
   /**
    * Main Scene Render
@@ -278,7 +305,17 @@ export const LoanDetailsScene = (props: Props) => {
             disabled={isNextDisabled}
             type="secondary"
             onPress={() => {
-              // TODO: after implementation of LoanDetailsConfirmationScene
+              if (destTokenId == null || srcTokenId == null) return
+
+              navigation.navigate('loanDetailsConfirmation', {
+                borrowEngine,
+                borrowPlugin,
+                destWallet: wallets[destWalletId],
+                destTokenId,
+                nativeDestAmount: nativeBorrowAmountCrypto,
+                nativeSrcAmount: nativeRequiredCrypto,
+                srcTokenId
+              })
             }}
             marginRem={[1.5, 6, 6, 6]}
           />
