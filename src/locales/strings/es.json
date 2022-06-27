@@ -122,7 +122,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "¿Está seguro de que desea archivar ",
   "fragmet_wallets_delete_fio_extra_message_mobile": "Eliminar esta cartera FIO eliminará el acceso a cualquier dirección FIO que hayas vinculado a esta cartera.",
   "fragmet_wallets_delete_eth_extra_message": "Archivar esta cartera también archivará cualquier token habilitado para esta cartera.",
-  "wallet_list_add_wallet": "Añadir carpeta",
+  "wallet_list_add_wallet": "Añadir cartera",
   "wallet_list_add_token": "Añadir token",
   "wallet_list_referral_link_currency_invalid": "La moneda a crear no es válida",
   "wallet_list_referral_link_currency_loading": "Un momento. Creando la cartera necesaria para esta promoción",
