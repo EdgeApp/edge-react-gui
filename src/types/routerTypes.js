@@ -188,6 +188,15 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
+  loanDetailsConfirmation: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    destWallet: EdgeCurrencyWallet,
+    destTokenId: string,
+    nativeDestAmount: string,
+    nativeSrcAmount: string,
+    srcTokenId: string
+  |},
   makeLoanPaymentScene: {|
     borrowEngine: BorrowEngine
   |},
