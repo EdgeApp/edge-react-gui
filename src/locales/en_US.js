@@ -868,6 +868,8 @@ const strings = {
   loan_details_select_s_wallet: 'Please select a %s wallet',
   loan_details_select_source_collateral: 'Please select a source of collateral',
   loan_details_select_receiving_wallet: 'Please select a receiving wallet',
+  loan_details_conf_amount_borrow: 'Amount to Borrow',
+  loan_details_conf_title: 'Borrow Details',
   loan_interest_rate: 'Interest Rate',
   loan_s_apr: '%1$s%% APR',
 
