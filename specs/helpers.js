@@ -56,6 +56,45 @@ export const helpers = (spec: any) => ({
     return walletNameModal.props.data[0].wallet.name
   },
 
+  scrollToLastItem: async (walletListName: any) => {
+    // Get Last item name, call it lastRowName
+    try {
+      const lastRow = await spec.findComponent(walletListName)
+      console.log('lastRow', lastRow.props.data)
+      const lastRowName = walletListName.length - 1
+      console.log('lastRowName', lastRowName)
+      await lastRow.scrollToEnd()
+
+      return lastRowName.props.data
+    } catch (e) {
+      spec.pause(1000)
+      walletListName.scrollToEnd()
+      console.log('e', e)
+    }
+  },
+
+  scrollWalletList: async (walletListName: string): Promise<data> => {
+    const walletList = await spec.findComponent(walletListName)
+    // walletList.scrollToIndex({ animated: true, index: 15 })
+    // for (let i = 0; i < walletList.length; i++) {
+    // setinterval doesnt work well with async b/c it doesn't return a promise
+    // use the coding file matt showed while true
+    await setInterval(walletList.scrollToEnd({ animated: true, index: -1 }), 1000)
+    // if (walletList.lastIndexOf(walletList.props.data.walletId)) {
+    // stop interval
+    // } snooze in utils
+    // walletList.scrollToEnd()
+    // await spec.pause(1000)
+    // walletList.scrollToEnd({ animated: true, index: -1 })
+    // await spec.pause(1000)
+    // walletList.scrollToEnd({ animated: true, index: -1 })
+    // scroll loop that goes until it gets to the end
+    // create a loop to get
+    // }
+    console.log('walletList', walletList.props.data)
+    return walletList.props.data
+  },
+
   //   navigate: async (fromName: string, toName: string, time?: number = 1000) => {
   //     try {
   //       await mkdir(SnapShotsPath)
