@@ -4,16 +4,12 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
+import { fuzzyTimeout } from '../../util/utils'
 import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs } from './fiatPluginTypes'
 import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
 import { dummyProvider } from './providers/dummyProvider'
 
 const providerFactories = [dummyProvider]
-
-const promiseWithTimeout = <T>(promise: Promise<T>, timeoutMs: number = 5000): Promise<T> | Promise<void> =>
-  Promise.race([promise, new Promise((resolve, reject) => setTimeout(() => resolve(undefined), timeoutMs))])
-
-const safePromise = <T>(promise: Promise<T>): Promise<T> | Promise<void> => promise.catch(e => undefined)
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
@@ -26,14 +22,14 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   }
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {
-    assetPromises.push(promiseWithTimeout(safePromise(provider.getSupportedAssets())))
+    assetPromises.push(provider.getSupportedAssets())
   }
   // const store = createStore(account.dataStore, pluginId)
 
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async () => {
-      const assetArray = await Promise.all(assetPromises)
+      const assetArray = await fuzzyTimeout(assetPromises, 5000).catch(e => [])
 
       const allowedAssets: EdgeTokenId[] = []
       for (const assetMap of assetArray) {
@@ -98,8 +94,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             }
           }
 
-          const quotePromises = providers.map(p => promiseWithTimeout(safePromise(p.getQuote(quoteParams))))
-          const quotes = await Promise.all(quotePromises)
+          const quotePromises = providers.map(p => p.getQuote(quoteParams))
+          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => [])
 
           // Only update with the latest call to convertValue
           if (myCounter !== counter) return
