@@ -55,6 +55,7 @@ export const helpers = (spec: any) => ({
     const walletNameModal = await spec.findComponent(walletName)
     return walletNameModal.props.data[0].wallet.name
   },
+
   //   navigate: async (fromName: string, toName: string, time?: number = 1000) => {
   //     try {
   //       await mkdir(SnapShotsPath)
