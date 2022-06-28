@@ -780,6 +780,8 @@
   "loan_details_collateral_source": "Source of Collateral",
   "loan_details_destination": "Fund Destination",
   "loan_details_enter_loan_amount_s": "Enter Loan Amount (%1$s)",
+  "loan_details_must_be_s_or_less": "Loan must be less than %1$s of your total collateral value",
+  "loan_details_amount_exceeds_s_collateral": "Loan exceeds %1$s of collateral value in your %2$s wallet",
   "loan_details_title": "Borrow With Aave",
   "loan_details_actions_title": "Actions",
   "loan_details_breakdown_title": "Loan Breakdown",

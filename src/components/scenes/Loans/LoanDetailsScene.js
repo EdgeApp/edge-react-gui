@@ -1,17 +1,19 @@
 // @flow
 
-import { div, mul } from 'biggystring'
+import { div, lt, mul } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../../hooks/useAllTokens'
+import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatchAccount } from '../../../hooks/useWatch'
+import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useCallback, useEffect, useMemo, useState } from '../../../types/reactHooks'
@@ -175,17 +177,72 @@ export const LoanDetailsScene = (props: Props) => {
   /**
    * Main Scene Final Props & Calculations
    */
+
+  // User has made input to all required fields
+  const isUserInputComplete = srcTokenId != null && destTokenId != null && !zeroString(borrowAmountFiat)
+
+  // Required Collateral
+  // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
+  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
+
+  // Deposit + Borrow Request Data
+  // Convert collateral in fiat -> collateral crypto
+  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
+    tokenId: srcTokenId,
+    wallet: srcWallet
+  })
+  const { denominations: srcDenoms } = srcToken
+  const srcExchangeMultiplier = !isUserInputComplete ? '0' : srcDenoms[0].multiplier
+  const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
+
+  // Convert borrow amount fiat -> borrow amount crypto
+  const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
+    tokenId: destTokenId,
+    wallet: destTokenId == null ? srcWallet : destWallet // srcWallet will always exist.
+    // If the user has not yet selected a destWallet, we wouldn't be showing
+    // any exchange rate, anyway, so just pass srcWallet to allow this hook not to puke.
+  })
+  const destToken = destTokenId == null ? null : destWallet.currencyConfig.allTokens[destTokenId]
+  const { denominations: destDenoms } = destToken ?? {}
+  const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
+  const nativeBorrowAmountCrypto = !isUserInputComplete
+    ? '0'
+    : truncateDecimals(mul(destExchangeMultiplier, div(borrowAmountFiat, destToFiatRate, DECIMAL_PRECISION)), 0)
+
+  const isLtvExceeded = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
+
   // Borrow Amount Card
+  const displayLtvLimit = useMemo(() => toPercentString(ltvRatio), [ltvRatio])
+  const handleEditBorrowAmountSubmit = async (text: string) => {
+    // Accept any user entry if source and dest assets haven't been set yet
+    if (!isUserInputComplete) return true
+
+    // Evaluate if the dollar value of the borrow amount is valid. This error can show up on the scene as well.
+    if (isLtvExceeded) return sprintf(s.strings.loan_details_amount_exceeds_s_collateral, displayLtvLimit, srcCurrencyCode)
+
+    // Valid input
+    return true
+  }
+
   const handleEditBorrowAmount = useCallback(() => {
-    Airship.show(bridge => <TextInputModal bridge={bridge} title={sprintf(s.strings.loan_details_enter_loan_amount_s, fiatCurrencyCode)} />).then(amount => {
+    Airship.show(bridge => (
+      <TextInputModal
+        title={sprintf(s.strings.loan_details_enter_loan_amount_s, fiatCurrencyCode)}
+        message={sprintf(s.strings.loan_details_must_be_s_or_less)}
+        bridge={bridge}
+        onSubmit={handleEditBorrowAmountSubmit}
+        keyboardType="decimal-pad"
+      />
+    )).then(amount => {
       if (amount != null) {
         setBorrowAmount(amount)
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fiatCurrencyCode])
 
   // APR
-  const aprValue = apr == null || apr === 0 ? '-- ' : truncateDecimals((100 * apr).toString(), 1)
+  const aprValue = apr == null || apr === 0 ? '-- ' : toPercentString(apr)
   const displayApr = useMemo(() => sprintf(s.strings.loan_s_apr, aprValue), [aprValue])
 
   // Warning
@@ -201,52 +258,46 @@ export const LoanDetailsScene = (props: Props) => {
     [isCollateralWalletEnabled, srcAssetName, srcCurrencyCode, srcWalletName]
   )
   const renderWarning = useHandler(() => {
+    // User doesn't have required collateral wallet enabled or 0 balance
     if ((srcToken != null && zeroString(srcBalance)) || !isCollateralWalletEnabled)
       return (
         <Alert
           numberOfLines={0}
           marginRem={[0.5, 0.5, 0.5, 0.5]}
-          title={s.strings.wc_smartcontract_warning_title}
+          title={s.strings.exchange_insufficient_funds_title}
           message={collateralWarningMsg}
           type="warning"
+        />
+      )
+    // User completed Borrow Amount entry before finishing the src/dest wallet
+    // destinations, and the combination of all inputs exceed LTV ratio.
+    else if (isUserInputComplete && isLtvExceeded)
+      return (
+        <Alert
+          numberOfLines={0}
+          marginRem={[0.5, 0.5, 0.5, 0.5]}
+          title={s.strings.exchange_insufficient_funds_title}
+          message={sprintf(s.strings.loan_details_amount_exceeds_s_collateral, displayLtvLimit, srcCurrencyCode)}
+          type="error"
         />
       )
     else return null
   })
 
-  // Required Collateral
-  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
-
-  // Next Button
-  const isNextDisabled = srcTokenId == null || destTokenId == null || zeroString(borrowAmountFiat)
-
-  // Deposit + Borrow Request Data
-  // Convert collateral in fiat -> collateral crypto
-  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
-    tokenId: srcTokenId,
-    wallet: srcWallet
-  })
-  const { denominations: srcDenoms } = srcToken
-  const srcExchangeMultiplier = isNextDisabled ? '0' : srcDenoms[0].multiplier
-  const nativeRequiredCrypto = isNextDisabled ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
-
-  // Convert borrow amount fiat -> borrow amount crypto
-  const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
-    tokenId: destTokenId,
-    wallet: destTokenId == null ? srcWallet : destWallet // srcWallet will always exist.
-    // If the user has not yet selected a destWallet, we wouldn't be showing
-    // any exchange rate, anyway, so just pass srcWallet to allow this hook not to puke.
-  })
-  const destToken = destTokenId == null ? null : destWallet.currencyConfig.allTokens[destTokenId]
-  const { denominations: destDenoms } = destToken ?? {}
-  const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
-  const nativeBorrowAmountCrypto = isNextDisabled
-    ? '0'
-    : truncateDecimals(mul(destExchangeMultiplier, div(borrowAmountFiat, destToFiatRate, DECIMAL_PRECISION)), 0)
-
   /**
    * Main Scene Render
    */
+
+  const displayBorrowAmount = useMemo(
+    () =>
+      formatFiatString({
+        fiatAmount: borrowAmountFiat,
+        autoPrecision: true,
+        noGrouping: false
+      }),
+    [borrowAmountFiat]
+  )
+
   return (
     <SceneWrapper>
       <SceneHeader underline textTitle={s.strings.loan_details_title} />
@@ -255,7 +306,7 @@ export const LoanDetailsScene = (props: Props) => {
           {/* Amount  to borrow */}
           <ValueBarCard
             currencyCode="USD"
-            formattedAmount={borrowAmountFiat}
+            formattedAmount={displayBorrowAmount}
             iconUri={hardBarCardIconUri}
             title={s.strings.loan_details_title}
             onPress={handleEditBorrowAmount}
@@ -283,9 +334,6 @@ export const LoanDetailsScene = (props: Props) => {
             tokenId={srcTokenId}
           />
 
-          {/* Insufficient Collateral Warning Card */}
-          {renderWarning()}
-
           {/* Fund Destination */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_details_destination}</EdgeText>
 
@@ -300,9 +348,13 @@ export const LoanDetailsScene = (props: Props) => {
               <CryptoFiatAmountRow nativeFiatAmount={requiredFiat} tokenId={srcTokenId} wallet={srcWallet} />
             )}
           </Card>
+
+          {/* Insufficient Collateral Warning Card */}
+          {renderWarning()}
+
           <MainButton
             label={s.strings.string_next_capitalized}
-            disabled={isNextDisabled}
+            disabled={isLtvExceeded || !isUserInputComplete}
             type="secondary"
             onPress={() => {
               if (destTokenId == null || srcTokenId == null) return
