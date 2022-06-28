@@ -234,7 +234,6 @@ export function ControlPanel(props: Props) {
     },
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     { pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars },
-
     {
       pressHandler: () => handleGoToScene('termsOfService'),
       iconName: 'control-panel-tos',
