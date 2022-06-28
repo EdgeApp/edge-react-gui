@@ -31,7 +31,7 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
   const styles = getStyles(theme)
   const walletId = wallet.id
   const token = wallet.currencyConfig.allTokens[tokenId]
-  const { currencyCode, denominations } = token
+  const { denominations } = token
   const tokenExchangeMultiplier = denominations[0].multiplier
 
   const { assetToFiatRate: tokenFiatRate } = useTokenDisplayData({
@@ -58,7 +58,6 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
         <View style={styles.halfContainer}>
           <EdgeText style={styles.text}>
             <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeTokenAmount} />
-            {' ' + currencyCode}
           </EdgeText>
         </View>
       </View>
