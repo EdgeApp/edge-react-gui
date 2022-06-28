@@ -17,8 +17,8 @@ import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type GuiExchangeRates } from '../../../types/types'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
-import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
+import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
@@ -29,7 +29,6 @@ import { CryptoText } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { TappableRow } from '../../themed/TappableRow'
 
 type Props = {
   route: RouteProp<'loanDetails'>,
@@ -101,19 +100,17 @@ export const LoanDetailsScene = (props: Props) => {
             const currencyCode = token?.currencyCode ?? 'N/A'
             const aprText = `APR: ${(debt.apr * 100).toFixed(0)}%`
             return (
-              <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <TappableRow onPress={() => handleBreakdownPress(debt.tokenId)}>
-                  <Space right>
-                    <CryptoIcon currencyCode={currencyCode} hideSecondary />
-                  </Space>
-                  <Space>
-                    <EdgeText style={styles.breakdownText}>
-                      <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
-                    </EdgeText>
-                    <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
-                  </Space>
-                </TappableRow>
-              </Card>
+              <TappableCard key={debt.tokenId} marginRem={[0, 0, 1]} onPress={() => handleBreakdownPress(debt.tokenId)}>
+                <Space right>
+                  <CryptoIcon currencyCode={currencyCode} hideSecondary />
+                </Space>
+                <Space>
+                  <EdgeText style={styles.breakdownText}>
+                    <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
+                  </EdgeText>
+                  <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
+                </Space>
+              </TappableCard>
             )
           })}
         </Space>
@@ -121,30 +118,24 @@ export const LoanDetailsScene = (props: Props) => {
           <Space bottom>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
           </Space>
-          <Card marginRem={[0, 0, 1, 0]}>
-            <TappableRow center>
-              <Space right style={styles.actionIcon}>
-                <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
-              </Space>
-              <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
-            </TappableRow>
-          </Card>
-          <Card marginRem={[0, 0, 1, 0]}>
-            <TappableRow sideways center>
-              <Space right style={styles.actionIcon}>
-                <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
-              </Space>
-              <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
-            </TappableRow>
-          </Card>
-          <Card marginRem={[0, 0, 1, 0]}>
-            <TappableRow sideways center>
-              <Space right style={styles.actionIcon}>
-                <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
-              </Space>
-              <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
-            </TappableRow>
-          </Card>
+          <TappableCard marginRem={[0, 0, 1, 0]}>
+            <Space right style={styles.actionIcon}>
+              <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
+          </TappableCard>
+          <TappableCard marginRem={[0, 0, 1, 0]}>
+            <Space right style={styles.actionIcon}>
+              <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
+          </TappableCard>
+          <TappableCard marginRem={[0, 0, 1, 0]}>
+            <Space right style={styles.actionIcon}>
+              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
+          </TappableCard>
         </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>
