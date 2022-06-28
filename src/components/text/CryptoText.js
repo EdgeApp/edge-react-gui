@@ -25,12 +25,6 @@ type Props = {|
  * 3. Localization: commas, decimals, spaces
  **/
 export const CryptoText = ({ wallet, tokenId, nativeAmount, withSymbol }: Props) => {
-  const cryptoText = useCryptoTextSimple({ wallet, tokenId, nativeAmount, withSymbol })
-
-  return <EdgeText>{cryptoText}</EdgeText>
-}
-
-export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol }: Props): string => {
   const {
     denomination: exchangeDenomination,
     fiatDenomination,
@@ -52,5 +46,5 @@ export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol 
     currencyCode: withSymbol ? undefined : currencyCode
   })
 
-  return cryptoText
+  return <EdgeText>{cryptoText}</EdgeText>
 }
