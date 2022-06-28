@@ -30,6 +30,7 @@ type Props = {
   actionWallet: 'fromWallet' | 'toWallet',
   ltvType: 'debts' | 'collaterals',
   ltvChange: 'increase' | 'decrease',
+  debtChange?: 'increase' | 'decrease',
 
   showExchangeRateTile?: boolean,
   showTotalDebtTile?: boolean,
@@ -52,6 +53,7 @@ export const ManageCollateralScene = (props: Props) => {
     showExchangeRateTile,
     showTotalDebtTile,
     showNewDebtTile,
+    debtChange = 'increase',
     showTotalCollateralTile,
     goBack
   } = props
@@ -174,7 +176,8 @@ export const ManageCollateralScene = (props: Props) => {
   }, [currencyWallet, borrowEngine, showTotalDebtTile])
 
   const renderNewDebtTile = useMemo(() => {
-    const newDebt = { nativeAmount: `-${actionNativeAmount}`, tokenId: selectedTokenId, apr: 0 } // APR is only present to appease Flow. It does not mean anything.
+    const multiplier = debtChange === 'increase' ? '1' : '-1'
+    const newDebt = { nativeAmount: mul(actionNativeAmount, multiplier), tokenId: selectedTokenId, apr: 0 } // APR is only present to appease Flow. It does not mean anything.
     return showNewDebtTile ? <DebtAmountTile title={s.strings.loan_new_principle} wallet={currencyWallet} debts={[...borrowEngine.debts, newDebt]} /> : null
   }, [currencyWallet, borrowEngine, actionNativeAmount, selectedTokenId, showNewDebtTile])
 
