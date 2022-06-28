@@ -7,8 +7,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useMemo } from '../../types/reactHooks.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SmartSlider } from '../themed/SmartSlider'
 
 type OwnProps = {
   headerText: string,
@@ -24,7 +24,7 @@ export const FormScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const sceneHeader = useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} withTopMargin />, [headerText, styles.sceneHeader])
+  const sceneHeader = useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} underline />, [headerText, styles.sceneHeader])
 
   return (
     <SceneWrapper background="theme">
@@ -32,7 +32,7 @@ export const FormScene = (props: Props) => {
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}
         <View style={styles.footer}>
-          <SmartSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} />
+          <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
@@ -46,6 +46,8 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   footer: {
-    marginBottom: theme.rem(2)
+    margin: theme.rem(2),
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }))
