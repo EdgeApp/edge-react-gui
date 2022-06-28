@@ -39,6 +39,10 @@ export const LoanBorrowDetailsScene = (props: Props) => {
   const loanFiatValue = '$5,001 USD'
   const interestRate = '12.4%'
 
+  const handleBorrowMorePress = () => {
+    navigation.navigate('loanBorrowMoreScene', { borrowEngine, borrowPlugin })
+  }
+
   const handleRepayPress = () => {
     navigation.navigate('loanRepayScene', { borrowEngine, borrowPlugin })
   }
@@ -74,7 +78,7 @@ export const LoanBorrowDetailsScene = (props: Props) => {
               <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
             </Space>
             <Card marginRem={[0, 0, 1, 0]}>
-              <TappableRow sideways center>
+              <TappableRow sideways center onPress={handleBorrowMorePress}>
                 <Space right>
                   <Fontello name="borrow-more" size={theme.rem(1.5)} color={theme.iconTappable} />
                 </Space>
