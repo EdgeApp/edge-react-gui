@@ -29,8 +29,8 @@ const TappableCardComponent = ({
 
   return (
     <View style={styles.container}>
-      <TouchableHighlight onPress={disabled ? null : onPress}>
-        <Card paddingRem={[0.5, 0.5, 0.5, 0.5]}>
+      <TouchableHighlight onPress={disabled ? null : onPress} underlayColor={theme.backgroundGradientColors[0]}>
+        <Card paddingRem={[0.5, 1, 0.5, 0.5]}>
           <View style={styles.cardContainer}>
             <View style={styles.childContainer}>{children}</View>
             {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}

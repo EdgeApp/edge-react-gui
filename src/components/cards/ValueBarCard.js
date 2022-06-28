@@ -88,6 +88,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   textTitle: { fontFamily: theme.fontFaceMedium },
   textBasePrimary: {
+    alignSelf: 'flex-end',
+    flexShrink: 1,
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(2),
     marginRight: theme.rem(0.25)
@@ -110,7 +112,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   valueContainer: {
     flexDirection: 'row',
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
+    flex: 1,
+    marginRight: theme.rem(0.25)
   }
 }))
 

@@ -55,7 +55,7 @@ const LoanSummaryCardComponent = ({
       noGrouping: true
     })
 
-    // TODO: Calculate amount-adjusted cumulative interest
+    // TODO: Calculate amount-adjusted cumulative interest for multiple debt asset currencies and amounts.
     const displayInterestTotal = toPercentString(debts[0].apr)
 
     return (
@@ -122,7 +122,8 @@ export const calculateFiatValue = (
 const getStyles = cacheStyles((theme: Theme) => {
   return {
     cardContainer: {
-      flex: 1
+      flex: 1,
+      margin: theme.rem(0.5)
     },
     column: {
       flexDirection: 'column',
