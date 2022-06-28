@@ -5,7 +5,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
-import { type FiatPluginEnterAmountResponse } from '../plugins/gui/fiatPluginTypes.js'
+import { type FiatPluginEnterAmountResponse, type FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
 import {
@@ -187,6 +187,7 @@ export type ParamList = {
     label2: string,
     onChangeText: (fieldNum: number, value: string) => Promise<void>,
     convertValue: (sourceFieldNum: number, value: string) => Promise<string | void>,
+    getMethods?: (methods: FiatPluginGetMethodsResponse) => void,
     initialAmount1?: string,
     headerIconUri?: string
   |},

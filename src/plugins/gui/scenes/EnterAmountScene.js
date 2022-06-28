@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../../../components/services/ThemeContext.js'
@@ -20,17 +20,30 @@ type Props = {
 export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '' } = props.route.params
+  const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
   const [value1, setValue1] = useState<string>(initialAmount1)
   const [value2, setValue2] = useState<string>('')
   const [spinner1, setSpinner1] = useState<boolean>(false)
   const [spinner2, setSpinner2] = useState<boolean>(false)
+  const [statusTextContent, setStatusTextContent] = useState<string>('')
+  const [statusTextType, setStatusTextType] = useState<'warning' | 'error' | void>()
   const firstRun = useRef<boolean>(true)
   const lastUsed = useRef<number>(1)
 
+  if (getMethods != null)
+    getMethods({
+      setStatusText: params => {
+        const { statusText, options = {} } = params
+        setStatusTextContent(statusText)
+        setStatusTextType(options.textType)
+      }
+    })
+
   if (firstRun.current && initialAmount1 != null) {
     convertValue(1, initialAmount1).then(val => {
-      if (typeof val === 'string') setValue2(val)
+      if (typeof val === 'string') {
+        setValue2(val)
+      }
     })
   }
   firstRun.current = false
@@ -71,6 +84,12 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
     onSubmit({ lastUsed: lastUsed.current, value1, value2 })
   }, [onSubmit, value1, value2])
 
+  let statusTextStyle = styles.text
+  if (statusTextType === 'warning') {
+    statusTextStyle = styles.textWarning
+  } else if (statusTextType === 'error') {
+    statusTextStyle = styles.textError
+  }
   return (
     <SceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme">
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
@@ -101,6 +120,7 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
             value={value2 ?? '0'}
           />
         </View>
+        {statusTextContent != null ? <Text style={statusTextStyle}>{statusTextContent}</Text> : null}
         <MainButton label={s.strings.string_next_capitalized} marginRem={[2, 0]} type="secondary" onPress={handleSubmit} />
       </View>
     </SceneWrapper>
@@ -121,6 +141,24 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     minWidth: theme.rem(15),
     maxWidth: theme.rem(20)
+  },
+  text: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1),
+    includeFontPadding: false
+  },
+  textWarning: {
+    color: theme.warningText,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1),
+    includeFontPadding: false
+  },
+  textError: {
+    color: theme.dangerText,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1),
+    includeFontPadding: false
   },
   icon: {
     height: theme.rem(1.5),

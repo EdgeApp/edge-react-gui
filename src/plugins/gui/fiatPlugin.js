@@ -33,13 +33,14 @@ export const executePlugin = async (params: {
       showError(e)
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
-      const { headerTitle, label1, label2, initialAmount1, convertValue } = params
+      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
       return new Promise((resolve, reject) => {
         navigation.navigate('guiPluginEnterAmount', {
           headerTitle,
           label1,
           label2,
           initialAmount1,
+          getMethods,
           convertValue,
           onChangeText: async () => undefined,
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {

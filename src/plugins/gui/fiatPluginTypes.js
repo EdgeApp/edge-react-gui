@@ -3,11 +3,15 @@ import { type EdgeAccount } from 'edge-core-js'
 
 import { type EdgeTokenId } from '../../types/types.js'
 
+export type FiatPluginGetMethodsResponse = {
+  setStatusText: ({ statusText: string, options?: { textType?: 'warning' | 'error' } }) => void
+}
 export type FiatPluginEnterAmountParams = {
   headerTitle: string,
   label1: string,
   label2: string,
   convertValue: (sourceFieldNum: number, value: string) => Promise<string | void>,
+  getMethods?: (methods: FiatPluginGetMethodsResponse) => void,
   initialAmount1?: string,
   headerIconUri?: string
 }
