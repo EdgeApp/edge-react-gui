@@ -143,12 +143,16 @@ export const dummyProvider: FiatProviderFactory = {
         const result = await response.json().catch(e => undefined)
 
         if (params.amountType === 'fiat') {
+          const rateShift = (1 - Math.random() * 0.05).toString() // Randomly apply a fee between 0-5%
           cryptoAmount = result?.exchangeRate ?? '0'
           cryptoAmount = mul(cryptoAmount, params.exchangeAmount)
+          cryptoAmount = mul(cryptoAmount, rateShift)
           fiatAmount = params.exchangeAmount
         } else {
+          const rateShift = (1 + Math.random() * 0.05).toString() // Randomly apply a fee between 0-5%
           fiatAmount = result?.exchangeRate ?? '0'
           fiatAmount = mul(fiatAmount, params.exchangeAmount)
+          fiatAmount = mul(fiatAmount, rateShift)
           cryptoAmount = params.exchangeAmount
         }
 

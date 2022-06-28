@@ -5,10 +5,12 @@ import { sprintf } from 'sprintf-js'
 import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
 import { fuzzyTimeout } from '../../util/utils'
-import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs } from './fiatPluginTypes'
+import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginGetMethodsResponse } from './fiatPluginTypes'
 import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
 import { dummyProvider } from './providers/dummyProvider'
 
+// TODO: Allow other fiat currency codes. Hard code USD for now
+const FIAT_SUPPORTED = 'USD'
 const providerFactories = [dummyProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
@@ -61,14 +63,17 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       let counter = 0
       let bestQuote: FiatProviderQuote | void
 
+      let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
 
-        // TODO: Allow other fiat currency codes. Hard code USD for now
-        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, 'USD'),
+        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, FIAT_SUPPORTED),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
+        getMethods: (methods: FiatPluginGetMethodsResponse) => {
+          enterAmountMethods = methods
+        },
         convertValue: async (sourceFieldNum: number, value: string): Promise<string | void> => {
           if (eq(value, '0')) return ''
           const myCounter = ++counter
@@ -112,6 +117,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           }
           if (bestQuote == null) return
 
+          const bestRate = div(bestQuote.fiatAmount, bestQuote.cryptoAmount, 16)
+          const exchangeRateText = `1 ${currencyCode} = ${toFixed(bestRate, 0, 2)} ${FIAT_SUPPORTED}`
+          if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: exchangeRateText })
           if (sourceFieldNum === 1) {
             return toFixed(bestQuote.cryptoAmount, 0, 6)
           } else {
@@ -124,7 +132,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       if (bestQuote == null) {
         return
       }
-      bestQuote.approveQuote({ showUi })
+      await bestQuote.approveQuote({ showUi })
     }
   }
   return fiatPlugin
