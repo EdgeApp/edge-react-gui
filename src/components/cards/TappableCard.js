@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { memo } from '../../types/reactHooks.js'
@@ -15,10 +15,12 @@ import { Card } from './Card'
  */
 const TappableCardComponent = ({
   children,
+  disabled = false,
   nonTappable = false,
   onPress
 }: {
   children: React.Node,
+  disabled?: boolean,
   nonTappable?: boolean,
   onPress?: any => Promise<void> | void
 }) => {
@@ -27,14 +29,14 @@ const TappableCardComponent = ({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress}>
-        <Card>
+      <TouchableHighlight onPress={disabled ? null : onPress} underlayColor={theme.backgroundGradientColors[0]}>
+        <Card paddingRem={[0.5, 1, 0.5, 0.5]}>
           <View style={styles.cardContainer}>
-            <View style={styles.spacedContainer}>{children}</View>
+            <View style={styles.childContainer}>{children}</View>
             {nonTappable ? null : <FontAwesome5 name="chevron-right" size={theme.rem(1.25)} color={theme.iconTappable} style={styles.chevron} />}
           </View>
         </Card>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   )
 }
@@ -46,14 +48,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     flexDirection: 'row'
   },
-  spacedContainer: {
+  childContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignSelf: 'center',
     flex: 1
   },
   chevron: {
-    alignSelf: 'center',
-    marginLeft: theme.rem(1.25)
+    alignSelf: 'center'
   }
 }))
 
