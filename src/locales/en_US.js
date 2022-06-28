@@ -892,7 +892,7 @@ const strings = {
   loan_new_principle: 'New Principle',
   loan_interest_rate: 'Interest Rate',
   loan_remaining_principle: 'Remaining Principle',
-  loan_s_apr: '%1$s%% APR',
+  loan_s_apr: '%1$s APR',
   loan_total_collateral_value: 'Total Collateral Value',
   loan_withdraw_collateral: 'Withdraw Collateral',
 
