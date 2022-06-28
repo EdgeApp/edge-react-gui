@@ -30,7 +30,7 @@ const LoanSummaryCardComponent = ({
   borrowEngine: BorrowEngine,
   iconUri: string,
   exchangeRates: GuiExchangeRates,
-  onPress: () => void | void
+  onPress: () => void
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -45,16 +45,17 @@ const LoanSummaryCardComponent = ({
       return add(accumulator, calculateFiatValue(currencyWallet, collateral.tokenId, isoFiatCurrencyCode, collateral.nativeAmount, exchangeRates) ?? '0')
     }, '0')
 
-    const displayCollateralTotal = `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount: collateralTotal })}`
+    const displayCollateralTotal = `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount: collateralTotal, noGrouping: true })}`
 
     const displayBorrowTotal = formatFiatString({
       autoPrecision: true,
       fiatAmount: debts.reduce((accumulator, debt) => {
         return add(accumulator, calculateFiatValue(currencyWallet, debt.tokenId, isoFiatCurrencyCode, debt.nativeAmount, exchangeRates) ?? '0')
-      }, '0')
+      }, '0'),
+      noGrouping: true
     })
 
-    // TODO: Calculate amount-adjusted cumulative interest
+    // TODO: Calculate amount-adjusted cumulative interest for multiple debt asset currencies and amounts.
     const displayInterestTotal = toPercentString(debts[0].apr)
 
     return (
@@ -84,7 +85,7 @@ const LoanSummaryCardComponent = ({
     showError(err.message)
 
     // Render a failed card
-    return <Alert marginRem={[0.5, 0.5, 0.5, 0.5]} title={s.strings.send_scene_error_title} message={s.strings.loan_failed_loan} type="error" />
+    return <Alert marginRem={[0.5, 0.5, 0.5, 0.5]} title={s.strings.send_scene_error_title} message={s.strings.loan_dashboard_failed_loan} type="error" />
   }
 }
 
@@ -121,7 +122,8 @@ export const calculateFiatValue = (
 const getStyles = cacheStyles((theme: Theme) => {
   return {
     cardContainer: {
-      flex: 1
+      flex: 1,
+      margin: theme.rem(0.5)
     },
     column: {
       flexDirection: 'column',
@@ -153,8 +155,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(0.75)
     },
     textSecondary: {
-      fontSize: theme.rem(0.75),
-      marginRight: theme.rem(1)
+      fontSize: theme.rem(0.75)
     }
   }
 })
