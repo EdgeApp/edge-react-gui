@@ -905,6 +905,15 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
+            <Scene
+              key="LoanDetailsConfirmationScene"
+              component={withNavigation(ifLoggedIn(LoanDetailsConfirmationScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
           </Stack>
         </Scene>
       </Drawer>

@@ -169,7 +169,7 @@ const getStyles = cacheStyles(theme => {
   }
 })
 
-export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string, nativeAmount: string }>): string => {
+const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string, nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {
@@ -178,14 +178,14 @@ export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ t
   }, '0')
 }
 
-export const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string) => {
+const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string) => {
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
 
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount, noGrouping: true })}`
 }
 
-export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: string | void, nativeAmount: string): string => {
+const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: string | void, nativeAmount: string): string => {
   if (tokenId == null) return '0' // TODO: Support wrapped native token
 
   const token = getToken(wallet, tokenId)
