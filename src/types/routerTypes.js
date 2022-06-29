@@ -5,6 +5,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import { type BorrowEngine, type BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
 import {
@@ -179,6 +180,16 @@ export type ParamList = {
     currencyCode: string,
     walletId: string
   },
+  loanDashboard: void,
+  loanDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanBorrowDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    tokenId: string
+  |},
   manageTokens: {|
     walletId: string
   |},
@@ -230,6 +241,7 @@ export type ParamList = {
   stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   termsOfService: void,
+  testScene: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string
