@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react'
+import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
 
 import { makeErrorLog, translateError } from '../../util/translateError'
@@ -32,6 +33,25 @@ export function showWarning(error: mixed): void {
  */
 export function showToast(message: string): void {
   Airship.show(bridge => <AirshipToast bridge={bridge} message={message} />)
+}
+
+/**
+ * Shows a message to the user with spinner
+ * Closes only once promise resolves or rejects
+ */
+export function showToastSpinner<T>(message: string, activity: Promise<T>): Promise<T> {
+  Airship.show(bridge => {
+    activity.then(
+      () => bridge.resolve(),
+      () => bridge.resolve()
+    )
+    return (
+      <AirshipToast bridge={bridge} autoHideMs={0} message={message}>
+        <ActivityIndicator />
+      </AirshipToast>
+    )
+  })
+  return activity
 }
 
 /**

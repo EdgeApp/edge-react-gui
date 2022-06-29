@@ -32,7 +32,9 @@ export type FiatPluginListModalParams = {
 
 export type FiatPluginEnterAmountResponse = { lastUsed: number, value1: string, value2: string }
 export type FiatPluginOpenWebViewParams = { url: string }
+
 export type FiatPluginUi = {
+  showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>,
   openWebView: FiatPluginOpenWebViewParams => Promise<void>,
   walletPicker: (params: { headerTitle: string, allowedAssets?: EdgeTokenId[], showCreateWallet?: boolean }) => Promise<{
     walletId: string | void,

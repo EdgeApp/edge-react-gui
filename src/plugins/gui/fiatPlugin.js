@@ -7,7 +7,7 @@ import SafariView from 'react-native-safari-view'
 
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal'
-import { Airship, showError } from '../../components/services/AirshipInstance'
+import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { type GuiPlugin } from '../../types/GuiPluginTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import {
@@ -30,6 +30,7 @@ export const executePlugin = async (params: {
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
+    showToastSpinner,
     openWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)

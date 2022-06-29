@@ -49,7 +49,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
       const { regionCode, paymentTypes } = params
-      const assetArray = await fuzzyTimeout(assetPromises, 5000).catch(e => [])
+      const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
+      const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
       const allowedAssets: EdgeTokenId[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
