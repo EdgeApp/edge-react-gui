@@ -149,7 +149,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    */
   async openPlugin(listRow: GuiPluginRow) {
     const { countryCode, navigation, route, account } = this.props
-    const { pluginId, deepQuery = {} } = listRow
+    const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
@@ -183,8 +183,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
+    const regionCode = { countryCode }
     if (plugin.nativePlugin != null) {
-      executePlugin({ guiPlugin: plugin, navigation, account })
+      executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
     } else {
       // Launch!
       navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
