@@ -844,6 +844,7 @@
   "fiat_plugin_payment_unsupported": "Payment Method Unsupported",
   "fiat_plugin_buy_region_restricted": "Region restricted from purchasing %s",
   "fiat_plugin_buy_no_quote": "Unable to get purchase quote",
+  "fiat_plugin_fetching_assets": "Fetching supported assets",
   "currency_label_AFN": "Afghani",
   "currency_label_ALL": "Lek",
   "currency_label_DZD": "Algerian Dinar",
