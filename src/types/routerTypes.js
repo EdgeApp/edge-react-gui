@@ -189,6 +189,7 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
+
   loanDetailsConfirmation: {|
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin,
@@ -223,6 +224,11 @@ export type ParamList = {
   loanRepayScene: {|
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
+  |},
+  loanBorrowDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    tokenId: string
   |},
   manageTokens: {|
     walletId: string
