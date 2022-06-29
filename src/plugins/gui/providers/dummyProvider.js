@@ -9,7 +9,7 @@ import {
   type FiatProviderFactoryParams,
   type FiatProviderGetQuoteParams,
   type FiatProviderQuote,
-  type FiatProviderQuoteError
+  FiatProviderError
 } from '../fiatProviderTypes'
 const pluginId = 'simplex'
 
@@ -128,7 +128,7 @@ export const dummyProvider: FiatProviderFactory = {
     const out = {
       pluginId,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
-      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote | FiatProviderQuoteError | void> => {
+      getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const MIN_USD = '50'
         const MAX_USD = '20000'
 
@@ -143,7 +143,7 @@ export const dummyProvider: FiatProviderFactory = {
         }
 
         const response = await fetch(url + pairCodes).catch(e => undefined)
-        if (response == null || !response.ok) return
+        if (response == null || !response.ok) throw new Error('Dummy failed to fetch')
         const result = await response.json().catch(e => undefined)
 
         let maxLimit: number
@@ -166,10 +166,10 @@ export const dummyProvider: FiatProviderFactory = {
           minLimit = parseFloat(toFixed(mul(MIN_USD, div(cryptoAmount, fiatAmount, 16)), 0, 6))
         }
         if (gt(fiatAmount, MAX_USD)) {
-          return { errorType: 'overLimit', errorAmount: maxLimit }
+          throw new FiatProviderError({ errorType: 'overLimit', errorAmount: maxLimit })
         }
         if (lt(fiatAmount, MIN_USD)) {
-          return { errorType: 'underLimit', errorAmount: minLimit }
+          throw new FiatProviderError({ errorType: 'underLimit', errorAmount: minLimit })
         }
 
         const paymentQuote: FiatProviderQuote = {

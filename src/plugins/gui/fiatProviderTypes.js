@@ -34,6 +34,16 @@ export type FiatProviderQuoteError =
     }
   | { errorType: FiatProviderQuoteErrorTypesLimit, errorAmount: number }
 
+export class FiatProviderError extends Error {
+  name: string
+  +quoteError: FiatProviderQuoteError
+
+  constructor(info: FiatProviderQuoteError) {
+    super('FiatProviderError')
+    this.quoteError = info
+  }
+}
+
 export type FiatProviderAssetMap = {
   [pluginId: string]: {
     [tokenId: string]: boolean
@@ -51,7 +61,7 @@ export type FiatProviderGetQuoteParams = {
 export type FiatProvider = {
   pluginId: string,
   getSupportedAssets: () => Promise<FiatProviderAssetMap>,
-  getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote | FiatProviderQuoteError | void>
+  getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }
 
 export type FiatProviderFactoryParams = {

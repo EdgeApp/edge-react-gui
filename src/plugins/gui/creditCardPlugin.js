@@ -6,7 +6,13 @@ import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
 import { fuzzyTimeout } from '../../util/utils'
 import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginGetMethodsResponse } from './fiatPluginTypes'
-import { type FiatProviderGetQuoteParams, type FiatProviderQuote, type FiatProviderQuoteError, type FiatProviderQuoteErrorTypes } from './fiatProviderTypes'
+import {
+  type FiatProviderGetQuoteParams,
+  type FiatProviderQuote,
+  type FiatProviderQuoteError,
+  type FiatProviderQuoteErrorTypes,
+  FiatProviderError
+} from './fiatProviderTypes'
 import { dummyProvider } from './providers/dummyProvider'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
@@ -104,23 +110,18 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           }
 
           const quotePromises = providers.map(p => p.getQuote(quoteParams))
-          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => [])
+          let errors = []
+          let quotes = []
+          quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
+            errors = e
+            return []
+          })
 
           // Only update with the latest call to convertValue
           if (myCounter !== counter) return
 
-          const errorQuotes: FiatProviderQuoteError[] = []
           let bestQuoteRatio = '0'
-          for (const q of quotes) {
-            if (q == null) continue
-            const qany: any = q // XXX Flow hack
-            if (qany.errorType != null) {
-              const qerr: FiatProviderQuoteError = qany // XXX Flow hack
-              errorQuotes.push(qerr)
-              continue
-            }
-            const quote: FiatProviderQuote = qany // XXX Flow hack
-
+          for (const quote of quotes) {
             if (quote.direction !== 'buy') continue
             const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
             if (gt(quoteRatio, bestQuoteRatio)) {
@@ -128,9 +129,10 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               bestQuote = quote
             }
           }
+
           if (bestQuote == null) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errorQuotes, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
+            const bestErrorText = getBestError(errors, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
             if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: bestErrorText, options: { textType: 'error' } })
             return
           }
@@ -170,9 +172,11 @@ const ERROR_TEXT = {
   assetUnsupported: s.strings.fiat_plugin_asset_unsupported
 }
 
-export const getBestError = (errorQuotes: FiatProviderQuoteError[], currencyCode: string): string | void => {
+export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string): string | void => {
   let bestError: FiatProviderQuoteError | void
-  for (const errorQuote of errorQuotes) {
+  for (const eq of errorQuotes) {
+    const errorQuote = eq.quoteError
+    if (errorQuote == null) continue
     if (bestError == null) {
       bestError = errorQuote
       continue
