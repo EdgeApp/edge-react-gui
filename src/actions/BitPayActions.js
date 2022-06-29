@@ -20,8 +20,7 @@ import {
   type BpVerificationPayment,
   type BpVerificationResponse
 } from '../types/BitPayTypes.js'
-import { Actions } from '../types/routerTypes.js'
-
+import { type ParamList } from '../types/routerTypes.js'
 /**
  * Performs the fetch commands to BitPay.
  * Throws errors when response is not OK.
@@ -71,7 +70,7 @@ export async function launchBitPay(
     currencyWallets?: { [walletId: string]: EdgeCurrencyWallet },
     metadata?: EdgeMetadata
   }
-): Promise<void> {
+): Promise<$ElementType<ParamList, 'send'> | void> {
   // Fetch payment options
   let responseJson = await fetchBitPayJsonResponse(uri, {
     method: 'GET',
@@ -223,7 +222,7 @@ export async function launchBitPay(
     lockInputs: true,
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
-      Actions.pop()
+      // navigation.pop()
       if (!error && edgeTransaction) {
         fetchBitPayJsonResponse(uri, {
           method: 'POST',
@@ -240,21 +239,25 @@ export async function launchBitPay(
       }
     }
   }
-
-  // Send confirmation scene
-  if (Actions.currentScene === 'send') {
-    Actions.refresh({
-      guiMakeSpendInfo,
-      selectedWalletId: selectedWallet?.id ?? '',
-      selectedCurrencyCode
-    })
-  } else {
-    Actions.push('send', {
-      guiMakeSpendInfo,
-      selectedWalletId: selectedWallet.id,
-      selectedCurrencyCode
-    })
+  return {
+    guiMakeSpendInfo,
+    selectedWalletId: selectedWallet?.id ?? '',
+    selectedCurrencyCode
   }
+  // Send confirmation scene
+  // if (navigation.currentScene === 'send') {
+  //   navigation.setParams({
+  //     guiMakeSpendInfo,
+  //     selectedWalletId: selectedWallet?.id ?? '',
+  //     selectedCurrencyCode
+  //   })
+  // } else {
+  //   navigation.push('send', {
+  //     guiMakeSpendInfo,
+  //     selectedWalletId: selectedWallet.id,
+  //     selectedCurrencyCode
+  //   })
+  // }
 }
 
 /**

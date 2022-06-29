@@ -8,7 +8,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { launchBitPay } from './BitPayActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
@@ -21,8 +21,8 @@ import { selectWallet } from './WalletActions.js'
  */
 export const launchDeepLink = (link: DeepLink) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-
-  const handled = handleLink(dispatch, state, link)
+  const navigation: NavigationProp<'edge'> = useNavigation()
+  const handled = handleLink(dispatch, state, link, navigation)
 
   // If we couldn't handle the link, save it for later:
   if (!handled) {
@@ -39,8 +39,9 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
   const state = getState()
   const { pendingDeepLink } = state
   if (pendingDeepLink == null) return
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
-  const handled = handleLink(dispatch, state, pendingDeepLink)
+  const handled = handleLink(dispatch, state, pendingDeepLink, navigation)
 
   // If we handled the link, clear it:
   if (handled) {
@@ -51,7 +52,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
+function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, navigation: NavigationProp<'edge'>): boolean {
   const { activeWalletIds, currencyWallets, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
@@ -62,7 +63,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
-      Actions.push('edgeLogin')
+      navigation.push('edgeLogin')
       return true
 
     // The login scene always handles this one:
@@ -76,7 +77,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push('pluginView', {
+      navigation.push('pluginView', {
         plugin,
         deepPath: path,
         deepQuery: query
@@ -98,7 +99,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
     case 'swap': {
       if (!hasCurrentWallet) return false
-      Actions.push('exchangeScene')
+      navigation.push('exchangeScene')
       return true
     }
 
@@ -106,25 +107,26 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        Actions.push('walletListScene')
+        navigation.push('walletListScene')
         showError(s.strings.azteco_btc_only)
         return false
       }
-      launchAzteco(edgeWallet, link.uri).catch(showError)
+      launchAzteco(edgeWallet, link.uri, navigation).catch(showError)
       return true
     }
 
     case 'walletConnect': {
       if (!hasCurrentWallet) return false
       const { uri, isSigning } = link
-      Actions.push('wcConnections')
+      navigation.push('wcConnections')
       // Hack around our router's horrible bugs:
-      if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
+      if (!isSigning) setTimeout(() => navigation.push('wcConnect', { uri }), 100)
       return true
     }
 
     case 'bitPay': {
       launchBitPay(link.uri, { currencyWallets }).catch(showError)
+      navigation.pop()
       return true
     }
 
@@ -144,7 +146,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       for (const walletId of walletIds) {
         const wallet = byId[walletId]
         if (wallet.currencyCode !== currencyCode) continue
-        dispatch(selectWallet(wallet.id, wallet.currencyCode))
+        dispatch(selectWallet(wallet.id, wallet.currencyCode, undefined))
         dispatch(parseScannedUri(link.uri))
         return true
       }
@@ -170,7 +172,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   return false
 }
 
-async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
+async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string, navigation: NavigationProp<'edge'>): Promise<void> {
   const address = await edgeWallet.getReceiveAddress()
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {
@@ -180,7 +182,7 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promis
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  Actions.push('walletListScene')
+  navigation.push('walletListScene')
 }
 
 const CURRENCY_NAMES = {

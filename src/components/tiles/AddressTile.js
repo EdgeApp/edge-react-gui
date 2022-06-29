@@ -14,6 +14,7 @@ import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
 import { forwardRef } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp, withNavigation } from '../../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { parseDeepLink } from '../../util/DeepLinkParser.js'
 import { AddressModal } from '../modals/AddressModal'
@@ -33,7 +34,8 @@ type OwnProps = {
   lockInputs?: boolean,
   addressTileRef: any,
   isCameraOpen: boolean,
-  fioToAddress?: string
+  fioToAddress?: string,
+  navigation: NavigationProp<'send'>
 }
 type StateProps = {
   fioPlugin?: EdgeCurrencyConfig
@@ -112,7 +114,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolURL && !parsedUri.publicAddress) {
         await launchBitPay(parsedUri.paymentProtocolURL, { wallet: coreWallet }).catch(showError)
-
+        this.props.navigation.pop()
         return
       }
 
@@ -130,7 +132,8 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         if (ercTokenStandard === 'ERC20') {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          const sendSceneRouteParams = await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          this.props.navigation.jumpTo('send', { ...sendSceneRouteParams })
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
@@ -261,6 +264,6 @@ const AddressTileConnector = connect<StateProps, {}, OwnProps>(
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
-)(withTheme(AddressTileComponent))
+)(withTheme(withNavigation(AddressTileComponent)))
 
 export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)
