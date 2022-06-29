@@ -1,9 +1,12 @@
 // @flow
+import { type EdgeCurrencyWallet } from 'edge-core-js'
+
 import { type EdgeTokenId } from '../../types/types.js'
 import { type FiatPluginUi } from './fiatPluginTypes.js'
 
 export type FiatProviderApproveQuoteParams = {
-  showUi: FiatPluginUi
+  showUi: FiatPluginUi,
+  coreWallet: EdgeCurrencyWallet
 }
 
 export type FiatProviderQuote = {
