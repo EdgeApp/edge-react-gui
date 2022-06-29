@@ -134,7 +134,7 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
-  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
+  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} withTopMargin />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>

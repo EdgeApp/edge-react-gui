@@ -2,8 +2,10 @@
 
 import * as React from 'react'
 import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { updateWalletsSort } from '../../actions/WalletListActions.js'
+import { Fontello } from '../../assets/vector/index.js'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
@@ -12,6 +14,7 @@ import { useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
+import { PromoCard } from '../cards/PromoCard.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -20,10 +23,12 @@ import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListHeader } from '../themed/WalletListHeader.js'
 import { WalletListSortable } from '../themed/WalletListSortable.js'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable.js'
+import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type Props = {
@@ -105,30 +110,62 @@ export function WalletListScene(props: Props) {
     return <WalletListFooter navigation={navigation} />
   }, [navigation])
 
-  const header = useMemo(() => {
-    return (
-      <WalletListHeader
-        sorting={sorting}
-        searching={searching}
-        searchText={searchText}
-        openSortModal={handleSort}
-        onChangeSearchText={setSearchText}
-        onChangeSearchingState={setSearching}
-      />
-    )
-  }, [handleSort, searchText, searching, sorting])
+  // const header = useMemo(() => {
+  //   return (
+  //     <WalletListHeader
+  //       sorting={sorting}
+  //       searching={searching}
+  //       searchText={searchText}
+  //       openSortModal={handleSort}
+  //       onChangeSearchText={setSearchText}
+  //       onChangeSearchingState={setSearching}
+  //     />
+  //   )
+  // }, [handleSort, searchText, searching, sorting])
+
+  const header = !sorting && !searching && (
+    <View style={styles.headerContainer}>
+      <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+      <View key="defaultButtons" style={styles.headerButtonsContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto')}>
+          <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleSort}>
+          <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
 
   return (
     <SceneWrapper>
-      <WiredProgressBar />
-      {sorting && (
-        <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
-            <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
-          </TouchableOpacity>
+      <SceneHeader underline>
+        <WiredProgressBar />
+        <View style={styles.balance}>
+          {sorting && (
+            <View style={styles.headerContainer}>
+              <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+              <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
+                <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {searching && (
+            <WalletListHeader
+              navigation={navigation}
+              sorting={sorting}
+              searching={searching}
+              searchText={searchText}
+              openSortModal={handleSort}
+              onChangeSearchText={setSearchText}
+              onChangeSearchingState={setSearching}
+            />
+          )}
+          {!searching && !sorting && <WiredBalanceBox />}
         </View>
-      )}
+      </SceneHeader>
+
       <View style={styles.listStack}>
         <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
           <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
@@ -145,11 +182,16 @@ export function WalletListScene(props: Props) {
           <WalletListSortable key="sortList" />
         </CrossFade>
       </View>
+
+      {!searching && <PromoCard />}
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  balance: {
+    marginTop: theme.rem(1)
+  },
   // The sort & add buttons are stacked on top of the header component:
   // Header Stack style
   headerContainer: {
@@ -166,6 +208,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   doneButton: {
     color: theme.textLink
+  },
+  addButton: {
+    marginRight: theme.rem(0.5)
   },
   // The two lists are stacked vertically on top of each other:
   listStack: {

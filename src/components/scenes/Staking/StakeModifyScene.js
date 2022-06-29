@@ -312,9 +312,9 @@ export const StakeModifyScene = (props: Props) => {
   const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper background="theme">
+      {sceneHeader}
       <ScrollView>
-        {sceneHeader}
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
         <View style={styles.footer}>

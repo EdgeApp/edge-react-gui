@@ -45,7 +45,7 @@ export const WcDisconnectScene = (props: Props) => {
     navigation.navigate('wcConnections')
   }
 
-  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
+  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} withTopMargin />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
