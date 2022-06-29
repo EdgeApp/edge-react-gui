@@ -78,8 +78,11 @@ export const helpers = (spec: any) => ({
     // walletList.scrollToIndex({ animated: true, index: 15 })
     // for (let i = 0; i < walletList.length; i++) {
     // setinterval doesnt work well with async b/c it doesn't return a promise
-    // use the coding file matt showed while true
-    await setInterval(walletList.scrollToEnd({ animated: true, index: -1 }), 1000)
+    // use the encoding file matt showed while true
+    // while(the last index is not visible... meaning you can not press on the last row){
+
+    // }
+    // await setInterval(walletList.scrollToEnd({ animated: true, index: -1 }), 1000)
     // if (walletList.lastIndexOf(walletList.props.data.walletId)) {
     // stop interval
     // } snooze in utils
