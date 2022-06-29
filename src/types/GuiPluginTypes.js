@@ -2,10 +2,10 @@
 
 import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
+import { type FiatPluginFactory } from '../plugins/gui/fiatPluginTypes.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { type EdgeTokenId } from '../types/types.js'
 import { type UriQueryMap } from './WebTypes'
-
 /**
  * A unique WebView-based plugin.
  *
@@ -25,7 +25,7 @@ export type GuiPlugin = {
   storeId: string,
 
   // Is a native plugin written in React Native
-  nativePlugin?: boolean,
+  nativePlugin?: FiatPluginFactory,
 
   // The URI to show in the WebView.
   // Both the plugin list & deep links can add stuff to the end of this:

@@ -3,6 +3,7 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
+import { creditCardPlugin } from '../../plugins/gui/creditCardPlugin'
 import { type GuiPlugin, type GuiPluginRow } from '../../types/GuiPluginTypes.js'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -90,7 +91,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     storeId: '',
     baseUri: '',
     lockUriPath: true,
-    nativePlugin: true,
+    nativePlugin: creditCardPlugin,
     displayName: 'Credit Card'
   },
   simplex: {

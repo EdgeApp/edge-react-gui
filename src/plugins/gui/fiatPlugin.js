@@ -6,10 +6,7 @@ import { type WalletListResult, WalletListModal } from '../../components/modals/
 import { Airship, showError } from '../../components/services/AirshipInstance'
 import { type GuiPlugin } from '../../types/GuiPluginTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { creditCardPlugin } from './creditCardPlugin'
 import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse } from './fiatPluginTypes'
-
-const pluginFactories = [creditCardPlugin]
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
@@ -49,13 +46,12 @@ export const executePlugin = async (params: {
       navigation.pop()
     }
   }
-  const pluginPromises = pluginFactories.map(p => {
-    const out = p({ showUi, account })
-    return out
-  })
-  const plugins = await Promise.all(pluginPromises)
 
-  const plugin = plugins.find(p => p.pluginId === pluginId)
+  if (guiPlugin.nativePlugin == null) {
+    throw new Error('executePlugin: missing nativePlugin')
+  }
+
+  const plugin = await guiPlugin.nativePlugin({ showUi, account })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }

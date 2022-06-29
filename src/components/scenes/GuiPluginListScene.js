@@ -183,7 +183,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
-    if (plugin.nativePlugin) {
+    if (plugin.nativePlugin != null) {
       executePlugin({ guiPlugin: plugin, navigation, account })
     } else {
       // Launch!
