@@ -40,7 +40,7 @@ import { ControlPanel } from '../components/themed/ControlPanel'
 import s from '../locales/strings.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
-import { Actions, withNavigation } from '../types/routerTypes.js'
+import { type NavigationProp, Actions, withNavigation } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -115,12 +115,17 @@ type DispatchProps = {
   checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   checkEnabledExchanges: () => void,
   dispatchDisableScan: () => void,
+  // eslint-disable-next-line react/no-unused-prop-types
   dispatchEnableScan: () => void,
   requestPermission: (permission: Permission) => void,
   showReEnableOtpModal: () => void
 }
 
-type Props = DispatchProps
+type OwnProps = {
+  navigation: NavigationProp<'root'>
+}
+
+type Props = DispatchProps & OwnProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -154,7 +159,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
+              renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
             />
             {this.renderTransactionDetailsView()}
             {this.renderTabView()}
@@ -180,6 +185,7 @@ export class MainComponent extends React.Component<Props> {
   }
 
   renderTabView = () => {
+    const { navigation } = this.props
     return (
       <Drawer
         hideTabBar
@@ -200,7 +206,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(WalletListScene))}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderLeftButton={<HeaderTextButton navigation={navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
               />
 
@@ -259,7 +265,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<HeaderTextButton type="help" placement="right" />}
+                renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
               />
 
               <Scene
@@ -268,7 +274,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<HeaderTextButton type="help" placement="right" />}
+                renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
               />
 
               <Scene
@@ -354,9 +360,9 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginListBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
-                onLeft={Actions.pop}
+                onLeft={this.props.navigation.pop}
                 route={{ params: { direction: 'buy' } }}
               />
               <Scene
@@ -364,8 +370,8 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                renderLeftButton={renderPluginBackButton()}
-                renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+                renderLeftButton={renderPluginBackButton(navigation)}
+                renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
                 hideTabBar
               />
             </Stack>
@@ -374,9 +380,9 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginListSell"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
-                onLeft={Actions.pop}
+                onLeft={this.props.navigation.pop}
                 route={{ params: { direction: 'sell' } }}
               />
               <Scene
@@ -384,8 +390,8 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                renderLeftButton={renderPluginBackButton()}
-                renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+                renderLeftButton={renderPluginBackButton(navigation)}
+                renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
                 hideTabBar
               />
             </Stack>
@@ -394,7 +400,7 @@ export class MainComponent extends React.Component<Props> {
                 key="exchangeScene"
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
-                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
               />
@@ -456,7 +462,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
+              renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
             />
           </Stack>
 
@@ -577,7 +583,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
             <Scene
               key="currencyNotificationSettings"
@@ -586,7 +592,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -596,8 +602,8 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              renderLeftButton={renderPluginBackButton()}
-              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+              renderLeftButton={renderPluginBackButton(navigation)}
+              renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
             />
           </Stack>
 
@@ -609,7 +615,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -620,7 +626,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -632,7 +638,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -644,7 +650,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -656,7 +662,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
             <Scene
               key="fioDomainRegisterSelectWallet"
@@ -665,7 +671,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
             <Scene
               key="fioDomainConfirm"
@@ -673,7 +679,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -684,7 +690,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -704,7 +710,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -716,7 +722,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -739,7 +745,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -750,7 +756,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
             <Scene
               key="fioRequestApproved"
@@ -771,7 +777,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
 
@@ -782,7 +788,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
             <Scene
               key="wcDisconnect"
@@ -790,7 +796,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
             <Scene
               key="wcConnect"
@@ -798,7 +804,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
+              onLeft={this.props.navigation.pop}
             />
           </Stack>
         </Scene>
@@ -811,7 +817,7 @@ export class MainComponent extends React.Component<Props> {
   }
 
   isCurrentScene = (sceneKey: string) => {
-    return Actions.currentScene === sceneKey
+    return this.props.navigation.currentScene === sceneKey
   }
 
   handleEmpty = () => null
@@ -832,31 +838,31 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('exchangeQuote')) {
-      Actions.popTo('exchangeScene')
+      this.props.navigation.jumpTo('exchangeScene')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
-      handlePluginBack()
+      handlePluginBack(this.props.navigation)
       return true
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        Actions.jump('walletListScene')
+        this.props.navigation.jumpTo('walletListScene')
         return true
       }
     }
     if (this.isCurrentScene('fioAddressRegisterSelectWallet')) {
       if (Actions.currentParams.isFallback) {
-        Actions.popTo('fioAddressRegister')
+        this.props.navigation.jumpTo('fioAddressRegister')
         return true
       }
     }
-    Actions.pop()
+    this.props.navigation.pop()
     return true
   }
 }
 
-export const Main = connect<{}, DispatchProps, {}>(
+export const Main = connect<{}, DispatchProps, OwnProps>(
   state => ({}),
   dispatch => ({
     registerDevice() {
