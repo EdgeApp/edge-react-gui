@@ -5,7 +5,6 @@ import type { EdgeTransaction } from 'edge-core-js'
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import { type TransactionListTx } from '../types/types.js'
 import { isReceivedTransaction, unixToLocaleDateTime } from '../util/utils'
 import { checkFioObtData } from './FioActions'
@@ -151,7 +150,6 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
 
-  const navigation: NavigationProp<'transactionDropdown'> = useNavigation()
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
   const receivedTxs = []
@@ -175,7 +173,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
   if (!isReceivedTransaction(edgeTransaction)) return
-  showTransactionDropdown(edgeTransaction, walletId, navigation)
+  showTransactionDropdown(edgeTransaction, walletId)
 }
 
 export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {
