@@ -1,16 +1,19 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
+import * as React from 'react'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
+import { EdgeText } from '../themed/EdgeText'
 
 type Props = {|
   nativeAmount: string,
   tokenId?: string,
-  wallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet,
+  withSymbol?: boolean
 |}
 
 /**
@@ -21,23 +24,32 @@ type Props = {|
  * 2. Display Denomination
  * 3. Localization: commas, decimals, spaces
  **/
-export const CryptoText = ({ wallet, tokenId, nativeAmount }: Props) => {
+export const CryptoText = ({ wallet, tokenId, nativeAmount, withSymbol }: Props) => {
+  const cryptoText = useCryptTextActually({ wallet, tokenId, nativeAmount, withSymbol })
+
+  return <EdgeText>{cryptoText}</EdgeText>
+}
+
+export const useCryptTextActually = ({ wallet, tokenId, nativeAmount, withSymbol }: Props): string => {
   const {
     denomination: exchangeDenomination,
     fiatDenomination,
-    assetToFiatRate
+    assetToFiatRate,
+    currencyCode
   } = useTokenDisplayData({
     tokenId,
     wallet
   })
   const state = useSelector(state => state)
   const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, exchangeDenomination.name ?? wallet.currencyInfo.currencyCode)
-
-  return useCryptoText({
+  const cryptoText = useCryptoText({
     displayDenomination,
     exchangeDenomination,
     exchangeRate: assetToFiatRate,
     fiatDenomination,
-    nativeAmount
+    nativeAmount,
+    currencyCode: withSymbol ? undefined : currencyCode
   })
+
+  return cryptoText
 }
