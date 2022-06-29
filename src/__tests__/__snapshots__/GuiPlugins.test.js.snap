@@ -87,6 +87,34 @@ Array [
 exports[`Production plugin data Buy plugins match snapshot on android + IL 1`] = `
 Array [
   Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "applepay",
+    "paymentTypeLogoKey": "applepay",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Apple Pay",
+  },
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Credit and Debit Card",
+  },
+  Object {
     "cryptoCodes": Array [
       "BTC",
       "ETH",
@@ -111,6 +139,34 @@ Settlement: 1 - 48 hours",
 
 exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
 Array [
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "applepay",
+    "paymentTypeLogoKey": "applepay",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Apple Pay",
+  },
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Credit and Debit Card",
+  },
   Object {
     "cryptoCodes": Array [
       "BTC",
