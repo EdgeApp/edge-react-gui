@@ -4,6 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
+import { getPartnerIconUri } from '../../util/CdnUris.js'
 import { fuzzyTimeout } from '../../util/utils'
 import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginGetMethodsResponse } from './fiatPluginTypes'
 import {
@@ -14,10 +15,11 @@ import {
   FiatProviderError
 } from './fiatProviderTypes'
 import { dummyProvider } from './providers/dummyProvider'
+import { dummyProvider2 } from './providers/dummyProvider2'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
 const FIAT_SUPPORTED = 'USD'
-const providerFactories = [dummyProvider]
+const providerFactories = [dummyProvider, dummyProvider2]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
@@ -68,6 +70,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
       let counter = 0
       let bestQuote: FiatProviderQuote | void
+      let goodQuotes: FiatProviderQuote[] = []
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
@@ -82,6 +85,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
         },
         convertValue: async (sourceFieldNum: number, value: string): Promise<string | void> => {
           bestQuote = undefined
+          goodQuotes = []
           if (eq(value, '0')) return ''
           const myCounter = ++counter
           let quoteParams: FiatProviderGetQuoteParams
@@ -123,6 +127,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           let bestQuoteRatio = '0'
           for (const quote of quotes) {
             if (quote.direction !== 'buy') continue
+            goodQuotes.push(quote)
             const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
             if (gt(quoteRatio, bestQuoteRatio)) {
               bestQuoteRatio = quoteRatio
@@ -137,11 +142,47 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             return
           }
 
-          const bestRate = div(bestQuote.fiatAmount, bestQuote.cryptoAmount, 16)
-          const exchangeRateText = `1 ${currencyCode} = ${toFixed(bestRate, 0, 2)} ${FIAT_SUPPORTED}`
+          const exchangeRateText = getRateFromQuote(bestQuote)
           if (enterAmountMethods != null) {
+            const poweredByOnClick = async () => {
+              // 1. Show modal with all the valid quotes
+              const items = goodQuotes.map(quote => {
+                let text
+                if (sourceFieldNum === 1) {
+                  // User entered a fiat value. Show the crypto value per partner
+                  text = `(${toFixed(quote.cryptoAmount, 0, 6)} ${quote.tokenId?.tokenId ?? ''})`
+                } else {
+                  // User entered a crypto value. Show the fiat value per partner
+                  text = `(${toFixed(quote.fiatAmount, 0, 2)} ${quote.fiatCurrencyCode.replace('iso:', '')})`
+                }
+                const out = {
+                  text,
+                  name: quote.pluginDisplayName,
+                  icon: getPartnerIconUri(quote.partnerIcon)
+                }
+                return out
+              })
+              const rowName = await showUi.listModal({
+                title: 'Providers',
+                selected: bestQuote?.pluginDisplayName ?? '',
+                items
+              })
+              if (bestQuote == null) return
+
+              // 2. Set the best quote to the one chosen by user (if any is chosen)
+              if (rowName != null && rowName !== bestQuote.pluginDisplayName) {
+                bestQuote = goodQuotes.find(quote => quote.pluginDisplayName === rowName)
+                if (bestQuote == null) return
+
+                // 3. Set the status text and powered by
+                const statusText = getRateFromQuote(bestQuote)
+                enterAmountMethods.setStatusText({ statusText })
+                enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
+              }
+            }
+
             enterAmountMethods.setStatusText({ statusText: exchangeRateText })
-            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick: () => {} })
+            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
           }
           if (sourceFieldNum === 1) {
             return toFixed(bestQuote.cryptoAmount, 0, 6)
@@ -173,6 +214,12 @@ const ERROR_TEXT = {
   overLimit: s.strings.fiat_plugin_buy_amount_over_limit,
   regionRestricted: s.strings.fiat_plugin_buy_region_restricted,
   assetUnsupported: s.strings.fiat_plugin_asset_unsupported
+}
+
+const getRateFromQuote = (quote: FiatProviderQuote): string => {
+  const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
+  const exchangeRateText = `1 ${quote.tokenId?.tokenId ?? ''} = ${toFixed(bestRate, 0, 2)} ${FIAT_SUPPORTED}`
+  return exchangeRateText
 }
 
 export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string): string | void => {
