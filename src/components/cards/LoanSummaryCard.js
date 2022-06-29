@@ -58,27 +58,25 @@ const LoanSummaryCardComponent = ({
     const displayInterestTotal = toPercentString(debts[0].apr)
 
     return (
-      <>
-        <TappableCard onPress={onPress}>
-          <View style={styles.cardContainer}>
-            <View style={styles.row}>
-              <FastImage style={styles.icon} source={{ uri: iconUri }} />
-              <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>
-              <EdgeText>{fiatCurrencyCode}</EdgeText>
+      <TappableCard marginRem={0.5} onPress={onPress}>
+        <View style={styles.cardContainer}>
+          <View style={styles.row}>
+            <FastImage style={styles.icon} source={{ uri: iconUri }} />
+            <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>
+            <EdgeText>{fiatCurrencyCode}</EdgeText>
+          </View>
+          <View style={styles.spacedRow}>
+            <View style={styles.column}>
+              <EdgeText style={styles.textSecondary}>{s.strings.loan_collateral_value}</EdgeText>
+              <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
             </View>
-            <View style={styles.spacedRow}>
-              <View style={styles.column}>
-                <EdgeText style={styles.textSecondary}>{s.strings.loan_collateral_value}</EdgeText>
-                <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
-              </View>
-              <View style={styles.column}>
-                <EdgeText style={styles.textSecondary}>{s.strings.loan_interest_rate}</EdgeText>
-                <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
-              </View>
+            <View style={styles.column}>
+              <EdgeText style={styles.textSecondary}>{s.strings.loan_interest_rate}</EdgeText>
+              <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
             </View>
           </View>
-        </TappableCard>
-      </>
+        </View>
+      </TappableCard>
     )
   } catch (err) {
     showError(err.message)
