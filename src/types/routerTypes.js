@@ -394,3 +394,51 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
   WithNavigation.displayName = `WithNavigation(${displayName})`
   return WithNavigation
 }
+
+export const useNavigation = <Name: $Keys<ParamList>>() => {
+  const navigation: NavigationProp<Name> = {
+    addListener(event, callback) {
+      // TODO
+      return () => {}
+    },
+    isFocused() {
+      // TODO
+      return false
+    },
+
+    navigate(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
+    push(name, params) {
+      // $FlowFixMe
+      Flux.Actions.push(name, { route: { name, params } })
+    },
+    replace(name, params) {
+      // $FlowFixMe
+      Flux.Actions.replace(name, { route: { name, params } })
+    },
+    setParams(params) {},
+    jumpTo(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
+    goBack() {},
+    pop() {
+      // $FlowFixMe
+      Flux.Actions.pop()
+    },
+    popToTop() {},
+
+    closeDrawer() {},
+    openDrawer() {},
+    toggleDrawer() {},
+
+    get state() {},
+    get currentScene() {
+      // $FlowFixMe
+      return Flux.Actions.currentScene
+    }
+  }
+  return navigation
+}
