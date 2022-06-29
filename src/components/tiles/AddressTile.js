@@ -133,7 +133,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
           const sendSceneRouteParams = await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
-          this.props.navigation.jumpTo('send', { ...sendSceneRouteParams })
+          this.props.navigation.navigate('send', { ...sendSceneRouteParams })
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
