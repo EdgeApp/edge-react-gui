@@ -5,6 +5,7 @@ import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDeno
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
+import { v4 } from 'uuid'
 
 import {
   FEE_ALERT_THRESHOLD,
@@ -704,4 +705,10 @@ export function fuzzyTimeout<T>(promises: Promise<T>[], timeoutMs: number): Prom
       )
     }
   })
+}
+
+export const consify = (arg: Object) => console.log(JSON.stringify(arg, null, 2))
+
+export const makeUuid = () => {
+  return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
 }
