@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
@@ -19,11 +20,12 @@ type Props = {
 
 export const Top = (props: Props) => {
   const loading = useSelector(state => !state.ui.wallets.byId[props.walletId])
-
+  const navigation: NavigationProp<any> = useNavigation()
   return loading ? (
     <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
   ) : (
     <TransactionListTop
+      navigation={navigation}
       walletId={props.walletId}
       isEmpty={props.isEmpty}
       searching={props.searching}
