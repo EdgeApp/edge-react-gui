@@ -2,7 +2,7 @@
 // globals spec
 // import ENV from '../env.json'
 
-import { DocumentDirectoryPath } from 'react-native-fs'
+import { DocumentDirectoryPath, mkdir } from 'react-native-fs'
 import { captureScreen } from 'react-native-view-shot'
 type fiatList = {
   value: string,
@@ -17,10 +17,23 @@ type walletData = {
 }
 type data = {
   walletId: string,
-  key: string
+  key: string,
+  wallet: { name: string },
+  id: string
 }
 
+type walletNameData = {
+  children: string,
+  wallet: { name: string }
+}
+
+const SnapShotsPath = `${DocumentDirectoryPath}/__snapshots__`
+
 export const helpers = (spec: any) => ({
+  longPress: async (walletName: string) => {
+    const row = await spec.findComponent(walletName)
+    row.props.onLongPress()
+  },
   resolveModal: async (modalName: string, returnValue: string) => {
     const modal = await spec.findComponent(modalName)
     return await modal.props.bridge.resolve(returnValue)
@@ -39,22 +52,43 @@ export const helpers = (spec: any) => ({
   },
   getWalletListData: async (walletListName: string): Promise<walletData> => {
     const walletList = await spec.findComponent(walletListName)
-    console.log('codes', walletList.props.data)
     return walletList.props.data
   },
+
+  getWalletNameValue: async (renameWallet: string): Promise<walletNameData> => {
+    const walletNameModal = await spec.findComponent(renameWallet)
+    console.log('getWalletNameValue', walletNameModal.props.children.length)
+    return walletNameModal.props.children.length
+  },
+  checkWalletNameValue: async (renameWallet: string): Promise<walletNameData> => {
+    const walletNameModal = await spec.findComponent(renameWallet)
+    console.log('checkWalletNameValue', walletNameModal.props.wallet.name)
+    return walletNameModal.props.wallet.name
+  },
+  getWalletName: async (walletName: string): Promise<data> => {
+    const walletNameModal = await spec.findComponent(walletName)
+    console.log('getWalletName', walletNameModal.props.wallet)
+
+    return walletNameModal.props.wallet
+  },
   navigate: async (fromName: string, toName: string, time?: number = 1000) => {
+    try {
+      await mkdir(SnapShotsPath)
+    } catch (err) {}
+
     const currentTime = Date.now()
     const destinationName = `${fromName}.${toName}`
+    const snapshotFilePath = `${SnapShotsPath}/${currentTime}:${destinationName}.snap.jpg`
     await spec.press(destinationName)
     await spec.pause(time)
     await captureScreen({
       snapshotContentContainer: false,
-      path: `${DocumentDirectoryPath}/${currentTime}.${destinationName}.snap.jpg`,
+      path: snapshotFilePath,
       result: 'file',
       format: 'jpg',
       quality: 0.8
     })
-    console.log('Saved Snap Shot', `${DocumentDirectoryPath}/${currentTime}.${destinationName}.snap.jpg`)
+    console.log('Saved Snap Shot', snapshotFilePath)
   },
 
   closeModal: async (modalName: string, time?: number = 1000) => {
