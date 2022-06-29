@@ -7,13 +7,21 @@ import s from '../../locales/strings'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
 import { fuzzyTimeout } from '../../util/utils'
-import { type FiatPlugin, type FiatPluginFactory, type FiatPluginFactoryArgs, type FiatPluginGetMethodsResponse } from './fiatPluginTypes'
+import {
+  type FiatPlugin,
+  type FiatPluginFactory,
+  type FiatPluginFactoryArgs,
+  type FiatPluginGetMethodsResponse,
+  type FiatPluginStartParams
+} from './fiatPluginTypes'
 import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
+// import { banxaProvider } from './providers/banxaProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
+// const providerFactories = [banxaProvider]
 const providerFactories = [simplexProvider, moonpayProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
@@ -38,7 +46,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
   const fiatPlugin: FiatPlugin = {
     pluginId,
-    startPlugin: async () => {
+    startPlugin: async (params: FiatPluginStartParams) => {
+      const { regionCode, paymentTypes } = params
       const assetArray = await fuzzyTimeout(assetPromises, 5000).catch(e => [])
 
       const allowedAssets: EdgeTokenId[] = []
@@ -106,7 +115,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               exchangeAmount: value,
               fiatCurrencyCode: coreWallet.fiatCurrencyCode,
               amountType: 'fiat',
-              direction: 'buy'
+              direction: 'buy',
+              paymentTypes,
+              regionCode
             }
           } else {
             // User entered a crypto value. Convert to fiat
@@ -116,7 +127,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               exchangeAmount: value,
               fiatCurrencyCode: coreWallet.fiatCurrencyCode,
               amountType: 'crypto',
-              direction: 'buy'
+              direction: 'buy',
+              paymentTypes,
+              regionCode
             }
           }
 

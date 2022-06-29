@@ -135,6 +135,8 @@ export const dummyProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
+        const { regionCode, paymentTypes } = params
+
         const MIN_USD = '50'
         const MAX_USD = '20000'
 
@@ -180,6 +182,8 @@ export const dummyProvider: FiatProviderFactory = {
 
         const paymentQuote: FiatProviderQuote = {
           pluginId,
+          regionCode,
+          paymentTypes,
           partnerIcon,
           pluginDisplayName,
           tokenId: params.tokenId,

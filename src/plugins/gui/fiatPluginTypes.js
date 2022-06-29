@@ -1,8 +1,13 @@
 // @flow
+import { asValue } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js'
 
 import { type EdgeTokenId } from '../../types/types.js'
 import { type EnterAmountPoweredBy } from './scenes/EnterAmountScene'
+
+export const asFiatPaymentTypes = asValue('credit', 'applepay')
+export type FiatPaymentType = 'credit' | 'applepay'
+export type FiatPaymentTypes = FiatPaymentType[]
 
 export type FiatPluginGetMethodsResponse = {
   setStatusText: (params: { statusText: string, options?: { textType?: 'warning' | 'error' } }) => void,
@@ -49,9 +54,17 @@ export type FiatPluginFactoryArgs = {
   account: EdgeAccount
 }
 
+export type FiatPluginRegionCode = {
+  countryCode: string,
+  stateCode?: string
+}
+export type FiatPluginStartParams = {
+  paymentTypes: FiatPaymentTypes,
+  regionCode: FiatPluginRegionCode
+}
 export type FiatPlugin = {
   pluginId: string,
-  startPlugin: () => Promise<void>
+  startPlugin: (params: FiatPluginStartParams) => Promise<void>
 }
 
 export type FiatPluginFactory = (params: FiatPluginFactoryArgs) => Promise<FiatPlugin>
