@@ -1,6 +1,7 @@
 // @flow
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import URL from 'url-parse'
 
 import {
   type FiatProvider,
@@ -45,6 +46,18 @@ const asMoonpayQuote = asObject({
   networkFeeAmount: asNumber,
   totalAmount: asNumber
 })
+
+type MoonpayWidgetQueryParams = {
+  apiKey: string,
+  currencyCode: string,
+  baseCurrencyCode: string,
+  lockAmount: boolean,
+  walletAddress: string,
+  showAllCurrencies: boolean,
+  enableRecurringBuys: boolean,
+  quoteCurrencyAmount?: number,
+  baseCurrencyAmount?: number
+}
 
 const CURRENCY_CODE_TRANSLATE = {
   matic_polygon: 'matic'
@@ -161,6 +174,9 @@ export const moonpayProvider: FiatProviderFactory = {
         const result = await response.json()
         const moonpayQuote = asMoonpayQuote(result)
 
+        console.log('Got Moonpay quote')
+        console.log(JSON.stringify(moonpayQuote, null, 2))
+
         const paymentQuote: FiatProviderQuote = {
           pluginId,
           partnerIcon,
@@ -168,12 +184,33 @@ export const moonpayProvider: FiatProviderFactory = {
           tokenId: params.tokenId,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
-          fiatAmount: moonpayQuote.baseCurrencyAmount.toString(),
+          fiatAmount: moonpayQuote.totalAmount.toString(),
           cryptoAmount: moonpayQuote.quoteCurrencyAmount.toString(),
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
-          approveQuote: async (params: FiatProviderApproveQuoteParams): Promise<void> => {
-            params.showUi.openWebView({ url: 'https://edge.app' })
+          approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
+            const { coreWallet, showUi } = approveParams
+            const receiveAddress = await coreWallet.getReceiveAddress()
+            const url = new URL('https://buy.moonpay.com?', true)
+            const queryObj: MoonpayWidgetQueryParams = {
+              apiKey,
+              walletAddress: receiveAddress.publicAddress,
+              currencyCode: cryptoCurrencyObj.code,
+              baseCurrencyCode: fiatCurrencyObj.code,
+              lockAmount: true,
+              showAllCurrencies: false,
+              enableRecurringBuys: true
+            }
+            if (params.amountType === 'crypto') {
+              queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
+            } else {
+              queryObj.baseCurrencyAmount = moonpayQuote.totalAmount
+            }
+
+            url.set('query', queryObj)
+
+            console.log('Approving moonpay quote url=' + url.href)
+            showUi.openWebView({ url: url.href })
           },
           closeQuote: async (): Promise<void> => {}
         }

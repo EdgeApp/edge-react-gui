@@ -15,11 +15,12 @@ import {
   type FiatProviderQuoteErrorTypes,
   FiatProviderError
 } from './fiatProviderTypes'
-import { dummyProvider } from './providers/dummyProvider'
-import { dummyProvider2 } from './providers/dummyProvider2'
+// import { dummyProvider } from './providers/dummyProvider'
+// import { dummyProvider2 } from './providers/dummyProvider2'
+import { moonpayProvider } from './providers/moonpayProvider'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
-const providerFactories = [dummyProvider, dummyProvider2]
+const providerFactories = [moonpayProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
@@ -207,7 +208,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       if (bestQuote == null) {
         return
       }
-      await bestQuote.approveQuote({ showUi })
+      await bestQuote.approveQuote({ showUi, coreWallet })
     }
   }
   return fiatPlugin
