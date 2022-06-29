@@ -16,7 +16,7 @@ import { type StakePolicy } from '../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { stakePlugin } from '../../util/stakeUtils.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
@@ -32,7 +32,8 @@ type OwnProps = {
   isEmpty: boolean,
   searching: boolean,
   onChangeSortingState: (isSearching: boolean) => void,
-  onSearchTransaction: (searchString: string) => void
+  onSearchTransaction: (searchString: string) => void,
+  navigation: NavigationProp<any>
 }
 
 type StateProps = {
@@ -174,11 +175,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    Actions.push('request')
+    this.props.navigation.push('request')
   }
 
   handleSend = (): void => {
-    Actions.push('send', {})
+    this.props.navigation.push('send', {})
   }
 
   handleSearchDone = () => {
@@ -189,9 +190,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleStakePress = () => {
-    const { currencyCode, walletId } = this.props
-    if (currencyCode === 'FIO') Actions.push('fioStakingOverview', { currencyCode, walletId })
-    else Actions.push('stakeOptions', { walletId, currencyCode })
+    const { currencyCode, walletId, navigation } = this.props
+    if (currencyCode === 'FIO') navigation.push('fioStakingOverview', { currencyCode, walletId })
+    else navigation.push('stakeOptions', { walletId, currencyCode })
   }
 
   clearText = () => {
