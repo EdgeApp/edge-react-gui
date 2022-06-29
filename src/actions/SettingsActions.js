@@ -17,7 +17,7 @@ import {
 } from '../modules/Core/Account/settings.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import { DECIMAL_PRECISION } from '../util/utils.js'
 import { validatePassword } from './AccountActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
@@ -198,6 +198,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
 export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
+  const navigation: NavigationProp<'edge'> = useNavigation()
   const response = await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
@@ -220,7 +221,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
           })
         )
     )
-    Actions.jump('walletList')
+    navigation.jumpTo('walletList')
   }
 }
 
