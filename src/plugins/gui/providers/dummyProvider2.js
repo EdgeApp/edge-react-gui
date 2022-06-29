@@ -11,9 +11,9 @@ import {
   type FiatProviderQuote,
   FiatProviderError
 } from '../fiatProviderTypes'
-const pluginId = 'dummyprovider'
-const partnerIcon = 'simplex-logo-sm-square.png'
-const pluginDisplayName = 'Dummy'
+const pluginId = 'dummyprovider2'
+const partnerIcon = 'icon_black_small.png'
+const pluginDisplayName = 'Dummy 2'
 
 const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
   avalanche: { AVAX: 'AVAX-C' },
@@ -124,7 +124,7 @@ for (const pluginId in SIMPLEX_ID_MAP) {
   }
 }
 
-export const dummyProvider: FiatProviderFactory = {
+export const dummyProvider2: FiatProviderFactory = {
   pluginId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const out = {
@@ -147,7 +147,7 @@ export const dummyProvider: FiatProviderFactory = {
         }
 
         const response = await fetch(url + pairCodes).catch(e => undefined)
-        if (response == null || !response.ok) throw new Error('Dummy failed to fetch')
+        if (response == null || !response.ok) throw new Error('Dummy 2 failed to fetch')
         const result = await response.json().catch(e => undefined)
 
         let maxLimit: number
