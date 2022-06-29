@@ -312,7 +312,8 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
   navigate: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   push: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   replace: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  setParams: (params: $ElementType<ParamList, Name>) => void,
+  setParams: <Name: $Keys<ParamList>>(params: $ElementType<ParamList, Name>) => void,
+  jumpTo: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
 
   // Returning:
   goBack: () => void,
@@ -325,7 +326,8 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
   toggleDrawer: () => void,
 
   // Internals nobody should need to touch:
-  state: mixed
+  state: mixed,
+  currentScene: mixed
 }
 
 /**
@@ -362,6 +364,9 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
       setParams(params) {
         props.navigation.setParams({ route: { name: Actions.currentScene, params } })
       },
+      jumpTo(name, params) {
+        props.navigation.navigate(name, { route: { name, params } })
+      },
 
       goBack() {
         props.navigation.goBack()
@@ -385,6 +390,11 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
 
       get state() {
         return props.navigation.state
+      },
+
+      get currentScene() {
+        // $FlowFixMe
+        return Flux.Actions.currentScene
       }
     }
 
