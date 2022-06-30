@@ -3,7 +3,7 @@
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
-import { makeUuid, multiFetch } from '../../../util/utils'
+import { fetchInfo, makeUuid } from '../../../util/utils'
 import { asFiatPaymentTypes } from '../fiatPluginTypes'
 import {
   type FiatProvider,
@@ -19,8 +19,6 @@ const pluginId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
-
-const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
 
 const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
   avalanche: { AVAX: 'AVAX-C' },
@@ -239,8 +237,7 @@ export const simplexProvider: FiatProviderFactory = {
           tacn = simplexFiatCode
         }
 
-        const response = await multiFetch(
-          INFO_SERVERS,
+        const response = await fetchInfo(
           'v1/jwtSign/simplex',
           {
             method: 'POST',
@@ -308,7 +305,7 @@ export const simplexProvider: FiatProviderFactory = {
               fiam: goodQuote.fiat_money.amount
             }
 
-            const response = await multiFetch(INFO_SERVERS, `v1/jwtSign/${jwtTokenProvider}`, {
+            const response = await fetchInfo(`v1/jwtSign/${jwtTokenProvider}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ data })

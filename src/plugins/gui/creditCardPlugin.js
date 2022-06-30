@@ -9,7 +9,7 @@ import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
-import { fuzzyTimeout, multiFetch } from '../../util/utils'
+import { fetchInfo, fuzzyTimeout } from '../../util/utils'
 import {
   type FiatPlugin,
   type FiatPluginFactory,
@@ -30,7 +30,6 @@ type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
 const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
-const INFO_SERVERS = ['http://localhost:8087']
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
@@ -56,7 +55,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   }
 
   try {
-    const response = await multiFetch(INFO_SERVERS, `v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
+    const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
     pluginPriority = asFiatPluginPriorities(await response.json())
     priorityArray = createPriorityArray(pluginPriority[pluginId])
   } catch (e) {
