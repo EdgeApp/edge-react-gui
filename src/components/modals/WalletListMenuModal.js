@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -9,11 +9,12 @@ import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
+import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { getCurrencyInfos, getTokenId } from '../../util/CurrencyInfoHelpers.js'
+import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -29,8 +30,7 @@ type Props = {
   navigation: NavigationProp<'walletList'>,
 
   // Wallet identity:
-  currencyCode?: string,
-  isToken?: boolean,
+  tokenId?: string,
   walletId: string
 }
 
@@ -46,23 +46,17 @@ const icons = {
   viewXPub: 'eye'
 }
 
-const getWalletOptions = async (params: {
-  walletId: string,
-  walletName?: string,
-  pluginId?: string,
-  isToken?: boolean,
-  account: EdgeAccount
-}): Promise<Option[]> => {
-  const { walletId, pluginId, isToken, account } = params
+const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet, tokenId?: string, account: EdgeAccount }): Promise<Option[]> => {
+  const { wallet, tokenId, account } = params
 
-  if (!pluginId) {
+  if (wallet == null) {
     return [
       { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
       { label: s.strings.string_archive_wallet, value: 'rawDelete' }
     ]
   }
 
-  if (isToken) {
+  if (tokenId != null) {
     return [
       {
         label: s.strings.string_resync,
@@ -77,7 +71,7 @@ const getWalletOptions = async (params: {
 
   const result = []
 
-  const splittable = await account.listSplittableWalletTypes(walletId)
+  const splittable = await account.listSplittableWalletTypes(wallet.id)
 
   const currencyInfos = getCurrencyInfos(account)
   for (const splitWalletType of splittable) {
@@ -86,6 +80,7 @@ const getWalletOptions = async (params: {
     result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
   }
 
+  const { pluginId } = wallet.currencyInfo
   for (const option of WALLET_LIST_MENU) {
     const { pluginIds, label, value } = option
 
@@ -97,51 +92,41 @@ const getWalletOptions = async (params: {
 }
 
 export function WalletListMenuModal(props: Props) {
-  const { bridge, currencyCode, isToken, navigation, walletId } = props
+  const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = useState([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const edgeWallet = account.currencyWallets[walletId]
-  const { pluginId } = edgeWallet.currencyInfo
+  const wallet = useWatchAccount(account, 'currencyWallets')[walletId]
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // Look up the image and name:
-  const walletName = edgeWallet?.name ?? ''
-
   const handleCancel = () => props.bridge.resolve(null)
 
   const optionAction = (option: WalletListMenuKey) => {
-    if (currencyCode == null && edgeWallet != null) {
-      dispatch(walletListMenuAction(navigation, walletId, option, edgeWallet.currencyInfo.currencyCode))
-    } else {
-      dispatch(walletListMenuAction(navigation, walletId, option, currencyCode))
-    }
+    dispatch(walletListMenuAction(navigation, walletId, option, tokenId))
     bridge.resolve(null)
   }
 
   useEffect(() => {
-    getWalletOptions({ walletId, walletName, pluginId, isToken, account }).then(options => setOptions(options))
+    getWalletOptions({ wallet, tokenId, account }).then(options => setOptions(options))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      {walletName ? <ModalTitle>{walletName}</ModalTitle> : null}
-      <View style={styles.row}>
-        {edgeWallet == null || currencyCode == null ? null : (
-          <CryptoIcon
-            marginRem={[0, 0, 0, 0.5]}
-            sizeRem={1}
-            tokenId={getTokenId(account, edgeWallet.currencyInfo.pluginId, currencyCode)}
-            walletId={walletId}
-          />
-        )}
-        {currencyCode ? <ModalTitle>{currencyCode}</ModalTitle> : null}
-      </View>
+      {wallet != null && (
+        <View>
+          <ModalTitle>{wallet.name}</ModalTitle>
+          <View style={styles.row}>
+            <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
+            <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
+          </View>
+        </View>
+      )}
+
       {options.map((option: Option) => (
         <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
           <AntDesignIcon
