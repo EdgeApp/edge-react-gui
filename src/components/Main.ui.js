@@ -520,7 +520,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(OtpSettingsScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_otp} />}
-              renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('OtpSettingsScene.Back')} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('TwoFactorSettingsScene.Back')} />}
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
@@ -528,7 +528,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
-              renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('ChangeRecoveryScene.Back')} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} ref={this.props.generateTestHook('ChangePasswordRecoveryScene.Back')} />}
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene

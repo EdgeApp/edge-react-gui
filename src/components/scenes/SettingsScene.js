@@ -284,7 +284,11 @@ export class SettingsSceneComponent extends React.Component<Props & TestProps, S
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsTappableRow label={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
+          <SettingsTappableRow
+            label={s.strings.settings_notifications}
+            onPress={this.handleNotificationSettings}
+            ref={this.props.generateTestHook('SettingsScene.OpenNotificationSettings')}
+          />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
@@ -301,7 +305,7 @@ export class SettingsSceneComponent extends React.Component<Props & TestProps, S
                 onPress={onPress}
                 ref={this.props.generateTestHook(`SettingsScene.CurrencySettings.${pluginId}`)}
               >
-                <CurrencyIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
+                <CryptoIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
               </SettingsTappableRow>
             )
           })}
