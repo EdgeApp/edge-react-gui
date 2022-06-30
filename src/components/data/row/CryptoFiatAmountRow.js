@@ -26,13 +26,13 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
   const { nativeAmount, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const walletId = wallet.id
+  const { pluginId } = wallet.currencyInfo
 
   // Use nativeAmount in both fiat and crypto display fields because they properly handle any user/locale settings.
   return (
     <View style={styles.container}>
       <View style={styles.columnLeft}>
-        <CryptoIcon sizeRem={1.5} tokenId={tokenId} walletId={walletId} hideSecondary />
+        <CryptoIcon sizeRem={1.5} tokenId={tokenId} pluginId={pluginId} hideSecondary />
         <EdgeText style={styles.text}>
           <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount} />
         </EdgeText>
