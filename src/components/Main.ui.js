@@ -200,7 +200,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(WalletListScene))}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
-                renderLeftButton={<HeaderTextButton type="help" placement="left" testId="MainUi.Help" />}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" testId="MainUi.HelpModal" />}
                 renderRightButton={<SideMenuButton testId="WalletList.SideMenuButton" />}
               />
 

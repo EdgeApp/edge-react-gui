@@ -34,17 +34,17 @@ export function showHelpModal(): Promise<mixed> {
   return Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 
-export function showWebViewModal(uri: string, title: string): void {
-  Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
+export function showWebViewModal(uri: string, title: string, testId: string): void {
+  Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} testId={testId} />)
 }
 
 type Props = {
   bridge: AirshipBridge<void>
 }
 
-export const HelpWebViewModal = (props: Props & { uri: string, title: string }) => {
+export const HelpWebViewModal = (props: Props & { uri: string, title: string, testId: string }) => {
   const handleClose = () => props.bridge.resolve()
-  const { bridge, uri, title } = props
+  const { bridge, uri, title, testId } = props
   const generateTestHook = useCavy()
   return (
     <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
@@ -53,7 +53,7 @@ export const HelpWebViewModal = (props: Props & { uri: string, title: string }) 
       </ModalTitle>
       <WebView source={{ uri }} />
 
-      <ModalCloseArrow onPress={handleClose} ref={generateTestHook('HelpModal.CloseHelpWebViewModal')} />
+      <ModalCloseArrow onPress={handleClose} ref={generateTestHook(`${testId}.Close`)} />
     </ThemedModal>
   )
 }
@@ -91,8 +91,8 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           subTitle={s.strings.help_knowledge_base_text}
           title={s.strings.help_knowledge_base}
           underline
-          onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
-          ref={this.props.generateTestHook('HelpModal.KnowledgeBase')}
+          onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base, 'KnowledgeBaseModal')}
+          ref={this.props.generateTestHook('HelpModal.KnowledgeBaseModal')}
         />
 
         <SelectableRow
@@ -103,8 +103,8 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           subTitle={s.strings.help_support_text}
           title={s.strings.help_support}
           underline
-          onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
-          ref={this.props.generateTestHook('HelpModal.SupportTicket')}
+          onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support, 'SupportTicketModal')}
+          ref={this.props.generateTestHook('HelpModal.SupportTicketModal')}
         />
 
         <SelectableRow
@@ -125,8 +125,8 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps & Tes
           paddingRem={optionPaddingRem}
           subTitle={helpSiteMoreInfoText}
           title={sprintf(s.strings.help_visit_site, config.appName)}
-          onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
-          ref={this.props.generateTestHook('HelpModal.EdgeSite')}
+          onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText, 'EdgeSiteModal')}
+          ref={this.props.generateTestHook('HelpModal.EdgeSiteModal')}
         />
         <View style={styles.footer}>
           <EdgeText style={styles.version}>{versionText}</EdgeText>
