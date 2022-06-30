@@ -5,7 +5,7 @@ import { asArray, asNumber, asObject, asString } from 'cleaners'
 import URL from 'url-parse'
 
 import { type EdgeTokenId } from '../../../types/types'
-import { consify, makeUuid, multiFetch } from '../../../util/utils'
+import { consify, fetchInfo, makeUuid } from '../../../util/utils'
 import {
   type FiatProvider,
   type FiatProviderApproveQuoteParams,
@@ -20,8 +20,6 @@ const pluginId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
-
-const INFO_SERVERS = ['https://info2.edge.app']
 
 const asBanxaApiKeys = asObject({
   partnerUrl: asString,
@@ -340,8 +338,7 @@ export const banxaProvider: FiatProviderFactory = {
 
 const generateHmac = async (apiKey: string, data: string, nonce: string) => {
   const body = JSON.stringify({ data })
-  const response = await multiFetch(
-    INFO_SERVERS,
+  const response = await fetchInfo(
     'v1/createHmac/banxa',
     {
       method: 'POST',

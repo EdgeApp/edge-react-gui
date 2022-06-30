@@ -653,6 +653,11 @@ export const pickRandom = <T>(array?: T[]): T | null => {
   return array[Math.floor(Math.random() * array.length)]
 }
 
+const INFO_SERVERS = ['https://info2.edge.app']
+export const fetchInfo = (path: string, options?: Object, timeout?: number): Promise<any> => {
+  return multiFetch(INFO_SERVERS, path, options, timeout)
+}
+
 /**
  * Waits for a collection of promises.
  * Returns all the promises that manage to resolve within the timeout.
