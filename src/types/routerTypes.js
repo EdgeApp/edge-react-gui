@@ -230,6 +230,10 @@ export type ParamList = {
     borrowPlugin: BorrowPlugin,
     tokenId: string
   |},
+  loanClose: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
   loanAddCollateralScene: {|
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin

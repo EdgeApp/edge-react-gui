@@ -79,6 +79,9 @@ export const LoanDetailsScene = (props: Props) => {
   const handleWithdrawCollateralPress = () => {
     navigation.navigate('loanWithdrawCollateralScene', { borrowEngine, borrowPlugin })
   }
+  const handleLoanClosePress = () => {
+    navigation.navigate('loanClose', { borrowEngine, borrowPlugin })
+  }
 
   return (
     <SceneWrapper>
@@ -136,7 +139,7 @@ export const LoanDetailsScene = (props: Props) => {
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
             <Space right style={styles.actionIcon}>
               <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
