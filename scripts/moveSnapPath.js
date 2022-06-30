@@ -20,6 +20,9 @@ const appsSnapshotFolder = '/Documents/__snapshots__'
 const snapshotPath = 'specs/__snapshots__'
 
 const snapShotFolder = path.join(`${__dirname}`, `../${snapshotPath}`)
+if (!fs.existsSync(snapShotFolder)) {
+  fs.mkdirSync(snapShotFolder)
+}
 console.log('snapShotFolder', snapShotFolder)
 
 const homedir = require('os').homedir()
@@ -57,11 +60,11 @@ for (let i = 0; i < existingSnapShots.length; i++) {
 
 for (let i = 0; i < newSnapShotsTrimmed.length; i++) {
   if (!existingSnapShotsTrimmed.includes(newSnapShotsTrimmed[i])) {
-    console.log('newSnapShotsTrimmed[i]', newSnapShotsTrimmed[i])
     fs.copyFileSync(`${documentFolder}/${newSnapShots[i]}`, `${snapShotFolder}/${newSnapShots[i]}`)
   }
 }
 
+const existingSnapShotsAfterValidationCopy = readCleanDirSync(snapShotFolder)
 const compareSnapShots = async () => {
   const report = []
   for (let i = 0; i < newSnapShots.length; i++) {
@@ -70,11 +73,11 @@ const compareSnapShots = async () => {
 
     const form = new FormData()
     const fileA = `${snapShotFolder}/${newSnapShots[i]}`
-    const fileB = `${documentFolder}/${existingSnapShots[i]}`
+    const fileB = `${documentFolder}/${existingSnapShotsAfterValidationCopy[i]}`
     form.append('image1', fs.createReadStream(fileA))
     form.append('image2', fs.createReadStream(fileB))
     const newSnapShotFile = newSnapShots[i]
-    const existingSnapShotFile = existingSnapShots[i]
+    const existingSnapShotFile = existingSnapShotsAfterValidationCopy[i]
     const snapShotReport = { newSnapShotFile, existingSnapShotFile }
     try {
       const response = await fetch(DEEPAI_URI, {
