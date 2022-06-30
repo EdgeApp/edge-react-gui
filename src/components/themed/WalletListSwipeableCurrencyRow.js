@@ -1,8 +1,9 @@
 // @flow
 
+import { useCavy, wrap } from 'cavy'
 import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { type SharedValue } from 'react-native-reanimated'
 
 import { selectWallet } from '../../actions/WalletActions.js'
@@ -10,6 +11,7 @@ import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
+import { TouchableOpacity } from '../../types/reactNative.js'
 import { memo, useEffect, useMemo, useRef } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -42,6 +44,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const generateTestHook = useCavy()
 
   // Tutorial mode:
   useEffect(() => {
@@ -109,7 +112,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const renderRequestUnderlay = (isActive: SharedValue<boolean>) => (
     <>
-      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
+      <TouchableOpacity style={styles.menuButton} onPress={handleMenu} ref={generateTestHook('WalletListSwipeableCurrencyRow.OpenMenuModal')}>
         <Text style={styles.menuIcon}>…</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
@@ -185,4 +188,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeableCurrencyRow = memo(WalletListSwipeableCurrencyRowComponent)
+export const WalletListSwipeableCurrencyRow = wrap(memo(WalletListSwipeableCurrencyRowComponent))

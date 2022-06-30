@@ -1,5 +1,5 @@
 // @flow
-
+import { wrap } from 'cavy'
 import * as React from 'react'
 import { Text } from 'react-native'
 

@@ -71,6 +71,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           "walletId": "",
         }
       }
+      testId="CryptoExchangeScene.FromWalletList"
       walletId=""
     >
       <MiniButton
@@ -136,6 +137,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           "walletId": "",
         }
       }
+      testId="CryptoExchangeScene.ToWalletList"
       walletId=""
     />
     <ActivityIndicator

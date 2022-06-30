@@ -74,8 +74,9 @@ require('./reactPatcher/index').Cavify(React, {
     'EditableAmountTile',
     'SettingsScene',
     'SettingsSceneComponent',
-    'AutoLogoutModalComponent',
-    'PrimaryButton'
-    
+    'PrimaryButton',
+    'MainButton',
+    'WalletListSwipeable',
+    'WalletListSwipeableRow'
   ]
 })

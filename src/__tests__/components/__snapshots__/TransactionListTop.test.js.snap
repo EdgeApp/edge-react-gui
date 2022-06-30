@@ -72,7 +72,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                 }
               }
             >
-              <TouchableOpacity
+              <Wrap(TouchableOpacity)
                 onPress={[Function]}
                 style={
                   Object {
@@ -100,13 +100,13 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   name="chevron-forward"
                   size={34}
                 />
-              </TouchableOpacity>
-              <Memo(CryptoIconComponent)
+              </Wrap(TouchableOpacity)>
+              <Memo(CurrencyIconComponent)
                 currencyCode="string"
                 sizeRem={1.5}
               />
             </View>
-            <TouchableOpacity
+            <Wrap(TouchableOpacity)
               onPress={[Function]}
             >
               <React.Fragment>
@@ -131,7 +131,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   stringstring string
                 </WithTheme(EdgeTextComponent)>
               </React.Fragment>
-            </TouchableOpacity>
+            </Wrap(TouchableOpacity)>
           </View>
         </View>
       </View>
@@ -143,7 +143,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
           }
         }
       >
-        <TouchableOpacity
+        <Wrap(TouchableOpacity)
           onPress={[Function]}
           style={
             Object {
@@ -173,8 +173,15 @@ exports[`TransactionListTop should render with loading props 1`] = `
           >
             Request
           </WithTheme(EdgeTextComponent)>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Wrap(TouchableOpacity)>
+        <View
+          style={
+            Object {
+              "width": 45,
+            }
+          }
+        />
+        <Wrap(TouchableOpacity)
           onPress={[Function]}
           style={
             Object {
@@ -204,7 +211,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
           >
             Send
           </WithTheme(EdgeTextComponent)>
-        </TouchableOpacity>
+        </Wrap(TouchableOpacity)>
       </View>
     </React.Fragment>
   </View>

@@ -27,7 +27,8 @@ describe('TransactionListTop', () => {
       },
       onSelectWallet: () => undefined,
       toggleBalanceVisibility: () => undefined,
-      theme: getTheme()
+      theme: getTheme(),
+      generateTestHook: () => undefined
     }
 
     const actual = renderer.render(<TransactionListTopComponent {...props} />)

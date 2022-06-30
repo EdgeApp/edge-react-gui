@@ -18,7 +18,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { config } from '../../theme/appConfig.js'
-import { connect } from '../../types/reactRedux.js'
+import { type TestProps, connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types/types.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
@@ -62,7 +62,7 @@ type DispatchProps = {
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [pluginId: string]: ModalState }
 
-type Props = StateProps & DispatchProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps & TestProps
 
 type State = {
   publicAddress: string,
@@ -374,7 +374,7 @@ export class RequestComponent extends React.Component<Props, State> {
               </View>
             </InputAccessoryView>
           ) : null}
-          <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} />
+          <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} ref={this.props.generateTestHook('RequestScene.OpenQr')} />
           <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
             <View style={styles.rightChevronContainer}>
               <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
@@ -588,7 +588,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Request = connect<StateProps, DispatchProps, OwnProps>(
+export const Request = connect<StateProps, DispatchProps, OwnProps & TestProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
