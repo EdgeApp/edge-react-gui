@@ -1,12 +1,12 @@
 export default function (spec) {
   spec.describe('NavigationBar', function () {
     spec.it('Menu Navigation', async function () {
-      await spec.pause(5000)
+      await spec.pause(10000)
 
-      await spec.press('MenuTab.pluginBuy')
+      await spec.press('MenuTab.pluginListBuy')
       await spec.pause(1000)
 
-      await spec.press('MenuTab.pluginSell')
+      await spec.press('MenuTab.pluginListSell')
       await spec.pause(1000)
 
       await spec.press('MenuTab.exchange')
