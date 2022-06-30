@@ -3,10 +3,26 @@
 import { sprintf } from 'sprintf-js'
 
 import s from '../locales/strings'
+import { createPriorityArray } from '../plugins/gui/creditCardPlugin'
 import { FiatProviderError } from '../plugins/gui/fiatProviderTypes'
 import { getBestError } from '../plugins/gui/pluginUtils'
 
 describe('creditCardPlugin', function () {
+  describe('createPriorityArray', function () {
+    test('createPriorityArray', function () {
+      const prio = {
+        pro1: 20,
+        pro2: 10,
+        pro3: 10,
+        pro4: 15,
+        pro5: 16,
+        pro6: 15
+      }
+      const result = createPriorityArray(prio)
+      console.error(result)
+      expect(JSON.stringify(result)).toBe(JSON.stringify([{ pro1: true }, { pro5: true }, { pro4: true, pro6: true }, { pro2: true, pro3: true }]))
+    })
+  })
   describe('getBestError', function () {
     test('overLimit', function () {
       const errors: FiatProviderError[] = [new FiatProviderError({ errorType: 'overLimit', errorAmount: 50 })]

@@ -1,13 +1,15 @@
 // @flow
 import { div, eq, gt, toFixed } from 'biggystring'
+import { asMap, asNumber } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
 import ENV from '../../../env.json'
 import { isValidInput } from '../../locales/intl'
 import s from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
-import { fuzzyTimeout } from '../../util/utils'
+import { fuzzyTimeout, multiFetch } from '../../util/utils'
 import {
   type FiatPlugin,
   type FiatPluginFactory,
@@ -21,8 +23,14 @@ import { banxaProvider } from './providers/banxaProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
+const asFiatPluginPriorities = asMap(asMap(asNumber))
+
+type FiatPluginPriority = { [pluginId: string]: number }
+type PriorityArray = Array<{ [pluginId: string]: boolean }>
+
 // TODO: Allow other fiat currency codes. Hard code USD for now
 const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
+const INFO_SERVERS = ['http://localhost:8087']
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
@@ -30,7 +38,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
   const assetPromises = []
   const providerPromises = []
+  let priorityArray = [{}]
+  let pluginPriority = {}
+
   for (const providerFactory of providerFactories) {
+    priorityArray[0][providerFactory.pluginId] = true
     let apiKeys
     if (ENV.PLUGIN_API_KEYS[providerFactory.pluginId] != null) {
       apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
@@ -42,7 +54,15 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   for (const provider of providers) {
     assetPromises.push(provider.getSupportedAssets())
   }
-  // const store = createStore(account.dataStore, pluginId)
+
+  try {
+    const response = await multiFetch(INFO_SERVERS, `v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
+    pluginPriority = asFiatPluginPriorities(await response.json())
+    priorityArray = createPriorityArray(pluginPriority[pluginId])
+  } catch (e) {
+    console.log(e.message)
+    // This is ok. We just use default values
+  }
 
   const fiatPlugin: FiatPlugin = {
     pluginId,
@@ -150,21 +170,23 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           // Only update with the latest call to convertValue
           if (myCounter !== counter) return
 
-          let bestQuoteRatio = '0'
           for (const quote of quotes) {
             if (quote.direction !== 'buy') continue
+            if (pluginPriority[pluginId] != null && pluginPriority[pluginId][quote.pluginId] <= 0) continue
             goodQuotes.push(quote)
-            const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
-            if (gt(quoteRatio, bestQuoteRatio)) {
-              bestQuoteRatio = quoteRatio
-              bestQuote = quote
-            }
           }
 
-          if (bestQuote == null) {
+          if (goodQuotes.length === 0) {
             // Find the best error to surface
             const bestErrorText = getBestError(errors, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
             if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: bestErrorText, options: { textType: 'error' } })
+            return
+          }
+
+          // Find best quote factoring in pluginPriorities
+          bestQuote = getBestQuote(goodQuotes, priorityArray)
+          if (bestQuote == null) {
+            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: s.strings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
             return
           }
 
@@ -226,4 +248,43 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     }
   }
   return fiatPlugin
+}
+
+export const createPriorityArray = (pluginPriority: FiatPluginPriority): PriorityArray => {
+  const priorityArray = []
+  if (pluginPriority != null) {
+    const temp: Array<{ pluginId: string, priority: number }> = []
+    for (const pluginId in pluginPriority) {
+      temp.push({ pluginId, priority: pluginPriority[pluginId] })
+    }
+    temp.sort((a, b) => b.priority - a.priority)
+    let currentPriority = Infinity
+    let priorityObj = {}
+    for (const t of temp) {
+      if (t.priority < currentPriority) {
+        priorityArray.push({})
+        currentPriority = t.priority
+        priorityObj = priorityArray[priorityArray.length - 1]
+      }
+      priorityObj[t.pluginId] = true
+    }
+  }
+  return priorityArray
+}
+
+export const getBestQuote = (quotes: FiatProviderQuote[], priorityArray: PriorityArray): FiatProviderQuote | void => {
+  let bestQuote
+  let bestQuoteRatio = '0'
+  for (const p of priorityArray) {
+    for (const quote of quotes) {
+      if (!p[quote.pluginId]) continue
+      const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
+
+      if (gt(quoteRatio, bestQuoteRatio)) {
+        bestQuoteRatio = quoteRatio
+        bestQuote = quote
+      }
+    }
+    if (bestQuote != null) return bestQuote
+  }
 }
