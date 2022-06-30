@@ -21,6 +21,10 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 
   const url = new URL(uri)
 
+  if (url.protocol === 'dev:') {
+    return { type: 'dev', sceneName: url.pathname }
+  }
+
   // Handle dl.edge.app links:
   if ((url.protocol === 'https:' || url.protocol === 'http:') && url.host === 'dl.edge.app') {
     return parseDownloadLink(url)
