@@ -44,6 +44,7 @@
     "test": "jest --config jest.config.js",
     "test:ios": "cavy run-ios",
     "test:android": "cavy run-android",
+    "test:snapshots": "node ./scripts/moveSnapPath.js",
     "theme": "node ./themeServer.js",
     "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"
