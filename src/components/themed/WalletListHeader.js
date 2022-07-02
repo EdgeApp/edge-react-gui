@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import Animated, { useAnimatedProps, useHandler, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -39,7 +40,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { searchText, theme } = this.props
+    const { searchText, theme, searching } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -56,9 +57,11 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             searchIcon
           />
         </View>
-        <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-          <EdgeText style={styles.searchDoneButtonText}>{s.strings.string_done_cap}</EdgeText>
-        </TouchableOpacity>
+        {searching && (
+          <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
+            <EdgeText style={styles.searchDoneButtonText}>{s.strings.string_done_cap}</EdgeText>
+          </TouchableOpacity>
+        )}
       </View>
     )
   }

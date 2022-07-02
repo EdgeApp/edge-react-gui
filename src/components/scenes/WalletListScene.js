@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+// import { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { updateWalletsSort } from '../../actions/WalletListActions.js'
@@ -10,7 +11,8 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useWatchAccount } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
-import { useMemo, useState } from '../../types/reactHooks.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
+import { useMemo, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -110,80 +112,104 @@ export function WalletListScene(props: Props) {
     return <WalletListFooter navigation={navigation} />
   }, [navigation])
 
-  // const header = useMemo(() => {
-  //   return (
-  //     <WalletListHeader
-  //       sorting={sorting}
-  //       searching={searching}
-  //       searchText={searchText}
-  //       openSortModal={handleSort}
-  //       onChangeSearchText={setSearchText}
-  //       onChangeSearchingState={setSearching}
-  //     />
-  //   )
-  // }, [handleSort, searchText, searching, sorting])
-
   const header = !sorting && !searching && (
-    <View style={styles.headerContainer}>
-      <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-      <View key="defaultButtons" style={styles.headerButtonsContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto')}>
-          <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSort}>
-          <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
-        </TouchableOpacity>
+    <Gradient>
+      <View style={styles.headerContainer}>
+        <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+        <View key="defaultButtons" style={styles.headerButtonsContainer}>
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto')}>
+            <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSort}>
+            <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </Gradient>
   )
+
+  // Constants for header
+  const HEADER_MAX_HEIGHT = theme.rem(5)
+
+  // Scrolling configs
+  // const scrollY = useSharedValue(0)
+  const scrollY = useRef(new Animated.Value(0))
+  const scrollYClamped = Animated.diffClamp(scrollY.current, 0, HEADER_MAX_HEIGHT)
+  const translateY = scrollYClamped.interpolate({
+    inputRange: [0, HEADER_MAX_HEIGHT],
+    outputRange: [0, -HEADER_MAX_HEIGHT]
+  })
+
+  const translateYNumber = useRef(0)
+
+  translateY.addListener(({ value }) => {
+    translateYNumber.current = value
+  })
+
+  // const animatedStyles = useAnimatedStyle(() => {
+  //   if (searching) return {}
+  //   const translateY = interpolate(scrollY.value, [0, HEADER_MAX_HEIGHT], [0, -HEADER_MAX_HEIGHT / 2], 'clamp')
+  //   return {
+  //     transform: [{ translateY }]
+  //   }
+  // })
+
+  // const ref = useRef(null)
 
   return (
     <SceneWrapper>
-      <SceneHeader underline>
-        <WiredProgressBar />
-        <View style={styles.balance}>
-          {sorting && (
-            <View style={styles.headerContainer}>
-              <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-              <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
-                <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            </View>
-          )}
+      <WiredProgressBar />
+      <SafeAreaView style={styles.container}>
+        <Animated.View style={[styles.header, { transform: [{ translateY }] }]}>
+          <Gradient>
+            <SceneHeader underline>
+              <View style={styles.balance}>
+                {sorting && (
+                  <View style={styles.headerContainer}>
+                    <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+                    <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
+                      <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
+                    </TouchableOpacity>
+                  </View>
+                )}
 
-          {searching && (
-            <WalletListHeader
+                <WalletListHeader
+                  navigation={navigation}
+                  sorting={sorting}
+                  searching={searching}
+                  searchText={searchText}
+                  openSortModal={handleSort}
+                  onChangeSearchText={setSearchText}
+                  onChangeSearchingState={setSearching}
+                />
+
+                {!searching && !sorting && <WiredBalanceBox />}
+              </View>
+            </SceneHeader>
+          </Gradient>
+        </Animated.View>
+
+        <View style={styles.listStack}>
+          <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
+            <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
+            <WalletListSwipeable
+              scrollY={scrollY}
+              headerMaxHeight={HEADER_MAX_HEIGHT}
+              translateYNumber={translateYNumber}
+              key="fullList"
+              header={header}
+              footer={searching ? null : footer}
               navigation={navigation}
-              sorting={sorting}
               searching={searching}
               searchText={searchText}
-              openSortModal={handleSort}
-              onChangeSearchText={setSearchText}
-              onChangeSearchingState={setSearching}
+              showSlidingTutorial={showSlidingTutorial}
+              onRefresh={handleRefresh}
             />
-          )}
-          {!searching && !sorting && <WiredBalanceBox />}
+            <WalletListSortable key="sortList" />
+          </CrossFade>
         </View>
-      </SceneHeader>
-
-      <View style={styles.listStack}>
-        <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
-          <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-          <WalletListSwipeable
-            key="fullList"
-            header={header}
-            footer={searching ? null : footer}
-            navigation={navigation}
-            searching={searching}
-            searchText={searchText}
-            showSlidingTutorial={showSlidingTutorial}
-            onRefresh={handleRefresh}
-          />
-          <WalletListSortable key="sortList" />
-        </CrossFade>
-      </View>
-
-      {!searching && <PromoCard />}
+        {!searching && <PromoCard />}
+      </SafeAreaView>
     </SceneWrapper>
   )
 }
@@ -191,6 +217,17 @@ export function WalletListScene(props: Props) {
 const getStyles = cacheStyles((theme: Theme) => ({
   balance: {
     marginTop: theme.rem(1)
+  },
+  container: {
+    flex: 1
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 1,
+    heigth: theme.rem(10)
   },
   // The sort & add buttons are stacked on top of the header component:
   // Header Stack style
