@@ -43,6 +43,7 @@ type WalletDetails = {
   receiveAddress: {
     publicAddress: string
   },
+  chainCode: string,
   currencyCode: string,
   fiatCurrencyCode: string
 }
@@ -239,6 +240,7 @@ export class EdgeProvider extends Bridgeable {
       name: walletName,
       pluginId: edgeWallet.currencyInfo.pluginId,
       receiveAddress,
+      chainCode: this.selectedChainCode,
       currencyCode,
       fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
       currencyIcon: icons.symbolImage,
