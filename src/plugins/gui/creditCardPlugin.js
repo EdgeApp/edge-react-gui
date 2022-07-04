@@ -17,13 +17,12 @@ import {
 } from './fiatPluginTypes'
 import { type FiatProviderGetQuoteParams, type FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
-// import { banxaProvider } from './providers/banxaProvider'
+import { banxaProvider } from './providers/banxaProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
 // TODO: Allow other fiat currency codes. Hard code USD for now
-// const providerFactories = [banxaProvider]
-const providerFactories = [simplexProvider, moonpayProvider]
+const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
