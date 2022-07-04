@@ -129,7 +129,7 @@ export function WalletListScene(props: Props) {
   )
 
   // Constants for header
-  const HEADER_MAX_HEIGHT = theme.rem(5)
+  const HEADER_MAX_HEIGHT = theme.rem(10.5)
 
   // Scrolling configs
   // const scrollY = useSharedValue(0)
@@ -137,7 +137,7 @@ export function WalletListScene(props: Props) {
   const scrollYClamped = Animated.diffClamp(scrollY.current, 0, HEADER_MAX_HEIGHT)
   const translateY = scrollYClamped.interpolate({
     inputRange: [0, HEADER_MAX_HEIGHT],
-    outputRange: [0, -HEADER_MAX_HEIGHT]
+    outputRange: [0, -HEADER_MAX_HEIGHT / 2]
   })
 
   const translateYNumber = useRef(0)
@@ -158,7 +158,9 @@ export function WalletListScene(props: Props) {
 
   return (
     <SceneWrapper>
-      <WiredProgressBar />
+      <View style={styles.progressBar}>
+        <WiredProgressBar />
+      </View>
       <SafeAreaView style={styles.container}>
         <Animated.View style={[styles.header, { transform: [{ translateY }] }]}>
           <Gradient>
@@ -248,6 +250,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   addButton: {
     marginRight: theme.rem(0.5)
+  },
+  progressBar: {
+    zIndex: 2
   },
   // The two lists are stacked vertically on top of each other:
   listStack: {

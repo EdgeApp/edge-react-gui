@@ -125,13 +125,13 @@ export const WalletListSwipeable = (props: Props) => {
   const ref = useRef(null)
   const handleSnap = ({ nativeEvent }) => {
     const offsetY = nativeEvent.contentOffset.y
-    if (headerMaxHeight != null && translateYNumber && !(translateYNumber.current === 0 || translateYNumber.current === -headerMaxHeight / 1.2)) {
+    if (headerMaxHeight != null && translateYNumber && !(translateYNumber.current === 0 || translateYNumber.current === -headerMaxHeight / 2)) {
       if (translateYNumber && translateYNumber.current && ref.current) {
         ref.current.scrollToOffset({
           offset:
             getCloser(translateYNumber.current, -headerMaxHeight / 2, 0) === -headerMaxHeight / 2
-              ? offsetY + headerMaxHeight / 1.2
-              : offsetY - headerMaxHeight / 1.2
+              ? offsetY + headerMaxHeight / 2
+              : offsetY - headerMaxHeight / 2
         })
       }
     }
@@ -154,6 +154,7 @@ export const WalletListSwipeable = (props: Props) => {
   return (
     <Animated.FlatList
       stickyHeaderIndices={searching ? [] : [0]}
+      scrollEventThrottle={16}
       //  style={animatedStyles}
       ref={ref}
       onScroll={handleScroll}
