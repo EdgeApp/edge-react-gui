@@ -2,12 +2,14 @@
 const { makeConfig } = require('cleaner-config')
 const { asBoolean, asNumber, asObject, asOptional, asString, asArray, asNull, asEither } = require('cleaners')
 
+const configComment = (comment: string) => ({ [`-------- ${comment} --------`]: asOptional(asNumber, 0) })
+
 const asConfig = asObject({
-  '-------- api keys --------': asOptional(asNumber, 0),
+  ...configComment('api keys'),
   AIRBITZ_API_KEY: asOptional(asString, ''),
   BUGSNAG_API_KEY: asOptional(asString, ''),
 
-  '-------- GUI plugin options --------': asOptional(asNumber, 0),
+  ...configComment('GUI plugin options'),
   PLUGIN_API_KEYS: asOptional(
     asObject({
       Bitrefill: asOptional(asString, '')
@@ -15,7 +17,7 @@ const asConfig = asObject({
     { Bitrefill: '' }
   ),
 
-  '-------- core plugin options (remove `x_` to activate) --------': asOptional(asNumber, 0),
+  ...configComment('core plugin options (remove `x_` to activate)'),
   x_BINANCE_SMART_CHAIN_INIT: asOptional(
     asObject({
       evmScanApiKey: asOptional(asArray(asString), [])
@@ -137,7 +139,7 @@ const asConfig = asObject({
     { quiknodeApiKey: '' }
   ),
 
-  '-------- app options --------': asOptional(asNumber, 0),
+  ...configComment('app options'),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   YOLO_DEEP_LINK: asOptional(asEither(asString, asNull), null),
@@ -146,7 +148,7 @@ const asConfig = asObject({
   YOLO_USERNAME: asOptional(asEither(asString, asNull), null),
   APP_CONFIG: asOptional(asString, 'edge'),
 
-  '-------- debug options --------': asOptional(asNumber, 0),
+  ...configComment('debug options'),
   DEBUG_CORE: asOptional(asBoolean, false),
   DEBUG_PLUGINS: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
