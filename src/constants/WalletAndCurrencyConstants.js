@@ -521,8 +521,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true,
-    keysOnlyMode: true
+    isBitPayProtocolSupported: true
   },
   groestlcoin: {
     initWalletName: s.strings.string_first_groestlcoin_wallet_name,
