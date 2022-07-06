@@ -92,13 +92,13 @@ Array [
     "deepQuery": Object {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
-    "paymentType": "applepay",
-    "paymentTypeLogoKey": "applepay",
+    "paymentType": "googlepay",
+    "paymentTypeLogoKey": "googlepay",
     "paymentTypes": Array [
       "credit",
     ],
     "pluginId": "creditcard",
-    "title": "Apple Pay",
+    "title": "Google Pay",
   },
   Object {
     "cryptoCodes": Array [],

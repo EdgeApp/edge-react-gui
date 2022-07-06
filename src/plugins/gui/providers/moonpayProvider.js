@@ -21,7 +21,7 @@ const pluginDisplayName = 'Moonpay'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
-const allowedPaymentTypes = { applepay: true, credit: true }
+const allowedPaymentTypes = { applepay: true, credit: true, googlepay: true }
 
 const asMoonpayCurrency = asObject({
   type: asValue('crypto', 'fiat'),
