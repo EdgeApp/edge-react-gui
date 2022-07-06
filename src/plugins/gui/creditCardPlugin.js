@@ -225,6 +225,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
                 enterAmountMethods.setStatusText({ statusText })
                 enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
+                if (sourceFieldNum === 1) {
+                  enterAmountMethods.setValue2(bestQuote.cryptoAmount)
+                } else {
+                  enterAmountMethods.setValue1(bestQuote.fiatAmount)
+                }
               }
             }
 
