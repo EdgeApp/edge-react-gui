@@ -191,7 +191,6 @@ export const dummyProvider2: FiatProviderFactory = {
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount,
           cryptoAmount,
-          direction: params.direction,
           expirationDate: new Date(Date.now() + 60000),
           approveQuote: async (params: FiatProviderApproveQuoteParams): Promise<void> => {
             params.showUi.openWebView({ url: 'https://edge.app' })

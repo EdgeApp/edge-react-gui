@@ -167,8 +167,12 @@ export const banxaProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
       apiKeys,
+      direction,
       io: { store }
     } = params
+
+    if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
+
     const { partnerUrl: url, apiKey } = asBanxaApiKeys(apiKeys)
 
     let banxaUsername = await store.getItem('username').catch(e => undefined)
@@ -215,11 +219,9 @@ export const banxaProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, tokenId, direction } = params
+        const { regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, tokenId } = params
         console.log('Start Banxa quote')
         consify(params)
-
-        if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
 
         // Check if the region, payment type, and fiat/crypto codes are supported
         const fiat = fiatCurrencyCode.replace('iso:', '')

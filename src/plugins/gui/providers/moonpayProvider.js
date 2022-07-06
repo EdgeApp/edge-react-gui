@@ -110,8 +110,11 @@ export const moonpayProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
+    const { apiKeys, direction } = params
+    const apiKey: string | null = typeof apiKeys === 'string' ? apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
+    if (direction !== 'buy') throw new Error('Only buy supported by Moonpay')
+
     const out = {
       pluginId,
       partnerIcon,
@@ -225,7 +228,6 @@ export const moonpayProvider: FiatProviderFactory = {
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: moonpayQuote.totalAmount.toString(),
           cryptoAmount: moonpayQuote.quoteCurrencyAmount.toString(),
-          direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { coreWallet, showUi } = approveParams

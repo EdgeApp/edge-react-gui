@@ -16,17 +16,19 @@ import {
   type FiatPluginEnterAmountResponse,
   type FiatPluginListModalParams,
   type FiatPluginRegionCode,
-  type FiatPluginUi
+  type FiatPluginUi,
+  type FiatTxDirection
 } from './fiatPluginTypes'
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
   regionCode: FiatPluginRegionCode,
   paymentType?: FiatPaymentType,
+  direction: FiatTxDirection,
   account: EdgeAccount,
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
 }): Promise<void> => {
-  const { guiPlugin, navigation, account, regionCode, paymentType } = params
+  const { guiPlugin, navigation, account, regionCode, paymentType, direction } = params
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
@@ -71,7 +73,7 @@ export const executePlugin = async (params: {
     throw new Error('executePlugin: missing nativePlugin')
   }
 
-  const plugin = await guiPlugin.nativePlugin({ showUi, account })
+  const plugin = await guiPlugin.nativePlugin({ showUi, account, direction })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }

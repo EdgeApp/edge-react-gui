@@ -174,8 +174,11 @@ export const simplexProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
       apiKeys,
+      direction,
       io: { store }
     } = params
+    if (direction !== 'buy') throw new Error('Only buy supported by Simplex')
+
     let simplexUserId = await store.getItem('simplex_user_id').catch(e => undefined)
     if (simplexUserId == null || simplexUserId === '') {
       simplexUserId = makeUuid()
@@ -290,7 +293,6 @@ export const simplexProvider: FiatProviderFactory = {
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: goodQuote.fiat_money.amount.toString(),
           cryptoAmount: goodQuote.digital_money.amount.toString(),
-          direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams

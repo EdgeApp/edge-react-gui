@@ -5,7 +5,9 @@ import { type EdgeAccount } from 'edge-core-js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { type EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
+export const asFiatTxDirection = asValue('buy', 'sell')
 export const asFiatPaymentTypes = asValue('credit', 'applepay')
+export type FiatTxDirection = 'buy' | 'sell'
 export type FiatPaymentType = 'credit' | 'applepay'
 export type FiatPaymentTypes = FiatPaymentType[]
 
@@ -55,6 +57,7 @@ export type FiatPluginFactoryArgs = {
   //   log: EdgeLog, // scoped logs
   // }
   showUi: FiatPluginUi,
+  direction: FiatTxDirection,
   account: EdgeAccount
 }
 

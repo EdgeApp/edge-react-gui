@@ -33,7 +33,7 @@ const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
-  const { showUi, account } = params
+  const { showUi, account, direction } = params
 
   const assetPromises = []
   const providerPromises = []
@@ -47,7 +47,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
     }
     const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
+    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys, direction }))
   }
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {
@@ -140,7 +140,6 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               exchangeAmount: value,
               fiatCurrencyCode: coreWallet.fiatCurrencyCode,
               amountType: 'fiat',
-              direction: 'buy',
               paymentTypes,
               regionCode
             }
@@ -152,7 +151,6 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               exchangeAmount: value,
               fiatCurrencyCode: coreWallet.fiatCurrencyCode,
               amountType: 'crypto',
-              direction: 'buy',
               paymentTypes,
               regionCode
             }
@@ -170,7 +168,6 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           if (myCounter !== counter) return
 
           for (const quote of quotes) {
-            if (quote.direction !== 'buy') continue
             if (pluginPriority[pluginId] != null && pluginPriority[pluginId][quote.pluginId] <= 0) continue
             goodQuotes.push(quote)
           }
