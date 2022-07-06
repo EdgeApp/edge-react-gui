@@ -11,7 +11,9 @@ export type FiatPaymentTypes = FiatPaymentType[]
 
 export type FiatPluginGetMethodsResponse = {
   setStatusText: (params: { statusText: string, options?: { textType?: 'warning' | 'error' } }) => void,
-  setPoweredBy: (params: EnterAmountPoweredBy) => void
+  setPoweredBy: (params: EnterAmountPoweredBy) => void,
+  setValue1: (value: string) => void,
+  setValue2: (value: string) => void
 }
 export type FiatPluginEnterAmountParams = {
   headerTitle: string,
