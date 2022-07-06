@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
@@ -102,6 +102,14 @@ export function getCreateWalletType(account: EdgeAccount, currencyCode: string):
 export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): string | void => {
   const { allTokens } = account.currencyConfig[pluginId]
   return Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+}
+
+/**
+ * Get the currencyCode associated with a tokenId
+ */
+export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: string): string => {
+  const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
+  return currencyCode
 }
 
 /**
