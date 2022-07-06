@@ -19,7 +19,7 @@ import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
-import { useWatchContext } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
@@ -63,7 +63,7 @@ export function ControlPanel(props: Props) {
   /// ---- Local State ----
 
   // Maintain the list of usernames:
-  const localUsers = useWatchContext(context, 'localUsers')
+  const localUsers = useWatch(context, 'localUsers')
   const usernames = useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
 
   // User List dropdown/open state:

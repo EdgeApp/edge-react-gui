@@ -9,7 +9,7 @@ import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletA
 import { useHandler } from '../../hooks/useHandler.js'
 import { useRowLayout } from '../../hooks/useRowLayout.js'
 import { useWalletName } from '../../hooks/useWalletName.js'
-import { useWatchCurrencyConfig, useWatchWallet } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
@@ -49,11 +49,11 @@ export function ManageTokensScene(props: Props) {
 
   // Subscribe to the account's token lists:
   const { currencyConfig } = wallet
-  const allTokens = useWatchCurrencyConfig(currencyConfig, 'allTokens')
-  const customTokens = useWatchCurrencyConfig(currencyConfig, 'customTokens')
+  const allTokens = useWatch(currencyConfig, 'allTokens')
+  const customTokens = useWatch(currencyConfig, 'customTokens')
 
   // Subscribe to the wallet's enabled tokens:
-  const enabledTokenIds = useWatchWallet(wallet, 'enabledTokenIds')
+  const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
 
   // Optimize the enabled tokens:
   const enabledTokenSet = useMemo(() => new Set(enabledTokenIds), [enabledTokenIds])
