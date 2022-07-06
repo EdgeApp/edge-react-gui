@@ -17,32 +17,52 @@ import { ThemedModal } from '../themed/ThemedModal.js'
 
 type Props = {|
   bridge: AirshipBridge<boolean>,
+  children?: React.Node,
+
   body?: string,
   isSkippable?: boolean,
-  title?: string
+  title?: string,
+
+  // Add a border:
+  warning?: boolean,
+
+  // The modal will show a spinner as long as this promise is pending.
+  // Returning true will dismiss the modal,
+  // but returning false will leave the modal up.
+  // Errors go to the drop-down alert.
+  onPress?: () => Promise<boolean>
 |}
 
 export function ConfirmContinueModal(props: Props) {
+  const { bridge, body, children, isSkippable = false, title, warning, onPress } = props
+
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { bridge, body, isSkippable, title } = props
   const [isAgreed, setAgreed] = useState(false)
-  const toggleIsAgreed = () => setAgreed(!isAgreed)
-  const handleClose = () => (isSkippable ? bridge.resolve(false) : undefined)
-  const handleAgreed = () => (isAgreed ? bridge.resolve(true) : undefined)
+  const handleTogggle = () => setAgreed(!isAgreed)
+
+  const handleClose = () => bridge.resolve(false)
+  const handleAgreed = (): Promise<void> | void => {
+    if (!isAgreed) return
+    if (onPress == null) return bridge.resolve(true)
+    onPress().then(result => {
+      if (result) bridge.resolve(true)
+    })
+  }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose}>
+    <ThemedModal bridge={bridge} warning={warning} onCancel={handleClose}>
       {title != null && (
         <View style={styles.headerContainer}>
           <Ionicons name="warning" size={theme.rem(1.75)} color={theme.warningIcon} />
           <ModalTitle>{title}</ModalTitle>
         </View>
       )}
+      {children}
       {body != null ? <ModalMessage>{body}</ModalMessage> : null}
       <ModalMessage>{s.strings.confirm_continue_modal_body}</ModalMessage>
-      <TouchableWithoutFeedback onPress={toggleIsAgreed}>
+      <TouchableWithoutFeedback onPress={handleTogggle}>
         <View style={styles.checkBoxContainer}>
           <EdgeText style={styles.checkboxText}>{s.strings.confirm_continue_modal_button_text}</EdgeText>
           <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>

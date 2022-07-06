@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, Keyboard, Linking, View } from 'react-native'
+import { Image, Keyboard, Linking, Platform, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
@@ -60,6 +60,22 @@ class HelpWebViewModal extends React.Component<Props & { uri: string, title: str
 
 export class HelpModalComponent extends React.Component<Props & ThemeProps> {
   handleClose = () => this.props.bridge.resolve()
+
+  handleEdgeSitePress = (helpSiteMoreInfoText: string) => {
+    if (Platform.OS === 'android') {
+      Linking.canOpenURL(HELP_URIS.site).then(supported => {
+        if (supported) {
+          Linking.openURL(HELP_URIS.site).catch(err => {
+            console.log(err)
+          })
+        } else {
+          console.log("Don't know how to open URI: " + HELP_URIS.site)
+        }
+      })
+    } else {
+      showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)
+    }
+  }
 
   componentDidMount() {
     Keyboard.dismiss()
@@ -124,7 +140,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           paddingRem={optionPaddingRem}
           subTitle={helpSiteMoreInfoText}
           title={sprintf(s.strings.help_visit_site, config.appName)}
-          onPress={() => showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)}
+          onPress={() => this.handleEdgeSitePress(helpSiteMoreInfoText)}
         />
         <View style={styles.footer}>
           <EdgeText style={styles.version}>{versionText}</EdgeText>

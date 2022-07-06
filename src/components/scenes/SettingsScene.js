@@ -26,6 +26,7 @@ import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
+import { DeleteAccountModal } from '../modals/DeleteAccountModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type ThemeProps, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -137,6 +138,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery')
   }
 
+  handleDeleteAccount = (): void => {
+    this.props.isLocked ? this.handleUnlock() : Airship.show(bridge => <DeleteAccountModal bridge={bridge} />)
+  }
+
   handleExchangeSettings = (): void => {
     const { navigation } = this.props
     navigation.navigate('exchangeSettings')
@@ -233,6 +238,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.delete_account_title} onPress={this.handleDeleteAccount} />
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
           <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
