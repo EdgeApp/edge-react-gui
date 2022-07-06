@@ -34,8 +34,7 @@ const contextOptions: EdgeContextOptions = {
     }
   },
 
-  plugins: allPlugins,
-  authServer: ENV.USE_TEST_AUTH_SERVER ? 'https://auth.airbitz.co/api' : 'https://login-test.edge.app/api'
+  plugins: allPlugins
 }
 
 const nativeIo = detectBundler.isReactNative
