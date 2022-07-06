@@ -79,6 +79,15 @@ export const LoanDashboardScene = (props: Props) => {
     )).then(({ walletId }) => {
       if (walletId != null) {
         const wallet = wallets[walletId]
+
+        if (borrowInfos != null) {
+          const existingBorrowInfo = borrowInfos.find(borrowInfo => borrowInfo.borrowEngine.currencyWallet.id === walletId)
+          if (existingBorrowInfo != null) {
+            navigation.navigate('loanDetails', { borrowEngine: existingBorrowInfo.borrowEngine, borrowPlugin: existingBorrowInfo.borrowPlugin })
+            return
+          }
+        }
+
         setIsNewLoanLoading(true)
 
         getAaveBorrowInfo(wallet.currencyInfo.pluginId === hardWalletPluginId ? makeAaveBorrowPlugin() : makeAaveKovanBorrowPlugin(), wallet)
