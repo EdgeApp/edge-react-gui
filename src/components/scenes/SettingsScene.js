@@ -3,7 +3,7 @@
 import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -23,12 +23,13 @@ import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
+import { Collapsable } from '../common/Collapsable.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { DeleteAccountModal } from '../modals/DeleteAccountModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
-import { type ThemeProps, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, changeTheme, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
@@ -72,11 +73,11 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    const theme = getTheme()
+
     const { logSettings } = this.props.context
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID,
-      darkTheme: theme === config.darkTheme,
+      darkTheme: this.props.theme === config.darkTheme,
       defaultLogLevel: logSettings.defaultLogLevel
     }
   }
@@ -212,6 +213,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   render() {
     const { account, theme, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
+    const styles = getStyles(theme)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
@@ -238,7 +240,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.delete_account_title} onPress={this.handleDeleteAccount} />
+
+          <Collapsable minHeightRem={0} maxHeightRem={3.25} isCollapsed={this.props.isLocked}>
+            <SettingsTappableRow disabled={this.props.isLocked} onPress={this.handleDeleteAccount}>
+              <Text style={styles.text}>{s.strings.delete_account_title}</Text>
+            </SettingsTappableRow>
+          </Collapsable>
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
           <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
@@ -292,6 +299,18 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     )
   }
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  text: {
+    flexGrow: 1,
+    flexShrink: 1,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'left',
+    paddingHorizontal: theme.rem(0.5),
+    color: theme.dangerText
+  }
+}))
 
 export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
