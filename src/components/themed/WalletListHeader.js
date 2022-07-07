@@ -1,70 +1,86 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import Animated, { useAnimatedProps, useHandler, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
+import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import s from '../../locales/strings.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
-import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
+import { useEffect, useRef } from '../../types/reactHooks.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
+import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
+import { DynamicOutlinedTextInput } from './OutlinedTextInput.js'
 
-type OwnProps = {
+type Props = {
+  sorting: boolean,
   searching: boolean,
   searchText: string,
+  scrollY: Animated.SharedValue<number>,
+  isScrolling: Animated.SharedValue<boolean>,
   onChangeSearchText: (search: string) => void,
   onChangeSearchingState: (searching: boolean) => void
 }
-type Props = OwnProps & ThemeProps
 
-export class WalletListHeaderComponent extends React.PureComponent<Props> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
+export function WalletListHeaderComponent(props: Props) {
+  const { searchText, searching, sorting, onChangeSearchText, onChangeSearchingState, scrollY, isScrolling } = props
+  const textInput = useRef(null)
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
-      this.textInput.current.focus()
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  useEffect(() => {
+    if (searching === true && textInput.current) {
+      textInput.current.focus()
+    }
+  }, [searching, textInput])
+
+  const handleOnChangeText = (input: string) => onChangeSearchText(input)
+
+  const handleTextFieldFocus = () => {
+    onChangeSearchingState(true)
+  }
+
+  const handleSearchDone = () => {
+    onChangeSearchingState(false)
+    if (textInput.current) {
+      textInput.current.clear()
     }
   }
+  // Constants for header
+  // const HEADER_MAX_HEIGHT = theme.rem(7)
+  // const HEADER_HALF_HEIGHT = theme.rem(2.4)
 
-  handleOnChangeText = (input: string) => this.props.onChangeSearchText(input)
+  // const animatedStyles = useAnimatedStyle(() => {
+  //   return {
+  //     maxHeight: withTiming(searching ? HEADER_MAX_HEIGHT : HEADER_MAX_HEIGHT, { duration: 1000 }),
+  //     opacity: withTiming(searching ? 1 : 1, { duration: 1000 })
+  //   }
+  // })
 
-  handleTextFieldFocus = () => {
-    this.props.onChangeSearchingState(true)
-  }
-
-  handleSearchDone = () => {
-    this.props.onChangeSearchingState(false)
-    if (this.textInput.current) {
-      this.textInput.current.clear()
-    }
-  }
-
-  render() {
-    const { searchText, theme, searching } = this.props
-    const styles = getStyles(theme)
-
-    return (
-      <View style={styles.searchContainer}>
-        <View style={styles.searchTextInput}>
-          <OutlinedTextInput
-            returnKeyType="search"
-            label={s.strings.wallet_list_wallet_search}
-            onChangeText={this.handleOnChangeText}
-            value={searchText}
-            onFocus={this.handleTextFieldFocus}
-            ref={this.textInput}
-            marginRem={[0, 0, 1]}
-            searchIcon
-          />
+  return (
+    <SceneHeader underline>
+      <View>
+        {!sorting && <WiredBalanceBox />}
+        <View style={styles.searchContainer}>
+          <View style={styles.searchTextInput}>
+            <DynamicOutlinedTextInput
+              scrollY={scrollY}
+              isScrolling={isScrolling}
+              returnKeyType="search"
+              label={s.strings.wallet_list_wallet_search}
+              onChangeText={handleOnChangeText}
+              value={searchText}
+              onFocus={handleTextFieldFocus}
+              onSubmitEditing={handleSearchDone}
+              ref={textInput}
+              marginRem={[0, 0, 1]}
+              searchIcon
+            />
+          </View>
         </View>
-        {searching && (
-          <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-            <EdgeText style={styles.searchDoneButtonText}>{s.strings.string_done_cap}</EdgeText>
-          </TouchableOpacity>
-        )}
       </View>
-    )
-  }
+    </SceneHeader>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -104,4 +120,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListHeader = withTheme(WalletListHeaderComponent)
+export const WalletListHeader = WalletListHeaderComponent

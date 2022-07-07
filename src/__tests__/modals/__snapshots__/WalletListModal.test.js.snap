@@ -144,6 +144,7 @@ Array [
             "paddingRight": 65,
             "paddingVertical": 0,
           },
+          [MockFunction],
         ]
       }
     >
@@ -231,6 +232,7 @@ Array [
               "paddingLeft": 65,
               "paddingRight": 65,
             },
+            [MockFunction],
           ]
         }
       >
@@ -286,33 +288,43 @@ Array [
       >
         
       </Text>
-      <Text
-        allowFontScaling={false}
+      <View
         style={
           Array [
             Object {
-              "color": undefined,
-              "fontSize": 12,
-            },
-            Object {
-              "color": "rgba(255, 255, 255, .75)",
-              "fontSize": 22,
               "left": 0,
               "padding": 22,
               "position": "absolute",
               "top": 0,
             },
-            Object {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            Object {},
+            [MockFunction],
           ]
         }
       >
-        
-      </Text>
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": undefined,
+                "fontSize": 12,
+              },
+              Object {
+                "color": "rgba(255, 255, 255, .75)",
+                "fontSize": 22,
+              },
+              Object {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
       <TextInput
         autoFocus={false}
         multiline={false}

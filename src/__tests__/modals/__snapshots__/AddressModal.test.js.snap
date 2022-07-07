@@ -35,7 +35,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       }
     }
   >
-    <ForwardRef
+    <OutlinedTextInput
       autoCapitalize="none"
       autoCorrect={false}
       label="Address"

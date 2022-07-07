@@ -1,8 +1,16 @@
 // @flow
 
 import * as React from 'react'
-import { Animated, FlatList, FlatListProps, RefreshControl } from 'react-native'
-import { ILayoutAnimationBuilder, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { FlatList, FlatListProps, RefreshControl } from 'react-native'
+import { PanGestureHandler } from 'react-native-gesture-handler'
+import Animated, {
+  ILayoutAnimationBuilder,
+  interpolate,
+  useAnimatedGestureHandler,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue
+} from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler.js'
 import { useRowLayout } from '../../hooks/useRowLayout.js'
@@ -24,12 +32,12 @@ type Props = {|
   showSlidingTutorial?: boolean,
 
   // Animation
-  scrollY?: { current: Animated.Value<number> | void },
-  translateYNumber?: { current: number | void },
-  headerMaxHeight?: number,
+  scrollY?: Animated.SharedValue<number>,
+  isScrolling?: Animated.SharedValue<boolean>,
+  headerMaxHeight?: number
 
   // Callbacks:
-  onRefresh?: () => void
+  // onRefresh?: () => void
 |}
 
 /**
@@ -46,28 +54,23 @@ export const WalletListSwipeable = (props: Props) => {
 
     // Animation
     scrollY,
-    translateYNumber,
-    headerMaxHeight,
-
-    // Callbacks:
-    onRefresh
+    isScrolling,
+    headerMaxHeight
   } = props
 
   // Subscriptions:
-  const theme = useTheme()
   const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   // Filter based on the search text:
   const searchedWalletList = useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
-
   // Render the refresh control:
-  const refreshControl = useMemo(() => {
-    if (onRefresh == null) return null
-    return <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
-  }, [theme, onRefresh])
+  // const refreshControl = useMemo(() => {
+  //   if (onRefresh == null) return null
+  //   return <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
+  // }, [theme, onRefresh])
 
   // Renders a single row:
-  const renderRow = useHandler((item: FlatListItem<WalletListItem>) => {
+  const renderRow = useHandler((item: FlatListItem<WalletListItem> | FlatListItem<any>) => {
     const { token, tokenId, wallet, walletId } = item.item
 
     if (wallet != null) {
@@ -102,69 +105,35 @@ export const WalletListSwipeable = (props: Props) => {
   //   }
   // })
 
-  // const handleSnap = useAnimatedScrollHandler({
-  //   onScroll: event => {
-  //     scrollY.value = event.contentOffset.y
-  //   },
-  //   onEndDrag: e => {
-  //     const offsetY = e.contentOffset.y
-  //     if (headerMaxHeight != null && !(translateYNumber.value === 0 || translateYNumber.value === -headerMaxHeight / 2)) {
-  //       if (ref.current) {
-  //         console.log('hello')
-  //         ref.current.getNode().scrollToOffset({
-  //           offset:
-  //             getCloserSnappingZone(translateYNumber.value, -headerMaxHeight / 2, 0) === -headerMaxHeight / 2
-  //               ? offsetY + headerMaxHeight / 2
-  //               : offsetY - headerMaxHeight / 2,
-  //           animated: false
-  //         })
-  //       }
-  //     }
-  //   }
-  // })
-  const ref = useRef(null)
-  const handleSnap = ({ nativeEvent }) => {
-    const offsetY = nativeEvent.contentOffset.y
-    if (headerMaxHeight != null && translateYNumber && !(translateYNumber.current === 0 || translateYNumber.current === -headerMaxHeight / 2)) {
-      if (translateYNumber && translateYNumber.current && ref.current) {
-        ref.current.scrollToOffset({
-          offset:
-            getCloser(translateYNumber.current, -headerMaxHeight / 2, 0) === -headerMaxHeight / 2
-              ? offsetY + headerMaxHeight / 2
-              : offsetY - headerMaxHeight / 2
-        })
+  const handleScroll = useAnimatedScrollHandler({
+    onScroll: event => {
+      if (scrollY != null) {
+        scrollY.value = event.contentOffset.y
       }
+      if (isScrolling != null) {
+        isScrolling.value = true
+      }
+    }
+  })
+
+  const handleScrollEndDrag = e => {
+    if (isScrolling != null) {
+      isScrolling.value = false
     }
   }
 
-  const handleScroll = Animated.event(
-    [
-      {
-        nativeEvent: {
-          contentOffset: { y: scrollY == null ? 0 : scrollY.current }
-        }
-      }
-    ],
-    {
-      useNativeDriver: true
-    }
-  )
-  const paddingTop = theme.rem(10.5)
-  const getCloser = (value, checkOne, checkTwo) => (value !== undefined && Math.abs(value - checkOne) < Math.abs(value - checkTwo) ? checkOne : checkTwo)
   return (
     <Animated.FlatList
+      /// style={animatedStyles}
       stickyHeaderIndices={searching ? [] : [0]}
-      scrollEventThrottle={16}
-      //  style={animatedStyles}
-      ref={ref}
       onScroll={handleScroll}
-      onMomentumScrollEnd={handleSnap}
       data={searchedWalletList}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
+      scrollEventThrottle={16}
       ListHeaderComponent={header}
-      refreshControl={refreshControl}
-      contentContainerStyle={{ paddingTop: paddingTop }}
+      //  refreshControl={refreshControl}
+      onScrollEndDrag={handleScrollEndDrag}
       renderItem={renderRow}
       getItemLayout={handleItemLayout}
     />

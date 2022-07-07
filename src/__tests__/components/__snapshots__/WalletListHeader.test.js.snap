@@ -1,58 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListHeader should render with loading props 1`] = `
-<View
-  style={
-    Object {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "marginRight": 22,
-      "marginTop": 11,
-    }
-  }
+<Memo(SceneHeaderComponent)
+  underline={true}
 >
-  <View
-    style={
-      Object {
-        "flex": 1,
-      }
-    }
-  >
-    <ForwardRef
-      label="Search Wallets"
-      marginRem={
-        Array [
-          0,
-          0,
-          1,
-        ]
-      }
-      onChangeText={[Function]}
-      onFocus={[Function]}
-      returnKeyType="search"
-      searchIcon={true}
-      value="string"
-    />
-  </View>
-  <TouchableOpacity
-    onPress={[Function]}
-    style={
-      Object {
-        "justifyContent": "center",
-        "paddingBottom": 22,
-        "paddingLeft": 17,
-      }
-    }
-  >
-    <WithTheme(EdgeTextComponent)
+  <View>
+    <View
       style={
         Object {
-          "color": "#66EDA8",
+          "alignItems": "center",
+          "flexDirection": "row",
+          "marginRight": 22,
+          "marginTop": 11,
         }
       }
     >
-      Done
-    </WithTheme(EdgeTextComponent)>
-  </TouchableOpacity>
-</View>
+      <View
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      >
+        <DynamicOutlinedTextInput
+          label="Search Wallets"
+          marginRem={
+            Array [
+              0,
+              0,
+              1,
+            ]
+          }
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="search"
+          searchIcon={true}
+          value="string"
+        />
+      </View>
+    </View>
+  </View>
+</Memo(SceneHeaderComponent)>
 `;

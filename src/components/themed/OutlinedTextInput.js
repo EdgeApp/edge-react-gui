@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import Animated, { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -21,6 +21,9 @@ type Props = {|
   marginRem?: number | number[], // Defaults to 0.5
   multiline?: boolean, // Defaults to 'false'
   searchIcon?: boolean, // Defaults to 'false'
+  scrollY?: Animated.SharedValue<number>,
+  isScrolling?: Animated.SharedValue<boolean>,
+  styles?: any,
 
   // Callbacks:
   onBlur?: () => void,
@@ -59,7 +62,7 @@ declare export class OutlinedTextInputRef extends React.Component<Props> {
   clear: () => void;
 }
 
-export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
+export const OutlinedTextInputComponent: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
   const {
     // Contents:
     error,
@@ -71,6 +74,9 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
     marginRem,
     multiline = false,
     searchIcon = false,
+    scrollY = null,
+    isScrolling = null,
+    styles = {},
 
     // Callbacks:
     onBlur,
@@ -86,7 +92,6 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
     ...inputProps
   } = props
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   const hasError = error != null
   const hasLabel = label != null
@@ -143,6 +148,10 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const handleBlur = () => {
     focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
     focusAnimationAlt.value = withTiming(0, { duration: baseDuration })
+    if (scrollY !== null) {
+      console.log('sdf')
+      scrollY.value = withDelay(animationDelay, withTiming(scrollY.value + CONTAINER_BASE_HEIGHT, { duration: baseDuration }))
+    }
     if (onBlur != null) onBlur()
   }
   const handleFocus = () => {
@@ -181,7 +190,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   }
   const containerStyle = {
     ...containerPadding,
-    ...sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem)),
+    ...sidesToMargin(scrollY === null ? mapSides(fixSides(marginRem, 0.5), theme.rem) : [0, 0, 0, 0]),
     flexGrow: multiline ? 1 : 0,
     paddingVertical: multiline
       ? // Tweaked to align the first input line with the label text:
@@ -193,6 +202,28 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const textInputStyle = {
     flexGrow: multiline ? 1 : 0
   }
+
+  // Height controls:
+  const CONTAINER_BASE_HEIGHT = theme.rem(3)
+  const MIN_HEIGHT_TO_SHOW_CONTAINER = theme.rem(1) // To prevent top and bottom borders from crossing visually
+  const dynamicHeight = useSharedValue(scrollY === null ? CONTAINER_BASE_HEIGHT : 0) // use -1 as a flag to indicate that this is the first render
+
+  // The styling only applies when the component is collapsible
+  const containerHeightStyle = useAnimatedStyle(() => {
+    if (scrollY === null || isScrolling === null) return {}
+
+    if (isScrolling && isScrolling.value) {
+      dynamicHeight.value = interpolate(scrollY.value, [CONTAINER_BASE_HEIGHT - scrollY.value, 0], [0, CONTAINER_BASE_HEIGHT], Extrapolate.CLAMP)
+      console.log(dynamicHeight.value)
+    } else {
+      dynamicHeight.value = dynamicHeight.value > CONTAINER_BASE_HEIGHT / 2 ? CONTAINER_BASE_HEIGHT : 0
+    }
+
+    return {
+      height: withTiming(dynamicHeight.value, { duration: isScrolling.value ? 0 : baseDuration / 2 }),
+      opacity: withTiming(dynamicHeight.value <= MIN_HEIGHT_TO_SHOW_CONTAINER ? 0 : 1, { duration: 100 })
+    }
+  })
 
   // Animated styles:
   const getBorderColor = useMemo(
@@ -222,9 +253,13 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
       left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
     }
   })
+
+  const bufferingHeight = theme.rem(0.1)
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
+
     return {
+      opacity: withTiming(dynamicHeight.value >= CONTAINER_BASE_HEIGHT - bufferingHeight ? 1 : 0, { duration: baseDuration / 2 }),
       color: getLabelColor(errorAnimation.value, focusAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
@@ -233,6 +268,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
       ]
     }
   })
+
   const counterStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
@@ -258,23 +294,27 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
 
   return (
     <TouchableWithoutFeedback onPress={() => focus()}>
-      <View style={[styles.container, containerStyle]}>
+      <Animated.View style={[styles.container, containerStyle, containerHeightStyle]}>
         <Animated.View style={[styles.bottomLine, bottomStyle]} />
         <Animated.View style={[styles.leftCap, leftStyle]} />
         <Animated.View style={[styles.rightCap, rightStyle]} />
         <Animated.View style={[styles.topLine, topStyle]} />
-        <View style={[styles.labelContainer, containerPadding]}>
+        <Animated.View style={[styles.labelContainer, containerPadding, containerHeightStyle]}>
           <Animated.Text numberOfLines={1} style={[styles.labelText, labelStyle]} onLayout={handleLabelLayout}>
             {label}
           </Animated.Text>
-        </View>
+        </Animated.View>
         <Animated.Text numberOfLines={1} style={[styles.errorText, errorStyle]}>
           {error}
         </Animated.Text>
         <Animated.Text numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout}>
           {charLimitLabel}
         </Animated.Text>
-        {searchIcon ? <AntDesignIcon name="search1" style={styles.searchIcon} /> : null}
+
+        <Animated.View style={[styles.searchIconContainer, containerHeightStyle]}>
+          {props.searchIcon ? <AntDesignIcon name="search1" style={styles.searchIcon} /> : null}
+        </Animated.View>
+
         {clearIcon && hasValue && !secureTextEntry ? (
           <TouchableOpacity style={styles.clearTapArea} onPress={() => clear()}>
             <AntDesignIcon name="close" style={styles.clearIcon} />
@@ -288,6 +328,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
             </View>
           </TouchableWithoutFeedback>
         ) : null}
+
         <TextInput
           ref={inputRef}
           {...inputProps}
@@ -304,12 +345,21 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
           onFocus={handleFocus}
           maxLength={maxLength}
         />
-      </View>
+      </Animated.View>
     </TouchableWithoutFeedback>
   )
 })
 
-const getStyles = cacheStyles(theme => {
+const CommonOutlinedTextInput = (getStyles, props: Props, ref) => {
+  const theme = useTheme()
+  return <OutlinedTextInputComponent ref={ref} {...props} styles={getStyles(theme)} />
+}
+
+export const OutlinedTextInput = forwardRef((props: Props, ref) => CommonOutlinedTextInput(getNormalStyles, props, ref))
+
+export const DynamicOutlinedTextInput = forwardRef((props: Props, ref) => CommonOutlinedTextInput(getDynamicStyles, props, ref))
+
+const getNormalStyles = cacheStyles(theme => {
   // A top or bottom line in the border puzzle:
   const commonLine = {
     borderTopWidth: theme.outlineTextInputBorderWidth,
@@ -397,15 +447,164 @@ const getStyles = cacheStyles(theme => {
       borderTopRightRadius: theme.rem(0.5),
       right: 0
     },
-
-    // Icons:
-    searchIcon: {
-      color: theme.iconDeactivated,
-      fontSize: theme.rem(1),
+    searchIconContainer: {
       padding: theme.rem(1),
       position: 'absolute',
       left: 0,
       top: 0
+    },
+
+    // Icons:
+    searchIcon: {
+      color: theme.iconDeactivated,
+      fontSize: theme.rem(1)
+    },
+    clearTapArea: {
+      position: 'absolute',
+      right: 0,
+      top: 0
+    },
+    clearIcon: {
+      color: theme.iconDeactivated,
+      fontSize: theme.rem(1),
+      padding: theme.rem(1)
+    },
+    eyeIcon: {
+      zIndex: 0,
+      color: theme.iconTappable,
+      fontSize: theme.rem(1),
+      padding: theme.rem(1)
+    },
+    eyeIconHideLine: {
+      borderTopWidth: theme.thinLineWidth,
+      borderTopColor: theme.modal,
+      borderBottomColor: theme.modal,
+      borderBottomWidth: theme.thinLineWidth,
+      top: theme.rem(1.5) - theme.thinLineWidth,
+      position: 'absolute',
+      alignSelf: 'center',
+      zIndex: 2,
+      width: '40%',
+      height: theme.thinLineWidth * 3
+    },
+
+    // The error text hangs out in the margin area below the main box:
+    errorText: {
+      ...footerCommon,
+      color: theme.dangerText,
+      left: theme.rem(1.25),
+      bottom: -theme.rem(1.25)
+    },
+
+    // The counter text splits the bottom right border line:
+    counterText: {
+      ...footerCommon,
+      right: theme.rem(1.25),
+      bottom: -theme.rem(0.45)
+    }
+  }
+})
+
+const getDynamicStyles = cacheStyles(theme => {
+  // A top or bottom line in the border puzzle:
+  const commonLine = {
+    borderTopWidth: theme.outlineTextInputBorderWidth,
+    position: 'absolute',
+    left: theme.rem(1),
+    right: theme.rem(1)
+  }
+
+  // A left or right C-shape in the border puzzle:
+  const commonCap = {
+    borderBottomWidth: theme.outlineTextInputBorderWidth,
+    borderTopWidth: theme.outlineTextInputBorderWidth,
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    width: theme.rem(1)
+  }
+
+  // Common footer attributes, applies to the counter and the error text
+  const footerCommon = {
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.75),
+    position: 'absolute'
+  }
+
+  return {
+    // Provides a layout container for the text input:
+    container: {
+      backgroundColor: theme.outlineTextInputColor,
+      borderRadius: theme.rem(0.5),
+      justifyContent: 'center',
+      // minHeight: theme.rem(3),
+      paddingHorizontal: theme.rem(1)
+    },
+
+    // Provides a layout container for the placeholder label:
+    labelContainer: {
+      // height: theme.rem(3),
+      justifyContent: 'center',
+      paddingHorizontal: theme.rem(1),
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0
+    },
+
+    // The text input and placeholder label both float
+    // in their respective containers, allowing React to center them:
+    labelText: {
+      alignSelf: 'flex-start',
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
+      padding: 0
+    },
+    textInput: {
+      alignSelf: 'stretch',
+      color: theme.outlineTextInputTextColor,
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
+      padding: 0
+    },
+
+    // We render our border in four pieces, so we can animate the top gap:
+    bottomLine: {
+      ...commonLine,
+      bottom: 0
+    },
+    topLine: {
+      ...commonLine,
+      top: 0
+    },
+    leftCap: {
+      ...commonCap,
+      borderLeftWidth: theme.outlineTextInputBorderWidth,
+      borderRightWidth: 0,
+      borderBottomLeftRadius: theme.rem(0.5),
+      borderTopLeftRadius: theme.rem(0.5),
+      left: 0
+    },
+    rightCap: {
+      ...commonCap,
+      borderLeftWidth: 0,
+      borderRightWidth: theme.outlineTextInputBorderWidth,
+      borderBottomRightRadius: theme.rem(0.5),
+      borderTopRightRadius: theme.rem(0.5),
+      right: 0
+    },
+
+    searchIconContainer: {
+      padding: theme.rem(1),
+      position: 'absolute',
+      left: 0,
+      top: 0
+    },
+
+    // Icons:
+    searchIcon: {
+      color: theme.iconDeactivated,
+      fontSize: theme.rem(1)
     },
     clearTapArea: {
       position: 'absolute',
