@@ -5,7 +5,7 @@ import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-rea
 
 import { useTheme } from '../services/ThemeContext'
 
-const TIME_SCALE = 750
+const TIME_SCALE = 500
 
 type Props = {
   minHeightRem: number,
@@ -23,7 +23,7 @@ export function Collapsable(props: Props) {
   const maxHeight = theme.rem(maxHeightRem)
 
   const heightAnimation = useAnimatedStyle(() => ({
-    height: withTiming(isCollapsed ? minHeight : maxHeight, { duration, easing: Easing.out(Easing.exp) })
+    height: withTiming(isCollapsed ? minHeight : maxHeight, { duration, easing: Easing.out(Easing.poly(5)) })
   }))
 
   return <Animated.View style={heightAnimation}>{children}</Animated.View>
