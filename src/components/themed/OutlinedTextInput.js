@@ -350,14 +350,15 @@ export const OutlinedTextInputComponent: Class<OutlinedTextInputRef> = forwardRe
   )
 })
 
-const CommonOutlinedTextInput = (getStyles, props: Props, ref) => {
+export const OutlinedTextInput = forwardRef((props: Props, ref) => {
   const theme = useTheme()
-  return <OutlinedTextInputComponent ref={ref} {...props} styles={getStyles(theme)} />
-}
+  return <OutlinedTextInputComponent ref={ref} {...props} styles={getNormalStyles(theme)} />
+})
 
-export const OutlinedTextInput = forwardRef((props: Props, ref) => CommonOutlinedTextInput(getNormalStyles, props, ref))
-
-export const DynamicOutlinedTextInput = forwardRef((props: Props, ref) => CommonOutlinedTextInput(getDynamicStyles, props, ref))
+export const DynamicOutlinedTextInput = forwardRef((props: Props, ref) => {
+  const theme = useTheme()
+  return <OutlinedTextInputComponent ref={ref} {...props} styles={getDynamicStyles(theme)} />
+})
 
 const getNormalStyles = cacheStyles(theme => {
   // A top or bottom line in the border puzzle:
