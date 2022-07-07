@@ -28,7 +28,7 @@
     "android:release-clean-install": "npm run android:clean && npm run android:release && adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "android:release-install": "npm run android:release && adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "cover": "jest --config jest.config.js --coverage",
-    "fix": "npm run lint -- --fix",
+    "fix": "npm run lint -- --fix && yarn-deduplicate",
     "flow": "flow",
     "flow-coverage": "flow-coverage-report",
     "flow:0": "flow; exit 0",
@@ -201,7 +201,8 @@
     "updot": "^1.1.7",
     "webpack": "^4.46.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0"
+    "webpack-dev-server": "^4.6.0",
+    "yarn-deduplicate": "^5.0.0"
   },
   "flow-coverage-report": {
     "includeGlob": [
