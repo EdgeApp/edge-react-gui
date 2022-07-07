@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
-import { useWatchAccount } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
@@ -98,7 +98,7 @@ export function WalletListMenuModal(props: Props) {
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const wallet = useWatchAccount(account, 'currencyWallets')[walletId]
+  const wallet = useWatch(account, 'currencyWallets')[walletId]
 
   const theme = useTheme()
   const styles = getStyles(theme)
