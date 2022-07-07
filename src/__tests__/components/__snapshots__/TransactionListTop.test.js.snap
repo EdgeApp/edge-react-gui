@@ -101,7 +101,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   size={34}
                 />
               </Wrap(TouchableOpacity)>
-              <Memo(CurrencyIconComponent)
+              <Memo(CryptoIconComponent)
                 currencyCode="string"
                 sizeRem={1.5}
               />
@@ -158,8 +158,8 @@ exports[`TransactionListTop should render with loading props 1`] = `
           <Icon
             allowFontScaling={false}
             color="#66EDA8"
-            name="arrowdown"
-            size={28}
+            name="arrow-down"
+            size={34}
           />
           <WithTheme(EdgeTextComponent)
             style={
@@ -174,13 +174,6 @@ exports[`TransactionListTop should render with loading props 1`] = `
             Request
           </WithTheme(EdgeTextComponent)>
         </Wrap(TouchableOpacity)>
-        <View
-          style={
-            Object {
-              "width": 45,
-            }
-          }
-        />
         <Wrap(TouchableOpacity)
           onPress={[Function]}
           style={
@@ -196,8 +189,8 @@ exports[`TransactionListTop should render with loading props 1`] = `
           <Icon
             allowFontScaling={false}
             color="#66EDA8"
-            name="arrowup"
-            size={28}
+            name="arrow-up"
+            size={34}
           />
           <WithTheme(EdgeTextComponent)
             style={

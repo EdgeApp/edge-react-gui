@@ -46,4 +46,4 @@ export const SettingsLabelRowComponent = (props: Props): React.Node => {
   )
 }
 
-export const SettingsLabelRow = memo(SettingsLabelRowComponent)
+export const SettingsLabelRow = wrap(memo(SettingsLabelRowComponent))

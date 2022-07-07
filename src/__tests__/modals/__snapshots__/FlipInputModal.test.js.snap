@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FlipInputModalComponent should render with loading props 1`] = `
-<ThemedModal
+<ForwardRef
   bridge={
     Object {
       "on": [Function],
@@ -255,5 +255,5 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
       </View>
     </TouchableWithoutFeedback>
   </View>
-</ThemedModal>
+</ForwardRef>
 `;
