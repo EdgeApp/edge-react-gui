@@ -1,5 +1,6 @@
 // @flow
 
+import { useCavy } from 'cavy'
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -67,6 +68,8 @@ export function WalletListModal(props: Props) {
     excludeCurrencyCodes
   } = props
 
+  const generateTestHook = useCavy()
+
   const account = useSelector(state => state.core.account)
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
@@ -126,7 +129,7 @@ export function WalletListModal(props: Props) {
         showCreateWallet={showCreateWallet}
         onPress={handlePress}
       />
-      <ModalCloseArrow onPress={handleCancel} />
+      <ModalCloseArrow onPress={handleCancel} ref={generateTestHook('WalletListModal.Close')} />
     </ThemedModal>
   )
 }

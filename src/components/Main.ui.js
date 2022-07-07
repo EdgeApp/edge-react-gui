@@ -201,7 +201,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={<SideMenuButton testId="WalletList.SideMenuButton" />}
               />
 
               <Scene

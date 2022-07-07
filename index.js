@@ -1,5 +1,6 @@
 // @flow
 
+import './reactPatch.js'
 import 'react-native-gesture-handler'
 import './src/app.js'
 
