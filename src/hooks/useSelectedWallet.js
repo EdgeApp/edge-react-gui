@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { useWatchAccount } from '../hooks/useWatch.js'
+import { useWatch } from '../hooks/useWatch.js'
 import { useSelector } from '../types/reactRedux.js'
 import { getTokenId } from '../util/CurrencyInfoHelpers.js'
 
@@ -18,7 +18,7 @@ export function useSelectedWallet(): SelectedWallet | void {
 
   // Grab the wallet from the account:
   const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatchAccount(account, 'currencyWallets')
+  const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = currencyWallets[walletId]
   if (wallet == null) return
 
