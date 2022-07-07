@@ -98,6 +98,9 @@ const strings = {
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
+  request_dot_minimum_notification_body:
+    'Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.',
+  request_dot_minimum_notification_alert_body: 'This wallet will always require a 1 DOT minimum',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
@@ -163,6 +166,7 @@ const strings = {
   create_wallet_import_input_key_prompt: 'Private Key',
   create_wallet_import_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated wallet',
   create_wallet_import_input_key_or_seed_prompt: 'Private Key or Private Seed',
+  create_wallet_import_polkadot_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated ed25519 wallet',
   create_wallet_import_active_key_input_prompt: 'Active Private Key',
   create_wallet_import_active_key_instructions: 'Enter your active private key to verify and restore the associated wallet:',
   create_wallet_import_successful: 'Import Successful!',
@@ -388,6 +392,7 @@ const strings = {
   string_first_doge_wallet_name: 'My Doge',
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',
+  string_first_polkadot_wallet_name: 'My Polkadot',
   string_first_polygon_wallet_name: 'My Polygon',
   string_first_avalanche_wallet_name: 'My Avalanche',
   my_crypto_wallet_name: 'My %s',

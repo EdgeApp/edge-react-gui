@@ -39,11 +39,14 @@ module.exports = {
               loader: 'babel-loader',
               options: {
                 babelrc: false,
-                presets: ['@babel/preset-env'],
-                plugins: [
-                  ['@babel/plugin-transform-for-of', { assumeArray: true }],
-                  // Work around metro-react-native-babel-preset issue:
-                  ['@babel/plugin-proposal-class-properties', { loose: false }]
+                configFile: false,
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      targets: { chrome: '67' }
+                    }
+                  ]
                 ],
                 cacheDirectory: true
               }
