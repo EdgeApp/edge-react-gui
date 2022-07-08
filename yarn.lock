@@ -15167,7 +15167,7 @@ yaml@^1.10.0:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaob@^0.3.6, yaob@^0.3.7, yaob@^0.3.8:
+yaob@^0.3.6, yaob@^0.3.8:
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.8.tgz#a359fd092dbf42d07f82eb2fb0b00bdb87f1c4cc"
   integrity sha512-6ocTmk7fVAB7TOc8ot7sdt5o+UK3d8qtDtd61IBIVe++V1xGmhP3Y8FYOCrzmo6ywzGJPaDS66orZIwnw5NwEw==
