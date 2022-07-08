@@ -82,11 +82,11 @@ export function ControlPanel(props: Props) {
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.delete_account_header}
-        message={sprintf(s.strings.delete_username_account, username)}
+        title={s.strings.forget_account_title}
+        message={sprintf(s.strings.forget_account_message_common, username)}
         buttons={{
           ok: {
-            label: s.strings.string_delete,
+            label: s.strings.string_forget,
             async onPress() {
               await dispatch(deleteLocalAccount(username))
               return true

@@ -558,8 +558,6 @@
   "ss_geolock": "Accès limité. Impossible de completer d'échange. ",
   "ss_unable": "Impossible d'effectuer l'échange %1$s to %2$s.",
   "account": "Compte",
-  "delete_account_header": "Supprimer le compte",
-  "delete_username_account": "Supprimer '%1$s' sur cet appareil ? Cela désactivera l’accès par le code PIN. Si le multi facteur d'authentification est activé sur ce compte, cet appareil ne pourra se connecter sans une réinitialisation du multi facteur d'authentificaion qui dure 7 jours.",
   "no": "Non",
   "yes": "Oui",
   "swap_terms_accept_button": "Accept",

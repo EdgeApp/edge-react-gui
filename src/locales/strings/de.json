@@ -558,8 +558,6 @@
   "ss_geolock": "Länderbeschränkung. Wechsel kann nicht abgeschlossen werden.",
   "ss_unable": "Keine aktivierte Börse unterstützt einen Wechsel von %1$s zu %2$s.",
   "account": "Benutzerkonto",
-  "delete_account_header": "Benutzerkonto löschen",
-  "delete_username_account": "%1$s auf diesem Gerät löschen? Dies deaktiviert den Zugriff über PIN. Wenn 2FA auf diesem Konto aktiviert ist, wird dieses Gerät nicht in der Lage sein, sich ohne einen 2FA-Reset einzuloggen, der 7 Tage in Anspruch nimmt.",
   "no": "Nein",
   "yes": "Ja",
   "swap_terms_accept_button": "Akzeptieren",

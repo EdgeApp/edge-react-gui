@@ -558,8 +558,6 @@
   "ss_geolock": "Ubicación restringida. Imposible completar el cambio.",
   "ss_unable": "No hay casas de cambio activas que soporten %1$s a %2$s.",
   "account": "Cuenta",
-  "delete_account_header": "Borrar cuenta",
-  "delete_username_account": "Borrar %1$s en este dispositivo? Esto desactivará el acceso a través de PIN. Si la autenticación de doble factor está activada en esta cuenta, el dispositivo no podrá acceder sin un reseteo de la autenticación de doble factor, que lleva 7 días.",
   "no": "No",
   "yes": "Sí",
   "swap_terms_accept_button": "Aceptar",

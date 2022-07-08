@@ -558,8 +558,6 @@
   "ss_geolock": "Vị trí bị giới hạn. Không thể hoàn tất trao đổi.",
   "ss_unable": "Không có trao đổi được kích hoạt hỗ trợ% 1 $ s đến% 2 $ s.",
   "account": "Tài Khoản",
-  "delete_account_header": "Xoá tài khoản",
-  "delete_username_account": "Xóa%1$s trên thiết bị này? Điều này sẽ vô hiệu hóa quyền truy cập qua mã PIN. Nếu 2FA được bật trên tài khoản này, thiết bị này sẽ không thể đăng nhập nếu không thiết lập lại 2FA mất 7 ngày.",
   "no": "Không",
   "yes": "Có",
   "swap_terms_accept_button": "Accept",
