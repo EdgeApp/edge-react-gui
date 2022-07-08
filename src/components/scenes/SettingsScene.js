@@ -6,8 +6,10 @@ import * as React from 'react'
 import { ScrollView, Text } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { showSendLogsModal } from '../../actions/LogActions.js'
+import { logoutRequest } from '../../actions/LoginActions.js'
 import {
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
@@ -27,7 +29,8 @@ import { Collapsable } from '../common/Collapsable.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
-import { DeleteAccountModal } from '../modals/DeleteAccountModal.js'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, changeTheme, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -58,7 +61,8 @@ type DispatchProps = {
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void,
   showRestoreWalletsModal: () => void,
   showUnlockSettingsModal: () => void,
-  toggleDeveloperMode: (developerModeOn: boolean) => void
+  toggleDeveloperMode: (developerModeOn: boolean) => void,
+  logoutRequest: () => Promise<void>
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -139,8 +143,39 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery')
   }
 
-  handleDeleteAccount = (): void => {
-    this.props.isLocked ? this.handleUnlock() : Airship.show(bridge => <DeleteAccountModal bridge={bridge} />)
+  handleDeleteAccount = async (): Promise<void> => {
+    if (this.props.isLocked) return this.handleUnlock()
+
+    const approveDelete = await Airship.show(bridge => (
+      <ConfirmContinueModal
+        bridge={bridge}
+        body={sprintf(s.strings.delete_account_body, config.appName, config.supportSite)}
+        title={s.strings.delete_account_title}
+        isSkippable
+        warning
+      />
+    ))
+
+    if (approveDelete !== true) return
+
+    const { username } = this.props.account
+    await Airship.show(bridge => (
+      <TextInputModal
+        bridge={bridge}
+        submitLabel={s.strings.string_delete}
+        message={sprintf(s.strings.delete_account_verification_body, username)}
+        title={s.strings.delete_account_title}
+        warning
+        onSubmit={async text => {
+          if (text !== username) return s.strings.delete_account_verification_error
+
+          await this.props.account.deleteRemoteAccount()
+          await this.props.logoutRequest()
+          await this.props.context.deleteLocalAccount(username)
+          return true
+        }}
+      />
+    ))
   }
 
   handleExchangeSettings = (): void => {
@@ -351,6 +386,9 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     toggleDeveloperMode(developerModeOn: boolean) {
       dispatch(setDeveloperModeOn(developerModeOn))
+    },
+    async logoutRequest() {
+      await dispatch(logoutRequest())
     }
   })
 )(withTheme(SettingsSceneComponent))
