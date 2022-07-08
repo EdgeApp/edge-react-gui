@@ -161,7 +161,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
           validatePassword({
             title: s.strings.fragment_wallets_get_seed_title,
             submitLabel: s.strings.fragment_wallets_get_seed_wallet,
-            warning: s.strings.fragment_wallets_get_seed_warning_message
+            warningMessage: s.strings.fragment_wallets_get_seed_warning_message
           })
         )
 
@@ -192,7 +192,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
         const passwordValid = await dispatch(
           validatePassword({
             title: s.strings.fragment_wallets_get_raw_keys_title,
-            warning: s.strings.fragment_wallets_get_raw_keys_warning_message,
+            warningMessage: s.strings.fragment_wallets_get_raw_keys_warning_message,
             submitLabel: s.strings.string_get_raw_keys
           })
         )
