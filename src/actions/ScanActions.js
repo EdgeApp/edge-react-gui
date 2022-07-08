@@ -354,6 +354,7 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
   })
   const signedTx = await wallet.signTx(unsignedTx)
   await wallet.broadcastTx(signedTx)
+  await wallet.resyncBlockchain()
 }
 
 const shownWalletGetCryptoModals = []
