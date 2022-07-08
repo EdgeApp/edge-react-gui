@@ -6049,10 +6049,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.20, edge-core-js@^0.19.21:
-  version "0.19.21"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.21.tgz#207c13a3123c4aac3791cc24742e3f46fa6c39e6"
-  integrity sha512-JPo02QeFWoCWBxkK+qYrC3dXUvd81XiT/jilJUW/QFOxrT6Vr5J+HLBXj8KUnoqZw7Her2jZlKuDGCQyfAKXtQ==
+edge-core-js@^0.19.20, edge-core-js@^0.19.22:
+  version "0.19.22"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.22.tgz#e8c9dc1c8292ab2ed3e1f034254ba22617a54fc7"
+  integrity sha512-Gl5MqWQw9RYYBTFu7Qt+OnpRcvGQlgRrjDlBB3Ve85T47HjmJfnM/2XGbujltLngvNJUUJIhjm3D33jPfjm7hA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -6073,7 +6073,7 @@ edge-core-js@^0.19.20, edge-core-js@^0.19.21:
     rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
     serverlet "^0.1.0"
-    yaob "^0.3.7"
+    yaob "^0.3.8"
     yavent "^0.1.3"
 
 edge-currency-accountbased@^0.16.3:
@@ -15167,10 +15167,10 @@ yaml@^1.10.0:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaob@^0.3.6, yaob@^0.3.7:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.7.tgz#f33f6a7869a8cabaec761a31ae577aaee659d9d0"
-  integrity sha512-r48BLEBGUhkUHBVudB4X+JvID4ZczwzPJg0zDynZ3gbBguEwtO7WE+djKQSY1uclVOB6a7Y51oB8OhAyhQNCxg==
+yaob@^0.3.6, yaob@^0.3.7, yaob@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.8.tgz#a359fd092dbf42d07f82eb2fb0b00bdb87f1c4cc"
+  integrity sha512-6ocTmk7fVAB7TOc8ot7sdt5o+UK3d8qtDtd61IBIVe++V1xGmhP3Y8FYOCrzmo6ywzGJPaDS66orZIwnw5NwEw==
   dependencies:
     rfc4648 "^1.1.0"
 
