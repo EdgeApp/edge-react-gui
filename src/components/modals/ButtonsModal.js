@@ -41,9 +41,12 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   buttons: Buttons,
   closeArrow?: boolean,
   disableCancel?: boolean,
-  fullScreen?: boolean
+  fullScreen?: boolean,
+
+  // Adds a border:
+  warning?: boolean
 |}) {
-  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false } = props
+  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false, warning } = props
   const theme = useTheme()
 
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
@@ -61,7 +64,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   }
 
   return (
-    <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleCancel}>
+    <ThemedModal warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
       <View style={styles.container}>
         <View style={styles.text}>
           {title != null ? <ModalTitle>{title}</ModalTitle> : null}
