@@ -28,7 +28,10 @@ type Props = {|
   initialValue?: string,
   inputLabel?: string,
   submitLabel?: string,
-  warning?: string,
+  warningMessage?: string,
+
+  // Adds a border:
+  warning?: boolean,
 
   // Text input options:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
@@ -58,7 +61,8 @@ export function TextInputModal(props: Props) {
     submitLabel = s.strings.submit,
     title,
     maxLength,
-    warning
+    warning,
+    warningMessage
   } = props
 
   const [errorMessage, setErrorMessage] = useState<string | void>()
@@ -90,10 +94,10 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
+    <ThemedModal warning={warning} bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-      {warning != null ? <Alert type="warning" title={s.strings.string_warning} marginRem={0.5} message={warning} numberOfLines={0} /> : null}
+      {warningMessage != null ? <Alert type="warning" title={s.strings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
       <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}
