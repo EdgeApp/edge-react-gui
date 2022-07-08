@@ -343,6 +343,7 @@ const strings = {
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
+  string_forget: 'Forget',
   string_delete: 'Delete',
   string_archive: 'Archive',
   string_archive_wallet: 'Archive Wallet',
@@ -607,9 +608,9 @@ const strings = {
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
   account: 'Account',
-  delete_account_header: 'Delete Account',
-  delete_username_account:
-    'Delete %1$s on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without a 2FA reset which takes 7 days.',
+  forget_account_title: 'Forget Account',
+  forget_account_message_common:
+    'Are you sure you want to forget the account %1$s from this device? PIN login will no longer work and you will need to login with your username and password.\n\nIf 2FA is enabled for this account, you will need to either enter your 2FA code or be locked out for 7 days before being able to regain access.',
   no: 'No',
   yes: 'Yes',
   swap_terms_accept_button: 'Accept',

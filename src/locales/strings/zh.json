@@ -558,8 +558,6 @@
   "ss_geolock": "位置受限。无法完成交易。",
   "ss_unable": "没有启用的交易所支持 %1$s 到 %2$s。",
   "account": "账号",
-  "delete_account_header": "删除帐户",
-  "delete_username_account": "删除此装置上的 %1$s 吗？这将禁止其使用PIN码登入。如果此账户启用了双重身份验证，此装置将需通过7天的双重身份验证重置程序才能重新登入账户。",
   "no": "否",
   "yes": "是",
   "swap_terms_accept_button": "Accept",
