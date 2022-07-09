@@ -624,14 +624,19 @@ function upgradeExtendedCurrencyCodes(
 
       if (tokenCode == null) {
         // It's a plain code, like "BTC" or "USDC". If the code matches a chain (ie. "BTC, "ETH", or "DOGE"), add that to the list.
-        // Otherwise, code is a token. Only add it to the chain if there's a matching chainCode of "ETH".
+        // Otherwise, code is a token. Only add it to the list if there's a matching chainCode of "ETH" and it doesn't match any
+        // mainnet coin.
+        //
         // For all other chains, tokenCodes need to be specified with their parent chain. ie "MATIC-USDC"
 
         // Find all the matching coins that are parent chains
         const mainnets = codeLookup(parentCode).filter(match => match.tokenId == null)
 
         // Find all the matching coins that are tokens of ETH
-        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum')
+        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum' && match.tokenId != null)
+
+        // If there is a match for both mainnet coins and ETH tokens, then don't add this currencyCode
+        if (mainnets.length > 0 && ethParent.length > 0) continue
 
         out.push(...mainnets, ...ethParent)
       } else {
