@@ -558,8 +558,6 @@
   "ss_geolock": "Localização restringida. É impossível efectuar a negociação.",
   "ss_unable": "Nenhuma Exchange habilitada suporta %1$s para %2$s.",
   "account": "Conta",
-  "delete_account_header": "Excluir Conta",
-  "delete_username_account": "Eliminar %1$s neste dispositivo? Isto irá desativar o acesso via PIN. Se a A2F estiver ativada nesta conta, não será possível iniciar sessão neste dispositivo sem reiniciar a A2F, o que leva 7 dias.",
   "no": "Não",
   "yes": "Sim",
   "swap_terms_accept_button": "Aceitar",

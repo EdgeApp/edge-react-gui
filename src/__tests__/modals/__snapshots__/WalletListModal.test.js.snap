@@ -98,7 +98,7 @@ Array [
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
-              "margin": 11,
+              "marginVertical": 11,
             },
             Object {
               "textAlign": "center",

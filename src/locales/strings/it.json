@@ -558,8 +558,6 @@
   "ss_geolock": "Posizione geografica limitata. Impossibile completare lo scambio.",
   "ss_unable": "Nessun cambio valuta abilitato supporta da %1$s a %2$s.",
   "account": "Account",
-  "delete_account_header": "Rimuovi Account",
-  "delete_username_account": "Eliminare %1$s su questo dispositivo? Questo disabiliterà l'accesso tramite PIN. Se 2FA è abilitato su questo account, questo dispositivo non sarà in grado di accedere senza un reset 2FA che richiede 7 giorni.",
   "no": "No",
   "yes": "Sì",
   "swap_terms_accept_button": "Accetta",

@@ -66,7 +66,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.2),
-    margin: theme.rem(0.5)
+    marginVertical: theme.rem(0.5)
   },
   titleCenter: {
     textAlign: 'center'
