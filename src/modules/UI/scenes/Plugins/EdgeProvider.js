@@ -163,18 +163,56 @@ export class EdgeProvider extends Bridgeable {
     if (walletId && currencyCode) {
       this.selectedWallet = this._state.core.account.currencyWallets[walletId]
       if (this.selectedWallet == null) throw new Error(`Missing wallet for walletId`)
+      const chainCode = this.selectedWallet.currencyInfo.currencyCode
+      const tokenCode = currencyCode
       const { pluginId } = this.selectedWallet.currencyInfo
       const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
 
-      // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
+      this.selectedCurrencyCode = currencyCode
+      this.selectedChainCode = chainCode
+
+      let returnCurrencyCode
+
       if (allowedCurrencyCodes != null && allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
+        // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
         return {
           pluginId,
           tokenId,
           currencyCode
         }
       }
-      return unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId) ?? currencyCode
+      if (chainCode !== tokenCode) {
+        // User selected a token
+        if (chainCode === 'ETH') {
+          // Special case for ETH. Caller can specify a token code alone and it can be matched against ETH tokens
+          // Check if the tokenCode also exists as a parent chain currencyCode. ie. "MATIC"
+          const codeLookup = makeCurrencyCodeTable(this._state.core.account)
+          const edgeToken = codeLookup(tokenCode)
+          if (edgeToken.find(t => t.tokenId == null)) {
+            // Found a mainnet chain with the same currencyCode as this token. Return the full currency code. ie. "ETH-MATIC"
+            returnCurrencyCode = `ETH-${tokenCode}`
+          } else {
+            // See if tokenCode matches one of the allowedCurrencyCodes
+            returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === tokenCode)
+          }
+
+          // If no match found. Check if a full currency code was used.
+          if (returnCurrencyCode == null) {
+            returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === `ETH-${tokenCode}`)
+          }
+          if (returnCurrencyCode == null) {
+            throw new Error(`Internal error. Tokencode ${tokenCode} selected but not in allowedCurrencyCodes`)
+          }
+        } else {
+          // Tokens for all other chains must be specified using a full currency code. ie. "ETH-USDC"
+          returnCurrencyCode = `${chainCode}-${tokenCode}`
+        }
+      } else {
+        // This is a mainnet coin.
+        returnCurrencyCode = chainCode
+      }
+
+      return unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId) ?? returnCurrencyCode
     }
 
     throw new Error(s.strings.user_closed_modal_no_wallet)
@@ -568,7 +606,7 @@ function upgradeExtendedCurrencyCodes(
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   // Grab all relevant tokens from the account:
-  const lookup = makeCurrencyCodeTable(account)
+  const codeLookup = makeCurrencyCodeTable(account)
 
   const out: EdgeTokenId[] = []
   for (const code of currencyCodes) {
@@ -583,13 +621,22 @@ function upgradeExtendedCurrencyCodes(
       const [parentCode, tokenCode] = code.split('-')
 
       if (tokenCode == null) {
-        // It's a plain code, like "REP", so add all matches:
-        out.push(...lookup(parentCode))
+        // It's a plain code, like "BTC" or "USDC". If the code matches a chain (ie. "BTC, "ETH", or "DOGE"), add that to the list.
+        // Otherwise, code is a token. Only add it to the chain if there's a matching chainCode of "ETH".
+        // For all other chains, tokenCodes need to be specified with their parent chain. ie "MATIC-USDC"
+
+        // Find all the matching coins that are parent chains
+        const mainnets = codeLookup(parentCode).filter(match => match.tokenId == null)
+
+        // Find all the matching coins that are tokens of ETH
+        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum')
+
+        out.push(...mainnets, ...ethParent)
       } else {
         // It's a scoped code, like "ETH-REP", so filter using the parent:
-        const parent = lookup(parentCode).find(match => match.tokenId == null)
+        const parent = codeLookup(parentCode).find(match => match.tokenId == null)
         if (parent == null) continue
-        out.push(...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
+        out.push(...codeLookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
       }
     } else {
       const { pluginId, tokenId, currencyCode } = code
@@ -599,7 +646,7 @@ function upgradeExtendedCurrencyCodes(
         out.push({ pluginId, tokenId })
       } else {
         // The object contains a scoped currency code:
-        out.push(...lookup(currencyCode).filter(match => match.pluginId === pluginId))
+        out.push(...codeLookup(currencyCode).filter(match => match.pluginId === pluginId))
       }
     }
   }
