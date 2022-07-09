@@ -75,7 +75,7 @@ export function WalletListModal(props: Props) {
   const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
     if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
 
-    const lookup = makeCurrencyCodeTable(account)
+    const lookup = makeCurrencyCodeTable(account.currencyConfig)
     const allowedAssets = upgradeCurrencyCodes(lookup, allowedCurrencyCodes)
     const excludeAssets = upgradeCurrencyCodes(lookup, excludeCurrencyCodes)
 

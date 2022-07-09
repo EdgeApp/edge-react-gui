@@ -3,7 +3,6 @@
 import { abs } from 'biggystring'
 import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
 import type {
-  EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeNetworkFee,
@@ -35,7 +34,7 @@ import { type GuiMakeSpendInfo } from '../../../../types/types.js'
 import { type UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
-import { makeCurrencyCodeTable } from '../../../../util/utils.js'
+import { type CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils.js'
 
 type WalletDetails = {
   name: string,
@@ -155,7 +154,7 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal
         bridge={bridge}
         showCreateWallet
-        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
+        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
         headerTitle={s.strings.choose_your_wallet}
       />
     ))
@@ -187,7 +186,7 @@ export class EdgeProvider extends Bridgeable {
         if (chainCode === 'ETH') {
           // Special case for ETH. Caller can specify a token code alone and it can be matched against ETH tokens
           // Check if the tokenCode also exists as a parent chain currencyCode. ie. "MATIC"
-          const codeLookup = makeCurrencyCodeTable(this._state.core.account)
+          const codeLookup = makeCurrencyCodeTable(this._state.core.account.currencyConfig)
           const edgeToken = codeLookup(tokenCode)
           if (edgeToken.find(t => t.tokenId == null)) {
             // Found a mainnet chain with the same currencyCode as this token. Return the full currency code. ie. "ETH-MATIC"
@@ -600,15 +599,15 @@ export class EdgeProvider extends Bridgeable {
  * This one serves a public-facing API,
  * so it will potentially need to stick around forever.
  */
-function upgradeExtendedCurrencyCodes(
-  account: EdgeAccount,
+export function upgradeExtendedCurrencyCodes(
+  currencyConfigMap: CurrencyConfigMap,
   fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeTokenId[] | void {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   // Grab all relevant tokens from the account:
-  const codeLookup = makeCurrencyCodeTable(account)
+  const codeLookup = makeCurrencyCodeTable(currencyConfigMap)
 
   const out: EdgeTokenId[] = []
   for (const code of currencyCodes) {
