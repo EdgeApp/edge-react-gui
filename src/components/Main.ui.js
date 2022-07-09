@@ -74,6 +74,8 @@ import { LoanAddCollateralScene } from './scenes/Loans/LoanAddCollateralScene.js
 import { LoanBorrowDetailsScene } from './scenes/Loans/LoanBorrowDetailsScene'
 import { LoanBorrowMoreScene } from './scenes/Loans/LoanBorrowMoreScene'
 import { LoanCloseScene } from './scenes/Loans/LoanCloseScene'
+import { LoanCreateConfirmationScene } from './scenes/Loans/LoanCreateConfirmationScene'
+import { LoanCreateScene } from './scenes/Loans/LoanCreateScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
 import { LoanMakeLoanPaymentScene } from './scenes/Loans/LoanRepayScene.js'
@@ -814,6 +816,24 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key="loanDashboard"
               component={withNavigation(ifLoggedIn(LoanDashboardScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanCreate"
+              component={withNavigation(ifLoggedIn(LoanCreateScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanCreateConfirmation"
+              component={withNavigation(ifLoggedIn(LoanCreateConfirmationScene))}
               navTransparent
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}

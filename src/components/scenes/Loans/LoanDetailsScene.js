@@ -191,7 +191,7 @@ export const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string)
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
 
-  return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount, noGrouping: true })}`
+  return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
 }
 
 export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: string | void, nativeAmount: string): string => {
