@@ -1,13 +1,10 @@
 // @flow
 
-import { div, mul } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
-import { memo, useMemo } from '../../../types/reactHooks'
-import { DECIMAL_PRECISION } from '../../../util/utils'
+import { memo } from '../../../types/reactHooks'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -16,8 +13,8 @@ import { FiatText } from '../../text/FiatText.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 
 type Props = {|
-  nativeFiatAmount: string,
-  tokenId: string,
+  nativeAmount: string,
+  tokenId?: string,
   wallet: EdgeCurrencyWallet
 |}
 
@@ -26,70 +23,51 @@ type Props = {|
 // supports only an input amount of native fiat and a conversion to some token.
 // -----------------------------------------------------------------------------
 const CryptoFiatAmountRowComponent = (props: Props) => {
-  const { nativeFiatAmount, tokenId, wallet } = props
+  const { nativeAmount, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const walletId = wallet.id
-  const token = wallet.currencyConfig.allTokens[tokenId]
-  const { currencyCode, denominations } = token
-  const tokenExchangeMultiplier = denominations[0].multiplier
+  const { pluginId } = wallet.currencyInfo
 
-  const { assetToFiatRate: tokenFiatRate } = useTokenDisplayData({
-    tokenId,
-    wallet
-  })
-
-  /**
-   * Convert between native fiat amount and native crypto amount:
-   *   nativeFiatAmount = (nativeCryptoAmount / cryptoExchangeMultiplier) * tokenFiatRate
-   *   nativeCryptoAmount = cryptoExchangeMultiplier * (nativeFiatAmount / tokenFiatRate)
-   */
-  const nativeTokenAmount = useMemo(() => {
-    const ret = mul(tokenExchangeMultiplier, div(nativeFiatAmount, tokenFiatRate, DECIMAL_PRECISION))
-    return ret
-  }, [tokenExchangeMultiplier, nativeFiatAmount, tokenFiatRate])
-
-  // Use nativeTokenAmount in both fiat and crypto display fields because they properly handle any user/locale settings.
+  // Use nativeAmount in both fiat and crypto display fields because they properly handle any user/locale settings.
   return (
-    <View style={styles.spacedContainer}>
-      <View style={styles.halfContainer}>
-        <CryptoIcon sizeRem={1.5} marginRem={[0.5, 0.25, 0.5, 0.5]} tokenId={tokenId} walletId={walletId} />
-        {/* Extra view to make text respect bounds of outer halfContainer */}
-        <View style={styles.halfContainer}>
-          <EdgeText style={styles.text}>
-            <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeTokenAmount} />
-            {' ' + currencyCode}
-          </EdgeText>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.columnLeft}>
+        <CryptoIcon sizeRem={1.5} tokenId={tokenId} pluginId={pluginId} hideSecondary />
+        <EdgeText style={styles.text}>
+          <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount} />
+        </EdgeText>
       </View>
 
-      <View style={styles.halfContainer}>
-        <FiatIcon sizeRem={1.5} marginRem={[0.5, 0.25, 0.5, 0.5]} fiatCurrencyCode={wallet.fiatCurrencyCode} />
-        {/* Make text respect bounds of outer half container */}
-        <View style={styles.halfContainer}>
-          <EdgeText style={styles.text}>
-            <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeTokenAmount} tokenId={tokenId} wallet={wallet} />
-          </EdgeText>
-        </View>
+      <View style={styles.columnRight}>
+        <FiatIcon sizeRem={1.5} fiatCurrencyCode={wallet.fiatCurrencyCode} />
+        <EdgeText style={styles.text}>
+          <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeAmount} tokenId={tokenId} wallet={wallet} />
+        </EdgeText>
       </View>
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  spacedContainer: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1
   },
-  halfContainer: {
+  columnLeft: {
     flex: 1,
     alignItems: 'center',
     flexDirection: 'row'
   },
+  columnRight: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'row'
+  },
   text: {
     fontFamily: theme.fontFaceMedium,
-    marginLeft: theme.rem(0.25)
+    marginLeft: theme.rem(0.5)
   }
 }))
 
