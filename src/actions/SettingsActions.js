@@ -221,7 +221,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
           })
         )
     )
-    navigation.jumpTo('walletList')
+    navigation.navigate('walletList')
   }
 }
 

@@ -133,11 +133,11 @@ export const sendConfirmationUpdateTx =
           ))
           switch (result) {
             case 'buy':
-              navigation.jumpTo('pluginListBuy', { direction: 'buy' })
+              navigation.navigate('pluginListBuy', { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.jumpTo('exchangeScene')
+              navigation.navigate('exchangeScene')
               break
           }
         }

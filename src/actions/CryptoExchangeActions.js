@@ -72,7 +72,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    navigation.jumpTo('exchangeScene')
+    navigation.navigate('exchangeScene')
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
       const { currencyCode, networkFee = '' } = insufficientFunds
@@ -92,7 +92,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
       ))
       switch (result) {
         case 'buy':
-          navigation.jumpTo('pluginListBuy', { direction: 'buy' })
+          navigation.navigate('pluginListBuy', { direction: 'buy' })
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })
@@ -109,6 +109,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   const navigation: NavigationProp<'edge'> = useNavigation()
 
+  if (navigation.currentScene !== 'exchangeQuote') return
   navigation.push('exchangeQuoteProcessing')
 
   try {

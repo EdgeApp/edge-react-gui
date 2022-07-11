@@ -403,10 +403,10 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       ))
     }
     if (threeButtonModal === 'buy') {
-      navigation.jumpTo('pluginListBuy', { direction: 'buy' })
+      navigation.navigate('pluginListBuy', { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-      navigation.jumpTo('exchangeScene')
+      navigation.navigate('exchangeScene')
     }
   } catch (e) {
     // Don't bother the user with this error, but log it quietly:

@@ -160,7 +160,7 @@ export const createAccountTransaction =
               notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, 'support@edge.app')
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              navigation.jumpTo('walletListScene')
+              navigation.navigate('walletListScene')
               setTimeout(() => {
                 Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
               }, 750)
