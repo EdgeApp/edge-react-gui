@@ -838,7 +838,7 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('exchangeQuote')) {
-      this.props.navigation.jumpTo('exchangeScene')
+      this.props.navigation.navigate('exchangeScene')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
@@ -847,13 +847,13 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        this.props.navigation.jumpTo('walletListScene')
+        this.props.navigation.navigate('walletListScene')
         return true
       }
     }
     if (this.isCurrentScene('fioAddressRegisterSelectWallet')) {
       if (Actions.currentParams.isFallback) {
-        this.props.navigation.jumpTo('fioAddressRegister')
+        this.props.navigation.navigate('fioAddressRegister')
         return true
       }
     }
