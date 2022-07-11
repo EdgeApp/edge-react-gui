@@ -10,8 +10,7 @@ export type StakePolicyInfo = {|
   policy: StakePluginPolicy,
   liquidityPool?: LiquidityPool,
   stakeAssets: AssetId[],
-  rewardAssets: AssetId[],
-  mustClaimRewards: boolean
+  rewardAssets: AssetId[]
 |}
 
 // Generate a unique deterministic ID for the policy
@@ -37,7 +36,7 @@ export const withGeneratedStakePolicyId = (policyInfo: StakePolicyInfo): StakePo
 export const toStakePolicy =
   (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { liquidityPool, stakeAssets, rewardAssets, mustClaimRewards } = policyInfo
+    const { liquidityPool, stakeAssets, rewardAssets } = policyInfo
     const stakePolicyId = deriveStakePolicyId(policyInfo)
     const apy = infoResponse.policies[stakePolicyId]
 
@@ -46,7 +45,6 @@ export const toStakePolicy =
       apy,
       liquidityPool,
       stakeAssets,
-      rewardAssets,
-      mustClaimRewards
+      rewardAssets
     }
   }

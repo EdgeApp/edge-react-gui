@@ -30,10 +30,7 @@ export type StakePolicy = {|
   stakeAssets: AssetId[],
 
   // The assets which can be earned
-  rewardAssets: AssetId[],
-
-  // Whether claim action is required to obtain reward
-  mustClaimRewards: boolean
+  rewardAssets: AssetId[]
 |}
 
 // -----------------------------------------------------------------------------

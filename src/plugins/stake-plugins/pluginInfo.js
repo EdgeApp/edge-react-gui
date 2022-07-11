@@ -41,8 +41,7 @@ export const pluginInfo: StakePluginInfo = {
           pluginId: 'fantom',
           currencyCode: 'TOMB'
         }
-      ],
-      mustClaimRewards: true
+      ]
     },
     {
       stakePolicyId: '',
@@ -73,8 +72,7 @@ export const pluginInfo: StakePluginInfo = {
           pluginId: 'fantom',
           currencyCode: 'TSHARE'
         }
-      ],
-      mustClaimRewards: true
+      ]
     },
     {
       stakePolicyId: '',
@@ -105,8 +103,7 @@ export const pluginInfo: StakePluginInfo = {
           pluginId: 'fantom',
           currencyCode: 'TSHARE'
         }
-      ],
-      mustClaimRewards: true
+      ]
     },
     {
       stakePolicyId: '',
@@ -136,8 +133,7 @@ export const pluginInfo: StakePluginInfo = {
           pluginId: 'fantom',
           currencyCode: 'TSHARE'
         }
-      ],
-      mustClaimRewards: true
+      ]
     },
     {
       stakePolicyId: '',
@@ -167,8 +163,7 @@ export const pluginInfo: StakePluginInfo = {
           pluginId: 'fantom',
           currencyCode: 'TSHARE'
         }
-      ],
-      mustClaimRewards: true
+      ]
     },
     {
       stakePolicyId: '',
@@ -198,8 +193,7 @@ export const pluginInfo: StakePluginInfo = {
           pluginId: 'fantom',
           currencyCode: 'TSHARE'
         }
-      ],
-      mustClaimRewards: true
+      ]
     }
   ].map(withGeneratedStakePolicyId)
 }
