@@ -10,7 +10,7 @@ import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { type NavigationProp, type RouteProp, withNavigation } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { makePluginUri } from '../../util/GuiPluginTools.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -273,4 +273,4 @@ class GuiPluginView extends React.Component<Props, State> {
 export const GuiPluginViewScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({ state }),
   dispatch => ({ dispatch })
-)(withNavigation(GuiPluginView))
+)(GuiPluginView)

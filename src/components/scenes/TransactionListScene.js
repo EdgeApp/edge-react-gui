@@ -7,7 +7,7 @@ import { RefreshControl, SectionList } from 'react-native'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, withNavigation } from '../../types/routerTypes'
+import { type NavigationProp } from '../../types/routerTypes'
 import type { TransactionListTx } from '../../types/types.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -42,7 +42,7 @@ type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => void
 }
 
-type Props = StateProps & DispatchProps & ThemeProps & OwnProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
   reset: boolean,
@@ -200,7 +200,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const TransactionList = connect<StateProps, DispatchProps, {}>(
+export const TransactionList = connect<StateProps, DispatchProps, OwnProps, {}>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
@@ -226,4 +226,4 @@ export const TransactionList = connect<StateProps, DispatchProps, {}>(
       dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
     }
   })
-)(withTheme(withNavigation(TransactionListComponent)))
+)(withTheme(TransactionListComponent))

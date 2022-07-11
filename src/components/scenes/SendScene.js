@@ -22,7 +22,7 @@ import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, type RouteProp, withNavigation } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo } from '../../types/types.js'
 import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
@@ -75,8 +75,7 @@ type DispatchProps = {
 
 type OwnProps = {
   navigation: NavigationProp<'send'>,
-  route: RouteProp<'send'>,
-  navigation: NavigationProp<'send'>
+  route: RouteProp<'send'>
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
@@ -655,4 +654,4 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
       return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
     }
   })
-)(withTheme(withNavigation(SendComponent)))
+)(withTheme(SendComponent))

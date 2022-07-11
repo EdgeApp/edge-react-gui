@@ -17,7 +17,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, type RouteProp, withNavigation } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import {
   autoCorrectDate,
@@ -616,4 +616,4 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
       dispatch(setTransactionDetails(transaction, edgeMetadata))
     }
   })
-)(withTheme(withNavigation(TransactionDetailsComponent)))
+)(withTheme(TransactionDetailsComponent))
