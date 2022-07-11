@@ -7,7 +7,7 @@ export const openDrawer = () => (dispatch: Dispatch, getState: GetState) => {
 
   const navigation: NavigationProp<'edge'> = useNavigation()
   const selectedWallet = state.ui.wallets.selectedWalletId
-  if (selectedWallet.length > 0 && navigation.currentScene !== 'DrawerOpen') {
+  if (selectedWallet.length > 0) {
     navigation.openDrawer()
   }
 }
