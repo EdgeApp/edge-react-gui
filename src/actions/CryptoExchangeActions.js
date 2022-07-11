@@ -109,7 +109,6 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   const navigation: NavigationProp<'edge'> = useNavigation()
 
-  if (navigation.currentScene !== 'exchangeQuote') return
   navigation.push('exchangeQuoteProcessing')
 
   try {
