@@ -67,9 +67,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       watchSecurityAlerts(account, hasAlerts => {
-        if (hasAlerts && navigation.currentScene !== 'securityAlerts') {
-          navigation.push('securityAlerts')
-        }
+        navigation.push('securityAlerts')
       }),
 
       account.rateCache.on('update', () =>

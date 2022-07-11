@@ -817,7 +817,12 @@ export class MainComponent extends React.Component<Props> {
   }
 
   isCurrentScene = (sceneKey: string) => {
-    return this.props.navigation.currentScene === sceneKey
+    // For now we'd have to use Flux because our custom navigation hook
+    // does not implment the routeName state. We can remove this once we
+    // have migrated to the official react-navigation library by
+    // replacing it with the following:
+    // https://stackoverflow.com/questions/53040094/how-to-get-current-route-name-in-react-navigation
+    return Actions.currentScene === sceneKey
   }
 
   handleEmpty = () => null
