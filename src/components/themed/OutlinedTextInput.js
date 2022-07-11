@@ -210,11 +210,13 @@ export const OutlinedTextInputComponent: Class<OutlinedTextInputRef> = forwardRe
 
   // The styling only applies when the component is collapsible
   const containerHeightStyle = useAnimatedStyle(() => {
-    if (scrollY === null || isScrolling === null) return {}
+    if (scrollY === null || isScrolling === null || focusAnimation.value === 1) return {}
 
     if (isScrolling && isScrolling.value) {
-      dynamicHeight.value = interpolate(scrollY.value, [CONTAINER_BASE_HEIGHT - scrollY.value, 0], [0, CONTAINER_BASE_HEIGHT], Extrapolate.CLAMP)
-      console.log(dynamicHeight.value)
+      dynamicHeight.value = Math.max(0, Math.min(CONTAINER_BASE_HEIGHT, CONTAINER_BASE_HEIGHT - scrollY.value))
+
+      // interpolate(scrollY.value, [0, CONTAINER_BASE_HEIGHT - scrollY.value, 0], [CONTAINER_BASE_HEIGHT, 0, CONTAINER_BASE_HEIGHT], Extrapolate.CLAMP)
+      console.log(CONTAINER_BASE_HEIGHT - scrollY.value)
     } else {
       dynamicHeight.value = dynamicHeight.value > CONTAINER_BASE_HEIGHT / 2 ? CONTAINER_BASE_HEIGHT : 0
     }
@@ -357,7 +359,7 @@ export const OutlinedTextInput = forwardRef((props: Props, ref) => {
 
 export const DynamicOutlinedTextInput = forwardRef((props: Props, ref) => {
   const theme = useTheme()
-  return <OutlinedTextInputComponent ref={ref} {...props} styles={getDynamicStyles(theme)} />
+  return <OutlinedTextInputComponent {...props} styles={getDynamicStyles(theme)} />
 })
 
 const getNormalStyles = cacheStyles(theme => {

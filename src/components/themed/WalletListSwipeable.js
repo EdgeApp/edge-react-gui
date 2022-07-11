@@ -1,8 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { FlatList, FlatListProps, RefreshControl } from 'react-native'
-import { PanGestureHandler } from 'react-native-gesture-handler'
+import { FlatListProps, RefreshControl } from 'react-native'
+import { FlatList, PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, {
   ILayoutAnimationBuilder,
   interpolate,
@@ -122,6 +122,18 @@ export const WalletListSwipeable = (props: Props) => {
     }
   }
 
+  const handleGestureEvent = useAnimatedGestureHandler({
+    onStart: (events, ctx) => {
+      console.log('sdf')
+    },
+    onActive: (events, ctx) => {
+      console.log('sdf')
+    },
+    onEnd: (events, ctx) => {
+      console.log('sdf')
+    }
+  })
+
   return (
     <Animated.FlatList
       /// style={animatedStyles}
@@ -130,10 +142,11 @@ export const WalletListSwipeable = (props: Props) => {
       data={searchedWalletList}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
-      scrollEventThrottle={16}
+      // scrollEventThrottle={16}
       ListHeaderComponent={header}
       //  refreshControl={refreshControl}
       onScrollEndDrag={handleScrollEndDrag}
+      // onGestureEvent={handleGestureEvent}
       renderItem={renderRow}
       getItemLayout={handleItemLayout}
     />
