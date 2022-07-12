@@ -4914,17 +4914,7 @@ cleaner-config@^0.1.8:
     minimist "^1.2.5"
     sucrase "^3.17.1"
 
-cleaners@^0.3.1, cleaners@^0.3.9:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.9.tgz#e9d2b7ebbbf62c0ae9f7bf1f1cf0aa5544acb3fa"
-  integrity sha512-DAddE949KDyTFcb6LdVpEd4BBHa55wNfm63tE0AYT2hDZyg0IR6lwOqjPhP/6GwF1z9FWeKqjw20T27/UHjM+Q==
-
-cleaners@^0.3.11:
-  version "0.3.11"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.11.tgz#7168178df8223965acfea1b81883250c574fedfe"
-  integrity sha512-Iq/spAHw/Ca2O8+kRaYy60+XWQrnqYa7KuuHM7z+RV8wvrN2JTWtBpY0uZWfhVuooGY7SoaY6Cwvbqo8oE4OYQ==
-
-cleaners@^0.3.12, cleaners@^0.3.8:
+cleaners@^0.3.1, cleaners@^0.3.11, cleaners@^0.3.12, cleaners@^0.3.8, cleaners@^0.3.9:
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.12.tgz#0e99ef2460a59ed87550a60bdfc441b1696ff9cb"
   integrity sha512-bK7IvvYyhfy30S3VKmWi/YVWp0MUH1pEYfdtbjCpQiIzy8gmP9GCXv6AVZENDHbpcRHqMnZONs3ieyJMh3zvVw==
