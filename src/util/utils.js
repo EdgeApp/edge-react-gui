@@ -1,7 +1,7 @@
 // @flow
 
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgePluginMap, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -589,10 +589,16 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
   return out
 }
 
+export type MiniCurrencyConfig = {
+  allTokens: EdgeTokenMap,
+  currencyInfo: EdgeCurrencyInfo
+}
+export type CurrencyConfigMap = EdgePluginMap<EdgeCurrencyConfig> | EdgePluginMap<MiniCurrencyConfig>
+
 /**
  * Creates a function that returns all matching tokenId's for a currency code.
  */
-export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: string) => EdgeTokenId[] {
+export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (currencyCode: string) => EdgeTokenId[] {
   const map = new Map<string, EdgeTokenId[]>()
 
   function addMatch(currencyCode: string, location: EdgeTokenId): void {
@@ -602,8 +608,8 @@ export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: stri
     else map.set(key, [location])
   }
 
-  for (const pluginId of Object.keys(account.currencyConfig)) {
-    const currencyConfig = account.currencyConfig[pluginId]
+  for (const pluginId of Object.keys(currencyConfigMap)) {
+    const currencyConfig = currencyConfigMap[pluginId]
     const { allTokens, currencyInfo } = currencyConfig
 
     addMatch(currencyInfo.currencyCode, { pluginId })
