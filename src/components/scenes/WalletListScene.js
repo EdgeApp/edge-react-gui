@@ -111,19 +111,6 @@ export function WalletListScene(props: Props) {
     return <WalletListFooter navigation={navigation} />
   }, [navigation])
 
-  // const header = useMemo(() => {
-  //   return (
-  //     <WalletListHeader
-  //       sorting={sorting}
-  //       searching={searching}
-  //       searchText={searchText}
-  //       openSortModal={handleSort}
-  //       onChangeSearchText={setSearchText}
-  //       onChangeSearchingState={setSearching}
-  //     />
-  //   )
-  // }, [handleSort, searchText, searching, sorting])
-
   const header = !sorting && !searching && (
     <Gradient>
       <View style={styles.headerContainer}>

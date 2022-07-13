@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 
-// import Animated, { useAnimatedProps, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useRowLayout } from '../../hooks/useRowLayout.js'
 import { useMemo } from '../../types/reactHooks.js'
@@ -78,12 +77,8 @@ export function WalletListSwipeable(props: Props) {
   })
 
   const handleItemLayout = useRowLayout()
-  // const yNotSearching = theme.rem(4.5)
-  // const animatedProps = useAnimatedProps(() => ({ contentOffset: { x: 0, y: withSpring(searching ? 0 : yNotSearching, { duration: 100 }) } }))
   return (
     <FlatList
-      // animatedProps={animatedProps}
-      // contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
       stickyHeaderIndices={searching ? [] : [0]}
       data={searchedWalletList}
       keyboardShouldPersistTaps="handled"
