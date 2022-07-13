@@ -16,7 +16,7 @@ function CrashSceneComponent(props: ThemeProps): React.Node {
   const styles = getStyles(theme)
 
   return (
-    <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
+    <SceneWrapper background="theme" padding={theme.rem(0.5)}>
       <AntDesignIcon name="frowno" style={styles.icon} />
       <Text style={styles.titleText}>{s.strings.error_boundary_title}</Text>
       <Text style={styles.messageText}>{s.strings.error_boundary_message}</Text>

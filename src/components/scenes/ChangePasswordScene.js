@@ -24,7 +24,7 @@ export class ChangePasswordComponent extends React.Component<Props> {
     const handleComplete = () => navigation.goBack()
 
     return (
-      <SceneWrapper hasTabs={false} background="theme">
+      <SceneWrapper hasTabs={false} background="body">
         <ChangePasswordScreen account={account} context={context} onComplete={handleComplete} onCancel={handleComplete} showHeader={false} />
       </SceneWrapper>
     )

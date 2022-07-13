@@ -2,7 +2,7 @@
 
 exports[`ChangePinComponent should render with loading props 1`] = `
 <SceneWrapper
-  background="theme"
+  background="body"
   hasTabs={false}
 >
   <UNDEFINED

@@ -113,7 +113,7 @@ export const StakeOverviewScene = (props: Props) => {
 
   const estimatedReturnMsg = stakePolicy.apy > 0 ? toFixed(stakePolicy.apy.toString(), 1, 1) + '% APR' : 'N/A'
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper background="theme">
       {sceneHeader}
       <View style={styles.card}>
         <StakingReturnsCard
@@ -126,6 +126,26 @@ export const StakeOverviewScene = (props: Props) => {
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}
+        ListFooterComponentStyle={styles.buttons}
+        ListFooterComponent={
+          <>
+            <MainButton label={s.strings.stake_stake_more_funds} type="primary" onPress={handleModifyPress('stake')} marginRem={[0.5, 0.5, 0.25, 0.5]} />
+            <MainButton
+              label={s.strings.stake_claim_rewards}
+              disabled={!stakePosition?.canClaim}
+              type="secondary"
+              onPress={handleModifyPress('claim')}
+              marginRem={[0.25, 0.5, 0.25, 0.5]}
+            />
+            <MainButton
+              label={s.strings.stake_unstake_claim}
+              disabled={!stakePosition?.canUnstake}
+              type="escape"
+              onPress={handleModifyPress('unstake')}
+              marginRem={[0.25, 0.5, 0.25, 0.5]}
+            />
+          </>
+        }
       />
       <MainButton
         label={s.strings.stake_stake_more_funds}
@@ -167,5 +187,6 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'
-  }
+  },
+  buttons: { marginTop: theme.rem(0.5) }
 }))
