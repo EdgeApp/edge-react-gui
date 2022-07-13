@@ -576,7 +576,8 @@
       "GB",
       "AU",
       "CA",
-      "NL"
+      "NL",
+      "TR"
     ],
     "cryptoCodes": [
       "BTC",
@@ -930,6 +931,23 @@
     "title": "Interac e-Transfer",
     "paymentTypeLogoKey": "interac",
     "description": "Fee: 3% / Settlement: 1 - 2 days\nDaily Limit: $10000\nMonthly Limit: $70000",
+    "sortIndex": 1
+  },
+  {
+    "id": "banxa.bank",
+    "forCountries": [
+      "TR"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "deepQuery": {
+      "country": "TR",
+      "payment_id": "6068"
+    },
+    "title": "Turkish Bank Transfer",
+    "paymentTypeLogoKey": "bank",
+    "description": "Fee: 2% / Settlement: Instant - 1 hour\nDaily Limit: ₺228,000",
     "sortIndex": 1
   },
   {
