@@ -2,25 +2,25 @@
 import { makeContract } from './contracts.js'
 import { makeCemeteryPolicy } from './policies/cemeteryPolicy.js'
 import { makeMasonryPolicy } from './policies/masonryPolicy.js'
-import { type StakePolicyInfo, withGeneratedStakePolicyId } from './stakePolicy.js'
-import { type LiquidityPool } from './types'
+import { type StakePolicyInfo } from './stakePolicy.js'
+import { type StakeProviderInfo } from './types'
 
 export type StakePluginInfo = {
   pluginId: string,
   policyInfo: StakePolicyInfo[]
 }
 
-const tombSwapLiquidityPool: LiquidityPool = {
+const tombCemeteryV2ProviderInfo: StakeProviderInfo = {
+  displayName: 'Cemetery V2 (using TombSwap)',
   pluginId: 'fantom',
-  lpId: '6d0176c5ea1e44b08d3dd001b0784ce42f47a3a7',
-  displayName: 'TombSwap'
+  stakeProviderId: 'tombswap_cemetery_v2'
 }
 
 export const pluginInfo: StakePluginInfo = {
   pluginId: 'stake:uniswapV2',
   policyInfo: [
     {
-      stakePolicyId: '',
+      stakePolicyId: 'ftm_tombswap_masonry_v1_0',
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeMasonryPolicy(),
@@ -38,8 +38,8 @@ export const pluginInfo: StakePluginInfo = {
       ]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_0',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -57,8 +57,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_1',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -76,8 +76,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_2',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -95,8 +95,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_4',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -114,8 +114,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_5',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -133,8 +133,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_6',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -152,8 +152,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_7',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -171,8 +171,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_8',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -191,8 +191,8 @@ export const pluginInfo: StakePluginInfo = {
     },
 
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_10',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -210,8 +210,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_11',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -229,8 +229,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_12',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -248,8 +248,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_13',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -267,8 +267,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_14',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -286,8 +286,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_15',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -305,8 +305,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_16',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -324,8 +324,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_17',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -343,8 +343,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_18',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -362,8 +362,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_19',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -381,8 +381,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_20',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -400,8 +400,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_21',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -419,8 +419,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_22',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -438,8 +438,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_23',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -457,8 +457,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_24',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -476,8 +476,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_25',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -495,8 +495,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_26',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -514,8 +514,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_27',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -533,8 +533,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_28',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -552,8 +552,8 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     },
     {
-      stakePolicyId: '',
-      liquidityPool: tombSwapLiquidityPool,
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_29',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
@@ -571,44 +571,6 @@ export const pluginInfo: StakePluginInfo = {
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     }
 
-    // TODO: Add these pools after multi-hop swap support implemented OR if a direct swap route opens up for FTM->TREEB, FTM->FUSD
-    // {
-    //   stakePolicyId: '',
-    //   liquidityPool: tombSwapLiquidityPool,
-    //   parentPluginId: 'fantom',
-    //   parentCurrencyCode: 'FTM',
-    //   policy: makeCemeteryPolicy({
-    //     poolId: 3,
-    //     lpTokenContract: makeContract('TOMBSWAP_TOMB_TREEB_LP'),
-    //     poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
-    //     swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
-    //     tokenAContract: makeContract('TOMB'),
-    //     tokenBContract: makeContract('TREEB')
-    //   }),
-    //   stakeAssets: [
-    //     { pluginId: 'fantom', currencyCode: 'TOMB' },
-    //     { pluginId: 'fantom', currencyCode: 'TREEB' }
-    //   ],
-    //   rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
-    // },
-    // {
-    //   stakePolicyId: '',
-    //   liquidityPool: tombSwapLiquidityPool,
-    //   parentPluginId: 'fantom',
-    //   parentCurrencyCode: 'FTM',
-    //   policy: makeCemeteryPolicy({
-    //     poolId: 9,
-    //     lpTokenContract: makeContract('TOMBSWAP_USDC_FUSD_LP'),
-    //     poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
-    //     swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
-    //     tokenAContract: makeContract('USDC'),
-    //     tokenBContract: makeContract('FUSD')
-    //   }),
-    //   stakeAssets: [
-    //     { pluginId: 'fantom', currencyCode: 'USDC' },
-    //     { pluginId: 'fantom', currencyCode: 'FUSD' }
-    //   ],
-    //   rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
-    // },
-  ].map(withGeneratedStakePolicyId)
+    // TODO: After multi-hop swap support implemented OR if a direct swap route opens up for FTM->TREEB and FTM->FUSD, add those Cemetery V2 pools.
+  ]
 }

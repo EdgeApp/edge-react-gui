@@ -113,6 +113,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
       const isTokenANative = tokenACurrencyCode === policyInfo.parentCurrencyCode
       const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
+      if (isTokenANative && isTokenBNative) throw new Error('Stake plugin does not support two native assets')
 
       // Metadata constants:
       const metadataName = 'Tomb Finance'
@@ -281,26 +282,24 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
-              if (isTokenBNative) {
+              if (isTokenANative || isTokenBNative) {
                 // Call the contract (for LP involving native liquidity)
                 result = await swapRouterContract
                   .connect(signer)
-                  .addLiquidityETH(tokenAContract.address, amountTokenADesired, amountTokenAMin, amountTokenBMin, signerAddress, deadline, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce(),
-                    value: amountTokenBDesired
-                  })
-              } else if (isTokenANative) {
-                // Call the contract (for LP involving native liquidity)
-                result = await swapRouterContract
-                  .connect(signer)
-                  .addLiquidityETH(tokenBContract.address, amountTokenBDesired, amountTokenBMin, amountTokenAMin, signerAddress, deadline, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce(),
-                    value: amountTokenADesired
-                  })
+                  .addLiquidityETH(
+                    isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    isTokenANative ? amountTokenBDesired : amountTokenADesired,
+                    isTokenANative ? amountTokenBMin : amountTokenAMin,
+                    isTokenANative ? amountTokenAMin : amountTokenBMin,
+                    signerAddress,
+                    deadline,
+                    {
+                      gasLimit,
+                      gasPrice,
+                      nonce: nextNonce(),
+                      value: amountTokenBDesired
+                    }
+                  )
               } else {
                 // Call the contract
                 result = await swapRouterContract
@@ -503,22 +502,22 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
-              if (isTokenBNative) {
+              if (isTokenANative || isTokenBNative) {
                 result = await swapRouterContract
                   .connect(signer)
-                  .removeLiquidityETH(tokenAContract.address, expectedLiquidityAmount, amountTokenAMin, amountTokenBMin, signerAddress, deadline, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce()
-                  })
-              } else if (isTokenANative) {
-                result = await swapRouterContract
-                  .connect(signer)
-                  .removeLiquidityETH(tokenBContract.address, expectedLiquidityAmount, amountTokenBMin, amountTokenAMin, signerAddress, deadline, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce()
-                  })
+                  .removeLiquidityETH(
+                    isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    expectedLiquidityAmount,
+                    isTokenANative ? amountTokenBMin : amountTokenAMin,
+                    isTokenANative ? amountTokenAMin : amountTokenBMin,
+                    signerAddress,
+                    deadline,
+                    {
+                      gasLimit,
+                      gasPrice,
+                      nonce: nextNonce()
+                    }
+                  )
               } else {
                 result = await swapRouterContract
                   .connect(signer)
