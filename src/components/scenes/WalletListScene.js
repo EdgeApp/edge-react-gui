@@ -10,6 +10,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
@@ -124,17 +125,19 @@ export function WalletListScene(props: Props) {
   // }, [handleSort, searchText, searching, sorting])
 
   const header = !sorting && !searching && (
-    <View style={styles.headerContainer}>
-      <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-      <View key="defaultButtons" style={styles.headerButtonsContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto')}>
-          <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSort}>
-          <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
-        </TouchableOpacity>
+    <Gradient>
+      <View style={styles.headerContainer}>
+        <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+        <View key="defaultButtons" style={styles.headerButtonsContainer}>
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto')}>
+            <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSort}>
+            <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </Gradient>
   )
 
   return (

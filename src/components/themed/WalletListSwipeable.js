@@ -84,6 +84,7 @@ export function WalletListSwipeable(props: Props) {
     <FlatList
       // animatedProps={animatedProps}
       // contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
+      stickyHeaderIndices={searching ? [] : [0]}
       data={searchedWalletList}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
