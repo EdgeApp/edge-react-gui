@@ -6054,10 +6054,37 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.20, edge-core-js@^0.19.22:
+edge-core-js@^0.19.20:
   version "0.19.22"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.22.tgz#e8c9dc1c8292ab2ed3e1f034254ba22617a54fc7"
   integrity sha512-Gl5MqWQw9RYYBTFu7Qt+OnpRcvGQlgRrjDlBB3Ve85T47HjmJfnM/2XGbujltLngvNJUUJIhjm3D33jPfjm7hA==
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^3.0.2"
+    cleaners "^0.3.11"
+    currency-codes "^1.1.2"
+    disklet "^0.5.2"
+    edge-sync-client "^0.2.6"
+    elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
+    hash.js "^1.1.7"
+    hmac-drbg "^1.0.1"
+    node-fetch "^2.6.1"
+    redux "^3.6.0"
+    redux-keto "^0.3.4"
+    redux-pixies "^0.3.6"
+    rfc4648 "^1.4.0"
+    scrypt-js "^2.0.3"
+    serverlet "^0.1.0"
+    yaob "^0.3.8"
+    yavent "^0.1.3"
+
+edge-core-js@^0.19.23:
+  version "0.19.23"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.23.tgz#84559f4921932de3f3bf88947ec6dd8650725d7f"
+  integrity sha512-3t/MHJQPfNW7DdLIbH4DVa5p87sClrd1KpG4kYmZXG12Kt3vbBVo4m7jBdKAHdVIKjSEddUkDRfxOghZ2uSITw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -6157,10 +6184,10 @@ edge-currency-plugins@^1.1.1:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.13.2:
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.13.2.tgz#4647a0545ac819e1451fe859a9beb92689f9a65f"
-  integrity sha512-k0cy55rA9V4f18VQ2O9cP9xi7doMMs9kBkJVWvu5lazXyJLHbnUP+Iod/Jj5ybUhQXZY/2DxsTraDxVqT46ncg==
+edge-exchange-plugins@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.13.3.tgz#38e0e51705ecba30aecc647fd7f03ddbe4e4bebf"
+  integrity sha512-eqmbAngJUnCj8CGJN+Wb/i1bsdDLVtwOa9CMj9G0S3T8n3dxgsNReab2S/E/o6Yv/CVWge4prtGFuPtZ5+5MMg==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
