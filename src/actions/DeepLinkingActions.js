@@ -5,7 +5,6 @@ import { sprintf } from 'sprintf-js'
 
 import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { EDGE_LOGIN, EXCHANGE_SCENE, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -63,7 +62,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
-      Actions.push(EDGE_LOGIN)
+      Actions.push('edgeLogin')
       return true
 
     // The login scene always handles this one:
@@ -99,7 +98,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
     case 'swap': {
       if (!hasCurrentWallet) return false
-      Actions.push(EXCHANGE_SCENE)
+      Actions.push('exchangeScene')
       return true
     }
 
@@ -107,7 +106,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        Actions.push(WALLET_LIST_SCENE)
+        Actions.push('walletListScene')
         showError(s.strings.azteco_btc_only)
         return false
       }
@@ -159,6 +158,13 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       showError(noWalletMessage)
       return true
     }
+
+    case 'dev': {
+      if (!global.__DEV__) return false
+      // $FlowFixMe
+      Actions.push(link.sceneName)
+      return true
+    }
   }
 
   return false
@@ -174,7 +180,7 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promis
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  Actions.push(WALLET_LIST_SCENE)
+  Actions.push('walletListScene')
 }
 
 const CURRENCY_NAMES = {

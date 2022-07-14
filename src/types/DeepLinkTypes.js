@@ -34,6 +34,7 @@
  * Besides the edge:// protocol, there are also various coin-specific URI
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
+import { type ParamList } from './routerTypes'
 
 export type AztecoLink = {
   type: 'azteco',
@@ -85,6 +86,11 @@ export type WalletConnectLink = {
   uri: string
 }
 
+export type DevLink = {
+  type: 'dev',
+  sceneName: $Keys<ParamList>
+}
+
 export type DeepLink =
   | AztecoLink
   | BitPayLink
@@ -95,6 +101,7 @@ export type DeepLink =
   | RequestAddressLink
   | WalletConnectLink
   | SwapLink
+  | DevLink
   | {
       type: 'other',
       protocol: string, // Without the ':'

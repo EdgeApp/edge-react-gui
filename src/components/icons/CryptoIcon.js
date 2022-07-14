@@ -25,7 +25,7 @@ type Props = {
   currencyCode?: string
 }
 
-export const CurrencyIconComponent = (props: Props) => {
+const CryptoIconComponent = (props: Props) => {
   let { pluginId, tokenId } = props
   const { walletId, mono = false, sizeRem, marginRem, currencyCode } = props
 
@@ -97,4 +97,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CurrencyIcon = memo(CurrencyIconComponent)
+export const CryptoIcon = memo(CryptoIconComponent)

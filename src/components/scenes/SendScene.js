@@ -36,8 +36,8 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { PinDots } from '../themed/PinDots.js'
+import { SafeSlider } from '../themed/SafeSlider'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
-import { SmartSlider } from '../themed/SmartSlider'
 import { AddressTile } from '../tiles/AddressTile.js'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
@@ -575,7 +575,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderUniqueIdentifier()}
           {this.renderInfoTiles()}
           {this.renderAuthentication()}
-          <View style={styles.footer}>{!!recipientAddress && <SmartSlider onSlidingComplete={this.submit} disabled={sliderDisabled} />}</View>
+          <View style={styles.footer}>{!!recipientAddress && <SafeSlider onSlidingComplete={this.submit} disabled={sliderDisabled} />}</View>
         </KeyboardAwareScrollView>
       </SceneWrapper>
     )

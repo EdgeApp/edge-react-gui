@@ -17,10 +17,10 @@ import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type EdgeTokenId, type FlatListItem } from '../../types/types.js'
 import { normalizeForSearch } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from '../themed/CurrencyIcon.js'
 import { DividerLine } from '../themed/DividerLine.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -136,7 +136,7 @@ export function ManageTokensScene(props: Props) {
       <SceneHeader underline>
         <TouchableOpacity onPress={handleSelectWallet}>
           <Title
-            leftIcon={<CurrencyIcon sizeRem={1.5} walletId={wallet.id} />}
+            leftIcon={<CryptoIcon sizeRem={1.5} walletId={wallet.id} />}
             rightIcon={<FontAwesomeIcon name="angle-right" size={theme.rem(2)} style={styles.rightIcon} />}
             text={walletName}
           />

@@ -7,7 +7,8 @@ exports[`TransactionListTop should render with loading props 1`] = `
       Object {
         "flex": 1,
         "marginBottom": 11,
-        "paddingLeft": 22,
+        "paddingBottom": 22,
+        "paddingHorizontal": 22,
       }
     }
   >
@@ -15,7 +16,6 @@ exports[`TransactionListTop should render with loading props 1`] = `
       style={
         Object {
           "flexDirection": "row",
-          "marginRight": 22,
           "marginTop": 11,
         }
       }
@@ -44,9 +44,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
       <View
         style={
           Object {
-            "height": 118,
-            "marginRight": 22,
-            "marginVertical": 22,
+            "marginTop": 22,
           }
         }
       >
@@ -68,6 +66,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
               style={
                 Object {
                   "flexDirection": "row",
+                  "justifyContent": "space-between",
                 }
               }
             >
@@ -76,14 +75,16 @@ exports[`TransactionListTop should render with loading props 1`] = `
                 style={
                   Object {
                     "alignItems": "center",
-                    "flex": 1,
                     "flexDirection": "row",
+                    "flexShrink": 1,
+                    "marginRight": 11,
                   }
                 }
               >
                 <WithTheme(EdgeTextComponent)
                   style={
                     Object {
+                      "flexShrink": 1,
                       "fontSize": 28,
                       "marginRight": 6,
                     }
@@ -98,7 +99,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   size={34}
                 />
               </TouchableOpacity>
-              <Memo(CurrencyIconComponent)
+              <Memo(CryptoIconComponent)
                 currencyCode="string"
                 sizeRem={1.5}
               />
@@ -136,7 +137,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
         style={
           Object {
             "flexDirection": "row",
-            "marginBottom": 22,
+            "marginTop": 22,
           }
         }
       >
@@ -146,17 +147,17 @@ exports[`TransactionListTop should render with loading props 1`] = `
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "height": 67,
-              "justifyContent": "center",
-              "width": 135,
+              "flexShrink": 1,
+              "justifyContent": "flex-start",
+              "paddingRight": 34,
             }
           }
         >
           <Icon
             allowFontScaling={false}
             color="#66EDA8"
-            name="arrow-down"
-            size={34}
+            name="arrowdown"
+            size={22}
           />
           <WithTheme(EdgeTextComponent)
             style={
@@ -171,30 +172,23 @@ exports[`TransactionListTop should render with loading props 1`] = `
             Request
           </WithTheme(EdgeTextComponent)>
         </TouchableOpacity>
-        <View
-          style={
-            Object {
-              "width": 45,
-            }
-          }
-        />
         <TouchableOpacity
           onPress={[Function]}
           style={
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "height": 67,
-              "justifyContent": "center",
-              "width": 135,
+              "flexShrink": 1,
+              "justifyContent": "flex-start",
+              "paddingRight": 34,
             }
           }
         >
           <Icon
             allowFontScaling={false}
             color="#66EDA8"
-            name="arrow-up"
-            size={34}
+            name="arrowup"
+            size={22}
           />
           <WithTheme(EdgeTextComponent)
             style={

@@ -6,9 +6,9 @@ import FastImage from 'react-native-fast-image'
 
 import { type LiquidityPool } from '../../plugins/stake-plugins/types'
 import { getLiquidityPoolIconUri } from '../../util/CdnUris.js'
+import { PairIcons } from '../icons/PairIcons.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { PairIcons } from '../themed/PairIcons.js'
 
 export function StakingOptionCard({
   currencyLogos,

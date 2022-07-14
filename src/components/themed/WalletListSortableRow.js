@@ -14,8 +14,8 @@ import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
+import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { CurrencyIcon } from './CurrencyIcon.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
@@ -77,7 +77,7 @@ export class WalletListSortableRowComponent extends React.PureComponent<Props> {
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
             </View>
             <View style={styles.iconContainer}>
-              <CurrencyIcon currencyCode={currencyCode} walletId={pluginId} />
+              <CryptoIcon currencyCode={currencyCode} walletId={pluginId} />
             </View>
             <View style={styles.detailsContainer}>
               <View style={styles.detailsRow}>

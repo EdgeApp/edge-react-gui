@@ -6,7 +6,6 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { WALLET_LIST } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import {
   setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
@@ -221,7 +220,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
           })
         )
     )
-    Actions.jump(WALLET_LIST)
+    Actions.jump('walletList')
   }
 }
 

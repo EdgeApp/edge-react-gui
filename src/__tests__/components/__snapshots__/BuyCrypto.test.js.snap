@@ -25,7 +25,7 @@ exports[`BuyCrypto should render with some props 1`] = `
           }
         }
       >
-        <Memo(CurrencyIconComponent)
+        <Memo(CryptoIconComponent)
           marginRem={
             Array [
               0.25,

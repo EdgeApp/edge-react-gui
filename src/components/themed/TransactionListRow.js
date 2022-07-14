@@ -4,7 +4,6 @@ import { abs, div, log10 } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { displayFiatAmount } from '../../hooks/useFiatText.js'
 import { formatNumber } from '../../locales/intl.js'
@@ -54,7 +53,7 @@ export class TransactionListRowComponent extends React.PureComponent<Props> {
     if (transaction == null) {
       return showError(s.strings.transaction_details_error_invalid)
     }
-    Actions.push(TRANSACTION_DETAILS, {
+    Actions.push('transactionDetails', {
       edgeTransaction: transaction,
       thumbnailPath
     })

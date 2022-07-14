@@ -37,70 +37,6 @@ import { TransactionsExportScene } from '../components/scenes/TransactionsExport
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import { ControlPanel } from '../components/themed/ControlPanel'
-import {
-  CHANGE_MINING_FEE,
-  CHANGE_PASSWORD,
-  CHANGE_PIN,
-  CREATE_WALLET_ACCOUNT_SELECT,
-  CREATE_WALLET_ACCOUNT_SETUP,
-  CREATE_WALLET_CHOICE,
-  CREATE_WALLET_IMPORT,
-  CREATE_WALLET_NAME,
-  CREATE_WALLET_REVIEW,
-  CREATE_WALLET_SELECT_CRYPTO,
-  CREATE_WALLET_SELECT_FIAT,
-  CURRENCY_NOTIFICATION_SETTINGS,
-  CURRENCY_SETTINGS,
-  DEFAULT_FIAT_SETTING,
-  EDGE,
-  EDGE_LOGIN,
-  EXCHANGE,
-  EXCHANGE_QUOTE_PROCESSING_SCENE,
-  EXCHANGE_QUOTE_SCENE,
-  EXCHANGE_SCENE,
-  EXCHANGE_SETTINGS,
-  EXCHANGE_SUCCESS_SCENE,
-  FIO_ADDRESS_DETAILS,
-  FIO_ADDRESS_LIST,
-  FIO_ADDRESS_REGISTER,
-  FIO_ADDRESS_REGISTER_SELECT_WALLET,
-  FIO_ADDRESS_REGISTER_SUCCESS,
-  FIO_ADDRESS_SETTINGS,
-  FIO_CONNECT_TO_WALLETS_CONFIRM,
-  FIO_DOMAIN_CONFIRM,
-  FIO_DOMAIN_REGISTER,
-  FIO_DOMAIN_REGISTER_SELECT_WALLET,
-  FIO_DOMAIN_SETTINGS,
-  FIO_NAME_CONFIRM,
-  FIO_REQUEST_APPROVED,
-  FIO_REQUEST_CONFIRMATION,
-  FIO_REQUEST_LIST,
-  FIO_SENT_REQUEST_DETAILS,
-  FIO_STAKING_CHANGE,
-  FIO_STAKING_OVERVIEW,
-  LOGIN,
-  NOTIFICATION_SETTINGS,
-  OTP_REPAIR_SCENE,
-  OTP_SETUP,
-  PROMOTION_SETTINGS,
-  RECOVER_PASSWORD,
-  REQUEST,
-  ROOT,
-  SECURITY_ALERTS_SCENE,
-  SEND,
-  SETTINGS_OVERVIEW,
-  SETTINGS_OVERVIEW_TAB,
-  SPENDING_LIMITS,
-  STAKE_MODIFY,
-  STAKE_OPTIONS,
-  STAKE_OVERVIEW,
-  TERMS_OF_SERVICE,
-  TRANSACTION_DETAILS,
-  TRANSACTION_LIST,
-  TRANSACTIONS_EXPORT,
-  WALLET_LIST,
-  WALLET_LIST_SCENE
-} from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
@@ -210,10 +146,10 @@ export class MainComponent extends React.Component<Props> {
     return (
       <>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
-          <Stack key={ROOT} hideNavBar panHandlers={null}>
-            <Scene key={LOGIN} component={withNavigation(LoginScene)} initial />
+          <Stack key="root" hideNavBar panHandlers={null}>
+            <Scene key="login" component={withNavigation(LoginScene)} initial />
             <Scene
-              key={EDGE_LOGIN}
+              key="edgeLogin"
               component={withNavigation(ifLoggedIn(EdgeLoginScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
@@ -231,7 +167,7 @@ export class MainComponent extends React.Component<Props> {
   renderTransactionDetailsView = () => {
     return (
       <Scene
-        key={TRANSACTION_DETAILS}
+        key="transactionDetails"
         component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
         navTransparent
         onEnter={() => this.props.requestPermission('contacts')}
@@ -248,7 +184,7 @@ export class MainComponent extends React.Component<Props> {
       <Drawer
         hideTabBar
         drawerBackgroundColor="none"
-        key={EDGE}
+        key="edge"
         hideNavBar
         contentComponent={withNavigation(ifLoggedIn(ControlPanel))}
         hideDrawerButton
@@ -257,10 +193,10 @@ export class MainComponent extends React.Component<Props> {
       >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
-          <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
-            <Stack key={WALLET_LIST}>
+          <Tabs key="edge" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
+            <Stack key="walletList">
               <Scene
-                key={WALLET_LIST_SCENE}
+                key="walletListScene"
                 component={withNavigation(ifLoggedIn(WalletListScene))}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
@@ -269,7 +205,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_CHOICE}
+                key="createWalletChoice"
                 component={withNavigation(ifLoggedIn(CreateWalletChoiceScene))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -277,7 +213,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_IMPORT}
+                key="createWalletImport"
                 component={withNavigation(ifLoggedIn(CreateWalletImportScene))}
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_import_title} />}
@@ -286,7 +222,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_SELECT_CRYPTO}
+                key="createWalletSelectCrypto"
                 component={withNavigation(ifLoggedIn(CreateWalletSelectCryptoScene))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -294,7 +230,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_NAME}
+                key="createWalletName"
                 component={withNavigation(ifLoggedIn(CreateWalletName))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -302,7 +238,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_SELECT_FIAT}
+                key="createWalletSelectFiat"
                 component={withNavigation(ifLoggedIn(CreateWalletSelectFiatScene))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -310,7 +246,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_REVIEW}
+                key="createWalletReview"
                 component={withNavigation(ifLoggedIn(CreateWalletReviewScene))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -318,7 +254,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_ACCOUNT_SETUP}
+                key="createWalletAccountSetup"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
@@ -327,7 +263,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={CREATE_WALLET_ACCOUNT_SELECT}
+                key="createWalletAccountSelect"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
@@ -336,7 +272,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={TRANSACTION_LIST}
+                key="transactionList"
                 component={withNavigation(ifLoggedIn(TransactionList))}
                 onEnter={() => {
                   this.props.requestPermission('contacts')
@@ -348,7 +284,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={STAKE_MODIFY}
+                key="stakeModify"
                 navTransparent
                 component={withNavigation(ifLoggedIn(StakeModifyScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -356,7 +292,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={STAKE_OPTIONS}
+                key="stakeOptions"
                 navTransparent
                 component={withNavigation(ifLoggedIn(StakeOptionsScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -364,7 +300,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={STAKE_OVERVIEW}
+                key="stakeOverview"
                 navTransparent
                 component={withNavigation(ifLoggedIn(StakeOverviewScene))}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -372,7 +308,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={FIO_STAKING_OVERVIEW}
+                key="fioStakingOverview"
                 navTransparent
                 component={ifLoggedIn(FioStakingOverviewScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -380,7 +316,7 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={FIO_STAKING_CHANGE}
+                key="fioStakingChange"
                 navTransparent
                 component={ifLoggedIn(FioStakingChangeScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -405,7 +341,7 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderEmptyButton()}
               />
               <Scene
-                key={TRANSACTIONS_EXPORT}
+                key="transactionsExport"
                 component={withNavigation(ifLoggedIn(TransactionsExportScene))}
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.title_export_transactions} />}
@@ -453,9 +389,9 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
               />
             </Stack>
-            <Stack key={EXCHANGE}>
+            <Stack key="exchange">
               <Scene
-                key={EXCHANGE_SCENE}
+                key="exchangeScene"
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
@@ -463,7 +399,7 @@ export class MainComponent extends React.Component<Props> {
                 onEnter={() => this.props.checkEnabledExchanges()}
               />
               <Scene
-                key={EXCHANGE_QUOTE_PROCESSING_SCENE}
+                key="exchangeQuoteProcessing"
                 component={withNavigation(ifLoggedIn(CryptoExchangeQuoteProcessingScreen))}
                 navTransparent
                 hideTabBar
@@ -471,13 +407,13 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderEmptyButton()}
               />
               <Scene
-                key={EXCHANGE_QUOTE_SCENE}
+                key="exchangeQuote"
                 component={withNavigation(ifLoggedIn(CryptoExchangeQuote))}
                 navTransparent
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
               />
               <Scene
-                key={EXCHANGE_SUCCESS_SCENE}
+                key="exchangeSuccess"
                 component={withNavigation(ifLoggedIn(CryptoExchangeSuccessScene))}
                 navTransparent
                 renderLeftButton={this.renderEmptyButton()}
@@ -485,9 +421,9 @@ export class MainComponent extends React.Component<Props> {
             </Stack>
           </Tabs>
 
-          <Stack key={REQUEST} hideTabBar>
+          <Stack key="request" hideTabBar>
             <Scene
-              key={REQUEST}
+              key="request"
               component={withNavigation(ifLoggedIn(Request))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -495,7 +431,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
             />
             <Scene
-              key={FIO_REQUEST_CONFIRMATION}
+              key="fioRequestConfirmation"
               component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
@@ -504,9 +440,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={SEND} hideTabBar>
+          <Stack key="send" hideTabBar>
             <Scene
-              key={SEND}
+              key="send"
               component={withNavigation(ifLoggedIn(SendScene))}
               navTransparent
               onEnter={props => {
@@ -516,7 +452,7 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
             <Scene
-              key={CHANGE_MINING_FEE}
+              key="changeMiningFee"
               component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -524,9 +460,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={RECOVER_PASSWORD} hideTabBar>
+          <Stack key="passwordRecovery" hideTabBar>
             <Scene
-              key={RECOVER_PASSWORD}
+              key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
@@ -534,12 +470,12 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={OTP_REPAIR_SCENE} hideNavBar>
-            <Scene key={OTP_REPAIR_SCENE} component={withNavigation(ifLoggedIn(OtpRepairScene))} navTransparent />
+          <Stack key="otpRepair" hideNavBar>
+            <Scene key="otpRepair" component={withNavigation(ifLoggedIn(OtpRepairScene))} navTransparent />
           </Stack>
 
-          <Stack key={SECURITY_ALERTS_SCENE} hideNavBar>
-            <Scene key={SECURITY_ALERTS_SCENE} component={withNavigation(ifLoggedIn(SecurityAlertsScene))} navTransparent />
+          <Stack key="securityAlerts" hideNavBar>
+            <Scene key="securityAlerts" component={withNavigation(ifLoggedIn(SecurityAlertsScene))} navTransparent />
           </Stack>
 
           <Stack key="manageTokens" hideTabBar>
@@ -553,9 +489,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={SETTINGS_OVERVIEW_TAB} hideDrawerButton>
+          <Stack key="settingsOverviewTab" hideDrawerButton>
             <Scene
-              key={SETTINGS_OVERVIEW}
+              key="settingsOverview"
               component={withNavigation(ifLoggedIn(SettingsScene))}
               navTransparent
               onEnter={() => this.props.showReEnableOtpModal()}
@@ -564,7 +500,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
             />
             <Scene
-              key={CHANGE_PASSWORD}
+              key="changePassword"
               component={withNavigation(ifLoggedIn(ChangePasswordScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
@@ -572,7 +508,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={CHANGE_PIN}
+              key="changePin"
               component={withNavigation(ifLoggedIn(ChangePinScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
@@ -580,7 +516,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={OTP_SETUP}
+              key="otpSetup"
               component={withNavigation(ifLoggedIn(OtpSettingsScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_otp} />}
@@ -588,7 +524,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={RECOVER_PASSWORD}
+              key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
@@ -596,7 +532,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={SPENDING_LIMITS}
+              key="spendingLimits"
               component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
@@ -604,7 +540,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={EXCHANGE_SETTINGS}
+              key="exchangeSettings"
               component={withNavigation(ifLoggedIn(SwapSettingsScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} />}
@@ -612,7 +548,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={CURRENCY_SETTINGS}
+              key="currencySettings"
               component={withNavigation(ifLoggedIn(CurrencySettingsScene))}
               navTransparent
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
@@ -620,7 +556,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={PROMOTION_SETTINGS}
+              key="promotionSettings"
               component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} />}
@@ -628,14 +564,14 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={DEFAULT_FIAT_SETTING}
+              key="defaultFiatSetting"
               component={withNavigation(ifLoggedIn(DefaultFiatSettingScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={NOTIFICATION_SETTINGS}
+              key="notificationSettings"
               component={withNavigation(ifLoggedIn(NotificationScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
@@ -644,7 +580,7 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key={CURRENCY_NOTIFICATION_SETTINGS}
+              key="currencyNotificationSettings"
               component={withNavigation(ifLoggedIn(CurrencyNotificationScene))}
               navTransparent
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
@@ -665,9 +601,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={TERMS_OF_SERVICE}>
+          <Stack key="termsOfService">
             <Scene
-              key={TERMS_OF_SERVICE}
+              key="termsOfService"
               component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
@@ -677,9 +613,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_ADDRESS_LIST}>
+          <Stack key="fioAddressList">
             <Scene
-              key={FIO_ADDRESS_LIST}
+              key="fioAddressList"
               component={withNavigation(ifLoggedIn(FioAddressListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -688,9 +624,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_ADDRESS_REGISTER}>
+          <Stack key="fioAddressRegister">
             <Scene
-              key={FIO_ADDRESS_REGISTER}
+              key="fioAddressRegister"
               component={withNavigation(ifLoggedIn(FioAddressRegisterScene))}
               navTransparent
               renderTitle={<EdgeLogoHeader />}
@@ -700,9 +636,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_ADDRESS_REGISTER_SELECT_WALLET}>
+          <Stack key="fioAddressRegisterSelectWallet">
             <Scene
-              key={FIO_ADDRESS_REGISTER_SELECT_WALLET}
+              key="fioAddressRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
@@ -712,9 +648,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_DOMAIN_REGISTER}>
+          <Stack key="fioDomainRegister">
             <Scene
-              key={FIO_DOMAIN_REGISTER}
+              key="fioDomainRegister"
               component={withNavigation(ifLoggedIn(FioDomainRegisterScene))}
               navTransparent
               renderTitle={<EdgeLogoHeader />}
@@ -723,7 +659,7 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key={FIO_DOMAIN_REGISTER_SELECT_WALLET}
+              key="fioDomainRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
@@ -732,7 +668,7 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key={FIO_DOMAIN_CONFIRM}
+              key="fioDomainConfirm"
               component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -741,9 +677,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_NAME_CONFIRM}>
+          <Stack key="fioNameConfirm">
             <Scene
-              key={FIO_NAME_CONFIRM}
+              key="fioNameConfirm"
               component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -752,9 +688,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_ADDRESS_DETAILS}>
+          <Stack key="fioAddressDetails">
             <Scene
-              key={FIO_ADDRESS_DETAILS}
+              key="fioAddressDetails"
               component={withNavigation(ifLoggedIn(FioAddressDetailsScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
@@ -762,7 +698,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
             />
             <Scene
-              key={FIO_CONNECT_TO_WALLETS_CONFIRM}
+              key="fioConnectToWalletsConfirm"
               component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
@@ -772,9 +708,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_ADDRESS_SETTINGS}>
+          <Stack key="fioAddressSettings">
             <Scene
-              key={FIO_ADDRESS_SETTINGS}
+              key="fioAddressSettings"
               component={withNavigation(FioAddressSettingsScene)}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
@@ -784,9 +720,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_ADDRESS_REGISTER_SUCCESS}>
+          <Stack key="fioAddressRegisterSuccess">
             <Scene
-              key={FIO_ADDRESS_REGISTER_SUCCESS}
+              key="fioAddressRegisterSuccess"
               component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
@@ -795,9 +731,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_DOMAIN_SETTINGS}>
+          <Stack key="fioDomainSettings">
             <Scene
-              key={FIO_DOMAIN_SETTINGS}
+              key="fioDomainSettings"
               component={withNavigation(FioDomainSettingsScene)}
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
@@ -807,9 +743,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_REQUEST_LIST}>
+          <Stack key="fioRequestList">
             <Scene
-              key={FIO_REQUEST_LIST}
+              key="fioRequestList"
               component={withNavigation(ifLoggedIn(FioRequestListScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -817,7 +753,7 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key={FIO_REQUEST_APPROVED}
+              key="fioRequestApproved"
               component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
               navTransparent
               onEnter={() => this.props.requestPermission('contacts')}
@@ -828,9 +764,9 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={FIO_SENT_REQUEST_DETAILS}>
+          <Stack key="fioSentRequestDetails">
             <Scene
-              key={FIO_SENT_REQUEST_DETAILS}
+              key="fioSentRequestDetails"
               component={withNavigation(ifLoggedIn(FioSentRequestDetailsScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -881,10 +817,10 @@ export class MainComponent extends React.Component<Props> {
   handleEmpty = () => null
 
   handleBack = () => {
-    if (this.isCurrentScene(LOGIN)) {
+    if (this.isCurrentScene('login')) {
       return false
     }
-    if (this.isCurrentScene(WALLET_LIST_SCENE)) {
+    if (this.isCurrentScene('walletListScene')) {
       if (this.backPressedOnce) {
         this.props.logout()
       } else {
@@ -895,23 +831,23 @@ export class MainComponent extends React.Component<Props> {
       }
       return true
     }
-    if (this.isCurrentScene(EXCHANGE_QUOTE_SCENE)) {
-      Actions.popTo(EXCHANGE_SCENE)
+    if (this.isCurrentScene('exchangeQuote')) {
+      Actions.popTo('exchangeScene')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
       handlePluginBack()
       return true
     }
-    if (this.isCurrentScene(FIO_ADDRESS_REGISTER)) {
+    if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        Actions.jump(WALLET_LIST_SCENE)
+        Actions.jump('walletListScene')
         return true
       }
     }
-    if (this.isCurrentScene(FIO_ADDRESS_REGISTER_SELECT_WALLET)) {
+    if (this.isCurrentScene('fioAddressRegisterSelectWallet')) {
       if (Actions.currentParams.isFallback) {
-        Actions.popTo(FIO_ADDRESS_REGISTER)
+        Actions.popTo('fioAddressRegister')
         return true
       }
     }

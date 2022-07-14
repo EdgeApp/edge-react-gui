@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_SCENE, TRANSACTION_DETAILS } from '../constants/SceneKeys.js'
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, recordSend } from '../modules/FioAddress/util'
@@ -137,7 +136,7 @@ export const sendConfirmationUpdateTx =
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              Actions.jump(EXCHANGE_SCENE)
+              Actions.jump('exchangeScene')
               break
           }
         }
@@ -354,7 +353,7 @@ export const signBroadcastAndSave =
       if (guiMakeSpendInfo.onDone) {
         guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
       } else {
-        Actions.replace(TRANSACTION_DETAILS, {
+        Actions.replace('transactionDetails', {
           edgeTransaction: edgeSignedTransaction
         })
       }

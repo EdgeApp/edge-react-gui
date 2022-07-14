@@ -5,7 +5,6 @@ import React from 'react'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
-import { FIO_DOMAIN_SETTINGS } from '../constants/SceneKeys.js'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings'
 import {
@@ -181,7 +180,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: Fio
   if (answer) {
     // $FlowFixMe
     const { isPublic = false } = fioDomain
-    Actions.push(FIO_DOMAIN_SETTINGS, {
+    Actions.push('fioDomainSettings', {
       showRenew: true,
       fioWallet,
       fioDomainName: fioDomain.name,

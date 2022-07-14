@@ -21,7 +21,6 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_QUOTE_PROCESSING_SCENE, EXCHANGE_QUOTE_SCENE, EXCHANGE_SCENE, EXCHANGE_SUCCESS_SCENE } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
@@ -40,7 +39,7 @@ export type SetNativeAmountInfo = {
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
-  Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
+  Actions.push('exchangeQuoteProcessing')
 
   const state = getState()
   const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -66,13 +65,13 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 
     const swapInfo = await fetchSwapQuote(state, request)
 
-    Actions.push(EXCHANGE_QUOTE_SCENE, {
+    Actions.push('exchangeQuote', {
       swapInfo,
       onApprove
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    Actions.popTo(EXCHANGE_SCENE)
+    Actions.popTo('exchangeScene')
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
       const { currencyCode, networkFee = '' } = insufficientFunds
@@ -107,18 +106,18 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 }
 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
-  if (Actions.currentScene !== EXCHANGE_QUOTE_SCENE) return
-  Actions.push(EXCHANGE_QUOTE_PROCESSING_SCENE)
+  if (Actions.currentScene !== 'exchangeQuote') return
+  Actions.push('exchangeQuoteProcessing')
 
   try {
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-    Actions.push(EXCHANGE_QUOTE_SCENE, {
+    Actions.push('exchangeQuote', {
       swapInfo,
       onApprove
     })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    Actions.popTo(EXCHANGE_SCENE)
+    Actions.popTo('exchangeScene')
     dispatch(processSwapQuoteError(error))
   }
 }
@@ -236,13 +235,14 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
 const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { fromWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
+  const { fromWalletId, fromCurrencyCode, toWalletId, toCurrencyCode } = state.cryptoExchange
 
   // Basic sanity checks (should never fail):
   if (error == null) return
-  if (fromWalletId == null || fromCurrencyCode == null || toCurrencyCode == null) return
+  if (fromWalletId == null || fromCurrencyCode == null || toWalletId == null || toCurrencyCode == null) return
 
   const fromWallet = state.core.account.currencyWallets[fromWalletId]
+  const toWallet = state.core.account.currencyWallets[toWalletId]
 
   // Check for known error types:
   const insufficientFunds = asMaybeInsufficientFundsError(error)
@@ -252,7 +252,9 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   const aboveLimit = asMaybeSwapAboveLimitError(error)
   if (aboveLimit != null) {
-    const currentCurrencyDenomination = getDisplayDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
+    const wallet = aboveLimit.direction === 'to' ? toWallet : fromWallet
+    const currencyCode = aboveLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
+    const currentCurrencyDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
     const { nativeMax } = aboveLimit
     const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -266,7 +268,9 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   const belowLimit = asMaybeSwapBelowLimitError(error)
   if (belowLimit) {
-    const currentCurrencyDenomination = getDisplayDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
+    const wallet = belowLimit.direction === 'to' ? toWallet : fromWallet
+    const currencyCode = belowLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
+    const currentCurrencyDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
     const { nativeMin } = belowLimit
     const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -338,7 +342,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
       name,
       category
     }
-    Actions.push(EXCHANGE_SUCCESS_SCENE)
+    Actions.push('exchangeSuccess')
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     // Dispatch the success action and callback

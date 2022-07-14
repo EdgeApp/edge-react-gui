@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
-import { CurrencyIcon } from '../../components/themed/CurrencyIcon.js'
+import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -123,12 +123,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={styles.scrollableView}>
-            <CurrencyIcon
-              currencyCode={currencyCode}
-              marginRem={[1.5, 0, 0, 0]}
-              pluginId={currencyConfigs[walletTypeValue].currencyInfo.pluginId}
-              sizeRem={4}
-            />
+            <CryptoIcon currencyCode={currencyCode} marginRem={[1.5, 0, 0, 0]} pluginId={currencyConfigs[walletTypeValue].currencyInfo.pluginId} sizeRem={4} />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>

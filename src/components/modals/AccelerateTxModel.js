@@ -6,7 +6,6 @@ import { ActivityIndicator, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { playSendSound } from '../../actions/SoundActions.js'
-import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors.js'
@@ -130,7 +129,7 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
 
           showToast(s.strings.transaction_success_message)
 
-          Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+          Actions.replace('transactionDetails', { edgeTransaction: edgeSignedTransaction })
         } else {
           showWarning(s.strings.transaction_success_message)
         }

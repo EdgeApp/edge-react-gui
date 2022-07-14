@@ -8,11 +8,11 @@ import { useHandler } from '../../hooks/useHandler.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { memo, useRef } from '../../types/reactHooks.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
+import { SwipeableRowIcon } from '../icons/SwipeableRowIcon.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { type SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow.js'
-import { SwipeableRowIcon } from './SwipeableRowIcon.js'
 import { WalletListLoadingRow } from './WalletListLoadingRow.js'
 
 type Props = {|
@@ -37,7 +37,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     setTimeout(() => {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode="" isToken={false} navigation={navigation} walletId={walletId} />)
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} navigation={navigation} walletId={walletId} />)
   })
 
   // rendering -----------------------------------------------------------

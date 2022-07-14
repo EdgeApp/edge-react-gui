@@ -21,7 +21,7 @@ type Props = {
 }
 
 /**
- * Renders the sync progress ratio as part of the `CurrencyIcon` component.
+ * Renders the sync progress ratio as part of the `CryptoIcon` component.
  */
 export const WalletSyncCircle = (props: Props) => {
   const theme = useTheme()

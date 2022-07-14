@@ -5,7 +5,6 @@ import * as React from 'react'
 
 import { TextInputModal } from '../components/modals/TextInputModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { OTP_REPAIR_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
@@ -16,7 +15,7 @@ export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getSt
 
   if (account.loggedIn && !otpErrorShown) {
     dispatch({ type: 'OTP_ERROR_SHOWN' })
-    Actions.push(OTP_REPAIR_SCENE, {
+    Actions.push('otpRepair', {
       otpError
     })
   }
@@ -26,18 +25,18 @@ type ValidatePasswordOptions = {
   message?: string,
   submitLabel?: string,
   title?: string,
-  warning?: string
+  warningMessage?: string
 }
 
 export const validatePassword =
   (opts: ValidatePasswordOptions = {}) =>
   async (dispatch: Dispatch, getState: GetState): Promise<boolean> => {
-    const { message, submitLabel, title = s.strings.confirm_password_text, warning } = opts
+    const { message, submitLabel, title = s.strings.confirm_password_text, warningMessage } = opts
     const state = getState()
     const { account } = state.core
     const password = await Airship.show(bridge => (
       <TextInputModal
-        autoFocus={warning == null}
+        autoFocus={warningMessage == null}
         autoCorrect={false}
         bridge={bridge}
         inputLabel={s.strings.enter_your_password}
@@ -46,7 +45,7 @@ export const validatePassword =
         secureTextEntry
         submitLabel={submitLabel}
         title={title}
-        warning={warning}
+        warningMessage={warningMessage}
         onSubmit={async password => {
           const isOk = await account.checkPassword(password)
           if (!isOk) return s.strings.password_reminder_invalid
