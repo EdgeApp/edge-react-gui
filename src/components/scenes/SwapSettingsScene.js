@@ -42,7 +42,6 @@ type State = {
 }
 
 export class SwapSettings extends React.Component<Props, State> {
-  cleanups: Array<() => mixed> = []
   sortedIds: string[]
 
   constructor(props: Props) {
@@ -53,14 +52,6 @@ export class SwapSettings extends React.Component<Props, State> {
     for (const pluginId of Object.keys(exchanges)) {
       const exchange = exchanges[pluginId]
       this.state.enabled[pluginId] = exchange.enabled
-
-      this.cleanups.push(
-        exchange.watch('enabled', enabled =>
-          this.setState(state => ({
-            enabled: { ...state.enabled, [pluginId]: enabled }
-          }))
-        )
-      )
     }
 
     const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
@@ -68,7 +59,8 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    for (const cleanup of this.cleanups) cleanup()
+    const { exchanges } = this.props
+    Promise.all(Object.keys(exchanges).map(pluginId => exchanges[pluginId].changeEnabled(this.state.enabled[pluginId])))
   }
 
   handlePreferredModal = () => {
@@ -124,15 +116,15 @@ export class SwapSettings extends React.Component<Props, State> {
   renderPlugin(pluginId: string) {
     const { exchanges } = this.props
     const { displayName } = exchanges[pluginId].swapInfo
+    const pluginEnabled = this.state.enabled[pluginId]
 
     return (
       <SettingsSwitchRow
         key={pluginId}
         label={displayName}
-        value={this.state.enabled[pluginId]}
+        value={pluginEnabled}
         onPress={async () => {
-          const newValue = !exchanges[pluginId].enabled
-          await exchanges[pluginId].changeEnabled(newValue)
+          this.setState({ enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled } })
         }}
       >
         {this.renderPluginIcon(pluginId)}
