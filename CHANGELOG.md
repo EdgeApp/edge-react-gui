@@ -27,9 +27,7 @@
   - added: Add optional from/to parameter to min and max swap errors
   - upgrade: yaob dependency to include error serialization fix
   - added: New deleteRemoteAccount function to the EdgeAccount object
-- Upgrade edge-currency-accountbased to v0.16.4
-  - FTM: Add new default tokens: AVAX, BNB, BTC, CRV, DAI, ETH, FUSD, LIF3, LINK, LSHARE, MIM, TREEB, ZOO
-  - ETH: Calculate and store feeRateUsed in transactions
+- Upgrade edge-currency-accountbased to v0.16.3
   - ETH: Fix network fee calculation
   - Add: All AAVE token for kovan
   - Change: Rename PAX token to USDP for ethereum
@@ -38,7 +36,9 @@
   - Fix: Engine crashs on fetching server list network failure
   - Fix: Spend issues caused by not saving UTXOs locally without needing a network event
   - Change: Computes the sat/vByte used for a given transaction, and adds feeRateUsed object to the EdgeTransaction output.
-- Upgrade edge-exchange-plugins v0.13.3
+- Upgrade edge-exchange-plugins v0.13.4
+  - Godex: Fix min amount currency display
+  - Exolix: Fix min amount currency display
   - LetsExchange: Update apiKey config
   - LetsExchange: Fix min amount currency display
   - Upgrade edge-core-js to v0.19.23
