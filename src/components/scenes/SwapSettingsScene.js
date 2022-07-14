@@ -38,8 +38,7 @@ type StateProps = {
 type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
-  enabled: { [pluginId: string]: boolean },
-  needsActivation: { [pluginId: string]: boolean }
+  enabled: { [pluginId: string]: boolean }
 }
 
 export class SwapSettings extends React.Component<Props, State> {
@@ -50,23 +49,15 @@ export class SwapSettings extends React.Component<Props, State> {
     super(props)
     const { exchanges } = props
 
-    this.state = { enabled: {}, needsActivation: {} }
+    this.state = { enabled: {} }
     for (const pluginId of Object.keys(exchanges)) {
       const exchange = exchanges[pluginId]
       this.state.enabled[pluginId] = exchange.enabled
-      this.state.needsActivation[pluginId] = exchange.needsActivation
 
       this.cleanups.push(
         exchange.watch('enabled', enabled =>
           this.setState(state => ({
             enabled: { ...state.enabled, [pluginId]: enabled }
-          }))
-        )
-      )
-      this.cleanups.push(
-        exchange.watch('needsActivation', needsActivation =>
-          this.setState(state => ({
-            needsActivation: { ...state.needsActivation, [pluginId]: needsActivation }
           }))
         )
       )
