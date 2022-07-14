@@ -1,5 +1,65 @@
 # edge-react-gui
 
+## 2.18.0 (2022-07-13)
+
+- Allow account deletion
+- Fix possible broadcast error on fourth consecutive send
+- Fix swept funds not immediately showing in balance
+- Fix bitcoin-related wallets load failure on airplane mode
+- Fix send/receive/stake button alignment
+- Re-enable Feathercoin
+- Display feeRateUsed for incoming bitcoin transactions
+- Update Change Pin and Password scenes to UI2
+- Add warning on PIN screen about needing password on first login
+- Fix incorrect currency code shown in min and max amount swap error messages
+- Live refresh users list in login scenes
+- Fix token amount calculation in transaction details scene
+- Rename existing 'delete' account features to 'forget'
+- Refactor the contents of the WalletListCurrencyRow into CurrencyRow for reuse
+- Modify scene wrapper to get rid of the white space at the bottom
+- Fix crash when tapping on a wallet that is still loading
+- Add skip button to Change Password after denying access to account
+- Show/hide the password fields at the same time
+- Replace all scene key constants with strings
+- Update translations
+- Various visual fixes
+- Upgrade edge-core-js to v0.19.23
+  - added: Add optional from/to parameter to min and max swap errors
+  - upgrade: yaob dependency to include error serialization fix
+  - added: New deleteRemoteAccount function to the EdgeAccount object
+- Upgrade edge-currency-accountbased to v0.16.4
+  - FTM: Add new default tokens: AVAX, BNB, BTC, CRV, DAI, ETH, FUSD, LIF3, LINK, LSHARE, MIM, TREEB, ZOO
+  - ETH: Calculate and store feeRateUsed in transactions
+  - ETH: Fix network fee calculation
+  - Add: All AAVE token for kovan
+  - Change: Rename PAX token to USDP for ethereum
+- Upgrade edge-currency-plugins v1.1.1
+  - Fix: Add feathercoin blockbook server
+  - Fix: Engine crashs on fetching server list network failure
+  - Fix: Spend issues caused by not saving UTXOs locally without needing a network event
+  - Change: Computes the sat/vByte used for a given transaction, and adds feeRateUsed object to the EdgeTransaction output.
+- Upgrade edge-exchange-plugins v0.13.3
+  - LetsExchange: Update apiKey config
+  - LetsExchange: Fix min amount currency display
+  - Upgrade edge-core-js to v0.19.23
+- Upgrade edge-login-ui-rn v0.10.7
+    changed: Update forget account description text
+  - changed: Update PIN description text
+  - changed: Add titles for resecure password/pin scenes
+  - changed: Add SKIP button for resecure password and pin scenes
+  - changed: Move this library to its own Git repository.
+  - fixed: Correctly document the native dependencies this library requires.
+  - fixed: Automatically update the user list when it changes.
+  - removed: No longer depend on @react-native-community/art.
+  - rn: Create a UI2 ChangePinScene and reuse it for creating, changing and resecuring the pin code
+  - rn: Create a UI2 ChangePasswordScene and reuse it for creating, changing and resecuring the password
+  - rn: Sync password eyes
+  - rn: remove unused strings
+  - rn: remove unused redux states
+  - rn: Update "react-redux" to version 7.2.4
+  - rn: Add properly typed redux hooks
+  - rn: Add the useHandler hook from edge-react-gui
+
 ## 2.17.0 (2022-06-22)
 
 - Replace edge-currency-bitcoin with more performant edge-currency-plugins v1.0.0 based on bitcoin.js
