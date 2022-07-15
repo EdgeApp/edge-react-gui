@@ -58,9 +58,14 @@ export class SwapSettings extends React.Component<Props, State> {
     this.sortedIds = exchangeIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     const { exchanges } = this.props
-    Promise.all(Object.keys(exchanges).map(pluginId => exchanges[pluginId].changeEnabled(this.state.enabled[pluginId])))
+    for (const pluginId of Object.keys(exchanges)) {
+      if (exchanges[pluginId].enabled !== this.state.enabled[pluginId]) {
+        // This method updates the same file so we have to save updates one at a time
+        await exchanges[pluginId].changeEnabled(this.state.enabled[pluginId])
+      }
+    }
   }
 
   handlePreferredModal = () => {
