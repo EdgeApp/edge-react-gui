@@ -508,6 +508,7 @@ const strings = {
   transaction_details_exchange_status_page: 'Exchange Status Page',
   transaction_details_exchange_support: 'Exchange Support',
   transaction_details_exchange_support_request: '%s Support Request',
+  transaction_details_fee_warning: 'High Network Fees',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
