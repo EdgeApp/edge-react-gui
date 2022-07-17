@@ -211,6 +211,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       autoCorrect={true}
       autoFocus={true}
       blurOnSubmit={true}
+      editable={true}
       inputAccessoryViewID="string"
       keyboardType="default"
       maxLength={11}
