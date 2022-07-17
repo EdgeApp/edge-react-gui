@@ -10,8 +10,9 @@ import { type Theme, cacheStyles, useTheme } from '../../../components/services/
 import { MainButton } from '../../../components/themed/MainButton.js'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { SceneHeader } from '../../../components/themed/SceneHeader.js'
+import { useHandler } from '../../../hooks/useHandler.js'
 import s from '../../../locales/strings'
-import { memo, useCallback, useRef, useState } from '../../../types/reactHooks.js'
+import { memo, useRef, useState } from '../../../types/reactHooks.js'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris.js'
 
@@ -59,37 +60,31 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
     headerIcon = <Image style={styles.icon} source={{ uri: headerIconUri }} />
   }
 
-  const handleChangeText1 = useCallback(
-    (value: string) => {
-      lastUsed.current = 1
-      onChangeText(1, value)
-      setValue1(value)
-      setValue2(' ')
-      setSpinner2(true)
-      convertValue(1, value).then(v => {
-        if (typeof v === 'string') setValue2(v)
-        setSpinner2(false)
-      })
-    },
-    [convertValue, onChangeText]
-  )
-  const handleChangeText2 = useCallback(
-    (value: string) => {
-      lastUsed.current = 2
-      onChangeText(2, value)
-      setValue2(value)
-      setValue1(' ')
-      setSpinner1(true)
-      convertValue(2, value).then(v => {
-        if (typeof v === 'string') setValue1(v)
-        setSpinner1(false)
-      })
-    },
-    [convertValue, onChangeText]
-  )
-  const handleSubmit = useCallback(() => {
+  const handleChangeText1 = useHandler((value: string) => {
+    lastUsed.current = 1
+    onChangeText(1, value)
+    setValue1(value)
+    setValue2(' ')
+    setSpinner2(true)
+    convertValue(1, value).then(v => {
+      if (typeof v === 'string') setValue2(v)
+      setSpinner2(false)
+    })
+  })
+  const handleChangeText2 = useHandler((value: string) => {
+    lastUsed.current = 2
+    onChangeText(2, value)
+    setValue2(value)
+    setValue1(' ')
+    setSpinner1(true)
+    convertValue(2, value).then(v => {
+      if (typeof v === 'string') setValue1(v)
+      setSpinner1(false)
+    })
+  })
+  const handleSubmit = useHandler(() => {
     onSubmit({ lastUsed: lastUsed.current, value1, value2 })
-  }, [onSubmit, value1, value2])
+  })
 
   let statusTextStyle = styles.text
   if (statusTextType === 'warning') {
