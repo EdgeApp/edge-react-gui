@@ -478,6 +478,7 @@
   "transaction_details_exchange_status_page": "Pagina dello stato del cambio valuta",
   "transaction_details_exchange_support": "Supporto del cambio valuta",
   "transaction_details_exchange_support_request": "Richiesta di assistenza %s",
+  "transaction_details_fee_warning": "High Network Fees",
   "tx_detail_picker_title": "Scegli una categoria:",
   "transaction_details_notes_title": "Note",
   "back_button_tap_again_to_exit": "Tocca INDIETRO di nuovo per uscire dall'app",
