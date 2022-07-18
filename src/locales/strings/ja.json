@@ -478,6 +478,7 @@
   "transaction_details_exchange_status_page": "Exchange Status Page",
   "transaction_details_exchange_support": "Exchange Support",
   "transaction_details_exchange_support_request": "%s Support Request",
+  "transaction_details_fee_warning": "High Network Fees",
   "tx_detail_picker_title": "カテゴリーを選択：",
   "transaction_details_notes_title": "メモ",
   "back_button_tap_again_to_exit": "アプリを終了するにはもう一度「戻る」をタップしてください",
