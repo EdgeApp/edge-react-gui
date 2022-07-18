@@ -478,6 +478,7 @@
   "transaction_details_exchange_status_page": "Страница состояния обмена",
   "transaction_details_exchange_support": "Поддержка Обмена",
   "transaction_details_exchange_support_request": "%s Запрос на поддержку",
+  "transaction_details_fee_warning": "High Network Fees",
   "tx_detail_picker_title": "Выберите категорию:",
   "transaction_details_notes_title": "Примечания",
   "back_button_tap_again_to_exit": "Пожалуйста, нажмите BACK снова, чтобы выйти",
