@@ -12,6 +12,7 @@ import {
   FiatProviderError
 } from '../fiatProviderTypes'
 const pluginId = 'dummyprovider2'
+const storeId = 'com.dummyprovider2'
 const partnerIcon = 'icon_black_small.png'
 const pluginDisplayName = 'Dummy 2'
 
@@ -126,6 +127,7 @@ for (const pluginId in SIMPLEX_ID_MAP) {
 
 export const dummyProvider2: FiatProviderFactory = {
   pluginId,
+  storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const out = {
       pluginId,
@@ -133,6 +135,8 @@ export const dummyProvider2: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
+        const { regionCode, paymentTypes } = params
+
         const MIN_USD = '50'
         const MAX_USD = '20000'
 
@@ -178,6 +182,8 @@ export const dummyProvider2: FiatProviderFactory = {
 
         const paymentQuote: FiatProviderQuote = {
           pluginId,
+          regionCode,
+          paymentTypes,
           partnerIcon,
           pluginDisplayName,
           tokenId: params.tokenId,

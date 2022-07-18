@@ -5,6 +5,7 @@ import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDeno
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
+import { v4 } from 'uuid'
 
 import {
   FEE_ALERT_THRESHOLD,
@@ -57,7 +58,7 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
-  !isNaN(+input) || input === '.'
+  (!isNaN(+input) || input === '.') && input !== 'Infinity'
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
@@ -431,7 +432,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
   }
 }
 
-export async function fetchWaterfall(servers?: string[], path: string, options?: any): Promise<any> {
+export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
   if (servers == null) return
   const funcs = servers.map(server => async () => {
     const result = await fetch(server + '/' + path, options)
@@ -442,7 +443,7 @@ export async function fetchWaterfall(servers?: string[], path: string, options?:
     }
     return result
   })
-  return asyncWaterfall(funcs)
+  return asyncWaterfall(funcs, timeout)
 }
 
 export async function openLink(url: string): Promise<void> {
@@ -623,9 +624,38 @@ export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (cu
   return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
 }
 
+export const shuffleArray = <T>(array: T[]): T[] => {
+  let currentIndex = array.length
+  let temporaryValue, randomIndex
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
+  }
+
+  return array
+}
+
+export async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
+  if (servers == null) return
+  return fetchWaterfall(shuffleArray(servers), path, options, timeout)
+}
+
 export const pickRandom = <T>(array?: T[]): T | null => {
   if (array == null || array.length === 0) return null
   return array[Math.floor(Math.random() * array.length)]
+}
+
+const INFO_SERVERS = ['https://info2.edge.app']
+export const fetchInfo = (path: string, options?: Object, timeout?: number): Promise<any> => {
+  return multiFetch(INFO_SERVERS, path, options, timeout)
 }
 
 /**
@@ -680,4 +710,10 @@ export function fuzzyTimeout<T>(promises: Promise<T>[], timeoutMs: number): Prom
       )
     }
   })
+}
+
+export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
+
+export const makeUuid = () => {
+  return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
 }

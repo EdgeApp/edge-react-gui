@@ -349,6 +349,7 @@ export type Theme = {
   paymentTypeLogoDebitCard: string,
   paymentTypeLogoFasterPayments: string,
   paymentTypeLogoGiftCard: string,
+  paymentTypeLogoGooglePay: string,
   paymentTypeLogoIdeal: string,
   paymentTypeLogoInterac: string,
   paymentTypeLogoNewsagent: string,

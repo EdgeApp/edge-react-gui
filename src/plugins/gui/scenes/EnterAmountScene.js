@@ -44,13 +44,18 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
         setStatusTextContent(statusText)
         setStatusTextType(options.textType)
       },
-      setPoweredBy
+      setPoweredBy,
+      setValue1,
+      setValue2
     })
 
   if (firstRun.current && initialAmount1 != null) {
+    setValue2(' ')
+    setSpinner2(true)
     convertValue(1, initialAmount1).then(val => {
       if (typeof val === 'string') {
         setValue2(val)
+        setSpinner2(false)
       }
     })
   }

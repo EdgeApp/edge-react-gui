@@ -2,7 +2,7 @@
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { type EdgeTokenId } from '../../types/types.js'
-import { type FiatPluginUi } from './fiatPluginTypes.js'
+import { type FiatPaymentTypes, type FiatPluginRegionCode, type FiatPluginUi } from './fiatPluginTypes.js'
 
 export type FiatProviderApproveQuoteParams = {
   showUi: FiatPluginUi,
@@ -20,13 +20,15 @@ export type FiatProviderQuote = {
   +fiatAmount: string,
   +direction: 'buy' | 'sell',
   +expirationDate?: Date,
+  +regionCode: FiatPluginRegionCode,
+  +paymentTypes: FiatPaymentTypes,
 
   approveQuote(params: FiatProviderApproveQuoteParams): Promise<void>,
   closeQuote(): Promise<void>
 }
 
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
-type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'regionRestricted'
+type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'regionRestricted' | 'paymentUnsupported'
 
 export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesOther
 
@@ -60,7 +62,16 @@ export type FiatProviderGetQuoteParams = {
   exchangeAmount: string,
   fiatCurrencyCode: string,
   amountType: 'fiat' | 'crypto',
-  direction: 'buy' | 'sell'
+  direction: 'buy' | 'sell',
+  regionCode: FiatPluginRegionCode,
+  paymentTypes: FiatPaymentTypes
+}
+
+export type FiatProviderStore = {
+  +deleteItem: (itemId: string) => Promise<void>,
+  +listItemIds: () => Promise<string[]>,
+  +getItem: (itemId: string) => Promise<string>,
+  +setItem: (itemId: string, value: string) => Promise<void>
 }
 
 export type FiatProvider = {
@@ -72,11 +83,12 @@ export type FiatProvider = {
 }
 
 export type FiatProviderFactoryParams = {
-  io: {},
+  io: { store: FiatProviderStore },
   apiKeys?: mixed
 }
 
 export type FiatProviderFactory = {
   pluginId: string,
+  storeId: string,
   makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>
 }

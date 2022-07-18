@@ -7,20 +7,30 @@ import SafariView from 'react-native-safari-view'
 
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal'
-import { Airship, showError } from '../../components/services/AirshipInstance'
+import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { type GuiPlugin } from '../../types/GuiPluginTypes'
 import { type NavigationProp } from '../../types/routerTypes.js'
-import { type FiatPluginEnterAmountParams, type FiatPluginEnterAmountResponse, type FiatPluginListModalParams, type FiatPluginUi } from './fiatPluginTypes'
+import {
+  type FiatPaymentType,
+  type FiatPluginEnterAmountParams,
+  type FiatPluginEnterAmountResponse,
+  type FiatPluginListModalParams,
+  type FiatPluginRegionCode,
+  type FiatPluginUi
+} from './fiatPluginTypes'
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
+  regionCode: FiatPluginRegionCode,
+  paymentType?: FiatPaymentType,
   account: EdgeAccount,
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
 }): Promise<void> => {
-  const { guiPlugin, navigation, account } = params
+  const { guiPlugin, navigation, account, regionCode, paymentType } = params
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
+    showToastSpinner,
     openWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)
@@ -30,9 +40,7 @@ export const executePlugin = async (params: {
       const walletListResult = await Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={headerTitle} allowedAssets={allowedAssets} />)
       return walletListResult
     },
-    errorDropdown: async (e: Error) => {
-      showError(e)
-    },
+    showError: async (e: Error): Promise<void> => showError(e),
     listModal: async (params: FiatPluginListModalParams): Promise<string | void> => {
       const result = await Airship.show(bridge => <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />)
       return result
@@ -68,5 +76,10 @@ export const executePlugin = async (params: {
     throw new Error(`pluginId ${pluginId} not found`)
   }
 
-  plugin.startPlugin()
+  const paymentTypes = paymentType != null ? [paymentType] : []
+  const startPluginParams = {
+    regionCode,
+    paymentTypes
+  }
+  plugin.startPlugin(startPluginParams)
 }

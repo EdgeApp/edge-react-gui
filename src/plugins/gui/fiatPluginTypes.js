@@ -1,12 +1,19 @@
 // @flow
+import { asValue } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js'
 
 import { type EdgeTokenId } from '../../types/types.js'
 import { type EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
+export const asFiatPaymentTypes = asValue('credit', 'applepay', 'googlepay')
+export type FiatPaymentType = 'credit' | 'applepay' | 'googlepay'
+export type FiatPaymentTypes = FiatPaymentType[]
+
 export type FiatPluginGetMethodsResponse = {
   setStatusText: (params: { statusText: string, options?: { textType?: 'warning' | 'error' } }) => void,
-  setPoweredBy: (params: EnterAmountPoweredBy) => void
+  setPoweredBy: (params: EnterAmountPoweredBy) => void,
+  setValue1: (value: string) => void,
+  setValue2: (value: string) => void
 }
 export type FiatPluginEnterAmountParams = {
   headerTitle: string,
@@ -27,13 +34,15 @@ export type FiatPluginListModalParams = {
 
 export type FiatPluginEnterAmountResponse = { lastUsed: number, value1: string, value2: string }
 export type FiatPluginOpenWebViewParams = { url: string }
+
 export type FiatPluginUi = {
+  showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>,
   openWebView: FiatPluginOpenWebViewParams => Promise<void>,
   walletPicker: (params: { headerTitle: string, allowedAssets?: EdgeTokenId[], showCreateWallet?: boolean }) => Promise<{
     walletId: string | void,
     currencyCode: string | void
   }>,
-  errorDropdown: (error: Error) => Promise<void>,
+  showError: (error: Error) => Promise<void>,
   listModal: (params: FiatPluginListModalParams) => Promise<string | void>,
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>,
   popScene: () => {}
@@ -49,9 +58,17 @@ export type FiatPluginFactoryArgs = {
   account: EdgeAccount
 }
 
+export type FiatPluginRegionCode = {
+  countryCode: string,
+  stateCode?: string
+}
+export type FiatPluginStartParams = {
+  paymentTypes: FiatPaymentTypes,
+  regionCode: FiatPluginRegionCode
+}
 export type FiatPlugin = {
   pluginId: string,
-  startPlugin: () => Promise<void>
+  startPlugin: (params: FiatPluginStartParams) => Promise<void>
 }
 
 export type FiatPluginFactory = (params: FiatPluginFactoryArgs) => Promise<FiatPlugin>

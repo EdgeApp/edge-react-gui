@@ -949,8 +949,10 @@ const strings = {
   fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
   fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
   fiat_plugin_asset_unsupported: 'Asset Unsupported',
+  fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
+  fiat_plugin_fetching_assets: 'Fetching supported assets',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

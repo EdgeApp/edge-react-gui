@@ -47,6 +47,7 @@ const paymentTypeLogosById = {
   debit: 'paymentTypeLogoDebitCard',
   fasterPayments: 'paymentTypeLogoFasterPayments',
   giftcard: 'paymentTypeLogoGiftCard',
+  googlepay: 'paymentTypeLogoGooglePay',
   ideal: 'paymentTypeLogoIdeal',
   interac: 'paymentTypeLogoInterac',
   newsagent: 'paymentTypeLogoNewsagent',
@@ -149,7 +150,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    */
   async openPlugin(listRow: GuiPluginRow) {
     const { countryCode, navigation, route, account } = this.props
-    const { pluginId, deepQuery = {} } = listRow
+    const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
@@ -183,8 +184,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
+    const regionCode = { countryCode }
     if (plugin.nativePlugin != null) {
-      executePlugin({ guiPlugin: plugin, navigation, account })
+      executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
     } else {
       // Launch!
       navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
@@ -233,17 +235,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
-              <EdgeText style={styles.subtitleText} numberOfLines={0}>
-                {item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}
-              </EdgeText>
               <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>
             </View>
           </View>
-          <View style={styles.pluginRowPoweredByRow}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-            <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
-          </View>
+          {poweredBy != null && item.partnerIconPath != null ? (
+            <View style={styles.pluginRowPoweredByRow}>
+              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+              <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
+              <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+            </View>
+          ) : null}
         </TouchableOpacity>
       </View>
     )
