@@ -29,18 +29,13 @@ Array [
       blurAmount={10}
       blurType="light"
       style={
-        Array [
-          Object {
-            "backgroundColor": "transparent",
-          },
-          Object {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-        ]
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
     />
   </View>,
