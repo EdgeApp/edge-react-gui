@@ -478,6 +478,7 @@
   "transaction_details_exchange_status_page": "Exchange Status Page",
   "transaction_details_exchange_support": "Exchange Support",
   "transaction_details_exchange_support_request": "%s Support Request",
+  "transaction_details_fee_warning": "High Network Fees",
   "tx_detail_picker_title": "Chọn một danh mục:",
   "transaction_details_notes_title": "Ghi chú",
   "back_button_tap_again_to_exit": "Xin vui lòng bấm trở lại một lần nữa để thoát khỏi ứng dụng",
