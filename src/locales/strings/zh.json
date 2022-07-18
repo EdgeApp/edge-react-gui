@@ -478,6 +478,7 @@
   "transaction_details_exchange_status_page": "Exchange Status Page",
   "transaction_details_exchange_support": "Exchange Support",
   "transaction_details_exchange_support_request": "%s Support Request",
+  "transaction_details_fee_warning": "High Network Fees",
   "tx_detail_picker_title": "选择一个分类：",
   "transaction_details_notes_title": "备注",
   "back_button_tap_again_to_exit": "请再次点击 返回键 来登出",
