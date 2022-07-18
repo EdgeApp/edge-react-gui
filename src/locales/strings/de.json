@@ -478,6 +478,7 @@
   "transaction_details_exchange_status_page": "Exchange-Statusseite",
   "transaction_details_exchange_support": "Exchange Support",
   "transaction_details_exchange_support_request": "%s Supportanfrage",
+  "transaction_details_fee_warning": "High Network Fees",
   "tx_detail_picker_title": "Wählen Sie eine Kategorie:",
   "transaction_details_notes_title": "Notizen",
   "back_button_tap_again_to_exit": "Tippen Sie bitte noch einmal auf ZURÜCK, um die App zu verlassen",
