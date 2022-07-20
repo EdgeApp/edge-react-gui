@@ -18,6 +18,7 @@ export const testConfig: AppConfig = {
   phoneNumber: '+1-800-100-1000',
   referralServers: ['https://referral1.testy.com'],
   supportsEdgeLogin: false,
+  supportEmail: 'support@testy.com',
   supportSite: 'https://support.testy.com',
   termsOfServiceSite: 'https://testy.com/tos/',
   website: 'https://testy.com'

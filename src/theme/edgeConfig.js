@@ -18,6 +18,7 @@ export const edgeConfig: AppConfig = {
   phoneNumber: '+1-619-777-5688',
   referralServers: ['https://referral1.edge.app'],
   supportsEdgeLogin: true,
+  supportEmail: 'support@edge.app',
   supportSite: 'https://support.edge.app/support/tickets/new',
   termsOfServiceSite: 'https://edge.app/tos/',
   website: 'https://edge.app'

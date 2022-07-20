@@ -326,7 +326,7 @@ export type AppConfig = {
   phoneNumber: string,
   referralServers?: string[],
   supportsEdgeLogin: boolean,
-  knowledgeBase: string,
+  supportEmail: string,
   supportSite: string,
   termsOfServiceSite: string,
   website: string
