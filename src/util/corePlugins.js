@@ -89,6 +89,7 @@ export const ratePlugins = {
 
 export const swapPlugins = {
   // Centralized Swaps
+  changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   exolix: ENV.EXOLIX_INIT,
   foxExchange: ENV.FOX_INIT,
