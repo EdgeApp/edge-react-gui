@@ -731,7 +731,7 @@
   "update_notice_deprecate_electrum_servers_title": "Blockbook Upgrade",
   "update_notice_deprecate_electrum_servers_message": "%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.\n\nNOTE: If you had custom nodes enabled, those wallets will not sync until corrected.",
   "error_boundary_title": "Hoppla!",
-  "error_boundary_message": "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
+  "error_boundary_message_s": "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
   "export_transaction_date_range": "Zeitspanne",
   "export_transaction_export_type": "Export-Typ",
   "export_transaction_this_month": "Diesen Monat",
