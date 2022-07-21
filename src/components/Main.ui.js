@@ -992,6 +992,16 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
           </Stack>
+          <Stack key="loan">
+            <Scene
+              key="loanStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
         </Scene>
       </Drawer>
     )
