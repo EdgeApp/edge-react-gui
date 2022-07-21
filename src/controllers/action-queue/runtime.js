@@ -1,6 +1,6 @@
 // @flow
 
-import { add } from 'biggystring'
+import { add, gt, lt } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
@@ -45,6 +45,39 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         return await checkActionEffect(account, childEffect)
       })
       return (await Promise.all(promises)).every(yes => yes)
+    }
+    case 'address-balance': {
+      // TODO: Use effect.address when we can check address balances
+      const { aboveAmount, belowAmount, tokenId, walletId } = effect
+      const wallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(wallet, tokenId)
+      const walletBalance = wallet.balances[currencyCode] ?? '0'
+
+      return (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
+    }
+    case 'tx-confs': {
+      const { txId, walletId, confirmations } = effect
+      const wallet = account.currencyWallets[walletId]
+
+      // Get transaction
+      const txs = await wallet.getTransactions({
+        // TODO: Add a parameter to limit to one transaction in result
+        searchString: txId
+      })
+      if (txs.length === 0) throw new Error(`Cannot find transaction with txid '${txId}' in '${wallet.id}'`)
+      const tx = txs[0]
+
+      if (tx.confirmations === 'dropped') throw new Error('Transaction was dropped')
+
+      if (typeof tx.confirmations === 'number') {
+        return tx.confirmations >= confirmations
+      } else {
+        return confirmations === 0 || (confirmations > 0 && tx.confirmations === 'confirmed')
+      }
+    }
+    case 'price-level': {
+      // TODO: Implement
+      throw new Error('No implementation for price effect')
     }
     case 'unixtime': {
       return Date.now() >= effect.timestamp
@@ -326,6 +359,12 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
 async function delayForEffect(effect: ActionEffect): Promise<void> {
   const ms = (() => {
     switch (effect.type) {
+      case 'address-balance':
+        return 15000
+      case 'tx-confs':
+        return 6000
+      case 'price-level':
+        return 30000
       case 'unixtime':
         return 300
       default:
