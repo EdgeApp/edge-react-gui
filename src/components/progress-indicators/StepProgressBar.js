@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { memo, useMemo } from '../../types/reactHooks'
+import { type TempActionDisplayInfo } from '../../types/types'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -22,7 +23,7 @@ const StepProgressRowComponent = ({
   isLast: boolean,
   isNodeActive: boolean,
   isNodeCompleted: boolean,
-  stepText: { title: string, body: string }
+  stepText: { title: string, message: string }
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -61,7 +62,7 @@ const StepProgressRowComponent = ({
           {stepText.title}
         </EdgeText>
         <EdgeText style={bodyStyle} numberOfLines={100}>
-          {stepText.body}
+          {stepText.message}
         </EdgeText>
       </View>
     </View>
@@ -77,11 +78,11 @@ const StepProgressRow = memo(StepProgressRowComponent)
 //
 // StepProgressBar is a collection of StepProgressRows.
 // -----------------------------------------------------------------------------
-const StepProgressBarComponent = (props: { completedSteps?: number, stepTexts: Array<{ title: string, body: string }> }) => {
+const StepProgressBarComponent = (props: { actionDisplayInfos: TempActionDisplayInfo[] }) => {
   // completedSteps of -1 will gray out all steps, while 0 will highlight the
   // first step
-  const { completedSteps = -1, stepTexts, ...containerProps } = props
-  const totalSteps = stepTexts.length
+  const { actionDisplayInfos, ...containerProps } = props
+  const totalSteps = actionDisplayInfos.length
 
   // Render nodes and their connecting segments, starting from the top
   const renderRows = useMemo(() => {
@@ -90,14 +91,21 @@ const StepProgressBarComponent = (props: { completedSteps?: number, stepTexts: A
       // Render a completed, active/in-progress, or queued node.
       // Active/in-progress nodes are partially filled while queued or completed
       // nodes are solid filled.
-      const isNodeActive = completedSteps === i
-      const isNodeCompleted = completedSteps > i
+      const isNodeActive = (i === 0 || actionDisplayInfos[i - 1].complete) && !actionDisplayInfos[i].complete
+      const isNodeCompleted = actionDisplayInfos[i].complete
       const isLast = totalSteps <= 1 || i >= totalSteps - 1
 
-      actionRows.push(<StepProgressRow isNodeActive={isNodeActive} isNodeCompleted={isNodeCompleted} isLast={isLast} stepText={stepTexts[i]} />)
+      actionRows.push(
+        <StepProgressRow
+          isNodeActive={isNodeActive}
+          isNodeCompleted={isNodeCompleted}
+          isLast={isLast}
+          stepText={{ title: actionDisplayInfos[i].title, message: actionDisplayInfos[i].message }}
+        />
+      )
     }
     return actionRows
-  }, [completedSteps, stepTexts, totalSteps])
+  }, [actionDisplayInfos, totalSteps])
 
   return <View {...containerProps}>{renderRows}</View>
 }

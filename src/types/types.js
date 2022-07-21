@@ -351,3 +351,10 @@ export type EdgeTokenId = {
   pluginId: string,
   tokenId?: string
 }
+
+export type TempActionDisplayInfo = {
+  title: string,
+  message: string,
+  complete: boolean,
+  steps?: TempActionDisplayInfo[]
+}
