@@ -731,7 +731,7 @@
   "update_notice_deprecate_electrum_servers_title": "Aggiornamento Blockbook",
   "update_notice_deprecate_electrum_servers_message": "%s non utilizza più i server Electrum. Se desideri continuare a usare server personalizzati, inserisci indirizzi compatibili con Blockbook.\n\nNOTA: se hai abilitato dei server personalizzati, questi portafogli non verranno sincronizzati fino a quando non userai Blockbook o disattiverai i server personalizzati.",
   "error_boundary_title": "Oops!",
-  "error_boundary_message": "Siamo spiacenti ma qualcosa è andato storto. Si prega di chiudere forzatamente l'app e riavviarla.\n\nSe il problema persiste, contattaci a support@edge.app, e faremo del nostro meglio per risolverlo.",
+  "error_boundary_message_s": "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
   "export_transaction_date_range": "Intervallo Date",
   "export_transaction_export_type": "Tipo di esportazione",
   "export_transaction_this_month": "Questo mese",
