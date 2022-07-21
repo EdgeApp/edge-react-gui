@@ -71,6 +71,7 @@ import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
+import { LoanStatusScene } from './scenes/Loans/LoanStatusScene'
 import { LoginScene } from './scenes/LoginScene.js'
 import { ManageTokensScene } from './scenes/ManageTokensScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
@@ -803,6 +804,16 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key="wcConnect"
               component={withNavigation(ifLoggedIn(WcConnectScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+          <Stack key="loan">
+            <Scene
+              key="loanStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
