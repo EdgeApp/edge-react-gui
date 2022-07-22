@@ -38,10 +38,6 @@ import { DividerLine } from './DividerLine'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
-const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
-
 export function ControlPanel(props: Props) {
   const { navigation } = props
   const state: any = navigation.state
@@ -52,6 +48,7 @@ export function ControlPanel(props: Props) {
 
   // ---- Redux State ----
 
+  const wallets = useSelector(state => state.core.account.currencyWallets)
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -104,8 +101,21 @@ export function ControlPanel(props: Props) {
   }
 
   const handleSweep = () => {
+    const sweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+      .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
+      .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
+    const excludeWalletIds = Object.keys(wallets).filter(
+      walletId => !sweepableCurrencyCodes.some(currencyCode => currencyCode === wallets[walletId].currencyInfo.currencyCode)
+    )
+
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={SweepableCurrencyCodes} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        allowedCurrencyCodes={sweepableCurrencyCodes}
+        excludeWalletIds={excludeWalletIds}
+        showCreateWallet
+      />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
