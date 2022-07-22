@@ -51,7 +51,7 @@ export const asSyncedAccountSettings = asObject({
     }),
     PASSWORD_RECOVERY_REMINDERS_SHOWN
   ),
-  walletsSort: asOptional(asSortOption, 'manual'),
+  walletsSort: asOptional(asSortOption, 'init'),
   denominationSettings: asOptional(asDenominationSettings, {})
 })
 

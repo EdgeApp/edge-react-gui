@@ -19,7 +19,7 @@ const options = [
   ['lowest', s.strings.wallet_list_sort_lowest]
 ]
 
-export const asSortOption = asValue('manual', 'name', 'currencyCode', 'currencyName', 'highest', 'lowest')
+export const asSortOption = asValue('manual', 'name', 'currencyCode', 'currencyName', 'highest', 'lowest', 'init')
 export type SortOption = $Call<typeof asSortOption>
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
 
 export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
   const renderRow = useHandler(([key, title]) => {
-    return key === 'manual' ? (
+    return key === 'manual' || key === 'init' ? (
       <SettingsTappableRow key={key} label={title} onPress={() => bridge.resolve(key)} />
     ) : (
       <SettingsRadioRow key={key} label={title} value={sortOption === key} onPress={() => bridge.resolve(key)} />

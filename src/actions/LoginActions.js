@@ -116,7 +116,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
     touchIdInfo,
     walletId: '',
-    walletsSort: 'manual'
+    walletsSort: 'init'
   }
   try {
     let newAccount = false
