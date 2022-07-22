@@ -95,7 +95,7 @@
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
     "cleaner-config": "^0.1.8",
-    "cleaners": "^0.3.12",
+    "cleaners": "^0.3.13",
     "core-js": "^2.5.2",
     "csv-stringify": "^5.6.2",
     "date-fns": "^2.22.1",
