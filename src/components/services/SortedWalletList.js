@@ -47,6 +47,14 @@ export function SortedWalletList(props: Props) {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)
 
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (walletsSort !== undefined && walletsSort !== 'init') {
+      setLoading(false)
+    }
+  }, [walletsSort])
+
   // Phase 1: Gather the active wallets and tokens.
   const wallets: WalletListItem[] = []
   for (const walletId of activeWalletIds) {
@@ -76,7 +84,7 @@ export function SortedWalletList(props: Props) {
   }
 
   // Phase 2: Sort the list.
-  let sorted = wallets
+  let sorted = loading ? [] : wallets
   switch (walletsSort) {
     case 'currencyCode':
       sorted = stableSort(
@@ -132,7 +140,9 @@ export function SortedWalletList(props: Props) {
   const emptyList: WalletListItem[] = [] // Needed for Flow.
   const lastList = useRef(emptyList)
   useEffect(() => {
-    if (!matchWalletList(sorted, lastList.current)) {
+    if (loading) {
+      dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: [] })
+    } else if (!matchWalletList(sorted, lastList.current)) {
       dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: sorted })
     }
     lastList.current = sorted
