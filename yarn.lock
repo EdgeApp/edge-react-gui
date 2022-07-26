@@ -6069,10 +6069,10 @@ edge-core-js@^0.19.20:
     yaob "^0.3.8"
     yavent "^0.1.3"
 
-edge-core-js@^0.19.23:
-  version "0.19.23"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.23.tgz#84559f4921932de3f3bf88947ec6dd8650725d7f"
-  integrity sha512-3t/MHJQPfNW7DdLIbH4DVa5p87sClrd1KpG4kYmZXG12Kt3vbBVo4m7jBdKAHdVIKjSEddUkDRfxOghZ2uSITw==
+edge-core-js@^0.19.24:
+  version "0.19.24"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.24.tgz#5324a082a000106dc017599aa6757b5f0d2a344f"
+  integrity sha512-2ocQ7MUenPtStyKxhHq3xnE4UCmy90OC3zhk1OQ6ZaZc/wj9LDLF8FGOy4PlwZMFvs662l0Hoi9HXjBqtpR5ag==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -6080,7 +6080,7 @@ edge-core-js@^0.19.23:
     cleaners "^0.3.11"
     currency-codes "^1.1.2"
     disklet "^0.5.2"
-    edge-sync-client "^0.2.6"
+    edge-sync-client "^0.2.7"
     elliptic "^6.4.0"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
@@ -6144,10 +6144,10 @@ edge-currency-monero@^0.4.1:
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.1.1.tgz#0f2106253c9dd5478a8015c865a461f49ce5b2e1"
-  integrity sha512-pVW2jfe9zQ0TP6v4ZoZ1klT+IPBrqoNMMVPJV6nhAwmdceAI/vaksSiXFAv4vfRlrkri19CpEBhyMr2sfApauw==
+edge-currency-plugins@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.1.2.tgz#8d530b85b7a33435e0fbddba4bf8766ab1d48244"
+  integrity sha512-a7bRQn8xUoq9CM1/aq/ENieztvEcdS/vlLB+XBvDtFd6kp38o1p6g2TLuxO/haNc9MfPCRT631wSWcpYPjJ1sw==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -6165,6 +6165,7 @@ edge-currency-plugins@^1.1.1:
     cleaners "^0.3.12"
     disklet "^0.4.5"
     edge-core-js "^0.19.20"
+    edge-sync-client "^0.2.7"
     memlet "^0.1.6"
     uri-js "^4.4.0"
     url-parse "^1.5.2"
@@ -6240,6 +6241,18 @@ edge-sync-client@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/edge-sync-client/-/edge-sync-client-0.2.6.tgz#4425e14edd0f85f41a0ebe702e0e27274111cc90"
   integrity sha512-UNaxgXD87QJDEMYRs6fycOj1+Tt2WNPpNPcm4O4l2JCtPdqSHbjSHfGruS5/VWq5nGYPGX1boH15ekaLYCqo0w==
+  dependencies:
+    base-x "^1.0.4"
+    cleaners "^0.3.9"
+    cross-fetch "^3.1.4"
+    hash.js "^1.1.7"
+    rfc4648 "^1.5.0"
+    serverlet "^0.1.0"
+
+edge-sync-client@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/edge-sync-client/-/edge-sync-client-0.2.7.tgz#57041f1a17565f24750803a99aaea517361fe9e1"
+  integrity sha512-ySWvsvHisg3e5gV/KBQymt0Fos1Nqupb6fbvxn5YXM5SmsOWz2iGRqocSc/Qxyd85WV7G/DjpJ8zWVqf0eUTrg==
   dependencies:
     base-x "^1.0.4"
     cleaners "^0.3.9"
