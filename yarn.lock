@@ -6042,33 +6042,6 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.20:
-  version "0.19.22"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.22.tgz#e8c9dc1c8292ab2ed3e1f034254ba22617a54fc7"
-  integrity sha512-Gl5MqWQw9RYYBTFu7Qt+OnpRcvGQlgRrjDlBB3Ve85T47HjmJfnM/2XGbujltLngvNJUUJIhjm3D33jPfjm7hA==
-  dependencies:
-    aes-js "^3.1.0"
-    base-x "^1.0.4"
-    biggystring "^3.0.2"
-    cleaners "^0.3.11"
-    currency-codes "^1.1.2"
-    disklet "^0.5.2"
-    edge-sync-client "^0.2.6"
-    elliptic "^6.4.0"
-    ethereumjs-tx "^1.3.7"
-    ethereumjs-util "^5.2.0"
-    hash.js "^1.1.7"
-    hmac-drbg "^1.0.1"
-    node-fetch "^2.6.1"
-    redux "^3.6.0"
-    redux-keto "^0.3.4"
-    redux-pixies "^0.3.6"
-    rfc4648 "^1.4.0"
-    scrypt-js "^2.0.3"
-    serverlet "^0.1.0"
-    yaob "^0.3.8"
-    yavent "^0.1.3"
-
 edge-core-js@^0.19.24:
   version "0.19.24"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.24.tgz#5324a082a000106dc017599aa6757b5f0d2a344f"
@@ -6236,18 +6209,6 @@ edge-login-ui-rn@^0.10.7:
     cleaners "^0.3.12"
     js-sha256 "^0.9.0"
     moment "^2.22.2"
-
-edge-sync-client@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/edge-sync-client/-/edge-sync-client-0.2.6.tgz#4425e14edd0f85f41a0ebe702e0e27274111cc90"
-  integrity sha512-UNaxgXD87QJDEMYRs6fycOj1+Tt2WNPpNPcm4O4l2JCtPdqSHbjSHfGruS5/VWq5nGYPGX1boH15ekaLYCqo0w==
-  dependencies:
-    base-x "^1.0.4"
-    cleaners "^0.3.9"
-    cross-fetch "^3.1.4"
-    hash.js "^1.1.7"
-    rfc4648 "^1.5.0"
-    serverlet "^0.1.0"
 
 edge-sync-client@^0.2.7:
   version "0.2.7"
