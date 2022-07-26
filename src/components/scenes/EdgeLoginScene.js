@@ -16,6 +16,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { LoanStatusScene } from './Loans/LoanStatusScene.js'
 
 type OwnProps = {
   navigation: NavigationProp<'edgeLogin'>
@@ -127,11 +128,12 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
       )
     }
     return (
-      <SceneWrapper background="body">
-        {this.renderHeader()}
-        {this.renderBody()}
-        {this.renderButtons()}
-      </SceneWrapper>
+      // <SceneWrapper background="body">
+      //   {this.renderHeader()}
+      //   {this.renderBody()}
+      //   {this.renderButtons()}
+      // </SceneWrapper>
+      <LoanStatusScene />
     )
   }
 }

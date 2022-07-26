@@ -356,6 +356,6 @@ export type EdgeTokenId = {
 export type TempActionDisplayInfo = {
   title: string,
   message: string,
-  complete: boolean,
+  status: 'pending' | 'active' | 'complete',
   steps?: TempActionDisplayInfo[]
 }

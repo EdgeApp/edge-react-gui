@@ -1,13 +1,116 @@
+/* eslint-disable no-new */
+/* eslint-disable react-native/no-color-literals */
 // @flow
 
 import * as React from 'react'
 import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import Animated, {
+  createAnimatedPropAdapter,
+  Easing,
+  measure,
+  useAnimatedProps,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  useValue,
+  withTiming
+} from 'react-native-reanimated'
+import Svg, { Circle, ClipPath, Defs, G, Rect, Use } from 'react-native-svg'
 
-import { memo, useMemo } from '../../types/reactHooks'
+import { useLayout } from '../../hooks/useLayout'
+import { styles } from '../../modules/UI/components/Buttons/style'
+import { memo, useEffect, useMemo, useRef, useState } from '../../types/reactHooks'
 import { type TempActionDisplayInfo } from '../../types/types'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+
+const AnimatedRect = Animated.createAnimatedComponent(Rect)
+const AnimatedNode = (props: { size: number, status: 'pending' | 'active' | 'complete' }) => {
+  const { size, status } = props
+  const theme = useTheme()
+
+  // Calculate circle params based on size
+  const radius = Math.floor(size / 2)
+  const svgSize = size
+  const viewBox = `0 0 ${svgSize} ${svgSize}`
+  const center = size / 2
+
+  const sAnimationMult = useValue(0)
+  useEffect(() => {
+    sAnimationMult.value = withTiming(status === 'pending' ? 0 : status === 'active' ? 0.5 : 1, {
+      duration: 1000,
+      easing: Easing.inOut(Easing.circle)
+    })
+  }, [sAnimationMult, status])
+
+  useEffect(() => {
+    console.log('\x1b[34m\x1b[43m' + `sAnimationMult.value: ${JSON.stringify(sAnimationMult.value, null, 2)}` + '\x1b[0m')
+  }, [sAnimationMult])
+
+  const fillStyle = useAnimatedStyle(() => ({
+    height: sAnimationMult.value * svgSize
+  }))
+
+  // useEffect(() => {
+  //   'worklet'
+  //   setTest(aRef.current?.height)
+  //   // console.log('\x1b[34m\x1b[43m' + `aRef.current: ${JSON.stringify(aRef.current.props, null, 2)}` + '\x1b[0m')
+  // }, [])
+
+  const aref = useAnimatedRef()
+  const [test, setTest] = useState()
+  useDerivedValue(() => {
+    'worklet'
+    try {
+      if (aref && aref.current) {
+        aref.current.measure((x, y, width, height, pageX, pageY) => {
+          if (height) setTest(height)
+        })
+      }
+    } catch (_) {}
+    // ...
+  }, [aref])
+
+  useEffect(() => {
+    console.log('\x1b[34m\x1b[43m' + `test: ${JSON.stringify(test, null, 2)}` + '\x1b[0m')
+  }, [test])
+
+  // const test = new Promise((resolve, reject) => {
+  //   if (aref && aref.current) {
+  //     aref.current.measure((x, y, width, height, pageX, pageY) => {
+  //       resolve({ x, y, width, height, pageX, pageY })
+  //     })
+  //   } else {
+  //     reject(new Error('measure: animated ref not ready'))
+  //   }
+  // })
+
+  return (
+    <View style={{ backgroundColor: test === 1 ? 'red' : undefined }}>
+      <Svg width={svgSize} height={svgSize} viewBox={viewBox} preserveAspectRatio="false" zIndex={3}>
+        <Circle id="circle" cx={center} cy={center} r={radius} strokeWidth="0" fill={theme.deactivatedText} />
+        <Circle
+          id="circle"
+          cx={center}
+          cy={center}
+          r={radius}
+          strokeWidth="0"
+          strokeColor={theme.iconTappable}
+          fill={theme.iconTappable}
+          clipPath="url(#clip)"
+        />
+
+        <Defs>
+          <ClipPath id="clip">
+            <AnimatedRect id="rect" cx={center} cy={center} x="0" y="0" width={svgSize} height={0} animatedProps={fillStyle} ref={aref} />
+          </ClipPath>
+        </Defs>
+      </Svg>
+    </View>
+  )
+}
 
 // -----------------------------------------------------------------------------
 // A StepProgressRow consists of a left node + segment, right title text, and
@@ -16,51 +119,56 @@ import { EdgeText } from '../themed/EdgeText'
 // -----------------------------------------------------------------------------
 const StepProgressRowComponent = ({
   isLast,
-  isNodeActive,
-  isNodeCompleted,
+  status,
   stepText
 }: {
   isLast: boolean,
-  isNodeActive: boolean,
-  isNodeCompleted: boolean,
+  status: 'pending' | 'active' | 'complete',
   stepText: { title: string, message: string }
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const isComplete = status === 'complete'
+  const isActive = status === 'active'
 
-  // Circular part of the step progress bar
-  const node = useMemo(() => {
-    if (isNodeActive) {
-      // 'start' and 'end' LinearGradient coordinates close to each other give
-      // the illusion of a partial solid fill.
-      return <LinearGradient style={styles.circleCommon} start={{ x: 0, y: 0.49 }} end={{ x: 0, y: 0.51 }} colors={[theme.iconTappable, theme.fadeDisable]} />
-    } else
-      return (
-        // Queued/completed
-        <View style={isNodeCompleted ? styles.circleCompleted : styles.circleQueued} />
-      )
-  }, [isNodeActive, isNodeCompleted, styles.circleCommon, styles.circleCompleted, styles.circleQueued, theme.fadeDisable, theme.iconTappable])
+  const [segmentLayout, handleSegmentLayout] = useLayout()
+  const maxSegmentHeight = useSharedValue(0)
+  useEffect(() => {
+    if (segmentLayout.height > 0) maxSegmentHeight.value = segmentLayout.height
+  }, [maxSegmentHeight, segmentLayout.height])
+
+  const aLineFill = useAnimatedStyle(() => ({
+    height: withTiming(isComplete ? maxSegmentHeight.value + 10 : 0, {
+      duration: 500,
+      easing: Easing.inOut(Easing.circle)
+    })
+  }))
 
   // Render connecting segment lines between the bottom of this node and the
   // top of the next node (omitting if this is the last node).
-  const lineStyle = isNodeCompleted ? styles.lineCompleted : styles.lineQueued
-  const segment = isLast ? null : <View style={lineStyle} />
+
+  // Segment line animation
+  const pendingSegment = <View style={styles.lineQueued} onLayout={handleSegmentLayout} />
+  const fillSegment = <Animated.View style={[styles.lineCompleted, aLineFill]} />
+  // #endregion
 
   // Combine the node+segment on the left with the text elements on the right
   // into a completed StepProgressRow
-  const titleStyle = isNodeCompleted || isNodeActive ? styles.textTitleActive : styles.textTitleDisabled
-  const bodyStyle = isNodeCompleted || isNodeActive ? styles.textBodyActive : styles.textBodyDisabled
+  const titleStyle = isComplete || isActive ? styles.textTitleActive : styles.textTitleDisabled
+  const bodyStyle = isComplete || isActive ? styles.textBodyActive : styles.textBodyDisabled
 
   return (
     <View style={styles.actionRow}>
       <View style={styles.columnContainer}>
-        {node}
-        {segment}
+        <AnimatedNode size={theme.rem(1)} status={status} />
+        {pendingSegment}
+        {fillSegment}
       </View>
       <View style={styles.childContainer}>
         <EdgeText style={titleStyle} numberOfLines={3}>
           {stepText.title}
         </EdgeText>
+
         <EdgeText style={bodyStyle} numberOfLines={100}>
           {stepText.message}
         </EdgeText>
@@ -84,47 +192,43 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: TempActionDisplay
   const { actionDisplayInfos, ...containerProps } = props
   const totalSteps = actionDisplayInfos.length
 
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
   // Render nodes and their connecting segments, starting from the top
-  const renderRows = useMemo(() => {
-    const actionRows = []
-    for (let i = 0; i < totalSteps; i++) {
-      // Render a completed, active/in-progress, or queued node.
-      // Active/in-progress nodes are partially filled while queued or completed
-      // nodes are solid filled.
-      const isNodeActive = (i === 0 || actionDisplayInfos[i - 1].complete) && !actionDisplayInfos[i].complete
-      const isNodeCompleted = actionDisplayInfos[i].complete
-      const isLast = totalSteps <= 1 || i >= totalSteps - 1
+  const actionRows = []
+  for (let i = 0; i < totalSteps; i++) {
+    // Render a completed, active/in-progress, or queued node.
+    // Active/in-progress nodes are partially filled while queued or completed
+    // nodes are solid filled.
+    const isLast = totalSteps <= 1 || i >= totalSteps - 1
 
-      actionRows.push(
-        <StepProgressRow
-          isNodeActive={isNodeActive}
-          isNodeCompleted={isNodeCompleted}
-          isLast={isLast}
-          stepText={{ title: actionDisplayInfos[i].title, message: actionDisplayInfos[i].message }}
-        />
-      )
-    }
-    return actionRows
-  }, [actionDisplayInfos, totalSteps])
+    actionRows.push(
+      <StepProgressRow
+        status={actionDisplayInfos[i].status}
+        isLast={isLast}
+        stepText={{ title: actionDisplayInfos[i].title, message: actionDisplayInfos[i].message }}
+        key={i}
+      />
+    )
+  }
 
-  return <View {...containerProps}>{renderRows}</View>
+  return <View {...containerProps}>{actionRows}</View>
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
   const circleCommon = {
     width: theme.rem(1),
     height: theme.rem(1),
-    borderRadius: theme.rem(0.5),
-    zIndex: 1
+    zIndex: 2,
+    position: 'absolute'
   }
 
   // Lines are rendered underneath the circles' layer, to hide the y overlap
   // (negative margin) necessary in the styling.
   const lineCommon = {
-    width: theme.rem(0.25),
-    margin: theme.rem(-0.5),
-    zIndex: 0,
-    flexGrow: 1
+    width: theme.rem(0.25)
+    // width: theme.rem(1)
   }
 
   return {
@@ -155,11 +259,20 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     lineQueued: {
       ...lineCommon,
-      backgroundColor: theme.deactivatedText
+      backgroundColor: theme.deactivatedText,
+      zIndex: 1,
+      position: 'absolute',
+      height: '100%',
+      marginTop: theme.rem(0.5)
     },
     lineCompleted: {
       ...lineCommon,
-      backgroundColor: theme.iconTappable
+      backgroundColor: theme.iconTappable,
+      zIndex: 5,
+      marginTop: theme.rem(0.5),
+      position: 'absolute'
+      // borderColor: 'red',
+      // borderWidth: 1
     },
     textBodyActive: {
       fontSize: theme.rem(0.75)

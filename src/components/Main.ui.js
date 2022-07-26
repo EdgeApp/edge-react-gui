@@ -199,11 +199,12 @@ export class MainComponent extends React.Component<Props> {
             <Stack key="walletList">
               <Scene
                 key="walletListScene"
-                component={withNavigation(ifLoggedIn(WalletListScene))}
+                component={withNavigation(LoanStatusScene)}
                 navTransparent
                 renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
+                hideTabBar
               />
 
               <Scene

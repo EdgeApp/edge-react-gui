@@ -5,13 +5,12 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { LoanStatusScene } from './Loans/LoanStatusScene.js'
 
 export const LoadingScene = () => {
   return (
     <SceneWrapper background="header" hasHeader={false} hasTabs={false}>
-      <View style={styles.container}>
-        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" />
-      </View>
+      <LoanStatusScene />
     </SceneWrapper>
   )
 }

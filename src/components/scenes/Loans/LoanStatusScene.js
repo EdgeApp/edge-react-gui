@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
+import { useState } from '../../../types/reactHooks'
 import { type NavigationProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -23,8 +24,8 @@ type Props = {
   navigation: NavigationProp<'loanStatus'>
 }
 
-export const LoanStatusScene = (props: Props) => {
-  const { navigation } = props
+export const LoanStatusScene = () => {
+  // const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -35,30 +36,30 @@ export const LoanStatusScene = (props: Props) => {
   const hardLoanAsset = 'USDC'
   const hardDepositPartner = 'Wyre'
 
-  const hardDisplayInfos = [
+  const [hardDisplayInfos, setHardDisplayInfos] = useState([
     {
       title: sprintf(s.strings.loan_status_step_title_0, hardCollateral, hardWCollateral),
       message: sprintf(s.strings.loan_status_step_body_0, hardCollateral, config.appName, hardWCollateral, s.strings.loan_aave),
-      complete: true
+      status: 'active'
     },
     {
       title: sprintf(s.strings.loan_status_step_title_1, hardWCollateral),
       message: sprintf(s.strings.loan_status_step_body_1, hardWCollateral, s.strings.loan_aave),
-      complete: true
+      status: 'pending'
     },
     {
       title: s.strings.loan_status_step_title_2,
       message: sprintf(s.strings.loan_status_step_body_2, hardLoanAsset),
-      complete: true
+      status: 'pending'
     },
     {
       title: s.strings.loan_status_step_title_3,
       message: sprintf(s.strings.loan_status_step_body_3, hardLoanAsset, hardDepositPartner),
-      complete: true
+      status: 'pending'
     }
-  ]
+  ])
   const hardInfosLen = hardDisplayInfos.length
-  const isComplete = hardDisplayInfos[hardInfosLen - 1].complete
+  const isComplete = hardDisplayInfos[hardInfosLen - 1].status === 'done'
 
   // #endregion Temp hard-coded vars
 
@@ -75,8 +76,19 @@ export const LoanStatusScene = (props: Props) => {
 
     if (approve) {
       // TODO: Abort action queue
-      navigation.pop()
+      // navigation.pop()
     }
+  })
+
+  const handlePendingPress = useHandler(async () => {
+    hardDisplayInfos[0].status = 'active'
+    hardDisplayInfos[1].status = 'pending'
+    setHardDisplayInfos([...hardDisplayInfos])
+  })
+  const handleActivePress = useHandler(async () => {
+    hardDisplayInfos[0].status = 'complete'
+    hardDisplayInfos[1].status = 'active'
+    setHardDisplayInfos([...hardDisplayInfos])
   })
 
   return (
@@ -85,7 +97,7 @@ export const LoanStatusScene = (props: Props) => {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
         <StepProgressBar actionDisplayInfos={hardDisplayInfos} />
       </ScrollView>
-      {isComplete ? (
+      {/* {isComplete ? (
         <>
           <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} />
           <View style={styles.footerContainer}>
@@ -94,8 +106,9 @@ export const LoanStatusScene = (props: Props) => {
           </View>
         </>
       ) : (
-        <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
-      )}
+        )} */}
+      <MainButton label="active" type="secondary" onPress={handleActivePress} marginRem={[0.5, 1, 2, 1]} />
+      <MainButton label="pending" type="secondary" onPress={handlePendingPress} marginRem={[0.5, 1, 2, 1]} />
     </SceneWrapper>
   )
 }

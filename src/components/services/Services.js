@@ -82,23 +82,21 @@ export function Services(props: Props) {
 
   return (
     <Provider store={store}>
-      <LoginUiProvider themeOverride={theme}>
-        <MenuProvider>
-          <Airship>
-            <Main />
-          </Airship>
-        </MenuProvider>
-        <AutoLogout />
-        <ContactsLoader />
-        <DeepLinkingManager />
-        {account == null ? null : <AccountCallbackManager account={account} />}
-        {account == null ? null : <SortedWalletList account={account} />}
-        <EdgeContextCallbackManager />
-        <PermissionsManager />
-        <NetworkActivity />
-        <PasswordReminderService />
-        <WalletLifecycle />
-      </LoginUiProvider>
+      <MenuProvider>
+        <Airship>
+          <Main />
+        </Airship>
+      </MenuProvider>
+      <AutoLogout />
+      <ContactsLoader />
+      <DeepLinkingManager />
+      {account == null ? null : <AccountCallbackManager account={account} />}
+      {account == null ? null : <SortedWalletList account={account} />}
+      <EdgeContextCallbackManager />
+      <PermissionsManager />
+      <NetworkActivity />
+      <PasswordReminderService />
+      <WalletLifecycle />
     </Provider>
   )
 }

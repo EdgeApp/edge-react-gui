@@ -23,6 +23,7 @@ import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { getBackgroundImage } from './../../util/ThemeCache.js'
 import { LoadingScene } from './LoadingScene.js'
+import { LoanStatusScene } from './Loans/LoanStatusScene'
 
 // Sneak the BlurView over to the login UI:
 global.ReactNativeBlurView = BlurView
@@ -146,28 +147,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
     const styles = getStyles(theme)
 
-    return this.props.account.username == null ? (
-      <View style={styles.container} testID="edge: login-scene">
-        <LoginScreen
-          username={username}
-          appId={config.appId}
-          accountOptions={{ pauseWallets: true }}
-          context={context}
-          recoveryLogin={passwordRecoveryKey}
-          onLogin={this.onLogin}
-          fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceMedium }}
-          key={String(counter)}
-          appName={config.appNameShort}
-          backgroundImage={backgroundImage}
-          primaryLogo={theme.primaryLogo}
-          primaryLogoCallback={handleSendLogs}
-          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
-          skipSecurityAlerts
-        />
-      </View>
-    ) : (
-      <LoadingScene />
-    )
+    return <LoanStatusScene />
   }
 }
 

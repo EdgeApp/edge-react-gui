@@ -404,15 +404,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   // Animation
   dropContainer: {
-    backgroundColor: theme.modal,
-    borderBottomLeftRadius: theme.rem(2),
-    borderBottomRightRadius: theme.rem(2),
+    backgroundColor: 'transparent',
+    // borderBottomLeftRadius: theme.rem(2),
+    // borderBottomRightRadius: theme.rem(2),
     zIndex: 2,
     position: 'absolute',
-    width: '100%'
+    borderColor: 'white',
+    borderWidth: 1
+    // width: '100%'
   },
   disable: {
-    backgroundColor: theme.fadeDisable
+    // backgroundColor: theme.fadeDisable
   },
   // Elements
   logoImage: {

@@ -17,6 +17,6 @@ export function ifLoggedIn<Props: {}>(Component: React.ComponentType<Props>): Re
     dispatch => ({})
   )((props: Props & StateProps) => {
     const { loginStatus, ...rest } = props
-    return loginStatus ? <Component {...rest} /> : <LoadingScene />
+    return <LoadingScene />
   })
 }
