@@ -37,6 +37,7 @@ export const currencyPlugins = {
   ethereum: ENV.ETHEREUM_INIT,
   kovan: ENV.KOVAN_INIT,
   ethereumclassic: true,
+  kovan: ENV.KOVAN_INIT,
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT || true,
   polygon: ENV.POLYGON_INIT,
