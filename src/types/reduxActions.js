@@ -15,6 +15,7 @@ import {
 
 import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import { type ActionQueueAction } from '../controllers/action-queue/redux/actions'
+import { type PushAction } from '../controllers/push/redux/actions'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
@@ -193,3 +194,4 @@ export type Action =
    by the package.
    */
   | ActionQueueAction
+  | PushAction

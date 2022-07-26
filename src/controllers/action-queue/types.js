@@ -1,6 +1,8 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
+import { type PushEvent } from '../../controllers/push/types'
+
 //
 // Action Operations
 //
@@ -156,7 +158,8 @@ export type ExecutionResult = {
   action?: ActionOp // For dryrun
 }
 export type ExecutionResults = {
-  nextState: ActionProgramState
+  nextState: ActionProgramState,
+  pushEvents: PushEvent[]
 }
 
 //
