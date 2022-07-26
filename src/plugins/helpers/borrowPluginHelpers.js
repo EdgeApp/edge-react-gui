@@ -1,9 +1,9 @@
 // @flow
 
-import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin, makeAaveLocalhostPlugin } from '../borrow-plugins'
+import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from '../borrow-plugins'
 import { type BorrowPlugin } from '../borrow-plugins/types'
 
-const borrowPlugins: BorrowPlugin[] = [makeAaveBorrowPlugin(), makeAaveKovanBorrowPlugin(), makeAaveLocalhostPlugin()]
+const borrowPlugins: BorrowPlugin[] = [makeAaveBorrowPlugin(), makeAaveKovanBorrowPlugin()]
 
 type BorrowPluginQuery = {
   borrowPluginId?: string,
