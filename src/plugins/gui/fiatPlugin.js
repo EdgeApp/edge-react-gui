@@ -36,8 +36,10 @@ export const executePlugin = async (params: {
       else CustomTabs.openURL(params.url)
     },
     walletPicker: async (params): Promise<WalletListResult> => {
-      const { headerTitle, allowedAssets } = params
-      const walletListResult = await Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={headerTitle} allowedAssets={allowedAssets} />)
+      const { headerTitle, allowedAssets, showCreateWallet } = params
+      const walletListResult = await Airship.show(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
+      ))
       return walletListResult
     },
     showError: async (e: Error): Promise<void> => showError(e),
