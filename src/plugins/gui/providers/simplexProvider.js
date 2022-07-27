@@ -97,7 +97,6 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
     XYO: 'XYO'
   },
   fantom: { FTM: 'FTM' },
-  groestlcoin: { GRS: 'GRS' },
   hedera: { HBAR: 'HBAR' },
   litecoin: { LTC: 'LTC' },
   one: { ONE: 'ONE' },
