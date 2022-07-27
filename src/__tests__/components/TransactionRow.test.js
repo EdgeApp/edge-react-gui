@@ -7,7 +7,7 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
-import { TransactionListRowComponent } from '../../components/themed/TransactionListRow.js'
+import { TransactionListRow } from '../../components/themed/TransactionListRow.js'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import { type GuiWallet } from '../../types/types.js'
@@ -76,7 +76,7 @@ describe('Transaction List Row', () => {
       transaction: transaction,
       theme: getTheme()
     }
-    const actual = renderer.render(<TransactionListRowComponent {...props} />)
+    const actual = renderer.render(<TransactionListRow {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
