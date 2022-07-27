@@ -8,8 +8,8 @@ import { useSelector } from '../../types/reactRedux.js'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
+import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { WalletSyncCircle } from './WalletSyncCircle.js'
 
 type Props = {
   // Main props - If non is specified, would just render an empty view

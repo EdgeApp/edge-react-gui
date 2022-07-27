@@ -80,6 +80,7 @@ import { LoanCreateScene } from './scenes/Loans/LoanCreateScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
 import { LoanMakeLoanPaymentScene } from './scenes/Loans/LoanRepayScene.js'
+import { LoanStatusScene } from './scenes/Loans/LoanStatusScene'
 import { LoanWithdrawCollateralScene } from './scenes/Loans/LoanWithdrawCollateralScene'
 import { LoginScene } from './scenes/LoginScene.js'
 import { ManageTokensScene } from './scenes/ManageTokensScene.js'
@@ -903,6 +904,12 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(LoanCloseScene))}
               navTransparent
               renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+            <Scene
+              key="loanStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
+              navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
