@@ -185,7 +185,7 @@ export type Action =
   | { type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED', data: { [walletId: string]: boolean } }
   /*
    Self-Contained Package Actions:
-   
+
    All GUI-wide or global actions should be written inline above, but for any
    self-contained code (or package of code), it may isolate the types within
    the codebase's directory. Although, all of redux is global state, this
