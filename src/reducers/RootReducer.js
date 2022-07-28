@@ -2,6 +2,7 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
+import { type ActionQueueState, actionQueue } from '../controllers/action-queue/redux/reducer'
 import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Action } from '../types/reduxTypes.js'
@@ -31,6 +32,7 @@ export type RootState = {
 
   // Nested reducers:
   +account: AccountState,
+  +actionQueue: ActionQueueState,
   +core: CoreState,
   +cryptoExchange: CryptoExchangeState,
   +permissions: PermissionsState,
@@ -83,6 +85,7 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
 
   // Nested reducers:
   account,
+  actionQueue,
   core,
   cryptoExchange,
   permissions,
