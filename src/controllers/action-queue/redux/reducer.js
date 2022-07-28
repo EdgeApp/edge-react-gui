@@ -23,9 +23,10 @@ export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
       }
       case 'ACTION_QUEUE/UPDATE_PROGRAM_STATE': {
         const { programId } = action.state
+        const { effect } = action.state
 
-        // Remvoe program from action queue if it has finished
-        if (action.state.effect?.type === 'end') {
+        // Remove program from action queue if it has finished
+        if (effect?.type === 'done') {
           const { [programId]: _removed, ...rest } = state
           return rest
         }

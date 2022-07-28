@@ -77,7 +77,7 @@ export const makeActionQueueStore = (account: EdgeAccount): ActionQueueStore => 
           console.warn(`Missing state for '${programId}'`)
           continue
         }
-        if (state.effect?.type === 'end') {
+        if (state.effect?.type === 'done') {
           continue
         }
 

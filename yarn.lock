@@ -6042,10 +6042,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.20:
-  version "0.19.22"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.22.tgz#e8c9dc1c8292ab2ed3e1f034254ba22617a54fc7"
-  integrity sha512-Gl5MqWQw9RYYBTFu7Qt+OnpRcvGQlgRrjDlBB3Ve85T47HjmJfnM/2XGbujltLngvNJUUJIhjm3D33jPfjm7hA==
+edge-core-js@^0.19.20, edge-core-js@^0.19.25:
+  version "0.19.25"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.25.tgz#94468697b37aec86c324e7ba94fd8852d9108bbd"
+  integrity sha512-G9WkY4WSOK0FJX3RVmkCmPi0g8jv20Z94zv/67UxOQBNba3uHDNa4lQmuS+WlO7LfMpy8RS6wi+SdeJJIcmizQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -6053,34 +6053,7 @@ edge-core-js@^0.19.20:
     cleaners "^0.3.11"
     currency-codes "^1.1.2"
     disklet "^0.5.2"
-    edge-sync-client "^0.2.6"
-    elliptic "^6.4.0"
-    ethereumjs-tx "^1.3.7"
-    ethereumjs-util "^5.2.0"
-    hash.js "^1.1.7"
-    hmac-drbg "^1.0.1"
-    node-fetch "^2.6.1"
-    redux "^3.6.0"
-    redux-keto "^0.3.4"
-    redux-pixies "^0.3.6"
-    rfc4648 "^1.4.0"
-    scrypt-js "^2.0.3"
-    serverlet "^0.1.0"
-    yaob "^0.3.8"
-    yavent "^0.1.3"
-
-edge-core-js@^0.19.23:
-  version "0.19.23"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.23.tgz#84559f4921932de3f3bf88947ec6dd8650725d7f"
-  integrity sha512-3t/MHJQPfNW7DdLIbH4DVa5p87sClrd1KpG4kYmZXG12Kt3vbBVo4m7jBdKAHdVIKjSEddUkDRfxOghZ2uSITw==
-  dependencies:
-    aes-js "^3.1.0"
-    base-x "^1.0.4"
-    biggystring "^3.0.2"
-    cleaners "^0.3.11"
-    currency-codes "^1.1.2"
-    disklet "^0.5.2"
-    edge-sync-client "^0.2.6"
+    edge-sync-client "^0.2.7"
     elliptic "^6.4.0"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
@@ -6144,10 +6117,10 @@ edge-currency-monero@^0.4.1:
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.1.1.tgz#0f2106253c9dd5478a8015c865a461f49ce5b2e1"
-  integrity sha512-pVW2jfe9zQ0TP6v4ZoZ1klT+IPBrqoNMMVPJV6nhAwmdceAI/vaksSiXFAv4vfRlrkri19CpEBhyMr2sfApauw==
+edge-currency-plugins@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.1.2.tgz#8d530b85b7a33435e0fbddba4bf8766ab1d48244"
+  integrity sha512-a7bRQn8xUoq9CM1/aq/ENieztvEcdS/vlLB+XBvDtFd6kp38o1p6g2TLuxO/haNc9MfPCRT631wSWcpYPjJ1sw==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -6165,6 +6138,7 @@ edge-currency-plugins@^1.1.1:
     cleaners "^0.3.12"
     disklet "^0.4.5"
     edge-core-js "^0.19.20"
+    edge-sync-client "^0.2.7"
     memlet "^0.1.6"
     uri-js "^4.4.0"
     url-parse "^1.5.2"
@@ -6236,10 +6210,10 @@ edge-login-ui-rn@^0.10.7:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
 
-edge-sync-client@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/edge-sync-client/-/edge-sync-client-0.2.6.tgz#4425e14edd0f85f41a0ebe702e0e27274111cc90"
-  integrity sha512-UNaxgXD87QJDEMYRs6fycOj1+Tt2WNPpNPcm4O4l2JCtPdqSHbjSHfGruS5/VWq5nGYPGX1boH15ekaLYCqo0w==
+edge-sync-client@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/edge-sync-client/-/edge-sync-client-0.2.7.tgz#57041f1a17565f24750803a99aaea517361fe9e1"
+  integrity sha512-ySWvsvHisg3e5gV/KBQymt0Fos1Nqupb6fbvxn5YXM5SmsOWz2iGRqocSc/Qxyd85WV7G/DjpJ8zWVqf0eUTrg==
   dependencies:
     base-x "^1.0.4"
     cleaners "^0.3.9"

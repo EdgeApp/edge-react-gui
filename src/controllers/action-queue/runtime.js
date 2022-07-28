@@ -6,15 +6,36 @@ import * as React from 'react'
 
 import { AirshipToast } from '../../components/common/AirshipToast'
 import { Airship } from '../../components/services/AirshipInstance'
+import { type PushEvent } from '../../controllers/push/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { snooze } from '../../util/utils'
+import { preparePushEvents } from './push'
 import { type ActionEffect, type ActionProgram, type ActionProgramState, type ExecutionResult, type ExecutionResults } from './types'
 
 export const executeActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
-  const { effect } = state
+  let { effect } = state
+  let pushEvents: PushEvent[] = []
 
-  // TODO: dry-run program
+  // Dry Run
+  if (effect != null) {
+    const precomputed: ExecutionResult[] = []
+    while (true) {
+      const result = await executeActionOp(account, program, state, true)
+
+      // Stop if action isn't present, meaning we couldn't dryrun
+      if (result.action == null) break
+
+      precomputed.push(result)
+    }
+    // Convert each precomputed operation from the dryrun into an arrya of
+    // "push events" for the push-server.
+    pushEvents = preparePushEvents(account, precomputed)
+
+    // Change the current effect to that last effect in the dryrun, so we
+    // can pick up execution from there.
+    effect = precomputed[precomputed.length - 1].effect
+  }
 
   // Await Effect
   while (true) {
@@ -27,11 +48,12 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
   }
 
   // Execute Action
-  const { effect: nextEffect } = await executeActionOp(account, program, state)
+  const { effect: nextEffect } = await executeActionOp(account, program, state, false)
 
-  // Return next state
+  // Return results
   return {
-    nextState: { ...state, effect: nextEffect }
+    nextState: { ...state, effect: nextEffect },
+    pushEvents
   }
 }
 
@@ -91,7 +113,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
   }
 }
 
-async function executeActionOp(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResult> {
+async function executeActionOp(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, dryrun: boolean): Promise<ExecutionResult> {
   const { actionOp } = program
   const { effect } = state
 
@@ -108,26 +130,33 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
         programId: `${program.programId}[${opIndex}]`,
         actionOp: actionOp.actions[opIndex]
       }
-      const childResult = await executeActionOp(account, nextProgram, state)
+      const childResult: ExecutionResult = await executeActionOp(account, nextProgram, state, dryrun)
+
       return {
         effect: {
           type: 'seq',
           opIndex,
           childEffect: childResult.effect
-        }
+        },
+        action: childResult.action
       }
     }
     case 'par': {
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await executeActionOp(account, subProgram, state)
+        return await executeActionOp(account, subProgram, state, dryrun)
       })
       const childResults = await Promise.all(promises)
+
       return {
         effect: {
           type: 'par',
           childEffects: childResults.map(result => result.effect)
+        },
+        action: {
+          type: 'par',
+          actions: childResults.reduce((actions, result) => (result.action != null ? [...actions, result.action] : actions), [])
         }
       }
     }
@@ -352,7 +381,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       }
     }
     default:
-      throw new Error(`No implementation for effect type ${actionOp.type} at ${program.programId}`)
+      throw new Error(`No implementation for actionOp type ${actionOp.type} at ${program.programId}`)
   }
 }
 
