@@ -20,6 +20,8 @@
   <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
   <uses-feature android:name="android.hardware.location" android:required="false" />
 
+  <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+
   <queries>
     <package android:name="com.bankid.bus" />
     <package android:name="se.bankgirot.swish" />
