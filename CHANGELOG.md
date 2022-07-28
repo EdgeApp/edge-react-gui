@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 2.18.1 (2022-07-28)
+
+- Android: Disable Google AdID
+
 ## 2.18.0 (2022-07-13)
 
 - Allow account deletion
