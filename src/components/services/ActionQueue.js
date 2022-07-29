@@ -15,22 +15,24 @@ export const ActionQueue = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
   const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+
   const executingRef = useRef<{ [programId: string]: boolean }>({})
 
+  console.log(`=== queue ===`)
+  console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(queue, null, 2)} === \x1b[0m`)
   //
   // Initialization
   //
-
-  useAsyncEffect(async () => {
-    if (account?.dataStore != null) {
-      const store = makeActionQueueStore(account)
-      const queue = await store.getActionQueueMap()
-      dispatch({
-        type: 'ACTION_QUEUE/LOAD_QUEUE',
-        data: queue
-      })
-    }
-  }, [account, dispatch])
+  // useAsyncEffect(async () => {
+  //   if (account?.dataStore != null) {
+  //     const store = makeActionQueueStore(account)
+  //     const queue = await store.getActionQueueMap()
+  //     dispatch({
+  //       type: 'ACTION_QUEUE/LOAD_QUEUE',
+  //       data: queue
+  //     })
+  //   }
+  // }, [account, dispatch])
 
   //
   // Runtime
@@ -48,6 +50,10 @@ export const ActionQueue = () => {
         .map(async programId => {
           // Set program to running
           executing[programId] = true
+          console.log(`\x1b[30m\x1b[42m === ${'Runtime queue'} === \x1b[0m`)
+          console.log(`\x1b[30m\x1b[42m === ${JSON.stringify(queue, null, 2)} === \x1b[0m`)
+
+          console.log(`\x1b[30m\x1b[42m === ${'Executing program: ' + programId} === \x1b[0m`)
 
           const { program, state } = queue[programId]
           const { nextState, pushEvents } = await executeActionProgram(account, program, state).catch((error: Error) => ({

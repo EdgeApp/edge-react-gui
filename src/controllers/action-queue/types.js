@@ -6,6 +6,18 @@ import { type PushEvent } from '../../controllers/push/types'
 //
 // Action Operations
 //
+export type ActionOpTypes =
+  | 'seq'
+  | 'par'
+  | 'exchange-buy'
+  | 'exchange-sell'
+  | 'loan-borrow'
+  | 'loan-deposit'
+  | 'loan-repay'
+  | 'loan-withdraw'
+  | 'swap'
+  | 'toast'
+  | 'delay'
 
 export type ActionOp =
   | {

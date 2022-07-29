@@ -2,6 +2,7 @@
 
 import { ethers } from 'ethers'
 
+import ENV from '../../../../../env'
 import { type BorrowPluginBlueprint, makeBorrowPluginFactory } from '../../common/BorrowPluginFactory'
 import { makeAaveNetworkFactory } from './AaveNetwork'
 import { makeBorrowEngineFactory } from './BorrowEngineFactory'
@@ -42,9 +43,20 @@ export const makeAaveBorrowPlugin = makeBorrowPluginFactory(aaveBlueprint)
 // -----------------------------------------------------------------------------
 // Kovan Testnet
 // -----------------------------------------------------------------------------
+const testProvider = ethers.getDefaultProvider(
+  'kovan',
+  ENV.KOVAN_INIT != null
+    ? {
+        etherscan: ENV.KOVAN_INIT.evmScanApiKey[0]
+        // infura: ENV.KOVAN_INIT.infuraProjectId,
+        // alchemy: ENV.KOVAN_INIT.alchemyApiKey
+      }
+    : {}
+)
 
 const aaveKovanNetwork = makeAaveNetworkFactory({
   provider: ethers.getDefaultProvider('kovan'),
+  // provider: testProvider,
 
   contractAddresses: {
     lendingPool: '0xE0fBa4Fc209b4948668006B2bE61711b7f465bAe',

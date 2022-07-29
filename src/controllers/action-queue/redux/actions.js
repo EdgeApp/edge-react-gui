@@ -26,6 +26,7 @@ export const scheduleActionProgram = (actionProgram: ActionProgram) => async (di
   const state = getState()
   const store: ActionQueueStore = makeActionQueueStore(state.core.account)
   const programId = actionProgram.programId
+  console.log(`\x1b[30m\x1b[42m === ${'scheduleActionProgram: ' + actionProgram.programId} === \x1b[0m`)
 
   // Save ActionProgram
   const actionProgramItemId = `${programId}:ActionProgram`

@@ -81,6 +81,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       return (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
     }
     case 'tx-confs': {
+      console.log(`=== tx-confs... ===`)
       const { txId, walletId, confirmations } = effect
       const wallet = account.currencyWallets[walletId]
 
@@ -95,14 +96,17 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       if (txs.length === 0) return false
 
       const tx = txs[0]
-
       if (tx.confirmations === 'dropped') throw new Error('Transaction was dropped')
 
-      if (typeof tx.confirmations === 'number') {
-        return tx.confirmations >= confirmations
-      } else {
-        return confirmations === 0 || (confirmations > 0 && tx.confirmations === 'confirmed')
-      }
+      // Validated the transaction exists, but don't care about confirmations
+      if (confirmations === 0) return true
+
+      // Wait for confirmations
+      const confStatus = tx.confirmations === 'confirmed' || (typeof tx.confirmations === 'number' && tx.confirmations >= confirmations)
+      if (confStatus) console.log(`=== tx-confs...SUCCESS ===`)
+      else console.log(`=== tx-confs...waiting ${tx.confirmations ?? 0}/${confirmations} ===`)
+
+      return confStatus
     }
     case 'price-level': {
       // TODO: Implement
@@ -241,6 +245,8 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       }
     }
     case 'loan-deposit': {
+      console.log(`\n${'V'.repeat(25)}[ loan-deposit effect ]${'V'.repeat(25)}\n${JSON.stringify(effect, null, 2)}\n${'^'.repeat(80)}`)
+
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
       const wallet = account.currencyWallets[walletId]
@@ -260,6 +266,8 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
 
       // Construct a tx-conf effect
       const txId = txs[txs.length - 1].txid
+
+      console.log('\x1b[37m\x1b[41mloan-deposit DONE!\x1b[0m')
       return {
         effect: {
           type: 'tx-confs',
@@ -267,6 +275,8 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
           walletId,
           confirmations: 1
         }
+
+        // effect: { type: 'done' }
       }
     }
     case 'loan-repay': {
@@ -299,6 +309,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       }
     }
     case 'loan-withdraw': {
+      // LoanWithdrawCollateralScene
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
       const wallet = account.currencyWallets[walletId]

@@ -189,21 +189,19 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
 
     case 'getRawKeys': {
       return async (dispatch: Dispatch, getState: GetState) => {
-        const passwordValid = await dispatch(
-          validatePassword({
-            title: s.strings.fragment_wallets_get_raw_keys_title,
-            warningMessage: s.strings.fragment_wallets_get_raw_keys_warning_message,
-            submitLabel: s.strings.string_get_raw_keys
-          })
-        )
-        if (passwordValid) {
-          const state = getState()
-          const { account } = state.core
+        // const passwordValid = await dispatch(
+        //   validatePassword({
+        //     title: s.strings.fragment_wallets_get_raw_keys_title,
+        //     warningMessage: s.strings.fragment_wallets_get_raw_keys_warning_message,
+        //     submitLabel: s.strings.string_get_raw_keys
+        //   })
+        // )
+        const state = getState()
+        const { account } = state.core
 
-          const keys = account.allKeys.find(key => key.id === walletId)
-          const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-          Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} disableCopy />)
-        }
+        const keys = account.allKeys.find(key => key.id === walletId)
+        const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
+        Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} disableCopy />)
       }
     }
 
