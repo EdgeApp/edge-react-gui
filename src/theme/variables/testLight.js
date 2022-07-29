@@ -227,6 +227,9 @@ export const testLight: Theme = {
   tabBarIcon: palette.gray,
   tabBarIconHighlighted: palette.edgeBlue,
 
+  extraTabBarIconFont: '',
+  extraTabBarIconName: '',
+
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
   sliderTabMore: palette.accentBlue,

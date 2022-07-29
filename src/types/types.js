@@ -329,7 +329,11 @@ export type AppConfig = {
   supportEmail: string,
   supportSite: string,
   termsOfServiceSite: string,
-  website: string
+  website: string,
+  extraTab?: {
+    webviewUrl: string,
+    tabTitleKey: string
+  }
 }
 
 /**

@@ -229,6 +229,9 @@ export type Theme = {
   tabBarIcon: string,
   tabBarIconHighlighted: string,
 
+  extraTabBarIconFont: string,
+  extraTabBarIconName: string,
+
   sliderTabSend: string,
   sliderTabRequest: string,
   sliderTabMore: string,

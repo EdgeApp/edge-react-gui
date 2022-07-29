@@ -115,6 +115,8 @@ exports[`createWalletName should render with loading props 1`] = `
         },
         "textShadowRadius": 0,
       },
+      "extraTabBarIconFont": "",
+      "extraTabBarIconName": "",
       "fadeDisable": "#87939E",
       "fioAddressLogo": Object {
         "testUri": "../../../src/assets/images/details_fioAddress.png",

@@ -20,6 +20,7 @@ import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js
 import { CryptoExchangeSuccessScene } from '../components/scenes/CryptoExchangeSuccessScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
+import { ExtraTabScene } from '../components/scenes/ExtraTabScene'
 import { FioAddressDetailsScene } from '../components/scenes/FioAddressDetailsScene'
 import { FioAddressListScene } from '../components/scenes/FioAddressListScene'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
@@ -425,6 +426,15 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(CryptoExchangeSuccessScene))}
                 navTransparent
                 renderLeftButton={this.renderEmptyButton()}
+              />
+            </Stack>
+            <Stack key="extraTab">
+              <Scene
+                key="extraTab"
+                component={withNavigation(ifLoggedIn(ExtraTabScene))}
+                navTransparent
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderRightButton={<SideMenuButton />}
               />
             </Stack>
           </Tabs>

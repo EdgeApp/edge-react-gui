@@ -243,6 +243,9 @@ export const testDark: Theme = {
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
+  extraTabBarIconFont: 'Feather',
+  extraTabBarIconName: 'map-pin',
+
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
   sliderTabMore: palette.accentBlue,

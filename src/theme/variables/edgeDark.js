@@ -216,6 +216,8 @@ export const edgeDark: Theme = {
   tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeNavy],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
+  extraTabBarIconFont: '',
+  extraTabBarIconName: '',
 
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,

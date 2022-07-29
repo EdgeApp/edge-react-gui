@@ -21,5 +21,9 @@ export const testConfig: AppConfig = {
   supportEmail: 'support@testy.com',
   supportSite: 'https://support.testy.com',
   termsOfServiceSite: 'https://testy.com/tos/',
-  website: 'https://testy.com'
+  website: 'https://testy.com',
+  extraTab: {
+    tabTitleKey: 'title_map',
+    webviewUrl: 'https://amazon.com/'
+  }
 }

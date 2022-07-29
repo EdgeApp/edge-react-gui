@@ -456,6 +456,7 @@
   "title_wallets": "Wallets",
   "title_buy": "Buy",
   "title_sell": "Sell",
+  "title_map": "Map",
   "no_exchanges_available": "No Exchanges Enabled",
   "check_exchange_settings": "Please enable them in your Exchange Settings.",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
