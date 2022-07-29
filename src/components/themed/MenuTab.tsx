@@ -6,10 +6,12 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
 import s from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { Actions, NavigationProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
+import { VectorIcon } from './VectorIcon'
 
 type OwnProps = {
   navigation: NavigationProp<'edge'>
@@ -17,15 +19,21 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
+const extraTabString = config.extraTab?.tabTitleKey ?? 'title_map'
+
 const title = {
   walletList: s.strings.title_wallets,
   pluginListBuy: s.strings.title_buy,
   pluginListSell: s.strings.title_sell,
-  exchange: s.strings.title_exchange
+  exchange: s.strings.title_exchange,
+  // @ts-expect-error
+  extraTab: s.strings[extraTabString]
 }
 
 export class MenuTabComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange') => {
+  handleOnPress = (route: 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange' | 'extraTab') => {
+    const { navigation } = this.props
+
     switch (route) {
       case 'walletList':
         return Actions.jump('walletListScene', {})
@@ -35,6 +43,8 @@ export class MenuTabComponent extends React.PureComponent<Props> {
         return Actions.jump('pluginListSell', { direction: 'sell' })
       case 'exchange':
         return Actions.jump('exchange', {})
+      case 'extraTab':
+        return navigation.navigate('extraTab', undefined)
     }
   }
 
@@ -46,18 +56,24 @@ export class MenuTabComponent extends React.PureComponent<Props> {
     const colors = theme.tabBarBackground
     const start = theme.tabBarBackgroundStart
     const end = theme.tabBarBackgroundEnd
+    let routes = state.routes
+
+    if (config.extraTab == null) {
+      routes = routes.slice(0, -1)
+    }
 
     return (
       <View>
         <DividerLine colors={theme.tabBarTopOutlineColors} />
         <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
-          {state.routes.map((element: any, index: number) => {
+          {routes.map((element: any, index: number) => {
             const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
             const icon = {
               walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
               pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
               pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-              exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
+              exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
+              extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
             }
             return (
               <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>

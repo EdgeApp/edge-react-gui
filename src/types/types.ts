@@ -335,6 +335,12 @@ export type AppConfig = {
   supportSite: string
   termsOfServiceSite: string
   website: string
+  extraTab?: {
+    webviewUrl: string
+    tabTitleKey: string
+    extraTabBarIconFont: string
+    extraTabBarIconName: string
+  }
 }
 
 /**

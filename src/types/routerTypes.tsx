@@ -108,6 +108,7 @@ export type ParamList = {
   exchangeScene: {}
   exchangeSettings: {}
   exchangeSuccess: {}
+  extraTab: undefined
   fioAddressDetails: {
     fioAddressName: string
     bundledTxs: number
