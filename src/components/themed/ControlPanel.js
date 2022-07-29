@@ -26,6 +26,7 @@ import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
+import { type EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
@@ -53,7 +54,6 @@ export function ControlPanel(props: Props) {
   // ---- Redux State ----
 
   const account = useSelector(state => state.core.account)
-  const wallets = useWatch(account, 'currencyWallets')
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -106,16 +106,26 @@ export function ControlPanel(props: Props) {
   }
 
   const handleSweep = () => {
-    const excludeWalletIds = Object.keys(wallets).filter(
-      walletId => !SWEEPABLE_CURRENCY_CODES.some(currencyCode => currencyCode === wallets[walletId].currencyInfo.currencyCode)
-    )
+    // Only allow native assets, filtered by sweepable currency codes
+    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
+      .filter(pluginId => {
+        const currencyConfig = account.currencyConfig[pluginId]
+        return SWEEPABLE_CURRENCY_CODES.some(
+          sweepableCurrencyCode => currencyConfig.currencyInfo.currencyCode.toLowerCase() === sweepableCurrencyCode.toLowerCase()
+        )
+      })
+      .map(pluginId =>
+        // Return an "EdgeTokenId" specifying that this must NOT be a token
+        // (implies it must be a supported native asset)
+        ({ pluginId, tokenId: undefined })
+      )
 
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
+        allowedAssets={allowedAssets}
         allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
-        excludeWalletIds={excludeWalletIds}
         showCreateWallet
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
