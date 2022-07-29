@@ -6,13 +6,15 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants.js'
+import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram.js'
+import { scheduleActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../../hooks/useHandler.js'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings.js'
 import type { ApprovableAction, BorrowEngine } from '../../../plugins/borrow-plugins/types.js'
 import { useMemo, useRef, useState } from '../../../types/reactHooks.js'
-import { useSelector } from '../../../types/reactRedux.js'
+import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { zeroString } from '../../../util/utils.js'
 import { FlipInputTile } from '../../cards/FlipInputTile'
 import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents.js'
@@ -26,10 +28,18 @@ import { FormScene } from '../FormScene.js'
 
 const WBTC = { pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599', currencyCode: 'WBTC' }
 
+type ManageCollateralRequest = {
+  tokenId?: string,
+  ['fromWallet' | 'toWallet']: EdgeCurrencyWallet,
+  nativeAmount: string
+}
+
 type Props = {
   borrowEngine: BorrowEngine,
+  borrowPluginId: string, // TODO: make mandatory, reduce to just borrowPluginId?
   defaultTokenId?: string,
-  action: (request: { tokenId?: string, ['fromWallet' | 'toWallet']: EdgeCurrencyWallet, nativeAmount: string }) => Promise<ApprovableAction>,
+  action: (request: ManageCollateralRequest) => Promise<ApprovableAction>,
+  actionOpType: string,
   actionWallet: 'fromWallet' | 'toWallet',
   ltvType: 'debts' | 'collaterals',
   ltvChange: 'increase' | 'decrease',
@@ -48,8 +58,10 @@ type Props = {
 export const ManageCollateralScene = (props: Props) => {
   const {
     action,
+    actionOpType,
     actionWallet,
     borrowEngine,
+    borrowPluginId,
     defaultTokenId,
     headerText,
     ltvChange,
@@ -85,6 +97,29 @@ export const ManageCollateralScene = (props: Props) => {
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
   const [actionNativeAmount, setActionNativeAmount] = useState('0')
   const [newDebtApr, setNewDebtApr] = useState(0)
+
+  // TODO: WIP ActionQueue
+  const dispatch = useDispatch()
+  const [aqProg, setAqProg] = useState()
+
+  useAsyncEffect(async () => {
+    // const testAOpType = ''
+    const aOp = {
+      type: 'seq',
+      actions: [
+        // $FlowFixMe
+        {
+          type: actionOpType,
+          borrowPluginId,
+          nativeAmount: actionNativeAmount,
+          walletId: currencyWallet.id,
+          tokenId: selectedTokenId
+        }
+      ]
+    }
+    const prog = await makeActionProgram(aOp)
+    setAqProg(prog)
+  }, [actionNativeAmount])
 
   useAsyncEffect(async () => {
     if (zeroString(actionNativeAmount)) {
@@ -152,9 +187,11 @@ export const ManageCollateralScene = (props: Props) => {
   })
 
   const onSliderComplete = async (resetSlider: () => void) => {
-    if (approvalAction != null) {
+    if (aqProg != null) {
       try {
-        await approvalAction.approve()
+        // TODO: wip
+        // await approvalAction.approve()
+        await dispatch(scheduleActionProgram(aqProg))
         goBack()
       } catch (e) {
         showError(e)

@@ -1,14 +1,17 @@
 // @flow
+import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { type ActionQueueMap } from '../../../controllers/action-queue/types'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { type NavigationProp } from '../../../types/routerTypes'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
@@ -20,13 +23,20 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 type Props = {
-  navigation: NavigationProp<'loanStatus'>
+  navigation: NavigationProp<'loanStatus'>,
+  route: RouteProp<'loanStatus'>
 }
 
 export const LoanStatusScene = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const { actionQueueId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
+  const account: EdgeAccount = useSelector(state => state.core.account)
+  const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  // const aqProgram =
+  const displayInfos = []
 
   // #region Temp hard-coded vars
 
