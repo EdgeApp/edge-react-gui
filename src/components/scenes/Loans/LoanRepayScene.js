@@ -11,12 +11,14 @@ type Props = {
 
 export const LoanMakeLoanPaymentScene = (props: Props) => {
   const { navigation, route } = props
-  const { borrowEngine } = route.params
+  const { borrowEngine, borrowPlugin } = route.params
 
   return ManageCollateralScene({
     borrowEngine,
+    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
     defaultTokenId: borrowEngine.debts[0].tokenId,
     action: async req => await borrowEngine.repay(req),
+    actionOpType: 'loan-repay',
     actionWallet: 'fromWallet',
     ltvType: 'debts',
     ltvChange: 'decrease',
