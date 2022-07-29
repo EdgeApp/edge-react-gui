@@ -34,7 +34,7 @@ type Props = {|
   showCreateWallet?: boolean,
 
   // Callbacks:
-  onPress?: (walletId: string, currencyCode: string) => void
+  onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
 |}
 
 type WalletCreateItem = {|
@@ -174,7 +174,7 @@ export function WalletList(props: Props) {
 
     // Filter this list:
     const existingWallets: EdgeTokenId[] = []
-    for (const { wallet, tokenId } of sortedWalletList) {
+    for (const { wallet, tokenId } of filteredWalletList) {
       if (wallet == null) continue
       existingWallets.push({
         pluginId: wallet.currencyInfo.pluginId,
@@ -182,7 +182,7 @@ export function WalletList(props: Props) {
       })
     }
     return out.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
-  }, [account, allowedAssets, excludeAssets, filterActivation, sortedWalletList])
+  }, [account, allowedAssets, excludeAssets, filterActivation, filteredWalletList])
 
   // Merge the lists, filtering based on the search term:
   const { walletList, sectionList } = useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>, sectionList?: Section[] }>(() => {
