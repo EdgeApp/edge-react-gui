@@ -3,10 +3,10 @@ import { div } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
+import { type ActionDisplayInfo, type ActionEffect, type ActionOp, type ActionProgram, type ActionProgramState } from '../../controllers/action-queue/types'
 import s from '../../locales/strings'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { queryBorrowPlugins } from '../helpers/borrowPluginHelpers'
-import { type ActionDisplayInfo, type ActionEffect, type ActionOp, type ActionProgram, type ActionProgramState } from './types'
 
 export function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): ActionDisplayInfo {
   return getActionOpDisplayInfo(account, program.actionOp, programState.effect)
@@ -89,7 +89,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         message: sprintf(s.strings.action_queue_display_swap_message, fromCurrencyCode, toCurrencyCode)
       }
     }
-    case 'exchange:buy': {
+    case 'exchange-buy': {
       const { exchangePluginId, tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -102,7 +102,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         message: sprintf(s.strings.action_queue_display_exchange_buy_message, currencyCode, partnerDisplayName)
       }
     }
-    case 'exchange:sell': {
+    case 'exchange-sell': {
       const { exchangePluginId, tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -115,7 +115,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         message: sprintf(s.strings.action_queue_display_exchange_sell_message, currencyCode, partnerDisplayName)
       }
     }
-    case 'loan:borrow': {
+    case 'loan-borrow': {
       const { tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -126,7 +126,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         message: sprintf(s.strings.action_queue_display_loan_borrow_message, currencyCode)
       }
     }
-    case 'loan:deposit': {
+    case 'loan-deposit': {
       const { borrowPluginId, tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -139,14 +139,14 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         message: sprintf(s.strings.action_queue_display_loan_deposit_message, currencyCode, borrowPluginDisplayName)
       }
     }
-    case 'loan:repay': {
+    case 'loan-repay': {
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_loan_repay_title,
         message: sprintf(s.strings.action_queue_display_loan_repay_message)
       }
     }
-    case 'loan:withdraw': {
+    case 'loan-withdraw': {
       const { nativeAmount, walletId, tokenId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const { currencyCode, denominations } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo

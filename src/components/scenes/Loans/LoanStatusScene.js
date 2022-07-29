@@ -9,8 +9,10 @@ import { sprintf } from 'sprintf-js'
 import { type ActionQueueMap } from '../../../controllers/action-queue/types'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
+import { getActionProgramDisplayInfo } from '../../../plugins/action-queue'
 import { config } from '../../../theme/appConfig'
-import { useDispatch, useSelector } from '../../../types/reactRedux'
+import { useEffect, useState } from '../../../types/reactHooks'
+import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -32,45 +34,38 @@ export const LoanStatusScene = (props: Props) => {
   const { actionQueueId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
-  const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
-  const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  // const aqProgram =
-  const displayInfos = []
 
-  // #region Temp hard-coded vars
+  const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  const [programDisplayInfo, setProgramDisplayInfo] = useState()
 
-  const hardCollateral = 'BTC'
-  const hardWCollateral = 'WBTC'
-  const hardLoanAsset = 'USDC'
-  const hardDepositPartner = 'Wyre'
+  const [program, setProgram] = useState()
+  const [programState, setprogramState] = useState()
 
-  const hardDisplayInfos = [
-    {
-      title: sprintf(s.strings.loan_status_step_title_0, hardCollateral, hardWCollateral),
-      message: sprintf(s.strings.loan_status_step_body_0, hardCollateral, config.appName, hardWCollateral, s.strings.loan_aave),
-      complete: true
-    },
-    {
-      title: sprintf(s.strings.loan_status_step_title_1, hardWCollateral),
-      message: sprintf(s.strings.loan_status_step_body_1, hardWCollateral, s.strings.loan_aave),
-      complete: true
-    },
-    {
-      title: s.strings.loan_status_step_title_2,
-      message: sprintf(s.strings.loan_status_step_body_2, hardLoanAsset),
-      complete: true
-    },
-    {
-      title: s.strings.loan_status_step_title_3,
-      message: sprintf(s.strings.loan_status_step_body_3, hardLoanAsset, hardDepositPartner),
-      complete: true
+  useEffect(() => {
+    const actionQueueItem = actionQueue[actionQueueId]
+    if (actionQueueItem == null) {
+      console.log(`\x1b[34m\x1b[43m === ${'LSS DONE'} === \x1b[0m`)
+    } else {
+      const { program, state } = actionQueueItem
+      setProgram(program)
+      setprogramState(state)
     }
-  ]
-  const hardInfosLen = hardDisplayInfos.length
-  const isComplete = hardDisplayInfos[hardInfosLen - 1].complete
+  }, [actionQueue, actionQueueId])
 
-  // #endregion Temp hard-coded vars
+  useEffect(() => {
+    if (program != null && programState != null) {
+      const displayInfo = getActionProgramDisplayInfo(account, program, programState)
+      console.log(`\x1b[34m\x1b[43m === ${'displayInfo:'} === \x1b[0m`)
+      console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(displayInfo, null, 2)} === \x1b[0m`)
+      console.log(`\x1b[34m\x1b[43m === ${'programState:'} === \x1b[0m`)
+      console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(programState, null, 2)} === \x1b[0m`)
+      setProgramDisplayInfo(displayInfo)
+    }
+  }, [account, account.currencyWallets, program, programState])
+
+  console.log(`\x1b[34m\x1b[43m === ${'LSS: actionQueue[actionQueueId]:'} === \x1b[0m`)
+  console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(actionQueue[actionQueueId], null, 2)} === \x1b[0m`)
 
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {
@@ -89,13 +84,13 @@ export const LoanStatusScene = (props: Props) => {
     }
   })
 
-  return (
+  return programDisplayInfo == null ? null : (
     <SceneWrapper background="theme" hasHeader hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_status_title} />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
-        <StepProgressBar actionDisplayInfos={hardDisplayInfos} />
+        <StepProgressBar actionDisplayInfos={programDisplayInfo.steps} />
       </ScrollView>
-      {isComplete ? (
+      {programDisplayInfo.steps[programDisplayInfo.steps.length - 1].status === 'done' ? (
         <>
           <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} />
           <View style={styles.footerContainer}>

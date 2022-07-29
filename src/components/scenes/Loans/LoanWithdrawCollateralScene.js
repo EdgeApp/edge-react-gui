@@ -28,6 +28,6 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
     showTotalCollateralTile: true,
 
     headerText: s.strings.loan_withdraw_collateral,
-    goBack: () => navigation.pop()
+    navigation
   })
 }

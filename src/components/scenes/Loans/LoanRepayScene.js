@@ -28,6 +28,6 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
     showTotalCollateralTile: true,
 
     headerText: s.strings.loan_make_payment,
-    goBack: () => navigation.pop()
+    navigation
   })
 }

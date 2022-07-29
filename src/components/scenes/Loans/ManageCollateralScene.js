@@ -15,6 +15,7 @@ import s from '../../../locales/strings.js'
 import type { ApprovableAction, BorrowEngine } from '../../../plugins/borrow-plugins/types.js'
 import { useMemo, useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
+import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
 import { zeroString } from '../../../util/utils.js'
 import { FlipInputTile } from '../../cards/FlipInputTile'
 import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents.js'
@@ -34,7 +35,7 @@ type ManageCollateralRequest = {
   nativeAmount: string
 }
 
-type Props = {
+type Props<T: $Keys<ParamList>> = {
   borrowEngine: BorrowEngine,
   borrowPluginId: string, // TODO: make mandatory, reduce to just borrowPluginId?
   defaultTokenId?: string,
@@ -52,10 +53,11 @@ type Props = {
   showNewDebtAprChange?: true,
 
   headerText: string,
-  goBack: () => void
+
+  navigation: NavigationProp<T>
 }
 
-export const ManageCollateralScene = (props: Props) => {
+export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const {
     action,
     actionOpType,
@@ -72,7 +74,7 @@ export const ManageCollateralScene = (props: Props) => {
     debtChange = 'increase',
     showTotalCollateralTile,
     showNewDebtAprChange,
-    goBack
+    navigation
   } = props
 
   const { currencyWallet } = borrowEngine
@@ -112,14 +114,14 @@ export const ManageCollateralScene = (props: Props) => {
           type: actionOpType,
           borrowPluginId,
           nativeAmount: actionNativeAmount,
-          walletId: currencyWallet.id,
+          walletId: selectedWallet.id,
           tokenId: selectedTokenId
         }
       ]
     }
     const prog = await makeActionProgram(aOp)
     setAqProg(prog)
-  }, [actionNativeAmount])
+  }, [actionNativeAmount, selectedWallet, selectedTokenId])
 
   useAsyncEffect(async () => {
     if (zeroString(actionNativeAmount)) {
@@ -187,12 +189,16 @@ export const ManageCollateralScene = (props: Props) => {
   })
 
   const onSliderComplete = async (resetSlider: () => void) => {
-    if (aqProg != null) {
+    if (aqProg != null && approvalAction != null) {
       try {
-        // TODO: wip
-        // await approvalAction.approve()
+        aqProg.programId = actionOpType + '_' + Date.now()
         await dispatch(scheduleActionProgram(aqProg))
-        goBack()
+        navigation.navigate('loanStatus', { actionQueueId: aqProg.programId })
+
+        // const approvableAction = await borrowEngine.deposit({ nativeAmount: aqProg.nativeAmount, tokenId: aqProg.tokenId })
+        // const txs = await approvableAction.approve()
+
+        // await approvalAction.approve()
       } catch (e) {
         showError(e)
         resetSlider()

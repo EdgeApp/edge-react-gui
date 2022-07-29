@@ -908,8 +908,6 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
-          </Stack>
-          <Stack key="loan">
             <Scene
               key="loanStatus"
               component={withNavigation(ifLoggedIn(LoanStatusScene))}

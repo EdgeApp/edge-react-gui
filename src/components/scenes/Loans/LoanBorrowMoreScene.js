@@ -30,6 +30,6 @@ export const LoanBorrowMoreScene = (props: Props) => {
     showNewDebtAprChange: true,
 
     headerText: s.strings.loan_borrow_more,
-    goBack: () => navigation.pop()
+    navigation
   })
 }

@@ -81,7 +81,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       return (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
     }
     case 'tx-confs': {
-      console.log(`=== tx-confs... ===`)
+      // console.log(`\x1b[37m\x1b[41m === ${'tx-confs: executing...'} === \x1b[0m`)
       const { txId, walletId, confirmations } = effect
       const wallet = account.currencyWallets[walletId]
 
@@ -93,7 +93,10 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       // If not transaction is found with the effect's txId, then we can assume
       // that we're waiting to synchronize with network state.
-      if (txs.length === 0) return false
+      if (txs.length === 0) {
+        // console.log(`\x1b[37m\x1b[41m === ${'tx-confs: waiting...'} === \x1b[0m`)
+        return false
+      }
 
       const tx = txs[0]
       if (tx.confirmations === 'dropped') throw new Error('Transaction was dropped')
@@ -104,7 +107,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       // Wait for confirmations
       const confStatus = tx.confirmations === 'confirmed' || (typeof tx.confirmations === 'number' && tx.confirmations >= confirmations)
       if (confStatus) console.log(`=== tx-confs...SUCCESS ===`)
-      else console.log(`=== tx-confs...waiting ${tx.confirmations ?? 0}/${confirmations} ===`)
+      // else console.log(`=== tx-confs...waiting ${tx.confirmations ?? 0}/${confirmations} ===`)
 
       return confStatus
     }
@@ -245,7 +248,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       }
     }
     case 'loan-deposit': {
-      console.log(`\n${'V'.repeat(25)}[ loan-deposit effect ]${'V'.repeat(25)}\n${JSON.stringify(effect, null, 2)}\n${'^'.repeat(80)}`)
+      console.log(`\x1b[37m\x1b[41m === ${'loan-deposit: executing'} === \x1b[0m`)
 
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
@@ -261,22 +264,24 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.deposit({ nativeAmount, fromWallet: wallet, tokenId })
+
+      console.log(`\x1b[37m\x1b[41m === ${'loan-deposit: approving...'} === \x1b[0m`)
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
       const txId = txs[txs.length - 1].txid
 
-      console.log('\x1b[37m\x1b[41mloan-deposit DONE!\x1b[0m')
       return {
-        effect: {
-          type: 'tx-confs',
-          txId,
-          walletId,
-          confirmations: 1
-        }
+        // effect: {
+        //   type: 'tx-confs',
+        //   txId,
+        //   walletId,
+        //   confirmations: 1
+        // }
 
-        // effect: { type: 'done' }
+        // TODO: tx-confs isn't setting status
+        effect: { type: 'done' }
       }
     }
     case 'loan-repay': {

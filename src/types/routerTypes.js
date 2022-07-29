@@ -225,6 +225,7 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
+  loanManageCollateral: void,
   guiPluginEnterAmount: {|
     headerTitle: string,
     onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>,
@@ -236,7 +237,9 @@ export type ParamList = {
     initialAmount1?: string,
     headerIconUri?: string
   |},
-  loanStatus: void,
+  loanStatus: {|
+    actionQueueId: string
+  |},
   manageTokens: {|
     walletId: string
   |},
