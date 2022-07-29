@@ -236,6 +236,7 @@ export type ParamList = {
     initialAmount1?: string,
     headerIconUri?: string
   |},
+  loanStatus: void,
   manageTokens: {|
     walletId: string
   |},
