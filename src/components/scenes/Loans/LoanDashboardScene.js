@@ -9,6 +9,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from '../../../plugins/borrow-plugins/plugins/aave/index'
+// import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfo, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
@@ -60,7 +61,7 @@ export const LoanDashboardScene = (props: Props) => {
   const [timeoutId, setTimeoutId] = useState()
   const [resetTrigger, setResetTrigger] = useState(false)
   const [borrowInfos, borrowInfosError] = useAsyncValue(async () => {
-    const retVal = isWalletsLoaded
+    const retVal = isWalletsLoaded // && borrowPlugins
       ? await getAaveBorrowInfos(borrowPlugins, account).then(biRes => {
           return filterActiveBorrowInfos(biRes)
         })

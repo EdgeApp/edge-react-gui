@@ -12,7 +12,10 @@ import { ResolutionError, translateResolutionError } from '../types/ResolutionEr
 export function makeErrorLog(error: mixed): string {
   let message = String(error)
   if (ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS || ENV.DEBUG_VERBOSE_ERRORS) {
-    if (error instanceof Error) message += `\n${error.stack}`
+    if (error instanceof Error) {
+      // const testErr: Error = error
+      // message += `\n${error.stack}`
+    }
     message += `\n${JSON.stringify(error, null, 2)}`
   }
   return message
