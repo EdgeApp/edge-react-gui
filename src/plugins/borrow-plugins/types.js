@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyWallet, type EdgeNetworkFee } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Request Method Types
@@ -45,7 +45,8 @@ export type WithdrawRequest = {
 // General purpose approvable action
 export type ApprovableAction = {
   +networkFee: EdgeNetworkFee,
-  +approve: () => Promise<void>
+  +unsignedTxs: EdgeTransaction[],
+  +approve: () => Promise<EdgeTransaction[]>
 }
 
 // -----------------------------------------------------------------------------
