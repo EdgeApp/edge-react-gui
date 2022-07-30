@@ -24,8 +24,8 @@ const strings = {
   action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
   action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
   // loan_repay
-  action_queue_display_loan_repay_title: `Repay loan principle`,
-  action_queue_display_loan_repay_message: `Make a payment towards your loan prinicple.`,
+  action_queue_display_loan_repay_title: `Repay loan principal`,
+  action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
   // loan_withdraw
   action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
   action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
