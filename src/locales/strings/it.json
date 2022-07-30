@@ -23,7 +23,7 @@
   "action_queue_display_toast_message": "Mostra la notifica toast",
   "action_queue_display_delay_title": "Attendi",
   "action_queue_display_delay_message_pending": "Attendi %1$s millescondi",
-  "action_queue_display_delay_message_doing": "Wait until %1$s",
+  "action_queue_display_delay_message_doing": "Attendi fino a %1$s",
   "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s ricevuti",
   "dialog_title": "Imposta il tempo di auto disconnessione",
