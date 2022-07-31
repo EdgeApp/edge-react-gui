@@ -94,7 +94,7 @@ device: ${getBrand()} ${getDeviceId()}
 `
 
   return log('SENDING LOGS WITH MESSAGE: ' + text)
-    .then(() => readLogs())
+    .then(() => readLogs('info'))
     .then(logs => {
       logOutput.data += logs || ''
       return sendLogs(logOutput)
