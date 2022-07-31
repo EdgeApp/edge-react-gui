@@ -15,7 +15,7 @@ function handleErrors(response) {
 }
 
 const request = (name, path, method, data) => {
-  console.log(`====== ${name} REQUEST ======`, (data && data.length) || data)
+  console.log(`====== ${name} REQUEST ====== data length: ${data?.length ?? ''}`)
 
   return global
     .fetch(`${API_PREFIX}${path}`, {
