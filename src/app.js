@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs'
 
 import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext.js'
-import { log, logToServer } from './util/logger'
+import { log, logActivity, logToServer } from './util/logger'
 
 Bugsnag.start({
   apiKey: ENV.BUGSNAG_API_KEY,
@@ -57,7 +57,7 @@ if (!TextInput.defaultProps) {
 TextInput.defaultProps.allowFontScaling = false
 
 // $FlowFixMe
-if (!__DEV__) {
+if (__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
   // $FlowFixMe
   console.log = log
@@ -68,6 +68,8 @@ if (!__DEV__) {
   // $FlowFixMe
   console.error = log
 }
+
+global.logActivity = logActivity
 
 if (ENV.LOG_SERVER) {
   // $FlowFixMe: suppressing this error until we can find a workaround

@@ -7,8 +7,8 @@ import { sprintf } from 'sprintf-js'
 
 import ENV from '../../env.json'
 
-const NUM_FILES = 30
-export type LogType = 'info'
+const NUM_FILES = 20
+export type LogType = 'info' | 'activity'
 
 const padZeros = (n: number): string => {
   return sprintf('%03d', n)
@@ -23,7 +23,8 @@ const makePaths = (type: LogType): string[] => {
 }
 
 const logMap: { [type: LogType]: string[] } = {
-  info: makePaths('info')
+  info: makePaths('info'),
+  activity: makePaths('activity')
 }
 
 const getTime = () => new Date().toISOString()
@@ -142,6 +143,10 @@ export async function logWithType(type: LogType, ...info: Array<number | string 
 
 export async function log(...info: Array<number | string | null | {}>): Promise<void> {
   await logWithType('info', ...info)
+}
+
+export async function logActivity(...info: Array<number | string | null | {}>): Promise<void> {
+  await logWithType('activity', ...info)
 }
 
 async function request(data: string) {
