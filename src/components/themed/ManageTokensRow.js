@@ -57,6 +57,11 @@ export const ManageTokensRowComponent = (props: Props) => {
 
     const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)
+    if (isEnabled) {
+      global.logActivity(`Disable Token: ${wallet.name ?? 'no_wallet_name'} ${wallet.type} ${tokenId}`)
+    } else {
+      global.logActivity(`Enable Token: ${wallet.name ?? 'no_wallet_name'} ${wallet.type} ${tokenId}`)
+    }
   })
 
   // Animate the spinner in while the toggle is pending:
