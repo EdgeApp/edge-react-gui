@@ -1,5 +1,34 @@
 # edge-react-gui
 
+## 2.19.0 (2022-08-01)
+
+- Add Polkadot (DOT)
+- Add new swap provider ChangeHero
+- Wyre: add USDC (MATIC) sell support
+- New Fiat Plugin framework
+- Add additional TOMB Cemetary pools
+- Banxa: Add Turkey
+- Rename Paxos to Pax Dollar
+- Fix crash on deeplink
+- Fix crash when tapping on wallet very shortly after login
+- EdgeProvider: Harden supported currency code formats
+- Replace `react-native-blur` with `rn-id-blurview`
+- Tighten sweep private key wallet list filtering
+- Upgrade to Webpack v5
+- Add supportEmail to AppConfig
+- Upgrade edge-core-js to v0.19.25
+  - changed: Allow individual plugins to resist being loaded by returning undefined instead of an EdgeCurrencyPlugin object.
+  - changed: Randomly generate loginIds so recycled usernames don't cause conflicts
+  - fixed: Upgrade edge-sync-client to include patch
+- Upgrade edge-currency-accountbased to v0.17.2
+  - Add Polkadot (DOT)
+  - FTM: Add new default tokens: AVAX, BNB, BTC, CRV, DAI, ETH, FUSD, LIF3, LINK, LSHARE, MIM, TREEB, ZOO
+  - ETH: Calculate and store feeRateUsed in transactions
+- Upgrade edge-currency-plugins to v1.1.2
+  - Fix: Upgrade edge-sync-client to include patch
+- Upgrade edge-exchange-plugins to v0.13.6
+  - Add ChangeHero
+
 ## 2.18.1 (2022-07-28)
 
 - Android: Disable Google AdID
