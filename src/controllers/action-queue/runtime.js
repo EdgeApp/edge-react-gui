@@ -30,7 +30,7 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
   }
 
   // Execute Action
-  const { effect: nextEffect } = await executeActionOp(account, program, state)
+  const { effect: nextEffect } = await executeAction(account, program, state)
 
   // Return next state
   return {
@@ -101,7 +101,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
   }
 }
 
-async function executeActionOp(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResult> {
+async function executeAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResult> {
   const { actionOp } = program
   const { effect } = state
 
@@ -118,7 +118,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
         programId: `${program.programId}[${opIndex}]`,
         actionOp: actionOp.actions[opIndex]
       }
-      const childResult = await executeActionOp(account, nextProgram, state)
+      const childResult = await executeAction(account, nextProgram, state)
       return {
         effect: {
           type: 'seq',
@@ -131,7 +131,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await executeActionOp(account, subProgram, state)
+        return await executeAction(account, subProgram, state)
       })
       const childResults = await Promise.all(promises)
       return {
