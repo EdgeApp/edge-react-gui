@@ -51,10 +51,25 @@ const aaveKovanNetwork = makeAaveNetworkFactory({
     protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
   },
   enabledTokens: {
+    AAVE: true,
+    AMPL: true,
+    BUSD: true,
     DAI: true,
-    WETH: true,
+    ENJ: true,
+    ETH: true,
+    KNC: true,
+    LINK: true,
+    MANA: true,
+    MKR: true,
+    REN: true,
+    sUSD: true,
+    SNX: true,
+    TUSD: true,
+    USDC: true,
+    USDT: true,
     WBTC: true,
-    USDC: true
+    YFI: true,
+    ZRX: true
   }
 })
 
@@ -95,10 +110,25 @@ const aaveLocalhostNetwork = makeAaveNetworkFactory({
     protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
   },
   enabledTokens: {
+    AAVE: true,
+    AMPL: true,
+    BUSD: true,
     DAI: true,
-    WETH: true,
+    ENJ: true,
+    ETH: true,
+    KNC: true,
+    LINK: true,
+    MANA: true,
+    MKR: true,
+    REN: true,
+    sUSD: true,
+    SNX: true,
+    TUSD: true,
+    USDC: true,
+    USDT: true,
     WBTC: true,
-    USDC: true
+    YFI: true,
+    ZRX: true
   }
 })
 

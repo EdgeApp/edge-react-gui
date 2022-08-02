@@ -17,7 +17,8 @@ import { WalletList } from '../themed/WalletList.js'
 
 export type WalletListResult = {
   walletId?: string,
-  currencyCode?: string
+  currencyCode?: string,
+  tokenId?: string
 }
 
 type Props = {|

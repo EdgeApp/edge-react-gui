@@ -23,7 +23,7 @@ export function ShareButtons(props: Props) {
     <View style={styles.container}>
       <ShareButton icon="FIO-geometric" text={s.strings.fio_reject_request_title} onPress={fioAddressModal} />
       <ShareButton icon="Copy-icon" text={s.strings.fragment_request_copy_title} onPress={copyToClipboard} />
-      <ShareButton icon="group-(2)" text={s.strings.string_share} onPress={shareViaShare} />
+      <ShareButton icon="FIO-share" text={s.strings.string_share} onPress={shareViaShare} />
     </View>
   )
 }

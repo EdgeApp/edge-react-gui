@@ -34,7 +34,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
     >
       <View style={styles.headerContainer}>
         <View style={styles.iconCircle}>
-          <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
+          <Fontello name="address-book" size={theme.rem(1.5)} color={theme.icon} />
         </View>
         <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
       </View>
