@@ -10,6 +10,7 @@ import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { makeCurrencyCodeTable } from '../../util/utils.js'
+import { showError } from '../services/AirshipInstance.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -86,7 +87,10 @@ export function WalletListModal(props: Props) {
     bridge.resolve({})
   })
   const handlePress = useHandler((walletId: string, currencyCode: string) => {
-    bridge.resolve({ walletId, currencyCode })
+    if (walletId === '') {
+      handleCancel()
+      showError(s.strings.network_alert_title)
+    } else bridge.resolve({ walletId, currencyCode })
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
