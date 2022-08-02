@@ -19,22 +19,28 @@ export type ActionOpTypes =
   | 'toast'
   | 'delay'
 
+export type ActionOpExecStatus = 'pending' | 'active' | 'done' | Error
+
 export type ActionOp =
   | {
       type: 'seq',
+      status?: ActionOpExecStatus,
       actions: ActionOp[]
     }
   | {
       type: 'par',
+      status?: ActionOpExecStatus,
       actions: ActionOp[]
     }
   | {
       type: 'broadcast-tx',
+      status?: ActionOpExecStatus,
       pluginId: string,
       rawTx: Uint8Array
     }
   | {
       type: 'exchange-buy',
+      status?: ActionOpExecStatus,
       nativeAmount: string,
       walletId: string,
       tokenId?: string,
@@ -42,6 +48,7 @@ export type ActionOp =
     }
   | {
       type: 'exchange-sell',
+      status?: ActionOpExecStatus,
       nativeAmount: string,
       walletId: string,
       tokenId?: string,
@@ -49,6 +56,10 @@ export type ActionOp =
     }
   | {
       type: 'loan-borrow',
+
+      status?: ActionOpExecStatus,
+      stepId: number,
+
       borrowPluginId: string,
       nativeAmount: string,
       walletId: string,
@@ -56,6 +67,7 @@ export type ActionOp =
     }
   | {
       type: 'loan-deposit',
+      status?: ActionOpExecStatus,
       borrowPluginId: string,
       nativeAmount: string,
       walletId: string,
@@ -63,6 +75,7 @@ export type ActionOp =
     }
   | {
       type: 'loan-repay',
+      status?: ActionOpExecStatus,
       borrowPluginId: string,
       nativeAmount: string,
       walletId: string,
@@ -70,6 +83,7 @@ export type ActionOp =
     }
   | {
       type: 'loan-withdraw',
+      status?: ActionOpExecStatus,
       borrowPluginId: string,
       nativeAmount: string,
       walletId: string,
@@ -77,6 +91,7 @@ export type ActionOp =
     }
   | {
       type: 'swap',
+      status?: ActionOpExecStatus,
       fromWalletId: string,
       toWalletId: string,
       fromTokenId?: string,
@@ -87,15 +102,17 @@ export type ActionOp =
   // Useful for development/testing
   | {
       type: 'toast',
+      status?: ActionOpExecStatus,
       message: string
     }
   | {
       type: 'delay',
+      status?: ActionOpExecStatus,
       ms: number
     }
 
 //
-// Action Effects
+// Action (After) Effects
 //
 
 export type ActionEffect =
@@ -137,6 +154,9 @@ export type ActionEffect =
       type: 'unixtime',
       timestamp: number
     }
+  | {
+      type: 'init'
+    }
 
 //
 // Action Program
@@ -150,7 +170,7 @@ export type ActionProgram = {
 
 export type ActionProgramState = {
   programId: string,
-  effect?: ActionEffect
+  effect?: ActionEffect // result/resolves
 }
 
 //
@@ -171,7 +191,8 @@ export type ExecutionResult = {
 }
 export type ExecutionResults = {
   nextState: ActionProgramState,
-  pushEvents: PushEvent[]
+  pushEvents: PushEvent[],
+  programState: ActionProgram
 }
 
 //
@@ -181,6 +202,6 @@ export type ExecutionResults = {
 export type ActionDisplayInfo = {
   title: string,
   message: string,
-  status: 'pending' | 'doing' | 'done' | Error,
+  status: ActionOpExecStatus,
   steps: ActionDisplayInfo[]
 }

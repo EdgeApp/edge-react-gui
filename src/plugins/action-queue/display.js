@@ -3,7 +3,14 @@ import { div } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { type ActionDisplayInfo, type ActionEffect, type ActionOp, type ActionProgram, type ActionProgramState } from '../../controllers/action-queue/types'
+import {
+  type ActionDisplayInfo,
+  type ActionEffect,
+  type ActionOp,
+  type ActionOpExecStatus,
+  type ActionProgram,
+  type ActionProgramState
+} from '../../controllers/action-queue/types'
 import s from '../../locales/strings'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { queryBorrowPlugins } from '../helpers/borrowPluginHelpers'
@@ -13,6 +20,7 @@ export function getActionProgramDisplayInfo(account: EdgeAccount, program: Actio
 }
 
 function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect?: ActionEffect): ActionDisplayInfo {
+  // Derive actionOp status from current effect
   const baseDisplayInfo = {
     status: stateToStatus(effect),
     steps: []
@@ -197,8 +205,8 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
 
 // This op is only done if the effect is a 'done' type because the runtime
 // should return a 'done' type after the last effect passes in sequence or parallel (seq/par).
-function stateToStatus(effect?: ActionEffect): 'pending' | 'doing' | 'done' | Error {
+function stateToStatus(effect?: ActionEffect): ActionOpExecStatus {
   if (effect == null) return 'pending'
   if (effect.type === 'done') return effect.error ?? 'done'
-  return 'doing'
+  return 'active'
 }

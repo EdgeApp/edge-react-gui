@@ -91,16 +91,19 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo
     // Render a completed, active/in-progress, or queued node.
     // Active/in-progress nodes are partially filled while queued or completed
     // nodes are solid filled.
-    const isNodeActive = (i === 0 || actionDisplayInfos[i - 1].status === 'done') && !actionDisplayInfos[i].status === 'done'
+    // const isNodeActive = (i === 0 || actionDisplayInfos[i - 1].status === 'done') && !actionDisplayInfos[i].status === 'done'
+    const isNodeActive = actionDisplayInfos[i].status === 'doing'
     const isNodeCompleted = actionDisplayInfos[i].status === 'done' || actionDisplayInfos[i].status instanceof Error
     const isLast = totalSteps <= 1 || i >= totalSteps - 1
 
+    console.log('\x1b[37m\x1b[44m' + `isNodeCompleted: ${JSON.stringify(isNodeCompleted, null, 2)}` + '\x1b[0m')
     actionRows.push(
       <StepProgressRow
         isNodeActive={isNodeActive}
         isNodeCompleted={isNodeCompleted}
         isLast={isLast}
         stepText={{ title: actionDisplayInfos[i].title, message: actionDisplayInfos[i].message }}
+        key={'spb' + i}
       />
     )
   }

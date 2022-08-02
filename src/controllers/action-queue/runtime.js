@@ -40,17 +40,18 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
     }
   }
 
-  // Await Effect
+  // Main Loop: Await Effect
   while (true) {
     if (effect == null) break
 
     const isEffective = await checkActionEffect(account, effect)
     if (isEffective) break
 
-    await delayForEffect(effect)
+    await intervalForEffect(effect)
   }
 
-  // Execute Action
+  // Update current program state, execute Action
+  // const programState = getProgramState()
   const { effect: nextEffect } = await executeActionOp(account, program, state, false)
 
   // Return results
@@ -219,6 +220,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       // }
     }
     case 'loan-borrow': {
+      console.log(`\x1b[37m\x1b[41m === ${'loan-borrow: executing'} === \x1b[0m`)
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
       const wallet = account.currencyWallets[walletId]
@@ -233,7 +235,9 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.borrow({ nativeAmount, toWallet: wallet, tokenId })
+
+      console.log(`\x1b[37m\x1b[41m === ${'loan-borrow: approving...'} === \x1b[0m`)
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -273,18 +277,17 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const txId = txs[txs.length - 1].txid
 
       return {
-        // effect: {
-        //   type: 'tx-confs',
-        //   txId,
-        //   walletId,
-        //   confirmations: 1
-        // }
-
-        // TODO: tx-confs isn't setting status
-        effect: { type: 'done' }
+        effect: {
+          type: 'tx-confs',
+          txId,
+          walletId,
+          confirmations: 1
+        }
       }
     }
     case 'loan-repay': {
+      console.log(`\x1b[37m\x1b[41m === ${'loan-repay: executing'} === \x1b[0m`)
+
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
       const wallet = account.currencyWallets[walletId]
@@ -299,7 +302,8 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.repay({ nativeAmount, fromWallet: wallet, tokenId })
+      console.log(`\x1b[37m\x1b[41m === ${'loan-repay: approving'} === \x1b[0m`)
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -315,6 +319,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
     }
     case 'loan-withdraw': {
       // LoanWithdrawCollateralScene
+      console.log(`\x1b[37m\x1b[41m === ${'loan-withdraw: executing'} === \x1b[0m`)
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
       const wallet = account.currencyWallets[walletId]
@@ -330,6 +335,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
 
       // Do the thing
       const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
+      console.log(`\x1b[37m\x1b[41m === ${'loan-withdraw: approving'} === \x1b[0m`)
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -408,7 +414,34 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
   }
 }
 
-async function delayForEffect(effect: ActionEffect): Promise<void> {
+// Update programState right before we execute an action
+function getProgramState(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, dryrun: boolean): ActionProgram {
+  const { actionOp } = program
+  const { effect } = state
+
+  let ret = { ...program }
+  switch (actionOp.type) {
+    case 'seq':
+      {
+        const opIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+        if (opIndex <= actionOp.actions.length - 1) actionOp.actions[opIndex].status = 'active'
+        if (opIndex > 0) actionOp.actions[opIndex - 1].status = 'done'
+
+        ret = {
+          ...program,
+          actionOp
+        }
+      }
+      break
+    default: {
+      console.log(`\x1b[37m\x1b[41m === ${'getProgramState: unhandled'} === \x1b[0m`)
+    }
+  }
+  return ret
+}
+
+// The rate at which we check the results of the effects
+async function intervalForEffect(effect: ActionEffect): Promise<void> {
   const ms = (() => {
     switch (effect.type) {
       case 'address-balance':

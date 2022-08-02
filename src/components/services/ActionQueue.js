@@ -18,8 +18,8 @@ export const ActionQueue = () => {
 
   const executingRef = useRef<{ [programId: string]: boolean }>({})
 
-  console.log(`=== queue ===`)
-  console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(queue, null, 2)} === \x1b[0m`)
+  console.log(`\x1b[37m\x1b[41m=== ActionQueue current queue: ===`)
+  console.log(`=== ${JSON.stringify(queue, null, 2)} === \x1b[0m`)
   //
   // Initialization
   //

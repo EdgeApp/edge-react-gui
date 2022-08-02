@@ -6,7 +6,7 @@ import ConfettiCannon from 'react-native-confetti-cannon'
 import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import { type ActionQueueMap } from '../../../controllers/action-queue/types'
+import { type ActionDisplayInfo, type ActionQueueItem, type ActionQueueMap } from '../../../controllers/action-queue/types'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { getActionProgramDisplayInfo } from '../../../plugins/action-queue'
@@ -37,34 +37,64 @@ export const LoanStatusScene = (props: Props) => {
   const account: EdgeAccount = useSelector(state => state.core.account)
 
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  const [programDisplayInfo, setProgramDisplayInfo] = useState()
+  const [programDisplayInfo, setProgramDisplayInfo] = useState<ActionDisplayInfo | void>()
+  const [actionQueueItem, setActionQueueItem] = useState<ActionQueueItem | void>()
 
-  const [program, setProgram] = useState()
-  const [programState, setprogramState] = useState()
+  // Refresh tinkering
+  const [testIsProgramDone, setTestIsProgramDone] = useState(false)
+  const [testSteps, setTestSteps] = useState<ActionDisplayInfo[]>([])
 
   useEffect(() => {
     const actionQueueItem = actionQueue[actionQueueId]
     if (actionQueueItem == null) {
-      console.log(`\x1b[34m\x1b[43m === ${'LSS DONE'} === \x1b[0m`)
+      console.log(`\x1b[34m\x1b[43m === ${'LoanStatusScene (actionQueueItem == null)'} === \x1b[0m`)
+      if (programDisplayInfo != null) {
+        const lastStatus = programDisplayInfo.steps[programDisplayInfo.steps.length - 1].status
+        if (lastStatus !== 'done') {
+          // Manual completion handling - program actionQueueItem gets removed from queue
+          console.log(`\x1b[34m\x1b[43m === ${"LoanStatusScene: Setting last step to 'done'"} === \x1b[0m`)
+          programDisplayInfo.steps[programDisplayInfo.steps.length - 1].status = 'done'
+          setProgramDisplayInfo(programDisplayInfo)
+
+          setTestSteps([...programDisplayInfo.steps])
+          setTestIsProgramDone(true)
+        }
+      }
     } else {
-      const { program, state } = actionQueueItem
-      setProgram(program)
-      setprogramState(state)
+      setActionQueueItem(actionQueueItem)
     }
   }, [actionQueue, actionQueueId])
 
   useEffect(() => {
-    if (program != null && programState != null) {
-      const displayInfo = getActionProgramDisplayInfo(account, program, programState)
+    if (actionQueueItem != null) {
+      const { program, state } = actionQueueItem
+      const displayInfo = getActionProgramDisplayInfo(account, program, state)
       console.log(`\x1b[34m\x1b[43m === ${'displayInfo:'} === \x1b[0m`)
       console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(displayInfo, null, 2)} === \x1b[0m`)
       console.log(`\x1b[34m\x1b[43m === ${'programState:'} === \x1b[0m`)
-      console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(programState, null, 2)} === \x1b[0m`)
+      console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(state, null, 2)} === \x1b[0m`)
       setProgramDisplayInfo(displayInfo)
+      setTestSteps([...displayInfo.steps])
     }
-  }, [account, account.currencyWallets, program, programState])
 
-  console.log(`\x1b[34m\x1b[43m === ${'LSS: actionQueue[actionQueueId]:'} === \x1b[0m`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionQueueItem, account])
+
+  // useEffect(() => {
+  //   // If we had already initialized displayInfo and the program no longer
+  //   // exists, assume the program has finished.
+  //   // TODO: Sam's design intent?
+  //   if (actionQueueItem == null && programDisplayInfo != null) {
+  //     const lastStatus = programDisplayInfo.steps[programDisplayInfo.steps.length - 1].status
+  //     if (lastStatus !== 'done') {
+  //       console.log(`\x1b[34m\x1b[43m === ${'LoanStatusScene: Setting last step done'} === \x1b[0m`)
+  //       programDisplayInfo.steps[programDisplayInfo.steps.length - 1].status = 'done'
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [programDisplayInfo])
+
+  console.log(`\x1b[34m\x1b[43m === ${'LoanStatusScene: actionQueue[actionQueueId] (queue):'} === \x1b[0m`)
   console.log(`\x1b[34m\x1b[43m === ${JSON.stringify(actionQueue[actionQueueId], null, 2)} === \x1b[0m`)
 
   // Show a confirmation modal before aborting the ActionQueue
@@ -84,23 +114,27 @@ export const LoanStatusScene = (props: Props) => {
     }
   })
 
-  return programDisplayInfo == null ? null : (
+  if (testSteps) console.log(`\n🪲🪲🪲🪲🪲\n🪲 ${JSON.stringify(testSteps, null, 2)} 🪲\n🪲🪲🪲🪲🪲`)
+
+  return testSteps == null ? null : (
     <SceneWrapper background="theme" hasHeader hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_status_title} />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
-        <StepProgressBar actionDisplayInfos={programDisplayInfo.steps} />
-      </ScrollView>
-      {programDisplayInfo.steps[programDisplayInfo.steps.length - 1].status === 'done' ? (
-        <>
-          <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} />
-          <View style={styles.footerContainer}>
-            <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
-            <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
-          </View>
-        </>
-      ) : (
-        <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
-      )}
+      <View style={{ flex: 1 }}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
+          <StepProgressBar actionDisplayInfos={testSteps} />
+        </ScrollView>
+        {testIsProgramDone ? (
+          <>
+            <View style={styles.footerContainer}>
+              <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
+              <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
+            </View>
+          </>
+        ) : (
+          <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
+        )}
+        {testIsProgramDone ? <ConfettiCannon autostart count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
+      </View>
     </SceneWrapper>
   )
 }
