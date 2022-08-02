@@ -236,6 +236,7 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
+  loanStatus: void,
   manageTokens: {|
     walletId: string
   |},
