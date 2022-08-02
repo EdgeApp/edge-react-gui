@@ -305,7 +305,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
             return (
               <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-                <CryptoIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
+                <CryptoIcon marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} sizeRem={1.25} />
               </SettingsTappableRow>
             )
           })}
