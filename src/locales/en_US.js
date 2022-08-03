@@ -22,7 +22,7 @@ const strings = {
   action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,
   // loan_deposit
   action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
-  action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
+  action_queue_display_loan_deposit_message: `Edge rrs sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
   // loan_repay
   action_queue_display_loan_repay_title: `Repay loan principal`,
   action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
