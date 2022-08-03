@@ -363,7 +363,7 @@ async function executeAction(account: EdgeAccount, program: ActionProgram, state
       }
     }
     default:
-      throw new Error(`No implementation for effect type ${actionOp.type} at ${program.programId}`)
+      throw new Error(`No implementation for action type ${actionOp.type} at ${program.programId}`)
   }
 }
 
