@@ -93,6 +93,9 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       if (effect.error != null) throw effect.error
       return true
     }
+    case 'noop': {
+      return true
+    }
     default:
       throw new Error(`No implementation for effect type ${effect.type}`)
   }
@@ -349,10 +352,9 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       }
     }
     case 'toast': {
-      await Airship.show(bridge => <AirshipToast bridge={bridge} message={actionOp.message} />)
-      // Delay for 3 seconds because that's how long toasts last
+      Airship.show(bridge => <AirshipToast bridge={bridge} message={actionOp.message} />)
       return {
-        effect: { type: 'unixtime', timestamp: Date.now() + 3000 }
+        effect: { type: 'noop' }
       }
     }
     case 'delay': {

@@ -159,6 +159,9 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asObject({
     type: asValue('unixtime'),
     timestamp: asNumber
+  }),
+  asObject({
+    type: asValue('noop')
   })
 )
 
