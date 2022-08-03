@@ -3,6 +3,8 @@
 import { asEither, asMaybe, uncleaner } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js'
 
+import { type BorrowActionId } from '../../plugins/borrow-plugins/types'
+import { useSelector } from '../../types/reactRedux'
 import { asActionProgram, asActionProgramState } from './cleaners'
 import { type ActionProgram, type ActionProgramState, type ActionQueueMap } from './types'
 
@@ -91,4 +93,10 @@ export const makeActionQueueStore = (account: EdgeAccount): ActionQueueStore => 
     }
   }
   return instance
+}
+
+// TODO: Sam's recommendation: Create separate map in redux to manage running borrow action programs?
+export const useRunningActionQueueId = (borrowActionId: BorrowActionId) => {
+  const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  return Object.keys(actionQueue).find(programId => programId.includes('loan-create'))
 }
