@@ -4,8 +4,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import { type ActionDisplayInfo } from '../../controllers/action-queue/types'
 import { memo, useMemo } from '../../types/reactHooks'
-import { type TempActionDisplayInfo } from '../../types/types'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -78,7 +78,7 @@ const StepProgressRow = memo(StepProgressRowComponent)
 //
 // StepProgressBar is a collection of StepProgressRows.
 // -----------------------------------------------------------------------------
-const StepProgressBarComponent = (props: { actionDisplayInfos: TempActionDisplayInfo[] }) => {
+const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo[] }) => {
   // completedSteps of -1 will gray out all steps, while 0 will highlight the
   // first step
   const { actionDisplayInfos, ...containerProps } = props
@@ -91,8 +91,8 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: TempActionDisplay
       // Render a completed, active/in-progress, or queued node.
       // Active/in-progress nodes are partially filled while queued or completed
       // nodes are solid filled.
-      const isNodeActive = (i === 0 || actionDisplayInfos[i - 1].complete) && !actionDisplayInfos[i].complete
-      const isNodeCompleted = actionDisplayInfos[i].complete
+      const isNodeActive = actionDisplayInfos[i].status === 'doing'
+      const isNodeCompleted = actionDisplayInfos[i].status === 'done' || actionDisplayInfos[i].status instanceof Error
       const isLast = totalSteps <= 1 || i >= totalSteps - 1
 
       actionRows.push(
@@ -101,6 +101,7 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: TempActionDisplay
           isNodeCompleted={isNodeCompleted}
           isLast={isLast}
           stepText={{ title: actionDisplayInfos[i].title, message: actionDisplayInfos[i].message }}
+          key={'spb' + i}
         />
       )
     }
