@@ -11,6 +11,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { snooze } from '../../util/utils'
 import { type ActionEffect, type ActionProgram, type ActionProgramState, type ExecutionResult, type ExecutionResults } from './types'
 
+// TODO: Set the status of executing steps accurately
 export const executeActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 

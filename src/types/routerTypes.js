@@ -253,7 +253,9 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
-  loanStatus: void,
+  loanStatus: {|
+    actionQueueId: string
+  |},
   manageTokens: {|
     walletId: string
   |},

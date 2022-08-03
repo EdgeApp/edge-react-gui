@@ -1,14 +1,19 @@
 // @flow
+import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
+import { type ActionDisplayInfo, type ActionQueueMap } from '../../../controllers/action-queue/types'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { type NavigationProp } from '../../../types/routerTypes'
+import { useEffect, useState } from '../../../types/reactHooks'
+import { useSelector } from '../../../types/reactRedux'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
@@ -20,47 +25,41 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 type Props = {
-  navigation: NavigationProp<'loanStatus'>
+  navigation: NavigationProp<'loanStatus'>,
+  route: RouteProp<'loanStatus'>
 }
 
 export const LoanStatusScene = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const { actionQueueId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
+  const account: EdgeAccount = useSelector(state => state.core.account)
 
-  // #region Temp hard-coded vars
+  const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  const [steps, setSteps] = useState<ActionDisplayInfo[] | void>()
+  useEffect(() => {
+    const actionQueueItem = actionQueue[actionQueueId]
 
-  const hardCollateral = 'BTC'
-  const hardWCollateral = 'WBTC'
-  const hardLoanAsset = 'USDC'
-  const hardDepositPartner = 'Wyre'
-
-  const hardDisplayInfos = [
-    {
-      title: sprintf(s.strings.loan_status_step_title_0, hardCollateral, hardWCollateral),
-      message: sprintf(s.strings.loan_status_step_body_0, hardCollateral, config.appName, hardWCollateral, s.strings.loan_aave),
-      complete: true
-    },
-    {
-      title: sprintf(s.strings.loan_status_step_title_1, hardWCollateral),
-      message: sprintf(s.strings.loan_status_step_body_1, hardWCollateral, s.strings.loan_aave),
-      complete: true
-    },
-    {
-      title: s.strings.loan_status_step_title_2,
-      message: sprintf(s.strings.loan_status_step_body_2, hardLoanAsset),
-      complete: true
-    },
-    {
-      title: s.strings.loan_status_step_title_3,
-      message: sprintf(s.strings.loan_status_step_body_3, hardLoanAsset, hardDepositPartner),
-      complete: true
+    // HACK: Manual program completion handling:
+    // 1. actionQueueItem gets removed from actionQueue when the last step completes, so we need to maintain and mutate a copy of the steps to reflect program completion since there's nothing to reference after completion.
+    // 2. The first step of a seq does not get set to 'active'
+    // TODO: Make ActionQueue handle these cases correctly.
+    if (actionQueueItem == null && steps != null) {
+      const lastStepIndex = steps.length - 1
+      const lastStatus = steps[lastStepIndex].status
+      if (lastStatus !== 'done') {
+        steps[lastStepIndex].status = 'done'
+        setSteps([...steps])
+      }
+    } else {
+      const { program, state } = actionQueueItem
+      const displayInfo = getActionProgramDisplayInfo(account, program, state)
+      if (steps == null) displayInfo.steps[0].status = 'active'
+      setSteps([...displayInfo.steps])
     }
-  ]
-  const hardInfosLen = hardDisplayInfos.length
-  const isComplete = hardDisplayInfos[hardInfosLen - 1].complete
-
-  // #endregion Temp hard-coded vars
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionQueue])
 
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {
@@ -79,24 +78,29 @@ export const LoanStatusScene = (props: Props) => {
     }
   })
 
-  return (
-    <SceneWrapper background="theme" hasHeader hasTabs={false}>
-      <SceneHeader underline title={s.strings.loan_status_title} />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
-        <StepProgressBar actionDisplayInfos={hardDisplayInfos} />
-      </ScrollView>
-      {isComplete ? (
-        <>
-          <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} />
-          <View style={styles.footerContainer}>
-            <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
-            <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
-          </View>
-        </>
-      ) : (
-        <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
-      )}
-    </SceneWrapper>
+  const isProgramDone = steps != null && steps[steps.length - 1].status === 'done'
+  return steps == null ? null : (
+    <>
+      <SceneWrapper background="theme" hasHeader hasTabs={false}>
+        <SceneHeader underline title={s.strings.loan_status_title} />
+        <View style={{ flex: 1 }}>
+          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
+            <StepProgressBar actionDisplayInfos={steps} />
+          </ScrollView>
+          {isProgramDone ? (
+            <>
+              <View style={styles.footerContainer}>
+                <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
+                <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
+              </View>
+            </>
+          ) : (
+            <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
+          )}
+          {isProgramDone ? <ConfettiCannon autostart count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
+        </View>
+      </SceneWrapper>
+    </>
   )
 }
 
