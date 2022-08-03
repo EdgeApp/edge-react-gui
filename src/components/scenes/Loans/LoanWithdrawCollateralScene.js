@@ -11,12 +11,14 @@ type Props = {
 
 export const LoanWithdrawCollateralScene = (props: Props) => {
   const { navigation, route } = props
-  const { borrowEngine } = route.params
+  const { borrowEngine, borrowPlugin } = route.params
 
   return ManageCollateralScene({
     borrowEngine,
+    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
     defaultTokenId: borrowEngine.collaterals[0].tokenId,
     action: async req => await borrowEngine.withdraw(req),
+    actionOpType: 'loan-withdraw',
     actionWallet: 'toWallet',
     ltvType: 'collaterals',
     ltvChange: 'increase',
@@ -26,6 +28,6 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
     showTotalCollateralTile: true,
 
     headerText: s.strings.loan_withdraw_collateral,
-    goBack: () => navigation.pop()
+    navigation
   })
 }
