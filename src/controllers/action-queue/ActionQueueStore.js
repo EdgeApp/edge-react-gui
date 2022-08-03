@@ -1,6 +1,7 @@
 // @flow
 
 import { asEither, asMaybe, uncleaner } from 'cleaners'
+import { navigateDisklet } from 'disklet'
 import { type EdgeAccount } from 'edge-core-js'
 
 import { type BorrowActionId } from '../../plugins/borrow-plugins/types'
@@ -21,17 +22,21 @@ export type ActionQueueStore = {
 }
 
 export const makeActionQueueStore = (account: EdgeAccount): ActionQueueStore => {
+  const disklet = navigateDisklet(account.localDisklet, ACTION_QUEUE_DATASTORE_ID)
+
   const instance = {
     async set(itemId: string, data: StoreItem): Promise<void> {
       const uncleanData = uncleaner(asStoreItem)(data)
       const serializedData = JSON.stringify(uncleanData)
-      await account.dataStore.setItem(ACTION_QUEUE_DATASTORE_ID, itemId, serializedData)
+      await disklet.setText(itemId, serializedData)
     },
     async get(itemId: string): Promise<string> {
-      return await account.dataStore.getItem(ACTION_QUEUE_DATASTORE_ID, itemId)
+      return await disklet.getText(itemId)
     },
     async list() {
-      return await account.dataStore.listItemIds(ACTION_QUEUE_DATASTORE_ID)
+      const listing = await disklet.list()
+      const filenames = Object.entries(listing).reduce((filenames, [name, type]) => (type === 'file' ? [...filenames, name] : filenames), [])
+      return filenames
     },
     async getActionQueueMap(): Promise<ActionQueueMap> {
       const itemIds = await instance.list()
