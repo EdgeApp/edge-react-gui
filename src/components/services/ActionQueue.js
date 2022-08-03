@@ -51,12 +51,15 @@ export const ActionQueue = () => {
           executing[programId] = true
 
           const { program, state } = queue[programId]
-          const { nextState } = await executeActionProgram(account, program, state).catch((error: Error) => ({
-            nextState: {
-              ...state,
-              effect: { type: 'done', error }
+          const { nextState } = await executeActionProgram(account, program, state).catch((error: Error) => {
+            console.error('Action Program Exception:', error.message)
+            return {
+              nextState: {
+                ...state,
+                effect: { type: 'done', error }
+              }
             }
-          }))
+          })
 
           // Update program state
           dispatch(updateActionProgramState(nextState))
