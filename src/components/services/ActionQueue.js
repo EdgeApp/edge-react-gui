@@ -2,7 +2,6 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 
-import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime'
 import { type ActionQueueMap } from '../../controllers/action-queue/types'
@@ -16,20 +15,21 @@ export const ActionQueue = () => {
   const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const executingRef = useRef<{ [programId: string]: boolean }>({})
 
+  // TODO: Fix sync server stale ActionQueue state overwrite on startup
   //
   // Initialization
   //
 
-  useAsyncEffect(async () => {
-    if (account?.dataStore != null) {
-      const store = makeActionQueueStore(account)
-      const queue = await store.getActionQueueMap()
-      dispatch({
-        type: 'ACTION_QUEUE/LOAD_QUEUE',
-        data: queue
-      })
-    }
-  }, [account, dispatch])
+  // useAsyncEffect(async () => {
+  //   if (account?.dataStore != null) {
+  //     const store = makeActionQueueStore(account)
+  //     const queue = await store.getActionQueueMap()
+  //     dispatch({
+  //       type: 'ACTION_QUEUE/LOAD_QUEUE',
+  //       data: queue
+  //     })
+  //   }
+  // }, [account, dispatch])
 
   //
   // Runtime
