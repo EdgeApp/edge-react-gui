@@ -9,6 +9,7 @@ import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo, fuzzyTimeout } from '../../util/utils'
 import {
   type FiatPlugin,
@@ -78,7 +79,12 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           const currencyCodeMap = assetMap.crypto[currencyPluginId]
           for (const currencyCode in currencyCodeMap) {
             if (currencyCodeMap[currencyCode]) {
-              allowedAssets.push({ pluginId: currencyPluginId, currencyCode })
+              try {
+                const currencyTokenId = getTokenId(account, currencyPluginId, currencyCode)
+                allowedAssets.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
+              } catch (e) {
+                // This is ok. We might not support a specific pluginId
+              }
             }
           }
           for (const fiatCode in assetMap.fiat) {
