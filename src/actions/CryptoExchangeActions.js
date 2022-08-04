@@ -320,12 +320,32 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
   const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
-  const { quote, request } = swapInfo
-  const { pluginId, toNativeAmount } = quote
+  const { fromDisplayAmount, quote, request, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
+  const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate } = quote
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
   try {
     logEvent('SwapStart')
     const result: EdgeSwapResult = await quote.approve()
+
+    global.logActivity(`Swap Exchange Executed: ${account.username}`)
+    global.logActivity(`
+    fromDisplayAmount: ${fromDisplayAmount}
+    fee: ${fee}
+    fromFiat: ${fromFiat}
+    fromTotalFiat: ${fromTotalFiat}
+    toDisplayAmount: ${toDisplayAmount}
+    toFiat: ${toFiat}
+    quote:
+      pluginId: ${pluginId}
+      isEstimate: ${isEstimate.toString()}
+      fromNativeAmount: ${fromNativeAmount}
+      toNativeAmount: ${toNativeAmount}
+      expirationDate: ${expirationDate ? expirationDate.toISOString() : 'no expiration'}
+      networkFee:
+        currencyCode ${networkFee.currencyCode}
+        nativeAmount ${networkFee.nativeAmount}
+`)
+
     await fromWallet.saveTx(result.transaction)
 
     const { swapInfo } = account.swapConfig[pluginId]

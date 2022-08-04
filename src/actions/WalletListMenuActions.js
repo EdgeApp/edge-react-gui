@@ -166,6 +166,8 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
         )
 
         if (passwordValid) {
+          const { name, id, type } = wallet
+          global.logActivity(`Show Master Private Key: ${account.username} -- ${name ?? ''} -- ${type} -- ${id}`)
           // Add a copy button only for development
           let devButtons = {}
           if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
