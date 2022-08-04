@@ -8,7 +8,7 @@ import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatchAccount } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
-import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from '../../../plugins/borrow-plugins/plugins/aave/index'
+import { makeAaveMaticBorrowPlugin } from '../../../plugins/borrow-plugins/plugins/aave/index'
 import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfo, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
@@ -34,7 +34,7 @@ type Props = {
   navigation: NavigationProp<'loanDashboard'>
 }
 
-const borrowPlugins = [makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()]
+const borrowPlugins = [makeAaveMaticBorrowPlugin()]
 
 export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
@@ -87,12 +87,7 @@ export const LoanDashboardScene = (props: Props) => {
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const handleAddLoan = useHandler(() => {
     Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        headerTitle={s.strings.select_wallet}
-        allowedAssets={[{ pluginId: hardWalletPluginId }, { pluginId: 'kovan' }]}
-        showCreateWallet
-      />
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: 'polygon' }]} showCreateWallet />
     )).then(({ walletId }) => {
       if (walletId != null) {
         const wallet = wallets[walletId]
@@ -107,7 +102,7 @@ export const LoanDashboardScene = (props: Props) => {
 
         setIsNewLoanLoading(true)
 
-        getAaveBorrowInfo(wallet.currencyInfo.pluginId === hardWalletPluginId ? makeAaveBorrowPlugin() : makeAaveKovanBorrowPlugin(), wallet)
+        getAaveBorrowInfo(makeAaveMaticBorrowPlugin(), wallet)
           .then((borrowInfo: TempBorrowInfo) => {
             setIsNewLoanLoading(false)
             navigation.navigate('loanCreate', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
