@@ -28,6 +28,8 @@
   - Fix: Upgrade edge-sync-client to include patch
 - Upgrade edge-exchange-plugins to v0.13.6
   - Add ChangeHero
+- Upgrade edge-currency-monero to v0.4.2
+  - Set `addressesChecked` to `false` on resync
 
 ## 2.18.1 (2022-07-28)
 
