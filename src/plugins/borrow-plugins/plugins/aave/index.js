@@ -26,9 +26,9 @@ const aaveNetwork = makeAaveNetworkFactory({
 
 const aaveBlueprint: BorrowPluginBlueprint = {
   borrowInfo: {
-    pluginId: 'aave',
-    displayName: 'AAVE',
+    borrowPluginId: 'aave',
     currencyPluginId: 'ethereum',
+    displayName: 'AAVE',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
@@ -75,9 +75,9 @@ const aaveKovanNetwork = makeAaveNetworkFactory({
 
 const aaveKovanBlueprint: BorrowPluginBlueprint = {
   borrowInfo: {
-    pluginId: 'aaveKovan',
-    displayName: 'AAVE (Kovan)',
+    borrowPluginId: 'aaveKovan',
     currencyPluginId: 'kovan',
+    displayName: 'AAVE (Kovan)',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({

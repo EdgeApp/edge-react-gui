@@ -53,7 +53,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       fromWallet: srcWallet
     }
 
-    const borrowPluginId = borrowPlugin.borrowInfo.pluginId
+    const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
     const actionOps = {
       type: 'seq',
       actions: [

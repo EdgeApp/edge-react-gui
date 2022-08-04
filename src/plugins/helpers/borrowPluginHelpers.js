@@ -15,7 +15,7 @@ export function queryBorrowPlugins(query: BorrowPluginQuery): BorrowPlugin[] {
   let plugins = borrowPlugins
 
   if (borrowPluginId != null) {
-    plugins = plugins.filter(borrowPlugin => borrowPlugin.borrowInfo.pluginId === borrowPluginId)
+    plugins = plugins.filter(borrowPlugin => borrowPlugin.borrowInfo.borrowPluginId === borrowPluginId)
   }
   if (currencyPluginId != null) {
     plugins = plugins.filter(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)
