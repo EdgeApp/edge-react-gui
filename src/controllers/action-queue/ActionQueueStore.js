@@ -4,11 +4,14 @@ import { type Cleaner, asEither, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { type EdgeAccount } from 'edge-core-js'
 
+import ENV from '../../../env'
 import { type BorrowActionId } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { asActionProgram, asActionProgramState } from './cleaners'
 import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from './types'
+
+const { debugStore } = ENV.ACTION_QUEUE
 
 export const ACTION_QUEUE_DATASTORE_ID = 'actionQueue'
 
@@ -24,7 +27,8 @@ export type ActionQueueStore = {
 }
 
 export const makeActionQueueStore = (account: EdgeAccount): ActionQueueStore => {
-  const baseDisklet = account.disklet
+  // Use localDisklet (unencrypted) for debuggin purposes
+  const baseDisklet = debugStore ? account.localDisklet : account.disklet
   const disklet = navigateDisklet(baseDisklet, ACTION_QUEUE_DATASTORE_ID)
 
   async function persistToDisk(path: string, data: mixed, cleaner: Cleaner<any>) {
