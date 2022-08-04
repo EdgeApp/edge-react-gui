@@ -224,7 +224,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.deposit({ nativeAmount, fromWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -253,7 +253,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.repay({ nativeAmount, fromWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -282,7 +282,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.withdraw({ nativeAmount, toWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
