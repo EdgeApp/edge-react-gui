@@ -91,7 +91,7 @@ export const StakeOptionsScene = (props: Props) => {
             currencyLogos={policyIcons.stakeAssetUris}
             primaryText={primaryText}
             secondaryText={secondaryText}
-            liquidityPool={item.liquidityPool}
+            stakeProviderInfo={item.stakeProviderInfo}
           />
         </TouchableOpacity>
       </View>

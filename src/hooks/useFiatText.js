@@ -57,7 +57,7 @@ export const useFiatText = (props: Props): string => {
 }
 
 export const formatFiatString = (props: { autoPrecision?: boolean, fiatAmount: string, noGrouping?: boolean, minPrecision?: string }): string => {
-  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = false } = props
+  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
 
   // Use US locale delimeters for determining precision
   const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')

@@ -20,7 +20,8 @@ type Props = {
   walletId: string,
   walletName: string,
   total?: string,
-  miningFee?: string | null
+  miningFee?: string | null,
+  showFeeWarning?: boolean | null
 }
 type State = {}
 
@@ -36,23 +37,22 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
   }
 
   renderBottom = () => {
-    const { theme, isTop, fiatCurrencyAmount, fiatCurrencyCode, total, miningFee } = this.props
+    const { theme, isTop, fiatCurrencyAmount, fiatCurrencyCode, total, miningFee, showFeeWarning } = this.props
     if (isTop) {
       const styles = getStyles(theme)
       const totalText = `${total || fiatCurrencyAmount} ${fiatCurrencyCode}`
+      const feeTextStyle = showFeeWarning ? styles.bottomWarningText : styles.bottomText
       return (
         <>
-          {this.renderRow(
-            <EdgeText style={styles.bottomText}>{s.strings.mining_fee}</EdgeText>,
-            <EdgeText style={styles.bottomText}>{miningFee || '0'}</EdgeText>,
-            {
-              ...sidesToMargin(mapSides(fixSides([1, 0, 0], 0), theme.rem))
-            }
-          )}
-          {this.renderRow(
-            <EdgeText style={styles.bottomText}>{s.strings.string_total_amount}</EdgeText>,
-            <EdgeText style={styles.bottomText}>{totalText}</EdgeText>
-          )}
+          <View>
+            {this.renderRow(<EdgeText style={feeTextStyle}>{s.strings.mining_fee}</EdgeText>, <EdgeText style={feeTextStyle}>{miningFee || '0'}</EdgeText>, {
+              ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
+            })}
+            {this.renderRow(
+              <EdgeText style={styles.bottomText}>{s.strings.string_total_amount}</EdgeText>,
+              <EdgeText style={styles.bottomText}>{totalText}</EdgeText>
+            )}
+          </View>
         </>
       )
     }
@@ -81,7 +81,6 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
             )}
           </View>
         </View>
-
         {this.renderBottom()}
       </Card>
     )
@@ -107,19 +106,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column'
   },
   contentTitle: {
-    fontFamily: theme.fontFaceMedium,
-    fontWeight: '600'
+    fontFamily: theme.fontFaceMedium
   },
   contentValue: {
-    fontWeight: '600',
+    fontFamily: theme.fontFaceMedium,
     textAlign: 'right'
   },
   contentSubTitle: {
     flex: 1,
+    marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
   contentSubValue: {
+    marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
@@ -133,8 +133,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right'
   },
   bottomText: {
-    fontWeight: '600',
+    marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75)
+  },
+  bottomWarningText: {
+    fontSize: theme.rem(0.75),
+    color: theme.warningText
   }
 }))
 

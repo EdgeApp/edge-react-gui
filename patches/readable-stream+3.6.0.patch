@@ -1,13 +1,13 @@
 diff --git a/node_modules/readable-stream/lib/_stream_writable.js b/node_modules/readable-stream/lib/_stream_writable.js
-index b3f4e85..e2a2491 100644
+index a2634d7..bfbcfea 100644
 --- a/node_modules/readable-stream/lib/_stream_writable.js
 +++ b/node_modules/readable-stream/lib/_stream_writable.js
-@@ -488,7 +488,7 @@ function onwrite(stream, er) {
+@@ -466,7 +466,7 @@ function onwrite(stream, er) {
  function afterWrite(stream, state, finished, cb) {
    if (!finished) onwriteDrain(stream, state);
    state.pendingcb--;
 -  cb();
 +  if (cb != null) cb();
    finishMaybe(stream, state);
- }
-
+ } // Must force callback to be called on nextTick, so that we don't
+ // emit 'drain' before the write() consumer gets the 'false' return

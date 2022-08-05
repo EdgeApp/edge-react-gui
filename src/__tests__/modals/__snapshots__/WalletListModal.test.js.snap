@@ -29,18 +29,13 @@ Array [
       blurAmount={10}
       blurType="light"
       style={
-        Array [
-          Object {
-            "backgroundColor": "transparent",
-          },
-          Object {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-        ]
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
     />
   </View>,
@@ -98,7 +93,7 @@ Array [
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
-              "margin": 11,
+              "marginVertical": 11,
             },
             Object {
               "textAlign": "center",
@@ -315,6 +310,7 @@ Array [
       </Text>
       <TextInput
         autoFocus={false}
+        editable={true}
         multiline={false}
         onBlur={[Function]}
         onChangeText={[Function]}

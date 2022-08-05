@@ -38,46 +38,34 @@ type StateProps = {
 type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
-  enabled: { [pluginId: string]: boolean },
-  needsActivation: { [pluginId: string]: boolean }
+  enabled: { [pluginId: string]: boolean }
 }
 
 export class SwapSettings extends React.Component<Props, State> {
-  cleanups: Array<() => mixed> = []
   sortedIds: string[]
 
   constructor(props: Props) {
     super(props)
     const { exchanges } = props
 
-    this.state = { enabled: {}, needsActivation: {} }
+    this.state = { enabled: {} }
     for (const pluginId of Object.keys(exchanges)) {
       const exchange = exchanges[pluginId]
       this.state.enabled[pluginId] = exchange.enabled
-      this.state.needsActivation[pluginId] = exchange.needsActivation
-
-      this.cleanups.push(
-        exchange.watch('enabled', enabled =>
-          this.setState(state => ({
-            enabled: { ...state.enabled, [pluginId]: enabled }
-          }))
-        )
-      )
-      this.cleanups.push(
-        exchange.watch('needsActivation', needsActivation =>
-          this.setState(state => ({
-            needsActivation: { ...state.needsActivation, [pluginId]: needsActivation }
-          }))
-        )
-      )
     }
 
     const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
     this.sortedIds = exchangeIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
 
-  componentWillUnmount() {
-    for (const cleanup of this.cleanups) cleanup()
+  async componentWillUnmount() {
+    const { exchanges } = this.props
+    for (const pluginId of Object.keys(exchanges)) {
+      if (exchanges[pluginId].enabled !== this.state.enabled[pluginId]) {
+        // This method updates the same file so we have to save updates one at a time
+        await exchanges[pluginId].changeEnabled(this.state.enabled[pluginId])
+      }
+    }
   }
 
   handlePreferredModal = () => {
@@ -133,15 +121,15 @@ export class SwapSettings extends React.Component<Props, State> {
   renderPlugin(pluginId: string) {
     const { exchanges } = this.props
     const { displayName } = exchanges[pluginId].swapInfo
+    const pluginEnabled = this.state.enabled[pluginId]
 
     return (
       <SettingsSwitchRow
         key={pluginId}
         label={displayName}
-        value={this.state.enabled[pluginId]}
+        value={pluginEnabled}
         onPress={async () => {
-          const newValue = !exchanges[pluginId].enabled
-          await exchanges[pluginId].changeEnabled(newValue)
+          this.setState({ enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled } })
         }}
       >
         {this.renderPluginIcon(pluginId)}

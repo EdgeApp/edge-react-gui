@@ -46,6 +46,7 @@ describe('MyComponent', () => {
         showRestoreWalletsModal={nop}
         showUnlockSettingsModal={nop}
         toggleDeveloperMode={nop}
+        logoutRequest={nop}
       />
     )
 
@@ -78,6 +79,7 @@ describe('MyComponent', () => {
         showRestoreWalletsModal={nop}
         showUnlockSettingsModal={nop}
         toggleDeveloperMode={nop}
+        logoutRequest={nop}
       />
     )
 

@@ -87,6 +87,34 @@ Array [
 exports[`Production plugin data Buy plugins match snapshot on android + IL 1`] = `
 Array [
   Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "googlepay",
+    "paymentTypeLogoKey": "googlepay",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Google Pay",
+  },
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Credit and Debit Card",
+  },
+  Object {
     "cryptoCodes": Array [
       "BTC",
       "ETH",
@@ -96,9 +124,8 @@ Array [
       "order_id": "null",
       "page": "0",
     },
-    "description": "Fee: 5.95% / Settlement: 1 - 48 hours
-Level 1 Limit:  €10000/day
-Level 2 Limit: Unlimited",
+    "description": "Fee: 5.95%
+Settlement: 1 - 48 hours",
     "partnerIconPath": "bits-of-gold-logo-sm.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
@@ -107,67 +134,40 @@ Level 2 Limit: Unlimited",
     "pluginId": "bitsofgold",
     "title": "Israeli Bank Transfer",
   },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "BCH",
-      "ETH",
-      "DAI",
-      "DGB",
-      "LTC",
-      "EOS",
-      "XLM",
-      "BAT",
-      "BNB Beacon Chain",
-      "PAX",
-      "QTUM",
-      "RVN",
-      "TUSD",
-      "USDC",
-      "USDT",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 6.5% / Settlement: 10 minutes
-Daily Limit: $5500
-Monthly Limit: $54000
-Doge supported on USA",
-    "partnerIconPath": "icon_black_small.png",
-    "paymentTypeLogoKey": "credit",
-    "paymentTypes": Array [
-      "credit",
-    ],
-    "pluginId": "moonpay",
-    "title": "Credit and Debit Card",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "BCH",
-      "BSV",
-      "ETH",
-      "LTC",
-      "USDT",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10 - 30 minutes
-Daily Limit: $18000
-Monthly Limit: $47000",
-    "partnerIconPath": "simplex-logo-sm-square.png",
-    "paymentTypeLogoKey": "credit",
-    "paymentTypes": Array [
-      "credit",
-    ],
-    "pluginId": "simplex",
-    "title": "Credit and Debit Card",
-  },
 ]
 `;
 
 exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
 Array [
   Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "applepay",
+    "paymentTypeLogoKey": "applepay",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Apple Pay",
+  },
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 5-7%
+Settlement: 10 - 30 minutes",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "creditcard",
+    "title": "Credit and Debit Card",
+  },
+  Object {
     "cryptoCodes": Array [
       "BTC",
       "ETH",
@@ -176,9 +176,8 @@ Array [
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 1% / Settlement: 1 - 5 days
-Weekly Limit: $25000
-Monthly Limit: $50000",
+    "description": "Fee: 1-2%
+Settlement: 1 - 5 days",
     "partnerIconPath": "wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
@@ -190,67 +189,11 @@ Monthly Limit: $50000",
   Object {
     "cryptoCodes": Array [
       "BTC",
-      "BCH",
-      "ETH",
-      "DAI",
-      "DGB",
-      "LTC",
-      "EOS",
-      "XLM",
-      "BAT",
-      "BNB Beacon Chain",
-      "PAX",
-      "QTUM",
-      "RVN",
-      "TUSD",
-      "USDC",
-      "USDT",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 6.5% / Settlement: 10 minutes
-Daily Limit: $5500
-Monthly Limit: $54000
-Doge supported on USA",
-    "partnerIconPath": "icon_black_small.png",
-    "paymentTypeLogoKey": "applepay",
-    "paymentTypes": Array [
-      "credit",
-      "applepay",
-    ],
-    "pluginId": "moonpay",
-    "title": "Apple Pay, Credit, and Debit Card",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "BCH",
-      "BSV",
-      "ETH",
-      "LTC",
-      "USDT",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10 - 30 minutes
-Daily Limit: $18000
-Monthly Limit: $47000",
-    "partnerIconPath": "simplex-logo-sm-square.png",
-    "paymentTypeLogoKey": "credit",
-    "paymentTypes": Array [
-      "credit",
-    ],
-    "pluginId": "simplex",
-    "title": "Credit and Debit Card",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
     ],
     "deepPath": "/",
     "deepQuery": Object {},
-    "description": "Fee: 3-8% / Settlement: Instant
-Limit: $200 - $3000/day",
+    "description": "Fee: 3-8%
+Settlement: Instant",
     "partnerIconPath": "libertyXlogo.png",
     "paymentTypeLogoKey": "cash",
     "paymentTypes": Array [

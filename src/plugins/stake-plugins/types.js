@@ -6,34 +6,33 @@
 
 export type AssetId = { pluginId: string, currencyCode: string }
 
-export type LpUid = {
+// Defines what to display so that the user can identify the service provider
+// of the staking policy.
+export type StakeProviderInfo = {
+  // Card subtitle
+  displayName: string,
+
+  // CDN icon
   pluginId: string,
-  lpId: string
+  stakeProviderId: string
 }
 
-export type LiquidityPool = LpUid & {
-  displayName: string
-}
-
-// Not sure if this is going be enough because how "LP-staking" works;
-// Need to figure out how we deal with LP pool asset-ratios.
 export type StakePolicy = {|
-  // Perhaps we need a UUID for each policy?
+  // Internal policy id, unique across all stake policies offered by Edge
   stakePolicyId: string,
+
+  // Some unique grouping information to display in the policy card to
+  // differentiate between stake policies that share the same input stakeAssets
+  stakeProviderInfo?: StakeProviderInfo,
 
   // A percentage number representing the yield per year
   apy: number,
 
-  liquidityPool?: LiquidityPool,
-
-  // The assets which must be staked
-  stakeAssets: AssetId[],
-
   // The assets which can be earned
   rewardAssets: AssetId[],
 
-  // Whether claim action is required to obtain reward
-  mustClaimRewards: boolean
+  // The assets which must be staked
+  stakeAssets: AssetId[]
 |}
 
 // -----------------------------------------------------------------------------

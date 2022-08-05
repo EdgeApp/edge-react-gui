@@ -1,9 +1,9 @@
 // @flow
 
-import { BlurView } from '@react-native-community/blur'
 import * as React from 'react'
 import { type ViewStyle, StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
+import { BlurView } from 'rn-id-blurview'
 
 import { fixSides } from '../../util/sides.js'
 import { useTheme } from '../services/ThemeContext.js'
@@ -19,26 +19,33 @@ type Props<T> = {
   // Control over the content area:
   flexDirection?: $PropertyType<ViewStyle, 'flexDirection'>,
   justifyContent?: $PropertyType<ViewStyle, 'justifyContent'>,
-  paddingRem?: number[] | number
+  paddingRem?: number[] | number,
+
+  // Gives the box a border:
+  warning?: boolean
 }
 
 /**
  * The Airship modal, but connected to our theming system.
  */
 export const ThemedModal = <T>(props: Props<T>) => {
-  const { bridge, children = null, flexDirection, iconRem = 0, justifyContent, onCancel } = props
+  const { bridge, children, flexDirection, iconRem = 0, justifyContent, warning = false, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()
 
   paddingRem[0] += iconRem / 2
+
+  // TODO: The warning styles are incorrectly hard-coded:
+  const borderColor = warning ? theme.warningText : theme.modalBorderColor
+  const borderWidth = warning ? 4 : theme.modalBorderWidth
 
   return (
     <AirshipModal
       bridge={bridge}
       backgroundColor={theme.modal}
       borderRadius={theme.rem(theme.modalBorderRadiusRem)}
-      borderColor={theme.modalBorderColor}
-      borderWidth={theme.modalBorderWidth}
+      borderColor={borderColor}
+      borderWidth={borderWidth}
       flexDirection={flexDirection}
       justifyContent={justifyContent}
       margin={[theme.rem(iconRem / 2), 0, 0]}

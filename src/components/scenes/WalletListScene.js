@@ -6,7 +6,7 @@ import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions.js'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../hooks/useHandler.js'
-import { useWatchAccount } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
@@ -47,7 +47,7 @@ export function WalletListScene(props: Props) {
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   // Subscribe to account state:
-  const currencyWallets = useWatchAccount(account, 'currencyWallets')
+  const currencyWallets = useWatch(account, 'currencyWallets')
   const loading = Object.keys(currencyWallets).length <= 0
 
   const handleSort = useHandler(() => {

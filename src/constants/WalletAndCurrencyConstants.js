@@ -56,6 +56,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monero',
   'wallet:ethereum',
   'wallet:zcash',
+  'wallet:polkadot',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
@@ -534,8 +535,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true,
-    keysOnlyMode: true
+    isBitPayProtocolSupported: true
   },
   groestlcoin: {
     initWalletName: s.strings.string_first_groestlcoin_wallet_name,
@@ -603,6 +603,21 @@ export const SPECIAL_CURRENCY_INFO: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
       keyboardType: 'default'
+    }
+  },
+  polkadot: {
+    initWalletName: s.strings.string_first_polkadot_wallet_name,
+    chainCode: 'DOT',
+    dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
+    noChangeMiningFee: true,
+    minimumPopupModals: {
+      minimumNativeBalance: '10000000000',
+      modalMessage: s.strings.request_dot_minimum_notification_body,
+      alertMessage: s.strings.request_dot_minimum_notification_alert_body
+    },
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_polkadot_input_key_or_seed_instructions
     }
   },
   zcash: {

@@ -25,18 +25,18 @@ type ValidatePasswordOptions = {
   message?: string,
   submitLabel?: string,
   title?: string,
-  warning?: string
+  warningMessage?: string
 }
 
 export const validatePassword =
   (opts: ValidatePasswordOptions = {}) =>
   async (dispatch: Dispatch, getState: GetState): Promise<boolean> => {
-    const { message, submitLabel, title = s.strings.confirm_password_text, warning } = opts
+    const { message, submitLabel, title = s.strings.confirm_password_text, warningMessage } = opts
     const state = getState()
     const { account } = state.core
     const password = await Airship.show(bridge => (
       <TextInputModal
-        autoFocus={warning == null}
+        autoFocus={warningMessage == null}
         autoCorrect={false}
         bridge={bridge}
         inputLabel={s.strings.enter_your_password}
@@ -45,7 +45,7 @@ export const validatePassword =
         secureTextEntry
         submitLabel={submitLabel}
         title={title}
-        warning={warning}
+        warningMessage={warningMessage}
         onSubmit={async password => {
           const isOk = await account.checkPassword(password)
           if (!isOk) return s.strings.password_reminder_invalid
