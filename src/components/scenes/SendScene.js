@@ -468,6 +468,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     return (
       <View>
         <SelectFioAddress
+          navigation={this.props.navigation}
           selected={fioSender.fioAddress}
           memo={fioSender.memo}
           memoError={fioSender.memoError}

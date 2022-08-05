@@ -6,6 +6,7 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene.js'
 import { getTheme } from '../components/services/ThemeContext.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 import { type GuiWallet } from '../types/types.js'
 
 const fakeGuiWallet: GuiWallet = {
@@ -61,6 +62,7 @@ describe('TransactionDetails.ui', () => {
           thumbnailPath: 'thumb/nail/path'
         }
       },
+
       contacts: [],
       subcategoriesList: [],
       currencyCode: 'BTC',
@@ -73,7 +75,8 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
+    const navigation: NavigationProp<'transactionDetails'> = useNavigation()
+    const actual = renderer.render(<TransactionDetailsComponent navigation={navigation} {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
@@ -111,7 +114,9 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
+
+    const navigation: NavigationProp<'transactionDetails'> = useNavigation()
+    const actual = renderer.render(<TransactionDetailsComponent navigation={navigation} {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
@@ -150,7 +155,8 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
+    const navigation: NavigationProp<'transactionDetails'> = useNavigation()
+    const actual = renderer.render(<TransactionDetailsComponent navigation={navigation} {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
@@ -191,8 +197,8 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
-
+    const navigation: NavigationProp<'transactionDetails'> = useNavigation()
+    const actual = renderer.render(<TransactionDetailsComponent navigation={navigation} {...props} />)
     expect(actual).toMatchSnapshot()
   })
 })
