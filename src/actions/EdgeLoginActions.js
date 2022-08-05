@@ -8,7 +8,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { Actions } from '../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
 
 export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -29,12 +29,13 @@ export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) =
   if (lobby == null) return
   const { loginRequest } = lobby
   if (loginRequest == null) return
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
   dispatch({ type: 'PROCESS_EDGE_LOGIN' })
   try {
     await loginRequest.approve()
     dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
-    Actions.pop()
+    navigation.pop()
     setTimeout(() => {
       Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
     }, 750)
