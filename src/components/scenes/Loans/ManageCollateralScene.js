@@ -37,25 +37,23 @@ type ManageCollateralRequest = {
 }
 
 type Props<T: $Keys<ParamList>> = {
-  borrowEngine: BorrowEngine,
-  borrowPluginId: string,
-  defaultTokenId?: string,
   // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
   action: (request: ManageCollateralRequest) => Promise<ApprovableAction>,
   actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw',
   actionWallet: 'fromWallet' | 'toWallet',
+  amountChange?: 'increase' | 'decrease',
+  borrowEngine: BorrowEngine,
+  borrowPluginId: string,
+  defaultTokenId?: string,
   ltvType: 'debts' | 'collaterals',
-  ltvChange: 'increase' | 'decrease',
-  debtChange?: 'increase' | 'decrease',
 
   showExchangeRateTile?: boolean,
-  showTotalDebtTile?: boolean,
+  showNewDebtAprChange?: true,
   showNewDebtTile?: boolean,
   showTotalCollateralTile?: boolean,
-  showNewDebtAprChange?: true,
+  showTotalDebtTile?: boolean,
 
   headerText: string,
-
   navigation: NavigationProp<T>
 }
 
@@ -64,18 +62,19 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     action,
     actionOpType,
     actionWallet,
+    amountChange = 'increase',
     borrowEngine,
     borrowPluginId,
     defaultTokenId,
-    headerText,
-    ltvChange,
     ltvType,
+
     showExchangeRateTile,
-    showTotalDebtTile,
-    showNewDebtTile,
-    debtChange = 'increase',
-    showTotalCollateralTile,
     showNewDebtAprChange,
+    showNewDebtTile,
+    showTotalCollateralTile,
+    showTotalDebtTile,
+
+    headerText,
     navigation
   } = props
 
@@ -236,12 +235,12 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   }, [currencyWallet, borrowEngine, showTotalDebtTile])
 
   const renderNewDebtTile = useMemo(() => {
-    const multiplier = debtChange === 'increase' ? '1' : '-1'
+    const multiplier = amountChange === 'increase' ? '1' : '-1'
     const newDebt = { nativeAmount: mul(actionNativeAmount, multiplier), tokenId: selectedTokenId, apr: 0 } // APR is only present to appease Flow. It does not mean anything.
     return showNewDebtTile ? (
       <DebtAmountTile title={s.strings.loan_new_principle} wallet={currencyWallet} debts={[...borrowEngine.debts, newDebt]} key="newDebt" />
     ) : null
-  }, [debtChange, actionNativeAmount, selectedTokenId, showNewDebtTile, currencyWallet, borrowEngine.debts])
+  }, [amountChange, actionNativeAmount, selectedTokenId, showNewDebtTile, currencyWallet, borrowEngine.debts])
 
   const renderTotalCollateralTile = useMemo(() => {
     return showTotalCollateralTile ? (
@@ -266,9 +265,16 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   const renderLTVRatioTile = useMemo(() => {
     return (
-      <LoanToValueTile borrowEngine={borrowEngine} tokenId={selectedTokenId} nativeAmount={actionNativeAmount} type={ltvType} direction={ltvChange} key="ltv" />
+      <LoanToValueTile
+        borrowEngine={borrowEngine}
+        tokenId={selectedTokenId}
+        nativeAmount={actionNativeAmount}
+        type={ltvType}
+        direction={amountChange}
+        key="ltv"
+      />
     )
-  }, [borrowEngine, ltvChange, ltvType, selectedTokenId, actionNativeAmount])
+  }, [borrowEngine, amountChange, ltvType, selectedTokenId, actionNativeAmount])
 
   const tiles = [
     renderFlipInput,

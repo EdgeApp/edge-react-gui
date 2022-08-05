@@ -14,14 +14,14 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
   const { borrowEngine, borrowPlugin } = route.params
 
   return ManageCollateralScene({
-    borrowEngine,
-    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
-    defaultTokenId: borrowEngine.collaterals[0].tokenId,
     action: async req => await borrowEngine.withdraw(req),
     actionOpType: 'loan-withdraw',
     actionWallet: 'toWallet',
+    amountChange: 'decrease',
+    borrowEngine,
+    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
+    defaultTokenId: borrowEngine.collaterals[0].tokenId,
     ltvType: 'collaterals',
-    ltvChange: 'increase',
 
     showExchangeRateTile: true,
     showTotalDebtTile: true,

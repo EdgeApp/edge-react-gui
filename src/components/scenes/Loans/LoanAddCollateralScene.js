@@ -14,14 +14,14 @@ export const LoanAddCollateralScene = (props: Props) => {
   const { borrowEngine, borrowPlugin } = route.params
 
   return ManageCollateralScene({
-    borrowEngine,
-    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
-    defaultTokenId: borrowEngine.collaterals[0].tokenId,
     action: async req => await borrowEngine.deposit(req),
     actionOpType: 'loan-deposit',
     actionWallet: 'fromWallet',
+    amountChange: 'increase',
+    borrowEngine,
+    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
+    defaultTokenId: borrowEngine.collaterals[0].tokenId,
     ltvType: 'collaterals',
-    ltvChange: 'decrease',
 
     showExchangeRateTile: true,
     showTotalDebtTile: true,
