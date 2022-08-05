@@ -49,6 +49,9 @@ export type ApprovableAction = {
   +approve: () => Promise<EdgeTransaction[]>
 }
 
+// HACK: Used to identify running ActionQueue programs by borrow action type.
+export type BorrowActionId = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw'
+
 // -----------------------------------------------------------------------------
 // Engine
 // -----------------------------------------------------------------------------
