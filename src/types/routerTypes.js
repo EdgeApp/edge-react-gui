@@ -5,6 +5,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import { type BorrowEngine, type BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { type FiatPluginEnterAmountResponse, type FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
@@ -37,6 +38,7 @@ export type ParamList = {
   root: void,
   login: void,
   edge: void,
+
   // Logged-in scenes:
   changeMiningFee: {|
     guiMakeSpendInfo: GuiMakeSpendInfo,
@@ -191,6 +193,52 @@ export type ParamList = {
     initialAmount1?: string,
     headerIconUri?: string
   |},
+  loanDashboard: void,
+  loanDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanCreate: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanCreateConfirmation: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    destWallet: EdgeCurrencyWallet,
+    destTokenId: string,
+    nativeDestAmount: string,
+    nativeSrcAmount: string,
+    srcTokenId: string
+  |},
+  loanBorrowDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    tokenId: string
+  |},
+  loanClose: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanAddCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanBorrowMoreScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanWithdrawCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanRepayScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanStatus: {|
+    actionQueueId: string
+  |},
   manageTokens: {|
     walletId: string
   |},
@@ -242,6 +290,7 @@ export type ParamList = {
   stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   termsOfService: void,
+  testScene: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string

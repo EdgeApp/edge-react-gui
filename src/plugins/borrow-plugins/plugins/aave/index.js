@@ -51,10 +51,25 @@ const aaveKovanNetwork = makeAaveNetworkFactory({
     protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
   },
   enabledTokens: {
+    AAVE: true,
+    AMPL: true,
+    BUSD: true,
     DAI: true,
-    WETH: true,
+    ENJ: true,
+    ETH: true,
+    KNC: true,
+    LINK: true,
+    MANA: true,
+    MKR: true,
+    REN: true,
+    sUSD: true,
+    SNX: true,
+    TUSD: true,
+    USDC: true,
+    USDT: true,
     WBTC: true,
-    USDC: true
+    YFI: true,
+    ZRX: true
   }
 })
 
@@ -82,47 +97,3 @@ const aaveKovanBlueprint: BorrowPluginBlueprint = {
 }
 
 export const makeAaveKovanBorrowPlugin = makeBorrowPluginFactory(aaveKovanBlueprint)
-
-// -----------------------------------------------------------------------------
-// Localhost
-// -----------------------------------------------------------------------------
-
-const aaveLocalhostNetwork = makeAaveNetworkFactory({
-  provider: ethers.getDefaultProvider('http://localhost:8545'),
-
-  contractAddresses: {
-    lendingPool: '0xE0fBa4Fc209b4948668006B2bE61711b7f465bAe',
-    protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
-  },
-  enabledTokens: {
-    DAI: true,
-    WETH: true,
-    WBTC: true,
-    USDC: true
-  }
-})
-
-const aaveLocalhostBlueprint: BorrowPluginBlueprint = {
-  borrowInfo: {
-    pluginId: 'aaveLocalhost',
-    displayName: 'AAVE (Localhost)',
-    currencyPluginId: 'ethLocalhost',
-    maxLtvRatio: 0.5
-  },
-  makeBorrowEngine: makeBorrowEngineFactory({
-    aaveNetwork: aaveLocalhostNetwork,
-    asTokenContractAddress: asEthTokenContractAddress,
-    enabledTokens: {
-      DAI: {
-        isCollateral: false,
-        isDebt: true
-      },
-      WBTC: {
-        isCollateral: true,
-        isDebt: false
-      }
-    }
-  })
-}
-
-export const makeAaveLocalhostPlugin = makeBorrowPluginFactory(aaveLocalhostBlueprint)
