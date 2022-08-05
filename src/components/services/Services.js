@@ -21,6 +21,7 @@ import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
 import { perfLogger } from '../../util/middleware/perfLogger.js'
 import { Main } from '../Main.ui.js'
 import { AccountCallbackManager } from './AccountCallbackManager.js'
+import { ActionQueue } from './ActionQueue'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
 import { ContactsLoader } from './ContactsLoader.js'
@@ -90,6 +91,7 @@ export function Services(props: Props) {
             <Main navigation={navigation} />
           </Airship>
         </MenuProvider>
+        <ActionQueue />
         <AutoLogout />
         <ContactsLoader />
         <DeepLinkingManager />

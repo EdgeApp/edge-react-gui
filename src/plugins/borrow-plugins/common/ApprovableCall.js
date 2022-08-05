@@ -53,11 +53,13 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
       currencyCode: wallet.currencyInfo.currencyCode,
       nativeAmount: edgeUnsignedTx.parentNetworkFee ?? '0'
     },
+    unsignedTxs: [edgeUnsignedTx],
 
     approve: async () => {
       const tx = await wallet.signTx(edgeUnsignedTx)
       await wallet.broadcastTx(tx)
       await wallet.saveTx(tx)
+      return [tx]
     }
   }
 }

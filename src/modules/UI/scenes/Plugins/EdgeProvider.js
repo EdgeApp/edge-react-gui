@@ -3,7 +3,6 @@
 import { abs } from 'biggystring'
 import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
 import type {
-  EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeNetworkFee,
@@ -35,7 +34,7 @@ import { type GuiMakeSpendInfo } from '../../../../types/types.js'
 import { type UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
-import { makeCurrencyCodeTable } from '../../../../util/utils.js'
+import { type CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils.js'
 
 type WalletDetails = {
   name: string,
@@ -151,13 +150,20 @@ export class EdgeProvider extends Bridgeable {
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
+    const allObjects = (allowedCurrencyCodes ?? ['']).every(code => typeof code === 'object')
+    const allStrings = (allowedCurrencyCodes ?? ['']).every(code => typeof code === 'string')
+
+    if (!allObjects && !allStrings) {
+      throw new Error('Cannot mix string and object currency specifiers')
+    }
+
+    const allowedAssets = upgradeExtendedCurrencyCodes(this._state.core.account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
+    if (allowedAssets == null) {
+      throw new Error('No allowed assets specified')
+    }
+
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        showCreateWallet
-        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
-        headerTitle={s.strings.choose_your_wallet}
-      />
+      <WalletListModal bridge={bridge} showCreateWallet allowedAssets={allowedAssets} headerTitle={s.strings.choose_your_wallet} />
     ))
 
     const { walletId, currencyCode } = selectedWallet
@@ -172,9 +178,12 @@ export class EdgeProvider extends Bridgeable {
       this.selectedCurrencyCode = currencyCode
       this.selectedChainCode = chainCode
 
-      let returnCurrencyCode
+      const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)
+      if (unfixCode != null) {
+        return unfixCode
+      }
 
-      if (allowedCurrencyCodes != null && allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
+      if (allObjects) {
         // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
         return {
           pluginId,
@@ -182,38 +191,15 @@ export class EdgeProvider extends Bridgeable {
           currencyCode
         }
       }
-      if (chainCode !== tokenCode) {
-        // User selected a token
-        if (chainCode === 'ETH') {
-          // Special case for ETH. Caller can specify a token code alone and it can be matched against ETH tokens
-          // Check if the tokenCode also exists as a parent chain currencyCode. ie. "MATIC"
-          const codeLookup = makeCurrencyCodeTable(this._state.core.account)
-          const edgeToken = codeLookup(tokenCode)
-          if (edgeToken.find(t => t.tokenId == null)) {
-            // Found a mainnet chain with the same currencyCode as this token. Return the full currency code. ie. "ETH-MATIC"
-            returnCurrencyCode = `ETH-${tokenCode}`
-          } else {
-            // See if tokenCode matches one of the allowedCurrencyCodes
-            returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === tokenCode)
-          }
 
-          // If no match found. Check if a full currency code was used.
-          if (returnCurrencyCode == null) {
-            returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === `ETH-${tokenCode}`)
-          }
-          if (returnCurrencyCode == null) {
-            throw new Error(`Internal error. Tokencode ${tokenCode} selected but not in allowedCurrencyCodes`)
-          }
-        } else {
-          // Tokens for all other chains must be specified using a full currency code. ie. "ETH-USDC"
-          returnCurrencyCode = `${chainCode}-${tokenCode}`
-        }
-      } else {
-        // This is a mainnet coin.
-        returnCurrencyCode = chainCode
+      const flowHack: any = allowedCurrencyCodes
+      const stringCodes: string[] = flowHack
+      const returnCurrencyCode = getReturnCurrencyCode(stringCodes, chainCode, tokenCode)
+
+      if (returnCurrencyCode == null) {
+        throw new Error(`Internal error. Tokencode ${tokenCode} selected but not in allowedCurrencyCodes`)
       }
-
-      return unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId) ?? returnCurrencyCode
+      return returnCurrencyCode
     }
 
     throw new Error(s.strings.user_closed_modal_no_wallet)
@@ -600,15 +586,15 @@ export class EdgeProvider extends Bridgeable {
  * This one serves a public-facing API,
  * so it will potentially need to stick around forever.
  */
-function upgradeExtendedCurrencyCodes(
-  account: EdgeAccount,
+export function upgradeExtendedCurrencyCodes(
+  currencyConfigMap: CurrencyConfigMap,
   fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeTokenId[] | void {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   // Grab all relevant tokens from the account:
-  const codeLookup = makeCurrencyCodeTable(account)
+  const codeLookup = makeCurrencyCodeTable(currencyConfigMap)
 
   const out: EdgeTokenId[] = []
   for (const code of currencyCodes) {
@@ -624,14 +610,19 @@ function upgradeExtendedCurrencyCodes(
 
       if (tokenCode == null) {
         // It's a plain code, like "BTC" or "USDC". If the code matches a chain (ie. "BTC, "ETH", or "DOGE"), add that to the list.
-        // Otherwise, code is a token. Only add it to the chain if there's a matching chainCode of "ETH".
+        // Otherwise, code is a token. Only add it to the list if there's a matching chainCode of "ETH" and it doesn't match any
+        // mainnet coin.
+        //
         // For all other chains, tokenCodes need to be specified with their parent chain. ie "MATIC-USDC"
 
         // Find all the matching coins that are parent chains
         const mainnets = codeLookup(parentCode).filter(match => match.tokenId == null)
 
         // Find all the matching coins that are tokens of ETH
-        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum')
+        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum' && match.tokenId != null)
+
+        // If there is a match for both mainnet coins and ETH tokens, then don't add this currencyCode
+        if (mainnets.length > 0 && ethParent.length > 0) continue
 
         out.push(...mainnets, ...ethParent)
       } else {
@@ -658,4 +649,23 @@ function upgradeExtendedCurrencyCodes(
 
 function unfixCurrencyCode(fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {}, pluginId: string, tokenId?: string): string | void {
   return Object.keys(fixCurrencyCodes).find(uid => fixCurrencyCodes[uid].pluginId === pluginId && fixCurrencyCodes[uid].tokenId === tokenId)
+}
+
+export function getReturnCurrencyCode(allowedCurrencyCodes: string[] | void, chainCode: string, tokenCode: string): string | void {
+  let returnCurrencyCode
+
+  // See if there's a match with a double code
+  returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === `${chainCode}-${tokenCode}`)
+
+  if (returnCurrencyCode == null) {
+    if (chainCode === tokenCode) {
+      // Try to match mainnet single codes if a mainnet coin was chosen
+      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === chainCode)
+    } else if (chainCode === 'ETH') {
+      // Special case for ETH. Users can specify a single code token
+      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === tokenCode)
+    }
+  }
+
+  return returnCurrencyCode
 }

@@ -235,13 +235,14 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
 const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { fromWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
+  const { fromWalletId, fromCurrencyCode, toWalletId, toCurrencyCode } = state.cryptoExchange
 
   // Basic sanity checks (should never fail):
   if (error == null) return
-  if (fromWalletId == null || fromCurrencyCode == null || toCurrencyCode == null) return
+  if (fromWalletId == null || fromCurrencyCode == null || toWalletId == null || toCurrencyCode == null) return
 
   const fromWallet = state.core.account.currencyWallets[fromWalletId]
+  const toWallet = state.core.account.currencyWallets[toWalletId]
 
   // Check for known error types:
   const insufficientFunds = asMaybeInsufficientFundsError(error)
@@ -251,7 +252,9 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   const aboveLimit = asMaybeSwapAboveLimitError(error)
   if (aboveLimit != null) {
-    const currentCurrencyDenomination = getDisplayDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
+    const wallet = aboveLimit.direction === 'to' ? toWallet : fromWallet
+    const currencyCode = aboveLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
+    const currentCurrencyDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
     const { nativeMax } = aboveLimit
     const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -265,7 +268,9 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   const belowLimit = asMaybeSwapBelowLimitError(error)
   if (belowLimit) {
-    const currentCurrencyDenomination = getDisplayDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
+    const wallet = belowLimit.direction === 'to' ? toWallet : fromWallet
+    const currencyCode = belowLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
+    const currentCurrencyDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 
     const { nativeMin } = belowLimit
     const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -315,12 +320,32 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
   const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
-  const { quote, request } = swapInfo
-  const { pluginId, toNativeAmount } = quote
+  const { fromDisplayAmount, quote, request, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
+  const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate } = quote
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
   try {
     logEvent('SwapStart')
     const result: EdgeSwapResult = await quote.approve()
+
+    global.logActivity(`Swap Exchange Executed: ${account.username}`)
+    global.logActivity(`
+    fromDisplayAmount: ${fromDisplayAmount}
+    fee: ${fee}
+    fromFiat: ${fromFiat}
+    fromTotalFiat: ${fromTotalFiat}
+    toDisplayAmount: ${toDisplayAmount}
+    toFiat: ${toFiat}
+    quote:
+      pluginId: ${pluginId}
+      isEstimate: ${isEstimate.toString()}
+      fromNativeAmount: ${fromNativeAmount}
+      toNativeAmount: ${toNativeAmount}
+      expirationDate: ${expirationDate ? expirationDate.toISOString() : 'no expiration'}
+      networkFee:
+        currencyCode ${networkFee.currencyCode}
+        nativeAmount ${networkFee.nativeAmount}
+`)
+
     await fromWallet.saveTx(result.transaction)
 
     const { swapInfo } = account.swapConfig[pluginId]

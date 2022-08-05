@@ -10,6 +10,7 @@ import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { makeCurrencyCodeTable } from '../../util/utils.js'
+import { showError } from '../services/AirshipInstance.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -17,7 +18,8 @@ import { WalletList } from '../themed/WalletList.js'
 
 export type WalletListResult = {
   walletId?: string,
-  currencyCode?: string
+  currencyCode?: string,
+  tokenId?: string
 }
 
 type Props = {|
@@ -75,7 +77,7 @@ export function WalletListModal(props: Props) {
   const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
     if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
 
-    const lookup = makeCurrencyCodeTable(account)
+    const lookup = makeCurrencyCodeTable(account.currencyConfig)
     const allowedAssets = upgradeCurrencyCodes(lookup, allowedCurrencyCodes)
     const excludeAssets = upgradeCurrencyCodes(lookup, excludeCurrencyCodes)
 
@@ -86,7 +88,10 @@ export function WalletListModal(props: Props) {
     bridge.resolve({})
   })
   const handlePress = useHandler((walletId: string, currencyCode: string) => {
-    bridge.resolve({ walletId, currencyCode })
+    if (walletId === '') {
+      handleCancel()
+      showError(s.strings.network_alert_title)
+    } else bridge.resolve({ walletId, currencyCode })
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')

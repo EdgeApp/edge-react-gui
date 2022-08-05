@@ -1,12 +1,52 @@
 // @flow
 
 const strings = {
+  // Action Queue Display Info
+  // Unknown
+  action_queue_display_unknown_title: `Unknown action`,
+  action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
+  // seq
+  action_queue_display_seq_title: `Action sequence`,
+  action_queue_display_seq_message: `Doing a sequence of actions`,
+  // par
+  action_queue_display_par_title: `Action concurrency`,
+  action_queue_display_par_message: `Doing multiple things at once`,
+  // exchange_buy
+  action_queue_display_exchange_buy_title: `Purchase %s`,
+  action_queue_display_exchange_buy_message: `Purchase %1$s from %3$s.`,
+  // exchange_sell
+  action_queue_display_exchange_sell_title: `Deposit funds to bank`,
+  action_queue_display_exchange_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
+  // loan_borrow
+  action_queue_display_loan_borrow_title: `Take out loan`,
+  action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,
+  // loan_deposit
+  action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
+  action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
+  // loan_repay
+  action_queue_display_loan_repay_title: `Repay loan principal`,
+  action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
+  // loan_withdraw
+  action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
+  action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
+  // swap
+  action_queue_display_swap_title: `Swap %1$s into %2$s`,
+  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
+  // toast
+  action_queue_display_toast_title: `Toast`,
+  action_queue_display_toast_message: `Show toast message`,
+  // delay
+  action_queue_display_delay_title: 'Wait',
+  action_queue_display_delay_message_pending: 'Wait for %1$s millesconds',
+  action_queue_display_delay_message_doing: 'Wait until %1$s',
+
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
   share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
+  drawer_borrow_dollars: 'Borrow Dollars',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_scan_qr_send: 'Scan QR',
@@ -98,6 +138,9 @@ const strings = {
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
+  request_dot_minimum_notification_body:
+    'Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.',
+  request_dot_minimum_notification_alert_body: 'This wallet will always require a 1 DOT minimum',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
@@ -163,6 +206,7 @@ const strings = {
   create_wallet_import_input_key_prompt: 'Private Key',
   create_wallet_import_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated wallet',
   create_wallet_import_input_key_or_seed_prompt: 'Private Key or Private Seed',
+  create_wallet_import_polkadot_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated ed25519 wallet',
   create_wallet_import_active_key_input_prompt: 'Active Private Key',
   create_wallet_import_active_key_instructions: 'Enter your active private key to verify and restore the associated wallet:',
   create_wallet_import_successful: 'Import Successful!',
@@ -388,6 +432,7 @@ const strings = {
   string_first_doge_wallet_name: 'My Doge',
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',
+  string_first_polkadot_wallet_name: 'My Polkadot',
   string_first_polygon_wallet_name: 'My Polygon',
   string_first_avalanche_wallet_name: 'My Avalanche',
   my_crypto_wallet_name: 'My %s',
@@ -508,6 +553,7 @@ const strings = {
   transaction_details_exchange_status_page: 'Exchange Status Page',
   transaction_details_exchange_support: 'Exchange Support',
   transaction_details_exchange_support_request: '%s Support Request',
+  transaction_details_fee_warning: 'High Network Fees',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
@@ -798,8 +844,8 @@ const strings = {
     'NOTE: If you had custom nodes enabled, those wallets will not sync until corrected.',
 
   error_boundary_title: 'Oops!',
-  error_boundary_message:
-    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
+  error_boundary_message_s:
+    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -854,6 +900,68 @@ const strings = {
   select_fio_address_address_from: 'Send from FIO Crypto Handle',
   select_fio_address_address_memo: 'FIO Memo',
   select_fio_address_address_memo_error: 'FIO Memo Error',
+
+  // Loan
+  loan_action_add_collateral: 'Add Collateral',
+  loan_action_close_loan: 'Close Loan',
+  loan_action_withdraw_collateral: 'Withdraw Collateral',
+  loan_actions_title: 'Actions',
+  loan_active_loans_title: 'Active Loans',
+  loan_add_collateral: 'Add Collateral',
+  loan_add_from: 'Add from %s',
+  loan_amount_borrow: 'Amount to Borrow',
+  loan_amount_exceeds_s_collateral: 'Loan exceeds %1$s of collateral value in your %2$s wallet',
+  loan_available_equity: 'Available Equity',
+  loan_borrow_details_title: 'Borrow Details',
+  loan_borrow_more: 'Borrow More',
+  loan_breakdown_title: 'Loan Breakdown',
+  loan_close_loan_message:
+    "Closing your loan will liquidate some of the collateral to pay of the remaining principle and interest of your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principle isn't repaid.",
+  loan_close_loan_title: 'Close Loan',
+  loan_collateral_amount: 'Collateral Amount',
+  loan_collateral_destination: 'Collateral Destination',
+  loan_collateral_required: 'Collateral Amount Required',
+  loan_collateral_source: 'Source of Collateral',
+  loan_collateral_value: 'Collateral Value',
+  loan_create_confirmation_title: 'Borrow Details',
+  loan_create_title: 'Borrow With Aave',
+  loan_current_principle: 'Current Principle',
+  loan_dashboard_title: 'Loan Dashboard',
+  loan_debt_amount_title: 'Principle Amount',
+  loan_destination: 'Fund Destination',
+  loan_details_title: 'Loan Details',
+  loan_enter_loan_amount_s: 'Enter Loan Amount (%1$s)',
+  loan_error_title: 'Unexpected Error',
+  loan_estimate_fee: 'Estimate Fee',
+  loan_exchange_rate: 'Exchange Rate',
+  loan_failed_loan: 'Failed to load loan data',
+  loan_fiat_value: 'Fiat Value',
+  loan_insufficient_funds_warning:
+    'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
+  loan_interest_rate: 'Interest Rate',
+  loan_loan_breakdown_title: 'Loan Breakdown',
+  loan_loan_to_value_ratio: 'Loan to Value Ratio',
+  loan_make_payment: 'Make Payment',
+  loan_must_be_s_or_less: 'Loan must be less than %1$s of your total collateral value',
+  loan_new_loan: 'New Loan',
+  loan_new_principle: 'New Principle',
+  loan_remaining_principle: 'Remaining Principle',
+  loan_s_apr: '%1$s%% APR',
+  loan_select_receiving_wallet: 'Please select a receiving wallet',
+  loan_select_s_wallet: 'Please select a %s wallet',
+  loan_select_source_collateral: 'Please select a source of collateral',
+  loan_total_collateral_value: 'Total Collateral Value',
+  loan_withdraw_collateral: 'Withdraw Collateral',
+  loan_add_collateral: 'Add Collateral',
+  loan_withdraw_collateral: 'Withdraw Collateral',
+  loan_make_payment: 'Make Payment',
+  loan_current_principle: 'Current Principle',
+  loan_new_principle: 'New Principle',
+  loan_total_collateral_value: 'Total Collateral Value',
+  loan_exchange_rate: 'Exchange Rate',
+  loan_add_from: 'Add from %s',
+  loan_estimate_fee: 'Estimate Fee',
+  loan_loan_to_value_ratio: 'Loan to Value Ratio',
 
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
@@ -941,6 +1049,17 @@ const strings = {
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
+
+  fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
+  fiat_plugin_buy_currencycode: 'Buy %s',
+  fiat_plugin_amount_currencycode: 'Amount %s',
+  fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
+  fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
+  fiat_plugin_asset_unsupported: 'Asset Unsupported',
+  fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
+  fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
+  fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
+  fiat_plugin_fetching_assets: 'Fetching supported assets',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

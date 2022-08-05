@@ -30,7 +30,7 @@ export const useFiatText = (props: Props): string => {
     hideFiatSymbol,
     isoFiatCurrencyCode = USD_FIAT,
     nativeCryptoAmount = cryptoExchangeMultiplier,
-    noGrouping = false
+    noGrouping
   } = props
 
   // Convert native to fiat amount.
@@ -56,7 +56,7 @@ export const useFiatText = (props: Props): string => {
   return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
-const formatFiatString = (props: { autoPrecision?: boolean, fiatAmount: string, noGrouping?: boolean, minPrecision?: string }): string => {
+export const formatFiatString = (props: { autoPrecision?: boolean, fiatAmount: string, noGrouping?: boolean, minPrecision?: string }): string => {
   const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = true } = props
 
   // Use US locale delimeters for determining precision

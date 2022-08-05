@@ -1,5 +1,6 @@
 // @flow
 import { add } from 'biggystring'
+import { type EdgeTransaction } from 'edge-core-js'
 
 import { type ApprovableAction } from '../../types'
 
@@ -19,10 +20,13 @@ export const composeApprovableActions = (...actions: ApprovableAction[]): Approv
       currencyCode,
       nativeAmount
     },
+    unsignedTxs: actions.reduce((txs, action) => [...txs, ...action.unsignedTxs], []),
     approve: async () => {
+      const txs: EdgeTransaction[] = []
       for (const action of actions) {
-        await action.approve()
+        txs.push(...(await action.approve()))
       }
+      return txs
     }
   }
 }

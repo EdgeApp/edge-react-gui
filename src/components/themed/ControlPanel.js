@@ -25,7 +25,8 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { type NavigationProp, type ParamList } from '../../types/routerTypes.js'
+import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
+import { type EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
@@ -38,7 +39,7 @@ import { DividerLine } from './DividerLine'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
-const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
@@ -51,6 +52,7 @@ export function ControlPanel(props: Props) {
   const styles = getStyles(theme)
   // ---- Redux State ----
 
+  const account = useSelector(state => state.core.account)
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -103,8 +105,28 @@ export function ControlPanel(props: Props) {
   }
 
   const handleSweep = () => {
+    // Only allow native assets, filtered by sweepable currency codes
+    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
+      .filter(pluginId => {
+        const currencyConfig = account.currencyConfig[pluginId]
+        return SWEEPABLE_CURRENCY_CODES.some(
+          sweepableCurrencyCode => currencyConfig.currencyInfo.currencyCode.toLowerCase() === sweepableCurrencyCode.toLowerCase()
+        )
+      })
+      .map(pluginId =>
+        // Return an "EdgeTokenId" specifying that this must NOT be a token
+        // (implies it must be a supported native asset)
+        ({ pluginId, tokenId: undefined })
+      )
+
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={SweepableCurrencyCodes} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        allowedAssets={allowedAssets}
+        allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
+        showCreateWallet
+      />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
@@ -117,6 +139,10 @@ export function ControlPanel(props: Props) {
           .catch(showError)
       }
     })
+  }
+
+  const handleBorrow = () => {
+    handleGoToScene('loanDashboard')
   }
 
   const handleLoginQr = () => {
@@ -188,39 +214,41 @@ export function ControlPanel(props: Props) {
   const rowDatas: any[] = [
     {
       pressHandler: () => handleGoToScene('fioAddressList'),
-      iconName: 'cp-fio-names',
+      iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
       pressHandler: () => handleGoToScene('fioRequestList'),
-      iconName: 'cp-fio',
+      iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
       pressHandler: () => handleGoToScene('wcConnections'),
-      iconName: 'cp-wallet-connect',
+      iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
     {
       pressHandler: () => handleLoginQr(),
-      iconName: 'cp-scan-qr',
+      iconName: 'control-panel-scan-qr',
       title: s.strings.drawer_scan_qr_send
     },
-    { pressHandler: handleSweep, iconName: 'cp-sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars },
+
     {
       pressHandler: () => handleGoToScene('termsOfService'),
-      iconName: 'cp-tos',
+      iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
-    { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + config.appName },
+    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
       pressHandler: () => handleGoToScene('settingsOverviewTab'),
-      iconName: 'cp-settings',
+      iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
     {
       pressHandler: () => dispatch(logoutRequest()),
-      iconName: 'cp-logout',
+      iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
     }
   ]
@@ -258,7 +286,7 @@ export function ControlPanel(props: Props) {
         {/* ==== Rate Display End ==== */}
         <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
-            <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
             <TitleText style={styles.text}>{activeUsername}</TitleText>

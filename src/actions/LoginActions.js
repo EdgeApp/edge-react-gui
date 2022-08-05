@@ -289,6 +289,8 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
       data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
     })
   }
+  global.logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
+
   return wallet
 }
 

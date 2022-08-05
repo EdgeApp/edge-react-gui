@@ -33,7 +33,9 @@ export const currencyPlugins = {
   eos: true,
   telos: true,
   wax: true,
+  polkadot: true,
   ethereum: ENV.ETHEREUM_INIT,
+  kovan: ENV.KOVAN_INIT,
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT || true,
@@ -89,6 +91,7 @@ export const ratePlugins = {
 
 export const swapPlugins = {
   // Centralized Swaps
+  changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   exolix: ENV.EXOLIX_INIT,
   foxExchange: ENV.FOX_INIT,

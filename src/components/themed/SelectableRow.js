@@ -94,7 +94,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   subTitle: {
     maxWidth: '85%',
-    color: theme.deactivatedText,
+    color: theme.secondaryText,
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25)
   },

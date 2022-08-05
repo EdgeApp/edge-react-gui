@@ -15,6 +15,7 @@ import { COUNTRY_CODES } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
+import { executePlugin } from '../../plugins/gui/fiatPlugin.js'
 import { config } from '../../theme/appConfig.js'
 import { type GuiPluginRow, asGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
@@ -46,6 +47,7 @@ const paymentTypeLogosById = {
   debit: 'paymentTypeLogoDebitCard',
   fasterPayments: 'paymentTypeLogoFasterPayments',
   giftcard: 'paymentTypeLogoGiftCard',
+  googlepay: 'paymentTypeLogoGooglePay',
   ideal: 'paymentTypeLogoIdeal',
   interac: 'paymentTypeLogoInterac',
   newsagent: 'paymentTypeLogoNewsagent',
@@ -147,8 +149,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, navigation, route } = this.props
-    const { pluginId, deepQuery = {} } = listRow
+    const { countryCode, navigation, route, account } = this.props
+    const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
@@ -182,12 +184,17 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
-    // Launch!
-    navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
-      plugin,
-      deepPath,
-      deepQuery
-    })
+    const regionCode = { countryCode }
+    if (plugin.nativePlugin != null) {
+      executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
+    } else {
+      // Launch!
+      navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
+        plugin,
+        deepPath,
+        deepQuery
+      })
+    }
   }
 
   async showCountrySelectionModal() {
@@ -228,17 +235,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
-              <EdgeText style={styles.subtitleText} numberOfLines={0}>
-                {item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}
-              </EdgeText>
               <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>
             </View>
           </View>
-          <View style={styles.pluginRowPoweredByRow}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-            <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
-          </View>
+          {poweredBy != null && item.partnerIconPath != null ? (
+            <View style={styles.pluginRowPoweredByRow}>
+              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+              <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
+              <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+            </View>
+          ) : null}
         </TouchableOpacity>
       </View>
     )

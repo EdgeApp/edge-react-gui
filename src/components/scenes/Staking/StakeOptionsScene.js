@@ -13,9 +13,9 @@ import type { RouteProp } from '../../../types/routerTypes'
 import { type NavigationProp } from '../../../types/routerTypes.js'
 import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName, stakePlugin } from '../../../util/stakeUtils.js'
 import { StakingOptionCard } from '../../cards/StakingOptionCard.js'
-import { FillLoader } from '../../common/FillLoader.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { CryptoIcon } from '../../icons/CryptoIcon.js'
+import { FillLoader } from '../../progress-indicators/FillLoader.js'
 import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
@@ -91,7 +91,7 @@ export const StakeOptionsScene = (props: Props) => {
             currencyLogos={policyIcons.stakeAssetUris}
             primaryText={primaryText}
             secondaryText={secondaryText}
-            liquidityPool={item.liquidityPool}
+            stakeProviderInfo={item.stakeProviderInfo}
           />
         </TouchableOpacity>
       </View>

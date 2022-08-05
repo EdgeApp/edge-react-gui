@@ -1,5 +1,6 @@
 // @flow
 
+import { div, gte } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
@@ -13,10 +14,10 @@ import { type RouteProp } from '../../types/routerTypes.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking.js'
-import { CircleTimer } from '../common/CircleTimer'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
+import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Alert } from '../themed/Alert'
@@ -102,13 +103,15 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { pluginId } = quote
     const swapConfig = account.swapConfig[pluginId]
     const exchangeName = swapConfig.swapInfo.displayName
+    const feePercent = div(quote.networkFee.nativeAmount, quote.fromNativeAmount, 2)
+    const showFeeWarning = gte(feePercent, '0.05')
     const styles = getStyles(theme)
-
     return (
       <SceneWrapper background="theme">
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <ScrollView>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
+          {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={s.strings.transaction_details_fee_warning} type="warning" />}
           <ExchangeQuote
             cryptoAmount={fromDisplayAmount}
             currency={fromWalletCurrencyName}
@@ -120,6 +123,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             total={fromTotalFiat}
             walletId={request.fromWallet.id}
             walletName={request.fromWallet.name || ''}
+            showFeeWarning={showFeeWarning}
           />
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <ExchangeQuote
