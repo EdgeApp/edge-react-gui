@@ -19,7 +19,7 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
     actionWallet: 'fromWallet',
     amountChange: 'decrease',
     borrowEngine,
-    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
+    borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
     defaultTokenId: borrowEngine.debts[0].tokenId,
     ltvType: 'debts',
 

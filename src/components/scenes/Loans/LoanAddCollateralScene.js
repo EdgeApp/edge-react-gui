@@ -19,7 +19,7 @@ export const LoanAddCollateralScene = (props: Props) => {
     actionWallet: 'fromWallet',
     amountChange: 'increase',
     borrowEngine,
-    borrowPluginId: borrowPlugin.borrowInfo.pluginId,
+    borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
     defaultTokenId: borrowEngine.collaterals[0].tokenId,
     ltvType: 'collaterals',
 
