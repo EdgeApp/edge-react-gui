@@ -189,6 +189,7 @@ export type ParamList = {
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin
   |},
+
   loanDetailsConfirmation: {|
     borrowEngine: BorrowEngine,
     borrowPlugin: BorrowPlugin,
@@ -211,6 +212,27 @@ export type ParamList = {
     getMethods?: (methods: FiatPluginGetMethodsResponse) => void,
     initialAmount1?: string,
     headerIconUri?: string
+  |},
+  loanAddCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanWithdrawCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanRepayScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanBorrowDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    tokenId: string
+  |},
+  loanClose: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
   |},
   loanAddCollateralScene: {|
     borrowEngine: BorrowEngine,
