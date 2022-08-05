@@ -262,7 +262,7 @@ export const simplexProvider: FiatProviderFactory = {
         console.log(JSON.stringify(quote, null, 2))
 
         if (quote.error != null) {
-          if (quote.type === 'invalidAmountLimit') {
+          if (quote.type === 'invalidAmountLimit' || quote.type === 'amount_Limit_exceeded') {
             const result3 = quote.error.match(/The (.*) amount must be between (.*) and (.*)/)
             if (result3 == null || result3.length < 4) throw new Error('Simplex unknown error')
             const [minLimit, maxLimit] = result3.slice(2, 4)
