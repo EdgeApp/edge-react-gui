@@ -489,10 +489,7 @@ export const useNavigation = <Name: $Keys<ParamList>>() => {
     popToTop() {},
 
     closeDrawer() {},
-    openDrawer() {
-      // $FlowFixMe
-      Flux.Actions.drawerOpen()
-    },
+    openDrawer() {},
     toggleDrawer() {},
 
     get state() {}

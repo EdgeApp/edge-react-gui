@@ -18,7 +18,7 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig.js'
 import { type RequestAddressLink } from '../types/DeepLinkTypes'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
 import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils.js'
@@ -181,8 +181,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
   const edgeWallet = currencyWallets[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
-  const navigation: NavigationProp<'edge'> = useNavigation()
-
   let fioAddress
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig.fio
@@ -230,7 +228,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     if (parsedUri.token) {
       // TOKEN URI
       const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
-      return navigation.push('editToken', {
+      return Actions.push('editToken', {
         currencyCode: currencyCode.toUpperCase(),
         multiplier: denominations[0]?.multiplier,
         displayName: currencyName,
@@ -242,7 +240,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     // LEGACY ADDRESS URI
     if (parsedUri.legacyAddress != null) {
       const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-      navigation.push('send', {
+      Actions.push('send', {
         guiMakeSpendInfo,
         selectedWalletId,
         selectedCurrencyCode: currencyCode
@@ -261,7 +259,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
 
       if (guiMakeSpendInfo != null) {
-        navigation.push('send', {
+        Actions.push('send', {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -295,7 +293,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       nativeAmount
     }
 
-    navigation.push('send', {
+    Actions.push('send', {
       guiMakeSpendInfo,
       selectedWalletId,
       selectedCurrencyCode: currencyCode
@@ -394,7 +392,6 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
     const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
     const { currencyWallets } = state.core.account
     const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
-    const navigation: NavigationProp<'edge'> = useNavigation()
     // check if balance is zero
     const balance = wallet.balances[currencyCode]
     if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
@@ -431,10 +428,10 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       ))
     }
     if (threeButtonModal === 'buy') {
-      navigation.navigate('pluginListBuy', { direction: 'buy' })
+      Actions.jump('pluginListBuy', { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-      navigation.navigate('exchangeScene')
+      Actions.jump('exchangeScene')
     }
   } catch (e) {
     // Don't bother the user with this error, but log it quietly:

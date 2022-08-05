@@ -18,7 +18,7 @@ import {
   setFioExpiredCheckToDisklet
 } from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import type { FioDomain, FioObtRecord } from '../types/types'
 
 const EXPIRE_CHECK_TIMEOUT = 30000
@@ -151,13 +151,12 @@ export const checkExpiredFioDomains =
     const state = getState()
     const { account } = state.core
     if (!account) return
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
     if (expired.length > 0) {
       const first: FioDomain = expired[0]
       const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
-      await showFioExpiredModal(fioWallet, first, navigation)
+      await showFioExpiredModal(fioWallet, first)
 
       const expiredLastChecks = { ...state.ui.fio.expiredLastChecks }
       expiredLastChecks[first.name] = new Date()
@@ -175,13 +174,13 @@ export const checkExpiredFioDomains =
     dispatch({ type: 'FIO/CHECKING_EXPIRED', data: false })
   }
 
-const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain, navigation: NavigationProp<'edge'>) => {
+const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
   const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {
     // $FlowFixMe
     const { isPublic = false } = fioDomain
-    navigation.push('fioDomainSettings', {
+    Actions.push('fioDomainSettings', {
       showRenew: true,
       fioWallet,
       fioDomainName: fioDomain.name,

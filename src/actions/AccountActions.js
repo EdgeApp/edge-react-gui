@@ -7,16 +7,15 @@ import { TextInputModal } from '../components/modals/TextInputModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { Actions } from '../types/routerTypes.js'
 
 export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account, otpErrorShown } = state.core
-  const navigation: NavigationProp<any> = useNavigation()
 
   if (account.loggedIn && !otpErrorShown) {
     dispatch({ type: 'OTP_ERROR_SHOWN' })
-    navigation.push('otpRepair', {
+    Actions.push('otpRepair', {
       otpError
     })
   }

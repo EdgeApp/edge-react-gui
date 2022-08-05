@@ -13,7 +13,7 @@ import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { config } from '../theme/appConfig.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
 
 export type CreateWalletOptions = {
@@ -132,7 +132,6 @@ export const createAccountTransaction =
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
-    const navigation: NavigationProp<any> = useNavigation()
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {
@@ -163,7 +162,7 @@ export const createAccountTransaction =
               notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              navigation.navigate('walletListScene')
+              Actions.popTo('walletListScene')
               setTimeout(() => {
                 Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
               }, 750)
@@ -173,7 +172,7 @@ export const createAccountTransaction =
         alternateBroadcast:
           createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
       }
-      navigation.push('send', {
+      Actions.push('send', {
         guiMakeSpendInfo,
         selectedWalletId: paymentWalletId,
         selectedCurrencyCode: currencyCode
@@ -187,8 +186,6 @@ export const createAccountTransaction =
 export const createHandleUnavailableModal = (newWalletId: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const navigation: NavigationProp<'edge'> = useNavigation()
-
   account.changeWalletStates({
     [newWalletId]: {
       deleted: true
@@ -202,5 +199,5 @@ export const createHandleUnavailableModal = (newWalletId: string, accountName: s
       buttons={{ ok: { label: s.strings.string_ok } }}
     />
   ))
-  navigation.pop()
+  Actions.pop()
 }

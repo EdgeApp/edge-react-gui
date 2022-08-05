@@ -16,7 +16,7 @@ import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutSt
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types.js'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
@@ -49,7 +49,7 @@ const updateAmount =
     const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
-    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode, false))
+    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
   }
 
 export const sendConfirmationUpdateTx =
@@ -63,7 +63,6 @@ export const sendConfirmationUpdateTx =
   async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[walletId]
@@ -133,11 +132,11 @@ export const sendConfirmationUpdateTx =
           ))
           switch (result) {
             case 'buy':
-              navigation.navigate('pluginListBuy', { direction: 'buy' })
+              Actions.jump('pluginListBuy', { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.navigate('exchangeScene')
+              Actions.jump('exchangeScene')
               break
           }
         }
@@ -198,7 +197,6 @@ export const signBroadcastAndSave =
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const selectedWalletId = walletId || state.ui.wallets.selectedWalletId
     const wallet = currencyWallets[selectedWalletId]
@@ -381,9 +379,8 @@ export const signBroadcastAndSave =
 
       if (guiMakeSpendInfo.onDone) {
         guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
-        navigation.pop()
       } else {
-        navigation.replace('transactionDetails', {
+        Actions.replace('transactionDetails', {
           edgeTransaction: edgeSignedTransaction
         })
       }
