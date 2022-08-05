@@ -50,7 +50,6 @@ export function ControlPanel(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-
   // ---- Redux State ----
 
   const account = useSelector(state => state.core.account)
@@ -147,7 +146,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleLoginQr = () => {
-    Actions.drawerClose()
+    navigation.closeDrawer()
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
@@ -168,15 +167,13 @@ export function ControlPanel(props: Props) {
   }
 
   const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
-    const { currentScene, drawerClose } = Actions
-
-    if (currentScene !== scene) {
-      navigation.navigate(scene, sceneProps)
-    } else if (sceneProps) {
+    if (sceneProps) {
       navigation.setParams(sceneProps)
+    } else {
+      navigation.navigate(scene, sceneProps)
     }
 
-    drawerClose()
+    navigation.closeDrawer()
   }
 
   /// ---- Animation ----

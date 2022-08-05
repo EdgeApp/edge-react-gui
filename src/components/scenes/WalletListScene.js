@@ -68,7 +68,7 @@ export function WalletListScene(props: Props) {
   useAsyncEffect(
     async () => {
       if (needsPasswordCheck) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+        await Airship.show(bridge => <PasswordReminderModal navigation={navigation} bridge={bridge} />)
       } else {
         const userTutorialList = await getWalletListSlideTutorial(disklet)
         const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
@@ -108,6 +108,7 @@ export function WalletListScene(props: Props) {
   const header = useMemo(() => {
     return (
       <WalletListHeader
+        navigation={navigation}
         sorting={sorting}
         searching={searching}
         searchText={searchText}

@@ -8,7 +8,7 @@ import { type AirshipBridge } from 'react-native-airship'
 import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextField } from '../themed/EdgeTextField.js'
@@ -17,7 +17,8 @@ import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<void>
+  bridge: AirshipBridge<void>,
+  navigation: NavigationProp<any>
 }
 
 type StateProps = {
@@ -55,7 +56,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.spinning) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
-      setTimeout(() => Actions.jump('changePassword'), 10)
+      setTimeout(() => this.props.navigation.navigate('changePassword'), 10)
     }
   }
 

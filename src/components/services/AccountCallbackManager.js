@@ -12,7 +12,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { isReceivedTransaction, snooze } from '../../util/utils.js'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal.js'
 import { Airship } from './AirshipInstance.js'
@@ -38,6 +38,7 @@ export function AccountCallbackManager(props: Props) {
   const { account } = props
   const dispatch = useDispatch()
   const [dirty, setDirty] = useState<DirtyList>(notDirty)
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
   // Helper for marking wallets dirty:
   function addWallet(wallet: EdgeCurrencyWallet) {
@@ -66,9 +67,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       watchSecurityAlerts(account, hasAlerts => {
-        if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
-          Actions.push('securityAlerts')
-        }
+        navigation.push('securityAlerts')
       }),
 
       account.rateCache.on('update', () =>

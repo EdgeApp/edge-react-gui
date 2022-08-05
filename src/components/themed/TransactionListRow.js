@@ -10,8 +10,8 @@ import { useWatch } from '../../hooks/useWatch.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { useSelector } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes.js'
 import { type GuiContact } from '../../types/types'
 import type { TransactionListTx } from '../../types/types.js'
 import {
@@ -31,7 +31,8 @@ import { TransactionRow } from './TransactionRow.js'
 type Props = {
   walletId: string,
   currencyCode: string,
-  transaction: TransactionListTx
+  transaction: TransactionListTx,
+  navigation: NavigationProp<any>
 }
 
 export function TransactionListRow(props: Props) {
@@ -89,7 +90,7 @@ export function TransactionListRow(props: Props) {
     if (transaction == null) {
       return showError(s.strings.transaction_details_error_invalid)
     }
-    Actions.push('transactionDetails', {
+    navigation.push('transactionDetails', {
       edgeTransaction: transaction,
       thumbnailPath
     })
