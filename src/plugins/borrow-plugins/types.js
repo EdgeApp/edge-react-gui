@@ -96,7 +96,7 @@ export type BorrowEngine = {
 // -----------------------------------------------------------------------------
 
 export type BorrowPluginInfo = {
-  pluginId: string,
+  borrowPluginId: string,
   displayName: string,
 
   // Defines the relationship to the type of currency plugins which the plugin supports
