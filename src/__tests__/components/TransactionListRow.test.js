@@ -2,59 +2,31 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
-import { createStore } from 'redux'
+import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { TransactionListRow } from '../../components/themed/TransactionListRow.js'
-import { rootReducer } from '../../reducers/RootReducer.js'
+import { getTheme } from '../../components/services/ThemeContext.js'
+import { TransactionListRowComponent } from '../../components/themed/TransactionListRow.js'
 
 describe('TransactionListRow', () => {
   it('should render with loading props', () => {
-    const currencyInfo = {
-      pluginId: 'bitcoin',
-      currencyCode: 'BTC',
-      displayName: 'Bitcoin',
-      requiredConfirmations: 1,
-      denominations: [
-        { name: 'BTC', multiplier: '100000000', symbol: '₿' },
-        { name: 'mBTC', multiplier: '100000', symbol: 'm₿' },
-        { name: 'bits', multiplier: '100', symbol: 'ƀ' },
-        { name: 'sats', multiplier: '1', symbol: 's' }
-      ]
-    }
-    const mockStore = {
-      core: {
-        account: {
-          currencyWallets: {
-            lmnop: {
-              pluginId: 'bitcoin',
-              watch: () => {},
-              currencyInfo,
-              fiatCurrencyCode: 'iso:USD'
-            }
-          },
-          currencyConfig: {
-            bitcoin: {
-              allTokens: [],
-              currencyInfo
-            }
-          }
-        }
-      }
-    }
-    const store = createStore(rootReducer, mockStore)
+    const renderer = new ShallowRenderer()
 
     const props = {
-      walletId: 'lmnop',
+      cryptoAmount: '1',
+      denominationSymbol: 'BTC',
+      fiatAmount: '1000000',
+      fiatSymbol: 'USD',
+      isSentTransaction: true,
+      requiredConfirmations: 11,
+      selectedCurrencyName: 'Bitcoin',
+      thumbnailPath: 'wyre.png',
+      walletBlockHeight: 11,
+      walletId: '3dfgbA347...',
       currencyCode: 'BTC',
-      transaction: '12ser4hh...'
+      transaction: '12ser4hh...',
+      theme: getTheme()
     }
-    const actual = renderer.create(
-      <Provider store={store}>
-        <TransactionListRow {...props} />
-      </Provider>
-    )
+    const actual = renderer.render(<TransactionListRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

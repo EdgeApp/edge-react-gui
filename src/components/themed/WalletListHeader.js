@@ -6,7 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import s from '../../locales/strings.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { PromoCard } from '../cards/PromoCard.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -19,7 +19,8 @@ type OwnProps = {
   searchText: string,
   openSortModal: () => void,
   onChangeSearchText: (search: string) => void,
-  onChangeSearchingState: (searching: boolean) => void
+  onChangeSearchingState: (searching: boolean) => void,
+  navigation: NavigationProp<any>
 }
 
 type Props = OwnProps & ThemeProps
@@ -47,7 +48,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { sorting, searching, searchText, theme } = this.props
+    const { sorting, searching, searchText, theme, navigation } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -76,7 +77,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={() => Actions.push('createWalletSelectCrypto')}>
+              <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto')}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.props.openSortModal}>
