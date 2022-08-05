@@ -12,6 +12,7 @@ import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin } from '../../../plugin
 import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfo, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
+import { type NavigationProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { type FlatListItem } from '../../../types/types'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -29,9 +30,15 @@ import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
+type Props = {
+  navigation: NavigationProp<'loanDashboard'>
+}
+
 const borrowPlugins = [makeAaveKovanBorrowPlugin(), makeAaveBorrowPlugin()]
 
-export const LoanDashboardScene = () => {
+export const LoanDashboardScene = (props: Props) => {
+  const { navigation } = props
+
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
@@ -77,7 +84,7 @@ export const LoanDashboardScene = () => {
         getAaveBorrowInfo(wallet.currencyInfo.pluginId === hardWalletPluginId ? makeAaveBorrowPlugin() : makeAaveKovanBorrowPlugin(), wallet)
           .then((borrowInfo: TempBorrowInfo) => {
             setIsNewLoanLoading(false)
-            // navigation.navigate('loanCreate', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
+            navigation.navigate('loanCreate', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
           })
           .catch(err => {
             redText(err.message)
@@ -90,7 +97,7 @@ export const LoanDashboardScene = () => {
   const renderLoanCard = useHandler((item: FlatListItem<TempBorrowInfo>) => {
     const borrowInfo: TempBorrowInfo = item.item
     const handleLoanPress = () => {
-      // navigation.navigate('loanDetails', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
+      navigation.navigate('loanDetails', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
     }
     return <LoanSummaryCard onPress={handleLoanPress} borrowEngine={borrowInfo.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} />
   })

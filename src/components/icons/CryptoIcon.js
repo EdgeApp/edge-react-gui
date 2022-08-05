@@ -22,11 +22,12 @@ type Props = {
   sizeRem?: number,
   marginRem?: number | number[],
   // Deprecated!!! here for backward compatibility instead of pluginId or tokenId wherever it's not yet easily available
-  currencyCode?: string
+  currencyCode?: string,
+  hideSecondary?: boolean // Only show the currency icon for token (no secondary icon for the network)
 }
 
 const CryptoIconComponent = (props: Props) => {
-  let { pluginId, tokenId } = props
+  let { pluginId, tokenId, hideSecondary } = props
   const { walletId, mono = false, sizeRem, marginRem, currencyCode } = props
 
   const theme = useTheme()
@@ -82,7 +83,7 @@ const CryptoIconComponent = (props: Props) => {
     <View style={spacingStyle}>
       {wallet != null ? <WalletSyncCircle size={size} wallet={wallet} /> : null}
       {primaryCurrencyIcon}
-      {secondaryCurrencyIcon}
+      {!hideSecondary ? secondaryCurrencyIcon : null}
     </View>
   )
 }
