@@ -421,6 +421,88 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
+          style={[MockFunction]}
+        >
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#E85466",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Delete Account
+            </Text>
+            <Text
+              style={
+                Object {
+                  "color": "#87939E",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              
+            </Text>
+            <Text
+              allowFontScaling={false}
+              style={
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
+                    "fontSize": 22,
+                    "marginHorizontal": 11,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -1751,6 +1833,88 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             
           </Text>
+        </View>
+        <View
+          style={[MockFunction]}
+        >
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginBottom": 1,
+                "minHeight": 67,
+                "padding": 11,
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#E85466",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Delete Account
+            </Text>
+            <Text
+              style={
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "paddingHorizontal": 11,
+                  "textAlign": "left",
+                }
+              }
+            >
+              
+            </Text>
+            <Text
+              allowFontScaling={false}
+              style={
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                    "marginHorizontal": 11,
+                  },
+                  Object {
+                    "fontFamily": "FontAwesome5Free-Solid",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  Object {
+                    "fontWeight": "900",
+                  },
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
         </View>
         <View
           style={

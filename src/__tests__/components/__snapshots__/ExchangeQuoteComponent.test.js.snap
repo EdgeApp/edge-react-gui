@@ -64,7 +64,6 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             style={
               Object {
                 "fontFamily": "Quicksand-Medium",
-                "fontWeight": "600",
               }
             }
           >
@@ -82,7 +81,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "fontWeight": "600",
+                "fontFamily": "Quicksand-Medium",
                 "textAlign": "right",
               }
             }
@@ -117,6 +116,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
                 "color": "#A4C7DF",
                 "flex": 1,
                 "fontSize": 17,
+                "marginTop": 6,
               }
             }
           >
@@ -136,6 +136,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
               Object {
                 "color": "#A4C7DF",
                 "fontSize": 17,
+                "marginTop": 6,
               }
             }
           >
@@ -146,111 +147,113 @@ exports[`ExchangeQuote should render with loading props 1`] = `
     </View>
   </View>
   <React.Fragment>
-    <View
-      style={
-        Array [
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-          },
-          Object {
-            "marginBottom": 0,
-            "marginLeft": 0,
-            "marginRight": 0,
-            "marginTop": 22,
-          },
-        ]
-      }
-    >
+    <View>
       <View
         style={
-          Object {
-            "alignItems": "center",
-            "flex": 1,
-            "flexDirection": "row",
-          }
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            },
+            Object {
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "marginTop": 17,
+            },
+          ]
         }
       >
-        <WithTheme(EdgeTextComponent)
+        <View
           style={
             Object {
-              "fontSize": 17,
-              "fontWeight": "600",
+              "alignItems": "center",
+              "flex": 1,
+              "flexDirection": "row",
             }
           }
         >
-          Max network fee
-        </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontSize": 17,
+                "marginTop": 6,
+              }
+            }
+          >
+            Max network fee
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
+          style={
+            Object {
+              "marginLeft": 6,
+              "textAlign": "right",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontSize": 17,
+                "marginTop": 6,
+              }
+            }
+          >
+            1
+          </WithTheme(EdgeTextComponent)>
+        </View>
       </View>
       <View
         style={
-          Object {
-            "marginLeft": 6,
-            "textAlign": "right",
-          }
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            },
+            Object {},
+          ]
         }
       >
-        <WithTheme(EdgeTextComponent)
+        <View
           style={
             Object {
-              "fontSize": 17,
-              "fontWeight": "600",
+              "alignItems": "center",
+              "flex": 1,
+              "flexDirection": "row",
             }
           }
         >
-          1
-        </WithTheme(EdgeTextComponent)>
-      </View>
-    </View>
-    <View
-      style={
-        Array [
-          Object {
-            "alignItems": "center",
-            "flexDirection": "row",
-          },
-          Object {},
-        ]
-      }
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "center",
-            "flex": 1,
-            "flexDirection": "row",
-          }
-        }
-      >
-        <WithTheme(EdgeTextComponent)
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontSize": 17,
+                "marginTop": 6,
+              }
+            }
+          >
+            Total Amount
+          </WithTheme(EdgeTextComponent)>
+        </View>
+        <View
           style={
             Object {
-              "fontSize": 17,
-              "fontWeight": "600",
+              "marginLeft": 6,
+              "textAlign": "right",
             }
           }
         >
-          Total Amount
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
-        style={
-          Object {
-            "marginLeft": 6,
-            "textAlign": "right",
-          }
-        }
-      >
-        <WithTheme(EdgeTextComponent)
-          style={
-            Object {
-              "fontSize": 17,
-              "fontWeight": "600",
+          <WithTheme(EdgeTextComponent)
+            style={
+              Object {
+                "fontSize": 17,
+                "marginTop": 6,
+              }
             }
-          }
-        >
-          40001 USD
-        </WithTheme(EdgeTextComponent)>
+          >
+            40001 USD
+          </WithTheme(EdgeTextComponent)>
+        </View>
       </View>
     </View>
   </React.Fragment>

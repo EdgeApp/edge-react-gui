@@ -21,6 +21,9 @@ type Props = {
   // to changes in the gap.
   children: React.Node | ((gap: SafeAreaGap) => React.Node),
 
+  // Settings for when using ScrollView
+  keyboardShouldPersistTaps?: 'always' | 'never' | 'handled',
+
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,
 
@@ -81,7 +84,7 @@ export class SceneWrapper extends React.Component<Props> {
    * Render the scene wrapper component, given various items from the context.
    */
   renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'theme', bodySplit = 0, padding = 0, scroll = false } = this.props
+    const { children, background = 'theme', bodySplit = 0, padding = 0, scroll = false, keyboardShouldPersistTaps } = this.props
 
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
@@ -89,7 +92,7 @@ export class SceneWrapper extends React.Component<Props> {
       keyboardAnimation != null ? (
         <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
       ) : scroll ? (
-        <ScrollView style={{ position: 'absolute', ...gap }} contentContainerStyle={{ padding }}>
+        <ScrollView style={{ position: 'absolute', ...gap }} keyboardShouldPersistTaps={keyboardShouldPersistTaps} contentContainerStyle={{ padding }}>
           {finalChildren}
         </ScrollView>
       ) : (

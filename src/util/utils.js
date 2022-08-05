@@ -1,10 +1,11 @@
 // @flow
 
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgePluginMap, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
+import { v4 } from 'uuid'
 
 import {
   FEE_ALERT_THRESHOLD,
@@ -57,7 +58,7 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
-  !isNaN(+input) || input === '.'
+  (!isNaN(+input) || input === '.') && input !== 'Infinity'
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
@@ -433,7 +434,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
   }
 }
 
-export async function fetchWaterfall(servers?: string[], path: string, options?: any): Promise<any> {
+export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
   if (servers == null) return
   const funcs = servers.map(server => async () => {
     const result = await fetch(server + '/' + path, options)
@@ -444,7 +445,7 @@ export async function fetchWaterfall(servers?: string[], path: string, options?:
     }
     return result
   })
-  return asyncWaterfall(funcs)
+  return asyncWaterfall(funcs, timeout)
 }
 
 export async function openLink(url: string): Promise<void> {
@@ -591,10 +592,16 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
   return out
 }
 
+export type MiniCurrencyConfig = {
+  allTokens: EdgeTokenMap,
+  currencyInfo: EdgeCurrencyInfo
+}
+export type CurrencyConfigMap = EdgePluginMap<EdgeCurrencyConfig> | EdgePluginMap<MiniCurrencyConfig>
+
 /**
  * Creates a function that returns all matching tokenId's for a currency code.
  */
-export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: string) => EdgeTokenId[] {
+export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (currencyCode: string) => EdgeTokenId[] {
   const map = new Map<string, EdgeTokenId[]>()
 
   function addMatch(currencyCode: string, location: EdgeTokenId): void {
@@ -604,8 +611,8 @@ export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: stri
     else map.set(key, [location])
   }
 
-  for (const pluginId of Object.keys(account.currencyConfig)) {
-    const currencyConfig = account.currencyConfig[pluginId]
+  for (const pluginId of Object.keys(currencyConfigMap)) {
+    const currencyConfig = currencyConfigMap[pluginId]
     const { allTokens, currencyInfo } = currencyConfig
 
     addMatch(currencyInfo.currencyCode, { pluginId })
@@ -619,7 +626,96 @@ export function makeCurrencyCodeTable(account: EdgeAccount): (currencyCode: stri
   return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
 }
 
+export const shuffleArray = <T>(array: T[]): T[] => {
+  let currentIndex = array.length
+  let temporaryValue, randomIndex
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
+  }
+
+  return array
+}
+
+export async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
+  if (servers == null) return
+  return fetchWaterfall(shuffleArray(servers), path, options, timeout)
+}
+
 export const pickRandom = <T>(array?: T[]): T | null => {
   if (array == null || array.length === 0) return null
   return array[Math.floor(Math.random() * array.length)]
+}
+
+const INFO_SERVERS = ['https://info2.edge.app']
+export const fetchInfo = (path: string, options?: Object, timeout?: number): Promise<any> => {
+  return multiFetch(INFO_SERVERS, path, options, timeout)
+}
+
+/**
+ * Waits for a collection of promises.
+ * Returns all the promises that manage to resolve within the timeout.
+ * If no promises mange to resolve within the timeout,
+ * returns the first promise that resolves.
+ * If all promises reject, rejects an array of errors.
+ */
+export function fuzzyTimeout<T>(promises: Promise<T>[], timeoutMs: number): Promise<T[]> {
+  return new Promise((resolve, reject) => {
+    let done = false
+    const results: T[] = []
+    const failures: any[] = []
+
+    // Set up the timer:
+    // let timer: $Call<typeof setTimeout> | void = setTimeout(() => {
+    let timer: TimeoutID | void = setTimeout(() => {
+      timer = undefined
+      if (results.length > 0) {
+        done = true
+        resolve(results)
+      }
+    }, timeoutMs)
+
+    function checkEnd(): void {
+      const allDone = results.length + failures.length === promises.length
+      if (allDone && timer != null) {
+        clearTimeout(timer)
+      }
+      if (allDone || timer == null) {
+        done = true
+        if (results.length > 0) resolve(results)
+        else reject(failures)
+      }
+    }
+    checkEnd() // Handle empty lists
+
+    // Attach to the promises:
+    for (const promise of promises) {
+      promise.then(
+        result => {
+          if (done) return
+          results.push(result)
+          checkEnd()
+        },
+        failure => {
+          if (done) return
+          failures.push(failure)
+          checkEnd()
+        }
+      )
+    }
+  })
+}
+
+export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
+
+export const makeUuid = () => {
+  return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
 }

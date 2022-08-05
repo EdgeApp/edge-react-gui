@@ -130,35 +130,30 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
-  renderStakingButton() {
-    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode, pluginId } = this.props
-    const { stakePolicies } = this.state
+  renderStakingBox() {
+    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
     const styles = getStyles(theme)
+    const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? {}
+
+    return lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
+      <View style={styles.stakingBoxContainer}>
+        <EdgeText style={styles.stakingStatusText}>
+          {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
+        </EdgeText>
+      </View>
+    ) : null
+  }
+
+  hasStaking = () => {
+    const { currencyCode, pluginId } = this.props
+    const { stakePolicies } = this.state
 
     const isStakingPolicyAvailable = stakePolicies.some(stakePolicy => {
       return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
     })
+
     // Special case for FIO because it uses it's own staking plugin
-    const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && (isStakingPolicyAvailable || currencyCode === 'FIO')
-    if (!isStakingSupported) return null
-
-    const lockedBalance = stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`]
-
-    return (
-      <View>
-        <View style={styles.stakingButtonContainer}>
-          <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
-            <AntDesignIcon name="barschart" size={theme.rem(1.25)} color={theme.iconTappable} />
-            <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
-          </TouchableOpacity>
-          <EdgeText style={styles.stakingStatusText}>
-            {lockedBalance.crypto != null && lockedBalance.crypto !== '0'
-              ? sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)
-              : null}
-          </EdgeText>
-        </View>
-      </View>
-    )
+    return SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && (isStakingPolicyAvailable || currencyCode === 'FIO')
   }
 
   handleOnChangeText = (input: string) => {
@@ -205,6 +200,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   render() {
     const { isEmpty, searching, theme } = this.props
     const styles = getStyles(theme)
+    const hasStaking = this.hasStaking()
+
     return (
       <>
         <View style={styles.container}>
@@ -234,16 +231,22 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           {!searching && (
             <>
               {this.renderBalanceBox()}
+              {hasStaking && this.renderStakingBox()}
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
-                  <AntDesignIcon name="arrowdown" size={theme.rem(1.25)} color={theme.iconTappable} />
+                  <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
-                  <AntDesignIcon name="arrowup" size={theme.rem(1.25)} color={theme.iconTappable} />
+                  <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>
-                {this.renderStakingButton()}
+                {hasStaking && (
+                  <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+                    <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
+                    <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
+                  </TouchableOpacity>
+                )}
               </View>
             </>
           )}
@@ -261,15 +264,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    paddingLeft: theme.rem(1),
+    paddingHorizontal: theme.rem(1),
+    paddingBottom: theme.rem(1),
     marginBottom: theme.rem(0.5)
   },
 
   // Balance Box
   balanceBoxContainer: {
-    height: theme.rem(5.25),
-    marginTop: theme.rem(1),
-    marginRight: theme.rem(1)
+    marginTop: theme.rem(1)
   },
   balanceBoxRow: {
     flexDirection: 'row'
@@ -309,14 +311,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row'
   },
   buttons: {
+    flexShrink: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    marginRight: theme.rem(1),
-    paddingVertical: theme.rem(0.5)
+    paddingRight: theme.rem(1.5)
   },
   buttonsText: {
-    fontSize: theme.rem(1.25),
+    fontSize: theme.rem(1),
     color: theme.textLink,
     fontFamily: theme.fontFaceMedium,
     marginLeft: theme.rem(0.25)
@@ -329,37 +331,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   searchContainer: {
     flexDirection: 'row',
-    marginTop: theme.rem(0.5),
-    marginRight: theme.rem(1)
+    marginTop: theme.rem(0.5)
   },
   searchDoneButton: {
     justifyContent: 'center',
     paddingLeft: theme.rem(0.75)
   },
 
-  // Staking Button
-  stakingButtonContainer: {
+  // Staking Box
+  stakingBoxContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: theme.rem(0.5)
+    justifyContent: 'space-between'
   },
   stakingStatusText: {
     color: theme.secondaryText,
     maxWidth: '70%',
     fontSize: theme.rem(1)
-  },
-  stakingButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingRight: theme.rem(1)
-  },
-  stakingButtonText: {
-    fontSize: theme.rem(0.875),
-    color: theme.textLink,
-    fontFamily: theme.fontFaceMedium,
-    marginRight: theme.rem(0.25)
   }
 }))
 

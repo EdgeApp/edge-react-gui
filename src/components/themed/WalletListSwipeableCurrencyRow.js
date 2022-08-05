@@ -63,9 +63,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleMenu = useHandler(() => {
     closeRow()
-    Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} currencyCode={currencyCode} isToken={tokenId != null} navigation={navigation} walletId={wallet.id} />
-    ))
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />)
   })
 
   const handleRequest = useHandler(() => {

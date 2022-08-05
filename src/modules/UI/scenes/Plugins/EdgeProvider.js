@@ -3,7 +3,6 @@
 import { abs } from 'biggystring'
 import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
 import type {
-  EdgeAccount,
   EdgeCurrencyWallet,
   EdgeMetadata,
   EdgeNetworkFee,
@@ -23,7 +22,6 @@ import { Bridgeable, update } from 'yaob'
 
 import { launchBitPay } from '../../../../actions/BitPayActions.js'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
-import { selectWallet } from '../../../../actions/WalletActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
 import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
@@ -36,7 +34,7 @@ import { type GuiMakeSpendInfo } from '../../../../types/types.js'
 import { type UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers.js'
-import { makeCurrencyCodeTable } from '../../../../util/utils.js'
+import { type CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils.js'
 
 type WalletDetails = {
   name: string,
@@ -44,6 +42,7 @@ type WalletDetails = {
   receiveAddress: {
     publicAddress: string
   },
+  chainCode: string,
   currencyCode: string,
   fiatCurrencyCode: string
 }
@@ -108,6 +107,9 @@ export class EdgeProvider extends Bridgeable {
   deepQuery: UriQueryMap | void
   promoCode: string | void
   restartPlugin: () => void
+  selectedWallet: EdgeCurrencyWallet
+  selectedChainCode: string
+  selectedCurrencyCode: string
 
   constructor(
     plugin: GuiPlugin,
@@ -127,6 +129,10 @@ export class EdgeProvider extends Bridgeable {
     this.deepQuery = deepQuery
     this.promoCode = promoCode
     this.restartPlugin = restartPlugin
+    const { currencyWallets } = this._state.core.account
+    this.selectedWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
+    this.selectedChainCode = this.selectedWallet.currencyInfo.currencyCode
+    this.selectedCurrencyCode = this._state.ui.wallets.selectedCurrencyCode
   }
 
   _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
@@ -144,30 +150,56 @@ export class EdgeProvider extends Bridgeable {
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
+    const allObjects = (allowedCurrencyCodes ?? ['']).every(code => typeof code === 'object')
+    const allStrings = (allowedCurrencyCodes ?? ['']).every(code => typeof code === 'string')
+
+    if (!allObjects && !allStrings) {
+      throw new Error('Cannot mix string and object currency specifiers')
+    }
+
+    const allowedAssets = upgradeExtendedCurrencyCodes(this._state.core.account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
+    if (allowedAssets == null) {
+      throw new Error('No allowed assets specified')
+    }
+
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        showCreateWallet
-        allowedAssets={upgradeExtendedCurrencyCodes(this._state.core.account, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)}
-        headerTitle={s.strings.choose_your_wallet}
-      />
+      <WalletListModal bridge={bridge} showCreateWallet allowedAssets={allowedAssets} headerTitle={s.strings.choose_your_wallet} />
     ))
 
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
-      this._dispatch(selectWallet(walletId, currencyCode))
-      const { pluginId } = this._state.core.account.currencyWallets[walletId].currencyInfo
+      this.selectedWallet = this._state.core.account.currencyWallets[walletId]
+      if (this.selectedWallet == null) throw new Error(`Missing wallet for walletId`)
+      const chainCode = this.selectedWallet.currencyInfo.currencyCode
+      const tokenCode = currencyCode
+      const { pluginId } = this.selectedWallet.currencyInfo
       const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
 
-      // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
-      if (allowedCurrencyCodes != null && allowedCurrencyCodes.length > 0 && allowedCurrencyCodes.every(code => typeof code === 'object')) {
+      this.selectedCurrencyCode = currencyCode
+      this.selectedChainCode = chainCode
+
+      const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)
+      if (unfixCode != null) {
+        return unfixCode
+      }
+
+      if (allObjects) {
+        // If allowedCurrencyCodes is an array of EdgeTokenIdExtended objects
         return {
           pluginId,
           tokenId,
           currencyCode
         }
       }
-      return unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId) ?? currencyCode
+
+      const flowHack: any = allowedCurrencyCodes
+      const stringCodes: string[] = flowHack
+      const returnCurrencyCode = getReturnCurrencyCode(stringCodes, chainCode, tokenCode)
+
+      if (returnCurrencyCode == null) {
+        throw new Error(`Internal error. Tokencode ${tokenCode} selected but not in allowedCurrencyCodes`)
+      }
+      return returnCurrencyCode
     }
 
     throw new Error(s.strings.user_closed_modal_no_wallet)
@@ -175,8 +207,7 @@ export class EdgeProvider extends Bridgeable {
 
   // Get an address from the user's wallet
   async getReceiveAddress(options: EdgeGetReceiveAddressOptions): Promise<EdgeReceiveAddress> {
-    const edgeWallet: EdgeCurrencyWallet = this._state.core.account.currencyWallets[this._state.ui.wallets.selectedWalletId]
-    const receiveAddress = await edgeWallet.getReceiveAddress()
+    const receiveAddress = await this.selectedWallet.getReceiveAddress()
     if (options && options.metadata) {
       receiveAddress.metadata = options.metadata
     }
@@ -184,8 +215,8 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async getCurrentWalletInfo(): Promise<WalletDetails> {
-    const edgeWallet = this._state.core.account.currencyWallets[this._state.ui.wallets.selectedWalletId]
-    const currencyCode = this._state.ui.wallets.selectedCurrencyCode
+    const edgeWallet = this.selectedWallet
+    const currencyCode = this.selectedCurrencyCode
     const walletName = edgeWallet.name ?? ''
     const receiveAddress = await edgeWallet.getReceiveAddress()
     const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
@@ -195,6 +226,7 @@ export class EdgeProvider extends Bridgeable {
       name: walletName,
       pluginId: edgeWallet.currencyInfo.pluginId,
       receiveAddress,
+      chainCode: this.selectedChainCode,
       currencyCode,
       fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
       currencyIcon: icons.symbolImage,
@@ -264,16 +296,14 @@ export class EdgeProvider extends Bridgeable {
 
   async getWalletHistory() {
     // Get Wallet Info
-    const { currencyWallets } = this._state.core.account
-    const edgeWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-    const currencyCode = this._state.ui.wallets.selectedCurrencyCode
+    const currencyCode = this.selectedCurrencyCode
 
     // Prompt user with yes/no modal for permission
     const confirmTxShare = await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fragment_wallets_export_transactions}
-        message={sprintf(s.strings.transaction_history_permission, edgeWallet.name ?? '')}
+        message={sprintf(s.strings.transaction_history_permission, this.selectedWallet.name ?? '')}
         buttons={{
           ok: { label: s.strings.yes },
           cancel: { label: s.strings.no }
@@ -285,10 +315,10 @@ export class EdgeProvider extends Bridgeable {
     }
 
     // Grab transactions from current wallet
-    const fiatCurrencyCode = edgeWallet.fiatCurrencyCode
-    const balance = edgeWallet.balances[currencyCode] ?? '0'
+    const fiatCurrencyCode = this.selectedWallet.fiatCurrencyCode
+    const balance = this.selectedWallet.balances[currencyCode] ?? '0'
 
-    const txs = await edgeWallet.getTransactions({ currencyCode })
+    const txs = await this.selectedWallet.getTransactions({ currencyCode })
     const transactions: EdgeTransaction[] = []
     for (const tx of txs) {
       const newTx: EdgeTransaction = {
@@ -317,14 +347,10 @@ export class EdgeProvider extends Bridgeable {
 
   // Request that the user spend to an address or multiple addresses
   async requestSpend(spendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
-    const { currencyWallets } = this._state.core.account
-    const edgeWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-
-    const { currencyCode = edgeWallet.currencyInfo.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
+    const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
     // Prepare the internal spend request:
     const info: GuiMakeSpendInfo = {
-      currencyCode,
       customNetworkFee,
       metadata,
       lockInputs,
@@ -337,36 +363,34 @@ export class EdgeProvider extends Bridgeable {
       if (spendTarget.nativeAmount != null) {
         nativeAmount = spendTarget.nativeAmount
       } else if (spendTarget.exchangeAmount != null) {
-        nativeAmount = await edgeWallet.denominationToNative(spendTarget.exchangeAmount, currencyCode)
+        nativeAmount = await this.selectedWallet.denominationToNative(spendTarget.exchangeAmount, this.selectedCurrencyCode)
       }
 
       const spendTargetObj: EdgeSpendTarget = { ...spendTarget, nativeAmount }
       if (uniqueIdentifier !== null) spendTargetObj.uniqueIdentifier = uniqueIdentifier
       edgeSpendTargets.push(spendTargetObj)
       console.log(
-        `requestSpend currencycode ${currencyCode} and spendTarget.publicAddress ${spendTarget.publicAddress || ''} and uniqueIdentifier ${
-          uniqueIdentifier || ''
-        }`
+        `requestSpend ${this.selectedChainCode}-${this.selectedCurrencyCode} and spendTarget.publicAddress ${
+          spendTarget.publicAddress || ''
+        } and uniqueIdentifier ${uniqueIdentifier || ''}`
       )
     }
     info.spendTargets = edgeSpendTargets
 
     // Launch:
-    return this._makeSpendRequest(info, edgeWallet, orderId, this._state.ui.wallets.selectedCurrencyCode)
+    return this._makeSpendRequest(info, this.selectedWallet, orderId, this.selectedCurrencyCode)
   }
 
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
     console.log(`requestSpendUri ${uri}`)
-    const { currencyWallets } = this._state.core.account
-    const edgeWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
 
-    const result: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(uri)
+    const result: EdgeParsedUri & { paymentProtocolURL?: string } = await this.selectedWallet.parseUri(uri)
     const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchBitPay(result.paymentProtocolURL, { wallet: edgeWallet, metadata }).catch(showError)
+      await launchBitPay(result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(showError)
       return
     }
 
@@ -382,17 +406,16 @@ export class EdgeProvider extends Bridgeable {
     }
 
     // Launch:
-    return this._makeSpendRequest(info, edgeWallet, orderId, this._state.ui.wallets.selectedCurrencyCode)
+    return this._makeSpendRequest(info, this.selectedWallet, orderId, this.selectedCurrencyCode)
   }
 
   // log body and signature and pubic address and final message (returned from signMessage)
   // log response afterwards line 451
   async signMessage(message: string) /* EdgeSignedMessage */ {
     console.log(`signMessage message:***${message}***`)
-    const { currencyWallets } = this._state.core.account
-    const edgeWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-    const { publicAddress } = await edgeWallet.getReceiveAddress()
-    const signedMessage = await edgeWallet.otherMethods.signMessageBase64(message, publicAddress)
+
+    const { publicAddress } = await this.selectedWallet.getReceiveAddress()
+    const signedMessage = await this.selectedWallet.otherMethods.signMessageBase64(message, publicAddress)
     console.log(`signMessage public address:***${publicAddress}***`)
     console.log(`signMessage signedMessage:***${signedMessage}***`)
     return signedMessage
@@ -563,15 +586,15 @@ export class EdgeProvider extends Bridgeable {
  * This one serves a public-facing API,
  * so it will potentially need to stick around forever.
  */
-function upgradeExtendedCurrencyCodes(
-  account: EdgeAccount,
+export function upgradeExtendedCurrencyCodes(
+  currencyConfigMap: CurrencyConfigMap,
   fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeTokenId[] | void {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   // Grab all relevant tokens from the account:
-  const lookup = makeCurrencyCodeTable(account)
+  const codeLookup = makeCurrencyCodeTable(currencyConfigMap)
 
   const out: EdgeTokenId[] = []
   for (const code of currencyCodes) {
@@ -586,13 +609,27 @@ function upgradeExtendedCurrencyCodes(
       const [parentCode, tokenCode] = code.split('-')
 
       if (tokenCode == null) {
-        // It's a plain code, like "REP", so add all matches:
-        out.push(...lookup(parentCode))
+        // It's a plain code, like "BTC" or "USDC". If the code matches a chain (ie. "BTC, "ETH", or "DOGE"), add that to the list.
+        // Otherwise, code is a token. Only add it to the list if there's a matching chainCode of "ETH" and it doesn't match any
+        // mainnet coin.
+        //
+        // For all other chains, tokenCodes need to be specified with their parent chain. ie "MATIC-USDC"
+
+        // Find all the matching coins that are parent chains
+        const mainnets = codeLookup(parentCode).filter(match => match.tokenId == null)
+
+        // Find all the matching coins that are tokens of ETH
+        const ethParent = codeLookup(parentCode).filter(match => match.pluginId === 'ethereum' && match.tokenId != null)
+
+        // If there is a match for both mainnet coins and ETH tokens, then don't add this currencyCode
+        if (mainnets.length > 0 && ethParent.length > 0) continue
+
+        out.push(...mainnets, ...ethParent)
       } else {
         // It's a scoped code, like "ETH-REP", so filter using the parent:
-        const parent = lookup(parentCode).find(match => match.tokenId == null)
+        const parent = codeLookup(parentCode).find(match => match.tokenId == null)
         if (parent == null) continue
-        out.push(...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
+        out.push(...codeLookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
       }
     } else {
       const { pluginId, tokenId, currencyCode } = code
@@ -602,7 +639,7 @@ function upgradeExtendedCurrencyCodes(
         out.push({ pluginId, tokenId })
       } else {
         // The object contains a scoped currency code:
-        out.push(...lookup(currencyCode).filter(match => match.pluginId === pluginId))
+        out.push(...codeLookup(currencyCode).filter(match => match.pluginId === pluginId))
       }
     }
   }
@@ -612,4 +649,23 @@ function upgradeExtendedCurrencyCodes(
 
 function unfixCurrencyCode(fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {}, pluginId: string, tokenId?: string): string | void {
   return Object.keys(fixCurrencyCodes).find(uid => fixCurrencyCodes[uid].pluginId === pluginId && fixCurrencyCodes[uid].tokenId === tokenId)
+}
+
+export function getReturnCurrencyCode(allowedCurrencyCodes: string[] | void, chainCode: string, tokenCode: string): string | void {
+  let returnCurrencyCode
+
+  // See if there's a match with a double code
+  returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === `${chainCode}-${tokenCode}`)
+
+  if (returnCurrencyCode == null) {
+    if (chainCode === tokenCode) {
+      // Try to match mainnet single codes if a mainnet coin was chosen
+      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === chainCode)
+    } else if (chainCode === 'ETH') {
+      // Special case for ETH. Users can specify a single code token
+      returnCurrencyCode = (allowedCurrencyCodes ?? []).find(m => m === tokenCode)
+    }
+  }
+
+  return returnCurrencyCode
 }

@@ -3,11 +3,13 @@
 import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { showSendLogsModal } from '../../actions/LogActions.js'
+import { logoutRequest } from '../../actions/LoginActions.js'
 import {
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
@@ -23,11 +25,14 @@ import { config } from '../../theme/appConfig.js'
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
+import { Collapsable } from '../common/Collapsable.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
-import { type ThemeProps, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, changeTheme, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
@@ -56,7 +61,8 @@ type DispatchProps = {
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void,
   showRestoreWalletsModal: () => void,
   showUnlockSettingsModal: () => void,
-  toggleDeveloperMode: (developerModeOn: boolean) => void
+  toggleDeveloperMode: (developerModeOn: boolean) => void,
+  logoutRequest: () => Promise<void>
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -71,11 +77,11 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    const theme = getTheme()
+
     const { logSettings } = this.props.context
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID,
-      darkTheme: theme === config.darkTheme,
+      darkTheme: this.props.theme === config.darkTheme,
       defaultLogLevel: logSettings.defaultLogLevel
     }
   }
@@ -135,6 +141,41 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   handleChangeRecovery = (): void => {
     const { navigation } = this.props
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery')
+  }
+
+  handleDeleteAccount = async (): Promise<void> => {
+    if (this.props.isLocked) return this.handleUnlock()
+
+    const approveDelete = await Airship.show(bridge => (
+      <ConfirmContinueModal
+        bridge={bridge}
+        body={sprintf(s.strings.delete_account_body, config.appName, config.supportSite)}
+        title={s.strings.delete_account_title}
+        isSkippable
+        warning
+      />
+    ))
+
+    if (approveDelete !== true) return
+
+    const { username } = this.props.account
+    await Airship.show(bridge => (
+      <TextInputModal
+        bridge={bridge}
+        submitLabel={s.strings.string_delete}
+        message={sprintf(s.strings.delete_account_verification_body, username)}
+        title={s.strings.delete_account_title}
+        warning
+        onSubmit={async text => {
+          if (text !== username) return s.strings.delete_account_verification_error
+
+          await this.props.account.deleteRemoteAccount()
+          await this.props.logoutRequest()
+          await this.props.context.deleteLocalAccount(username)
+          return true
+        }}
+      />
+    ))
   }
 
   handleExchangeSettings = (): void => {
@@ -207,6 +248,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   render() {
     const { account, theme, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
+    const styles = getStyles(theme)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
@@ -234,6 +276,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
 
+          <Collapsable minHeightRem={0} maxHeightRem={3.25} isCollapsed={this.props.isLocked}>
+            <SettingsTappableRow disabled={this.props.isLocked} onPress={this.handleDeleteAccount}>
+              <Text style={styles.text}>{s.strings.delete_account_title}</Text>
+            </SettingsTappableRow>
+          </Collapsable>
+
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
           <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
           <SettingsTappableRow label={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
@@ -257,7 +305,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
             return (
               <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-                <CryptoIcon marginRem={[0.5, 0]} pluginId={pluginId} sizeRem={1.25} />
+                <CryptoIcon marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} sizeRem={1.25} />
               </SettingsTappableRow>
             )
           })}
@@ -286,6 +334,18 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     )
   }
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  text: {
+    flexGrow: 1,
+    flexShrink: 1,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'left',
+    paddingHorizontal: theme.rem(0.5),
+    color: theme.dangerText
+  }
+}))
 
 export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
@@ -326,6 +386,9 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     toggleDeveloperMode(developerModeOn: boolean) {
       dispatch(setDeveloperModeOn(developerModeOn))
+    },
+    async logoutRequest() {
+      await dispatch(logoutRequest())
     }
   })
 )(withTheme(SettingsSceneComponent))

@@ -248,14 +248,16 @@ export const mergeSettings = (
   }
 }
 
-export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo('login')
-  Airship.clear()
-  const state = getState()
-  const { account } = state.core
-  dispatch({ type: 'LOGOUT', data: { username } })
-  if (typeof account.logout === 'function') account.logout()
-}
+export const logoutRequest =
+  (username?: string) =>
+  async (dispatch: Dispatch, getState: GetState): Promise<void> => {
+    Actions.popTo('login')
+    Airship.clear()
+    const state = getState()
+    const { account } = state.core
+    dispatch({ type: 'LOGOUT', data: { username } })
+    if (typeof account.logout === 'function') await account.logout()
+  }
 
 /**
  * Finds the currency info for a currency code.
@@ -287,6 +289,8 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
       data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
     })
   }
+  global.logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
+
   return wallet
 }
 

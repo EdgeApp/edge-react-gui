@@ -1,6 +1,45 @@
 // @flow
 
 const strings = {
+  // Action Queue Display Info
+  // Unknown
+  action_queue_display_unknown_title: `Unknown action`,
+  action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
+  // seq
+  action_queue_display_seq_title: `Action sequence`,
+  action_queue_display_seq_message: `Doing a sequence of actions`,
+  // par
+  action_queue_display_par_title: `Action concurrency`,
+  action_queue_display_par_message: `Doing multiple things at once`,
+  // exchange_buy
+  action_queue_display_exchange_buy_title: `Purchase %s`,
+  action_queue_display_exchange_buy_message: `Purchase %1$s from %3$s.`,
+  // exchange_sell
+  action_queue_display_exchange_sell_title: `Deposit funds to bank`,
+  action_queue_display_exchange_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
+  // loan_borrow
+  action_queue_display_loan_borrow_title: `Take out loan`,
+  action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,
+  // loan_deposit
+  action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
+  action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
+  // loan_repay
+  action_queue_display_loan_repay_title: `Repay loan principal`,
+  action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
+  // loan_withdraw
+  action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
+  action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
+  // swap
+  action_queue_display_swap_title: `Swap %1$s into %2$s`,
+  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
+  // toast
+  action_queue_display_toast_title: `Toast`,
+  action_queue_display_toast_message: `Show toast message`,
+  // delay
+  action_queue_display_delay_title: 'Wait',
+  action_queue_display_delay_message_pending: 'Wait for %1$s millesconds',
+  action_queue_display_delay_message_doing: 'Wait until %1$s',
+
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
@@ -98,6 +137,9 @@ const strings = {
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
+  request_dot_minimum_notification_body:
+    'Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.',
+  request_dot_minimum_notification_alert_body: 'This wallet will always require a 1 DOT minimum',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
@@ -163,6 +205,7 @@ const strings = {
   create_wallet_import_input_key_prompt: 'Private Key',
   create_wallet_import_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated wallet',
   create_wallet_import_input_key_or_seed_prompt: 'Private Key or Private Seed',
+  create_wallet_import_polkadot_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated ed25519 wallet',
   create_wallet_import_active_key_input_prompt: 'Active Private Key',
   create_wallet_import_active_key_instructions: 'Enter your active private key to verify and restore the associated wallet:',
   create_wallet_import_successful: 'Import Successful!',
@@ -343,6 +386,7 @@ const strings = {
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
+  string_forget: 'Forget',
   string_delete: 'Delete',
   string_archive: 'Archive',
   string_archive_wallet: 'Archive Wallet',
@@ -387,6 +431,7 @@ const strings = {
   string_first_doge_wallet_name: 'My Doge',
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',
+  string_first_polkadot_wallet_name: 'My Polkadot',
   string_first_polygon_wallet_name: 'My Polygon',
   string_first_avalanche_wallet_name: 'My Avalanche',
   my_crypto_wallet_name: 'My %s',
@@ -507,6 +552,7 @@ const strings = {
   transaction_details_exchange_status_page: 'Exchange Status Page',
   transaction_details_exchange_support: 'Exchange Support',
   transaction_details_exchange_support_request: '%s Support Request',
+  transaction_details_fee_warning: 'High Network Fees',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
@@ -607,9 +653,9 @@ const strings = {
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
   account: 'Account',
-  delete_account_header: 'Delete Account',
-  delete_username_account:
-    'Delete %1$s on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without a 2FA reset which takes 7 days.',
+  forget_account_title: 'Forget Account',
+  forget_account_message_common:
+    'Are you sure you want to forget the account %1$s from this device? PIN login will no longer work and you will need to login with your username and password.\n\nIf 2FA is enabled for this account, you will need to either enter your 2FA code or be locked out for 7 days before being able to regain access.',
   no: 'No',
   yes: 'Yes',
   swap_terms_accept_button: 'Accept',
@@ -797,8 +843,8 @@ const strings = {
     'NOTE: If you had custom nodes enabled, those wallets will not sync until corrected.',
 
   error_boundary_title: 'Oops!',
-  error_boundary_message:
-    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
+  error_boundary_message_s:
+    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -826,6 +872,12 @@ const strings = {
   scan_as_in_scan_barcode: 'Scan',
   enter_as_in_enter_address_with_keyboard: 'Enter',
 
+  // Account deletion:
+  delete_account_title: 'Delete Account',
+  delete_account_body:
+    'Deleting your %1$s account will make any funds in your wallets inaccessible. Any future funds that these wallets may receive will also be inaccessible.\n\nAccounts created with %1$s buy / sell partners will remain active. You will need to request deletion for any such accounts directly with the appropriate partners.\n\nIf this account has logged into any other devices, the private keys and information on those devices will remain accessible until the application has been deleted from those devices.\n\nDeletion of this account will make the username available to new accounts.\n\nIf you have any questions or concerns, please contact us at %2$s prior to deleting your account.',
+  delete_account_verification_body: 'To delete your account, please enter your username %1$s',
+  delete_account_verification_error: 'Username does not match',
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
   contacts_permission_modal_body_1: '%1$s would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
@@ -946,6 +998,17 @@ const strings = {
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
+
+  fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
+  fiat_plugin_buy_currencycode: 'Buy %s',
+  fiat_plugin_amount_currencycode: 'Amount %s',
+  fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
+  fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
+  fiat_plugin_asset_unsupported: 'Asset Unsupported',
+  fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
+  fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
+  fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
+  fiat_plugin_fetching_assets: 'Fetching supported assets',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

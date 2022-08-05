@@ -37,7 +37,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     setTimeout(() => {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} currencyCode="" isToken={false} navigation={navigation} walletId={walletId} />)
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} navigation={navigation} walletId={walletId} />)
   })
 
   // rendering -----------------------------------------------------------

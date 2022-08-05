@@ -13,6 +13,7 @@ import { ModalMessage } from '../components/themed/ModalParts.js'
 import s from '../locales/strings.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { type NavigationProp } from '../types/routerTypes.js'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers.js'
 import { validatePassword } from './AccountActions.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
@@ -30,7 +31,7 @@ export type WalletListMenuKey =
   | 'rawDelete'
   | string // for split keys like splitBCH, splitETH, etc.
 
-export function walletListMenuAction(navigation: NavigationProp<'walletList'>, walletId: string, option: WalletListMenuKey, currencyCode?: string) {
+export function walletListMenuAction(navigation: NavigationProp<'walletList'>, walletId: string, option: WalletListMenuKey, tokenId?: string) {
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
@@ -144,7 +145,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
         const wallet = currencyWallets[walletId]
         navigation.navigate('transactionsExport', {
           sourceWallet: wallet,
-          currencyCode: currencyCode ?? ''
+          currencyCode: getCurrencyCode(wallet, tokenId)
         })
       }
     }
@@ -160,11 +161,13 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
           validatePassword({
             title: s.strings.fragment_wallets_get_seed_title,
             submitLabel: s.strings.fragment_wallets_get_seed_wallet,
-            warning: s.strings.fragment_wallets_get_seed_warning_message
+            warningMessage: s.strings.fragment_wallets_get_seed_warning_message
           })
         )
 
         if (passwordValid) {
+          const { name, id, type } = wallet
+          global.logActivity(`Show Master Private Key: ${account.username} -- ${name ?? ''} -- ${type} -- ${id}`)
           // Add a copy button only for development
           let devButtons = {}
           if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
@@ -191,7 +194,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
         const passwordValid = await dispatch(
           validatePassword({
             title: s.strings.fragment_wallets_get_raw_keys_title,
-            warning: s.strings.fragment_wallets_get_raw_keys_warning_message,
+            warningMessage: s.strings.fragment_wallets_get_raw_keys_warning_message,
             submitLabel: s.strings.string_get_raw_keys
           })
         )

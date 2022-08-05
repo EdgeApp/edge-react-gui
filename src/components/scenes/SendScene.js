@@ -337,7 +337,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { lockTilesMap = {} } = route.params
 
     const { wallet, selectedCurrencyCode } = this.state
-    const name = getWalletName(wallet)
+    const name = wallet == null ? '' : getWalletName(wallet)
 
     return (
       <Tile

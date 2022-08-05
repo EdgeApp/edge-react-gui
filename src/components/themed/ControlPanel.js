@@ -19,13 +19,14 @@ import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
-import { useWatchContext } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
+import { type EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { ScanModal } from '../modals/ScanModal'
@@ -38,7 +39,7 @@ import { DividerLine } from './DividerLine'
 
 type Props = { navigation: NavigationProp<'controlPanel'> }
 
-const SweepableCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
@@ -52,6 +53,7 @@ export function ControlPanel(props: Props) {
 
   // ---- Redux State ----
 
+  const account = useSelector(state => state.core.account)
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -63,7 +65,7 @@ export function ControlPanel(props: Props) {
   /// ---- Local State ----
 
   // Maintain the list of usernames:
-  const localUsers = useWatchContext(context, 'localUsers')
+  const localUsers = useWatch(context, 'localUsers')
   const usernames = useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
 
   // User List dropdown/open state:
@@ -82,11 +84,11 @@ export function ControlPanel(props: Props) {
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.delete_account_header}
-        message={sprintf(s.strings.delete_username_account, username)}
+        title={s.strings.forget_account_title}
+        message={sprintf(s.strings.forget_account_message_common, username)}
         buttons={{
           ok: {
-            label: s.strings.string_delete,
+            label: s.strings.string_forget,
             async onPress() {
               await dispatch(deleteLocalAccount(username))
               return true
@@ -104,8 +106,28 @@ export function ControlPanel(props: Props) {
   }
 
   const handleSweep = () => {
+    // Only allow native assets, filtered by sweepable currency codes
+    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
+      .filter(pluginId => {
+        const currencyConfig = account.currencyConfig[pluginId]
+        return SWEEPABLE_CURRENCY_CODES.some(
+          sweepableCurrencyCode => currencyConfig.currencyInfo.currencyCode.toLowerCase() === sweepableCurrencyCode.toLowerCase()
+        )
+      })
+      .map(pluginId =>
+        // Return an "EdgeTokenId" specifying that this must NOT be a token
+        // (implies it must be a supported native asset)
+        ({ pluginId, tokenId: undefined })
+      )
+
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={SweepableCurrencyCodes} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        allowedAssets={allowedAssets}
+        allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
+        showCreateWallet
+      />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))

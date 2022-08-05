@@ -5,7 +5,7 @@ import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler.js'
-import { useWatchCurrencyConfig } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import { useMemo } from '../../types/reactHooks.js'
 
 /**
@@ -46,7 +46,7 @@ export function maybeCurrencySetting<T, X>(
 
     const defaultSetting = useMemo(() => asMaybeSetting(currencyConfig.currencyInfo.defaultSettings), [currencyConfig])
 
-    const userSettings = useWatchCurrencyConfig(currencyConfig, 'userSettings')
+    const userSettings = useWatch(currencyConfig, 'userSettings')
     const setting = useMemo(() => asMaybeSetting(userSettings), [userSettings])
 
     const handleUpdate = useHandler(async settings =>

@@ -40,6 +40,7 @@ export function filterGuiPluginJson(cleanJson: GuiPluginJson, platform: string, 
     if (row.pluginId != null) merged.pluginId = row.pluginId
     if (row.deepPath != null) merged.deepPath = row.deepPath
     if (row.deepQuery != null) merged.deepQuery = { ...merged.deepQuery, ...row.deepQuery }
+    if (row.paymentType != null) merged.paymentType = row.paymentType
     if (row.title != null) merged.title = row.title
     if (row.description != null) merged.description = row.description
     if (row.partnerIconPath != null) merged.partnerIconPath = row.partnerIconPath

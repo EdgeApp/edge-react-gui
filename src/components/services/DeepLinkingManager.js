@@ -46,7 +46,7 @@ export function DeepLinkingManager(props: Props) {
     if (url != null) handleUrl(url)
 
     return () => listener.remove()
-  })
+  }, [])
 
   return null
 }

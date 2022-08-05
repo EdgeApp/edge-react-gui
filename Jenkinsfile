@@ -89,6 +89,7 @@ pipeline {
           branch 'develop'
           branch 'staging'
           branch 'master'
+          branch 'test-cheddar'
           branch 'test-feta'
           branch 'test-gouda'
           branch 'test-halloumi'

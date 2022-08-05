@@ -21,10 +21,12 @@ type Props = StateProps & OwnProps
 export class ChangePasswordComponent extends React.Component<Props> {
   render() {
     const { context, account, navigation } = this.props
-    const handleComplete = () => navigation.goBack()
-
+    const handleComplete = () => {
+      global.logActivity(`Password Changed: ${account.username}`)
+      navigation.goBack()
+    }
     return (
-      <SceneWrapper hasTabs={false} background="body">
+      <SceneWrapper hasTabs={false} background="theme">
         <ChangePasswordScreen account={account} context={context} onComplete={handleComplete} onCancel={handleComplete} showHeader={false} />
       </SceneWrapper>
     )

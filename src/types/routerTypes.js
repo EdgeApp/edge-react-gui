@@ -6,6 +6,7 @@ import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
 import type { BorrowEngine } from '../plugins/borrow-plugins/types.js'
+import { type FiatPluginEnterAmountResponse, type FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
 import {
@@ -185,6 +186,17 @@ export type ParamList = {
   },
   makeLoanPaymentScene: {|
     borrowEngine: BorrowEngine
+  },
+  guiPluginEnterAmount: {|
+    headerTitle: string,
+    onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>,
+    label1: string,
+    label2: string,
+    onChangeText: (fieldNum: number, value: string) => Promise<void>,
+    convertValue: (sourceFieldNum: number, value: string) => Promise<string | void>,
+    getMethods?: (methods: FiatPluginGetMethodsResponse) => void,
+    initialAmount1?: string,
+    headerIconUri?: string
   |},
   manageTokens: {|
     walletId: string
