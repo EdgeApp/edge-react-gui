@@ -183,7 +183,7 @@ export const LoanCreateScene = (props: Props) => {
 
   // Required Collateral
   // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
-  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio), [borrowAmountFiat, ltvRatio])
+  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION), [borrowAmountFiat, ltvRatio])
 
   // Deposit + Borrow Request Data
   // Convert collateral in fiat -> collateral crypto
