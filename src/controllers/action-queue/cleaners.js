@@ -6,7 +6,24 @@
 import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { base64 } from 'rfc4648'
 
-import { type ActionEffect, type ActionOp, type ActionProgram, type ActionProgramState } from './types'
+import {
+  type ActionEffect,
+  type ActionOp,
+  type ActionProgram,
+  type ActionProgramState,
+  type BroadcastTxActionOp,
+  type DelayActionOp,
+  type ExchangeBuyActionOp,
+  type ExchangeSellActionOp,
+  type LoanBorrowActionOp,
+  type LoanDepositActionOp,
+  type LoanRepayActionOp,
+  type LoanWithdrawActionOp,
+  type ParActionOp,
+  type SeqActionOp,
+  type SwapActionOp,
+  type ToastActionOp
+} from './types'
 
 const asBase64 = asCodec(
   raw => base64.parse(asString(raw)),
@@ -43,126 +60,146 @@ const asError = asCodec(
   asJsonError
 )
 
+const asSeqActionOp: Cleaner<SeqActionOp> = asObject({
+  type: asValue('seq'),
+  actions: asArray((raw: any) => asActionOp(raw))
+})
+const asParActionOp: Cleaner<ParActionOp> = asObject({
+  type: asValue('par'),
+  actions: asArray((raw: any) => asActionOp(raw))
+})
+const asBroadcastTxActionOp: Cleaner<BroadcastTxActionOp> = asObject({
+  type: asValue('broadcast-tx'),
+  pluginId: asString,
+  rawTx: asBase64
+})
+const asExchangeBuyActionOp: Cleaner<ExchangeBuyActionOp> = asObject({
+  type: asValue('exchange-buy'),
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString),
+  exchangePluginId: asString
+})
+const asExchangeSellActionOp: Cleaner<ExchangeSellActionOp> = asObject({
+  type: asValue('exchange-sell'),
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString),
+  exchangePluginId: asString
+})
+const asLoanBorrowActionOp: Cleaner<LoanBorrowActionOp> = asObject({
+  type: asValue('loan-borrow'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asLoanDepositActionOp: Cleaner<LoanDepositActionOp> = asObject({
+  type: asValue('loan-deposit'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asLoanRepayActionOp: Cleaner<LoanRepayActionOp> = asObject({
+  type: asValue('loan-repay'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asLoanWithdrawActionOp: Cleaner<LoanWithdrawActionOp> = asObject({
+  type: asValue('loan-withdraw'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asSwapActionOp: Cleaner<SwapActionOp> = asObject({
+  type: asValue('swap'),
+  fromWalletId: asString,
+  toWalletId: asString,
+  fromTokenId: asOptional(asString),
+  toTokenId: asOptional(asString),
+  nativeAmount: asString,
+  amountFor: asValue('from', 'to')
+})
+const asToastActionOp: Cleaner<ToastActionOp> = asObject({
+  type: asValue('toast'),
+  message: asString
+})
+const asDelayActionOp: Cleaner<DelayActionOp> = asObject({
+  type: asValue('delay'),
+  ms: asNumber
+})
 export const asActionOp: Cleaner<ActionOp> = asEither(
-  asObject({
-    type: asValue('seq'),
-    actions: asArray((raw: any) => asActionOp(raw))
-  }),
-  asObject({
-    type: asValue('par'),
-    actions: asArray((raw: any) => asActionOp(raw))
-  }),
-  asObject({
-    type: asValue('broadcast-tx'),
-    pluginId: asString,
-    rawTx: asBase64
-  }),
-  asObject({
-    type: asValue('exchange-buy'),
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString),
-    exchangePluginId: asString
-  }),
-  asObject({
-    type: asValue('exchange-sell'),
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString),
-    exchangePluginId: asString
-  }),
-  asObject({
-    type: asValue('loan-borrow'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('loan-deposit'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('loan-repay'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('loan-withdraw'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('swap'),
-    fromWalletId: asString,
-    toWalletId: asString,
-    fromTokenId: asOptional(asString),
-    toTokenId: asOptional(asString),
-    nativeAmount: asString,
-    amountFor: asValue('from', 'to')
-  }),
-  asObject({
-    type: asValue('toast'),
-    message: asString
-  }),
-  asObject({
-    type: asValue('delay'),
-    ms: asNumber
-  })
+  asSeqActionOp,
+  asParActionOp,
+  asBroadcastTxActionOp,
+  asExchangeBuyActionOp,
+  asExchangeSellActionOp,
+  asLoanBorrowActionOp,
+  asLoanDepositActionOp,
+  asLoanRepayActionOp,
+  asLoanWithdrawActionOp,
+  asSwapActionOp,
+  asToastActionOp,
+  asDelayActionOp
 )
 
 //
 // Action Effects
 //
 
+const asSeqEffect = asObject({
+  type: asValue('seq'),
+  opIndex: asNumber,
+  childEffect: (raw: any) => asActionEffect(raw)
+})
+const asParEffect = asObject({
+  type: asValue('par'),
+  childEffects: asArray(raw => asActionEffect(raw))
+})
+const asAddressBalanceEffect = asObject({
+  type: asValue('address-balance'),
+  address: asString,
+  aboveAmount: asOptional(asString),
+  belowAmount: asOptional(asString),
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asTxConfsEffect = asObject({
+  type: asValue('tx-confs'),
+  txId: asString,
+  walletId: asString,
+  confirmations: asNumber
+})
+const asPriceLevelEffect = asObject({
+  type: asValue('price-level'),
+  currencyPair: asString,
+  aboveRate: asOptional(asNumber),
+  belowRate: asOptional(asNumber)
+})
+const asDoneEffect = asObject({
+  type: asValue('done'),
+  error: asOptional(asError)
+})
+const asUnixtimeEffect = asObject({
+  type: asValue('unixtime'),
+  timestamp: asNumber
+})
+const asNoopEffect = asObject({
+  type: asValue('noop')
+})
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
-  asObject({
-    type: asValue('seq'),
-    opIndex: asNumber,
-    childEffect: (raw: any) => asActionEffect(raw)
-  }),
-  asObject({
-    type: asValue('par'),
-    childEffects: asArray(raw => asActionEffect(raw))
-  }),
-  asObject({
-    type: asValue('address-balance'),
-    address: asString,
-    aboveAmount: asOptional(asString),
-    belowAmount: asOptional(asString),
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('tx-confs'),
-    txId: asString,
-    walletId: asString,
-    confirmations: asNumber
-  }),
-  asObject({
-    type: asValue('price-level'),
-    currencyPair: asString,
-    aboveRate: asOptional(asNumber),
-    belowRate: asOptional(asNumber)
-  }),
-  asObject({
-    type: asValue('done'),
-    error: asOptional(asError)
-  }),
-  asObject({
-    type: asValue('unixtime'),
-    timestamp: asNumber
-  }),
-  asObject({
-    type: asValue('noop')
-  })
+  asSeqEffect,
+  asParEffect,
+  asAddressBalanceEffect,
+  asTxConfsEffect,
+  asPriceLevelEffect,
+  asDoneEffect,
+  asUnixtimeEffect,
+  asNoopEffect
 )
 
 //
