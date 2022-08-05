@@ -56,13 +56,30 @@ export const LoanDashboardScene = (props: Props) => {
 
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
 
-  // Borrow Info
-  const [refreshCount, setRefreshCount] = useState(0)
+  // Borrow Info & Auto-Refresh
+  const [timeoutId, setTimeoutId] = useState()
+  const [resetTrigger, setResetTrigger] = useState(false)
   const [borrowInfos, borrowInfosError] = useAsyncValue(async () => {
-    return isWalletsLoaded ? await getAaveBorrowInfos(borrowPlugins, account).then(filterActiveBorrowInfos) : null
-  }, [account, isWalletsLoaded, refreshCount])
+    const retVal = isWalletsLoaded
+      ? await getAaveBorrowInfos(borrowPlugins, account).then(biRes => {
+          return filterActiveBorrowInfos(biRes)
+        })
+      : null
+    return retVal
+  }, [account, isWalletsLoaded, resetTrigger])
+
   useEffect(() => {
-    setTimeout(() => setRefreshCount(count => ++count), 10000)
+    // Wait for the first load after scene mounting before starting the refresh timer
+    if (borrowInfos == null && borrowInfosError == null) return
+
+    // Clear previous timeout, setup a new one
+    if (timeoutId != null) clearTimeout(timeoutId)
+    setTimeoutId(
+      setTimeout(() => {
+        setResetTrigger(!resetTrigger)
+      }, 10000)
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [borrowInfos, borrowInfosError])
 
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)

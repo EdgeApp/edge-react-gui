@@ -4,6 +4,20 @@
 //
 // Action Operations
 //
+export type ActionOpTypes =
+  | 'seq'
+  | 'par'
+  | 'exchange-buy'
+  | 'exchange-sell'
+  | 'loan-borrow'
+  | 'loan-deposit'
+  | 'loan-repay'
+  | 'loan-withdraw'
+  | 'swap'
+  | 'toast'
+  | 'delay'
+
+export type ActionOpExecStatus = 'pending' | 'active' | 'done' | Error
 
 export type ActionOp =
   | {
@@ -81,7 +95,7 @@ export type ActionOp =
     }
 
 //
-// Action Effects
+// Action (After) Effects
 //
 
 export type ActionEffect =
@@ -122,6 +136,9 @@ export type ActionEffect =
   | {
       type: 'unixtime',
       timestamp: number
+    }
+  | {
+      type: 'init'
     }
 
 //
@@ -166,6 +183,6 @@ export type ExecutionResults = {
 export type ActionDisplayInfo = {
   title: string,
   message: string,
-  status: 'pending' | 'doing' | 'done' | Error,
+  status: ActionOpExecStatus,
   steps: ActionDisplayInfo[]
 }
