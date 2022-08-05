@@ -20,6 +20,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
   }
 
   const url = new URL(uri)
+  const betterUrl = new URL(uri, true)
 
   if (url.protocol === 'dev:') {
     return { type: 'dev', sceneName: url.pathname }
@@ -36,12 +37,9 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
   // besides the specific currency defined in the uri's scheme.
   // Even if a specific currency is found in the protocol, the BitPay protocol
   // does not care what currency the payment steps start with.
-  if (uri.includes('https:') && uri.includes('bitpay.com')) {
-    if (url.protocol !== 'https:') {
-      // If the URI started with 'bitcoin:', etc.
-      uri = uri.replace(url.protocol, '')
-      uri = uri.replace('?r=', '')
-    }
+  if (betterUrl.query.r != null && betterUrl.query.r.includes('http')) {
+    // If the URI started with 'bitcoin:', etc.
+    uri = betterUrl.query.r
     return { type: 'bitPay', uri }
   }
 
