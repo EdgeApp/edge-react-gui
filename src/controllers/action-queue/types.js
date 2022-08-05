@@ -19,125 +19,138 @@ export type ActionOpTypes =
 
 export type ActionOpExecStatus = 'pending' | 'active' | 'done' | Error
 
+export type SeqActionOp = {
+  type: 'seq',
+  actions: ActionOp[]
+}
+export type ParActionOp = {
+  type: 'par',
+  actions: ActionOp[]
+}
+export type BroadcastActionOp = {
+  type: 'broadcast-tx',
+  pluginId: string,
+  rawTx: Uint8Array
+}
+export type ExchangeBuyActionOp = {
+  type: 'exchange-buy',
+  nativeAmount: string,
+  walletId: string,
+  tokenId?: string,
+  exchangePluginId: string
+}
+export type ExchangeSellActionOp = {
+  type: 'exchange-sell',
+  nativeAmount: string,
+  walletId: string,
+  tokenId?: string,
+  exchangePluginId: string
+}
+export type LoanBorrowActionOp = {
+  type: 'loan-borrow',
+  borrowPluginId: string,
+  nativeAmount: string,
+  walletId: string,
+  tokenId?: string
+}
+export type LoanDepositActionOp = {
+  type: 'loan-deposit',
+  borrowPluginId: string,
+  nativeAmount: string,
+  walletId: string,
+  tokenId?: string
+}
+export type LoanRepayActionOp = {
+  type: 'loan-repay',
+  borrowPluginId: string,
+  nativeAmount: string,
+  walletId: string,
+  tokenId?: string
+}
+export type LoanWithdrawActionOp = {
+  type: 'loan-withdraw',
+  borrowPluginId: string,
+  nativeAmount: string,
+  walletId: string,
+  tokenId?: string
+}
+export type SwapActionOp = {
+  type: 'swap',
+  fromWalletId: string,
+  toWalletId: string,
+  fromTokenId?: string,
+  toTokenId?: string,
+  nativeAmount: string,
+  amountFor: 'from' | 'to'
+}
+// Useful for development/testing
+export type ToastActionOp = {
+  type: 'toast',
+  message: string
+}
+export type DelayActionOp = {
+  type: 'delay',
+  ms: number
+}
 export type ActionOp =
-  | {
-      type: 'seq',
-      actions: ActionOp[]
-    }
-  | {
-      type: 'par',
-      actions: ActionOp[]
-    }
-  | {
-      type: 'broadcast-tx',
-      pluginId: string,
-      rawTx: Uint8Array
-    }
-  | {
-      type: 'exchange-buy',
-      nativeAmount: string,
-      walletId: string,
-      tokenId?: string,
-      exchangePluginId: string
-    }
-  | {
-      type: 'exchange-sell',
-      nativeAmount: string,
-      walletId: string,
-      tokenId?: string,
-      exchangePluginId: string
-    }
-  | {
-      type: 'loan-borrow',
-      borrowPluginId: string,
-      nativeAmount: string,
-      walletId: string,
-      tokenId?: string
-    }
-  | {
-      type: 'loan-deposit',
-      borrowPluginId: string,
-      nativeAmount: string,
-      walletId: string,
-      tokenId?: string
-    }
-  | {
-      type: 'loan-repay',
-      borrowPluginId: string,
-      nativeAmount: string,
-      walletId: string,
-      tokenId?: string
-    }
-  | {
-      type: 'loan-withdraw',
-      borrowPluginId: string,
-      nativeAmount: string,
-      walletId: string,
-      tokenId?: string
-    }
-  | {
-      type: 'swap',
-      fromWalletId: string,
-      toWalletId: string,
-      fromTokenId?: string,
-      toTokenId?: string,
-      nativeAmount: string,
-      amountFor: 'from' | 'to'
-    }
-  // Useful for development/testing
-  | {
-      type: 'toast',
-      message: string
-    }
-  | {
-      type: 'delay',
-      ms: number
-    }
+  | SeqActionOp
+  | ParActionOp
+  | BroadcastActionOp
+  | ExchangeBuyActionOp
+  | ExchangeSellActionOp
+  | LoanBorrowActionOp
+  | LoanDepositActionOp
+  | LoanRepayActionOp
+  | LoanWithdrawActionOp
+  | SwapActionOp
+  | ToastActionOp
+  | DelayActionOp
 
 //
 // Action (After) Effects
 //
 
-export type ActionEffect =
-  | {
-      type: 'seq',
-      opIndex: number,
-      childEffect: ActionEffect
-    }
-  | {
-      type: 'par',
-      childEffects: ActionEffect[]
-    }
-  | {
-      type: 'address-balance',
-      address: string,
-      aboveAmount?: string,
-      belowAmount?: string,
-      walletId: string,
-      tokenId?: string
-    }
-  | {
-      type: 'tx-confs',
-      txId: string,
-      walletId: string,
-      confirmations: number
-    }
-  | {
-      type: 'price-level',
-      currencyPair: string,
-      aboveRate?: number,
-      belowRate?: number
-    }
-  | {
-      type: 'done',
-      error?: Error
-    }
-  // Useful for development/testing
-  | {
-      type: 'unixtime',
-      timestamp: number
-    }
-  | { type: 'noop' }
+export type SeqEffect = {
+  type: 'seq',
+  opIndex: number,
+  childEffect: ActionEffect
+}
+export type ParEffect = {
+  type: 'par',
+  childEffects: ActionEffect[]
+}
+export type AddressBalanceEffect = {
+  type: 'address-balance',
+  address: string,
+  aboveAmount?: string,
+  belowAmount?: string,
+  walletId: string,
+  tokenId?: string
+}
+export type TxConfsEffect = {
+  type: 'tx-confs',
+  txId: string,
+  walletId: string,
+  confirmations: number
+}
+export type PriceLevelEffect = {
+  type: 'price-level',
+  currencyPair: string,
+  aboveRate?: number,
+  belowRate?: number
+}
+export type DoneEffect = {
+  type: 'done',
+  error?: Error
+}
+// Useful for development/testing
+export type UnixtimeEffect = {
+  type: 'unixtime',
+  timestamp: number
+}
+export type NoopEffect = { type: 'noop' }
+
+export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | TxConfsEffect | PriceLevelEffect | DoneEffect | UnixtimeEffect | NoopEffect
 
 //
 // Action Program

@@ -43,126 +43,146 @@ const asError = asCodec(
   asJsonError
 )
 
+const asSeqActionOp = asObject({
+  type: asValue('seq'),
+  actions: asArray((raw: any) => asActionOp(raw))
+})
+const asParActionOp = asObject({
+  type: asValue('par'),
+  actions: asArray((raw: any) => asActionOp(raw))
+})
+const asBroadcastTxActionOp = asObject({
+  type: asValue('broadcast-tx'),
+  pluginId: asString,
+  rawTx: asBase64
+})
+const asExchangeBuyactionop = asObject({
+  type: asValue('exchange-buy'),
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString),
+  exchangePluginId: asString
+})
+const asExchangeSellActionOp = asObject({
+  type: asValue('exchange-sell'),
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString),
+  exchangePluginId: asString
+})
+const asLoanBorrowActionOp = asObject({
+  type: asValue('loan-borrow'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asLoanDepositActionOp = asObject({
+  type: asValue('loan-deposit'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asLoanRepayActionOp = asObject({
+  type: asValue('loan-repay'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asLoanWithdrawActionOp = asObject({
+  type: asValue('loan-withdraw'),
+  borrowPluginId: asString,
+  nativeAmount: asString,
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asSwapActionOp = asObject({
+  type: asValue('swap'),
+  fromWalletId: asString,
+  toWalletId: asString,
+  fromTokenId: asOptional(asString),
+  toTokenId: asOptional(asString),
+  nativeAmount: asString,
+  amountFor: asValue('from', 'to')
+})
+const asToastActionOp = asObject({
+  type: asValue('toast'),
+  message: asString
+})
+const asDelayActionOp = asObject({
+  type: asValue('delay'),
+  ms: asNumber
+})
 export const asActionOp: Cleaner<ActionOp> = asEither(
-  asObject({
-    type: asValue('seq'),
-    actions: asArray((raw: any) => asActionOp(raw))
-  }),
-  asObject({
-    type: asValue('par'),
-    actions: asArray((raw: any) => asActionOp(raw))
-  }),
-  asObject({
-    type: asValue('broadcast-tx'),
-    pluginId: asString,
-    rawTx: asBase64
-  }),
-  asObject({
-    type: asValue('exchange-buy'),
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString),
-    exchangePluginId: asString
-  }),
-  asObject({
-    type: asValue('exchange-sell'),
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString),
-    exchangePluginId: asString
-  }),
-  asObject({
-    type: asValue('loan-borrow'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('loan-deposit'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('loan-repay'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('loan-withdraw'),
-    borrowPluginId: asString,
-    nativeAmount: asString,
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('swap'),
-    fromWalletId: asString,
-    toWalletId: asString,
-    fromTokenId: asOptional(asString),
-    toTokenId: asOptional(asString),
-    nativeAmount: asString,
-    amountFor: asValue('from', 'to')
-  }),
-  asObject({
-    type: asValue('toast'),
-    message: asString
-  }),
-  asObject({
-    type: asValue('delay'),
-    ms: asNumber
-  })
+  asSeqActionOp,
+  asParActionOp,
+  asBroadcastTxActionOp,
+  asExchangeBuyactionop,
+  asExchangeSellActionOp,
+  asLoanBorrowActionOp,
+  asLoanDepositActionOp,
+  asLoanRepayActionOp,
+  asLoanWithdrawActionOp,
+  asSwapActionOp,
+  asToastActionOp,
+  asDelayActionOp
 )
 
 //
 // Action Effects
 //
 
+const asSeqEffect = asObject({
+  type: asValue('seq'),
+  opIndex: asNumber,
+  childEffect: (raw: any) => asActionEffect(raw)
+})
+const asParEffect = asObject({
+  type: asValue('par'),
+  childEffects: asArray(raw => asActionEffect(raw))
+})
+const asAddressBalanceEffect = asObject({
+  type: asValue('address-balance'),
+  address: asString,
+  aboveAmount: asOptional(asString),
+  belowAmount: asOptional(asString),
+  walletId: asString,
+  tokenId: asOptional(asString)
+})
+const asTxConfsEffect = asObject({
+  type: asValue('tx-confs'),
+  txId: asString,
+  walletId: asString,
+  confirmations: asNumber
+})
+const asPriceLevelEffect = asObject({
+  type: asValue('price-level'),
+  currencyPair: asString,
+  aboveRate: asOptional(asNumber),
+  belowRate: asOptional(asNumber)
+})
+const asDoneEffect = asObject({
+  type: asValue('done'),
+  error: asOptional(asError)
+})
+const asUnixtimeEffect = asObject({
+  type: asValue('unixtime'),
+  timestamp: asNumber
+})
+const asNoopEffect = asObject({
+  type: asValue('noop')
+})
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
-  asObject({
-    type: asValue('seq'),
-    opIndex: asNumber,
-    childEffect: (raw: any) => asActionEffect(raw)
-  }),
-  asObject({
-    type: asValue('par'),
-    childEffects: asArray(raw => asActionEffect(raw))
-  }),
-  asObject({
-    type: asValue('address-balance'),
-    address: asString,
-    aboveAmount: asOptional(asString),
-    belowAmount: asOptional(asString),
-    walletId: asString,
-    tokenId: asOptional(asString)
-  }),
-  asObject({
-    type: asValue('tx-confs'),
-    txId: asString,
-    walletId: asString,
-    confirmations: asNumber
-  }),
-  asObject({
-    type: asValue('price-level'),
-    currencyPair: asString,
-    aboveRate: asOptional(asNumber),
-    belowRate: asOptional(asNumber)
-  }),
-  asObject({
-    type: asValue('done'),
-    error: asOptional(asError)
-  }),
-  asObject({
-    type: asValue('unixtime'),
-    timestamp: asNumber
-  }),
-  asObject({
-    type: asValue('noop')
-  })
+  asSeqEffect,
+  asParEffect,
+  asAddressBalanceEffect,
+  asTxConfsEffect,
+  asPriceLevelEffect,
+  asDoneEffect,
+  asUnixtimeEffect,
+  asNoopEffect
 )
 
 //
