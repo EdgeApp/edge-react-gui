@@ -4,6 +4,7 @@ import { type Cleaner, asMaybe } from 'cleaners'
 import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
+import { zeroString } from '../../../../util/utils'
 import { type CallInfo, asTxInfo, makeApprovableCall, makeTxCalls } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
@@ -124,6 +125,8 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+
         validateWalletParam(fromWallet)
 
         const token = getToken(tokenId)
@@ -188,6 +191,8 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, toWallet = wallet } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+
         validateWalletParam(toWallet)
 
         const token = getToken(tokenId)
@@ -213,6 +218,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: borrow request contains no nativeAmount.')
 
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
@@ -242,6 +248,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
