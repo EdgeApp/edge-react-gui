@@ -1,44 +1,267 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Transaction List Row should render props 1`] = `
-<WithTheme(TransactionRowComponent)
-  cryptoAmount="32.295514"
-  denominationSymbol="‎ɱ"
-  fiatAmount="4,424,808,418,353,299.50"
-  fiatSymbol="$"
-  isSentTransaction={true}
-  onPress={[Function]}
-  requiredConfirmations={15}
-  selectedCurrencyName="Monero"
-  thumbnailPath=""
-  transaction={
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
     Object {
-      "SVGMetadataElement": Object {
-        "category": "",
-        "name": "ShapeShift",
-        "notes": "Exchanged …",
-      },
-      "amountSatoshi": -32295514330000,
-      "blockHeight": 1683022,
-      "currencyCode": "XMR",
-      "date": 1539555412.068,
-      "dateString": "Oct 14, 2018",
-      "key": 0,
-      "metadata": Object {
-        "amountFiat": 4424808418353299.5,
-      },
-      "nativeAmount": "-32295514330000",
-      "networkFee": "0",
-      "otherParams": Object {},
-      "ourReceiveAddresses": Array [],
-      "signedTx": "no_signature",
-      "time": "3:16 PM",
-      "txid": "4e92d23cff1714d52d48c0c5246adf4f6871d6d8d52d774b1b60cc4b28f8f296",
-      "wallet": Object {
-        "id": "SXq1f3x21H…",
-        "type": "wallet:monero",
-      },
+      "opacity": 1,
     }
   }
-/>
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "height": 96,
+          "justifyContent": "center",
+          "paddingHorizontal": 22,
+        },
+        Object {
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 0,
+        },
+        Object {
+          "paddingBottom": 0,
+          "paddingLeft": 22,
+          "paddingRight": 22,
+          "paddingTop": 0,
+        },
+        null,
+        null,
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "marginRight": 22,
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "borderRadius": 17,
+              "borderWidth": 2,
+              "height": 45,
+              "justifyContent": "center",
+              "width": 45,
+              "zIndex": 1,
+            },
+            Object {
+              "borderColor": "#E85466",
+              "elevation": 3,
+              "shadowColor": "#E85466",
+              "shadowOffset": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "shadowOpacity": 0.3,
+              "shadowRadius": 11,
+            },
+            Object {
+              "backgroundColor": "#0C446A",
+            },
+          ]
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": "#E85466",
+                "fontSize": 28,
+              },
+              Object {
+                "marginLeft": 1,
+              },
+              Object {
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Object {
+              "borderRadius": 17,
+              "height": 45,
+              "position": "absolute",
+              "width": 45,
+            },
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            Object {
+              "uri": undefined,
+            }
+          }
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "flex": 1,
+                "fontFamily": "Quicksand-Medium",
+              },
+              null,
+            ]
+          }
+        >
+          Sent Bitcoin
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "color": "#E85466",
+                "fontFamily": "Quicksand-Medium",
+                "marginLeft": 11,
+                "textAlign": "right",
+              },
+              null,
+            ]
+          }
+        >
+          - ₿ 322,955.1433
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Object {
+                  "color": "#F1AA19",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Synchronizing
+          </Text>
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "color": "#A4C7DF",
+                "fontSize": 17,
+                "textAlign": "right",
+              },
+              null,
+            ]
+          }
+        >
+          $ 4424808418353299.50
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
 `;

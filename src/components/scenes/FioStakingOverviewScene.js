@@ -17,7 +17,7 @@ import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux'
 import type { RouteProp } from '../../types/routerTypes'
-import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
+import { Actions } from '../../types/routerTypes.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -65,7 +65,6 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
   const [locks, setLocks] = useState<Lock[]>([])
   const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
-  const navigation: NavigationProp<'edge'> = useNavigation()
 
   useEffect(() => {
     refreshAllFioAddresses()
@@ -86,10 +85,10 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    navigation.navigate('fioStakingChange', { change: 'add', currencyCode, walletId })
+    Actions.jump('fioStakingChange', { change: 'add', currencyCode, walletId })
   }
   const handlePressUnstake = () => {
-    navigation.navigate('fioStakingChange', { change: 'remove', currencyCode, walletId })
+    Actions.jump('fioStakingChange', { change: 'remove', currencyCode, walletId })
   }
 
   const renderItems = () =>

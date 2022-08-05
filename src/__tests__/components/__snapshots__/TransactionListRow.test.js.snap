@@ -1,16 +1,267 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransactionListRow should render with loading props 1`] = `
-<WithTheme(TransactionRowComponent)
-  cryptoAmount="1"
-  denominationSymbol="BTC"
-  fiatAmount="1000000"
-  fiatSymbol="USD"
-  isSentTransaction={true}
-  onPress={[Function]}
-  requiredConfirmations={11}
-  selectedCurrencyName="Bitcoin"
-  thumbnailPath="wyre.png"
-  transaction="12ser4hh..."
-/>
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "height": 96,
+          "justifyContent": "center",
+          "paddingHorizontal": 22,
+        },
+        Object {
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 0,
+        },
+        Object {
+          "paddingBottom": 0,
+          "paddingLeft": 22,
+          "paddingRight": 22,
+          "paddingTop": 0,
+        },
+        null,
+        null,
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "marginRight": 22,
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "borderRadius": 17,
+              "borderWidth": 2,
+              "height": 45,
+              "justifyContent": "center",
+              "width": 45,
+              "zIndex": 1,
+            },
+            Object {
+              "borderColor": "#77C513",
+              "elevation": 3,
+              "shadowColor": "#77C513",
+              "shadowOffset": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "shadowOpacity": 0.3,
+              "shadowRadius": 11,
+            },
+            Object {
+              "backgroundColor": "#0C446A",
+            },
+          ]
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": "#77C513",
+                "fontSize": 28,
+              },
+              Object {
+                "marginLeft": 1,
+              },
+              Object {
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Object {
+              "borderRadius": 17,
+              "height": 45,
+              "position": "absolute",
+              "width": 45,
+            },
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            Object {
+              "uri": undefined,
+            }
+          }
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "flex": 1,
+                "fontFamily": "Quicksand-Medium",
+              },
+              null,
+            ]
+          }
+        >
+          Received Bitcoin
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "color": "#77C513",
+                "fontFamily": "Quicksand-Medium",
+                "marginLeft": 11,
+                "textAlign": "right",
+              },
+              null,
+            ]
+          }
+        >
+          + ₿ 0
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Object {
+                  "color": "#F1AA19",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Synchronizing
+          </Text>
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "color": "#A4C7DF",
+                "fontSize": 17,
+                "textAlign": "right",
+              },
+              null,
+            ]
+          }
+        >
+          $ 0.00
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
 `;
