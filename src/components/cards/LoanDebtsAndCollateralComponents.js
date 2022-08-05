@@ -26,7 +26,7 @@ export const ExchangeRateTile = (props: { wallet: EdgeCurrencyWallet, tokenId?: 
   } = props
   const { multiplier } = getDenomFromIsoCode(isoFiatCurrencyCode)
 
-  const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
+  const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId] ?? {}
 
   const exchangeRateFiatAmount = useFiatText({
     appendFiatCurrencyCode: false,
@@ -54,7 +54,7 @@ export const TotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowD
 
   const necessaryExchangeRates = borrowArray.reduce((pairs, obj) => {
     const { tokenId } = obj
-    const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
+    const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId] ?? {}
     pairs.push(`${currencyCode}_${isoFiatCurrencyCode}`)
     return pairs
   }, [])
@@ -68,7 +68,7 @@ export const TotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowD
   })
 
   return borrowArray.reduce((total, obj) => {
-    const { currencyCode, denominations } = obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId]
+    const { currencyCode, denominations } = obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
     const denom = denominations.find(denom => denom.name === currencyCode)
     const multiplier = denom?.multiplier ?? '1'
     return add(total, mul(div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${isoFiatCurrencyCode}`)))

@@ -73,6 +73,12 @@ export const LoanDetailsScene = (props: Props) => {
 
     navigation.navigate('loanBorrowDetails', { borrowEngine, borrowPlugin, tokenId })
   }
+  const handleAddCollateralPress = () => {
+    navigation.navigate('loanAddCollateralScene', { borrowEngine, borrowPlugin })
+  }
+  const handleWithdrawCollateralPress = () => {
+    navigation.navigate('loanWithdrawCollateralScene', { borrowEngine, borrowPlugin })
+  }
 
   return (
     <SceneWrapper>
@@ -118,13 +124,13 @@ export const LoanDetailsScene = (props: Props) => {
           <Space bottom>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
           </Space>
-          <TappableCard marginRem={[0, 0, 1, 0]}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress}>
             <Space right style={styles.actionIcon}>
               <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress}>
             <Space right style={styles.actionIcon}>
               <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>

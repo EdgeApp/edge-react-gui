@@ -72,10 +72,13 @@ import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
+import { LoanAddCollateralScene } from './scenes/Loans/LoanAddCollateralScene.js'
 import { LoanBorrowDetailsScene } from './scenes/Loans/LoanBorrowDetailsScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsConfirmationScene } from './scenes/Loans/LoanDetailsConfirmationScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
+import { LoanMakeLoanPaymentScene } from './scenes/Loans/LoanRepayScene.js'
+import { LoanWithdrawCollateralScene } from './scenes/Loans/LoanWithdrawCollateralScene'
 import { LoginScene } from './scenes/LoginScene.js'
 import { MakeLoanPaymentScene } from './scenes/MakeLoanPaymentScene.js'
 import { ManageTokensScene } from './scenes/ManageTokensScene.js'
@@ -904,6 +907,39 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
+            />
+            <Scene
+              key="LoanDetailsConfirmationScene"
+              component={withNavigation(ifLoggedIn(LoanDetailsConfirmationScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanAddCollateralScene"
+              component={withNavigation(ifLoggedIn(LoanAddCollateralScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanWithdrawCollateralScene"
+              component={withNavigation(ifLoggedIn(LoanWithdrawCollateralScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanRepayScene"
+              component={withNavigation(ifLoggedIn(LoanMakeLoanPaymentScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
             />
           </Stack>
         </Scene>
