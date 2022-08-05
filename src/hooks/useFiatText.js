@@ -30,7 +30,7 @@ export const useFiatText = (props: Props): string => {
     hideFiatSymbol,
     isoFiatCurrencyCode = USD_FIAT,
     nativeCryptoAmount = cryptoExchangeMultiplier,
-    noGrouping = false
+    noGrouping
   } = props
 
   // Convert native to fiat amount.
