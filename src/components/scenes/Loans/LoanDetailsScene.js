@@ -60,7 +60,7 @@ export const LoanDetailsScene = (props: Props) => {
     { label: s.strings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
     {
       label: s.strings.loan_available_equity,
-      value: availableEquity,
+      value: displayFiatTotal(wallet, availableEquity),
       icon: <Ionicon name="information-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
     }
   ]
