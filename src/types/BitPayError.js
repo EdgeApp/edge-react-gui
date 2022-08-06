@@ -65,23 +65,23 @@ export class BitPayError extends Error {
 export function translateBitPayError(error: BitPayError): string {
   switch (error.code) {
     case 'CurrencyNotSupported':
-      return sprintf(s.strings.error_bitpay_currency_not_supported, error.text)
+      return sprintf(s.strings.error_paymentprotocol_currency_not_supported, error.text)
     case 'EmptyOutputInvoice':
-      return s.strings.error_bitpay_empty_output_invoice
+      return s.strings.error_paymentprotocol_empty_output_invoice
     case 'EmptyVerificationHexReq':
-      return s.strings.error_bitpay_empty_verification_hex_req
+      return s.strings.error_paymentprotocol_empty_verification_hex_req
     case 'FetchFailed':
-      return sprintf(s.strings.error_bitpay_fetch, error.header, error.statusCode, error.text)
+      return sprintf(s.strings.error_paymentprotocol_fetch, error.header, error.statusCode, error.text)
     case 'InvalidPaymentOption':
-      return sprintf(s.strings.error_bitpay_invalid_payment_option, error.text)
+      return sprintf(s.strings.error_paymentprotocol_invalid_payment_option, error.text)
     case 'MultiOutputInvoice':
-      return s.strings.error_bitpay_multi_output_invoice
+      return s.strings.error_paymentprotocol_multi_output_invoice
     case 'MultiInstructionInvoice':
-      return s.strings.error_bitpay_multi_tx_invoice
+      return s.strings.error_paymentprotocol_multi_tx_invoice
     case 'NoPaymentOption':
-      return sprintf(s.strings.error_bitpay_no_payment_option, error.text)
+      return sprintf(s.strings.error_paymentprotocol_no_payment_option, error.text)
     case 'TxVerificationMismatch':
-      return sprintf(s.strings.error_bitpay_tx_verification_failed)
+      return sprintf(s.strings.error_paymentprotocol_tx_verification_failed)
     default:
       return error.message
   }

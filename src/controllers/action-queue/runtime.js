@@ -6,11 +6,14 @@ import * as React from 'react'
 
 import { AirshipToast } from '../../components/common/AirshipToast'
 import { Airship } from '../../components/services/AirshipInstance'
+import { makeAaveMaticBorrowPlugin } from '../../plugins/borrow-plugins/plugins/aave'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
+import { getAaveBorrowInfo } from '../../plugins/helpers/getAaveBorrowPlugins'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { snooze } from '../../util/utils'
 import { type ActionEffect, type ActionProgram, type ActionProgramState, type ExecutionResult, type ExecutionResults } from './types'
 
+// TODO: Set the status of executing steps accurately
 export const executeActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 
@@ -194,7 +197,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.borrow({ nativeAmount, fromWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -220,14 +223,16 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
       // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const borrowInfo = await getAaveBorrowInfo(makeAaveMaticBorrowPlugin(), wallet)
+      // const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
+      const approvableAction = await borrowInfo.borrowEngine.deposit({ nativeAmount, fromWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
       const txId = txs[txs.length - 1].txid
+
       return {
         effect: {
           type: 'tx-confs',
@@ -252,7 +257,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.repay({ nativeAmount, fromWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -281,7 +286,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.withdraw({ nativeAmount, toWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect

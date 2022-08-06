@@ -150,6 +150,8 @@ export const convertNativeToDisplay = convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
 export const convertNativeToExchange = convertNativeToDenomination
 
+export const mulToPrecision = (multiplier: string): number => multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
+
 export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes(item) ? [...array, item] : array)
 
 const restrictedCurrencyCodes = ['BTC']

@@ -49,6 +49,9 @@ export type ApprovableAction = {
   +approve: () => Promise<EdgeTransaction[]>
 }
 
+// HACK: Used to identify running ActionQueue programs by borrow action type.
+export type BorrowActionId = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw'
+
 // -----------------------------------------------------------------------------
 // Engine
 // -----------------------------------------------------------------------------
@@ -93,7 +96,7 @@ export type BorrowEngine = {
 // -----------------------------------------------------------------------------
 
 export type BorrowPluginInfo = {
-  pluginId: string,
+  borrowPluginId: string,
   displayName: string,
 
   // Defines the relationship to the type of currency plugins which the plugin supports

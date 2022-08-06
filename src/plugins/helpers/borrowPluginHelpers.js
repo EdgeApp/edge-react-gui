@@ -1,9 +1,9 @@
 // @flow
 
-import { makeAaveBorrowPlugin, makeAaveKovanBorrowPlugin, makeAaveLocalhostPlugin } from '../borrow-plugins'
+import { makeAaveEthBorrowPlugin, makeAaveKovBorrowPlugin, makeAaveMaticBorrowPlugin } from '../borrow-plugins/plugins/aave'
 import { type BorrowPlugin } from '../borrow-plugins/types'
 
-const borrowPlugins: BorrowPlugin[] = [makeAaveBorrowPlugin(), makeAaveKovanBorrowPlugin(), makeAaveLocalhostPlugin()]
+const borrowPlugins: BorrowPlugin[] = [makeAaveEthBorrowPlugin(), makeAaveKovBorrowPlugin(), makeAaveMaticBorrowPlugin()]
 
 type BorrowPluginQuery = {
   borrowPluginId?: string,
@@ -15,7 +15,7 @@ export function queryBorrowPlugins(query: BorrowPluginQuery): BorrowPlugin[] {
   let plugins = borrowPlugins
 
   if (borrowPluginId != null) {
-    plugins = plugins.filter(borrowPlugin => borrowPlugin.borrowInfo.pluginId === borrowPluginId)
+    plugins = plugins.filter(borrowPlugin => borrowPlugin.borrowInfo.borrowPluginId === borrowPluginId)
   }
   if (currencyPluginId != null) {
     plugins = plugins.filter(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)

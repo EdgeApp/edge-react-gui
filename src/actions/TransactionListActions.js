@@ -149,6 +149,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   const currentViewableTransactions = state.ui.scenes.transactionList.transactions
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
   const receivedTxs = []

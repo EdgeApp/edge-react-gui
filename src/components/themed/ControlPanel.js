@@ -25,7 +25,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type ParamList } from '../../types/routerTypes.js'
 import { type EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -50,7 +50,6 @@ export function ControlPanel(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-
   // ---- Redux State ----
 
   const account = useSelector(state => state.core.account)
@@ -142,8 +141,12 @@ export function ControlPanel(props: Props) {
     })
   }
 
+  const handleBorrow = () => {
+    handleGoToScene('loanDashboard')
+  }
+
   const handleLoginQr = () => {
-    Actions.drawerClose()
+    navigation.closeDrawer()
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
@@ -164,15 +167,13 @@ export function ControlPanel(props: Props) {
   }
 
   const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
-    const { currentScene, drawerClose } = Actions
-
-    if (currentScene !== scene) {
-      navigation.navigate(scene, sceneProps)
-    } else if (sceneProps) {
+    if (sceneProps) {
       navigation.setParams(sceneProps)
+    } else {
+      navigation.navigate(scene, sceneProps)
     }
 
-    drawerClose()
+    navigation.closeDrawer()
   }
 
   /// ---- Animation ----
@@ -213,39 +214,41 @@ export function ControlPanel(props: Props) {
   const rowDatas: any[] = [
     {
       pressHandler: () => handleGoToScene('fioAddressList'),
-      iconName: 'cp-fio-names',
+      iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
       pressHandler: () => handleGoToScene('fioRequestList'),
-      iconName: 'cp-fio',
+      iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
       pressHandler: () => handleGoToScene('wcConnections'),
-      iconName: 'cp-wallet-connect',
+      iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
     {
       pressHandler: () => handleLoginQr(),
-      iconName: 'cp-scan-qr',
+      iconName: 'control-panel-scan-qr',
       title: s.strings.drawer_scan_qr_send
     },
-    { pressHandler: handleSweep, iconName: 'cp-sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
+    { pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars },
+
     {
       pressHandler: () => handleGoToScene('termsOfService'),
-      iconName: 'cp-tos',
+      iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
-    { pressHandler: handleShareApp, iconName: 'cp-share', title: s.strings.string_share + ' ' + config.appName },
+    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
       pressHandler: () => handleGoToScene('settingsOverviewTab'),
-      iconName: 'cp-settings',
+      iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
     {
       pressHandler: () => dispatch(logoutRequest()),
-      iconName: 'cp-logout',
+      iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
     }
   ]
@@ -283,7 +286,7 @@ export function ControlPanel(props: Props) {
         {/* ==== Rate Display End ==== */}
         <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
-            <Fontello name="cp-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
             <TitleText style={styles.text}>{activeUsername}</TitleText>

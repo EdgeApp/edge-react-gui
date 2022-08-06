@@ -5,6 +5,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import { type BorrowEngine, type BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { type FiatPluginEnterAmountResponse, type FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
@@ -37,6 +38,7 @@ export type ParamList = {
   root: void,
   login: void,
   edge: void,
+
   // Logged-in scenes:
   changeMiningFee: {|
     guiMakeSpendInfo: GuiMakeSpendInfo,
@@ -191,6 +193,52 @@ export type ParamList = {
     initialAmount1?: string,
     headerIconUri?: string
   |},
+  loanDashboard: void,
+  loanDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanCreate: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanCreateConfirmation: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    destWallet: EdgeCurrencyWallet,
+    destTokenId: string,
+    nativeDestAmount: string,
+    nativeSrcAmount: string,
+    srcTokenId: string
+  |},
+  loanBorrowDetails: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin,
+    tokenId: string
+  |},
+  loanClose: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanAddCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanBorrowMoreScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanWithdrawCollateralScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanRepayScene: {|
+    borrowEngine: BorrowEngine,
+    borrowPlugin: BorrowPlugin
+  |},
+  loanStatus: {|
+    actionQueueId: string
+  |},
   manageTokens: {|
     walletId: string
   |},
@@ -242,6 +290,7 @@ export type ParamList = {
   stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
   termsOfService: void,
+  testScene: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string
@@ -324,7 +373,7 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
   navigate: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   push: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   replace: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  setParams: (params: $ElementType<ParamList, Name>) => void,
+  setParams: <Name: $Keys<ParamList>>(params: $ElementType<ParamList, Name>) => void,
 
   // Returning:
   goBack: () => void,
@@ -405,4 +454,48 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
   const displayName = Component.displayName ?? Component.name ?? 'Component'
   WithNavigation.displayName = `WithNavigation(${displayName})`
   return WithNavigation
+}
+
+export const useNavigation = <Name: $Keys<ParamList>>() => {
+  const navigation: NavigationProp<Name> = {
+    addListener(event, callback) {
+      // TODO
+      return () => {}
+    },
+    isFocused() {
+      // TODO
+      return false
+    },
+
+    navigate(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
+    push(name, params) {
+      // $FlowFixMe
+      Flux.Actions.push(name, { route: { name, params } })
+    },
+    replace(name, params) {
+      // $FlowFixMe
+      Flux.Actions.replace(name, { route: { name, params } })
+    },
+    setParams(params) {},
+
+    goBack() {},
+    pop() {
+      // $FlowFixMe
+      Flux.Actions.pop()
+    },
+    popToTop() {},
+
+    closeDrawer() {},
+    openDrawer() {
+      // $FlowFixMe
+      Flux.Actions.drawerOpen()
+    },
+    toggleDrawer() {},
+
+    get state() {}
+  }
+  return navigation
 }

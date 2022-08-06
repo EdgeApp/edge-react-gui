@@ -54,7 +54,7 @@ const CurrencyRowComponent = (props: Props) => {
       {showBalance ? (
         <View style={styles.balanceColumn}>
           <EdgeText>
-            <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} />
+            <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} withSymbol />
           </EdgeText>
           <EdgeText style={styles.fiatBalanceText}>
             <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallet} />

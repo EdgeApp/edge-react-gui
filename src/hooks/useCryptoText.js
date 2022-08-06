@@ -18,7 +18,8 @@ type UseCryptoTextParams = {|
   exchangeDenomination: EdgeDenomination,
   exchangeRate?: string,
   fiatDenomination: EdgeDenomination,
-  nativeAmount: string
+  nativeAmount: string,
+  currencyCode?: string
 |}
 
 /**
@@ -28,10 +29,17 @@ type UseCryptoTextParams = {|
  * 2. Display Denomination
  * 3. Localization: commas, decimals, spaces
  */
-export const useCryptoText = ({ displayDenomination, exchangeDenomination, fiatDenomination, exchangeRate, nativeAmount }: UseCryptoTextParams) => {
+export const useCryptoText = ({
+  displayDenomination,
+  exchangeDenomination,
+  fiatDenomination,
+  exchangeRate,
+  nativeAmount,
+  currencyCode
+}: UseCryptoTextParams) => {
   const { multiplier: displayMultiplier, symbol } = displayDenomination
   const { multiplier: exchangeMultiplier } = exchangeDenomination
-  if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0`
+  if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0${currencyCode ? ' ' + currencyCode : ''}`
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
 
   if (exchangeRate != null && parseFloat(exchangeRate) > 0) {
@@ -46,6 +54,13 @@ export const useCryptoText = ({ displayDenomination, exchangeDenomination, fiatD
   try {
     const preliminaryCryptoAmount = nonLocalTruncateDecimals(div(nativeAmount, displayMultiplier, DECIMAL_PRECISION), maxConversionDecimals)
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+
+    if (currencyCode != null) {
+      // Display with currency code if provided
+      return `${finalCryptoAmount} ${currencyCode}`
+    }
+
+    // Display with symbol (if available)
     return `${symbol != null ? symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
     if (error.message === 'Cannot operate on base16 float values') {

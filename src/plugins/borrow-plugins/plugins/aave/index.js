@@ -8,10 +8,47 @@ import { makeBorrowEngineFactory } from './BorrowEngineFactory'
 import { asEthTokenContractAddress } from './cleaners/asEthTokenContractAddress'
 
 // -----------------------------------------------------------------------------
+// Matic Mainnet
+// -----------------------------------------------------------------------------
+const maticNetwork = {
+  name: 'matic',
+  chainId: 137,
+  _defaultProvider: providers => new providers.JsonRpcProvider('https://polygon-rpc.com')
+}
+
+const aaveMaticNetwork = makeAaveNetworkFactory({
+  provider: ethers.getDefaultProvider(maticNetwork),
+
+  contractAddresses: {
+    lendingPool: '0x8dff5e27ea6b7ac08ebfdf9eb090f32ee9a30fcf',
+    protocolDataProvider: '0x7551b5D2763519d4e37e8B81929D336De671d46d'
+  },
+  enabledTokens: {
+    DAI: true,
+    WBTC: true
+  }
+})
+
+const aaveMaticBlueprint: BorrowPluginBlueprint = {
+  borrowInfo: {
+    borrowPluginId: 'aavePolygon',
+    currencyPluginId: 'polygon',
+    displayName: 'AAVE',
+    maxLtvRatio: 0.5
+  },
+  makeBorrowEngine: makeBorrowEngineFactory({
+    aaveNetwork: aaveMaticNetwork,
+    asTokenContractAddress: asEthTokenContractAddress
+  })
+}
+
+export const makeAaveMaticBorrowPlugin = makeBorrowPluginFactory(aaveMaticBlueprint)
+
+// -----------------------------------------------------------------------------
 // Ethereum Mainnet
 // -----------------------------------------------------------------------------
 
-const aaveNetwork = makeAaveNetworkFactory({
+const aaveEthNetwork = makeAaveNetworkFactory({
   provider: ethers.getDefaultProvider('mainnet'),
 
   contractAddresses: {
@@ -24,20 +61,20 @@ const aaveNetwork = makeAaveNetworkFactory({
   }
 })
 
-const aaveBlueprint: BorrowPluginBlueprint = {
+const aaveEthBlueprint: BorrowPluginBlueprint = {
   borrowInfo: {
-    pluginId: 'aave',
-    displayName: 'AAVE',
+    borrowPluginId: 'aaveEth',
     currencyPluginId: 'ethereum',
+    displayName: 'AAVE',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
-    aaveNetwork,
+    aaveNetwork: aaveEthNetwork,
     asTokenContractAddress: asEthTokenContractAddress
   })
 }
 
-export const makeAaveBorrowPlugin = makeBorrowPluginFactory(aaveBlueprint)
+export const makeAaveEthBorrowPlugin = makeBorrowPluginFactory(aaveEthBlueprint)
 
 // -----------------------------------------------------------------------------
 // Kovan Testnet
@@ -51,18 +88,33 @@ const aaveKovanNetwork = makeAaveNetworkFactory({
     protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
   },
   enabledTokens: {
+    AAVE: true,
+    AMPL: true,
+    BUSD: true,
     DAI: true,
-    WETH: true,
+    ENJ: true,
+    ETH: true,
+    KNC: true,
+    LINK: true,
+    MANA: true,
+    MKR: true,
+    REN: true,
+    sUSD: true,
+    SNX: true,
+    TUSD: true,
+    USDC: true,
+    USDT: true,
     WBTC: true,
-    USDC: true
+    YFI: true,
+    ZRX: true
   }
 })
 
-const aaveKovanBlueprint: BorrowPluginBlueprint = {
+const aaveKovBlueprint: BorrowPluginBlueprint = {
   borrowInfo: {
-    pluginId: 'aaveKovan',
-    displayName: 'AAVE (Kovan)',
+    borrowPluginId: 'aaveKovan',
     currencyPluginId: 'kovan',
+    displayName: 'AAVE (Kovan)',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
@@ -81,48 +133,4 @@ const aaveKovanBlueprint: BorrowPluginBlueprint = {
   })
 }
 
-export const makeAaveKovanBorrowPlugin = makeBorrowPluginFactory(aaveKovanBlueprint)
-
-// -----------------------------------------------------------------------------
-// Localhost
-// -----------------------------------------------------------------------------
-
-const aaveLocalhostNetwork = makeAaveNetworkFactory({
-  provider: ethers.getDefaultProvider('http://localhost:8545'),
-
-  contractAddresses: {
-    lendingPool: '0xE0fBa4Fc209b4948668006B2bE61711b7f465bAe',
-    protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
-  },
-  enabledTokens: {
-    DAI: true,
-    WETH: true,
-    WBTC: true,
-    USDC: true
-  }
-})
-
-const aaveLocalhostBlueprint: BorrowPluginBlueprint = {
-  borrowInfo: {
-    pluginId: 'aaveLocalhost',
-    displayName: 'AAVE (Localhost)',
-    currencyPluginId: 'ethLocalhost',
-    maxLtvRatio: 0.5
-  },
-  makeBorrowEngine: makeBorrowEngineFactory({
-    aaveNetwork: aaveLocalhostNetwork,
-    asTokenContractAddress: asEthTokenContractAddress,
-    enabledTokens: {
-      DAI: {
-        isCollateral: false,
-        isDebt: true
-      },
-      WBTC: {
-        isCollateral: true,
-        isDebt: false
-      }
-    }
-  })
-}
-
-export const makeAaveLocalhostPlugin = makeBorrowPluginFactory(aaveLocalhostBlueprint)
+export const makeAaveKovBorrowPlugin = makeBorrowPluginFactory(aaveKovBlueprint)
