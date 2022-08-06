@@ -51,7 +51,7 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
   return {
     networkFee: {
       currencyCode: wallet.currencyInfo.currencyCode,
-      nativeAmount: edgeUnsignedTx.parentNetworkFee ?? '0'
+      nativeAmount: edgeUnsignedTx.parentNetworkFee ?? edgeUnsignedTx.networkFee ?? '0'
     },
     unsignedTxs: [edgeUnsignedTx],
 
