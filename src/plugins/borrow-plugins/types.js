@@ -42,11 +42,18 @@ export type WithdrawRequest = {
   toWallet?: EdgeCurrencyWallet
 }
 
+export type BroadcastTx = {
+  walletId: string,
+  networkFee: EdgeNetworkFee,
+  tx: EdgeTransaction
+}
+
 // General purpose approvable action
 export type ApprovableAction = {
   +networkFee: EdgeNetworkFee,
   +unsignedTxs: EdgeTransaction[],
-  +approve: () => Promise<EdgeTransaction[]>
+  +dryrun: () => Promise<BroadcastTx[]>,
+  +approve: () => Promise<BroadcastTx[]>
 }
 
 // HACK: Used to identify running ActionQueue programs by borrow action type.

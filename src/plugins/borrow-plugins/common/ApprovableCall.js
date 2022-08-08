@@ -25,6 +25,7 @@ export type CallInfo = {
 
 export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAction> => {
   const { tx: txInfo, wallet, spendToken, metadata } = params
+  const { id: walletId } = wallet
   const { gasLimit, gasPrice } = txInfo
 
   if (gasPrice == null || gasLimit == null) throw new Error('Explicit gas price and limit required for ApprovableAction.')
@@ -48,18 +49,23 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
   }
   const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(edgeSpendInfo)
 
-  return {
-    networkFee: {
-      currencyCode: wallet.currencyInfo.currencyCode,
-      nativeAmount: edgeUnsignedTx.parentNetworkFee ?? edgeUnsignedTx.networkFee ?? '0'
-    },
-    unsignedTxs: [edgeUnsignedTx],
+  const networkFee = {
+    currencyCode: wallet.currencyInfo.currencyCode,
+    nativeAmount: edgeUnsignedTx.parentNetworkFee ?? edgeUnsignedTx.networkFee ?? '0'
+  }
 
+  return {
+    networkFee,
+    unsignedTxs: [edgeUnsignedTx],
+    dryrun: async () => {
+      const tx = await wallet.signTx(edgeUnsignedTx)
+      return [{ walletId, networkFee, tx }]
+    },
     approve: async () => {
       const tx = await wallet.signTx(edgeUnsignedTx)
       await wallet.broadcastTx(tx)
       await wallet.saveTx(tx)
-      return [tx]
+      return [{ walletId, networkFee, tx }]
     }
   }
 }
