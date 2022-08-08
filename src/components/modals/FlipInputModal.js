@@ -27,7 +27,8 @@ import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { FiatText } from '../text/FiatText.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput'
+import { type ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
+import { FlipInput } from '../themed/FlipInput'
 import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -177,11 +178,11 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId } = this.props
+    const { flipInputHeaderText, headerText, primaryInfo, secondaryInfo, fiatPerCrypto, pluginId, wallet } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     return (
       <Card>
-        <ExchangedFlipInput
+        {/* <ExchangedFlipInput
           headerText={headerText ?? flipInputHeaderText}
           primaryCurrencyInfo={{ ...primaryInfo }}
           secondaryCurrencyInfo={{ ...secondaryInfo }}
@@ -194,6 +195,19 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           keyboardVisible={false}
           isFocus
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
+        /> */}
+        <FlipInput
+          title={headerText ?? flipInputHeaderText}
+          wallet={wallet}
+          // exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+          // overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+          // forceUpdateGuiCounter={0}
+          // onExchangeAmountChanged={this.handleExchangeAmountChange}
+          // onError={this.handleAmountChangeError}
+          // onNext={this.handleCloseModal}
+          // keyboardVisible={false}
+          // isFocus
+          // isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
           <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />

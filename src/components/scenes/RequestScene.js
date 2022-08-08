@@ -35,7 +35,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { FiatText } from '../text/FiatText.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
-import { FlipInput } from '../themed/FlipInput.js'
+import { OldFlipInput } from '../themed/OldFlipInput.js'
 import { MainButton } from '../themed/MainButton.js'
 import { QrCode } from '../themed/QrCode'
 import { SceneHeader } from '../themed/SceneHeader.js'
@@ -77,7 +77,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestComponent extends React.Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
-  flipInput: React.ElementRef<typeof FlipInput> | null = null
+  flipInput: React.ElementRef<typeof OldFlipInput> | null = null
   unsubscribeAddressChanged: Function | null
 
   constructor(props: Props) {

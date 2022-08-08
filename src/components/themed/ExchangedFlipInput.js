@@ -5,8 +5,8 @@ import * as React from 'react'
 
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust, zeroString } from '../../util/utils.js'
-import type { FlipInputFieldInfo } from './FlipInput.js'
-import { FlipInput } from './FlipInput.js'
+import type { FlipInputFieldInfo } from './OldFlipInput.js'
+import { OldFlipInput } from "./OldFlipInput.js";
 
 export type ExchangedFlipInputAmounts = {
   exchangeAmount: string,
@@ -118,7 +118,7 @@ function propsToState(props: Props): State {
 }
 
 export class ExchangedFlipInput extends React.Component<Props, State> {
-  flipInput: React.ElementRef<typeof FlipInput> | null = null
+  flipInput: React.ElementRef<typeof OldFlipInput> | null = null
 
   static defaultProps = {
     isEditable: true
@@ -169,7 +169,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
 
   render() {
     return (
-      <FlipInput
+      <OldFlipInput
         overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}
         exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
         headerText={this.props.headerText}
