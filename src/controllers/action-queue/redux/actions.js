@@ -1,5 +1,7 @@
 // @flow
 
+import { getUniqueId } from 'react-native-device-info'
+
 import { type Dispatch, type GetState } from '../../../types/reduxTypes'
 import { type ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from '../types'
@@ -23,8 +25,9 @@ type UpdateProgramStateAction = {
 export type ActionQueueAction = LoadActionQueueStateAction | ScheduleProgramAction | UpdateProgramStateAction
 
 export const scheduleActionProgram = (program: ActionProgram) => async (dispatch: Dispatch, getState: GetState) => {
+  const deviceId = getUniqueId()
   const state = getState()
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account)
+  const store: ActionQueueStore = makeActionQueueStore(state.core.account, deviceId)
   const programId = program.programId
 
   // Persist the ActionProgram to the ActionQueueStore
@@ -41,8 +44,9 @@ export const scheduleActionProgram = (program: ActionProgram) => async (dispatch
 }
 
 export const updateActionProgramState = (programState: ActionProgramState) => async (dispatch: Dispatch, getState: GetState) => {
+  const deviceId = getUniqueId()
   const state = getState()
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account)
+  const store: ActionQueueStore = makeActionQueueStore(state.core.account, deviceId)
 
   await store.updateActionQueueItem(programState)
 

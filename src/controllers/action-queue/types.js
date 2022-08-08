@@ -150,6 +150,7 @@ export type ActionProgram = {
 }
 
 export type ActionProgramState = {
+  deviceId: string,
   programId: string,
   effect?: ActionEffect
 }

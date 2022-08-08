@@ -175,6 +175,7 @@ export const asActionProgram: Cleaner<ActionProgram> = asObject({
 })
 
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
+  deviceId: asString,
   programId: asString,
   effect: asOptional(asActionEffect)
 })
