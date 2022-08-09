@@ -85,11 +85,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
 
   dispatch({ type: 'LOGIN', data: account })
 
-  navigation.push('edge')
-  if (hasSecurityAlerts(account)) {
-    navigation.push('securityAlerts')
-  }
-
   const state = getState()
   const { context } = state.core
 
@@ -196,6 +191,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     }
 
     dispatch(expiredFioNamesCheckDates())
+
+    navigation.push('edge')
+    if (hasSecurityAlerts(account)) {
+      navigation.push('securityAlerts')
+    }
     await updateWalletsRequest()(dispatch, getState)
   } catch (error) {
     showError(error)
