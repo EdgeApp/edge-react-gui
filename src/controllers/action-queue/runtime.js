@@ -20,11 +20,26 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
   // TODO: dry-run program
 
   // Await Effect
+  let checkErrors: Error[] = []
   while (true) {
     if (effect == null) break
 
-    const isEffective = await checkActionEffect(account, effect)
-    if (isEffective) break
+    try {
+      const isEffective = await checkActionEffect(account, effect)
+
+      // Reset error aggregation (and failure count)
+      checkErrors = []
+
+      // Break out of effect check loop if the ActionEffect passes the check
+      if (isEffective) break
+    } catch (err) {
+      checkErrors.push(err)
+
+      if (checkErrors.length >= 5) {
+        const messages = checkErrors.map(e => e.message).join('\n\t')
+        throw new Error(`Action effect check failed:\n\t${messages}`)
+      }
+    }
 
     await delayForEffect(effect)
   }
