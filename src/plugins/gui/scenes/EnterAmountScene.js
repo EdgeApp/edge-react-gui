@@ -11,6 +11,7 @@ import { MainButton } from '../../../components/themed/MainButton.js'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { SceneHeader } from '../../../components/themed/SceneHeader.js'
 import { useHandler } from '../../../hooks/useHandler.js'
+import { formatNumber, formatToNativeNumber, isValidInput } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { memo, useRef, useState } from '../../../types/reactHooks.js'
 import type { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -37,6 +38,14 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
   const firstRun = useRef<boolean>(true)
   const lastUsed = useRef<number>(1)
 
+  const formattedSetValue1 = useHandler((value: string) => {
+    setValue1(dotToLocale(value))
+  })
+
+  const formattedSetValue2 = useHandler((value: string) => {
+    setValue2(dotToLocale(value))
+  })
+
   if (getMethods != null)
     getMethods({
       setStatusText: params => {
@@ -45,8 +54,8 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
         setStatusTextType(options.textType)
       },
       setPoweredBy,
-      setValue1,
-      setValue2
+      setValue1: formattedSetValue1,
+      setValue2: formattedSetValue2
     })
 
   if (firstRun.current && initialAmount1 != null) {
@@ -54,7 +63,7 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
     setSpinner2(true)
     convertValue(1, initialAmount1).then(val => {
       if (typeof val === 'string') {
-        setValue2(val)
+        setValue2(dotToLocale(val))
         setSpinner2(false)
       }
     })
@@ -66,24 +75,32 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
   }
 
   const handleChangeText1 = useHandler((value: string) => {
+    if (!isValidInput(value)) {
+      setValue1(value1)
+      return
+    }
     lastUsed.current = 1
-    onChangeText(1, value)
+    onChangeText(1, forceDot(value))
     setValue1(value)
     setValue2(' ')
     setSpinner2(true)
-    convertValue(1, value).then(v => {
-      if (typeof v === 'string') setValue2(v)
+    convertValue(1, forceDot(value)).then(v => {
+      if (typeof v === 'string') setValue2(dotToLocale(v))
       setSpinner2(false)
     })
   })
   const handleChangeText2 = useHandler((value: string) => {
+    if (!isValidInput(value)) {
+      setValue2(value2)
+      return
+    }
     lastUsed.current = 2
-    onChangeText(2, value)
+    onChangeText(2, forceDot(value))
     setValue2(value)
     setValue1(' ')
     setSpinner1(true)
-    convertValue(2, value).then(v => {
-      if (typeof v === 'string') setValue1(v)
+    convertValue(2, forceDot(value)).then(v => {
+      if (typeof v === 'string') setValue1(dotToLocale(v))
       setSpinner1(false)
     })
   })
@@ -198,3 +215,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     resizeMode: 'contain'
   }
 }))
+
+const forceDot = (amount: string): string => {
+  return formatToNativeNumber(amount, { noGrouping: true })
+}
+
+const dotToLocale = (amount: string): string => {
+  return formatNumber(amount, { noGrouping: true })
+}

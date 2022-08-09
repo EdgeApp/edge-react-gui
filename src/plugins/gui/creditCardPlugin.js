@@ -4,7 +4,7 @@ import { asMap, asNumber } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
 import ENV from '../../../env.json'
-import { isValidInput } from '../../locales/intl'
+import { formatNumber, isValidInput } from '../../locales/intl'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { type EdgeTokenId } from '../../types/types'
@@ -203,10 +203,12 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 let text
                 if (sourceFieldNum === 1) {
                   // User entered a fiat value. Show the crypto value per partner
-                  text = `(${toFixed(quote.cryptoAmount, 0, 6)} ${quote.tokenId?.tokenId ?? ''})`
+                  const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
+                  text = `(${localeAmount} ${quote.tokenId?.tokenId ?? ''})`
                 } else {
                   // User entered a crypto value. Show the fiat value per partner
-                  text = `(${toFixed(quote.fiatAmount, 0, 2)} ${quote.fiatCurrencyCode.replace('iso:', '')})`
+                  const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
+                  text = `(${localeAmount} ${quote.fiatCurrencyCode.replace('iso:', '')})`
                 }
                 const out = {
                   text,
