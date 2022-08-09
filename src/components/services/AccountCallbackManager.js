@@ -12,7 +12,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect.js'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
-import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
+import { type NavigationProp, Actions, useNavigation } from '../../types/routerTypes.js'
 import { isReceivedTransaction, snooze } from '../../util/utils.js'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal.js'
 import { Airship } from './AirshipInstance.js'
@@ -67,7 +67,9 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       watchSecurityAlerts(account, hasAlerts => {
-        navigation.push('securityAlerts')
+        if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
+          navigation.push('securityAlerts')
+        }
       }),
 
       account.rateCache.on('update', () =>
