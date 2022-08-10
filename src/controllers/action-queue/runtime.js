@@ -9,6 +9,7 @@ import { Airship } from '../../components/services/AirshipInstance'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
 import {
@@ -171,8 +172,10 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
     case 'noop': {
       return true
     }
-    default:
-      throw new Error(`No implementation for effect type ${effect.type}`)
+    default: {
+      // $ExpectError
+      throw exhaustiveCheck(effect.type)
+    }
   }
 }
 
@@ -459,8 +462,29 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       }
     }
 
-    default:
-      throw new Error(`No implementation for action type ${actionOp.type} at ${program.programId}`)
+    case 'broadcast-tx': {
+      throw new Error(`No implementation for action type ${actionOp.type}`)
+    }
+    case 'done': {
+      throw new Error(`No implementation for action type ${actionOp.type}`)
+    }
+    case 'exchange-buy': {
+      throw new Error(`No implementation for action type ${actionOp.type}`)
+    }
+    case 'exchange-sell': {
+      throw new Error(`No implementation for action type ${actionOp.type}`)
+    }
+    case 'noop': {
+      throw new Error(`No implementation for action type ${actionOp.type}`)
+    }
+    case 'unixtime': {
+      throw new Error(`No implementation for action type ${actionOp.type}`)
+    }
+
+    default: {
+      // $ExpectError
+      throw exhaustiveCheck(actionOp.type)
+    }
   }
 }
 
