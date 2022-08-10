@@ -8,7 +8,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import s from '../../locales/strings.js'
-import { type NavigationProp, type ParamList } from '../../types/routerTypes.js'
+import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { DividerLine } from './DividerLine.js'
 import { EdgeText } from './EdgeText.js'
@@ -30,13 +30,13 @@ export class MenuTabComponent extends React.PureComponent<Props> {
   handleOnPress = (route: 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange') => {
     switch (route) {
       case 'walletList':
-        return this.props.navigation.navigate('walletListScene')
+        return Actions.jump('walletListScene')
       case 'pluginListBuy':
-        return this.props.navigation.navigate('pluginListBuy', { direction: 'buy' })
+        return Actions.jump('pluginListBuy', { direction: 'buy' })
       case 'pluginListSell':
-        return this.props.navigation.navigate('pluginListSell', { direction: 'sell' })
+        return Actions.jump('pluginListSell', { direction: 'sell' })
       case 'exchange':
-        return this.props.navigation.navigate('exchange')
+        return Actions.jump('exchange')
     }
   }
 

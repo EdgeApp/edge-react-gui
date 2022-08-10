@@ -15,7 +15,6 @@ import { rootReducer } from '../../reducers/RootReducer.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { type Action } from '../../types/reduxActions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../../types/routerTypes.js'
 import { errorAlert } from '../../util/middleware/errorAlert.js'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
 import { perfLogger } from '../../util/middleware/perfLogger.js'
@@ -44,7 +43,6 @@ export function Services(props: Props) {
   const { context } = props
   const [account, setAccount] = useState<EdgeAccount | void>()
   const theme = useTheme()
-  const navigation: NavigationProp<'root'> = useNavigation()
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.
@@ -88,7 +86,7 @@ export function Services(props: Props) {
       <LoginUiProvider themeOverride={theme}>
         <MenuProvider>
           <Airship>
-            <Main navigation={navigation} />
+            <Main />
           </Airship>
         </MenuProvider>
         <ActionQueue />

@@ -25,7 +25,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { type NavigationProp, type ParamList } from '../../types/routerTypes.js'
+import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { type EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -50,6 +50,7 @@ export function ControlPanel(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+
   // ---- Redux State ----
 
   const account = useSelector(state => state.core.account)
@@ -146,7 +147,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleLoginQr = () => {
-    navigation.closeDrawer()
+    Actions.drawerClose()
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
@@ -167,13 +168,15 @@ export function ControlPanel(props: Props) {
   }
 
   const handleGoToScene = (scene: $Keys<ParamList>, sceneProps: any) => {
-    if (sceneProps) {
-      navigation.setParams(sceneProps)
-    } else {
+    const { currentScene, drawerClose } = Actions
+
+    if (currentScene !== scene) {
       navigation.navigate(scene, sceneProps)
+    } else if (sceneProps) {
+      navigation.setParams(sceneProps)
     }
 
-    navigation.closeDrawer()
+    drawerClose()
   }
 
   /// ---- Animation ----
