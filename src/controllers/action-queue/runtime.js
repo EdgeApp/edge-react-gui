@@ -35,13 +35,16 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
     if (effect == null) break
 
     try {
-      const isEffective = await checkActionEffect(account, effect)
+      const { isEffective, delay } = await checkActionEffect(account, effect)
 
       // Reset error aggregation (and failure count)
       checkErrors = []
 
       // Break out of effect check loop if the ActionEffect passes the check
       if (isEffective) break
+
+      // Delay next check
+      await snooze(delay)
     } catch (err) {
       checkErrors.push(err)
 
@@ -49,9 +52,10 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
         const messages = checkErrors.map(e => e.message).join('\n\t')
         throw new Error(`Action effect check failed:\n\t${messages}`)
       }
-    }
 
-    await delayForEffect(effect)
+      // Delay retry after failure
+      await snooze(1000)
+    }
   }
 
   // Execute Action
@@ -106,7 +110,7 @@ export async function dryrunActionProgram(
   return outputs
 }
 
-async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Promise<boolean> {
+async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Promise<{ isEffective: boolean, delay: number }> {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexepected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
@@ -123,7 +127,10 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       const promises = checkedEffects.map(async (childEffect, index) => {
         return await checkActionEffect(account, childEffect)
       })
-      return (await Promise.all(promises)).every(yes => yes)
+      return {
+        delay: 0,
+        isEffective: (await Promise.all(promises)).every(yes => yes)
+      }
     }
     case 'address-balance': {
       // TODO: Use effect.address when we can check address balances
@@ -132,7 +139,10 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       const currencyCode = getCurrencyCode(wallet, tokenId)
       const walletBalance = wallet.balances[currencyCode] ?? '0'
 
-      return (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
+      return {
+        delay: 15000,
+        isEffective: (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
+      }
     }
     case 'tx-confs': {
       const { txId, walletId, confirmations } = effect
@@ -146,16 +156,27 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       // If not transaction is found with the effect's txId, then we can assume
       // that we're waiting to synchronize with network state.
-      if (txs.length === 0) return false
+      if (txs.length === 0) {
+        return {
+          delay: 6000,
+          isEffective: false
+        }
+      }
 
       const tx = txs[0]
 
       if (tx.confirmations === 'dropped') throw new Error('Transaction was dropped')
 
       if (typeof tx.confirmations === 'number') {
-        return tx.confirmations >= confirmations
+        return {
+          delay: 6000,
+          isEffective: tx.confirmations >= confirmations
+        }
       } else {
-        return confirmations === 0 || (confirmations > 0 && tx.confirmations === 'confirmed')
+        return {
+          delay: 6000,
+          isEffective: confirmations === 0 || (confirmations > 0 && tx.confirmations === 'confirmed')
+        }
       }
     }
     case 'price-level': {
@@ -163,14 +184,23 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
       throw new Error('No implementation for price effect')
     }
     case 'unixtime': {
-      return Date.now() >= effect.timestamp
+      return {
+        delay: 300,
+        isEffective: Date.now() >= effect.timestamp
+      }
     }
     case 'done': {
       if (effect.error != null) throw effect.error
-      return true
+      return {
+        delay: 0,
+        isEffective: true
+      }
     }
     case 'noop': {
-      return true
+      return {
+        delay: 0,
+        isEffective: true
+      }
     }
     default: {
       // $ExpectError
@@ -521,22 +551,4 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
     dryrunOutput: dryrun,
     execute
   }
-}
-
-async function delayForEffect(effect: ActionEffect): Promise<void> {
-  const ms = (() => {
-    switch (effect.type) {
-      case 'address-balance':
-        return 15000
-      case 'tx-confs':
-        return 6000
-      case 'price-level':
-        return 30000
-      case 'unixtime':
-        return 300
-      default:
-        return 0
-    }
-  })()
-  await snooze(ms)
 }
