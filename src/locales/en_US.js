@@ -845,7 +845,7 @@ const strings = {
 
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
-    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
+    "We're sorry but something went wrong. Please force close the app and reopen to continue using Edge.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem. \n\nNOTE: Do not uninstall the app before contacting Edge.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
