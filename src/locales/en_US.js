@@ -836,7 +836,7 @@ const strings = {
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
-  // Update notices
+  // Update noticesdfgfdgdf
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
   update_notice_deprecate_electrum_servers_message:
     '%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.' +
