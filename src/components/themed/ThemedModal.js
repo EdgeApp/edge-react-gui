@@ -1,9 +1,9 @@
 // @flow
 
-import { BlurView } from '@react-native-community/blur'
 import * as React from 'react'
 import { type ViewStyle, StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
+import { BlurView } from 'rn-id-blurview'
 
 import { fixSides } from '../../util/sides.js'
 import { useTheme } from '../services/ThemeContext.js'

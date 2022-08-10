@@ -324,7 +324,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
     const primaryInfo = {
-      walletId: walletId,
+      walletId,
+      pluginId,
       tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: cryptoDenomination,
@@ -333,7 +334,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const secondaryInfo = {
-      walletId: walletId,
+      walletId,
       displayCurrencyCode: fiatCurrencyCode,
       displayDenomination: fiatDenomination,
       exchangeCurrencyCode: isoFiatCurrencyCode,

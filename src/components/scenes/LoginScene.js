@@ -1,12 +1,12 @@
 // @flow
 
-import { BlurView } from '@react-native-community/blur'
 import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { type ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
+import { BlurView } from 'rn-id-blurview'
 
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions.js'

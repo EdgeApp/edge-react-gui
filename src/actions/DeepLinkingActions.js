@@ -56,6 +56,9 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
 
+  // Wait for all wallets to load before handling deep links
+  if (activeWalletIds.length !== Object.keys(currencyWallets).length) return false
+
   // We can't handle any links without an account:
   if (username == null) return false
 

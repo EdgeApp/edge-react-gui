@@ -2,10 +2,10 @@
 
 import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
+import { type FiatPaymentType, type FiatPluginFactory, asFiatPaymentTypes } from '../plugins/gui/fiatPluginTypes.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { type EdgeTokenId } from '../types/types.js'
 import { type UriQueryMap } from './WebTypes'
-
 /**
  * A unique WebView-based plugin.
  *
@@ -23,6 +23,9 @@ export type GuiPlugin = {
   // The storage location to make available in the `EdgeProvider`.
   // Also used for conversion tracking:
   storeId: string,
+
+  // Is a native plugin written in React Native
+  nativePlugin?: FiatPluginFactory,
 
   // The URI to show in the WebView.
   // Both the plugin list & deep links can add stuff to the end of this:
@@ -65,6 +68,7 @@ export type GuiPluginRow = {
 
   title: string,
   description: string,
+  paymentType?: FiatPaymentType,
   partnerIconPath?: string,
   paymentTypeLogoKey?: string,
   paymentTypes: string[],
@@ -85,6 +89,9 @@ const asGuiPluginJsonRow = asObject({
   // Optional stuff to add to the plugin URI:
   deepPath: asOptional(asString),
   deepQuery: asOptional(asMap(asEither(asString, asNull))),
+
+  // Optional params to sent to native Fiat Plugins
+  paymentType: asOptional(asFiatPaymentTypes),
 
   // List display options:
   title: asOptional(asString),

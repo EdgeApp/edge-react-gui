@@ -194,6 +194,9 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "paymentTypeLogoGiftCard": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGiftCard.png",
       },
+      "paymentTypeLogoGooglePay": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGooglePay.png",
+      },
       "paymentTypeLogoIdeal": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoIdeal.png",
       },

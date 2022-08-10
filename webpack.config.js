@@ -39,11 +39,14 @@ module.exports = {
               loader: 'babel-loader',
               options: {
                 babelrc: false,
-                presets: ['@babel/preset-env'],
-                plugins: [
-                  ['@babel/plugin-transform-for-of', { assumeArray: true }],
-                  // Work around metro-react-native-babel-preset issue:
-                  ['@babel/plugin-proposal-class-properties', { loose: false }]
+                configFile: false,
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      targets: { chrome: '67' }
+                    }
+                  ]
                 ],
                 cacheDirectory: true
               }
@@ -56,10 +59,30 @@ module.exports = {
     path: path.join(path.resolve(__dirname), 'android/app/src/main/assets/edge-core')
   },
   performance: { hints: false },
-  node: { fs: 'empty' },
-  plugins: [new webpack.IgnorePlugin(/^(https-proxy-agent)$/)],
+  plugins: [
+    new webpack.IgnorePlugin({ resourceRegExp: /^(https-proxy-agent)$/ }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer']
+    }),
+    new webpack.ProvidePlugin({
+      process: path.resolve('node_modules/process/browser.js')
+    })
+  ],
   resolve: {
     aliasFields: ['browser'],
+    fallback: {
+      assert: require.resolve('assert'),
+      crypto: require.resolve('crypto-browserify'),
+      fs: false,
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      path: require.resolve('path-browserify'),
+      stream: require.resolve('stream-browserify'),
+      string_decoder: require.resolve('string_decoder'),
+      url: require.resolve('url'),
+      vm: require.resolve('vm-browserify')
+    },
     mainFields: ['browser', 'module', 'main']
   }
 }

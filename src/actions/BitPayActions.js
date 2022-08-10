@@ -174,7 +174,7 @@ export async function launchBitPay(
   }
 
   const unsignedTx = await selectedWallet.makeSpend(spendInfo)
-  const unsignedHex = unsignedTx.otherParams?.txJson?.hex ?? ''
+  const unsignedHex = unsignedTx.otherParams?.unsignedTx ?? '' // unsignedTx is now a required field in otherParams in makeSpend()
   const signedTx = await selectedWallet.signTx(unsignedTx)
   const signedHex = signedTx.signedTx ?? ''
 

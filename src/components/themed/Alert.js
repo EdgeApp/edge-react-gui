@@ -90,13 +90,11 @@ const getStyles = (theme: Theme, { typeColor }: StylesOptions) =>
     header: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: theme.rem(0.4)
+      alignItems: 'center'
     },
     title: {
       fontSize: theme.rem(0.75),
-      color: typeColor,
-      fontFamily: theme.fontFaceBold
+      color: typeColor
     },
     icon: {
       marginRight: theme.rem(0.5)

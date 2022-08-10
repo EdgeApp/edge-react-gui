@@ -4,7 +4,7 @@ import { type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { useSelector } from '../types/reactRedux'
 import { fixFiatCurrencyCode, getDenomFromIsoCode, zeroString } from '../util/utils'
-import { useWatchWallet } from './useWatch.js'
+import { useWatch } from './useWatch.js'
 
 /**
  * Returns data from tokens relevant for display
@@ -18,7 +18,7 @@ export const useTokenDisplayData = (props: {| tokenId?: string, wallet: EdgeCurr
   const { tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { allTokens } = currencyConfig
-  const fiatCurrencyCode = useWatchWallet(wallet, 'fiatCurrencyCode')
+  const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
   const isoFiatCurrencyCode = fixFiatCurrencyCode(fiatCurrencyCode)
 
   // Get currencyCode and denomination from token

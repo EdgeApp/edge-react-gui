@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../hooks/useAllTokens.js'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber.js'
-import { useWatchAccount } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings.js'
 import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
@@ -41,8 +41,8 @@ export function SortedWalletList(props: Props) {
 
   // Subscribe to everything that affects the list ordering:
   const allTokens = useAllTokens(account)
-  const activeWalletIds = useWatchAccount(account, 'activeWalletIds')
-  const currencyWallets = useWatchAccount(account, 'currencyWallets')
+  const activeWalletIds = useWatch(account, 'activeWalletIds')
+  const currencyWallets = useWatch(account, 'currencyWallets')
   const enabledTokenIds = useEnabledWalletIds(account)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)

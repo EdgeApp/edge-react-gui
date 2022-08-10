@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -12,7 +12,7 @@ import { ListModal } from './ListModal.js'
 type Props = {
   bridge: AirshipBridge<string | void>,
   title: string,
-  items: Array<{ icon: string | number | React.Node, name: string }>, // Icon strings are image uri, numbers are local files
+  items: Array<{ icon: string | number | React.Node, name: string, text?: string }>, // Icon strings are image uri, numbers are local files
   selected?: string
 }
 
@@ -21,7 +21,7 @@ export function RadioListModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  function renderRow({ name, icon }): React.Node {
+  function renderRow({ name, icon, text }): React.Node {
     const imageIcon = typeof icon === 'string' ? { uri: icon } : icon
     const radio = selected === name ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
 
@@ -32,6 +32,7 @@ export function RadioListModal(props: Props) {
             {typeof icon === 'number' || typeof icon === 'string' ? <Image resizeMode="contain" source={imageIcon} style={styles.icon} /> : icon}
           </View>
           <EdgeText style={styles.rowText}>{name}</EdgeText>
+          {text != null ? <Text style={styles.text}>{text}</Text> : null}
           <IonIcon name={radio.icon} color={radio.color} size={theme.rem(1.25)} />
         </View>
       </TouchableOpacity>
@@ -55,6 +56,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
     height: theme.rem(1.25),
     width: theme.rem(1.25)
+  },
+  text: {
+    color: theme.secondaryText,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(0.75),
+    marginRight: theme.rem(0.5),
+    includeFontPadding: false
   },
   rowText: {
     flexGrow: 1

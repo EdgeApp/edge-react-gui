@@ -4,8 +4,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { type LiquidityPool } from '../../plugins/stake-plugins/types'
-import { getLiquidityPoolIconUri } from '../../util/CdnUris.js'
+import { type StakeProviderInfo } from '../../plugins/stake-plugins/types.js'
+import { getStakeProviderIcon } from '../../util/CdnUris.js'
 import { PairIcons } from '../icons/PairIcons.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -14,24 +14,24 @@ export function StakingOptionCard({
   currencyLogos,
   primaryText,
   secondaryText,
-  liquidityPool
+  stakeProviderInfo
 }: {
   currencyLogos: string[],
   primaryText: string,
   secondaryText: string,
-  liquidityPool?: LiquidityPool
+  stakeProviderInfo?: StakeProviderInfo
 }): React.Node {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderExchangeProvider = () => {
-    if (liquidityPool == null) return null
-    const { pluginId, lpId } = liquidityPool
-    const swapProviderIcon = getLiquidityPoolIconUri(pluginId, lpId, theme)
+  const renderStakeProvider = () => {
+    if (stakeProviderInfo == null) return null
+    const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
+    const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
     return (
       <View style={styles.swapProvider}>
         {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
-        <EdgeText style={styles.swapProviderText}>{liquidityPool.displayName}</EdgeText>
+        <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
       </View>
     )
   }
@@ -49,7 +49,7 @@ export function StakingOptionCard({
         </View>
         <View style={styles.textContainer}>
           <EdgeText style={styles.primaryText}>{primaryText}</EdgeText>
-          {renderExchangeProvider()}
+          {renderStakeProvider()}
           <EdgeText style={styles.secondaryText}>{secondaryText}</EdgeText>
         </View>
       </View>

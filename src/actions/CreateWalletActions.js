@@ -11,6 +11,7 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getPluginId } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
+import { config } from '../theme/appConfig.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
@@ -156,7 +157,7 @@ export const createAccountTransaction =
             const edgeMetadata: EdgeMetadata = {
               name: sprintf(s.strings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
               category: 'Expense:' + sprintf(s.strings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
-              notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, 'support@edge.app')
+              notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
               Actions.popTo('walletListScene')

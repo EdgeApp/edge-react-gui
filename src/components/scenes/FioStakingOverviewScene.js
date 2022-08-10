@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { getSymbolFromCurrency, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
-import { useWatchWallet } from '../../hooks/useWatch.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import { formatNumber, formatTimeDate } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -64,7 +64,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   } = props
   const styles = getStyles(theme)
   const [locks, setLocks] = useState<Lock[]>([])
-  const stakingStatus = useWatchWallet(currencyWallet, 'stakingStatus')
+  const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
 
   useEffect(() => {
     refreshAllFioAddresses()

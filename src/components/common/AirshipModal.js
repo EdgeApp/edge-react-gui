@@ -1,9 +1,9 @@
 // @flow
 
-import { BlurView } from '@react-native-community/blur'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal as RealAirshipModal } from 'react-native-airship'
+import { BlurView } from 'rn-id-blurview'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'

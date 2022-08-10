@@ -313,22 +313,23 @@ export type wcGetConnection = {
   timeConnected: number
 }
 export type AppConfig = {
-  configName: string,
   appId?: string,
   appName: string,
   appNameShort: string,
-  darkTheme: Theme,
-  lightTheme: Theme,
-  referralServers?: string[],
-  notificationServers: string[],
-  supportsEdgeLogin: boolean,
-  knowledgeBase: string,
-  supportSite: string,
-  phoneNumber: string,
-  website: string,
-  termsOfServiceSite: string,
   appStore: string,
-  defaultWallets: string[]
+  configName: string,
+  darkTheme: Theme,
+  defaultWallets: string[],
+  knowledgeBase: string,
+  lightTheme: Theme,
+  notificationServers: string[],
+  phoneNumber: string,
+  referralServers?: string[],
+  supportsEdgeLogin: boolean,
+  supportEmail: string,
+  supportSite: string,
+  termsOfServiceSite: string,
+  website: string
 }
 
 /**

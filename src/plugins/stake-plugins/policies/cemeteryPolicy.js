@@ -111,7 +111,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const parentCurrencyCode = policyInfo.parentCurrencyCode
       const tokenACurrencyCode = policyInfo.stakeAssets[0].currencyCode
       const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
-      const isTokenBNative = tokenBCurrencyCode === parentCurrencyCode
+      const isTokenANative = tokenACurrencyCode === policyInfo.parentCurrencyCode
+      const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
+      if (isTokenANative && isTokenBNative) throw new Error('Stake plugin does not support two native assets')
 
       // Metadata constants:
       const metadataName = 'Tomb Finance'
@@ -280,16 +282,24 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
-              if (isTokenBNative) {
-                // Call the contract
+              if (isTokenANative || isTokenBNative) {
+                // Call the contract (for LP involving native liquidity)
                 result = await swapRouterContract
                   .connect(signer)
-                  .addLiquidityETH(tokenAContract.address, amountTokenADesired, amountTokenAMin, amountTokenBMin, signerAddress, deadline, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce(),
-                    value: amountTokenBDesired
-                  })
+                  .addLiquidityETH(
+                    isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    isTokenANative ? amountTokenBDesired : amountTokenADesired,
+                    isTokenANative ? amountTokenBMin : amountTokenAMin,
+                    isTokenANative ? amountTokenAMin : amountTokenBMin,
+                    signerAddress,
+                    deadline,
+                    {
+                      gasLimit,
+                      gasPrice,
+                      nonce: nextNonce(),
+                      value: amountTokenBDesired
+                    }
+                  )
               } else {
                 // Call the contract
                 result = await swapRouterContract
@@ -492,14 +502,22 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
               let result
-              if (isTokenBNative) {
+              if (isTokenANative || isTokenBNative) {
                 result = await swapRouterContract
                   .connect(signer)
-                  .removeLiquidityETH(tokenAContract.address, expectedLiquidityAmount, amountTokenAMin, amountTokenBMin, signerAddress, deadline, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce()
-                  })
+                  .removeLiquidityETH(
+                    isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    expectedLiquidityAmount,
+                    isTokenANative ? amountTokenBMin : amountTokenAMin,
+                    isTokenANative ? amountTokenAMin : amountTokenBMin,
+                    signerAddress,
+                    deadline,
+                    {
+                      gasLimit,
+                      gasPrice,
+                      nonce: nextNonce()
+                    }
+                  )
               } else {
                 result = await swapRouterContract
                   .connect(signer)
@@ -605,7 +623,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
+      const tokenACurrencyCode = policyInfo.stakeAssets[0].currencyCode
       const tokenBCurrencyCode = policyInfo.stakeAssets[1].currencyCode
+      const isTokenANative = tokenACurrencyCode === policyInfo.parentCurrencyCode
       const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
 
       // Get the signer for the wallet
@@ -623,7 +643,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         // Get reward amount:
         multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress)).then(String),
         // Get token A balance:
-        multipass(p => tokenAContract.connect(p).balanceOf(signerAddress)).then(String),
+        multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
         // Get token B balance:
         multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
         // Get LP token balance:

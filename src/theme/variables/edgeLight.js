@@ -16,6 +16,7 @@ import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentT
 import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
 import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+import paymentTypeLogoGooglePay from '../../assets/images/paymentTypes/paymentTypeLogoGooglePay.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
@@ -355,6 +356,7 @@ export const edgeLight: Theme = {
   paymentTypeLogoDebitCard: paymentTypeLogoDebitCard,
   paymentTypeLogoFasterPayments: paymentTypeLogoFasterPayments,
   paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
+  paymentTypeLogoGooglePay,
   paymentTypeLogoIdeal: paymentTypeLogoIdeal,
   paymentTypeLogoInterac: paymentTypeLogoInterac,
   paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,

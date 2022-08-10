@@ -72,7 +72,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
     />
   ))
 
-  const lookup = makeCurrencyCodeTable(account)
+  const lookup = makeCurrencyCodeTable(account.currencyConfig)
   const supportedAssets: Array<{ nativeCode: string, tokenCode: string }> = []
   if (confirmResult === 'yes') {
     // Verify Edge supports at least some of the requested native assets

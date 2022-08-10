@@ -24,15 +24,15 @@ const strings = {
 
   // Error messages:
 
-  error_bitpay_empty_output_invoice: 'Received no output in payment request',
-  error_bitpay_empty_verification_hex_req: 'Generated empty transaction hex(es)',
-  error_bitpay_currency_not_supported: 'BitPay invoice payments in %s not currently supported. Please choose another payment currency.',
-  error_bitpay_invalid_payment_option: 'BitPay invoice does not accept this currency. Accepted currencies: %s',
-  error_bitpay_fetch: 'BitPay %s fetch error (%s)%s',
-  error_bitpay_multi_output_invoice: 'Multiple outputs found in payment request',
-  error_bitpay_multi_tx_invoice: 'Multiple transactions found in payment request',
-  error_bitpay_no_payment_option: 'No currencies available for this BitPay invoice. Accepted currencies: %s',
-  error_bitpay_tx_verification_failed: 'BitPay transaction verification mismatch',
+  error_paymentprotocol_empty_output_invoice: 'Received no output in payment request',
+  error_paymentprotocol_empty_verification_hex_req: 'Generated empty transaction hex(es)',
+  error_paymentprotocol_currency_not_supported: 'Payment Protocol invoice payments in %s not currently supported. Please choose another payment currency.',
+  error_paymentprotocol_invalid_payment_option: 'Payment Protocol invoice does not accept this currency. Accepted currencies: %s',
+  error_paymentprotocol_fetch: 'Payment Protocol %s fetch error (%s)%s',
+  error_paymentprotocol_multi_output_invoice: 'Multiple outputs found in payment request',
+  error_paymentprotocol_multi_tx_invoice: 'Multiple transactions found in payment request',
+  error_paymentprotocol_no_payment_option: 'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
+  error_paymentprotocol_tx_verification_failed: 'Payment Protocol transaction verification mismatch',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -98,6 +98,9 @@ const strings = {
   request_xlm_minimum_notification_body:
     'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
+  request_dot_minimum_notification_body:
+    'Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.',
+  request_dot_minimum_notification_alert_body: 'This wallet will always require a 1 DOT minimum',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
@@ -163,6 +166,7 @@ const strings = {
   create_wallet_import_input_key_prompt: 'Private Key',
   create_wallet_import_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated wallet',
   create_wallet_import_input_key_or_seed_prompt: 'Private Key or Private Seed',
+  create_wallet_import_polkadot_input_key_or_seed_instructions: 'Enter your private seed or private key to verify and restore the associated ed25519 wallet',
   create_wallet_import_active_key_input_prompt: 'Active Private Key',
   create_wallet_import_active_key_instructions: 'Enter your active private key to verify and restore the associated wallet:',
   create_wallet_import_successful: 'Import Successful!',
@@ -388,6 +392,7 @@ const strings = {
   string_first_doge_wallet_name: 'My Doge',
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',
+  string_first_polkadot_wallet_name: 'My Polkadot',
   string_first_polygon_wallet_name: 'My Polygon',
   string_first_avalanche_wallet_name: 'My Avalanche',
   my_crypto_wallet_name: 'My %s',
@@ -508,6 +513,7 @@ const strings = {
   transaction_details_exchange_status_page: 'Exchange Status Page',
   transaction_details_exchange_support: 'Exchange Support',
   transaction_details_exchange_support_request: '%s Support Request',
+  transaction_details_fee_warning: 'High Network Fees',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
@@ -798,8 +804,8 @@ const strings = {
     'NOTE: If you had custom nodes enabled, those wallets will not sync until corrected.',
 
   error_boundary_title: 'Oops!',
-  error_boundary_message:
-    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
+  error_boundary_message_s:
+    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -941,6 +947,17 @@ const strings = {
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
+
+  fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
+  fiat_plugin_buy_currencycode: 'Buy %s',
+  fiat_plugin_amount_currencycode: 'Amount %s',
+  fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
+  fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
+  fiat_plugin_asset_unsupported: 'Asset Unsupported',
+  fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
+  fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
+  fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
+  fiat_plugin_fetching_assets: 'Fetching supported assets',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

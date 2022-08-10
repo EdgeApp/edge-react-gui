@@ -34,7 +34,7 @@ export const useCryptoText = ({ displayDenomination, exchangeDenomination, fiatD
   if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0`
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
 
-  if (exchangeRate != null) {
+  if (exchangeRate != null && parseFloat(exchangeRate) > 0) {
     const precisionAdjustValue = precisionAdjust({
       primaryExchangeMultiplier: exchangeMultiplier,
       secondaryExchangeMultiplier: fiatDenomination.multiplier,

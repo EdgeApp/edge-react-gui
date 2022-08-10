@@ -23,6 +23,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       currencyCode="BTC"
       fiatCurrencyCode="USD"
       isTop={true}
+      showFeeWarning={false}
       walletName=""
     />
     <Memo(LineTextDividerComponent)

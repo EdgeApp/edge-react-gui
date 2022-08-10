@@ -14,11 +14,11 @@ export function getSwapPluginIconUri(pluginId: string, theme: Theme) {
 }
 
 /**
- * Swap Plugin Icons
+ * Stake Provider Icons
+ * Icons to differentiate multiple staking options that share the same assets.
  */
-
-export function getLiquidityPoolIconUri(pluginId: string, lpId: string, theme: Theme) {
-  return `${theme.iconServerBaseUri}/liquidityPoolIcons/${pluginId}/${lpId}/icon.png`
+export function getStakeProviderIcon(pluginId: string, providerId: string, theme: Theme) {
+  return `${theme.iconServerBaseUri}/stakeProviderIcons/${pluginId}/${providerId}/icon.png`
 }
 
 /**
