@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions.js'
-import { addressWarnings } from '../../actions/ScanActions.js'
+import { addressWarnings, parseScannedUri } from '../../actions/ScanActions.js'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
@@ -42,7 +42,11 @@ type State = {
   clipboard: string,
   loading: boolean
 }
-type Props = OwnProps & StateProps & ThemeProps
+
+type DispatchProps = {
+  dispatchScannedUri: (uri: string) => void
+}
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 export class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -166,10 +170,11 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleScan = () => {
+    const { dispatchScannedUri } = this.props
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
-          this.onChangeAddress(result)
+          dispatchScannedUri(result)
         }
       })
       .catch(error => {
@@ -255,12 +260,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+const AddressTileConnector = connect<StateProps, DispatchProps, OwnProps, {}>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
-  dispatch => ({})
+  dispatch => ({
+    dispatchScannedUri(uri: string) {
+      dispatch(parseScannedUri(uri))
+    }
+  })
 )(withTheme(AddressTileComponent))
 
 export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)
