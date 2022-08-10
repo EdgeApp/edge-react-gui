@@ -1,6 +1,8 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
+import { type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
+
 //
 // Action Operations
 //
@@ -113,11 +115,11 @@ export type ActionOp =
 export type SeqEffect = {
   type: 'seq',
   opIndex: number,
-  childEffect: ActionEffect
+  childEffect: ActionEffect | null // null is only for dryrun
 }
 export type ParEffect = {
   type: 'par',
-  childEffects: ActionEffect[]
+  childEffects: Array<ActionEffect | null> // null is only for dryrun
 }
 export type AddressBalanceEffect = {
   type: 'address-balance',
@@ -156,21 +158,16 @@ export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | TxConf
 // Action Program
 //
 
-// On Disk:
+// Storage:
 export type ActionProgram = {
   programId: string,
   actionOp: ActionOp
 }
-
 export type ActionProgramState = {
   deviceId: string,
   programId: string,
   effect?: ActionEffect
 }
-
-//
-// Internal Types
-//
 
 export type ActionQueueItem = {
   program: ActionProgram,
@@ -180,9 +177,19 @@ export type ActionQueueMap = {
   [id: string]: ActionQueueItem
 }
 
-export type ExecutionResult = {
+// Runtime:
+export type BroadcastTx = {
+  walletId: string,
+  networkFee: EdgeNetworkFee,
+  tx: EdgeTransaction
+}
+export type ExecutableAction = {
+  dryrunOutput: ExecutionOutput | null,
+  execute(): Promise<ExecutionOutput>
+}
+export type ExecutionOutput = {
   effect: ActionEffect,
-  action?: ActionOp // For dryrun
+  broadcastTxs: BroadcastTx[]
 }
 export type ExecutionResults = {
   nextState: ActionProgramState

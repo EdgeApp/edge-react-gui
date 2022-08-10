@@ -3,7 +3,7 @@
 //
 // Action Operations
 //
-import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { base64 } from 'rfc4648'
 
 import { type ActionEffect, type ActionOp, type ActionProgram, type ActionProgramState } from './types'
@@ -137,11 +137,11 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
 const asSeqEffect = asObject({
   type: asValue('seq'),
   opIndex: asNumber,
-  childEffect: (raw: any) => asActionEffect(raw)
+  childEffect: asEither((raw: any) => asActionEffect(raw), asNull)
 })
 const asParEffect = asObject({
   type: asValue('par'),
-  childEffects: asArray(raw => asActionEffect(raw))
+  childEffects: asArray(asEither((raw: any) => asActionEffect(raw), asNull))
 })
 const asAddressBalanceEffect = asObject({
   type: asValue('address-balance'),

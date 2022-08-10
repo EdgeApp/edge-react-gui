@@ -20,11 +20,16 @@ export function getActionProgramDisplayInfo(account: EdgeAccount, program: Actio
 }
 
 function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect?: ActionEffect): ActionDisplayInfo {
-  // Derive actionOp status from current effect
+  const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE = [
+    `Unexepected null effect while generating display info. `,
+    `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
+  ].join('')
+
   const baseDisplayInfo = {
     status: stateToStatus(effect),
     steps: []
   }
+
   switch (actionOp.type) {
     case 'seq': {
       return {
@@ -43,6 +48,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
             }
             // Otherwise the effect should be a seq matching the seq actionOp:
             if (effect.type === 'seq') {
+              if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
               // Use the opIndex on the effect to determine which child ops are
               // done and which one inherits the pending effect
               if (index < effect.opIndex) childEffect = { type: 'done' }
@@ -71,6 +77,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
             }
             // Otherwise the effect should be a seq matching the seq actionOp:
             if (effect.type === 'par') {
+              if (effect.childEffects[index] === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
               childEffect = effect.childEffects[index]
             }
           }
