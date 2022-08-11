@@ -30,7 +30,7 @@ const asBase64 = asCodec(
   clean => base64.stringify(clean)
 )
 
-// A serializeable error object
+// A serializable error object
 const asJsonError = asObject({
   name: asString,
   message: asString,
