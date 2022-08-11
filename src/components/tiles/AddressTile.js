@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions.js'
-import { addressWarnings, parseScannedUri } from '../../actions/ScanActions.js'
+import { addressWarnings } from '../../actions/ScanActions.js'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError.js'
@@ -42,11 +42,7 @@ type State = {
   clipboard: string,
   loading: boolean
 }
-
-type DispatchProps = {
-  dispatchScannedUri: (uri: string) => void
-}
-type Props = OwnProps & StateProps & ThemeProps & DispatchProps
+type Props = OwnProps & StateProps & ThemeProps
 
 export class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -103,8 +99,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       }
     }
     try {
-      const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await coreWallet.parseUri(address, currencyCode)
-
+      const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await coreWallet.parseUri(address, currencyCode)
       this.setState({ loading: false })
 
       // Check if the URI requires a warning to the user
@@ -112,10 +107,9 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       if (!approved) return
 
       // Missing isPrivateKeyUri Modal
-
       // Check is PaymentProtocolUri
-      if (!!parsedUri.paymentProtocolURL && !parsedUri.publicAddress) {
-        await launchBitPay(parsedUri.paymentProtocolURL, { wallet: coreWallet }).catch(showError)
+      if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
+        await launchBitPay(parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
 
         return
       }
@@ -170,11 +164,10 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleScan = () => {
-    const { dispatchScannedUri } = this.props
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
-          dispatchScannedUri(result)
+          this.onChangeAddress(result)
         }
       })
       .catch(error => {
@@ -260,16 +253,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect<StateProps, DispatchProps, OwnProps, {}>(
+const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
-  dispatch => ({
-    dispatchScannedUri(uri: string) {
-      dispatch(parseScannedUri(uri))
-    }
-  })
+  dispatch => ({})
 )(withTheme(AddressTileComponent))
 
 export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)
