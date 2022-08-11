@@ -5,13 +5,14 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { AirshipToast } from '../../components/common/AirshipToast'
-import { Airship } from '../../components/services/AirshipInstance'
+import { Airship, showError } from '../../components/services/AirshipInstance'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
+import { checkPushEvents, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
   type ActionEffect,
   type ActionProgram,
@@ -27,7 +28,30 @@ import {
 export const executeActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 
-  // TODO: dry-run program
+  // Dry Run
+  if (effect != null && (await effectCanBeATrigger(account, effect))) {
+    try {
+      const dryrunOutputs = await dryrunActionProgram(account, program, state, true)
+
+      // Convert each dryrun result into an array of push events for the push-server.
+      const newPushEvents = await prepareNewPushEvents(account, program, effect, dryrunOutputs)
+
+      // Send PushEvents to the push server:
+      await uploadPushEvents(account, newPushEvents)
+
+      // Mutate the nextState accordingly; effect should be awaiting push events:
+      const nextEffect = {
+        type: 'push-events',
+        eventIds: newPushEvents.map(event => event.eventId)
+      }
+
+      // Exit early with dryrun results:
+      return { nextState: { ...state, effect: nextEffect } }
+    } catch (error) {
+      // Silently fail dryrun
+      showError(error)
+    }
+  }
 
   // Await Effect
   let checkErrors: Error[] = []
@@ -112,7 +136,7 @@ export async function dryrunActionProgram(
 
 async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Promise<{ isEffective: boolean, delay: number }> {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
-    `Unexepected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
+    `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
   switch (effect.type) {
     case 'seq': {
@@ -143,6 +167,18 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         delay: 15000,
         isEffective: (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
       }
+    }
+    case 'push-events': {
+      const { eventIds } = effect
+
+      return {
+        delay: 15000,
+        isEffective: await checkPushEvents(account, eventIds)
+      }
+    }
+    case 'price-level': {
+      // TODO: Implement
+      throw new Error('No implementation for price effect')
     }
     case 'tx-confs': {
       const { txId, walletId, confirmations } = effect
@@ -178,10 +214,6 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
           isEffective: confirmations === 0 || (confirmations > 0 && tx.confirmations === 'confirmed')
         }
       }
-    }
-    case 'price-level': {
-      // TODO: Implement
-      throw new Error('No implementation for price effect')
     }
     case 'unixtime': {
       return {

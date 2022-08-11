@@ -40,6 +40,10 @@ const strings = {
   action_queue_display_delay_message_pending: 'Wait for %1$s millesconds',
   action_queue_display_delay_message_doing: 'Wait until %1$s',
 
+  // Action Queue Push Notifications
+  action_queue_push_notification_title: `Action Complete`,
+  action_queue_push_notification_body: `Edge has finished working on your behalf.`,
+
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',

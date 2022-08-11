@@ -129,17 +129,21 @@ export type AddressBalanceEffect = {
   walletId: string,
   tokenId?: string
 }
-export type TxConfsEffect = {
-  type: 'tx-confs',
-  txId: string,
-  walletId: string,
-  confirmations: number
+export type PushEventsEffect = {
+  type: 'push-events',
+  eventIds: string[]
 }
 export type PriceLevelEffect = {
   type: 'price-level',
   currencyPair: string,
   aboveRate?: number,
   belowRate?: number
+}
+export type TxConfsEffect = {
+  type: 'tx-confs',
+  txId: string,
+  walletId: string,
+  confirmations: number
 }
 export type DoneEffect = {
   type: 'done',
@@ -152,7 +156,16 @@ export type UnixtimeEffect = {
 }
 export type NoopEffect = { type: 'noop' }
 
-export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | TxConfsEffect | PriceLevelEffect | DoneEffect | UnixtimeEffect | NoopEffect
+export type ActionEffect =
+  | SeqEffect
+  | ParEffect
+  | AddressBalanceEffect
+  | PushEventsEffect
+  | PriceLevelEffect
+  | TxConfsEffect
+  | DoneEffect
+  | UnixtimeEffect
+  | NoopEffect
 
 //
 // Action Program
