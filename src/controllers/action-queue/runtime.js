@@ -18,7 +18,8 @@ import {
   type BroadcastTx,
   type ExecutableAction,
   type ExecutionOutput,
-  type ExecutionResults
+  type ExecutionResults,
+  type PendingTxMap
 } from './types'
 
 // TODO: Set the status of executing steps accurately
@@ -53,7 +54,7 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
   }
 
   // Execute Action
-  const executableAction = await evaluateAction(account, program, state)
+  const executableAction = await evaluateAction(account, program, state, {})
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
 
@@ -69,10 +70,11 @@ export async function dryrunActionProgram(
   state: ActionProgramState,
   shortCircuit: boolean
 ): Promise<ExecutionOutput[]> {
+  const pendingTxMap: PendingTxMap = {}
   const outputs: ExecutionOutput[] = []
   const simulatedState = { ...state }
   while (true) {
-    const { dryrunOutput } = await evaluateAction(account, program, simulatedState)
+    const { dryrunOutput } = await evaluateAction(account, program, simulatedState, pendingTxMap)
 
     // In order to avoid infinite loops, we must break when we reach the end
     // of the program or detect that the last effect in sequence is null, which
@@ -91,6 +93,11 @@ export async function dryrunActionProgram(
     outputs.push(dryrunOutput)
     // Update simulated state for next iteration
     simulatedState.effect = dryrunOutput.effect
+    // Add all txs to pendingTxMap
+    dryrunOutput.broadcastTxs.forEach(broadcastTx => {
+      const walletId = broadcastTx.walletId
+      pendingTxMap[walletId] = [...(pendingTxMap[walletId] ?? []), broadcastTx.tx]
+    })
 
     // End of the program
     if (dryrunOutput.effect.type === 'done') break
@@ -189,7 +196,7 @@ function checkEffectForNull(effect: ActionEffect): boolean {
  * be valid except for some special cases which must be specified by the
  * developer (via comments).
  */
-async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
+async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, pendingTxMap: PendingTxMap): Promise<ExecutableAction> {
   const { actionOp } = program
   const { effect } = state
 
@@ -213,7 +220,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         programId: `${program.programId}[${opIndex}]`,
         actionOp: actionOp.actions[opIndex]
       }
-      const childOutput = await evaluateAction(account, nextProgram, state)
+      const childOutput = await evaluateAction(account, nextProgram, state, pendingTxMap)
       const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
       const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
       const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
@@ -245,7 +252,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(account, subProgram, state)
+        return await evaluateAction(account, subProgram, state, pendingTxMap)
       })
       const childOutputs = await Promise.all(promises)
       const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
@@ -278,6 +285,9 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
+      // Get any pending txs for this wallet
+      const pendingTxs = pendingTxMap[walletId] ?? []
+
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -287,7 +297,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId, pendingTxs })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -297,6 +307,9 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
+      // Get any pending txs for this wallet
+      const pendingTxs = pendingTxMap[walletId] ?? []
+
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -306,7 +319,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId, pendingTxs })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -316,6 +329,9 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
+      // Get any pending txs for this wallet
+      const pendingTxs = pendingTxMap[walletId] ?? []
+
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -325,7 +341,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, pendingTxs })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -335,6 +351,9 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
+      // Get any pending txs for this wallet
+      const pendingTxs = pendingTxMap[walletId] ?? []
+
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -344,7 +363,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId, pendingTxs })
 
       return await approvableActionToExecutableAction(approvableAction)
     }

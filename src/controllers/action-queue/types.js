@@ -194,6 +194,9 @@ export type ExecutionOutput = {
 export type ExecutionResults = {
   nextState: ActionProgramState
 }
+export type PendingTxMap = {
+  [walletId: string]: EdgeTransaction[]
+}
 
 //
 // Aciton Display API
