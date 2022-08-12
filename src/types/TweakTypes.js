@@ -20,6 +20,9 @@ export const asMessageTweak = asObject({
 
   countryCodes: asOptional(asArray(asString)),
   hasLinkedBankMap: asOptional(asMap(asBoolean)), // Map of pluginIds
+  exactBuildNum: asOptional(asString),
+  minBuildNum: asOptional(asString),
+  maxBuildNum: asOptional(asString),
 
   startDate: asOptional(asDate),
   durationDays: asNumber

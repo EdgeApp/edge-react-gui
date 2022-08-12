@@ -2,6 +2,7 @@
 
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
+import { getBuildNumber } from 'react-native-device-info'
 
 import ENV from '../../env.json'
 import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
@@ -200,8 +201,20 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
   let wyreHasLinkedBank
 
   for (const card of cards) {
-    // Validate Country
+    // Validate app buildnum
+    const buildNum = getBuildNumber()
+    if (typeof card.exactBuildNum === 'string') {
+      if (card.exactBuildNum !== buildNum) continue
+    }
+    if (typeof card.minBuildNum === 'string') {
+      if (card.minBuildNum > buildNum) continue
+    }
+    if (typeof card.maxBuildNum === 'string') {
+      if (card.maxBuildNum < buildNum) continue
+    }
+
     if (card.countryCodes != null) {
+      // Validate Country
       const match = card.countryCodes.some(cc => cc === result.countryCode)
       if (!match) continue
     }
