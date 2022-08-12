@@ -41,7 +41,7 @@ import s from '../locales/strings.js'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
-import { type NavigationProp, Actions, withNavigation } from '../types/routerTypes.js'
+import { Actions, withNavigation } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -133,11 +133,7 @@ type DispatchProps = {
   showReEnableOtpModal: () => void
 }
 
-type OwnProps = {
-  navigation: NavigationProp<'root'>
-}
-
-type Props = DispatchProps & OwnProps
+type Props = DispatchProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -171,6 +167,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
+              // $FlowFixMe
               renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
             />
             {this.renderTransactionDetailsView()}
@@ -197,6 +194,7 @@ export class MainComponent extends React.Component<Props> {
   }
 
   renderTabView = () => {
+    // $FlowFixMe
     const { navigation } = this.props
     return (
       <Drawer
@@ -277,6 +275,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
+                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
               />
 
@@ -286,6 +285,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
+                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
               />
 
@@ -372,8 +372,10 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginListBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
+                // $FlowFixMe
                 renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
+                // $FlowFixMe
                 onLeft={this.props.navigation.pop}
                 route={{ params: { direction: 'buy' } }}
               />
@@ -383,6 +385,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
                 renderLeftButton={renderPluginBackButton(navigation)}
+                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
                 hideTabBar
               />
@@ -399,8 +402,10 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginListSell"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
+                // $FlowFixMe
                 renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
+                // $FlowFixMe
                 onLeft={this.props.navigation.pop}
                 route={{ params: { direction: 'sell' } }}
               />
@@ -410,6 +415,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
                 renderLeftButton={renderPluginBackButton(navigation)}
+                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
                 hideTabBar
               />
@@ -419,6 +425,7 @@ export class MainComponent extends React.Component<Props> {
                 key="exchangeScene"
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
+                // $FlowFixMe
                 renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
@@ -481,6 +488,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
+              // $FlowFixMe
               renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
             />
           </Stack>
@@ -602,6 +610,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -611,6 +620,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -622,6 +632,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
               renderLeftButton={renderPluginBackButton(navigation)}
+              // $FlowFixMe
               renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
             />
           </Stack>
@@ -634,6 +645,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -645,6 +657,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -657,6 +670,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -669,6 +683,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -681,6 +696,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -690,6 +706,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -698,6 +715,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -709,6 +727,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -729,6 +748,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -741,6 +761,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -764,6 +785,7 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -775,6 +797,8 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -796,6 +820,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -807,6 +832,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -815,6 +841,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -823,6 +850,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
+              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -959,31 +987,36 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('exchangeQuote')) {
+      // $FlowFixMe
       this.props.navigation.navigate('exchangeScene')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
+      // $FlowFixMe
       handlePluginBack(this.props.navigation)
       return true
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
+        // $FlowFixMe
         this.props.navigation.navigate('walletListScene')
         return true
       }
     }
     if (this.isCurrentScene('fioAddressRegisterSelectWallet')) {
       if (Actions.currentParams.isFallback) {
+        // $FlowFixMe
         this.props.navigation.navigate('fioAddressRegister')
         return true
       }
     }
+    // $FlowFixMe
     this.props.navigation.pop()
     return true
   }
 }
 
-export const Main = connect<{}, DispatchProps, OwnProps>(
+export const Main = connect<{}, DispatchProps, {}>(
   state => ({}),
   dispatch => ({
     registerDevice() {
@@ -1015,4 +1048,4 @@ export const Main = connect<{}, DispatchProps, OwnProps>(
       dispatch(showReEnableOtpModal())
     }
   })
-)(MainComponent)
+)(withNavigation(MainComponent))
