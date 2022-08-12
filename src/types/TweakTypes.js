@@ -1,6 +1,6 @@
 // @flow
 
-import { type Cleaner, asArray, asBoolean, asDate, asMap, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { type Cleaner, asArray, asBoolean, asDate, asMap, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 
 /**
  * A currency code to create a wallet for, normalized to uppercase.
@@ -23,6 +23,7 @@ export const asMessageTweak = asObject({
   exactBuildNum: asOptional(asString),
   minBuildNum: asOptional(asString),
   maxBuildNum: asOptional(asString),
+  osTypes: asOptional(asArray(asValue('ios', 'android', 'windows', 'macos', 'web'))),
 
   startDate: asOptional(asDate),
   durationDays: asNumber

@@ -2,6 +2,7 @@
 
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
+import { Platform } from 'react-native'
 import { getBuildNumber } from 'react-native-device-info'
 
 import ENV from '../../env.json'
@@ -12,6 +13,7 @@ import { type AccountReferral, type Promotion, type ReferralCache } from '../typ
 import { type MessageTweak, asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { fetchInfo, fetchReferral } from '../util/network'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
+
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
 const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
 
@@ -201,6 +203,12 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
   let wyreHasLinkedBank
 
   for (const card of cards) {
+    // Validate OS type
+    if (card.osTypes != null) {
+      const match = card.osTypes.some(os => os === Platform.OS)
+      if (!match) continue
+    }
+
     // Validate app buildnum
     const buildNum = getBuildNumber()
     if (typeof card.exactBuildNum === 'string') {
