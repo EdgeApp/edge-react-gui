@@ -14,6 +14,7 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
   const { borrowEngine, borrowPlugin } = route.params
 
   return ManageCollateralScene({
+    // $FlowFixMe - Get ride of this hasty abstraction
     action: async req => await borrowEngine.withdraw(req),
     actionOpType: 'loan-withdraw',
     actionWallet: 'toWallet',
