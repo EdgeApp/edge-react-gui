@@ -3,7 +3,8 @@
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
-import { fetchInfo, makeUuid } from '../../../util/utils'
+import { fetchInfo } from '../../../util/network'
+import { makeUuid } from '../../../util/utils'
 import { asFiatPaymentTypes } from '../fiatPluginTypes'
 import {
   type FiatProvider,

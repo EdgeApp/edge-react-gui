@@ -3,12 +3,11 @@
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 
-import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
 import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
+import { fetchReferral } from '../util/network'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
-import { fetchWaterfall } from '../util/utils.js'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
 const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
@@ -86,12 +85,10 @@ const createAccountReferral = () => async (dispatch: Dispatch, getState: GetStat
  * Downloads a promotion matching the given install link.
  */
 export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
-  if (config.referralServers == null || config.referralServers.length === 0) return
-
   const uri = `api/v1/promo?installerId=${installerId}`
   let reply
   try {
-    reply = await fetchWaterfall(config.referralServers, uri)
+    reply = await fetchReferral(uri)
   } catch (e) {
     console.warn(`Failed to contact referral server`)
     return
@@ -143,14 +140,13 @@ export const ignoreAccountSwap =
   }
 
 export const refreshAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
-  if (config.referralServers == null || config.referralServers.length === 0) return
   const state = getState()
   const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
 
   const uri = `api/v1/partner?installerId=${installerId}`
   let reply
   try {
-    reply = await fetchWaterfall(config.referralServers, uri)
+    reply = await fetchReferral(uri)
   } catch (e) {
     console.warn(`Failed to contact referral server`)
     return

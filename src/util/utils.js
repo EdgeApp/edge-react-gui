@@ -429,20 +429,6 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
   }
 }
 
-export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
-  if (servers == null) return
-  const funcs = servers.map(server => async () => {
-    const result = await fetch(server + '/' + path, options)
-    if (typeof result !== 'object') {
-      const msg = `Invalid return value ${path} in ${server}`
-      console.log(msg)
-      throw new Error(msg)
-    }
-    return result
-  })
-  return asyncWaterfall(funcs, timeout)
-}
-
 export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {
@@ -640,19 +626,9 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return array
 }
 
-export async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
-  if (servers == null) return
-  return fetchWaterfall(shuffleArray(servers), path, options, timeout)
-}
-
 export const pickRandom = <T>(array?: T[]): T | null => {
   if (array == null || array.length === 0) return null
   return array[Math.floor(Math.random() * array.length)]
-}
-
-const INFO_SERVERS = ['https://info2.edge.app']
-export const fetchInfo = (path: string, options?: Object, timeout?: number): Promise<any> => {
-  return multiFetch(INFO_SERVERS, path, options, timeout)
 }
 
 /**

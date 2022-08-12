@@ -4,8 +4,7 @@ import analytics from '@react-native-firebase/analytics'
 import { getUniqueId } from 'react-native-device-info'
 
 import ENV from '../../env.json'
-import { config } from '../theme/appConfig'
-import { pickRandom } from './utils.js'
+import { fetchReferral } from './network'
 
 export type TrackingEvent =
   | 'ActivateWalletCancel'
@@ -98,9 +97,7 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
-  const referralServer = pickRandom(config.referralServers)
-  if (referralServer == null) return
-  fetch(`${referralServer}/api/v1/event`, {
+  fetchReferral(`api/v1/event`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

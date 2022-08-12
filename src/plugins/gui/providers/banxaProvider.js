@@ -5,7 +5,8 @@ import { asArray, asNumber, asObject, asString } from 'cleaners'
 import URL from 'url-parse'
 
 import { type EdgeTokenId } from '../../../types/types'
-import { consify, fetchInfo, makeUuid } from '../../../util/utils'
+import { fetchInfo } from '../../../util/network'
+import { consify, makeUuid } from '../../../util/utils'
 import {
   type FiatProvider,
   type FiatProviderApproveQuoteParams,

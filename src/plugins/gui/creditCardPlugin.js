@@ -10,7 +10,8 @@ import { config } from '../../theme/appConfig'
 import { type EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
-import { fetchInfo, fuzzyTimeout } from '../../util/utils'
+import { fetchInfo } from '../../util/network'
+import { fuzzyTimeout } from '../../util/utils'
 import {
   type FiatPlugin,
   type FiatPluginFactory,
