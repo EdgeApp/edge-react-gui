@@ -15,11 +15,11 @@ import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 
-export function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): ActionDisplayInfo {
-  return getActionOpDisplayInfo(account, program.actionOp, programState.effect)
+export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
+  return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
 }
 
-function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect?: ActionEffect): ActionDisplayInfo {
+async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect?: ActionEffect): Promise<ActionDisplayInfo> {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexepected null effect while generating display info. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
@@ -34,28 +34,30 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         title: s.strings.action_queue_display_seq_title,
         message: s.strings.action_queue_display_seq_message,
         ...baseDisplayInfo,
-        steps: actionOp.actions.map((op, index) => {
-          let childEffect: ActionEffect | void
-          // If there is no effect, then this mean the program hasn't started
-          if (effect != null) {
-            // If the sequence effect is done without an error, then the
-            // sequence has completed successfully, and all the child effects
-            // would be complete too.
-            if (effect.type === 'done' && effect.error != null) {
-              childEffect = effect
+        steps: await Promise.all(
+          actionOp.actions.map(async (op, index) => {
+            let childEffect: ActionEffect | void
+            // If there is no effect, then this mean the program hasn't started
+            if (effect != null) {
+              // If the sequence effect is done without an error, then the
+              // sequence has completed successfully, and all the child effects
+              // would be complete too.
+              if (effect.type === 'done' && effect.error != null) {
+                childEffect = effect
+              }
+              // Otherwise the effect should be a seq matching the seq actionOp:
+              if (effect.type === 'seq') {
+                if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+                // Use the opIndex on the effect to determine which child ops are
+                // done and which one inherits the pending effect
+                if (index < effect.opIndex) childEffect = { type: 'done' }
+                if (index === effect.opIndex) childEffect = effect.childEffect
+              }
             }
-            // Otherwise the effect should be a seq matching the seq actionOp:
-            if (effect.type === 'seq') {
-              if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-              // Use the opIndex on the effect to determine which child ops are
-              // done and which one inherits the pending effect
-              if (index < effect.opIndex) childEffect = { type: 'done' }
-              if (index === effect.opIndex) childEffect = effect.childEffect
-            }
-          }
 
-          return getActionOpDisplayInfo(account, op, childEffect)
-        })
+            return await getActionOpDisplayInfo(account, op, childEffect)
+          })
+        )
       }
     }
     case 'par': {
@@ -63,34 +65,36 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
         title: s.strings.action_queue_display_par_title,
         message: s.strings.action_queue_display_par_message,
         ...baseDisplayInfo,
-        steps: actionOp.actions.map((op, index) => {
-          let childEffect: ActionEffect | void
-          // If there is no effect, then this mean the program hasn't started
-          if (effect != null) {
-            // If the sequence effect is done without an error, then the
-            // sequence has completed successfully, and all the child effects
-            // would be complete too.
-            if (effect.type === 'done' && effect.error != null) {
-              childEffect = effect
+        steps: await Promise.all(
+          actionOp.actions.map(async (op, index) => {
+            let childEffect: ActionEffect | void
+            // If there is no effect, then this mean the program hasn't started
+            if (effect != null) {
+              // If the sequence effect is done without an error, then the
+              // sequence has completed successfully, and all the child effects
+              // would be complete too.
+              if (effect.type === 'done' && effect.error != null) {
+                childEffect = effect
+              }
+              // Otherwise the effect should be a seq matching the seq actionOp:
+              if (effect.type === 'par') {
+                if (effect.childEffects[index] === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+                childEffect = effect.childEffects[index]
+              }
             }
-            // Otherwise the effect should be a seq matching the seq actionOp:
-            if (effect.type === 'par') {
-              if (effect.childEffects[index] === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-              childEffect = effect.childEffects[index]
-            }
-          }
 
-          return getActionOpDisplayInfo(account, op, childEffect)
-        })
+            return await getActionOpDisplayInfo(account, op, childEffect)
+          })
+        )
       }
     }
     case 'swap': {
       const { fromWalletId, fromTokenId, toWalletId, toTokenId } = actionOp
 
-      const fromWallet = account.currencyWallets[fromWalletId]
+      const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
 
-      const toWallet = account.currencyWallets[toWalletId]
+      const toWallet = await account.waitForCurrencyWallet(toWalletId)
       if (toWallet == null) throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
 
       const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
@@ -104,7 +108,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
     }
     case 'exchange-buy': {
       const { exchangePluginId, tokenId, walletId } = actionOp
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // TODO: Convert exchangePluginId to displayName
       const partnerDisplayName = exchangePluginId
@@ -117,7 +121,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
     }
     case 'exchange-sell': {
       const { exchangePluginId, tokenId, walletId } = actionOp
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // TODO: Convert exchangePluginId to displayName
       const partnerDisplayName = exchangePluginId
@@ -130,7 +134,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
     }
     case 'loan-borrow': {
       const { tokenId, walletId } = actionOp
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
 
       return {
@@ -141,7 +145,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
     }
     case 'loan-deposit': {
       const { borrowPluginId, tokenId, walletId } = actionOp
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       const [borrowPlugin] = queryBorrowPlugins({ borrowPluginId })
       const borrowPluginDisplayName = borrowPlugin.borrowInfo.displayName
@@ -161,7 +165,7 @@ function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect
     }
     case 'loan-withdraw': {
       const { nativeAmount, walletId, tokenId } = actionOp
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const { currencyCode, denominations } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
       const { multiplier } = denominations[0]
       const amount = div(nativeAmount, multiplier, multiplier.length)

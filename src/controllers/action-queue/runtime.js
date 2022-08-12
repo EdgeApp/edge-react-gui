@@ -120,7 +120,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
     case 'address-balance': {
       // TODO: Use effect.address when we can check address balances
       const { aboveAmount, belowAmount, tokenId, walletId } = effect
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       const walletBalance = wallet.balances[currencyCode] ?? '0'
 
@@ -128,7 +128,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
     }
     case 'tx-confs': {
       const { txId, walletId, confirmations } = effect
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
 
       // Get transaction
       const txs = await wallet.getTransactions({
@@ -275,7 +275,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'loan-borrow': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
       // Get the borrow-plugin
@@ -294,7 +294,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'loan-deposit': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
       // Get the borrow-plugin
@@ -313,7 +313,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'loan-repay': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
       // Get the borrow-plugin
@@ -332,7 +332,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'loan-withdraw': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
-      const wallet = account.currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
       // Get the borrow-plugin
@@ -351,10 +351,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'swap': {
       const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId } = actionOp
 
-      const fromWallet = account.currencyWallets[fromWalletId]
+      const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
 
-      const toWallet = account.currencyWallets[toWalletId]
+      const toWallet = await account.waitForCurrencyWallet(toWalletId)
       if (toWallet == null) throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
 
       const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
