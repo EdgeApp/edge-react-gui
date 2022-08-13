@@ -9,7 +9,8 @@ import { useEffect, useState } from '../types/reactHooks.js'
  */
 export function useWalletBalance(wallet: EdgeCurrencyWallet, tokenId?: string): string {
   // The core still reports balances by currency code:
-  const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
+  const token = tokenId == null ? null : wallet.currencyConfig.allTokens[tokenId]
+  const { currencyCode } = token == null ? wallet.currencyInfo : token
   const [out, setOut] = useState<string>(wallet.balances[currencyCode] ?? '0')
 
   useEffect(() => {
