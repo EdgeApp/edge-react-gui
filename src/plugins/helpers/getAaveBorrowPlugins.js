@@ -50,4 +50,4 @@ export const getAaveBorrowInfo = async (plugin: BorrowPlugin, wallet: EdgeCurren
 // Filter borrow infos (plugin, engine) for only the ones with open debts.
 // -----------------------------------------------------------------------------
 export const filterActiveBorrowInfos = (borrowInfos: TempBorrowInfo[]): TempBorrowInfo[] =>
-  borrowInfos.filter(borrowInfo => borrowInfo.borrowEngine.debts.length !== 0)
+  borrowInfos.filter(borrowInfo => borrowInfo.borrowEngine.debts.length !== 0 || borrowInfo.borrowEngine.collaterals.length !== 0)
