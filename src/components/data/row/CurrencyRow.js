@@ -30,7 +30,9 @@ const CurrencyRowComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   // Currency code and wallet name for display:
-  const { currencyCode } = token == null ? wallet.currencyInfo : token
+  const allTokens = wallet.currencyConfig.allTokens
+  const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
+  const { currencyCode } = tokenFromId == null ? wallet.currencyInfo : tokenFromId
   const name = useWalletName(wallet)
 
   // Balance stuff:
