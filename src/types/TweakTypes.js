@@ -15,6 +15,7 @@ export const asCurrencyCode: Cleaner<string> = raw => asString(raw).toUpperCase(
  */
 export const asMessageTweak = asObject({
   message: asString,
+  localeMessages: asOptional(asMap(asString)),
   uri: asOptional(asString),
   iconUri: asOptional(asString),
 

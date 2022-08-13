@@ -4,8 +4,10 @@ import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } fro
 import { type EdgeAccount } from 'edge-core-js/types'
 import { Platform } from 'react-native'
 import { getBuildNumber } from 'react-native-device-info'
+import { getLocales } from 'react-native-localize'
 
 import ENV from '../../env.json'
+import { pickLanguage } from '../locales/intl'
 import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -246,6 +248,19 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
         }
       }
       if (!useCard) continue
+    }
+
+    // Pick proper language
+    if (card.localeMessages != null) {
+      const [firstLocale = { languageTag: 'en_US' }] = getLocales()
+      const localeList = Object.keys(card.localeMessages ?? {})
+      const lang = pickLanguage(firstLocale.languageTag, localeList)
+      if (lang != null) {
+        const message = (card.localeMessages ?? {})[lang]
+        if (message != null) {
+          card.message = message
+        }
+      }
     }
     out.push(card)
   }

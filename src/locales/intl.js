@@ -263,3 +263,13 @@ export const toPercentString = (percentVal: string | number, options?: IntlNumbe
   const percentString = mul('100', String(percentVal))
   return `${formatNumber(toFixed(percentString, 0, 1), options)}%`
 }
+
+const normalizeLang = (l: string) => l.replace('-', '').replace('_', '').toLowerCase()
+
+// Given a language code, ie 'en_US', 'en-US', 'en-us', 'en'. Pick the language that closest matches
+export const pickLanguage = (lang: string, languages: string[]): string | void => {
+  const match = languages.find(l => normalizeLang(l) === normalizeLang(lang))
+  if (match != null) return match
+
+  return languages.find(l => normalizeLang(l.slice(0, 2)) === normalizeLang(lang.slice(0, 2)))
+}
