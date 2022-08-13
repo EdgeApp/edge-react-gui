@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 2.20.0 (2022-08-13)
+
+- Update MyMonero SDK for Monero V15 hard fork
+
 ## 2.19.0 (2022-08-01)
 
 - Add Polkadot (DOT)
