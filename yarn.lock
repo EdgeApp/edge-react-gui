@@ -6711,10 +6711,10 @@ edge-currency-accountbased@^0.17.2:
     xrpl "^2.1.1"
     yaob "^0.3.6"
 
-edge-currency-monero@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.4.2.tgz#c3a1c640005c4193e55dc1f61961dae5923a4ec7"
-  integrity sha512-DPQsg7Fd05Ilxn3D3uPDOnJk8CwBg5CGpQsWOvLScgaHEE4KYuzCqFlTw4MRf+EvtiKsRvXYwbRaPXeF1TNeKg==
+edge-currency-monero@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.5.2.tgz#387c592abcea74486ee811ced8daefcbf89c45da"
+  integrity sha512-B6Gq3SlqKyleXFXhLBCkevvTfbwCVOZdgFmo8mIdr3i8goUICi6+c8tBNLc1rQfqwUo45AZ2dWt+e3jgjNl0Aw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -6723,6 +6723,7 @@ edge-currency-monero@^0.4.2:
     buffer "^5.0.6"
     jsonschema "^1.1.1"
     uri-js "^3.0.2"
+    yaob "^0.3.7"
 
 edge-currency-plugins@^1.1.2:
   version "1.1.2"
@@ -12639,10 +12640,10 @@ react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1,
   dependencies:
     prop-types "^15.5.9"
 
-react-native-mymonero-core@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.2.tgz#8b65d0ef5bbefb6fff0a92e364b61d809447dd2f"
-  integrity sha512-mfh70iHKZywIJBfqlT80R7xcePr0b7EtpeXQDhIJSVIPCI0XKtKSpYIFpF2vWc5KitPtmQKAImtVM27pMb4hHA==
+react-native-mymonero-core@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.2.2.tgz#f8a885c634b48541f80d6f49b2edb5d0fbf3d7e6"
+  integrity sha512-I0X6z64m79BgZxNN6IQ6nAukABXGORyCXB8Njbf/kuP+Ca2MSiy5kxbooJuRSv9Sbuba8mxSSs/PRgiiNoLf5w==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -15977,7 +15978,7 @@ yaml@^1.10.0:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaob@^0.3.6, yaob@^0.3.8:
+yaob@^0.3.6, yaob@^0.3.7, yaob@^0.3.8:
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.8.tgz#a359fd092dbf42d07f82eb2fb0b00bdb87f1c4cc"
   integrity sha512-6ocTmk7fVAB7TOc8ot7sdt5o+UK3d8qtDtd61IBIVe++V1xGmhP3Y8FYOCrzmo6ywzGJPaDS66orZIwnw5NwEw==
