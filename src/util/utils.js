@@ -318,7 +318,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   for (const walletId of Object.keys(state.core.account.currencyWallets)) {
     const wallet = state.core.account.currencyWallets[walletId]
     for (const currencyCode of Object.keys(wallet.balances)) {
-      const nativeBalance = wallet.balances[currencyCode]
+      const nativeBalance = wallet.balances[currencyCode] ?? '0'
 
       const { allTokens } = wallet.currencyConfig
       const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
