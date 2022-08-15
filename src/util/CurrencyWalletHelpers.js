@@ -3,6 +3,7 @@
 import { sub } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
+import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings.js'
 
@@ -29,4 +30,15 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: stri
     balance = sub(balance, lockedBalance)
   }
   return balance
+}
+
+// TODO: Update to use tokenId. Integrate into the rest of the code base where the deprecated enableTokens is used.
+export const enableToken = async (currencyCode: string, wallet: EdgeCurrencyWallet) => {
+  const allTokens = wallet.currencyConfig.allTokens
+  const newTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode.toUpperCase() === currencyCode.toUpperCase())
+  if (newTokenId == null) throw Error(`Could not find token ${currencyCode} to add to ${wallet.currencyInfo.currencyCode} wallet`)
+
+  const enabledTokenIds = wallet.enabledTokenIds
+  if (enabledTokenIds.find(enabledTokenId => enabledTokenId === newTokenId) == null)
+    await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, newTokenId]))
 }
