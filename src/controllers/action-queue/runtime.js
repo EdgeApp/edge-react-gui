@@ -23,8 +23,8 @@ import {
   type ExecutionResults,
   type PendingTxMap
 } from './types'
+import { makeWyreClient } from './WyreClient'
 
-// TODO: Set the status of executing steps accurately
 export const executeActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 
@@ -344,6 +344,54 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       }
     }
 
+    case 'fiat-sell': {
+      const { nativeAmount, tokenId, walletId } = actionOp
+      const wallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(wallet, tokenId)
+
+      const wyreClient = await makeWyreClient({
+        account
+      })
+
+      const address = await wyreClient.getCryptoPaymentMethod(wallet)
+
+      if (address == null) throw new Error(`No fiat-sell support for ${tokenId ?? 'native'} token on ${wallet.type}`)
+
+      const makeExecutionOutput = async (): Promise<ExecutionOutput> => {
+        const unsignedTx = await wallet.makeSpend({
+          currencyCode,
+          spendTargets: [
+            {
+              nativeAmount,
+              publicAddress: address
+            }
+          ]
+        })
+        const signedTx = await wallet.signTx(unsignedTx)
+        const networkFee = {
+          currencyCode: wallet.currencyInfo.currencyCode,
+          nativeAmount: signedTx.parentNetworkFee ?? signedTx.networkFee ?? '0'
+        }
+        return {
+          effect: {
+            type: 'tx-confs',
+            txId: signedTx.txid,
+            walletId,
+            confirmations: 1
+          },
+          broadcastTxs: [
+            {
+              walletId: walletId,
+              networkFee,
+              tx: signedTx
+            }
+          ]
+        }
+      }
+
+      return makeExecutableAction(account, makeExecutionOutput)
+    }
+
     case 'loan-borrow': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
 
@@ -533,9 +581,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'fiat-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    case 'fiat-sell': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
     case 'noop': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
@@ -582,5 +627,33 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   return {
     dryrunOutput: dryrun,
     execute
+  }
+}
+
+/**
+ * Super hasty generic to make basic ExecutableAction objects from a function
+ * which returns a ExecutionOutput. This is a very basic contract between the
+ * two interfaces.
+ */
+async function makeExecutableAction(account: EdgeAccount, fn: () => Promise<ExecutionOutput>): Promise<ExecutableAction> {
+  const dryrunOutput = await fn()
+  return {
+    dryrunOutput,
+    execute: async () => {
+      const output = await fn()
+
+      await Promise.all(
+        output.broadcastTxs.map(async broadcastTx => {
+          const wallet = await account.waitForCurrencyWallet(broadcastTx.walletId)
+          const { tx } = broadcastTx
+          await wallet.broadcastTx(tx)
+          await wallet.saveTx(tx)
+        })
+      )
+
+      return {
+        ...output
+      }
+    }
   }
 }
