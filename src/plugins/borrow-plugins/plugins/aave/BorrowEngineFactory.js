@@ -65,7 +65,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     }
     const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
       if (walletParam.currencyInfo.pluginId !== wallet.currencyInfo.pluginId)
-        throw new Error(`Wallet parameter's plugin ID must match borrow engine's wallet plugin ID`)
+        throw new Error(
+          `Wallet parameter's plugin ID ${walletParam.currencyInfo.pluginId} must match borrow engine's wallet plugin ID ${wallet.currencyInfo.pluginId}`
+        )
     }
 
     //
@@ -137,18 +139,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
         const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress()).publicAddress
-        const amountToCover = amount.eq(ethers.constants.MaxUint256) ? BigNumber.from(debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0) : amount
-
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
-        // Check balance of token
-        const balance = await tokenContract.balanceOf(spenderAddress)
-        if (amountToCover.gt(balance)) {
-          throw new Error(`Insufficient funds to deposit ${token.displayName} collateral`)
-        }
-
         const gasPrice = await aaveNetwork.provider.getGasPrice()
-
         const txCallInfos: CallInfo[] = []
 
         const allowance = await tokenContract.allowance(onBehalfOf, aaveNetwork.lendingPool.address)
@@ -266,12 +259,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
-        // Check balance of token
-        const balance = await tokenContract.balanceOf(spenderAddress)
-        if (amountToCover.gt(balance)) {
-          throw new Error(`Insufficient funds to repay ${token.displayName} loan`)
-        }
-
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
 
@@ -344,6 +331,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...repayActions, ...withdrawActions)
       }
     }
+
     return instance
   }
 }
