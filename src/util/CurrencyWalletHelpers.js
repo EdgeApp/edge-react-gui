@@ -3,6 +3,7 @@
 import { sub } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
+import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings.js'
 
@@ -29,4 +30,11 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: stri
     balance = sub(balance, lockedBalance)
   }
   return balance
+}
+
+export const enableToken = async (currencyCode: string, wallet: EdgeCurrencyWallet) => {
+  const enabledTokens = await wallet.getEnabledTokens()
+  if (enabledTokens.find(enabledTokenCc => enabledTokenCc === currencyCode) == null) {
+    await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([currencyCode]))
+  }
 }
