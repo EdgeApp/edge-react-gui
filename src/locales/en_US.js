@@ -945,6 +945,7 @@ const strings = {
   loan_must_be_s_or_less: 'Loan must be less than %1$s of your total collateral value',
   loan_new_loan: 'New Loan',
   loan_new_principle: 'New Principle',
+  loan_no_active_loans_message: 'You have no active loans, create a loan, and start earning with AAVE!',
   loan_remaining_principle: 'Remaining Principle',
   loan_s_apr: '%1$s%% APR',
   loan_select_receiving_wallet: 'Please select a receiving wallet',

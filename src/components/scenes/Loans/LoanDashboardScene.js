@@ -156,6 +156,7 @@ export const LoanDashboardScene = (props: Props) => {
     <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
+      {borrowInfos.length === 0 && <EdgeText style={styles.bodyText}>{s.strings.loan_no_active_loans_message}</EdgeText>}
       <FlatList
         data={borrowInfos}
         keyboardShouldPersistTaps="handled"
@@ -194,6 +195,14 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     addItemText: {
       flexShrink: 1
+    },
+    bodyText: {
+      color: theme.secondaryText,
+      fontSize: theme.rem(1.75),
+      fontWeight: 'normal',
+      lineHeight: theme.rem(2.25),
+      marginLeft: theme.rem(1),
+      marginRight: theme.rem(1)
     },
     cardEmptyContainer: {
       marginLeft: theme.rem(1),
