@@ -73,13 +73,19 @@ async function rotateLogs(type: LogType): Promise<void> {
 
 async function migrateLogs(): Promise<void> {
   if (await RNFS.exists(RNFS.DocumentDirectoryPath + '/logs1.txt')) {
-    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs1.txt', RNFS.DocumentDirectoryPath + '/logs_info.000.txt')
+    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs1.txt', RNFS.DocumentDirectoryPath + '/logs_info.000.txt').catch(e => {
+      RNFS.unlink(RNFS.DocumentDirectoryPath + '/logs1.txt')
+    })
   }
   if (await RNFS.exists(RNFS.DocumentDirectoryPath + '/logs2.txt')) {
-    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs2.txt', RNFS.DocumentDirectoryPath + '/logs_info.001.txt')
+    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs2.txt', RNFS.DocumentDirectoryPath + '/logs_info.001.txt').catch(e => {
+      RNFS.unlink(RNFS.DocumentDirectoryPath + '/logs2.txt')
+    })
   }
   if (await RNFS.exists(RNFS.DocumentDirectoryPath + '/logs3.txt')) {
-    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs3.txt', RNFS.DocumentDirectoryPath + '/logs_info.002.txt')
+    await RNFS.moveFile(RNFS.DocumentDirectoryPath + '/logs3.txt', RNFS.DocumentDirectoryPath + '/logs_info.002.txt').catch(e => {
+      RNFS.unlink(RNFS.DocumentDirectoryPath + '/logs3.txt')
+    })
   }
 }
 
