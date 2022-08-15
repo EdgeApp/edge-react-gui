@@ -9,8 +9,8 @@ import { type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
 export type ActionOpTypes =
   | 'seq'
   | 'par'
-  | 'exchange-buy'
-  | 'exchange-sell'
+  | 'fiat-buy'
+  | 'fiat-sell'
   | 'loan-borrow'
   | 'loan-deposit'
   | 'loan-repay'
@@ -34,19 +34,19 @@ export type BroadcastTxActionOp = {
   pluginId: string,
   rawTx: Uint8Array
 }
-export type ExchangeBuyActionOp = {
-  type: 'exchange-buy',
+export type FiatBuyActionOp = {
+  type: 'fiat-buy',
+  fiatPluginId: string,
   nativeAmount: string,
   walletId: string,
-  tokenId?: string,
-  exchangePluginId: string
+  tokenId?: string
 }
-export type ExchangeSellActionOp = {
-  type: 'exchange-sell',
+export type FiatSellActionOp = {
+  type: 'fiat-sell',
+  fiatPluginId: string,
   nativeAmount: string,
   walletId: string,
-  tokenId?: string,
-  exchangePluginId: string
+  tokenId?: string
 }
 export type LoanBorrowActionOp = {
   type: 'loan-borrow',
@@ -98,8 +98,8 @@ export type ActionOp =
   | SeqActionOp
   | ParActionOp
   | BroadcastTxActionOp
-  | ExchangeBuyActionOp
-  | ExchangeSellActionOp
+  | FiatBuyActionOp
+  | FiatSellActionOp
   | LoanBorrowActionOp
   | LoanDepositActionOp
   | LoanRepayActionOp

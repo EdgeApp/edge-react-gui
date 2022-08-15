@@ -530,10 +530,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'done': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    case 'exchange-buy': {
+    case 'fiat-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    case 'exchange-sell': {
+    case 'fiat-sell': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
     case 'noop': {

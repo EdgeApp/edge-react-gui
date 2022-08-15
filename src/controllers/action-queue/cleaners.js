@@ -13,8 +13,8 @@ import {
   type ActionProgramState,
   type BroadcastTxActionOp,
   type DelayActionOp,
-  type ExchangeBuyActionOp,
-  type ExchangeSellActionOp,
+  type FiatBuyActionOp,
+  type FiatSellActionOp,
   type LoanBorrowActionOp,
   type LoanDepositActionOp,
   type LoanRepayActionOp,
@@ -68,19 +68,19 @@ const asBroadcastTxActionOp: Cleaner<BroadcastTxActionOp> = asObject({
   pluginId: asString,
   rawTx: asBase64
 })
-const asExchangeBuyActionOp: Cleaner<ExchangeBuyActionOp> = asObject({
-  type: asValue('exchange-buy'),
+const asFiatBuyActionOp: Cleaner<FiatBuyActionOp> = asObject({
+  type: asValue('fiat-buy'),
+  fiatPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString),
-  exchangePluginId: asString
+  tokenId: asOptional(asString)
 })
-const asExchangeSellActionOp: Cleaner<ExchangeSellActionOp> = asObject({
-  type: asValue('exchange-sell'),
+const asFiatSellActionOp: Cleaner<FiatSellActionOp> = asObject({
+  type: asValue('fiat-sell'),
+  fiatPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString),
-  exchangePluginId: asString
+  tokenId: asOptional(asString)
 })
 const asLoanBorrowActionOp: Cleaner<LoanBorrowActionOp> = asObject({
   type: asValue('loan-borrow'),
@@ -131,8 +131,8 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
   asParActionOp,
   asBroadcastTxActionOp,
-  asExchangeBuyActionOp,
-  asExchangeSellActionOp,
+  asFiatBuyActionOp,
+  asFiatSellActionOp,
   asLoanBorrowActionOp,
   asLoanDepositActionOp,
   asLoanRepayActionOp,
