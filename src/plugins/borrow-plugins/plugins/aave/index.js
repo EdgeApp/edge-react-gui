@@ -24,6 +24,7 @@ const aaveMaticNetwork = makeAaveNetworkFactory({
     protocolDataProvider: '0x7551b5D2763519d4e37e8B81929D336De671d46d'
   },
   enabledTokens: {
+    USDC: true,
     DAI: true,
     WBTC: true
   }
@@ -56,6 +57,7 @@ const aaveEthNetwork = makeAaveNetworkFactory({
     protocolDataProvider: '0x057835ad21a177dbdd3090bb1cae03eacf78fc6d'
   },
   enabledTokens: {
+    USDC: true,
     DAI: true,
     WBTC: true
   }
