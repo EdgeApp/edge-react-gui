@@ -84,7 +84,12 @@ export const LoanDashboardScene = (props: Props) => {
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const handleAddLoan = useHandler(() => {
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: 'ethereum' }]} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        allowedAssets={[{ pluginId: 'ethereum' }, { pluginId: 'polygon' }]}
+        showCreateWallet
+      />
     )).then(({ walletId }) => {
       if (walletId != null) {
         const selectedWallet = wallets[walletId]
