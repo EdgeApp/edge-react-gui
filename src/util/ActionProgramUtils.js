@@ -2,8 +2,8 @@
 
 import { type EdgeCurrencyWallet } from 'edge-core-js/types'
 
-import { getToken } from '../components/scenes/Loans/LoanDetailsScene'
 import { type ActionOp, type ActionProgram } from '../controllers/action-queue/types'
+import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 
 // -----------------------------------------------------------------------------

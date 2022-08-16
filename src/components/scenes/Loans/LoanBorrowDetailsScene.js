@@ -10,6 +10,7 @@ import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
+import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -20,7 +21,7 @@ import { useCryptoTextSimple } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { getToken, useFiatTotal } from './LoanDetailsScene'
+import { useFiatTotal } from './LoanDetailsScene'
 
 type Props = {
   route: RouteProp<'loanBorrowDetails'>,
