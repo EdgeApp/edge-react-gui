@@ -12,6 +12,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes'
 import { type GuiCurrencyInfo, emptyCurrencyInfo } from '../../types/types.js'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
@@ -63,10 +64,13 @@ type StateProps = {
 }
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>,
-  getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void,
+  getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void, navigation: NavigationProp<'exchangeScene'>) => void,
   exchangeMax: () => Promise<void>
 }
-type Props = StateProps & DispatchProps & ThemeProps
+type OwnProps = {
+  navigation: NavigationProp<'exchangeScene'>
+}
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {
   whichWalletFocus: 'from' | 'to', // Which wallet FlipInput was last focused and edited
@@ -143,7 +147,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
     if (!zeroString(data.primaryNativeAmount)) {
-      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data, this.resetState)
+      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data, this.resetState, this.props.navigation)
       Keyboard.dismiss()
       return
     }
@@ -347,7 +351,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
+export const CryptoExchangeScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { currencyWallets } = state.core.account
     const { cryptoExchange } = state
@@ -418,8 +422,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     }
   },
   dispatch => ({
-    getQuoteForTransaction(fromWalletNativeAmount, onApprove) {
-      dispatch(getQuoteForTransaction(fromWalletNativeAmount, onApprove))
+    getQuoteForTransaction(fromWalletNativeAmount, onApprove, navigation: NavigationProp<'exchangeScene'>) {
+      dispatch(getQuoteForTransaction(fromWalletNativeAmount, onApprove, navigation))
     },
     async onSelectWallet(walletId, currencyCode, direction) {
       await dispatch(selectWalletForExchange(walletId, currencyCode, direction))

@@ -18,7 +18,7 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig.js'
 import { type RequestAddressLink } from '../types/DeepLinkTypes'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser.js'
 import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils.js'
@@ -171,155 +171,155 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   return approve
 }
 
-export const parseScannedUri = (data: string, customErrorTitle?: string, customErrorDescription?: string) => async (dispatch: Dispatch, getState: GetState) => {
-  if (!data) return
-  const state = getState()
-  const { account } = state.core
-  const { currencyWallets } = account
+export const parseScannedUri =
+  (data: string, customErrorTitle?: string, customErrorDescription?: string, navigation: NavigationProp<any>) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    if (!data) return
+    const state = getState()
+    const { account } = state.core
+    const { currencyWallets } = account
 
-  const selectedWalletId = state.ui.wallets.selectedWalletId
-  const edgeWallet = currencyWallets[selectedWalletId]
-  const currencyCode = state.ui.wallets.selectedCurrencyCode
+    const selectedWalletId = state.ui.wallets.selectedWalletId
+    const edgeWallet = currencyWallets[selectedWalletId]
+    const currencyCode = state.ui.wallets.selectedCurrencyCode
 
-  const navigation: NavigationProp<'edge'> = useNavigation()
-
-  let fioAddress
-  if (account && account.currencyConfig) {
-    const fioPlugin = account.currencyConfig.fio
-    if (fioPlugin != null) {
-      const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-      try {
-        const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
-        fioAddress = data.toLowerCase()
-        data = publicAddress
-      } catch (e) {
-        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-          return showError(e)
+    let fioAddress
+    if (account && account.currencyConfig) {
+      const fioPlugin = account.currencyConfig.fio
+      if (fioPlugin != null) {
+        const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+        try {
+          const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
+          fioAddress = data.toLowerCase()
+          data = publicAddress
+        } catch (e) {
+          if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
+            return showError(e)
+          }
         }
       }
     }
-  }
-  // Check for things other than coins:
-  try {
-    const deepLink = parseDeepLink(data)
-    switch (deepLink.type) {
-      case 'other':
-        // Handle this link type below:
-        break
-      case 'requestAddress':
-        return await doRequestAddress(account, dispatch, deepLink)
-      case 'edgeLogin':
-      case 'bitPay':
-      default:
-        dispatch(launchDeepLink(deepLink))
-        return
-    }
-  } catch (error) {
-    return showError(error)
-  }
-
-  // Coin operations
-  try {
-    const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
-    dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
-
-    // Check if the URI requires a warning to the user
-    const approved = await addressWarnings(parsedUri, currencyCode)
-    if (!approved) return dispatch({ type: 'ENABLE_SCAN' })
-
-    if (parsedUri.token) {
-      // TOKEN URI
-      const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
-      return navigation.push('editToken', {
-        currencyCode: currencyCode.toUpperCase(),
-        multiplier: denominations[0]?.multiplier,
-        displayName: currencyName,
-        networkLocation: { contractAddress },
-        walletId: selectedWalletId
-      })
+    // Check for things other than coins:
+    try {
+      const deepLink = parseDeepLink(data)
+      switch (deepLink.type) {
+        case 'other':
+          // Handle this link type below:
+          break
+        case 'requestAddress':
+          return await doRequestAddress(account, dispatch, deepLink)
+        case 'edgeLogin':
+        case 'bitPay':
+        default:
+          dispatch(launchDeepLink(deepLink, navigation))
+          return
+      }
+    } catch (error) {
+      return showError(error)
     }
 
-    // LEGACY ADDRESS URI
-    if (parsedUri.legacyAddress != null) {
-      const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-      navigation.push('send', {
-        guiMakeSpendInfo,
-        selectedWalletId,
-        selectedCurrencyCode: currencyCode
-      })
+    // Coin operations
+    try {
+      const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
+      dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 
-      return
-    }
+      // Check if the URI requires a warning to the user
+      const approved = await addressWarnings(parsedUri, currencyCode)
+      if (!approved) return dispatch({ type: 'ENABLE_SCAN' })
 
-    if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
-      // PRIVATE KEY URI
-      return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
-    }
+      if (parsedUri.token) {
+        // TOKEN URI
+        const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
+        return navigation.push('editToken', {
+          currencyCode: currencyCode.toUpperCase(),
+          multiplier: denominations[0]?.multiplier,
+          displayName: currencyName,
+          networkLocation: { contractAddress },
+          walletId: selectedWalletId
+        })
+      }
 
-    if (parsedUri.paymentProtocolURL != null && parsedUri.publicAddress == null) {
-      // BIP70 URI
-      const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
-
-      if (guiMakeSpendInfo != null) {
+      // LEGACY ADDRESS URI
+      if (parsedUri.legacyAddress != null) {
+        const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
         navigation.push('send', {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
         })
+
+        return
       }
 
-      return
-    }
+      if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
+        // PRIVATE KEY URI
+        return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
+      }
 
-    // PUBLIC ADDRESS URI
-    const nativeAmount = parsedUri.nativeAmount || ''
-    const spendTargets: EdgeSpendTarget[] = [
-      {
-        publicAddress: parsedUri.publicAddress,
+      if (parsedUri.paymentProtocolURL != null && parsedUri.publicAddress == null) {
+        // BIP70 URI
+        const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
+
+        if (guiMakeSpendInfo != null) {
+          navigation.push('send', {
+            guiMakeSpendInfo,
+            selectedWalletId,
+            selectedCurrencyCode: currencyCode
+          })
+        }
+
+        return
+      }
+
+      // PUBLIC ADDRESS URI
+      const nativeAmount = parsedUri.nativeAmount || ''
+      const spendTargets: EdgeSpendTarget[] = [
+        {
+          publicAddress: parsedUri.publicAddress,
+          nativeAmount
+        }
+      ]
+
+      if (fioAddress != null) {
+        spendTargets[0].otherParams = {
+          fioAddress,
+          isSendUsingFioAddress: true
+        }
+      }
+
+      const guiMakeSpendInfo: GuiMakeSpendInfo = {
+        spendTargets,
+        lockInputs: false,
+        metadata: parsedUri.metadata,
+        uniqueIdentifier: parsedUri.uniqueIdentifier,
         nativeAmount
       }
-    ]
 
-    if (fioAddress != null) {
-      spendTargets[0].otherParams = {
-        fioAddress,
-        isSendUsingFioAddress: true
-      }
+      navigation.push('send', {
+        guiMakeSpendInfo,
+        selectedWalletId,
+        selectedCurrencyCode: currencyCode
+      })
+      // dispatch(sendConfirmationUpdateTx(parsedUri))
+    } catch (error) {
+      // INVALID URI
+      dispatch({ type: 'DISABLE_SCAN' })
+      setTimeout(
+        () =>
+          Alert.alert(
+            customErrorTitle || s.strings.scan_invalid_address_error_title,
+            customErrorDescription || s.strings.scan_invalid_address_error_description,
+            [
+              {
+                text: s.strings.string_ok,
+                onPress: () => dispatch({ type: 'ENABLE_SCAN' })
+              }
+            ]
+          ),
+        500
+      )
     }
-
-    const guiMakeSpendInfo: GuiMakeSpendInfo = {
-      spendTargets,
-      lockInputs: false,
-      metadata: parsedUri.metadata,
-      uniqueIdentifier: parsedUri.uniqueIdentifier,
-      nativeAmount
-    }
-
-    navigation.push('send', {
-      guiMakeSpendInfo,
-      selectedWalletId,
-      selectedCurrencyCode: currencyCode
-    })
-    // dispatch(sendConfirmationUpdateTx(parsedUri))
-  } catch (error) {
-    // INVALID URI
-    dispatch({ type: 'DISABLE_SCAN' })
-    setTimeout(
-      () =>
-        Alert.alert(
-          customErrorTitle || s.strings.scan_invalid_address_error_title,
-          customErrorDescription || s.strings.scan_invalid_address_error_description,
-          [
-            {
-              text: s.strings.string_ok,
-              onPress: () => dispatch({ type: 'ENABLE_SCAN' })
-            }
-          ]
-        ),
-      500
-    )
   }
-}
 
 const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -388,56 +388,56 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
 
 const shownWalletGetCryptoModals = []
 
-export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
-  try {
-    const state = getState()
-    const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
-    const { currencyWallets } = state.core.account
-    const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
-    const navigation: NavigationProp<'edge'> = useNavigation()
-    // check if balance is zero
-    const balance = wallet.balances[currencyCode]
-    if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
-    shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
-    let threeButtonModal
-    const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
-    if (displayBuyCrypto) {
-      const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.buy_crypto_modal_title}
-          message={messageSyntax}
-          buttons={{
-            buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-            exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-            decline: { label: s.strings.buy_crypto_decline }
-          }}
-        />
-      ))
-    } else {
-      // if we're not targetting for buying, but rather exchange
-      const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.buy_crypto_modal_title}
-          message={messageSyntax}
-          buttons={{
-            exchange: { label: sprintf(s.strings.buy_crypto_modal_exchange) },
-            decline: { label: s.strings.buy_crypto_decline }
-          }}
-        />
-      ))
+export const checkAndShowGetCryptoModal =
+  (selectedWalletId?: string, selectedCurrencyCode?: string, navigation: NavigationProp<any>) => async (dispatch: Dispatch, getState: GetState) => {
+    try {
+      const state = getState()
+      const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
+      const { currencyWallets } = state.core.account
+      const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
+      // check if balance is zero
+      const balance = wallet.balances[currencyCode]
+      if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
+      shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
+      let threeButtonModal
+      const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+      if (displayBuyCrypto) {
+        const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+        threeButtonModal = await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.buy_crypto_modal_title}
+            message={messageSyntax}
+            buttons={{
+              buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+              exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
+              decline: { label: s.strings.buy_crypto_decline }
+            }}
+          />
+        ))
+      } else {
+        // if we're not targetting for buying, but rather exchange
+        const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+        threeButtonModal = await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.buy_crypto_modal_title}
+            message={messageSyntax}
+            buttons={{
+              exchange: { label: sprintf(s.strings.buy_crypto_modal_exchange) },
+              decline: { label: s.strings.buy_crypto_decline }
+            }}
+          />
+        ))
+      }
+      if (threeButtonModal === 'buy') {
+        navigation.navigate('pluginListBuy', { direction: 'buy' })
+      } else if (threeButtonModal === 'exchange') {
+        dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
+        navigation.navigate('exchangeScene')
+      }
+    } catch (e) {
+      // Don't bother the user with this error, but log it quietly:
+      console.log(e)
     }
-    if (threeButtonModal === 'buy') {
-      navigation.navigate('pluginListBuy', { direction: 'buy' })
-    } else if (threeButtonModal === 'exchange') {
-      dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-      navigation.navigate('exchangeScene')
-    }
-  } catch (e) {
-    // Don't bother the user with this error, but log it quietly:
-    console.log(e)
   }
-}

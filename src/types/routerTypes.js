@@ -9,6 +9,7 @@ import { type BorrowEngine, type BorrowPlugin } from '../plugins/borrow-plugins/
 import { type FiatPluginEnterAmountResponse, type FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes.js'
 import { type ChangeQuoteRequest, type StakePolicy, type StakePosition } from '../plugins/stake-plugins'
 import { type GuiPlugin } from './GuiPluginTypes.js'
+import { useMemo } from './reactHooks'
 import {
   type CreateWalletType,
   type FeeOption,
@@ -457,6 +458,51 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
 }
 
 export const useNavigation = <Name: $Keys<ParamList>>() => {
+  const navigation: NavigationProp<Name> = {
+    addListener(event, callback) {
+      // TODO
+      return () => {}
+    },
+    isFocused() {
+      // TODO
+      return false
+    },
+
+    navigate(name, params) {
+      // $FlowFixMe
+      Flux.Actions.jump(name, { route: { name, params } })
+    },
+    push(name, params) {
+      // $FlowFixMe
+      Flux.Actions.push(name, { route: { name, params } })
+    },
+    replace(name, params) {
+      // $FlowFixMe
+      Flux.Actions.replace(name, { route: { name, params } })
+    },
+    setParams(params) {},
+
+    goBack() {},
+    pop() {
+      // $FlowFixMe
+      Flux.Actions.pop()
+    },
+    popToTop() {},
+
+    closeDrawer() {},
+    openDrawer() {
+      // $FlowFixMe
+      Flux.Actions.drawerOpen()
+    },
+    toggleDrawer() {},
+
+    get state() {}
+  }
+  return useMemo(() => navigation, [])
+}
+
+// For unit tests only
+export const getNavigation = <Name: $Keys<ParamList>>() => {
   const navigation: NavigationProp<Name> = {
     addListener(event, callback) {
       // TODO

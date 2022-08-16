@@ -100,7 +100,7 @@ export function AccountCallbackManager(props: Props) {
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1
         if (isReceivedTransaction(transactions[finalTxIndex])) {
-          dispatch(checkPasswordRecovery())
+          dispatch(checkPasswordRecovery(navigation))
         }
       }),
 

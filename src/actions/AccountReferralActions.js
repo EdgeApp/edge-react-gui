@@ -39,7 +39,7 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
     } catch (error) {}
   }
 
-  // Otherwise, just use default values:
+  // Otherwise, just  default values:
   const referral: AccountReferral = {
     promotions: [],
     ignoreAccountSwap: false,

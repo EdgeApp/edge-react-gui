@@ -13,7 +13,7 @@ import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { config } from '../theme/appConfig.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
 
 export type CreateWalletOptions = {
@@ -119,7 +119,8 @@ export const checkHandleAvailability = (walletType: string, accountName: string)
 }
 
 export const createAccountTransaction =
-  (createdWalletId: string, accountName: string, paymentWalletId: string) => async (dispatch: Dispatch, getState: GetState) => {
+  (createdWalletId: string, accountName: string, paymentWalletId: string, navigation: NavigationProp<any>) =>
+  async (dispatch: Dispatch, getState: GetState) => {
     // check available funds
     const state = getState()
     const { account } = state.core
@@ -132,7 +133,6 @@ export const createAccountTransaction =
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
-    const navigation: NavigationProp<any> = useNavigation()
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {
@@ -180,27 +180,27 @@ export const createAccountTransaction =
       })
     } else {
       // if handle is now unavailable
-      dispatch(createHandleUnavailableModal(createdWalletId, accountName))
+      dispatch(createHandleUnavailableModal(createdWalletId, accountName, navigation))
     }
   }
 
-export const createHandleUnavailableModal = (newWalletId: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const navigation: NavigationProp<'edge'> = useNavigation()
+export const createHandleUnavailableModal =
+  (newWalletId: string, accountName: string, navigation: NavigationProp<any>) => async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
 
-  account.changeWalletStates({
-    [newWalletId]: {
-      deleted: true
-    }
-  })
-  await Airship.show(bridge => (
-    <ButtonsModal
-      bridge={bridge}
-      title={s.strings.create_wallet_account_handle_unavailable_modal_title}
-      message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
-      buttons={{ ok: { label: s.strings.string_ok } }}
-    />
-  ))
-  navigation.pop()
-}
+    account.changeWalletStates({
+      [newWalletId]: {
+        deleted: true
+      }
+    })
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.create_wallet_account_handle_unavailable_modal_title}
+        message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
+    ))
+    navigation.pop()
+  }

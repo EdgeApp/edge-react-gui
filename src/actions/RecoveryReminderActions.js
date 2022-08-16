@@ -8,7 +8,7 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils.js'
 
 const levels = [20, 200, 2000, 20000, 200000]
@@ -18,12 +18,11 @@ const levels = [20, 200, 2000, 20000, 200000]
  * they don't have recovery set up.
  */
 export const checkPasswordRecovery =
-  () =>
+  (navigation: NavigationProp<any>) =>
   (dispatch: Dispatch, getState: GetState): void => {
     const state = getState()
     const { account } = state.core
     if (account.recoveryKey != null) return
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const totalDollars = getTotalFiatAmountFromExchangeRates(state, 'iso:USD')
     const { passwordRecoveryRemindersShown } = state.ui.settings
@@ -44,7 +43,7 @@ export const checkPasswordRecovery =
 /**
  * Actually show the password reminder modal.
  */
-async function showReminderModal(level: number, account: EdgeAccount, navigation: NavigationProp<'edge'>) {
+async function showReminderModal(level: number, account: EdgeAccount, navigation: NavigationProp<any>) {
   const reply = await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}

@@ -55,7 +55,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet: (walletId: string, currencyCode: string) => void,
+  onSelectWallet: (walletId: string, currencyCode: string, navigation: NavigationProp<any>) => void,
   toggleBalanceVisibility: () => void
 }
 
@@ -92,7 +92,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   handleOpenWalletListModal = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+        this.props.onSelectWallet(walletId, currencyCode, this.props.navigation)
       }
     })
   }
@@ -409,8 +409,8 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     toggleBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
     },
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(walletId: string, currencyCode: string, navigation: NavigationProp<any>) {
+      dispatch(selectWalletFromModal(walletId, currencyCode, navigation))
     }
   })
 )(withTheme(TransactionListTopComponent))

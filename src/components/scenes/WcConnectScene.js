@@ -94,7 +94,7 @@ export const WcConnectScene = (props: Props) => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={allowedAssets} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          dispatch(selectWalletFromModal(walletId, currencyCode))
+          dispatch(selectWalletFromModal(walletId, currencyCode, navigation))
           setSelectedWallet({ walletId, currencyCode })
           if (dappDetails.subTitleText === '') {
             handleRequestDapp(walletId)

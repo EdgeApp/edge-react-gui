@@ -16,6 +16,7 @@ import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig.js'
 import { type DeepLink } from '../../types/DeepLinkTypes.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes'
 import { type GuiTouchIdInfo } from '../../types/types.js'
 import { pickRandom } from '../../util/utils'
 import { showHelpModal } from '../modals/HelpModal.js'
@@ -37,10 +38,14 @@ type StateProps = {
 type DispatchProps = {
   deepLinkHandled: () => void,
   handleSendLogs: () => void,
-  initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
-  logout: () => void
+  initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo, navigation: NavigationProp<'login'>) => void,
+  logout: (navigation: NavigationProp<'login'>) => void
 }
-type Props = StateProps & DispatchProps & ThemeProps
+
+type OwnProps = {
+  navigation: NavigationProp<'login'>
+}
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {
   counter: number,
@@ -66,7 +71,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    const { theme } = this.props
+    const { theme, navigation } = this.props
     const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
     getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
       .then(backgroundImage => this.setState({ backgroundImage }))
@@ -78,13 +83,13 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
       if (YOLO_PIN != null) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
-          .then(account => initializeAccount(account, dummyTouchIdInfo))
+          .then(account => initializeAccount(account, dummyTouchIdInfo, navigation))
           .catch(showError)
       }
       if (YOLO_PASSWORD != null) {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
-          .then(account => initializeAccount(account, dummyTouchIdInfo))
+          .then(account => initializeAccount(account, dummyTouchIdInfo, navigation))
           .catch(showError)
       }
     }
@@ -104,7 +109,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(oldProps: Props) {
-    const { account, pendingDeepLink, theme } = this.props
+    const { account, pendingDeepLink, theme, navigation } = this.props
     const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
 
     getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
@@ -121,7 +126,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     // Did we get a new recovery link?
     if (pendingDeepLink !== oldProps.pendingDeepLink && pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
       // Log out if necessary:
-      if (account.username !== null) this.props.logout()
+      if (account.username !== null) this.props.logout(navigation)
 
       // Pass the link to our component:
       const { passwordRecoveryKey } = pendingDeepLink
@@ -136,13 +141,13 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     showHelpModal()
   }
 
-  onLogin = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | void) => {
+  onLogin = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | void, navigation: NavigationProp<'login'>) => {
     this.setState({ passwordRecoveryKey: undefined })
-    this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
+    this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo, navigation)
   }
 
   render() {
-    const { context, handleSendLogs, theme, username } = this.props
+    const { context, handleSendLogs, theme, username, navigation } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
     const styles = getStyles(theme)
 
@@ -154,7 +159,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           accountOptions={{ pauseWallets: true }}
           context={context}
           recoveryLogin={passwordRecoveryKey}
-          onLogin={this.onLogin}
+          onLogin={(account, touchIdInfo) => this.onLogin(account, touchIdInfo, navigation)}
           fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceMedium }}
           key={String(counter)}
           appName={config.appNameShort}
@@ -185,7 +190,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const LoginScene = connect<StateProps, DispatchProps, {}>(
+export const LoginScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,
@@ -200,11 +205,11 @@ export const LoginScene = connect<StateProps, DispatchProps, {}>(
     handleSendLogs() {
       dispatch(showSendLogsModal())
     },
-    initializeAccount(account, touchIdInfo) {
-      dispatch(initializeAccount(account, touchIdInfo))
+    initializeAccount(account, touchIdInfo, navigation: NavigationProp<'login'>) {
+      dispatch(initializeAccount(account, touchIdInfo, navigation))
     },
-    logout() {
-      dispatch(logoutRequest())
+    logout(navigation: NavigationProp<'login'>) {
+      dispatch(logoutRequest(undefined, navigation))
     }
   })
 )(withTheme(LoginSceneComponent))

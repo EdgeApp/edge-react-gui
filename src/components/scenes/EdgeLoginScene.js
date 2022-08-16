@@ -27,7 +27,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  accept: () => void
+  accept: (navigation: NavigationProp<'edgeLogin'>) => void
 }
 
 type Props = StateProps & DispatchProps & OwnProps
@@ -79,7 +79,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
           <SecondaryButton style={styles.cancel} onPress={handleDecline}>
             <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
           </SecondaryButton>
-          <PrimaryButton style={styles.submit} onPress={this.props.accept}>
+          <PrimaryButton style={styles.submit} onPress={() => this.props.accept(navigation)}>
             <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
           </PrimaryButton>
         </View>
@@ -238,8 +238,8 @@ export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(
     lobby: state.core.edgeLogin.lobby
   }),
   dispatch => ({
-    accept() {
-      dispatch(lobbyLogin())
+    accept(navigation: NavigationProp<'edgeLogin'>) {
+      dispatch(lobbyLogin(navigation))
     }
   })
 )(EdgeLoginSceneComponent)

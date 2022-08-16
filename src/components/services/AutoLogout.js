@@ -4,6 +4,7 @@ import { logoutRequest } from '../../actions/LoginActions.js'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground.js'
 import { useEffect, useRef } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes'
 
 export const AutoLogout = () => {
   const dispatch = useDispatch()
@@ -11,6 +12,7 @@ export const AutoLogout = () => {
   const loginStatus = useSelector(state => state.ui.settings.loginStatus ?? false)
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
   const isAppForeground = useIsAppForeground()
+  const navigation: NavigationProp<'edge'> = useNavigation()
 
   useEffect(() => {
     // Check if app came back from background
@@ -20,7 +22,7 @@ export const AutoLogout = () => {
     const differenceInSeconds = (timestamp - stateRef.current.timestamp) / 1000
     const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
     // Logout If all the conditions for autoLogout are met
-    if (appForegrounded && loginStatus && timeExpired) dispatch(logoutRequest())
+    if (appForegrounded && loginStatus && timeExpired) dispatch(logoutRequest(undefined, navigation))
     // Update the new appState
     stateRef.current = { timestamp, isAppForeground }
   }, [autoLogoutTimeInSeconds, dispatch, isAppForeground, loginStatus])

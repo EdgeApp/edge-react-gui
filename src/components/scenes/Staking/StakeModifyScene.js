@@ -174,6 +174,7 @@ export const StakeModifyScene = (props: Props) => {
           multi-asset staking is fully implemented and working in plugin */
           existingStaked.length > 1
         }
+        navigation={navigation}
       />
     ))
       .then(({ nativeAmount, exchangeAmount }) => {

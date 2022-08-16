@@ -16,7 +16,7 @@ import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutSt
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types.js'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
@@ -43,13 +43,14 @@ const updateAmount =
     fiatPerCrypto: string,
     forceUpdateGui?: boolean = false,
     selectedWalletId?: string,
-    selectedCurrencyCode?: string
+    selectedCurrencyCode?: string,
+    navigation: NavigationProp<any>
   ) =>
   (dispatch: Dispatch, getState: GetState) => {
     const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
-    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode, false))
+    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode, false, navigation))
   }
 
 export const sendConfirmationUpdateTx =
@@ -58,12 +59,12 @@ export const sendConfirmationUpdateTx =
     forceUpdateGui?: boolean = true,
     selectedWalletId?: string,
     selectedCurrencyCode?: string,
-    isFeeChanged: boolean = false
+    isFeeChanged: boolean = false,
+    navigation: NavigationProp<any>
   ) =>
   async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[walletId]
@@ -97,7 +98,7 @@ export const sendConfirmationUpdateTx =
       })
 
     if (maxSpendSet && isFeeChanged) {
-      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
+      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone, navigation))
     }
     await edgeWallet
       .makeSpend(spendInfo)
@@ -155,7 +156,8 @@ export const sendConfirmationUpdateTx =
   }
 
 export const updateMaxSpend =
-  (selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
+  (selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo, navigation: NavigationProp<any>) =>
+  (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
@@ -188,17 +190,17 @@ export const updateMaxSpend =
           data: true
         })
 
-        dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
+        dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode, navigation))
       })
       .catch(showError)
   }
 
 export const signBroadcastAndSave =
-  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void, navigation: NavigationProp<any>) =>
+  async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const selectedWalletId = walletId || state.ui.wallets.selectedWalletId
     const wallet = currencyWallets[selectedWalletId]

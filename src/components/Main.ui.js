@@ -41,7 +41,7 @@ import s from '../locales/strings.js'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
-import { Actions, withNavigation } from '../types/routerTypes.js'
+import { type NavigationProp, Actions, withNavigation } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -121,10 +121,10 @@ type DispatchProps = {
   registerDevice: () => void,
 
   // Navigation actions:
-  logout: (username?: string) => void,
+  logout: (username?: string, navigation: NavigationProp<'edge'>) => void,
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void,
+  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string, navigation: NavigationProp<'edge'>) => void,
   checkEnabledExchanges: () => void,
   dispatchDisableScan: () => void,
   // eslint-disable-next-line react/no-unused-prop-types
@@ -133,7 +133,14 @@ type DispatchProps = {
   showReEnableOtpModal: () => void
 }
 
-type Props = DispatchProps
+type StateProps = {}
+// type ReactNavigationProps = {  }
+type OwnProps = { navigation: NavigationProp<'edge'> }
+type Props = DispatchProps & OwnProps & StateProps
+
+// Special only for Main.ui
+// eslint-disable-next-line react-hooks/rules-of-hooks
+// const topLevelNavigation = useNavigation()
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -165,9 +172,8 @@ export class MainComponent extends React.Component<Props> {
               key="edgeLogin"
               component={withNavigation(ifLoggedIn(EdgeLoginScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
+              renderTitle={<HeaderTitle title={s.strings.title_edge_login} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // $FlowFixMe
               renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
             />
             {this.renderTransactionDetailsView()}
@@ -194,7 +200,6 @@ export class MainComponent extends React.Component<Props> {
   }
 
   renderTabView = () => {
-    // $FlowFixMe
     const { navigation } = this.props
     return (
       <Drawer
@@ -232,7 +237,7 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletImport"
                 component={withNavigation(ifLoggedIn(CreateWalletImportScene))}
                 navTransparent
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_import_title} />}
+                renderTitle={<HeaderTitle title={s.strings.create_wallet_import_title} navigation={this.props.navigation} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
@@ -273,9 +278,8 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletAccountSetup"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
                 navTransparent
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
+                renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} navigation={this.props.navigation} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
-                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
               />
 
@@ -283,9 +287,8 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletAccountSelect"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
                 navTransparent
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
+                renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} navigation={this.props.navigation} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
-                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
               />
 
@@ -296,7 +299,7 @@ export class MainComponent extends React.Component<Props> {
                   this.props.requestPermission('contacts')
                 }}
                 navTransparent
-                renderTitle={<HeaderTitle title=" " />}
+                renderTitle={<HeaderTitle title=" " navigation={this.props.navigation} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<SideMenuButton />}
               />
@@ -362,7 +365,7 @@ export class MainComponent extends React.Component<Props> {
                 key="transactionsExport"
                 component={withNavigation(ifLoggedIn(TransactionsExportScene))}
                 navTransparent
-                renderTitle={<HeaderTitle title={s.strings.title_export_transactions} />}
+                renderTitle={<HeaderTitle title={s.strings.title_export_transactions} navigation={this.props.navigation} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
@@ -372,10 +375,8 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginListBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
-                // $FlowFixMe
                 renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
-                // $FlowFixMe
                 onLeft={this.props.navigation.pop}
                 route={{ params: { direction: 'buy' } }}
               />
@@ -383,9 +384,8 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginViewBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
-                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} navigation={this.props.navigation} />}
                 renderLeftButton={renderPluginBackButton(navigation)}
-                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
                 hideTabBar
               />
@@ -402,10 +402,8 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginListSell"
                 component={withNavigation(ifLoggedIn(GuiPluginListScene))}
                 navTransparent
-                // $FlowFixMe
                 renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
-                // $FlowFixMe
                 onLeft={this.props.navigation.pop}
                 route={{ params: { direction: 'sell' } }}
               />
@@ -413,9 +411,8 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginViewSell"
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
-                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} navigation={this.props.navigation} />}
                 renderLeftButton={renderPluginBackButton(navigation)}
-                // $FlowFixMe
                 renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
                 hideTabBar
               />
@@ -425,7 +422,6 @@ export class MainComponent extends React.Component<Props> {
                 key="exchangeScene"
                 component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
                 navTransparent
-                // $FlowFixMe
                 renderLeftButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
@@ -466,7 +462,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioRequestConfirmation"
               component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
+              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
             />
@@ -478,7 +474,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SendScene))}
               navTransparent
               onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
+                this.props.checkAndShowGetCryptoModal(props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode, this.props.navigation)
               }}
               onExit={this.props.dispatchDisableScan}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -488,7 +484,6 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // $FlowFixMe
               renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="help" placement="right" />}
             />
           </Stack>
@@ -498,7 +493,7 @@ export class MainComponent extends React.Component<Props> {
               key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
           </Stack>
@@ -528,7 +523,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SettingsScene))}
               navTransparent
               onEnter={() => this.props.showReEnableOtpModal()}
-              renderTitle={<HeaderTitle title={s.strings.title_settings} />}
+              renderTitle={<HeaderTitle title={s.strings.title_settings} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
             />
@@ -536,7 +531,7 @@ export class MainComponent extends React.Component<Props> {
               key="changePassword"
               component={withNavigation(ifLoggedIn(ChangePasswordScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
+              renderTitle={<HeaderTitle title={s.strings.title_change_password} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -544,7 +539,7 @@ export class MainComponent extends React.Component<Props> {
               key="changePin"
               component={withNavigation(ifLoggedIn(ChangePinScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
+              renderTitle={<HeaderTitle title={s.strings.title_change_pin} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -552,7 +547,7 @@ export class MainComponent extends React.Component<Props> {
               key="otpSetup"
               component={withNavigation(ifLoggedIn(OtpSettingsScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_otp} />}
+              renderTitle={<HeaderTitle title={s.strings.title_otp} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -560,7 +555,7 @@ export class MainComponent extends React.Component<Props> {
               key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -568,7 +563,7 @@ export class MainComponent extends React.Component<Props> {
               key="spendingLimits"
               component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
+              renderTitle={<HeaderTitle title={s.strings.spending_limits} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -576,7 +571,7 @@ export class MainComponent extends React.Component<Props> {
               key="exchangeSettings"
               component={withNavigation(ifLoggedIn(SwapSettingsScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} />}
+              renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -592,7 +587,7 @@ export class MainComponent extends React.Component<Props> {
               key="promotionSettings"
               component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} />}
+              renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
@@ -607,10 +602,9 @@ export class MainComponent extends React.Component<Props> {
               key="notificationSettings"
               component={withNavigation(ifLoggedIn(NotificationScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
+              renderTitle={<HeaderTitle title={s.strings.settings_notifications} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -620,7 +614,6 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -630,9 +623,8 @@ export class MainComponent extends React.Component<Props> {
               key="pluginView"
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+              renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} navigation={this.props.navigation} />}
               renderLeftButton={renderPluginBackButton(navigation)}
-              // $FlowFixMe
               renderRightButton={<HeaderTextButton navigation={this.props.navigation} type="exit" placement="right" />}
             />
           </Stack>
@@ -642,10 +634,9 @@ export class MainComponent extends React.Component<Props> {
               key="termsOfService"
               component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
+              renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -657,7 +648,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -670,7 +660,6 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -680,10 +669,9 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
+              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -696,17 +684,15 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
               key="fioDomainRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
+              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -715,7 +701,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -727,7 +712,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -737,7 +721,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressDetails"
               component={withNavigation(ifLoggedIn(FioAddressDetailsScene))}
               navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
+              renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
             />
@@ -745,10 +729,9 @@ export class MainComponent extends React.Component<Props> {
               key="fioConnectToWalletsConfirm"
               component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
+              renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -758,10 +741,9 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressSettings"
               component={withNavigation(FioAddressSettingsScene)}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
+              renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -771,7 +753,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressRegisterSuccess"
               component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
               navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
+              renderTitle={props => <HeaderTitle title={props.route.params.fioName} navigation={this.props.navigation} />}
               renderRightButton={<SideMenuButton />}
               renderLeftButton={this.renderEmptyButton()}
             />
@@ -782,10 +764,9 @@ export class MainComponent extends React.Component<Props> {
               key="fioDomainSettings"
               component={withNavigation(FioDomainSettingsScene)}
               navTransparent
-              renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
+              renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} navigation={this.props.navigation} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -797,8 +778,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -820,7 +799,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -832,7 +810,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -841,7 +818,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
             <Scene
@@ -850,7 +826,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
-              // $FlowFixMe
               onLeft={this.props.navigation.pop}
             />
           </Stack>
@@ -972,12 +947,13 @@ export class MainComponent extends React.Component<Props> {
   handleEmpty = () => null
 
   handleBack = () => {
+    console.log('fl;asl;fkl;asdfkl;skf;lkasd;fk;sdkfl;ka;s handleBack')
     if (this.isCurrentScene('login')) {
       return false
     }
     if (this.isCurrentScene('walletListScene')) {
       if (this.backPressedOnce) {
-        this.props.logout()
+        this.props.logout(undefined, this.props.navigation)
       } else {
         this.backPressedOnce = true
         Airship.show(bridge => <AirshipToast bridge={bridge} message={s.strings.back_button_tap_again_to_exit} />).then(() => {
@@ -987,36 +963,32 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('exchangeQuote')) {
-      // $FlowFixMe
       this.props.navigation.navigate('exchangeScene')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
-      // $FlowFixMe
       handlePluginBack(this.props.navigation)
       return true
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        // $FlowFixMe
         this.props.navigation.navigate('walletListScene')
         return true
       }
     }
     if (this.isCurrentScene('fioAddressRegisterSelectWallet')) {
       if (Actions.currentParams.isFallback) {
-        // $FlowFixMe
         this.props.navigation.navigate('fioAddressRegister')
         return true
       }
     }
-    // $FlowFixMe
+
     this.props.navigation.pop()
     return true
   }
 }
 
-export const Main = connect<{}, DispatchProps, {}>(
+export const Main = connect<StateProps, DispatchProps, OwnProps>(
   state => ({}),
   dispatch => ({
     registerDevice() {
@@ -1024,13 +996,13 @@ export const Main = connect<{}, DispatchProps, {}>(
     },
 
     // Navigation actions:
-    logout(username?: string): void {
-      dispatch(logoutRequest(username))
+    logout(username?: string, navigation: NavigationProp<'edge'>): void {
+      dispatch(logoutRequest(username, navigation))
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(checkAndShowGetCryptoModal(selectedWalletId, selectedCurrencyCode))
+    checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string, navigation: NavigationProp<'edge'>) {
+      dispatch(checkAndShowGetCryptoModal(selectedWalletId, selectedCurrencyCode, navigation))
     },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
@@ -1048,4 +1020,4 @@ export const Main = connect<{}, DispatchProps, {}>(
       dispatch(showReEnableOtpModal())
     }
   })
-)(withNavigation(MainComponent))
+)(MainComponent)

@@ -18,6 +18,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { deviceHeight } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getTokenId } from '../../util/CurrencyInfoHelpers.js'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
@@ -40,7 +41,8 @@ type OwnProps = {
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void,
   overrideExchangeAmount?: string,
   headerText?: string,
-  hideMaxButton?: boolean
+  hideMaxButton?: boolean,
+  navigation: NavigationProp<any>
 }
 
 type StateProps = {
@@ -68,7 +70,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  updateMaxSpend: (walletId: string, currencyCode: string) => void,
+  updateMaxSpend: (walletId: string, currencyCode: string, navigation: NavigationProp<'edge'>) => void,
   updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
 }
 
@@ -133,7 +135,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
       this.props.onMaxSet()
       return this.handleCloseModal()
     }
-    return this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
+    return this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode, this.props.navigation)
   }
 
   renderErrorMessge = () => {
@@ -388,8 +390,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    updateMaxSpend(walletId: string, currencyCode: string) {
-      dispatch(updateMaxSpend(walletId, currencyCode))
+    updateMaxSpend(walletId: string, currencyCode: string, navigation: NavigationProp<'edge'>) {
+      dispatch(updateMaxSpend(walletId, currencyCode, undefined, navigation))
     },
     updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
       dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))

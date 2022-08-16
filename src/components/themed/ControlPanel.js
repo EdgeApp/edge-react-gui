@@ -101,7 +101,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleSwitchAccount = (username: string) => () => {
-    dispatch(logoutRequest(username))
+    dispatch(logoutRequest(username, navigation))
   }
 
   const handleSweep = () => {
@@ -129,11 +129,11 @@ export function ControlPanel(props: Props) {
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(walletId, currencyCode))
+        dispatch(selectWalletFromModal(walletId, currencyCode, navigation))
         Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | void) => {
             if (result) {
-              dispatch(parseScannedUri(result))
+              dispatch(parseScannedUri(result, undefined, undefined, navigation))
             }
           })
           .catch(showError)
@@ -150,7 +150,7 @@ export function ControlPanel(props: Props) {
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
-          dispatch(parseScannedUri(result))
+          dispatch(parseScannedUri(result, undefined, undefined, navigation))
         }
       })
       .catch(showError)
@@ -247,7 +247,7 @@ export function ControlPanel(props: Props) {
       title: s.strings.settings_title
     },
     {
-      pressHandler: () => dispatch(logoutRequest()),
+      pressHandler: () => dispatch(logoutRequest(undefined, navigation)),
       iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
     }

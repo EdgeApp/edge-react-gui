@@ -8,7 +8,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { launchBitPay } from './BitPayActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
@@ -19,9 +19,8 @@ import { selectWallet } from './WalletActions.js'
  * The app has just received some type of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export const launchDeepLink = (link: DeepLink) => (dispatch: Dispatch, getState: GetState) => {
+export const launchDeepLink = (link: DeepLink, navigation: NavigationProp<any>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const navigation: NavigationProp<'edge'> = useNavigation()
   const handled = handleLink(dispatch, state, link, navigation)
 
   // If we couldn't handle the link, save it for later:
@@ -35,11 +34,10 @@ export const launchDeepLink = (link: DeepLink) => (dispatch: Dispatch, getState:
  * Maybe we were in the wrong state before, but now we are able
  * to launch the link.
  */
-export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetState) => {
+export const retryPendingDeepLink = (navigation: NavigationProp<any>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { pendingDeepLink } = state
   if (pendingDeepLink == null) return
-  const navigation: NavigationProp<'edge'> = useNavigation()
 
   const handled = handleLink(dispatch, state, pendingDeepLink, navigation)
 
@@ -52,7 +50,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, navigation: NavigationProp<'edge'>): boolean {
+function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, navigation: NavigationProp<any>): boolean {
   const { activeWalletIds, currencyWallets, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
@@ -140,7 +138,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
 
       // If we don't know what this is, fake a barcode scan:
       if (currencyCode == null) {
-        dispatch(parseScannedUri(link.uri))
+        dispatch(parseScannedUri(link.uri, undefined, undefined, navigation))
         return true
       }
 
@@ -149,8 +147,8 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
       for (const walletId of walletIds) {
         const wallet = byId[walletId]
         if (wallet.currencyCode !== currencyCode) continue
-        dispatch(selectWallet(wallet.id, wallet.currencyCode, undefined))
-        dispatch(parseScannedUri(link.uri))
+        dispatch(selectWallet(wallet.id, wallet.currencyCode, undefined, navigation))
+        dispatch(parseScannedUri(link.uri, undefined, undefined, navigation))
         return true
       }
 
@@ -166,8 +164,8 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
 
     case 'dev': {
       if (!global.__DEV__) return false
-      // $FlowFixMe
-      Actions.push(link.sceneName)
+      const params: any = {}
+      navigation.push(link.sceneName, params)
       return true
     }
   }
@@ -175,7 +173,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
   return false
 }
 
-async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string, navigation: NavigationProp<'edge'>): Promise<void> {
+async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string, navigation: NavigationProp<any>): Promise<void> {
   const address = await edgeWallet.getReceiveAddress()
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {

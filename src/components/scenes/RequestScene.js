@@ -57,7 +57,7 @@ type StateProps = {
 
 type DispatchProps = {
   refreshAllFioAddresses: () => void,
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (walletId: string, currencyCode: string, navigation: NavigationProp<'request'>) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [pluginId: string]: ModalState }
@@ -270,10 +270,10 @@ export class RequestComponent extends React.Component<Props, State> {
       .catch(error => console.log(error))
   }
 
-  handleOpenWalletListModal = () => {
+  handleOpenWalletListModal = (navigation: NavigationProp<'request'>) => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+        this.props.onSelectWallet(walletId, currencyCode, navigation)
       }
     })
   }
@@ -299,7 +299,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme, navigation } = this.props
     const styles = getStyles(theme)
 
     if (primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
@@ -357,7 +357,7 @@ export class RequestComponent extends React.Component<Props, State> {
               onNext={this.onNext}
               topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
               inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
-              headerCallback={this.handleOpenWalletListModal}
+              headerCallback={() => this.handleOpenWalletListModal(navigation)}
               onError={this.onError}
             />
           </Card>
@@ -650,8 +650,8 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     },
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(walletId: string, currencyCode: string, navigation: NavigationProp<'request'>) {
+      dispatch(selectWalletFromModal(walletId, currencyCode, navigation))
     }
   })
 )(withTheme(RequestComponent))

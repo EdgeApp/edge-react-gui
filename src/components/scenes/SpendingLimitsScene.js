@@ -12,6 +12,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes'
 import { type SpendingLimits } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -23,9 +24,13 @@ type StateProps = {
   currencySymbol: string
 }
 type DispatchProps = {
-  onSubmit: (spendingLimits: SpendingLimits, password: string) => mixed
+  onSubmit: (spendingLimits: SpendingLimits, password: string, navigation: NavigationProp<'spendingLimits'>) => mixed
 }
-type Props = StateProps & DispatchProps
+
+type OwnProps = {
+  navigation: NavigationProp<'spendingLimits'>
+}
+type Props = StateProps & DispatchProps & OwnProps
 
 type State = {
   password: string,
@@ -112,7 +117,8 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
           amount: parseFloat(transactionAmount)
         }
       },
-      password
+      password,
+      this.props.navigation
     )
   }
 }
@@ -140,14 +146,14 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(
+export const SpendingLimitsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     currencySymbol: getSymbolFromCurrency(state.ui.settings.defaultFiat),
     transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
   }),
   dispatch => ({
-    onSubmit(spendingLimits: SpendingLimits, password: string) {
-      dispatch(setSpendingLimits(spendingLimits, password))
+    onSubmit(spendingLimits: SpendingLimits, password: string, navigation: NavigationProp<'spendingLimits'>) {
+      dispatch(setSpendingLimits(spendingLimits, password, navigation))
     }
   })
 )(SpendingLimitsComponent)

@@ -6,6 +6,7 @@ import { View } from 'react-native'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp } from '../../types/routerTypes'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -14,7 +15,8 @@ import { EdgeText } from '../themed/EdgeText.js'
 
 type OwnProps = {
   showWalletNameOnly?: boolean,
-  title?: string
+  title?: string,
+  navigation: NavigationProp<any>
 }
 
 type StateProps = {
@@ -23,7 +25,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (walletId: string, currencyCode: string, navigation: NavigationProp<any>) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -32,7 +34,7 @@ class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+        this.props.onSelectWallet(walletId, currencyCode, this.props.navigation)
       }
     })
   }
@@ -87,8 +89,8 @@ export const HeaderTitle = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(walletId: string, currencyCode: string, navigation: NavigationProp<any>) {
+      dispatch(selectWalletFromModal(walletId, currencyCode, navigation))
     }
   })
 )(withTheme(HeaderTitleComponent))

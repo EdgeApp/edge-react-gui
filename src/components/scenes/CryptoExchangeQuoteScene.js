@@ -10,7 +10,7 @@ import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoE
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes'
 import { type GuiSwapInfo } from '../../types/types.js'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking.js'
@@ -27,7 +27,8 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
 
 type OwnProps = {
-  route: RouteProp<'exchangeQuote'>
+  route: RouteProp<'exchangeQuote'>,
+  navigation: NavigationProp<'exchangeQuote'>
 }
 type StateProps = {
   account: EdgeAccount,
@@ -38,8 +39,8 @@ type StateProps = {
   toWalletCurrencyName: string
 }
 type DispatchProps = {
-  shift: (swapInfo: GuiSwapInfo, onApprove: () => void) => void,
-  timeExpired: (swapInfo: GuiSwapInfo, onApprove: () => void) => void
+  shift: (swapInfo: GuiSwapInfo, onApprove: () => void, navigation: NavigationProp<'exchangeQuote'>) => void,
+  timeExpired: (swapInfo: GuiSwapInfo, onApprove: () => void, navigation: NavigationProp<'exchangeQuote'>) => void
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -56,7 +57,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
 
     logEvent('SwapQuote')
     swapVerifyTerms(swapConfig).then(result => {
-      if (!result) timeExpired(swapInfo, onApprove)
+      if (!result) timeExpired(swapInfo, onApprove, this.props.navigation)
     }, showError)
   }
 
@@ -72,7 +73,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { shift, route } = this.props
     const { swapInfo, onApprove } = route.params
     this.calledApprove = true
-    shift(swapInfo, onApprove)
+    shift(swapInfo, onApprove, this.props.navigation)
   }
 
   renderTimer = () => {
@@ -81,7 +82,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={() => timeExpired(swapInfo, onApprove)} expiration={expirationDate} />
+    return <CircleTimer timeExpired={() => timeExpired(swapInfo, onApprove, this.props.navigation)} expiration={expirationDate} />
   }
 
   showExplanationForEstimate = () => {
@@ -195,11 +196,11 @@ export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
       state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
   }),
   dispatch => ({
-    shift(swapInfo, onApprove) {
-      dispatch(shiftCryptoCurrency(swapInfo, onApprove))
+    shift(swapInfo, onApprove, navigation: NavigationProp<'exchangeQuote'>) {
+      dispatch(shiftCryptoCurrency(swapInfo, onApprove, navigation))
     },
-    timeExpired(swapInfo, onApprove) {
-      dispatch(exchangeTimerExpired(swapInfo, onApprove))
+    timeExpired(swapInfo, onApprove, navigation: NavigationProp<'exchangeQuote'>) {
+      dispatch(exchangeTimerExpired(swapInfo, onApprove, navigation))
     }
   })
 )(withTheme(CryptoExchangeQuoteScreenComponent))

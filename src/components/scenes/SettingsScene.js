@@ -59,10 +59,10 @@ type DispatchProps = {
   lockSettings: () => void,
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>,
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void,
-  showRestoreWalletsModal: () => void,
+  showRestoreWalletsModal: (navigation: NavigationProp<'settingsOverview'>) => void,
   showUnlockSettingsModal: () => void,
   toggleDeveloperMode: (developerModeOn: boolean) => void,
-  logoutRequest: () => Promise<void>
+  logoutRequest: (navigation: NavigationProp<'settingsOverview'>) => Promise<void>
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -170,7 +170,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           if (text !== username) return s.strings.delete_account_verification_error
 
           await this.props.account.deleteRemoteAccount()
-          await this.props.logoutRequest()
+          await this.props.logoutRequest(this.props.navigation)
           await this.props.context.deleteLocalAccount(username)
           return true
         }}
@@ -320,7 +320,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(this.props.navigation)} />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
@@ -378,8 +378,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
       dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
     },
-    showRestoreWalletsModal() {
-      dispatch(showRestoreWalletsModal())
+    showRestoreWalletsModal(navigation: NavigationProp<'settingsOverview'>) {
+      dispatch(showRestoreWalletsModal(navigation))
     },
     showUnlockSettingsModal() {
       dispatch(showUnlockSettingsModal())
@@ -387,8 +387,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     toggleDeveloperMode(developerModeOn: boolean) {
       dispatch(setDeveloperModeOn(developerModeOn))
     },
-    async logoutRequest() {
-      await dispatch(logoutRequest())
+    async logoutRequest(navigation: NavigationProp<'settingsOverview'>) {
+      await dispatch(logoutRequest(undefined, navigation))
     }
   })
 )(withTheme(SettingsSceneComponent))

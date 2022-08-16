@@ -18,7 +18,7 @@ import {
   setFioExpiredCheckToDisklet
 } from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import type { FioDomain, FioObtRecord } from '../types/types'
 
 const EXPIRE_CHECK_TIMEOUT = 30000
@@ -102,14 +102,14 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
   }
 }
 
-export const expiredFioNamesCheckDates = () => async (dispatch: Dispatch, getState: GetState) => {
+export const expiredFioNamesCheckDates = (navigation: NavigationProp<any>) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const lastChecks = await getFioExpiredCheckFromDisklet(state.core.disklet)
   dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: lastChecks })
-  setTimeout(() => dispatch(refreshNamesToCheckExpired()), INIT_EXPIRE_CHECK_TIMEOUT)
+  setTimeout(() => dispatch(refreshNamesToCheckExpired(navigation)), INIT_EXPIRE_CHECK_TIMEOUT)
 }
 
-export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getState: GetState) => {
+export const refreshNamesToCheckExpired = (navigation: NavigationProp<any>) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
   if (!account) return
@@ -117,11 +117,11 @@ export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getSt
 
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   if (fioWallets.length === 0) {
-    return setTimeout(() => dispatch(refreshNamesToCheckExpired()), EXPIRE_CHECK_TIMEOUT)
+    return setTimeout(() => dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
   }
 
   const { expiredLastChecks, expiredChecking, walletsCheckedForExpired } = state.ui.fio
-  if (expiredChecking) return setTimeout(() => dispatch(refreshNamesToCheckExpired()), EXPIRE_CHECK_TIMEOUT)
+  if (expiredChecking) return setTimeout(() => dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
 
   const walletsToCheck: EdgeCurrencyWallet[] = []
   for (const fioWallet of fioWallets) {
@@ -140,18 +140,18 @@ export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getSt
 
   if (namesToCheck.length !== 0) {
     dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
-    dispatch(checkExpiredFioDomains(namesToCheck, fioWalletsById))
+    dispatch(checkExpiredFioDomains(namesToCheck, fioWalletsById, navigation))
   }
 
-  return setTimeout(() => dispatch(refreshNamesToCheckExpired()), EXPIRE_CHECK_TIMEOUT)
+  return setTimeout(() => dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
 }
 
 export const checkExpiredFioDomains =
-  (fioDomains: FioDomain[], fioWalletsById: { string: EdgeCurrencyWallet }) => async (dispatch: Dispatch, getState: GetState) => {
+  (fioDomains: FioDomain[], fioWalletsById: { string: EdgeCurrencyWallet }, navigation: NavigationProp<any>) =>
+  async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     if (!account) return
-    const navigation: NavigationProp<'edge'> = useNavigation()
 
     const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
     if (expired.length > 0) {
@@ -175,7 +175,7 @@ export const checkExpiredFioDomains =
     dispatch({ type: 'FIO/CHECKING_EXPIRED', data: false })
   }
 
-const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain, navigation: NavigationProp<'edge'>) => {
+const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain, navigation: NavigationProp<any>) => {
   const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {

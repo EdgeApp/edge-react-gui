@@ -68,13 +68,13 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleRequest = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(wallet.id, currencyCode, true))
+    dispatch(selectWallet(wallet.id, currencyCode, true, navigation))
     navigation.navigate('request')
   })
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(wallet.id, currencyCode, true)).then(async () => {
+    dispatch(selectWallet(wallet.id, currencyCode, undefined, navigation)).then(async () => {
       // Go to the transaction list, but only if the wallet exists
       // and does not need activation:
       if (
@@ -93,7 +93,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(wallet.id, currencyCode, true))
+    dispatch(selectWallet(wallet.id, currencyCode, true, this.props.navigation))
     navigation.navigate('send', {
       selectedWalletId: wallet.id,
       selectedCurrencyCode: currencyCode,

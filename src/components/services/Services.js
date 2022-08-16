@@ -15,6 +15,7 @@ import { rootReducer } from '../../reducers/RootReducer.js'
 import { useEffect, useState } from '../../types/reactHooks.js'
 import { type Action } from '../../types/reduxActions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type NavigationProp, useNavigation } from '../../types/routerTypes'
 import { errorAlert } from '../../util/middleware/errorAlert.js'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
 import { perfLogger } from '../../util/middleware/perfLogger.js'
@@ -81,12 +82,14 @@ export function Services(props: Props) {
     store.dispatch(loadDeviceReferral())
   }, [store])
 
+  const navigation: NavigationProp<'edge'> = useNavigation()
+
   return (
     <Provider store={store}>
       <LoginUiProvider themeOverride={theme}>
         <MenuProvider>
           <Airship>
-            <Main />
+            <Main navigation={navigation} />
           </Airship>
         </MenuProvider>
         <ActionQueue />
@@ -95,7 +98,7 @@ export function Services(props: Props) {
         <DeepLinkingManager />
         {account == null ? null : <AccountCallbackManager account={account} />}
         {account == null ? null : <SortedWalletList account={account} />}
-        <EdgeContextCallbackManager />
+        <EdgeContextCallbackManager navigation={navigation} />
         <PermissionsManager />
         <NetworkActivity />
         <PasswordReminderService />

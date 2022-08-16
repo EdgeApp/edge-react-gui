@@ -77,7 +77,7 @@ export function WalletList(props: Props) {
     () =>
       onPress ??
       ((walletId: string, currencyCode: string) => {
-        dispatch(selectWallet(walletId, currencyCode))
+        dispatch(selectWallet(walletId, currencyCode, undefined, this.props.navigation))
       }),
     [dispatch, onPress]
   )

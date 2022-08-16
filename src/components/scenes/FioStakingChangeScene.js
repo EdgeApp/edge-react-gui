@@ -141,6 +141,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
         onAmountChanged={onAmountChanged}
         overrideExchangeAmount={exchangeAmount}
         onMaxSet={onMaxSet}
+        navigation={navigation}
       />
     )).catch(error => setError(error))
   }

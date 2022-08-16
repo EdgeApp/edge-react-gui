@@ -38,7 +38,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  selectWallet: (walletId: string, currencyCode: string) => void
+  selectWallet: (walletId: string, currencyCode: string, navigation: NavigationProp<'edge'>) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -52,7 +52,7 @@ export function TransactionDropdown(props: Props) {
       bridge={bridge}
       onPress={() => {
         bridge.resolve()
-        walletId && selectWallet(walletId, tx.currencyCode)
+        walletId && selectWallet(walletId, tx.currencyCode, navigation)
         navigation.push('transactionDetails', {
           edgeTransaction: tx
         })
@@ -88,8 +88,8 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
     }
   },
   dispatch => ({
-    selectWallet: (walletId: string, currencyCode: string) => {
-      dispatch(selectWallet(walletId, currencyCode))
+    selectWallet: (walletId: string, currencyCode: string, navigation: NavigationProp<'edge'>) => {
+      dispatch(selectWallet(walletId, currencyCode, undefined, navigation))
     }
   })
 )(TransactionDropdown)

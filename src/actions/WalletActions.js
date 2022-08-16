@@ -10,45 +10,46 @@ import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.
 import s from '../locales/strings.js'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { type NavigationProp, useNavigation } from '../types/routerTypes.js'
+import { type NavigationProp } from '../types/routerTypes.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import { getSupportedFiats } from '../util/utils.js'
 import { refreshConnectedWallets } from './FioActions.js'
 import { registerNotifications } from './NotificationActions.js'
 
-export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyWallets } = state.core.account
-  // Manually un-pause the wallet, if necessary:
-  const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-  if (wallet.paused) wallet.changePaused(false).catch(showError)
+export const selectWallet =
+  (walletId: string, currencyCode: string, alwaysActivate?: boolean, navigation: NavigationProp<any>) => async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { currencyWallets } = state.core.account
+    // Manually un-pause the wallet, if necessary:
+    const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    if (wallet.paused) wallet.changePaused(false).catch(showError)
 
-  dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
-  if (isAccountActivationRequired) {
-    // EOS needs different path in case not activated yet
+    dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
+    const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+    if (isAccountActivationRequired) {
+      // EOS needs different path in case not activated yet
+      const currentWalletId = state.ui.wallets.selectedWalletId
+      const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+      if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+        await dispatch(selectEOSWallet(walletId, currencyCode, navigation))
+      }
+      return
+    }
     const currentWalletId = state.ui.wallets.selectedWalletId
     const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-    if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-      await dispatch(selectEOSWallet(walletId, currencyCode))
+    if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { walletId, currencyCode }
+      })
+      const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+      const receiveAddress = await wallet.getReceiveAddress({ currencyCode })
+      dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
     }
-    return
   }
-  const currentWalletId = state.ui.wallets.selectedWalletId
-  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-    dispatch({
-      type: 'UI/WALLETS/SELECT_WALLET',
-      data: { walletId, currencyCode }
-    })
-    const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    const receiveAddress = await wallet.getReceiveAddress({ currencyCode })
-    dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
-  }
-}
 
 // check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+const selectEOSWallet = (walletId: string, currencyCode: string, navigation: NavigationProp<any>) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.core.account.currencyWallets[walletId]
   const {
@@ -58,7 +59,6 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
   } = wallet
   const walletName = name ?? ''
   const { publicAddress } = await wallet.getReceiveAddress()
-  const navigation: NavigationProp<'edge'> = useNavigation()
 
   if (publicAddress !== '') {
     // already activated
@@ -109,8 +109,8 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
   }
 }
 
-export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(selectWallet(walletId, currencyCode, undefined))
+export const selectWalletFromModal = (walletId: string, currencyCode: string, navigation: NavigationProp<any>) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(selectWallet(walletId, currencyCode, undefined, navigation))
 }
 
 export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {
