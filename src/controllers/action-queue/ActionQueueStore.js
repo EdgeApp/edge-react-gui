@@ -1,12 +1,17 @@
 // @flow
 
-import { asEither, asMaybe, uncleaner } from 'cleaners'
+import { type Cleaner, asEither, uncleaner } from 'cleaners'
+import { navigateDisklet } from 'disklet'
 import { type EdgeAccount } from 'edge-core-js'
 
+import ENV from '../../../env'
 import { type BorrowActionId } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
+import { filterUndefined } from '../../util/safeFilters'
 import { asActionProgram, asActionProgramState } from './cleaners'
-import { type ActionProgram, type ActionProgramState, type ActionQueueMap } from './types'
+import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from './types'
+
+const { debugStore } = ENV.ACTION_QUEUE
 
 export const ACTION_QUEUE_DATASTORE_ID = 'actionQueue'
 
@@ -14,82 +19,92 @@ export const asStoreItem = asEither<ActionProgram, ActionProgramState>(asActionP
 export type StoreItem = $Call<typeof asStoreItem>
 
 export type ActionQueueStore = {
-  set: (itemId: string, data: StoreItem) => Promise<void>,
-  get: (itemId: string) => Promise<string>,
-  list: () => Promise<string[]>,
+  createActionQueueItem(program: ActionProgram): Promise<ActionProgramState>,
+  getActionQueueItem(programId: string): Promise<ActionQueueItem>,
+  updateActionQueueItem(programState: ActionProgramState): Promise<void>,
+  getActionQueueItems(): Promise<ActionQueueItem[]>,
   getActionQueueMap(): Promise<ActionQueueMap>
 }
 
-export const makeActionQueueStore = (account: EdgeAccount): ActionQueueStore => {
-  const instance = {
-    async set(itemId: string, data: StoreItem): Promise<void> {
-      const uncleanData = uncleaner(asStoreItem)(data)
+export const makeActionQueueStore = (account: EdgeAccount, deviceId: string): ActionQueueStore => {
+  // Use localDisklet (unencrypted) for debuggin purposes
+  const baseDisklet = debugStore ? account.localDisklet : account.disklet
+  const disklet = navigateDisklet(baseDisklet, ACTION_QUEUE_DATASTORE_ID)
+
+  async function persistToDisk(path: string, data: mixed, cleaner: Cleaner<any>) {
+    try {
+      const uncleanData = uncleaner(cleaner)(data)
       const serializedData = JSON.stringify(uncleanData)
-      await account.dataStore.setItem(ACTION_QUEUE_DATASTORE_ID, itemId, serializedData)
+      // console.log(`### WRITE ${path}`, serializedData)
+      await disklet.setText(path, serializedData)
+    } catch (error) {
+      console.error(`Failed to write:`, { path, data })
+      throw error
+    }
+  }
+  async function readFromDisk<T>(path: string, cleaner: Cleaner<T>): Promise<T> {
+    const serializedData = await disklet.getText(path)
+    // console.log(`### READ ${path}`, serializedData)
+    try {
+      const uncleanData = JSON.parse(serializedData)
+      return cleaner(uncleanData)
+    } catch (err) {
+      throw new Error(`Failed to read '${path}' from disk: ${String(err)}`)
+    }
+  }
+
+  const instance: ActionQueueStore = {
+    async createActionQueueItem(program: ActionProgram): Promise<ActionProgramState> {
+      const { programId } = program
+
+      // Initial program state
+      const programState: ActionProgramState = {
+        deviceId,
+        programId: programId
+      }
+
+      // Save to disk
+      await Promise.all([
+        persistToDisk(`${programId}/ActionProgram`, program, asActionProgram),
+        persistToDisk(`${programId}/ActionProgramState`, programState, asActionProgramState)
+      ])
+
+      // Return initial state
+      return programState
     },
-    async get(itemId: string): Promise<string> {
-      return await account.dataStore.getItem(ACTION_QUEUE_DATASTORE_ID, itemId)
+    async getActionQueueItem(programId: string): Promise<ActionQueueItem> {
+      const program = await readFromDisk(`${programId}/ActionProgram`, asActionProgram)
+      const state = await readFromDisk(`${programId}/ActionProgramState`, asActionProgramState)
+
+      return {
+        program,
+        state
+      }
     },
-    async list() {
-      return await account.dataStore.listItemIds(ACTION_QUEUE_DATASTORE_ID)
+    async updateActionQueueItem(programState: ActionProgramState): Promise<void> {
+      const { programId } = programState
+
+      await persistToDisk(`${programId}/ActionProgramState`, programState, asActionProgramState)
+    },
+    async getActionQueueItems(): Promise<ActionQueueItem[]> {
+      const listing = await disklet.list()
+      const programIds = Object.entries(listing).reduce((ids, [id, type]) => (type === 'folder' ? [...ids, id] : ids), [])
+      const promises = programIds.map(programId =>
+        instance.getActionQueueItem(programId).catch(err => {
+          // Silently fail on reads
+          console.error(`Failed to get ActionQueueItem for '${programId}'`, { err })
+        })
+      )
+      const items: ActionQueueItem[] = filterUndefined(await Promise.all(promises))
+
+      return items
     },
     async getActionQueueMap(): Promise<ActionQueueMap> {
-      const itemIds = await instance.list()
+      const queueItems = await instance.getActionQueueItems()
+      const filteredItems = queueItems.filter(item => item.state.effect?.type !== 'done')
+      const queueMap = filteredItems.reduce((map, item) => ({ ...map, [item.program.programId]: item }), {})
 
-      const itemPromises: Promise<mixed>[] = itemIds.map(async itemId => {
-        const item = await instance.get(itemId)
-        try {
-          return JSON.parse(item)
-        } catch (err) {
-          console.error(`Failed to JSON parse item in ActionQueueStore: ${itemId}`)
-        }
-      })
-
-      const items = await Promise.all(itemPromises)
-      const queue: ActionQueueMap = {}
-      const programIds: string[] = []
-      const programs: { [id: string]: ActionProgram } = {}
-      const states: { [id: string]: ActionProgramState } = {}
-
-      for (const item of items) {
-        const actionProgram = asMaybe(asActionProgram)(item)
-        if (actionProgram != null) {
-          const programId = actionProgram.programId
-          programs[programId] = actionProgram
-          programIds.push(programId)
-        }
-
-        const actionProgramState = asMaybe(asActionProgramState)(item)
-        if (actionProgramState != null) {
-          const programId = actionProgramState.programId
-          states[programId] = actionProgramState
-          programIds.push(programId)
-        }
-      }
-
-      for (const programId of programIds) {
-        const program = programs[programId]
-        const state = states[programId]
-
-        if (program == null) {
-          console.warn(`Missing program for '${programId}'`)
-          continue
-        }
-        if (state == null) {
-          console.warn(`Missing state for '${programId}'`)
-          continue
-        }
-        if (state.effect?.type === 'done') {
-          continue
-        }
-
-        queue[programId] = {
-          program,
-          state
-        }
-      }
-
-      return queue
+      return queueMap
     }
   }
   return instance

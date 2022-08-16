@@ -10,6 +10,16 @@ const asConfig = asObject({
   BUGSNAG_API_KEY: asOptional(asString, ''),
 
   ...configComment('GUI plugin options'),
+  ACTION_QUEUE: asOptional(
+    asObject({
+      debugStore: asBoolean,
+      pushServerUri: asString
+    }),
+    {
+      debugStore: false,
+      pushServerUri: 'https://push.edge.app'
+    }
+  ),
   PLUGIN_API_KEYS: asOptional(
     asObject({
       Bitrefill: asOptional(asString, '')

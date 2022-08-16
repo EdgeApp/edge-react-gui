@@ -159,6 +159,9 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asObject({
     type: asValue('unixtime'),
     timestamp: asNumber
+  }),
+  asObject({
+    type: asValue('noop')
   })
 )
 
@@ -172,6 +175,7 @@ export const asActionProgram: Cleaner<ActionProgram> = asObject({
 })
 
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
+  deviceId: asString,
   programId: asString,
   effect: asOptional(asActionEffect)
 })

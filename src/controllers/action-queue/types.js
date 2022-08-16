@@ -137,9 +137,7 @@ export type ActionEffect =
       type: 'unixtime',
       timestamp: number
     }
-  | {
-      type: 'init'
-    }
+  | { type: 'noop' }
 
 //
 // Action Program
@@ -152,6 +150,7 @@ export type ActionProgram = {
 }
 
 export type ActionProgramState = {
+  deviceId: string,
   programId: string,
   effect?: ActionEffect
 }

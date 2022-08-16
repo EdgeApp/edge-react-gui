@@ -1,5 +1,7 @@
 // @flow
 
+import { getUniqueId } from 'react-native-device-info'
+
 import { type Dispatch, type GetState } from '../../../types/reduxTypes'
 import { type ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from '../types'
@@ -22,38 +24,31 @@ type UpdateProgramStateAction = {
 
 export type ActionQueueAction = LoadActionQueueStateAction | ScheduleProgramAction | UpdateProgramStateAction
 
-export const scheduleActionProgram = (actionProgram: ActionProgram) => async (dispatch: Dispatch, getState: GetState) => {
+export const scheduleActionProgram = (program: ActionProgram) => async (dispatch: Dispatch, getState: GetState) => {
+  const deviceId = getUniqueId()
   const state = getState()
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account)
-  const programId = actionProgram.programId
+  const store: ActionQueueStore = makeActionQueueStore(state.core.account, deviceId)
+  const programId = program.programId
 
-  // Save ActionProgram
-  const actionProgramItemId = `${programId}:ActionProgram`
-  await store.set(actionProgramItemId, actionProgram)
-
-  // Create and save ActionProgramState
-  const actionProgramState: ActionProgramState = {
-    programId: programId
-  }
-  const actionProgramStateItemId = `${programId}:ActionProgramState`
-  await store.set(actionProgramStateItemId, actionProgramState)
+  // Persist the ActionProgram to the ActionQueueStore
+  const programState = await store.createActionQueueItem(program)
 
   dispatch({
     type: 'ACTION_QUEUE/QUEUE_ITEM',
     programId,
     item: {
-      program: actionProgram,
-      state: actionProgramState
+      program: program,
+      state: programState
     }
   })
 }
 
-export const updateActionProgramState = (actionProgramState: ActionProgramState) => async (dispatch: Dispatch, getState: GetState) => {
+export const updateActionProgramState = (programState: ActionProgramState) => async (dispatch: Dispatch, getState: GetState) => {
+  const deviceId = getUniqueId()
   const state = getState()
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account)
+  const store: ActionQueueStore = makeActionQueueStore(state.core.account, deviceId)
 
-  const actionProgramStateItemId = `${actionProgramState.programId}:ActionProgramState`
-  await store.set(actionProgramStateItemId, actionProgramState)
+  await store.updateActionQueueItem(programState)
 
-  dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: actionProgramState })
+  dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
 }
