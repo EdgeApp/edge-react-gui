@@ -6,6 +6,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
@@ -50,6 +51,7 @@ export const LoanCreateScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const existingProgramId = useRunningActionQueueId('loan-create', beWallet.id)
   if (debts.length > 0) {
     // TODO: transition to "advanced" loan details scene
   }
