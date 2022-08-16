@@ -7,8 +7,8 @@ import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
-import { makeAaveMaticBorrowPlugin } from '../../../plugins/borrow-plugins/plugins/aave/index'
-import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfo, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
+import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
+import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp } from '../../../types/routerTypes'
@@ -32,8 +32,6 @@ import { SceneHeader } from '../../themed/SceneHeader'
 type Props = {
   navigation: NavigationProp<'loanDashboard'>
 }
-
-const borrowPlugins = [makeAaveMaticBorrowPlugin()]
 
 export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
@@ -86,10 +84,10 @@ export const LoanDashboardScene = (props: Props) => {
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const handleAddLoan = useHandler(() => {
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: 'polygon' }]} showCreateWallet />
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: 'ethereum' }]} showCreateWallet />
     )).then(({ walletId }) => {
       if (walletId != null) {
-        const wallet = wallets[walletId]
+        const selectedWallet = wallets[walletId]
 
         if (borrowInfos != null) {
           const existingBorrowInfo = borrowInfos.find(borrowInfo => borrowInfo.borrowEngine.currencyWallet.id === walletId)
@@ -101,10 +99,14 @@ export const LoanDashboardScene = (props: Props) => {
 
         setIsNewLoanLoading(true)
 
-        getAaveBorrowInfo(makeAaveMaticBorrowPlugin(), wallet)
-          .then((borrowInfo: TempBorrowInfo) => {
+        const selectedWalletPluginId = selectedWallet.currencyInfo.pluginId
+        const newBorrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === selectedWalletPluginId)
+        if (newBorrowPlugin == null) throw new Error('Unable to find compatible borrow plugin for ' + selectedWalletPluginId)
+        newBorrowPlugin
+          .makeBorrowEngine(selectedWallet)
+          .then(newBorrowEngine => {
             setIsNewLoanLoading(false)
-            navigation.navigate('loanCreate', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
+            navigation.navigate('loanCreate', { borrowEngine: newBorrowEngine, borrowPlugin: newBorrowPlugin })
           })
           .catch(err => {
             redText(err.message)
