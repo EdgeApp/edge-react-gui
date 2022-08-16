@@ -1,5 +1,4 @@
 // @flow
-import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -24,7 +23,7 @@ import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { WalletListModal } from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
-import { Airship, redText, showError } from '../../services/AirshipInstance'
+import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -166,15 +165,6 @@ export const LoanDashboardScene = (props: Props) => {
       />
     </SceneWrapper>
   )
-}
-
-export const getToken = (wallet: EdgeCurrencyWallet, tokenIdStr: string) => {
-  const allTokens = wallet.currencyConfig.allTokens
-  if (!Object.keys(allTokens).find(tokenKey => tokenKey === tokenIdStr)) {
-    showError(`Could not find tokenId ${tokenIdStr}`)
-  } else {
-    return allTokens[tokenIdStr]
-  }
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
