@@ -354,7 +354,8 @@ export const LoanCreateScene = (props: Props) => {
                 destTokenId,
                 nativeDestAmount: nativeBorrowAmountCrypto,
                 nativeSrcAmount: nativeRequiredCrypto,
-                srcTokenId
+                srcTokenId,
+                srcWallet
               })
             }}
             marginRem={[1.5, 6, 6, 6]}
