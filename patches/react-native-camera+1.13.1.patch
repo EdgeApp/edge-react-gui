@@ -1,0 +1,39 @@
+diff --git a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java
+index bb8f269..572d099 100644
+--- a/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java
++++ b/node_modules/react-native-camera/android/src/main/java/org/reactnative/camera/RNCameraView.java
+@@ -179,33 +179,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener,
+     if (null == preview) {
+       return;
+     }
+-    float width = right - left;
+-    float height = bottom - top;
+-    float ratio = getAspectRatio().toFloat();
+-    int orientation = getResources().getConfiguration().orientation;
+-    int correctHeight;
+-    int correctWidth;
+-    this.setBackgroundColor(Color.BLACK);
+-    if (orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+-      if (ratio * height < width) {
+-        correctHeight = (int) (width / ratio);
+-        correctWidth = (int) width;
+-      } else {
+-        correctWidth = (int) (height * ratio);
+-        correctHeight = (int) height;
+-      }
+-    } else {
+-      if (ratio * width > height) {
+-        correctHeight = (int) (width * ratio);
+-        correctWidth = (int) width;
+-      } else {
+-        correctWidth = (int) (height / ratio);
+-        correctHeight = (int) height;
+-      }
+-    }
+-    int paddingX = (int) ((width - correctWidth) / 2);
+-    int paddingY = (int) ((height - correctHeight) / 2);
+-    preview.layout(paddingX, paddingY, correctWidth + paddingX, correctHeight + paddingY);
++    preview.layout(0, 0, right - left, bottom - top);
+   }
+ 
+   @SuppressLint("all")
