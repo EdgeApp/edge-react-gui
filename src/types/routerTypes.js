@@ -209,7 +209,8 @@ export type ParamList = {
     destTokenId: string,
     nativeDestAmount: string,
     nativeSrcAmount: string,
-    srcTokenId: string
+    srcTokenId?: string,
+    srcWallet: EdgeCurrencyWallet
   |},
   loanBorrowDetails: {|
     borrowEngine: BorrowEngine,
