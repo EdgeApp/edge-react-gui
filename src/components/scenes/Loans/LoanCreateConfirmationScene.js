@@ -31,7 +31,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const { currencyWallet: srcWallet } = borrowEngine
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId('loan-create')
+  const existingProgramId = useRunningActionQueueId('loan-create', srcWallet.id)
   if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
 
   // Setup Borrow Engine transaction requests/actions

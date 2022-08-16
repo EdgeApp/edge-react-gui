@@ -110,8 +110,7 @@ export const makeActionQueueStore = (account: EdgeAccount, deviceId: string): Ac
   return instance
 }
 
-// TODO: Sam's recommendation: Create separate map in redux to manage running borrow action programs?
-export const useRunningActionQueueId = (borrowActionId: BorrowActionId) => {
+export const useRunningActionQueueId = (borrowActionId: BorrowActionId, walletId: string) => {
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  return Object.keys(actionQueue).find(programId => programId.includes('loan-create'))
+  return Object.keys(actionQueue).find(programId => programId.includes(borrowActionId) && programId.includes(walletId))
 }
