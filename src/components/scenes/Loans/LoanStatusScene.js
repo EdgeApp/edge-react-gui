@@ -42,21 +42,21 @@ export const LoanStatusScene = (props: Props) => {
   useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]
 
-    // HACK: Manual program completion handling:
-    // 1. actionQueueItem gets removed from actionQueue when the last step completes, so we need to maintain and mutate a copy of the steps to reflect program completion since there's nothing to reference after completion.
-    // 2. The first step of a seq does not get set to 'active'
     // TODO: Make ActionQueue handle these cases correctly.
+    // HACK: Status mutations:
     if (actionQueueItem == null && steps != null) {
-      const lastStepIndex = steps.length - 1
-      const lastStatus = steps[lastStepIndex].status
-      if (lastStatus !== 'done') {
-        steps[lastStepIndex].status = 'done'
-        setSteps([...steps])
-      }
+      // 1. actionQueueItem gets removed from actionQueue when the last step completes, so we need to maintain and mutate a copy of the steps to reflect program completion since there's nothing to reference after completion.
+      setSteps(
+        steps.map(step => {
+          step.status = 'done'
+          return step
+        })
+      )
     } else {
+      // 2. The first step of a seq does not get set to 'active'
       const { program, state } = actionQueueItem
       const displayInfo = await getActionProgramDisplayInfo(account, program, state)
-      if (steps == null) displayInfo.steps[0].status = 'active'
+      if (displayInfo.steps[0].status === 'pending') displayInfo.steps[0].status = 'active'
       setSteps([...displayInfo.steps])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
