@@ -6,9 +6,7 @@ import * as React from 'react'
 
 import { AirshipToast } from '../../components/common/AirshipToast'
 import { Airship } from '../../components/services/AirshipInstance'
-import { makeAaveMaticBorrowPlugin } from '../../plugins/borrow-plugins/plugins/aave'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
-import { getAaveBorrowInfo } from '../../plugins/helpers/getAaveBorrowPlugins'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { snooze } from '../../util/utils'
 import { type ActionEffect, type ActionProgram, type ActionProgramState, type ExecutionResult, type ExecutionResults } from './types'
@@ -226,11 +224,10 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
       // Make borrow engine for wallet
-      const borrowInfo = await getAaveBorrowInfo(makeAaveMaticBorrowPlugin(), wallet)
-      // const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowInfo.borrowEngine.deposit({ nativeAmount, fromWallet: wallet, tokenId })
+      const approvableAction = await borrowEngine.deposit({ nativeAmount, fromWallet: wallet, tokenId })
       const txs = await approvableAction.approve()
 
       // Construct a tx-conf effect
@@ -304,7 +301,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
       }
     }
     case 'swap': {
-      const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId } = actionOp
+      const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId, amountFor } = actionOp
 
       const fromWallet = account.currencyWallets[fromWalletId]
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
@@ -321,7 +318,7 @@ async function executeActionOp(account: EdgeAccount, program: ActionProgram, sta
         fromCurrencyCode,
         toCurrencyCode,
         nativeAmount,
-        quoteFor: 'from'
+        quoteFor: amountFor
       })
       const swapResult = await swapQuote.approve()
 
