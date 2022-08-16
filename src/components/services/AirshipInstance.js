@@ -15,7 +15,7 @@ export const Airship = makeAirship()
  */
 export function showError(error: mixed): void {
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} />)
+  // Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} />)
 }
 
 /**
