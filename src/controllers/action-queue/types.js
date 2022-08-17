@@ -29,7 +29,7 @@ export type ParActionOp = {
   type: 'par',
   actions: ActionOp[]
 }
-export type BroadcastActionOp = {
+export type BroadcastTxActionOp = {
   type: 'broadcast-tx',
   pluginId: string,
   rawTx: Uint8Array
@@ -97,7 +97,7 @@ export type DelayActionOp = {
 export type ActionOp =
   | SeqActionOp
   | ParActionOp
-  | BroadcastActionOp
+  | BroadcastTxActionOp
   | ExchangeBuyActionOp
   | ExchangeSellActionOp
   | LoanBorrowActionOp

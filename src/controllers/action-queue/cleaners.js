@@ -6,7 +6,24 @@
 import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { base64 } from 'rfc4648'
 
-import { type ActionEffect, type ActionOp, type ActionProgram, type ActionProgramState } from './types'
+import {
+  type ActionEffect,
+  type ActionOp,
+  type ActionProgram,
+  type ActionProgramState,
+  type BroadcastTxActionOp,
+  type DelayActionOp,
+  type ExchangeBuyActionOp,
+  type ExchangeSellActionOp,
+  type LoanBorrowActionOp,
+  type LoanDepositActionOp,
+  type LoanRepayActionOp,
+  type LoanWithdrawActionOp,
+  type ParActionOp,
+  type SeqActionOp,
+  type SwapActionOp,
+  type ToastActionOp
+} from './types'
 
 const asBase64 = asCodec(
   raw => base64.parse(asString(raw)),
@@ -43,62 +60,62 @@ const asError = asCodec(
   asJsonError
 )
 
-const asSeqActionOp = asObject({
+const asSeqActionOp: Cleaner<SeqActionOp> = asObject({
   type: asValue('seq'),
   actions: asArray((raw: any) => asActionOp(raw))
 })
-const asParActionOp = asObject({
+const asParActionOp: Cleaner<ParActionOp> = asObject({
   type: asValue('par'),
   actions: asArray((raw: any) => asActionOp(raw))
 })
-const asBroadcastTxActionOp = asObject({
+const asBroadcastTxActionOp: Cleaner<BroadcastTxActionOp> = asObject({
   type: asValue('broadcast-tx'),
   pluginId: asString,
   rawTx: asBase64
 })
-const asExchangeBuyactionop = asObject({
+const asExchangeBuyActionOp: Cleaner<ExchangeBuyActionOp> = asObject({
   type: asValue('exchange-buy'),
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString),
   exchangePluginId: asString
 })
-const asExchangeSellActionOp = asObject({
+const asExchangeSellActionOp: Cleaner<ExchangeSellActionOp> = asObject({
   type: asValue('exchange-sell'),
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString),
   exchangePluginId: asString
 })
-const asLoanBorrowActionOp = asObject({
+const asLoanBorrowActionOp: Cleaner<LoanBorrowActionOp> = asObject({
   type: asValue('loan-borrow'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanDepositActionOp = asObject({
+const asLoanDepositActionOp: Cleaner<LoanDepositActionOp> = asObject({
   type: asValue('loan-deposit'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanRepayActionOp = asObject({
+const asLoanRepayActionOp: Cleaner<LoanRepayActionOp> = asObject({
   type: asValue('loan-repay'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanWithdrawActionOp = asObject({
+const asLoanWithdrawActionOp: Cleaner<LoanWithdrawActionOp> = asObject({
   type: asValue('loan-withdraw'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asSwapActionOp = asObject({
+const asSwapActionOp: Cleaner<SwapActionOp> = asObject({
   type: asValue('swap'),
   fromWalletId: asString,
   toWalletId: asString,
@@ -107,11 +124,11 @@ const asSwapActionOp = asObject({
   nativeAmount: asString,
   amountFor: asValue('from', 'to')
 })
-const asToastActionOp = asObject({
+const asToastActionOp: Cleaner<ToastActionOp> = asObject({
   type: asValue('toast'),
   message: asString
 })
-const asDelayActionOp = asObject({
+const asDelayActionOp: Cleaner<DelayActionOp> = asObject({
   type: asValue('delay'),
   ms: asNumber
 })
@@ -119,7 +136,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
   asParActionOp,
   asBroadcastTxActionOp,
-  asExchangeBuyactionop,
+  asExchangeBuyActionOp,
   asExchangeSellActionOp,
   asLoanBorrowActionOp,
   asLoanDepositActionOp,
