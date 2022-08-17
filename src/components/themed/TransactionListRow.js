@@ -54,7 +54,7 @@ export class TransactionListRowComponent extends React.PureComponent<Props> {
     if (transaction == null) {
       return showError(s.strings.transaction_details_error_invalid)
     }
-    navigation.push('transactionDetails', {
+    navigation.navigate('transactionDetails', {
       edgeTransaction: transaction,
       thumbnailPath
     })

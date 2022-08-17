@@ -170,11 +170,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    this.props.navigation.push('request')
+    this.props.navigation.navigate('request')
   }
 
   handleSend = (): void => {
-    this.props.navigation.push('send', {})
+    this.props.navigation.navigate('send', {})
   }
 
   handleSearchDone = () => {
@@ -186,8 +186,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleStakePress = () => {
     const { currencyCode, walletId, navigation } = this.props
-    if (currencyCode === 'FIO') navigation.push('fioStakingOverview', { currencyCode, walletId })
-    else navigation.push('stakeOptions', { walletId, currencyCode })
+    if (currencyCode === 'FIO') navigation.navigate('fioStakingOverview', { currencyCode, walletId })
+    else navigation.navigate('stakeOptions', { walletId, currencyCode })
   }
 
   clearText = () => {

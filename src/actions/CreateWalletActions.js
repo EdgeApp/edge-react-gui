@@ -173,7 +173,7 @@ export const createAccountTransaction =
         alternateBroadcast:
           createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
       }
-      navigation.push('send', {
+      navigation.navigate('send', {
         guiMakeSpendInfo,
         selectedWalletId: paymentWalletId,
         selectedCurrencyCode: currencyCode

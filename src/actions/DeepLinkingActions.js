@@ -64,7 +64,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
-      navigation.push('edgeLogin')
+      navigation.navigate('edgeLogin')
       return true
 
     // The login scene always handles this one:
@@ -78,7 +78,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      navigation.push('pluginView', {
+      navigation.navigate('pluginView', {
         plugin,
         deepPath: path,
         deepQuery: query
@@ -100,7 +100,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
 
     case 'swap': {
       if (!hasCurrentWallet) return false
-      navigation.push('exchangeScene')
+      navigation.navigate('exchangeScene')
       return true
     }
 
@@ -108,7 +108,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        navigation.push('walletListScene')
+        navigation.navigate('walletListScene')
         showError(s.strings.azteco_btc_only)
         return false
       }
@@ -119,9 +119,9 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
     case 'walletConnect': {
       if (!hasCurrentWallet) return false
       const { uri, isSigning } = link
-      navigation.push('wcConnections')
+      navigation.navigate('wcConnections')
       // Hack around our router's horrible bugs:
-      if (!isSigning) setTimeout(() => navigation.push('wcConnect', { uri }), 100)
+      if (!isSigning) setTimeout(() => navigation.navigate('wcConnect', { uri }), 100)
       return true
     }
 
@@ -165,7 +165,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink, naviga
     case 'dev': {
       if (!global.__DEV__) return false
       const params: any = {}
-      navigation.push(link.sceneName, params)
+      navigation.navigate(link.sceneName, params)
       return true
     }
   }
@@ -183,7 +183,7 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string, navigat
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  navigation.push('walletListScene')
+  navigation.navigate('walletListScene')
 }
 
 const CURRENCY_NAMES = {

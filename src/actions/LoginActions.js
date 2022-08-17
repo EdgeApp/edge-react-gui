@@ -192,9 +192,9 @@ export const initializeAccount =
 
       dispatch(expiredFioNamesCheckDates(navigation))
 
-      navigation.push('edge')
+      navigation.navigate('edge')
       if (hasSecurityAlerts(account)) {
-        navigation.push('securityAlerts')
+        navigation.navigate('securityAlerts')
       }
       await updateWalletsRequest()(dispatch, getState)
     } catch (error) {

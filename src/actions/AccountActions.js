@@ -15,7 +15,7 @@ export const handleOtpError = (otpError: OtpError, navigation: NavigationProp<an
 
   if (account.loggedIn && !otpErrorShown) {
     dispatch({ type: 'OTP_ERROR_SHOWN' })
-    navigation.push('otpRepair', {
+    navigation.navigate('otpRepair', {
       otpError
     })
   }

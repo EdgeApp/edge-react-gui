@@ -230,7 +230,7 @@ export const parseScannedUri =
       if (parsedUri.token) {
         // TOKEN URI
         const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
-        return navigation.push('editToken', {
+        return navigation.navigate('editToken', {
           currencyCode: currencyCode.toUpperCase(),
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
@@ -242,7 +242,7 @@ export const parseScannedUri =
       // LEGACY ADDRESS URI
       if (parsedUri.legacyAddress != null) {
         const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-        navigation.push('send', {
+        navigation.navigate('send', {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -261,7 +261,7 @@ export const parseScannedUri =
         const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
 
         if (guiMakeSpendInfo != null) {
-          navigation.push('send', {
+          navigation.navigate('send', {
             guiMakeSpendInfo,
             selectedWalletId,
             selectedCurrencyCode: currencyCode
@@ -295,7 +295,7 @@ export const parseScannedUri =
         nativeAmount
       }
 
-      navigation.push('send', {
+      navigation.navigate('send', {
         guiMakeSpendInfo,
         selectedWalletId,
         selectedCurrencyCode: currencyCode

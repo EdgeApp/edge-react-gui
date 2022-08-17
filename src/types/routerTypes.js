@@ -416,7 +416,7 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
         props.navigation.navigate(name, { route: { name, params } })
       },
       push(name, params) {
-        props.navigation.push(name, { route: { name, params } })
+        props.navigation.navigate(name, { route: { name, params } })
       },
       replace(name, params) {
         props.navigation.replace(name, { route: { name, params } })

@@ -183,7 +183,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
           />
         ))
         if (answer === 'ok') {
-          return navigation.push('fioAddressSettings', {
+          return navigation.navigate('fioAddressSettings', {
             showAddBundledTxs: true,
             fioWallet,
             fioAddressName: fioAddress

@@ -181,7 +181,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: Fio
   if (answer) {
     // $FlowFixMe
     const { isPublic = false } = fioDomain
-    navigation.push('fioDomainSettings', {
+    navigation.navigate('fioDomainSettings', {
       showRenew: true,
       fioWallet,
       fioDomainName: fioDomain.name,

@@ -55,5 +55,5 @@ async function showReminderModal(level: number, account: EdgeAccount, navigation
       }}
     />
   ))
-  if (reply === 'ok') navigation.push('passwordRecovery')
+  if (reply === 'ok') navigation.navigate('passwordRecovery')
 }

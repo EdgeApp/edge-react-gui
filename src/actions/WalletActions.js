@@ -81,7 +81,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string, navigation: Nav
     const selectedWalletType = makeCreateWalletType(currencyInfo)
     const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
     if (specialCurrencyInfo.skipAccountNameValidation) {
-      navigation.push('createWalletAccountSelect', {
+      navigation.navigate('createWalletAccountSelect', {
         selectedFiat: selectedFiat,
         selectedWalletType,
         accountName: walletName,
@@ -95,7 +95,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string, navigation: Nav
         isReactivation: true,
         existingWalletId: walletId
       }
-      navigation.push('createWalletAccountSetup', createWalletAccountSetupSceneProps)
+      navigation.navigate('createWalletAccountSetup', createWalletAccountSetupSceneProps)
     }
 
     Airship.show(bridge => (

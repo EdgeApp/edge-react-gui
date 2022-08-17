@@ -29,7 +29,7 @@ export const BuyCrypto = (props: Props) => {
   const styles = getStyles(theme)
   const navigation: NavigationProp<'edge'> = useNavigation()
   const handlePress = useHandler(() => {
-    navigation.push('pluginListBuy', { direction: 'buy' })
+    navigation.navigate('pluginListBuy', { direction: 'buy' })
   })
 
   const { displayName, pluginId } = wallet.currencyInfo

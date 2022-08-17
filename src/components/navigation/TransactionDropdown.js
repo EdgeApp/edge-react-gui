@@ -53,7 +53,7 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode, navigation)
-        navigation.push('transactionDetails', {
+        navigation.navigate('transactionDetails', {
           edgeTransaction: tx
         })
       }}

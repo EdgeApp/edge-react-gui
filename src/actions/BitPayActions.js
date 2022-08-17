@@ -252,7 +252,7 @@ export async function launchBitPay(
   //     selectedCurrencyCode
   //   })
   // } else {
-  //   navigation.push('send', {
+  //   navigation.navigate('send', {
   //     guiMakeSpendInfo,
   //     selectedWalletId: selectedWallet.id,
   //     selectedCurrencyCode
