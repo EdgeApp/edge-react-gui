@@ -12500,9 +12500,10 @@ react-native-airship@^0.2.9:
   dependencies:
     yavent "^0.1.1"
 
-"react-native-camera@https://github.com/EdgeApp/react-native-camera.git#edge-fixes":
+react-native-camera@^1.13.1:
   version "1.13.1"
-  resolved "https://github.com/EdgeApp/react-native-camera.git#2ff75ebbacc0062b5fccbcc951f41db5c6c38c11"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-1.13.1.tgz#19277ccae0a49dbf1b96049da5b95c847ea7aff2"
+  integrity sha512-wYjMi06ygYIiHRM4dSCH914xFUay7Wplx0bAej4iBkZeh54M4AxJDcF4vVZ5vdkpuAg8zvof3l+L1VhcKziMgw==
   dependencies:
     prop-types "^15.6.2"
 
@@ -12715,13 +12716,15 @@ react-native-share@^7.1.2:
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
   integrity sha512-kmwp11XYL1TBvKQ1s3Y4HTxu5QNZM6W1SopItAovoC+UD+9g4lVFIPL64bww16Oz15xQTTDtvDHCG8zDWKOVPA==
 
-"react-native-smart-splash-screen@https://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
+react-native-smart-splash-screen@^2.3.5:
   version "2.3.5"
-  resolved "https://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
+  resolved "https://registry.yarnpkg.com/react-native-smart-splash-screen/-/react-native-smart-splash-screen-2.3.5.tgz#68a1e45bfd708678aa12e65f2ba997ac5c1292a0"
+  integrity sha512-6Sl9UKzYIQu1Yl5SgsQdV4E8hUr1xz3UN1fmuqxHs82KRS9VkXaxkFJG1AIcFQGkKc4W1jQnU/RlP5PO8vezVg==
 
-"react-native-sortable-listview@https://github.com/EdgeApp/react-native-sortable-listview.git":
-  version "0.2.8"
-  resolved "https://github.com/EdgeApp/react-native-sortable-listview.git#209f808af19f719566e50475cc883ffc7c19d0e5"
+react-native-sortable-listview@^0.2.8:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/react-native-sortable-listview/-/react-native-sortable-listview-0.2.9.tgz#1719c64a7ee78ce14403fa49ba2d80628363530d"
+  integrity sha512-V12/ntls1NeLutfgi5z1RfmGEm6c98Sy3JMwU1nPObH9Mv1y42FaYudlzYgy0eGPQ2/owEHghZQct1BlHHZ4JQ==
   dependencies:
     deprecated-react-native-listview "^0.0.5"
 
