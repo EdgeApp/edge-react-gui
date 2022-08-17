@@ -1,7 +1,16 @@
 // @flow
 
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgePluginMap, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgePluginMap,
+  EdgeToken,
+  EdgeTokenMap,
+  EdgeTransaction
+} from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -319,17 +328,18 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
     const wallet = state.core.account.currencyWallets[walletId]
     for (const currencyCode of Object.keys(wallet.balances)) {
       const nativeBalance = wallet.balances[currencyCode] ?? '0'
+      const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
 
-      const { allTokens } = wallet.currencyConfig
-      const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
-      if (tokenId == null && currencyCode !== wallet.currencyInfo.currencyCode) continue
-      // $FlowFixMe
-      const token = allTokens[tokenId]
+      // Find the currency or token info:
+      let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
+      if (currencyCode !== wallet.currencyInfo.currencyCode) {
+        const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
+        if (tokenId == null) continue
+        info = wallet.currencyConfig.allTokens[tokenId]
+      }
       const {
         denominations: [denomination]
-      } = currencyCode === wallet.currencyInfo.currencyCode ? wallet.currencyInfo : token
-
-      const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+      } = info
 
       // Do the conversion:
       total += parseFloat(rate) * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
