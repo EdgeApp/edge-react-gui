@@ -3,13 +3,13 @@
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 
+import ENV from '../../env.json'
 import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
-import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
+import { type MessageTweak, asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { fetchInfo, fetchReferral } from '../util/network'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
-
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
 const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
 
@@ -172,14 +172,43 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
       throw new Error(`Returned status code ${reply.status}`)
     }
     const clean = asArray(asMessageTweak)(await reply.json())
-    cache.accountMessages.push(...lockStartDates(clean, creationDate))
+    const validated = await validatePromoCards(clean)
+    cache.accountMessages.push(...lockStartDates(validated, creationDate))
   } catch (e) {
     console.warn(`Failed to contact info server: ${e.message}`)
   }
 
-  if (cache.accountMessages.length <= 0 && cache.accountMessages.length <= 0) return
+  if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
   dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
   saveReferralCache(getState())
+}
+
+async function validatePromoCards(cards: MessageTweak[]): Promise<MessageTweak[]> {
+  const apiKey = ENV.IP_API_KEY ?? ''
+  let result = { countryCode: '--' }
+  try {
+    const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
+    if (reply) {
+      result = asIpApi(await reply.json())
+    }
+  } catch (e) {
+    console.error(e.message)
+  }
+
+  const out = []
+
+  // Validate Country
+  for (const card of cards) {
+    if (card.countryCodes != null) {
+      const match = card.countryCodes.some(cc => cc === result.countryCode)
+      if (!match) continue
+    }
+    out.push(card)
+  }
+
+  // Validate Bank Linkage
+
+  return out
 }
 
 /**
