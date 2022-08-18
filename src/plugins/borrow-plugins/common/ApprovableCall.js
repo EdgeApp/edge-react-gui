@@ -21,11 +21,12 @@ export type CallInfo = {
   wallet: EdgeCurrencyWallet,
   spendToken?: EdgeToken,
   metadata?: EdgeMetadata,
-  pendingTxs: EdgeTransaction[]
+  pendingTxs: EdgeTransaction[],
+  skipChecks?: boolean
 }
 
 export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAction> => {
-  const { tx: txInfo, wallet, spendToken, metadata, pendingTxs } = params
+  const { tx: txInfo, wallet, spendToken, metadata, pendingTxs, skipChecks = false } = params
   const { id: walletId } = wallet
   const { gasLimit, gasPrice } = txInfo
 
@@ -47,7 +48,8 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
     },
     networkFeeOption: 'custom',
     metadata,
-    pendingTxs
+    pendingTxs,
+    skipChecks
   }
   const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(edgeSpendInfo)
 
