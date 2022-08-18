@@ -3,10 +3,11 @@
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 
+import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
 import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
-import { fetchReferral } from '../util/network'
+import { fetchInfo, fetchReferral } from '../util/network'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
@@ -142,23 +143,41 @@ export const ignoreAccountSwap =
 export const refreshAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
+  const cache: ReferralCache = {
+    accountMessages: [],
+    accountPlugins: []
+  }
 
-  const uri = `api/v1/partner?installerId=${installerId}`
+  let uri = `api/v1/partner?installerId=${installerId}`
   let reply
   try {
     reply = await fetchReferral(uri)
+    if (!reply.ok) {
+      throw new Error(`Returned status code ${reply.status}`)
+    }
+    const clean = asServerTweaks(await reply.json())
+    cache.accountMessages.push(...lockStartDates(clean.messages, creationDate))
+    cache.accountPlugins.push(...lockStartDates(clean.plugins, creationDate))
   } catch (e) {
-    console.warn(`Failed to contact referral server`)
-    return
+    console.warn(`Failed to contact referral server: ${e.message}`)
   }
-  if (!reply.ok) {
-    console.warn(`Referral server returned status code ${reply.status}`)
+
+  // Get promo cards from info server
+  const appId = config.appId ?? 'edge'
+
+  uri = `v1/promoCards/${appId}`
+  try {
+    reply = await fetchInfo(uri)
+    if (!reply.ok) {
+      throw new Error(`Returned status code ${reply.status}`)
+    }
+    const clean = asArray(asMessageTweak)(await reply.json())
+    cache.accountMessages.push(...lockStartDates(clean, creationDate))
+  } catch (e) {
+    console.warn(`Failed to contact info server: ${e.message}`)
   }
-  const clean = asServerTweaks(await reply.json())
-  const cache: ReferralCache = {
-    accountMessages: lockStartDates(clean.messages, creationDate),
-    accountPlugins: lockStartDates(clean.plugins, creationDate)
-  }
+
+  if (cache.accountMessages.length <= 0 && cache.accountMessages.length <= 0) return
   dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
   saveReferralCache(getState())
 }
