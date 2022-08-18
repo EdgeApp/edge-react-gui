@@ -51,6 +51,12 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 }
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
+  // Log in as quickly as possible, but we do need the sort order:
+  const syncedSettings = await getSyncedSettings(account)
+  const { walletSort } = syncedSettings
+  dispatch({ type: 'LOGIN', data: { account, walletSort } })
+  Actions.push('edge')
+
   // Show a notice for deprecated electrum server settings
   const pluginIdsNeedingUserAction: string[] = []
   for (const pluginId in account.currencyConfig) {
@@ -82,9 +88,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       .catch(err => showError(err))
   }
 
-  dispatch({ type: 'LOGIN', data: account })
-
-  Actions.push('edge')
+  // Check for security alerts:
   if (hasSecurityAlerts(account)) {
     Actions.push('securityAlerts')
   }
@@ -92,12 +96,14 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
   const state = getState()
   const { context } = state.core
 
+  // Sign up for push notifications:
   dispatch(attachToUser())
 
   const walletInfos = account.allKeys
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
   console.log('Wallet Infos:', filteredWalletInfos)
 
+  // Merge and prepare settings files:
   let accountInitObject: AccountInitPayload = {
     account,
     autoLogoutTimeInSeconds: 3600,
@@ -140,7 +146,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       data: { activeWalletIds }
     })
 
-    const syncedSettings = await getSyncedSettings(account)
     accountInitObject = { ...accountInitObject, ...syncedSettings }
 
     const loadedLocalSettings = await getLocalSettings(account)

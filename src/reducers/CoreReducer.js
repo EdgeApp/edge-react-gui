@@ -32,7 +32,7 @@ export const core: Reducer<CoreState, Action> = combineReducers({
   account(state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {
     switch (action.type) {
       case 'LOGIN':
-        return action.data
+        return action.data.account
       case 'LOGOUT':
         return defaultAccount
     }
