@@ -11,7 +11,7 @@ import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
-import { type NavigationProp } from '../../../types/routerTypes'
+import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { type FlatListItem } from '../../../types/types'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -30,11 +30,14 @@ import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 type Props = {
-  navigation: NavigationProp<'loanDashboard'>
+  navigation: NavigationProp<'loanDashboard'>,
+  route: RouteProp<'loanDashboard'>
 }
 
 export const LoanDashboardScene = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+
+  const { borrowInfos: routeBorrowInfos } = route.params
 
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
@@ -56,7 +59,7 @@ export const LoanDashboardScene = (props: Props) => {
   // Borrow Info & Auto-Refresh
   const [timeoutId, setTimeoutId] = useState()
   const [resetTrigger, setResetTrigger] = useState(false)
-  const [borrowInfos, borrowInfosError] = useAsyncValue(async () => {
+  let [borrowInfos, borrowInfosError] = useAsyncValue(async () => {
     const retVal = isWalletsLoaded
       ? await getAaveBorrowInfos(borrowPlugins, account).then(biRes => {
           return filterActiveBorrowInfos(biRes)
@@ -150,12 +153,14 @@ export const LoanDashboardScene = (props: Props) => {
     )
 
   if (borrowInfos == null) {
-    return (
-      <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader underline title={s.strings.loan_dashboard_title} />
-        <FillLoader />
-      </SceneWrapper>
-    )
+    if (routeBorrowInfos == null)
+      return (
+        <SceneWrapper background="theme" hasTabs={false}>
+          <SceneHeader underline title={s.strings.loan_dashboard_title} />
+          <FillLoader />
+        </SceneWrapper>
+      )
+    else borrowInfos = routeBorrowInfos
   }
 
   return (

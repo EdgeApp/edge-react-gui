@@ -18,9 +18,12 @@ import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import { EDGE_URL } from '../../constants/constantSettings.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet.js'
 import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
+import { borrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
+import { filterActiveBorrowInfos, getAaveBorrowInfos } from '../../plugins/helpers/getAaveBorrowPlugins'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig.js'
 import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
@@ -61,6 +64,17 @@ export function ControlPanel(props: Props) {
     if (selectedWallet == null) return
     return getDisplayDenomination(state, selectedWallet.wallet.currencyInfo.pluginId, selectedWallet.currencyCode)
   })
+
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
+  const [borrowInfos, borrowInfosError] = useAsyncValue(async () => {
+    const retVal = Object.keys(currencyWallets).length
+      ? await getAaveBorrowInfos(borrowPlugins, account).then(biRes => {
+          return filterActiveBorrowInfos(biRes)
+        })
+      : null
+    return retVal
+  }, [])
 
   /// ---- Local State ----
 
@@ -143,7 +157,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
-    handleGoToScene('loanDashboard')
+    if (borrowInfos != null) handleGoToScene('loanDashboard', { borrowInfos })
   }
 
   const handleLoginQr = () => {
