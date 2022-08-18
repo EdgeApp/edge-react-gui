@@ -1,6 +1,7 @@
 // @flow
 
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
+import { type EdgeDataStore } from 'edge-core-js'
 import { type EdgeAccount } from 'edge-core-js/types'
 import { Platform } from 'react-native'
 import { getBuildNumber } from 'react-native-device-info'
@@ -189,30 +190,51 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
   saveReferralCache(getState())
 }
 
-async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
+export type ValidateFuncs = {
+  getCountryCodeByIp: () => Promise<string>,
+  checkWyreHasLinkedBank: (dataStore: EdgeDataStore) => Promise<boolean | void>,
+  getBuildNumber: () => string,
+  getLanguageTag: () => string,
+  getOs: () => string
+}
+
+const getCountryCodeByIp = async (): Promise<string> => {
   const apiKey = ENV.IP_API_KEY ?? ''
-  let result = { countryCode: '--' }
+  let out = '--'
   try {
     const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
     if (reply) {
-      result = asIpApi(await reply.json())
+      const { countryCode } = asIpApi(await reply.json())
+      out = countryCode
     }
   } catch (e) {
     console.error(e.message)
   }
+  return out
+}
+const getLanguageTag = (): string => {
+  const [firstLocale = { languageTag: 'en_US' }] = getLocales()
+  return firstLocale.languageTag
+}
+const getOs = (): string => Platform.OS
 
+async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
+  const funcs: ValidateFuncs = { getCountryCodeByIp, checkWyreHasLinkedBank, getBuildNumber, getLanguageTag, getOs }
+  return validatePromoCardsInner(account.dataStore, cards, funcs)
+}
+export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
   const out = []
   let wyreHasLinkedBank
 
   for (const card of cards) {
     // Validate OS type
     if (card.osTypes != null) {
-      const match = card.osTypes.some(os => os === Platform.OS)
+      const match = card.osTypes.some(os => os === funcs.getOs())
       if (!match) continue
     }
 
     // Validate app buildnum
-    const buildNum = getBuildNumber()
+    const buildNum = funcs.getBuildNumber()
     if (typeof card.exactBuildNum === 'string') {
       if (card.exactBuildNum !== buildNum) continue
     }
@@ -225,7 +247,8 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
 
     if (card.countryCodes != null) {
       // Validate Country
-      const match = card.countryCodes.some(cc => cc === result.countryCode)
+      const countryCode = await funcs.getCountryCodeByIp()
+      const match = (card.countryCodes ?? []).some(cc => cc === countryCode)
       if (!match) continue
     }
 
@@ -235,7 +258,7 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
       for (const [pluginId, hasLinkedBank] of Object.entries(card.hasLinkedBankMap)) {
         if (pluginId === 'co.edgesecure.wyre') {
           if (wyreHasLinkedBank == null) {
-            wyreHasLinkedBank = await checkWyreHasLinkedBank(account)
+            wyreHasLinkedBank = await funcs.checkWyreHasLinkedBank(dataStore)
           }
           if (wyreHasLinkedBank !== hasLinkedBank) {
             useCard = false
@@ -252,9 +275,8 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
 
     // Pick proper language
     if (card.localeMessages != null) {
-      const [firstLocale = { languageTag: 'en_US' }] = getLocales()
       const localeList = Object.keys(card.localeMessages ?? {})
-      const lang = pickLanguage(firstLocale.languageTag, localeList)
+      const lang = pickLanguage(funcs.getLanguageTag(), localeList)
       if (lang != null) {
         const message = (card.localeMessages ?? {})[lang]
         if (message != null) {

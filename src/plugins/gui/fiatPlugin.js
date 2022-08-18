@@ -1,6 +1,6 @@
 // @flow
 import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
-import { type EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount, type EdgeDataStore } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -97,7 +97,7 @@ export const executePlugin = async (params: {
 // ****************************************************************************
 
 const asBlockchainMap = asMap(asString)
-const asGetPaymentMethods = asObject({
+export const asGetPaymentMethods = asObject({
   data: asArray(
     asObject({
       status: asString,
@@ -119,9 +119,9 @@ const asGetAccount = asObject({ status: asString })
 type GetPaymentMethods = $Call<typeof asGetPaymentMethods>
 type GetAccount = $Call<typeof asGetAccount>
 
-export const checkWyreHasLinkedBank = async (account: EdgeAccount): Promise<boolean | void> => {
+export const checkWyreHasLinkedBank = async (dataStore: EdgeDataStore): Promise<boolean | void> => {
   try {
-    const store = createStore('co.edgesecure.wyre', account.dataStore)
+    const store = createStore('co.edgesecure.wyre', dataStore)
     let key = await store.getItem('wyreSecret').catch(e => undefined)
     if (key == null) {
       key = await store.getItem('wyreAccountId')
@@ -136,7 +136,7 @@ export const checkWyreHasLinkedBank = async (account: EdgeAccount): Promise<bool
   }
 }
 
-function checkWyreActive(account: GetAccount, paymentMethods: GetPaymentMethods): boolean {
+export function checkWyreActive(account: GetAccount, paymentMethods: GetPaymentMethods): boolean {
   if (account.status !== 'APPROVED') return false
 
   // Gather payment methods
