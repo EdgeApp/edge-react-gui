@@ -4,6 +4,7 @@ import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } fro
 import { type EdgeAccount } from 'edge-core-js/types'
 
 import ENV from '../../env.json'
+import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
@@ -172,7 +173,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
       throw new Error(`Returned status code ${reply.status}`)
     }
     const clean = asArray(asMessageTweak)(await reply.json())
-    const validated = await validatePromoCards(clean)
+    const validated = await validatePromoCards(state.core.account, clean)
     cache.accountMessages.push(...lockStartDates(validated, creationDate))
   } catch (e) {
     console.warn(`Failed to contact info server: ${e.message}`)
@@ -183,7 +184,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
   saveReferralCache(getState())
 }
 
-async function validatePromoCards(cards: MessageTweak[]): Promise<MessageTweak[]> {
+async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
   const apiKey = ENV.IP_API_KEY ?? ''
   let result = { countryCode: '--' }
   try {
@@ -196,17 +197,37 @@ async function validatePromoCards(cards: MessageTweak[]): Promise<MessageTweak[]
   }
 
   const out = []
+  let wyreHasLinkedBank
 
-  // Validate Country
   for (const card of cards) {
+    // Validate Country
     if (card.countryCodes != null) {
       const match = card.countryCodes.some(cc => cc === result.countryCode)
       if (!match) continue
     }
+
+    // Validate Bank Linkage
+    if (card.hasLinkedBankMap != null) {
+      let useCard = true
+      for (const [pluginId, hasLinkedBank] of Object.entries(card.hasLinkedBankMap)) {
+        if (pluginId === 'co.edgesecure.wyre') {
+          if (wyreHasLinkedBank == null) {
+            wyreHasLinkedBank = await checkWyreHasLinkedBank(account)
+          }
+          if (wyreHasLinkedBank !== hasLinkedBank) {
+            useCard = false
+            break
+          }
+        } else {
+          // We can't track any other types of bank linkage so punt on this promo card.
+          useCard = false
+          break
+        }
+      }
+      if (!useCard) continue
+    }
     out.push(card)
   }
-
-  // Validate Bank Linkage
 
   return out
 }

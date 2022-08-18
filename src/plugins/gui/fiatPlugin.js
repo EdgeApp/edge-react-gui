@@ -1,4 +1,5 @@
 // @flow
+import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -18,6 +19,7 @@ import {
   type FiatPluginRegionCode,
   type FiatPluginUi
 } from './fiatPluginTypes'
+import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
   guiPlugin: GuiPlugin,
@@ -84,4 +86,110 @@ export const executePlugin = async (params: {
     paymentTypes
   }
   plugin.startPlugin(startPluginParams)
+}
+
+// ****************************************************************************
+// XXX Hack. We don't have a clean API to see if the user has a linked bank
+// account. For now hard code to ask Wyre. This will change hopefully in the
+// next couple months
+//
+// Most of code below was stolen from edge-plugins-wyre
+// ****************************************************************************
+
+const asBlockchainMap = asMap(asString)
+const asGetPaymentMethods = asObject({
+  data: asArray(
+    asObject({
+      status: asString,
+      waitingPrompts: asArray(
+        asObject({
+          type: asString
+        })
+      ),
+      owner: asString,
+      id: asString,
+      createdAt: asNumber,
+      name: asString,
+      blockchains: asBlockchainMap
+    })
+  )
+})
+const asGetAccount = asObject({ status: asString })
+
+type GetPaymentMethods = $Call<typeof asGetPaymentMethods>
+type GetAccount = $Call<typeof asGetAccount>
+
+export const checkWyreHasLinkedBank = async (account: EdgeAccount): Promise<boolean | void> => {
+  try {
+    const store = createStore('co.edgesecure.wyre', account.dataStore)
+    let key = await store.getItem('wyreSecret').catch(e => undefined)
+    if (key == null) {
+      key = await store.getItem('wyreAccountId')
+    }
+    if (key == null) return false
+    const paymentMethods = await getWyrePaymentMethods(key)
+    const accountName = paymentMethods.data[0].owner.substring(8)
+    const wyreAccount = await getWyreAccount(accountName, key)
+    return checkWyreActive(wyreAccount, paymentMethods)
+  } catch (e) {
+    console.error(e.message)
+  }
+}
+
+function checkWyreActive(account: GetAccount, paymentMethods: GetPaymentMethods): boolean {
+  if (account.status !== 'APPROVED') return false
+
+  // Gather payment methods
+  for (let i = 0; i < paymentMethods.data.length; i++) {
+    // Skip all inactive payment methods
+    if (paymentMethods.data[i].status !== 'ACTIVE') {
+      continue
+    }
+
+    if (paymentMethods.data[i].waitingPrompts.length > 0) {
+      const prompt = paymentMethods.data[i].waitingPrompts.find(wp => wp.type === 'RECONNECT_BANK')
+      if (prompt != null) {
+        continue
+      }
+    }
+    return true
+  }
+
+  return false
+}
+
+async function getWyreAccount(account: string, token: string): Promise<GetAccount> {
+  const timestamp = new Date().getMilliseconds()
+  const data = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+  }
+  const url = 'https://api.sendwyre.com/v2/account/' + account + '?timestamp=' + timestamp
+  const result = await window.fetch(url, data)
+  if (!result.ok) throw new Error('fetchError')
+  if (result.status === 204) throw new Error('emptyResponse')
+  const newData = asGetAccount(await result.json())
+  return newData
+}
+
+async function getWyrePaymentMethods(token: string): Promise<GetPaymentMethods> {
+  const request = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+  }
+  const url = 'https://api.sendwyre.com/v2/paymentMethods' // V2_API_URL + 'apiKeys'
+  const result = await fetch(url, request)
+  if (!result.ok) throw new Error('fetchError')
+  if (result.status === 204) throw new Error('emptyResponse')
+  const newData = asGetPaymentMethods(await result.json())
+  if (newData.data.length < 1) throw new Error('emptyResponse')
+  return newData
 }
