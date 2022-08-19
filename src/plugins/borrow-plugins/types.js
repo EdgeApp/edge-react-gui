@@ -12,7 +12,10 @@ export type BorrowRequest = {
   nativeAmount: string,
 
   // Optional source for the funds which will borrow on behalf of the borrow engine's currencyWallet
-  fromWallet?: EdgeCurrencyWallet
+  fromWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[]
 }
 
 // Make payment:
@@ -21,7 +24,10 @@ export type RepayRequest = {
   nativeAmount: string,
 
   // Optional source for the funds which will repay on behalf of the borrow engine's currencyWallet
-  fromWallet?: EdgeCurrencyWallet
+  fromWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[]
 }
 
 // Deposit collateral:
@@ -30,7 +36,10 @@ export type DepositRequest = {
   nativeAmount: string,
 
   // Optional source for the funds which will deposit on behalf of the borrow engine's currencyWallet
-  fromWallet?: EdgeCurrencyWallet
+  fromWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[]
 }
 
 // Withdraw collateral:
@@ -39,14 +48,24 @@ export type WithdrawRequest = {
   nativeAmount: string,
 
   // Optional destination for the funds
-  toWallet?: EdgeCurrencyWallet
+  toWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[]
+}
+
+export type BroadcastTx = {
+  walletId: string,
+  networkFee: EdgeNetworkFee,
+  tx: EdgeTransaction
 }
 
 // General purpose approvable action
 export type ApprovableAction = {
   +networkFee: EdgeNetworkFee,
   +unsignedTxs: EdgeTransaction[],
-  +approve: () => Promise<EdgeTransaction[]>
+  +dryrun: () => Promise<BroadcastTx[]>,
+  +approve: () => Promise<BroadcastTx[]>
 }
 
 // HACK: Used to identify running ActionQueue programs by borrow action type.

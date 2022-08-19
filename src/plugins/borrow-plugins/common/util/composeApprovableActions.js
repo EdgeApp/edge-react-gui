@@ -1,7 +1,7 @@
 // @flow
 import { add } from 'biggystring'
-import { type EdgeTransaction } from 'edge-core-js'
 
+import { type BroadcastTx } from '../../../../controllers/action-queue/types'
 import { type ApprovableAction } from '../../types'
 
 export const composeApprovableActions = (...actions: ApprovableAction[]): ApprovableAction => {
@@ -21,12 +21,19 @@ export const composeApprovableActions = (...actions: ApprovableAction[]): Approv
       nativeAmount
     },
     unsignedTxs: actions.reduce((txs, action) => [...txs, ...action.unsignedTxs], []),
-    approve: async () => {
-      const txs: EdgeTransaction[] = []
+    dryrun: async () => {
+      const outputs: BroadcastTx[] = []
       for (const action of actions) {
-        txs.push(...(await action.approve()))
+        outputs.push(...(await action.dryrun()))
       }
-      return txs
+      return outputs
+    },
+    approve: async () => {
+      const outputs: BroadcastTx[] = []
+      for (const action of actions) {
+        outputs.push(...(await action.approve()))
+      }
+      return outputs
     }
   }
 }
