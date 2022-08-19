@@ -45,6 +45,43 @@ const aaveMaticBlueprint: BorrowPluginBlueprint = {
 export const makeAaveMaticBorrowPlugin = makeBorrowPluginFactory(aaveMaticBlueprint)
 
 // -----------------------------------------------------------------------------
+// Matic Testnet (Mumbai)
+// -----------------------------------------------------------------------------
+const maticMumbaiNetwork = {
+  name: 'mumbai',
+  chainId: 80001,
+  _defaultProvider: providers => new providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com')
+}
+
+const aaveMaticMumbaiNetwork = makeAaveNetworkFactory({
+  provider: ethers.getDefaultProvider(maticMumbaiNetwork),
+
+  contractAddresses: {
+    lendingPool: '0x9198F13B08E299d85E096929fA9781A1E3d5d827',
+    protocolDataProvider: '/0xFA3bD19110d986c5e5E9DD5F69362d05035D045B'
+  },
+  enabledTokens: {
+    USDC: true,
+    WBTC: true
+  }
+})
+
+const aaveMaticMumbaiBlueprint: BorrowPluginBlueprint = {
+  borrowInfo: {
+    borrowPluginId: 'aaveMumbai',
+    currencyPluginId: 'mumbai',
+    displayName: 'AAVE (Mumbai)',
+    maxLtvRatio: 0.5
+  },
+  makeBorrowEngine: makeBorrowEngineFactory({
+    aaveNetwork: aaveMaticMumbaiNetwork,
+    asTokenContractAddress: asEthTokenContractAddress
+  })
+}
+
+export const makeAaveMumbaiPlugin = makeBorrowPluginFactory(aaveMaticMumbaiBlueprint)
+
+// -----------------------------------------------------------------------------
 // Ethereum Mainnet
 // -----------------------------------------------------------------------------
 
