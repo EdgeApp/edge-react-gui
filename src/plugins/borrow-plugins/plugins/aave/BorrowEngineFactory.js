@@ -255,12 +255,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
-        // Check balance of token
-        const balance = await tokenContract.balanceOf(spenderAddress)
-        if (amountToCover.gt(balance)) {
-          throw new Error(`Insufficient funds to repay ${token.displayName} loan`)
-        }
-
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
 
