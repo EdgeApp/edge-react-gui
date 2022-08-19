@@ -215,7 +215,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 }
 
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return !isSentTransaction(edgeTransaction)
+  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) !== '0' && edgeTransaction.nativeAmount.charAt(0) !== '-'
 }
 
 export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
