@@ -141,7 +141,7 @@ export const getToken = (wallet: EdgeCurrencyWallet, tokenId?: string): EdgeToke
     // Either special handling should be done by the caller, or the workflow should not allow this to execute.
   } else {
     const allTokens = wallet.currencyConfig.allTokens
-    if (!Object.keys(allTokens).some(tokenKey => tokenKey === tokenId)) {
+    if (allTokens[tokenId] == null) {
       showError(`Could not find tokenId ${tokenId}`)
       return
     }
