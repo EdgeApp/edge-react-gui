@@ -1,6 +1,8 @@
 // @flow
 
 import { div, gt, gte, mul } from 'biggystring'
+import { asArray, asObject, asOptional, asString } from 'cleaners'
+import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -11,10 +13,12 @@ import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
+import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiCurrencyInfo, emptyCurrencyInfo } from '../../types/types.js'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers.js'
-import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
+import { DECIMAL_PRECISION, fetchInfo, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -28,6 +32,8 @@ import { MiniButton } from '../themed/MiniButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 type StateProps = {
+  account: EdgeAccount,
+
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWalletId: string,
   fromWalletBalances: { [code: string]: string },
@@ -66,6 +72,28 @@ type DispatchProps = {
   getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void,
   exchangeMax: () => Promise<void>
 }
+
+const asDisableAsset = asObject({
+  pluginId: asString,
+
+  // tokenId = undefined will only disable the mainnet coin
+  // tokenId = 'allTokens' will disable all tokens
+  // tokenId = 'allCoins' will disable all tokens and mainnet coin
+  tokenId: asOptional(asString) // May also be 'all' to disable all tokens
+})
+
+const asExchangeInfo = asObject({
+  swap: asObject({
+    disableAssets: asObject({
+      source: asArray(asDisableAsset),
+      destination: asArray(asDisableAsset)
+    })
+  })
+})
+
+type DisableAsset = $Call<typeof asDisableAsset>
+type ExchangeInfo = $Call<typeof asExchangeInfo>
+
 type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
@@ -74,7 +102,8 @@ type State = {
   forceUpdateGuiCounter: number,
   toExchangeAmount: string,
   fromAmountNative: string,
-  toAmountNative: string
+  toAmountNative: string,
+  exchangeInfo: ExchangeInfo | void
 }
 
 const defaultFromWalletInfo = {
@@ -108,14 +137,45 @@ const defaultState = {
   fromExchangeAmount: '',
   toExchangeAmount: '',
   fromAmountNative: '',
-  toAmountNative: ''
+  toAmountNative: '',
+  exchangeInfo: undefined
 }
 
+const EXCHANGE_INFO_REFRESH_INTERVAL = 60000
+
 export class CryptoExchangeComponent extends React.Component<Props, State> {
+  componentMounted: boolean
+  timeoutId: $Call<typeof setTimeout, any>
+
   constructor(props: Props) {
     super(props)
     const newState: State = defaultState
     this.state = newState
+    this.componentMounted = true
+  }
+
+  // Get exchangeInfo from info server
+  fetchExchangeInfo() {
+    const { appId = 'edge' } = config
+    fetchInfo(`v1/exchangeInfo/${appId}`)
+      .then(async response => {
+        const exchangeInfo = asExchangeInfo(await response.json())
+        if (!this.componentMounted) return
+        this.setState({ exchangeInfo })
+        this.timeoutId = setTimeout(() => {
+          this.fetchExchangeInfo()
+        }, EXCHANGE_INFO_REFRESH_INTERVAL)
+      })
+      .catch(e => console.error(e.message))
+  }
+
+  componentDidMount() {
+    this.fetchExchangeInfo()
+  }
+
+  componentWillUnmount() {
+    this.componentMounted = false
+    if (this.timeoutId != null) clearTimeout(this.timeoutId)
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
@@ -137,12 +197,40 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     }
   }
 
+  checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, guiCurrencyInfo: GuiCurrencyInfo): boolean => {
+    const wallet = this.props.account.currencyWallets[walletId] ?? { currencyInfo: {} }
+    const walletPluginId = wallet.currencyInfo.pluginId
+    const walletTokenId = guiCurrencyInfo.tokenId ?? getTokenId(this.props.account, walletPluginId, guiCurrencyInfo.exchangeCurrencyCode)
+    for (const disableAsset of disableAssets) {
+      const { pluginId, tokenId } = disableAsset
+      if (pluginId !== walletPluginId) continue
+      if (tokenId === walletTokenId) return true
+      if (tokenId === 'allCoins') return true
+      if (tokenId === 'allTokens' && walletTokenId != null) return true
+    }
+    return false
+  }
+
   getQuote = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
     if (!zeroString(data.primaryNativeAmount)) {
+      const { exchangeInfo } = this.state
+      if (exchangeInfo != null) {
+        const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
+        if (disableSrc) {
+          showError(sprintf(s.strings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
+          return
+        }
+
+        const disableDest = this.checkDisableAsset(exchangeInfo.swap.disableAssets.destination, this.props.toWalletId, this.props.toWalletPrimaryInfo)
+        if (disableDest) {
+          showError(sprintf(s.strings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
+          return
+        }
+      }
       if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data, this.resetState)
       Keyboard.dismiss()
       return
@@ -349,7 +437,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
   state => {
-    const { currencyWallets } = state.core.account
+    const { account } = state.core
+    const { currencyWallets } = account
     const { cryptoExchange } = state
     // Clone the default Info
     const result = {
@@ -411,6 +500,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
 
     return {
       ...result,
+      account,
       forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: cryptoExchange.calculatingMax,
       insufficient: state.cryptoExchange.insufficientError,
