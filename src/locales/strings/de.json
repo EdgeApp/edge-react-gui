@@ -78,6 +78,7 @@
   "exchange_congratulations_msg": "Ihr Austausch wurde erfolgreich abgeschlossen!",
   "exchange_congratulations_msg_info": "Der Austausch kann einige Minuten und bis zu 24 Stunden dauern.",
   "no_exchange_amount": "Kein Betrag ausgewählt",
+  "exchange_asset_unsupported": "%s unsupported at this time. Please try again later.",
   "select_exchange_amount": "Bitte geben Sie einen Betrag an, der gewechselt werden soll",
   "select_exchange_amount_short": "Betrag eingeben",
   "fragment_wallets_addwallet_fiat_hint": "Wählen Sie eine Fiat-Währung",
