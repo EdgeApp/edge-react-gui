@@ -78,6 +78,7 @@
   "exchange_congratulations_msg": "Your exchange has been successfully completed!",
   "exchange_congratulations_msg_info": "Exchanges may take a few minutes and up to 24 hours to process.",
   "no_exchange_amount": "Nenhuma quantia selecionada",
+  "exchange_asset_unsupported": "%s unsupported at this time. Please try again later.",
   "select_exchange_amount": "Por favor, digite uma quantia para trocar",
   "select_exchange_amount_short": "Digite uma Quantia",
   "fragment_wallets_addwallet_fiat_hint": "Escolha uma moeda fiduciária",
