@@ -33,8 +33,11 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: stri
 }
 
 export const enableToken = async (currencyCode: string, wallet: EdgeCurrencyWallet) => {
-  const enabledTokens = await wallet.getEnabledTokens()
-  if (enabledTokens.find(enabledTokenCc => enabledTokenCc === currencyCode) == null) {
-    await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([currencyCode]))
-  }
+  const allTokens = wallet.currencyConfig.allTokens
+  const newTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode.toUpperCase() === currencyCode.toUpperCase())
+  if (newTokenId == null) throw Error(`Could not find token ${currencyCode} to add to ${wallet.currencyInfo.currencyCode} wallet`)
+
+  const enabledTokenIds = wallet.enabledTokenIds
+  if (enabledTokenIds.find(enabledTokenId => enabledTokenId === newTokenId) == null)
+    await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, newTokenId]))
 }
