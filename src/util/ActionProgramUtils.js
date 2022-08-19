@@ -2,9 +2,9 @@
 
 import { type EdgeCurrencyWallet } from 'edge-core-js/types'
 
-import { getToken } from '../../util/CurrencyInfoHelpers'
-import { enableToken } from '../../util/CurrencyWalletHelpers'
-import { type ActionOp, type ActionProgram } from './types'
+import { type ActionOp, type ActionProgram } from '../controllers/action-queue/types'
+import { getToken } from './CurrencyInfoHelpers'
+import { enableToken } from './CurrencyWalletHelpers'
 
 // -----------------------------------------------------------------------------
 //  Given the user inputs made in the AAVE UI, return the Actions needed to
