@@ -20,10 +20,8 @@ export async function getActionProgramDisplayInfo(account: EdgeAccount, program:
 }
 
 async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect?: ActionEffect): Promise<ActionDisplayInfo> {
-  const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE = [
-    `Unexepected null effect while generating display info. `,
-    `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
-  ].join('')
+  const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
+    `Unexepected null effect while generating display info. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
   const baseDisplayInfo = {
     status: stateToStatus(effect),

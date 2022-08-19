@@ -106,10 +106,8 @@ export async function dryrunActionProgram(
 }
 
 async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Promise<boolean> {
-  const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE = [
-    `Unexepected null effect while running check. `,
-    `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
-  ].join('')
+  const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
+    `Unexepected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
   switch (effect.type) {
     case 'seq': {
