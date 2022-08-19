@@ -1,7 +1,7 @@
 // @flow
 
 import { add, div, gt, max, mul, sub } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -16,6 +16,7 @@ import { useCallback } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type GuiExchangeRates } from '../../../types/types'
+import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
@@ -211,17 +212,4 @@ export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: G
   const [denomination] = denominations
   const fiatAmount = div(mul(nativeAmount, assetFiatPrice), denomination.multiplier, DECIMAL_PRECISION)
   return gt(fiatAmount, '0') ? max('0.01', div(fiatAmount, '1', 2)) : '0'
-}
-
-export const getToken = (wallet: EdgeCurrencyWallet, tokenId?: string): EdgeToken | void => {
-  if (tokenId == null) {
-    showError(`Unwrapped native currency not yet supported`)
-    return // TODO: Support wrapped native token
-  }
-  const allTokens = wallet.currencyConfig.allTokens
-  if (!Object.keys(allTokens).some(tokenKey => tokenKey === tokenId)) {
-    showError(`Could not find tokenId ${tokenId}`)
-    return
-  }
-  return allTokens[tokenId]
 }

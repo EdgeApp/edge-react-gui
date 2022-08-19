@@ -92,9 +92,12 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo
       // Active/in-progress nodes are partially filled while queued or completed
       // nodes are solid filled.
       const isLast = totalSteps <= 1 || i >= totalSteps - 1
-      // HACK: Also set active status of this node based on the status of the previous node. Check to be removed when ActionQueue properly handles updating its execution state.
       const isNodeCompleted = actionDisplayInfos[i].status === 'done' || actionDisplayInfos[i].status instanceof Error
-      const isNodeActive = !isNodeCompleted && (actionDisplayInfos[i].status === 'active' || (i > 0 && actionDisplayInfos[i - 1].status === 'done'))
+      // HACK: Set active status of this node based on the status of the previous node. Check to be removed when ActionQueue properly handles updating the execution state of an 'active' step.
+      const isNodeActive =
+        !isNodeCompleted &&
+        (actionDisplayInfos[i].status === 'active' ||
+          (i > 0 && (actionDisplayInfos[i - 1].status === 'done' || actionDisplayInfos[i - 1].status instanceof Error)))
 
       actionRows.push(
         <StepProgressRow

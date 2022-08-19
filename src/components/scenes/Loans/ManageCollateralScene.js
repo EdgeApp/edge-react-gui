@@ -91,7 +91,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const wallets = useWatch(account, 'currencyWallets')
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType)
+  const existingProgramId = useRunningActionQueueId(actionOpType, currencyWallet.id)
   if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
 
   // Flip input selected wallet

@@ -948,7 +948,6 @@ const strings = {
   loan_remaining_principle: 'Remaining Principle',
   loan_s_apr: '%1$s%% APR',
   loan_select_receiving_wallet: 'Please select a receiving wallet',
-  loan_select_s_wallet: 'Please select a %s wallet',
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_total_collateral_value: 'Total Collateral Value',
   loan_withdraw_collateral: 'Withdraw Collateral',

@@ -15,6 +15,7 @@ import { memo } from '../../types/reactHooks.js'
 import { useDispatch } from '../../types/reactRedux.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
+import { enableToken } from '../../util/CurrencyWalletHelpers.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -87,7 +88,7 @@ const createAndSelectToken =
         if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
         wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
       }
-      await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([currencyCode]))
+      await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, enableToken(currencyCode, wallet))
       return wallet.id
     } catch (error) {
       showError(error)
