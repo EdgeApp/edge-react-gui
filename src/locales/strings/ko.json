@@ -78,6 +78,7 @@
   "exchange_congratulations_msg": "Your exchange has been successfully completed!",
   "exchange_congratulations_msg_info": "Exchanges may take a few minutes and up to 24 hours to process.",
   "no_exchange_amount": "금액이 선택되지 않았습니다.",
+  "exchange_asset_unsupported": "%s unsupported at this time. Please try again later.",
   "select_exchange_amount": "거래할 금액을 선택하십시오.",
   "select_exchange_amount_short": "금액을 입력",
   "fragment_wallets_addwallet_fiat_hint": "피아트 통화를 선택",
