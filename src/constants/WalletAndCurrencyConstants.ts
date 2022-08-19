@@ -280,6 +280,19 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false
   },
+  mumbai: {
+    allowZeroTx: true,
+    chainCode: 'MUMBAI',
+    displayBuyCrypto: false,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_mumbai_wallet_name,
+    isImportKeySupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '80001'
+    }
+  },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
     chainCode: 'ADA',
