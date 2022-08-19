@@ -78,6 +78,7 @@
   "exchange_congratulations_msg": "Your exchange has been successfully completed!",
   "exchange_congratulations_msg_info": "Exchanges may take a few minutes and up to 24 hours to process.",
   "no_exchange_amount": "未选择金额",
+  "exchange_asset_unsupported": "%s unsupported at this time. Please try again later.",
   "select_exchange_amount": "请输入要兑换的金额",
   "select_exchange_amount_short": "输入数量",
   "fragment_wallets_addwallet_fiat_hint": "选择法定货币",
