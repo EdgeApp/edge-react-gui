@@ -182,6 +182,20 @@ function checkEffectForNull(effect: ActionEffect): boolean {
   return false
 }
 
+/**
+ * Evaluates an ActionProgram against an ActionProgramState and returns the
+ * an ExecutableAction that can be introspected for dry-run output and executed
+ * to get the effect for the next ActionProgramState.
+ *
+ * The purpose for an ExecutableAction interface is to impose that the developer
+ * considers the dry-run output implementation before the execute implementation
+ * where it is possible. Sometimes the dry-run output is not possible to
+ * to implement for a particular ActionOp type, so the developer should be
+ * explicit about this by setting the dryrunOutput to null. A dryrunOutput with
+ * a insignificant effect (noop) and/or an empty broadcastTxs array should not
+ * be valid except for some special cases which must be specified by the
+ * developer (via comments).
+ */
 async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, pendingTxMap: PendingTxMap): Promise<ExecutableAction> {
   const { actionOp } = program
   const { effect } = state
