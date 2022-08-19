@@ -78,6 +78,7 @@
   "exchange_congratulations_msg": "Your exchange has been successfully completed!",
   "exchange_congratulations_msg_info": "Exchanges may take a few minutes and up to 24 hours to process.",
   "no_exchange_amount": "Không có số tiền nào được lựa chọn",
+  "exchange_asset_unsupported": "%s unsupported at this time. Please try again later.",
   "select_exchange_amount": "Vui lòng nhập một số tiền để trao đổi",
   "select_exchange_amount_short": "Nhập một số tiền",
   "fragment_wallets_addwallet_fiat_hint": "Chọn một loại tiền tệ fiat",
