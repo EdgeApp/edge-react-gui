@@ -203,10 +203,8 @@ const getCountryCodeByIp = async (): Promise<string> => {
   let out = '--'
   try {
     const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
-    if (reply) {
-      const { countryCode } = asIpApi(await reply.json())
-      out = countryCode
-    }
+    const { countryCode } = asIpApi(await reply.json())
+    out = countryCode
   } catch (e) {
     console.error(e.message)
   }
