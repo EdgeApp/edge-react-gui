@@ -180,7 +180,8 @@ export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   } catch (e) {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    await setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    return SYNCED_ACCOUNT_DEFAULTS
   }
 }
 
