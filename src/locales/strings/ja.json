@@ -78,6 +78,7 @@
   "exchange_congratulations_msg": "Your exchange has been successfully completed!",
   "exchange_congratulations_msg_info": "Exchanges may take a few minutes and up to 24 hours to process.",
   "no_exchange_amount": "数量が選択されていません",
+  "exchange_asset_unsupported": "%s unsupported at this time. Please try again later.",
   "select_exchange_amount": "交換する金額を入力してください",
   "select_exchange_amount_short": "金額を入力",
   "fragment_wallets_addwallet_fiat_hint": "法定通貨を選択",
