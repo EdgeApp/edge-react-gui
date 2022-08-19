@@ -111,6 +111,7 @@ const strings = {
   exchange_congratulations_msg: 'Your exchange has been successfully completed!',
   exchange_congratulations_msg_info: 'Exchanges may take a few minutes and up to 24 hours to process.',
   no_exchange_amount: 'No Amount Selected',
+  exchange_asset_unsupported: '%s unsupported at this time. Please try again later.',
   select_exchange_amount: 'Please enter an amount to exchange',
   select_exchange_amount_short: 'Enter an Amount',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
