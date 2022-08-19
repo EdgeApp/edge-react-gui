@@ -117,13 +117,13 @@ function currencyPluginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo
   }
 }
 
-export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
+export const settingsLegacy = (state: SettingsState = initialState, action: Action): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
-      const account = action.data
+      const { account, walletSort } = action.data
 
       // Setup default denominations for settings based on currencyInfo
-      const newState = { ...state }
+      const newState = { ...state, walletSort }
       for (const pluginId of Object.keys(account.currencyConfig)) {
         const { currencyInfo } = account.currencyConfig[pluginId]
         const { currencyCode } = currencyInfo
@@ -278,7 +278,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   }
 }
 
-export const settings = (state: SettingsState = initialState, action: Action) => {
+export const settings = (state: SettingsState = initialState, action: Action): SettingsState => {
   let result = state
   const legacy = settingsLegacy(state, action)
 
