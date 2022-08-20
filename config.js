@@ -26,6 +26,14 @@ const asConfig = asObject({
     }),
     { Bitrefill: '' }
   ),
+  WYRE_CLIENT_INIT: asOptional(
+    asObject({
+      baseUri: asString
+    }),
+    {
+      baseUri: 'https://api.sendwyre.com'
+    }
+  ),
 
   ...configComment('core plugin options (remove `x_` to activate)'),
   x_BINANCE_SMART_CHAIN_INIT: asOptional(

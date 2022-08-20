@@ -11,12 +11,12 @@ const strings = {
   // par
   action_queue_display_par_title: `Action concurrency`,
   action_queue_display_par_message: `Doing multiple things at once`,
-  // exchange_buy
-  action_queue_display_exchange_buy_title: `Purchase %s`,
-  action_queue_display_exchange_buy_message: `Purchase %1$s from %3$s.`,
-  // exchange_sell
-  action_queue_display_exchange_sell_title: `Deposit funds to bank`,
-  action_queue_display_exchange_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
+  // fiat_buy
+  action_queue_display_fiat_buy_title: `Purchase %s`,
+  action_queue_display_fiat_buy_message: `Purchase %1$s from %3$s.`,
+  // fiat_sell
+  action_queue_display_fiat_sell_title: `Deposit funds to bank`,
+  action_queue_display_fiat_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
   // loan_borrow
   action_queue_display_loan_borrow_title: `Take out loan`,
   action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,

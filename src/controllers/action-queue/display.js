@@ -106,30 +106,30 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_swap_message, fromCurrencyCode, toCurrencyCode)
       }
     }
-    case 'exchange-buy': {
-      const { exchangePluginId, tokenId, walletId } = actionOp
+    case 'fiat-buy': {
+      const { fiatPluginId, tokenId, walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      // TODO: Convert exchangePluginId to displayName
-      const partnerDisplayName = exchangePluginId
+      // TODO: Convert fiatPluginId to displayName
+      const partnerDisplayName = fiatPluginId
 
       return {
         ...baseDisplayInfo,
-        title: sprintf(s.strings.action_queue_display_exchange_buy_title, currencyCode),
-        message: sprintf(s.strings.action_queue_display_exchange_buy_message, currencyCode, partnerDisplayName)
+        title: sprintf(s.strings.action_queue_display_fiat_buy_title, currencyCode),
+        message: sprintf(s.strings.action_queue_display_fiat_buy_message, currencyCode, partnerDisplayName)
       }
     }
-    case 'exchange-sell': {
-      const { exchangePluginId, tokenId, walletId } = actionOp
+    case 'fiat-sell': {
+      const { fiatPluginId, tokenId, walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      // TODO: Convert exchangePluginId to displayName
-      const partnerDisplayName = exchangePluginId
+      // TODO: Convert fiatPluginId to displayName
+      const partnerDisplayName = fiatPluginId
 
       return {
         ...baseDisplayInfo,
-        title: s.strings.action_queue_display_exchange_sell_title,
-        message: sprintf(s.strings.action_queue_display_exchange_sell_message, currencyCode, partnerDisplayName)
+        title: s.strings.action_queue_display_fiat_sell_title,
+        message: sprintf(s.strings.action_queue_display_fiat_sell_message, currencyCode, partnerDisplayName)
       }
     }
     case 'loan-borrow': {
