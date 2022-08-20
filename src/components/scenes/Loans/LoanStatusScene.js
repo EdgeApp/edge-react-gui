@@ -8,10 +8,11 @@ import { sprintf } from 'sprintf-js'
 
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { type ActionDisplayInfo, type ActionQueueMap } from '../../../controllers/action-queue/types'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { useEffect, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
@@ -38,7 +39,7 @@ export const LoanStatusScene = (props: Props) => {
 
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const [steps, setSteps] = useState<ActionDisplayInfo[] | void>()
-  useEffect(() => {
+  useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]
 
     // HACK: Manual program completion handling:
@@ -54,7 +55,7 @@ export const LoanStatusScene = (props: Props) => {
       }
     } else {
       const { program, state } = actionQueueItem
-      const displayInfo = getActionProgramDisplayInfo(account, program, state)
+      const displayInfo = await getActionProgramDisplayInfo(account, program, state)
       if (steps == null) displayInfo.steps[0].status = 'active'
       setSteps([...displayInfo.steps])
     }
