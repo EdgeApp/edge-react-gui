@@ -4,8 +4,8 @@
 // Action Operations
 //
 import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
-import { base64 } from 'rfc4648'
 
+import { asBase64 } from '../../util/cleaners/asBase64'
 import {
   type ActionEffect,
   type ActionOp,
@@ -25,12 +25,7 @@ import {
   type ToastActionOp
 } from './types'
 
-const asBase64 = asCodec(
-  raw => base64.parse(asString(raw)),
-  clean => base64.stringify(clean)
-)
-
-// A serializeable error object
+// A serializable error object
 const asJsonError = asObject({
   name: asString,
   message: asString,
@@ -168,17 +163,21 @@ const asAddressBalanceEffect = asObject({
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asTxConfsEffect = asObject({
-  type: asValue('tx-confs'),
-  txId: asString,
-  walletId: asString,
-  confirmations: asNumber
+const asPushEvents = asObject({
+  type: asValue('push-events'),
+  eventIds: asArray(asString)
 })
 const asPriceLevelEffect = asObject({
   type: asValue('price-level'),
   currencyPair: asString,
   aboveRate: asOptional(asNumber),
   belowRate: asOptional(asNumber)
+})
+const asTxConfsEffect = asObject({
+  type: asValue('tx-confs'),
+  txId: asString,
+  walletId: asString,
+  confirmations: asNumber
 })
 const asDoneEffect = asObject({
   type: asValue('done'),
@@ -196,6 +195,7 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asParEffect,
   asAddressBalanceEffect,
   asTxConfsEffect,
+  asPushEvents,
   asPriceLevelEffect,
   asDoneEffect,
   asUnixtimeEffect,

@@ -37,7 +37,7 @@ export const scheduleActionProgram = (program: ActionProgram) => async (dispatch
     type: 'ACTION_QUEUE/QUEUE_ITEM',
     programId,
     item: {
-      program: program,
+      program,
       state: programState
     }
   })
