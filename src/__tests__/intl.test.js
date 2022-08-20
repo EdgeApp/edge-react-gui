@@ -1,8 +1,8 @@
 // @flow
 /* globals describe test expect beforeEach */
 
+import { type IntlLocaleType, formatNumber, formatNumberInput, isValidInput, prettifyNumber, setIntlLocale, truncateDecimalsPeriod } from '../locales/intl'
 import { truncateDecimals } from '../util/utils'
-import { type IntlLocaleType, formatNumber, formatNumberInput, isValidInput, prettifyNumber, setIntlLocale, truncateDecimalsPeriod } from './intl'
 
 const EN_US_LOCALE: IntlLocaleType = {
   localeIdentifier: 'en_US',

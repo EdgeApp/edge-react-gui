@@ -5,9 +5,9 @@ import { asArray, asEither, asNull, asObject, asString } from 'cleaners'
 
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../types/types.js'
-import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour, pickRandom } from '../util/utils.js'
+import { fetchRates } from '../util/network.js'
+import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour } from '../util/utils.js'
 
-const RATES_SERVERS = ['https://rates2.edge.app']
 const RATES_SERVER_MAX_QUERY_SIZE = 100
 const HOUR_MS = 1000 * 60 * 60
 
@@ -71,14 +71,13 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
     const query = filteredExchangeRates.splice(0, RATES_SERVER_MAX_QUERY_SIZE)
     let tries = 5
     do {
-      const url = pickRandom(RATES_SERVERS) ?? ''
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data: query })
       }
       try {
-        const response = await fetch(url + '/v2/exchangeRates', options)
+        const response = await fetchRates('v2/exchangeRates', options)
         if (response.ok) {
           const json = await response.json()
           const cleanedRates = asRatesResponse(json)
@@ -103,7 +102,7 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
           break
         }
       } catch (e) {
-        console.log(`buildExchangeRates error querying ${url} ${e.message}`)
+        console.log(`buildExchangeRates error querying rates server ${e.message}`)
       }
     } while (--tries > 0)
   }

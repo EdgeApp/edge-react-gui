@@ -1,8 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* globals jest */
 
-jest.useFakeTimers()
-
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('react-native-gesture-handler', () => ({
