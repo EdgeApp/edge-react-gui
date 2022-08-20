@@ -3,6 +3,7 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import { type ActionQueueState, actionQueue } from '../controllers/action-queue/redux/reducers'
+import { type LoanManagerState, loanManager } from '../controllers/loan-manager/redux/reducers'
 import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Action } from '../types/reduxTypes.js'
@@ -35,6 +36,7 @@ export type RootState = {
   +actionQueue: ActionQueueState,
   +core: CoreState,
   +cryptoExchange: CryptoExchangeState,
+  +loanManager: LoanManagerState,
   +permissions: PermissionsState,
   +ui: UiState,
   +network: NetworkState
@@ -88,6 +90,7 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
   actionQueue,
   core,
   cryptoExchange,
+  loanManager,
   permissions,
   ui,
   network
