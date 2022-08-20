@@ -38,6 +38,7 @@ import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { AprCard } from '../../tiles/AprCard'
 
 type Props = {
   route: RouteProp<'loanCreate'>,
@@ -141,8 +142,6 @@ export const LoanCreateScene = (props: Props) => {
             setDestWallet(selectedWallet)
             setDestTokenId(tokenId)
 
-            // TODO: Handle exchange sell case
-            // Fetch APR based on borrow destination
             try {
               setIsLoading(true)
               setApr(await borrowEngine.getAprQuote(hardDestTokenAddr))
@@ -233,10 +232,6 @@ export const LoanCreateScene = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fiatCurrencyCode])
 
-  // APR
-  const aprValue = apr == null || apr === 0 ? '-- ' : toPercentString(apr)
-  const displayApr = useMemo(() => sprintf(s.strings.loan_s_apr, aprValue), [aprValue])
-
   // Warning
   const collateralWarningMsg = useMemo(
     () => sprintf(s.strings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
@@ -301,9 +296,7 @@ export const LoanCreateScene = (props: Props) => {
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
             <View style={styles.cardContainer}>
-              <Card paddingRem={[0.5, 1]}>
-                <EdgeText>{displayApr}</EdgeText>
-              </Card>
+              <AprCard paddingRem={[0.5, 1]} apr={apr} />
             </View>
           )}
 
