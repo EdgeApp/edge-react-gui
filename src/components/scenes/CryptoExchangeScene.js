@@ -217,6 +217,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       whichWallet: this.state.whichWalletFocus,
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
+
+    if (this.props.fromCurrencyCode === '' || this.props.toCurrencyCode === '') {
+      Keyboard.dismiss()
+      return
+    }
+
     if (!zeroString(data.primaryNativeAmount)) {
       const { exchangeInfo } = this.state
       if (exchangeInfo != null) {
