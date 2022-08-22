@@ -1,7 +1,8 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 
+import { showError } from '../components/services/AirshipInstance.js'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
 
@@ -133,4 +134,17 @@ export const guessFromCurrencyCode = (account: EdgeAccount, { currencyCode, plug
     })
   }
   return { pluginId, tokenId }
+}
+
+export const getToken = (wallet: EdgeCurrencyWallet, tokenId?: string): EdgeToken | void => {
+  if (tokenId == null) {
+    // Either special handling should be done by the caller, or the workflow should not allow this to execute.
+  } else {
+    const allTokens = wallet.currencyConfig.allTokens
+    if (allTokens[tokenId] == null) {
+      showError(`Could not find tokenId ${tokenId}`)
+      return
+    }
+    return allTokens[tokenId]
+  }
 }

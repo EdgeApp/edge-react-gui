@@ -6,7 +6,6 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants.js'
-import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram.js'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { scheduleActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
@@ -17,6 +16,7 @@ import type { ApprovableAction, BorrowEngine } from '../../../plugins/borrow-plu
 import { useMemo, useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
+import { makeActionProgram } from '../../../util/ActionProgramUtils'
 import { zeroString } from '../../../util/utils.js'
 import { FlipInputTile } from '../../cards/FlipInputTile.js'
 import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents.js'
@@ -91,7 +91,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const wallets = useWatch(account, 'currencyWallets')
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType)
+  const existingProgramId = useRunningActionQueueId(actionOpType, currencyWallet.id)
   if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
 
   // Flip input selected wallet

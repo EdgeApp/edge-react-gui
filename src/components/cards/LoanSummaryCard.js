@@ -38,7 +38,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
 
   try {
     // TODO: Calculate amount-adjusted cumulative interest
-    const displayInterestTotal = toPercentString(debts[0].apr)
+    const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
 
     return (
       <TappableCard marginRem={0.5} onPress={onPress}>

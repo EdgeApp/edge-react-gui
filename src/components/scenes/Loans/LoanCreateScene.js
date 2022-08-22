@@ -1,11 +1,13 @@
 // @flow
 
 import { div, lt, mul } from 'biggystring'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
@@ -45,10 +47,14 @@ type Props = {
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
-  const { currencyWallet: srcWallet, debts } = borrowEngine
+  const { currencyWallet: beWallet, debts } = borrowEngine
 
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
+  const existingProgramId = useRunningActionQueueId('loan-create', beWallet.id)
+  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
 
   if (debts.length > 0) {
     // TODO: transition to "advanced" loan details scene
@@ -57,23 +63,29 @@ export const LoanCreateScene = (props: Props) => {
   // Wallet/Token Data
   const account = useSelector(state => state.core.account)
   const wallets = useWatch(account, 'currencyWallets')
-  const { fiatCurrencyCode: isoFiatCurrencyCode, id: srcWalletId } = srcWallet
-  const [srcTokenId, setSrcTokenId] = useState()
-  const [srcCurrencyCode, setSrcCurrencyCode] = useState('')
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const allTokens = useAllTokens(account)
 
-  const srcPluginId = srcWallet.currencyInfo.pluginId
-  const srcWalletName = useWalletName(srcWallet)
-  const srcBalance = useWalletBalance(srcWallet, srcTokenId ?? undefined)
-  const srcToken = useMemo(() => (srcTokenId != null ? allTokens[srcPluginId][srcTokenId] : {}), [allTokens, srcPluginId, srcTokenId])
-  const srcAssetName = useMemo(() => (srcToken != null ? srcToken.displayName : ''), [srcToken])
+  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: beCurrencyInfo } = beWallet
+  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const bePluginId = beCurrencyInfo.pluginId
 
-  // TODO: Post-ActionQueue, the destination wallet can differ from source wallet.
-  const destWalletId = srcWallet.id
-  const destWallet = wallets[destWalletId]
-  const destPluginId = srcPluginId
-  const [destTokenId, setDestTokenId] = useState()
+  // Source Wallet Data
+  const [srcWalletId, setSrcWalletId] = useState()
+  const [srcTokenId, setSrcTokenId] = useState()
+  const [srcCurrencyCode, setSrcCurrencyCode] = useState()
+
+  const srcWallet = srcWalletId == null ? null : wallets[srcWalletId]
+  const srcPluginId = srcWallet == null ? null : srcWallet.currencyInfo.pluginId
+  const srcToken = useMemo(() => (srcTokenId != null && srcPluginId != null ? allTokens[srcPluginId][srcTokenId] : {}), [allTokens, srcPluginId, srcTokenId])
+  const srcBalance = useWalletBalance(srcWallet ?? beWallet, srcTokenId) // HACK: Balance isn't being used anyway if the src wallet hasn't been chosen yet. Default to the borrow engine wallet in this case so this hook can be used
+  const srcWalletName = useWalletName(srcWallet ?? beWallet) // HACK: srcWalletName is used for the warning card display, which would never show unless the srcWallet has been set.
+  const srcAssetName = srcToken != null ? srcToken.displayName : srcWallet != null ? srcWallet.currencyInfo.displayName : ''
+
+  // Destination Wallet Data
+  const [destWallet, setDestWallet] = useState<EdgeCurrencyWallet | void>()
+  const [destTokenId, setDestTokenId] = useState<string | void>()
+  const destPluginId = destWallet == null ? null : destWallet.currencyInfo.pluginId
+  const destToken = destTokenId != null && destPluginId != null ? allTokens[destPluginId][destTokenId] : {}
 
   // BorrowPlugin
   const [borrowAmountFiat, setBorrowAmount] = useState('0')
@@ -95,53 +107,45 @@ export const LoanCreateScene = (props: Props) => {
   }, [borrowEngine.debts, destTokenId])
 
   // BorrowPlugin src/dest
-  const hardSrcCc = 'WBTC'
-  const hardSrcAssetName = 'Wrapped Bitcoin'
-  const hardDestCc = 'DAI'
-  const { tokenId: srcTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: hardSrcCc, pluginId: srcPluginId }), [account, srcPluginId])
-  const { tokenId: destTokenAddr } = useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: hardDestCc, pluginId: destPluginId }),
-    [account, destPluginId]
-  )
-
-  // Check if source wallet has supported collateral token enabled
-  const isCollateralWalletEnabled = srcWallet.enabledTokenIds.some(enabledTokenAddr => enabledTokenAddr === srcTokenAddr)
+  const { tokenId: hardSrcTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: bePluginId }), [account, bePluginId])
+  const { tokenId: hardDestTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: bePluginId }), [account, bePluginId])
 
   /**
    * Show a wallet picker modal filtered by the allowed assets defined by the
    * "Source of Collateral" or "Fund Destination" inputs
    */
   const showWalletPickerModal = (isSrc: boolean) => {
-    const walletPluginId = isSrc ? srcPluginId : destPluginId
-
-    // Filter for only tokens on the active wallet
-    // TODO: V2: Plugin change: return all the supported debt/col assets from some hard-coded data per dApp
-    const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== (isSrc ? srcWalletId : destWalletId))
-    const hardAllowedAsset = isSrc ? { pluginId: srcPluginId, tokenId: srcTokenAddr } : { pluginId: destPluginId, tokenId: destTokenAddr }
+    const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== beWallet.id)
+    const hardAllowedSrcAsset = [{ pluginId: bePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
+    const hardAllowedDestAsset = [{ pluginId: bePluginId, tokenId: hardDestTokenAddr }]
 
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
         showCreateWallet={!isSrc}
-        excludeWalletIds={excludeWalletIds}
-        allowedAssets={[hardAllowedAsset]}
+        excludeWalletIds={!isSrc ? excludeWalletIds : undefined}
+        allowedAssets={!isSrc ? hardAllowedDestAsset : hardAllowedSrcAsset}
         filterActivation
       />
     ))
       .then(async ({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
-          const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: walletPluginId })
+          const selectedWallet = wallets[walletId]
+          const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
           if (isSrc) {
             setSrcCurrencyCode(currencyCode)
-            setSrcTokenId(tokenId ?? '')
+            setSrcTokenId(tokenId)
+            setSrcWalletId(walletId)
           } else {
-            setDestTokenId(tokenId ?? '')
+            setDestWallet(selectedWallet)
+            setDestTokenId(tokenId)
 
+            // TODO: Handle exchange sell case
             // Fetch APR based on borrow destination
             try {
               setIsLoading(true)
-              setApr(await borrowEngine.getAprQuote(destTokenAddr))
+              setApr(await borrowEngine.getAprQuote(hardDestTokenAddr))
             } catch (err) {
               showError(err)
             } finally {
@@ -156,18 +160,18 @@ export const LoanCreateScene = (props: Props) => {
   /**
    * 'Source of Collateral' or 'Fund Destination' wallet cards
    */
-  type WalletCardProps = { disabled?: boolean, emptyLabel: string, isSrc: boolean, tokenId?: string, walletId?: string }
+  type WalletCardProps = { disabled?: boolean, emptyLabel: string, isSrc: boolean, tokenId?: string, wallet?: EdgeCurrencyWallet }
   const WalletCard = (props: WalletCardProps) => {
-    const { disabled, emptyLabel, isSrc, tokenId, walletId } = props
+    const { disabled, emptyLabel, isSrc, tokenId, wallet } = props
     const handleShowWalletPickerModal = useCallback(() => showWalletPickerModal(isSrc), [isSrc])
 
     return (
       <TappableCard disabled={disabled} onPress={handleShowWalletPickerModal} marginRem={0.5} paddingRem={0.5}>
-        {tokenId == null || walletId == null ? (
+        {wallet == null ? (
           <EdgeText style={disabled ? styles.textInitialDisabled : styles.textInitial}>{emptyLabel}</EdgeText>
         ) : (
           <View style={styles.currencyRow}>
-            <CurrencyRow tokenId={tokenId} wallet={wallets[walletId]} />
+            <CurrencyRow tokenId={tokenId} wallet={wallet} />
           </View>
         )}
       </TappableCard>
@@ -179,7 +183,7 @@ export const LoanCreateScene = (props: Props) => {
    */
 
   // User has made input to all required fields
-  const isUserInputComplete = srcTokenId != null && destTokenId != null && !zeroString(borrowAmountFiat)
+  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && destTokenId != null && !zeroString(borrowAmountFiat)
 
   // Required Collateral
   // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
@@ -189,21 +193,20 @@ export const LoanCreateScene = (props: Props) => {
   // Convert collateral in fiat -> collateral crypto
   const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
     tokenId: srcTokenId,
-    wallet: srcWallet
+    wallet: srcWallet ?? beWallet
   })
-  const { denominations: srcDenoms } = srcToken
-  const srcExchangeMultiplier = !isUserInputComplete ? '0' : srcDenoms[0].multiplier
+  const srcDenoms = !isUserInputComplete ? null : srcTokenId != null ? srcToken.denominations : srcWallet?.currencyInfo.denominations
+  const srcExchangeMultiplier = srcDenoms == null ? '0' : srcDenoms[0].multiplier
   const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
 
   // Convert borrow amount fiat -> borrow amount crypto
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({
     tokenId: destTokenId,
-    wallet: destTokenId == null ? srcWallet : destWallet // srcWallet will always exist.
+    wallet: destWallet == null ? beWallet : destWallet // beWallet will always exist.
     // If the user has not yet selected a destWallet, we wouldn't be showing
-    // any exchange rate, anyway, so just pass srcWallet to allow this hook not to puke.
+    // any exchange rate, anyway, so just pass beWallet to allow this hook not to puke.
   })
-  const destToken = destTokenId == null ? null : destWallet.currencyConfig.allTokens[destTokenId]
-  const { denominations: destDenoms } = destToken ?? {}
+  const { denominations: destDenoms } = destToken != null ? destToken : destWallet != null ? destWallet.currencyInfo : {}
   const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
   const nativeBorrowAmountCrypto = !isUserInputComplete
     ? '0'
@@ -236,19 +239,12 @@ export const LoanCreateScene = (props: Props) => {
 
   // Warning
   const collateralWarningMsg = useMemo(
-    () =>
-      sprintf(
-        s.strings.loan_insufficient_funds_warning,
-        isCollateralWalletEnabled ? srcAssetName : hardSrcAssetName,
-        srcWalletName,
-        isCollateralWalletEnabled ? srcCurrencyCode : hardSrcCc,
-        config.appName
-      ),
-    [isCollateralWalletEnabled, srcAssetName, srcCurrencyCode, srcWalletName]
+    () => sprintf(s.strings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
+    [srcAssetName, srcCurrencyCode, srcWalletName]
   )
   const renderWarning = useHandler(() => {
     // User doesn't have required collateral wallet enabled or 0 balance
-    if ((srcToken != null && zeroString(srcBalance)) || !isCollateralWalletEnabled)
+    if (srcWallet != null && zeroString(srcBalance))
       return (
         <Alert
           numberOfLines={0}
@@ -314,24 +310,20 @@ export const LoanCreateScene = (props: Props) => {
           {/* Source of Collateral / Source Wallet */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_source}</EdgeText>
 
-          <WalletCard
-            disabled={!isCollateralWalletEnabled}
-            emptyLabel={sprintf(s.strings.loan_select_s_wallet, hardSrcCc)}
-            isSrc
-            walletId={srcWalletId}
-            tokenId={srcTokenId}
-          />
+          <WalletCard emptyLabel={s.strings.loan_select_source_collateral} isSrc wallet={srcWallet ?? undefined} tokenId={srcTokenId} />
 
           {/* Fund Destination */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_destination}</EdgeText>
 
-          <WalletCard emptyLabel={s.strings.loan_select_receiving_wallet} isSrc={false} walletId={destWalletId} tokenId={destTokenId} />
+          <WalletCard emptyLabel={s.strings.loan_select_receiving_wallet} isSrc={false} wallet={destWallet ?? undefined} tokenId={destTokenId} />
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_required}</EdgeText>
           <Card marginRem={[0.5, 0.5, 0.5, 0.5]} paddingRem={1}>
-            {srcTokenId == null || srcWalletId == null ? (
-              <EdgeText style={styles.textInitial}>{s.strings.loan_select_source_collateral}</EdgeText>
+            {srcWallet == null || destWallet == null ? (
+              <EdgeText style={styles.textInitial}>
+                {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
+              </EdgeText>
             ) : (
               <CryptoFiatAmountRow nativeAmount={nativeRequiredCrypto} tokenId={srcTokenId} wallet={srcWallet} />
             )}
@@ -340,25 +332,28 @@ export const LoanCreateScene = (props: Props) => {
           {/* Insufficient Collateral Warning Card */}
           {renderWarning()}
 
-          <MainButton
-            label={s.strings.string_next_capitalized}
-            disabled={isLtvExceeded || !isUserInputComplete}
-            type="secondary"
-            onPress={() => {
-              if (destTokenId == null || srcTokenId == null) return
+          {destWallet == null ? null : (
+            <MainButton
+              label={s.strings.string_next_capitalized}
+              disabled={isLtvExceeded || !isUserInputComplete}
+              type="secondary"
+              onPress={() => {
+                if (destTokenId == null || srcWallet == null) return
 
-              navigation.navigate('loanCreateConfirmation', {
-                borrowEngine,
-                borrowPlugin,
-                destWallet: wallets[destWalletId],
-                destTokenId,
-                nativeDestAmount: nativeBorrowAmountCrypto,
-                nativeSrcAmount: nativeRequiredCrypto,
-                srcTokenId
-              })
-            }}
-            marginRem={[1.5, 6, 6, 6]}
-          />
+                navigation.navigate('loanCreateConfirmation', {
+                  borrowEngine,
+                  borrowPlugin,
+                  destWallet,
+                  destTokenId,
+                  nativeDestAmount: nativeBorrowAmountCrypto,
+                  nativeSrcAmount: nativeRequiredCrypto,
+                  srcWallet,
+                  srcTokenId
+                })
+              }}
+              marginRem={[1.5, 6, 6, 6]}
+            />
+          )}
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

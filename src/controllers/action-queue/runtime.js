@@ -481,7 +481,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       return await approvableActionToExecutableAction(approvableAction)
     }
     case 'swap': {
-      const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId } = actionOp
+      const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId, amountFor } = actionOp
 
       const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
@@ -498,7 +498,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         fromCurrencyCode,
         toCurrencyCode,
         nativeAmount,
-        quoteFor: 'from'
+        quoteFor: amountFor
       })
 
       const execute = async () => {
