@@ -2,16 +2,27 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
-import { CurrencyNotificationComponent } from '../../components/scenes/CurrencyNotificationScene.js'
+import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
+import { rootReducer } from '../../reducers/RootReducer.js'
 import { fakeNavigation } from '../../util/fake/fakeNavigation.js'
 
 describe('CurrencyNotificationComponent', () => {
-  it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+  const mockStore = {
+    core: {
+      account: {
+        rootLoginId: '332s0ds39f'
+      }
+    }
+  }
 
+  const store = createStore(rootReducer, mockStore)
+
+  it('should render with loading props', () => {
     const props = {
       navigation: fakeNavigation,
       route: {
@@ -58,7 +69,11 @@ describe('CurrencyNotificationComponent', () => {
       theme: getTheme()
     }
 
-    const actual = renderer.render(<CurrencyNotificationComponent {...props} />)
+    const actual = renderer.create(
+      <Provider store={store}>
+        <CurrencyNotificationScene {...props} />
+      </Provider>
+    )
 
     expect(actual).toMatchSnapshot()
   })
