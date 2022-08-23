@@ -5,117 +5,92 @@ import * as React from 'react'
 import { ActivityIndicator, ScrollView } from 'react-native'
 
 import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
-import { connect } from '../../types/reactRedux.js'
+import { useEffect, useState } from '../../types/reactHooks.js'
+import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type OwnProps = {
   navigation: NavigationProp<'notificationSettings'>
 }
-type StateProps = {
-  currencyInfos: EdgeCurrencyInfo[],
-  userId: string
-}
 
-type State = {
-  enabled: boolean,
-  loading: boolean
-}
+type Props = OwnProps
 
-type Props = StateProps & OwnProps & ThemeProps
+export const NotificationScene = (props: Props) => {
+  const { navigation } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-class NotificationComponent extends React.Component<Props, State> {
-  mounted: boolean
+  const [enabled, setEnabled] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      enabled: true,
-      loading: false
-    }
-  }
+  const userId = useSelector(state => state.core.account.rootLoginId)
+  const encodedUserId = encodeURIComponent(userId)
+  const currencyInfos = useSelector(state => getActiveWalletCurrencyInfos(state))
 
-  componentDidMount() {
-    this.mounted = true
-    this.getNotificationState()
-  }
+  useEffect(() => {
+    setLoading(true)
 
-  componentWillUnmount() {
-    this.mounted = false
-  }
-
-  async getNotificationState() {
-    const encodedUserId = encodeURIComponent(this.props.userId)
-    this.setState({ loading: true })
-    try {
-      const result = await notif1.get(`/user?userId=${encodedUserId}`)
-      this.setState({
-        enabled: result.notifications.enabled
+    notif1
+      .get(`/user?userId=${encodedUserId}`)
+      .then(result => {
+        setEnabled(result.notifications.enabled)
+        setLoading(false)
       })
-      this.setState({ loading: false })
-    } catch (error) {
-      if (this.mounted) {
+      .catch(error => {
         showError(error)
         console.log(error)
-        this.setState({ loading: false })
-      }
-    }
-  }
+        setLoading(false)
+      })
+  }, [encodedUserId])
 
-  setNotificationState() {
-    const encodedUserId = encodeURIComponent(this.props.userId)
-    try {
-      notif1.post(`user/notifications/toggle?userId=${encodedUserId}`, { enabled: this.state.enabled })
-      global.logActivity(`Set Notifications: ${this.props.userId} -- enabled=${this.state.enabled.toString()}}`)
-    } catch (error) {
-      showError(error)
-      console.log(error)
-    }
-  }
+  const toggleNotifications = useHandler(() => {
+    notif1
+      .post(`user/notifications/toggle?userId=${encodedUserId}`, { enabled: !enabled })
+      .then(() => {
+        setEnabled(!enabled)
+        global.logActivity(`Set Notifications: ${userId} -- enabled=${enabled.toString()}}`)
+      })
+      .catch(error => {
+        showError(error)
+        console.log(error)
+      })
+  })
 
-  toggleNotifications = () => {
-    this.setState({ enabled: !this.state.enabled }, this.setNotificationState)
-  }
+  return (
+    <SceneWrapper background="theme" hasTabs={false}>
+      {loading ? (
+        <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
+      ) : (
+        <ScrollView>
+          <SettingsSwitchRow label={s.strings.settings_notifications_switch} value={enabled} onPress={toggleNotifications} />
+          {currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
+            const { displayName, pluginId } = currencyInfo
+            const onPress = () =>
+              enabled
+                ? navigation.navigate('currencyNotificationSettings', {
+                    currencyInfo
+                  })
+                : undefined
 
-  render() {
-    const { navigation, theme } = this.props
-    const { enabled } = this.state
-    const styles = getStyles(theme)
-
-    return (
-      <SceneWrapper background="theme" hasTabs={false}>
-        {this.state.loading ? (
-          <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
-        ) : (
-          <ScrollView>
-            <SettingsSwitchRow label={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
-            {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
-              const { displayName, pluginId } = currencyInfo
-              const onPress = () =>
-                enabled
-                  ? navigation.navigate('currencyNotificationSettings', {
-                      currencyInfo
-                    })
-                  : undefined
-
-              return (
-                <SettingsTappableRow disabled={!enabled} key={pluginId} label={displayName} onPress={onPress}>
-                  <CryptoIcon pluginId={pluginId} />
-                </SettingsTappableRow>
-              )
-            })}
-          </ScrollView>
-        )}
-      </SceneWrapper>
-    )
-  }
+            return (
+              <SettingsTappableRow disabled={!enabled} key={pluginId} label={displayName} onPress={onPress}>
+                <CryptoIcon pluginId={pluginId} />
+              </SettingsTappableRow>
+            )
+          })}
+        </ScrollView>
+      )}
+    </SceneWrapper>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -130,11 +105,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   }
 }))
-
-export const NotificationScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    currencyInfos: getActiveWalletCurrencyInfos(state),
-    userId: state.core.account.rootLoginId
-  }),
-  dispatch => ({})
-)(withTheme(NotificationComponent))
