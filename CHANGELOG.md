@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 2.20.1 (2022-08-22)
+
+- Disable swaps for Monero and allow dynamic disabling of swaps for any asset
+- Fix missing UTXOs after spend for BTC and other UTXO currencies
+
 ## 2.20.0 (2022-08-13)
 
 - Update MyMonero SDK for Monero V15 hard fork
