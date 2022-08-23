@@ -292,8 +292,6 @@ const strings = {
   search_wallets: 'Search Wallets',
   search_tokens: 'Search Tokens',
   select_wallet: 'Select Wallet',
-  select_recv_wallet: 'Select Receiving Wallet',
-  select_src_wallet: 'Select Source Wallet',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
@@ -472,6 +470,7 @@ const strings = {
   title_change_password: 'Change Password',
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
+  title_deposit_to_edge: 'Deposit to Edge',
   title_export_transactions: 'Export Transactions',
   title_edge_login: 'Edge Login',
   title_exchange: 'Exchange',
@@ -1069,6 +1068,12 @@ const strings = {
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
+
+  // Wallet List Modal
+  select_recv_wallet: 'Select Receiving Wallet',
+  select_src_wallet: 'Select Source Wallet',
+  deposit_to_bank: 'Deposit to Bank',
+  deposit_to_edge: 'Deposit to Edge',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
