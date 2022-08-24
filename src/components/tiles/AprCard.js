@@ -12,7 +12,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 type Props = {
-  apr: number
+  apr?: number
 }
 
 const AprCardComponent = (props: Props) => {
