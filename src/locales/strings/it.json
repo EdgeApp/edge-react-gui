@@ -850,7 +850,7 @@
   "loan_new_loan": "Nuovo Prestito",
   "loan_new_principle": "Nuovo capitale",
   "loan_remaining_principle": "Capitale rimanente",
-  "loan_s_apr": "%1$s % APR",
+  "loan_s_apr": "%1$s APR",
   "loan_select_receiving_wallet": "Seleziona un portafoglio ricevente",
   "loan_select_source_collateral": "Seleziona la fonte del collaterale",
   "loan_total_collateral_value": "Valore totale del collaterale",
