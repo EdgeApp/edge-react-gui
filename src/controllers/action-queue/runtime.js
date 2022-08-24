@@ -343,9 +343,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
       if (address == null) throw new Error(`No fiat-sell support for ${tokenId ?? 'native'} token on ${wallet.type}`)
 
-      const makeExecutionOutput = async (): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
+          skipChecks: dryrun,
           spendTargets: [
             {
               nativeAmount,
@@ -590,12 +591,12 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  * which returns a ExecutionOutput. This is a very basic contract between the
  * two interfaces.
  */
-async function makeExecutableAction(account: EdgeAccount, fn: () => Promise<ExecutionOutput>): Promise<ExecutableAction> {
-  const dryrunOutput = await fn()
+async function makeExecutableAction(account: EdgeAccount, fn: (dryrun: boolean) => Promise<ExecutionOutput>): Promise<ExecutableAction> {
+  const dryrunOutput = await fn(true)
   return {
     dryrunOutput,
     execute: async () => {
-      const output = await fn()
+      const output = await fn(false)
 
       await Promise.all(
         output.broadcastTxs.map(async broadcastTx => {
