@@ -27,7 +27,7 @@ type Props = {
 
 export const LoanCreateConfirmationScene = (props: Props) => {
   const { navigation, route } = props
-  const { borrowPlugin, borrowEngine, destWallet, destTokenId, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
+  const { borrowPlugin, borrowEngine, destWallet, destTokenId, isDestBank, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
@@ -76,7 +76,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
             borrowPluginId,
             tokenId: destTokenId,
             nativeAmount: nativeDestAmount,
-            borrowEngineWallet: borrowEngineWallet
+            borrowEngineWallet: borrowEngineWallet,
+            isDestBank
           })
         ])
       ).reduce((accum, subActions) => accum.concat(subActions), [])

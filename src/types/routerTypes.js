@@ -207,6 +207,7 @@ export type ParamList = {
     borrowPlugin: BorrowPlugin,
     destTokenId: string,
     destWallet: EdgeCurrencyWallet,
+    isDestBank: boolean,
     nativeDestAmount: string,
     nativeSrcAmount: string,
     srcTokenId?: string,

@@ -111,7 +111,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // TODO: Convert fiatPluginId to displayName
-      const partnerDisplayName = fiatPluginId
+      const partnerDisplayName = fiatPluginId[0].toUpperCase() + fiatPluginId.substring(1)
 
       return {
         ...baseDisplayInfo,
@@ -124,7 +124,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // TODO: Convert fiatPluginId to displayName
-      const partnerDisplayName = fiatPluginId
+      const partnerDisplayName = fiatPluginId[0].toUpperCase() + fiatPluginId.substring(1)
 
       return {
         ...baseDisplayInfo,
