@@ -49,13 +49,15 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     const depositRequest = {
       tokenId: srcTokenId ?? defaultSrcTokenId,
       nativeAmount: nativeSrcAmount,
-      fromWallet: borrowEngineWallet
+      fromWallet: borrowEngineWallet,
+      skipChecks: true
     }
 
     const borrowRequest = {
       tokenId: destTokenId ?? defaultDestTokenId,
       nativeAmount: nativeDestAmount,
-      fromWallet: borrowEngineWallet
+      fromWallet: borrowEngineWallet,
+      skipChecks: true
     }
 
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
