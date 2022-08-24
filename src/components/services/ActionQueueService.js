@@ -12,7 +12,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useRef } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 
-export const ActionQueue = () => {
+export const ActionQueueService = () => {
   const deviceId = getUniqueId()
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
