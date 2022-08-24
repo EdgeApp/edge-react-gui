@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
-import { type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeAccount, type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
 
 //
 // Action Operations
@@ -153,7 +153,7 @@ export type ActionProgram = {
   mockMode?: boolean
 }
 export type ActionProgramState = {
-  deviceId: string,
+  clientId: string,
   programId: string,
   effect?: ActionEffect
 }
@@ -175,6 +175,10 @@ export type BroadcastTx = {
 export type ExecutableAction = {
   dryrunOutput: ExecutionOutput | null,
   execute(): Promise<ExecutionOutput>
+}
+export type ExecutionContext = {
+  account: EdgeAccount,
+  clientId: string
 }
 export type ExecutionOutput = {
   effect: ActionEffect,

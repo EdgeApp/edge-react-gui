@@ -26,7 +26,7 @@ export type ActionQueueStore = {
   getActionQueueMap(): Promise<ActionQueueMap>
 }
 
-export const makeActionQueueStore = (account: EdgeAccount, deviceId: string): ActionQueueStore => {
+export const makeActionQueueStore = (account: EdgeAccount, clientId: string): ActionQueueStore => {
   // Use localDisklet (unencrypted) for debuggin purposes
   const baseDisklet = debugStore ? account.localDisklet : account.disklet
   const disklet = navigateDisklet(baseDisklet, ACTION_QUEUE_DATASTORE_ID)
@@ -59,7 +59,7 @@ export const makeActionQueueStore = (account: EdgeAccount, deviceId: string): Ac
 
       // Initial program state
       const programState: ActionProgramState = {
-        deviceId,
+        clientId,
         programId: programId
       }
 
@@ -79,10 +79,7 @@ export const makeActionQueueStore = (account: EdgeAccount, deviceId: string): Ac
       const program = await readFromDisk(`${programId}/ActionProgram`, asActionProgram)
       const state = await readFromDisk(`${programId}/ActionProgramState`, asActionProgramState)
 
-      return {
-        program,
-        state
-      }
+      return { program, state }
     },
     async updateActionQueueItem(programState: ActionProgramState): Promise<void> {
       const { programId } = programState
