@@ -158,13 +158,14 @@ const asConfig = asObject({
   ),
 
   ...configComment('app options'),
+  APP_CONFIG: asOptional(asString, 'edge'),
+  BETA_FEATURES: asOptional(asBoolean),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   YOLO_DEEP_LINK: asOptional(asEither(asString, asNull), null),
   YOLO_PASSWORD: asOptional(asEither(asString, asNull), null),
   YOLO_PIN: asOptional(asEither(asNumber, asNull), null),
   YOLO_USERNAME: asOptional(asEither(asString, asNull), null),
-  APP_CONFIG: asOptional(asString, 'edge'),
 
   ...configComment('debug options'),
   DEBUG_CORE: asOptional(asBoolean, false),

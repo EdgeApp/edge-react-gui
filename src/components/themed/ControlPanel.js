@@ -10,6 +10,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
+import ENV from '../../../env'
 import { deleteLocalAccount } from '../../actions/AccountActions.js'
 import { logoutRequest } from '../../actions/LoginActions.js'
 import { parseScannedUri } from '../../actions/ScanActions.js'
@@ -236,8 +237,7 @@ export function ControlPanel(props: Props) {
       title: s.strings.drawer_scan_qr_send
     },
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
-    { pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars },
-
+    ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
       pressHandler: () => handleGoToScene('termsOfService'),
       iconName: 'control-panel-tos',

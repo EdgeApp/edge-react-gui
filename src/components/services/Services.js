@@ -89,7 +89,7 @@ export function Services(props: Props) {
             <Main />
           </Airship>
         </MenuProvider>
-        <ActionQueue />
+        {ENV.BETA_FEATURES ? <ActionQueue /> : null}
         <AutoLogout />
         <ContactsLoader />
         <DeepLinkingManager />
