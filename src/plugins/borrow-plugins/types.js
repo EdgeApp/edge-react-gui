@@ -15,7 +15,9 @@ export type BorrowRequest = {
   fromWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 // Make payment:
@@ -27,7 +29,9 @@ export type RepayRequest = {
   fromWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 // Deposit collateral:
@@ -39,7 +43,9 @@ export type DepositRequest = {
   fromWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 // Withdraw collateral:
@@ -51,7 +57,9 @@ export type WithdrawRequest = {
   toWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 export type BroadcastTx = {
