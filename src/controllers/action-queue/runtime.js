@@ -1,6 +1,6 @@
 // @flow
 
-import { add, gt, lt } from 'biggystring'
+import { add, gte, lte } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 
 import { showError } from '../../components/services/AirshipInstance'
@@ -163,7 +163,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       return {
         delay: 15000,
-        isEffective: (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
+        isEffective: (aboveAmount != null && gte(walletBalance, aboveAmount)) || (belowAmount != null && lte(walletBalance, belowAmount))
       }
     }
     case 'push-events': {
