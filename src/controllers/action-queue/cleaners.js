@@ -35,6 +35,10 @@ const asError = asCodec(
     // Handle Error
     if (raw instanceof Error) return raw
 
+    if (typeof raw === 'string') {
+      const error = new Error(raw)
+      return error
+    }
     // Handle JsonError
     const jsonError = asMaybe(asJsonError)(raw)
     if (jsonError != null) {
@@ -43,6 +47,7 @@ const asError = asCodec(
         configurable: true,
         value: jsonError.name
       })
+      // TODO: Copy stack trace
       return error
     }
 
