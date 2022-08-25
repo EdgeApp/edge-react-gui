@@ -54,7 +54,7 @@ export type PushMessage = {
   +data?: { [key: string]: string } // JSON to push to device
 }
 
-export type PushEventState = 'waiting' | 'cancelled' | 'complete'
+export type PushEventState = 'waiting' | 'cancelled' | 'triggered'
 /**
  * Combines a trigger with an action.
  * This the in-memory format, independent of the database.

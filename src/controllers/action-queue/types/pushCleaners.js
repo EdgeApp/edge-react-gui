@@ -59,7 +59,7 @@ export const asPushMessage: Cleaner<PushMessage> = asObject({
   data: asOptional(asObject(asString))
 })
 
-export const asPushEventState: Cleaner<PushEventState> = asValue('waiting', 'cancelled', 'complete')
+export const asPushEventState: Cleaner<PushEventState> = asValue('waiting', 'cancelled', 'triggered')
 
 export const asNewPushEvent: Cleaner<NewPushEvent> = asObject({
   eventId: asString,
