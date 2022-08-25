@@ -3,7 +3,6 @@
 import { add, gte, lte } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 
-import { showError } from '../../components/services/AirshipInstance'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -47,7 +46,7 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
       return { nextState: { ...state, effect: nextEffect } }
     } catch (error) {
       // Silently fail dryrun
-      showError(error)
+      console.error(error)
     }
   }
 
