@@ -42,7 +42,13 @@ const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time'
 console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
-if (ENV.DISABLE_WARNINGS) LogBox.ignoreAllLogs()
+if (ENV.DISABLE_WARNINGS) {
+  const ignoreWarns = [
+    "Module RCTSplashScreen requires main queue setup since it overrides `constantsToExport` but doesn't implement `requiresMainQueueSetup`. In a future release React Native will default to initializing all native modules on a background thread unless explicitly opted-out of.",
+    /Warning: \w+ has been renamed, and is not recommended for use. See [^\s]* for details./
+  ]
+  LogBox.ignoreLogs(ignoreWarns)
+}
 
 global.OS = Platform.OS
 // Disable the font scaling
@@ -64,9 +70,9 @@ if (__DEV__) {
   // $FlowFixMe
   console.info = log
   // $FlowFixMe
-  console.warn = log
+  // console.warn = log
   // $FlowFixMe
-  console.error = log
+  // console.error = log
 }
 
 global.logActivity = logActivity
