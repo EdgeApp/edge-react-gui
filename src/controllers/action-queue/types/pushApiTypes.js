@@ -4,7 +4,7 @@ import { type Cleaner, asArray, asDate, asEither, asJSON, asNull, asNumber, asOb
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import { asBroadcastTx, asNewPushEvent, asPushEventState, asPushMessage, asPushTrigger } from './pushCleaners'
-import { type NewPushEvent, type PushEvent } from './pushTypes'
+import { type NewPushEvent, type PushEventStatus } from './pushTypes'
 
 // ---------------------------------------------------------------------------
 // Request types
@@ -76,16 +76,7 @@ export const wasLoginUpdatePayload = uncleaner(asLoginUpdatePayload)
 /**
  * A push event returned from a query.
  */
-export const asPushEventStatus: Cleaner<
-  $Diff<
-    PushEvent,
-    {
-      created: *,
-      deviceId: *,
-      loginId: *
-    }
-  >
-> = asObject({
+export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
   eventId: asString,
 
   broadcastTxs: asOptional(asArray(asBroadcastTx)),

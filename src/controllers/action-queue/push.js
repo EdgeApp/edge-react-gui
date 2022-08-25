@@ -11,7 +11,7 @@ import { asHex } from '../../util/cleaners/asHex'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { type ActionEffect, type ActionProgram, type ExecutionOutput } from './types'
 import { type LoginUpdatePayload, type PushRequestBody, asErrorResponse, asLoginPayload, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
-import { type BroadcastTx, type NewPushEvent, type PushMessage, type PushTrigger } from './types/pushTypes'
+import { type BroadcastTx, type NewPushEvent, type PushEventState, type PushEventStatus, type PushMessage, type PushTrigger } from './types/pushTypes'
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
@@ -110,11 +110,18 @@ export async function checkPushEvents(account: EdgeAccount, eventIds: string[]):
 
   const data = await response.json()
   const loginPayload = asLoginPayload(data)
-  const eventStatusMap = loginPayload.events.reduce((map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }), {})
+  const eventStatusMap: { [eventId: string]: PushEventStatus } = loginPayload.events.reduce(
+    (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
+    {}
+  )
 
   const isEffective = eventIds.every(eventId => {
-    const status = eventStatusMap[eventId]
-    return status != null && ['triggered', 'complete'].includes(status.state)
+    const status: PushEventStatus = eventStatusMap[eventId]
+    const pushEventState: PushEventState = status.state
+    if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
+      throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
+    }
+    return status != null && pushEventState === 'triggered'
   })
 
   return isEffective
