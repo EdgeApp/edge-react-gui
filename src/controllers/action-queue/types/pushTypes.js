@@ -67,7 +67,6 @@ export type PushEvent = {
 
   +broadcastTxs?: BroadcastTx[],
   +pushMessage?: PushMessage,
-  +recurring: boolean, // Go back to waiting once complete
   +trigger: PushTrigger,
 
   // Mutable state:

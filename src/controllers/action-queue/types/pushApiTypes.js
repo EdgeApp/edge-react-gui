@@ -1,6 +1,6 @@
 // @flow
 
-import { type Cleaner, asArray, asBoolean, asDate, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, uncleaner } from 'cleaners'
+import { type Cleaner, asArray, asDate, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, uncleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import { asBroadcastTx, asNewPushEvent, asPushEventState, asPushMessage, asPushTrigger } from './pushCleaners'
@@ -90,7 +90,6 @@ export const asPushEventStatus: Cleaner<
 
   broadcastTxs: asOptional(asArray(asBroadcastTx)),
   pushMessage: asOptional(asPushMessage),
-  recurring: asBoolean,
   trigger: asPushTrigger,
 
   // Status:
