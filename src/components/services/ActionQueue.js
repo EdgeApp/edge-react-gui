@@ -61,7 +61,8 @@ export const ActionQueue = () => {
           }
 
           const { nextState } = await executeActionProgram(account, program, state).catch((error: Error) => {
-            console.error('Action Program Exception:', error.message)
+            console.warn(new Error('Action Program Exception: ' + error.message))
+            console.error(error)
             return {
               nextState: {
                 ...state,
