@@ -124,6 +124,7 @@ export const LoanCreateScene = (props: Props) => {
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
         showCreateWallet={!isSrc}
+        createWalletId={!isSrc ? beWallet.id : undefined}
         showWithdrawToBank={!isSrc}
         excludeWalletIds={!isSrc ? excludeWalletIds : undefined}
         allowedAssets={!isSrc ? hardAllowedDestAsset : hardAllowedSrcAsset}
