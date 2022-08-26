@@ -118,6 +118,10 @@ export type AddressBalanceEffect = {
   walletId: string,
   tokenId?: string
 }
+export type PushEventEffect = {
+  type: 'push-event',
+  eventId: string
+}
 export type PushEventsEffect = {
   type: 'push-events',
   eventIds: string[]
@@ -139,7 +143,7 @@ export type DoneEffect = {
   error?: Error
 }
 
-export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventsEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
+export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PushEventsEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
 
 //
 // Action Program

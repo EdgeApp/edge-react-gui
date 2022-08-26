@@ -161,6 +161,14 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         isEffective: (aboveAmount != null && gte(walletBalance, aboveAmount)) || (belowAmount != null && lte(walletBalance, belowAmount))
       }
     }
+    case 'push-event': {
+      const { eventId } = effect
+
+      return {
+        delay: 15000,
+        isEffective: await checkPushEvents(account, [eventId])
+      }
+    }
     case 'push-events': {
       const { eventIds } = effect
 
