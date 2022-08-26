@@ -85,15 +85,6 @@ export type SwapActionOp = {
   nativeAmount: string,
   amountFor: 'from' | 'to'
 }
-// Useful for development/testing
-export type ToastActionOp = {
-  type: 'toast',
-  message: string
-}
-export type DelayActionOp = {
-  type: 'delay',
-  ms: number
-}
 export type ActionOp =
   | SeqActionOp
   | ParActionOp
@@ -105,8 +96,6 @@ export type ActionOp =
   | LoanRepayActionOp
   | LoanWithdrawActionOp
   | SwapActionOp
-  | ToastActionOp
-  | DelayActionOp
 
 //
 // Action (After) Effects
@@ -149,23 +138,8 @@ export type DoneEffect = {
   type: 'done',
   error?: Error
 }
-// Useful for development/testing
-export type UnixtimeEffect = {
-  type: 'unixtime',
-  timestamp: number
-}
-export type NoopEffect = { type: 'noop' }
 
-export type ActionEffect =
-  | SeqEffect
-  | ParEffect
-  | AddressBalanceEffect
-  | PushEventsEffect
-  | PriceLevelEffect
-  | TxConfsEffect
-  | DoneEffect
-  | UnixtimeEffect
-  | NoopEffect
+export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventsEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
 
 //
 // Action Program

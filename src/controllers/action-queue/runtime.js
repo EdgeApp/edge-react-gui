@@ -2,10 +2,8 @@
 
 import { add, gt, lt } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
-import * as React from 'react'
 
-import { AirshipToast } from '../../components/common/AirshipToast'
-import { Airship, showError } from '../../components/services/AirshipInstance'
+import { showError } from '../../components/services/AirshipInstance'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -215,20 +213,8 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         }
       }
     }
-    case 'unixtime': {
-      return {
-        delay: 300,
-        isEffective: Date.now() >= effect.timestamp
-      }
-    }
     case 'done': {
       if (effect.error != null) throw effect.error
-      return {
-        delay: 0,
-        isEffective: true
-      }
-    }
-    case 'noop': {
       return {
         delay: 0,
         isEffective: true
@@ -547,31 +533,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       }
     }
 
-    case 'toast': {
-      const execute = async () => {
-        Airship.show(bridge => <AirshipToast bridge={bridge} message={actionOp.message} />)
-        return {
-          effect: { type: 'noop' },
-          broadcastTxs: []
-        }
-      }
-      return {
-        dryrunOutput: null,
-        execute
-      }
-    }
-
-    case 'delay': {
-      const execute = async () => ({
-        effect: { type: 'unixtime', timestamp: Date.now() + actionOp.ms },
-        broadcastTxs: []
-      })
-      return {
-        dryrunOutput: await execute(),
-        execute
-      }
-    }
-
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
@@ -579,12 +540,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
     case 'fiat-buy': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-    case 'noop': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-    case 'unixtime': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
 

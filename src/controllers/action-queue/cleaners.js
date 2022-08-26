@@ -12,7 +12,6 @@ import {
   type ActionProgram,
   type ActionProgramState,
   type BroadcastTxActionOp,
-  type DelayActionOp,
   type FiatBuyActionOp,
   type FiatSellActionOp,
   type LoanBorrowActionOp,
@@ -21,8 +20,7 @@ import {
   type LoanWithdrawActionOp,
   type ParActionOp,
   type SeqActionOp,
-  type SwapActionOp,
-  type ToastActionOp
+  type SwapActionOp
 } from './types'
 
 // A serializable error object
@@ -119,14 +117,6 @@ const asSwapActionOp: Cleaner<SwapActionOp> = asObject({
   nativeAmount: asString,
   amountFor: asValue('from', 'to')
 })
-const asToastActionOp: Cleaner<ToastActionOp> = asObject({
-  type: asValue('toast'),
-  message: asString
-})
-const asDelayActionOp: Cleaner<DelayActionOp> = asObject({
-  type: asValue('delay'),
-  ms: asNumber
-})
 export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
   asParActionOp,
@@ -137,9 +127,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
   asLoanDepositActionOp,
   asLoanRepayActionOp,
   asLoanWithdrawActionOp,
-  asSwapActionOp,
-  asToastActionOp,
-  asDelayActionOp
+  asSwapActionOp
 )
 
 //
@@ -183,13 +171,6 @@ const asDoneEffect = asObject({
   type: asValue('done'),
   error: asOptional(asError)
 })
-const asUnixtimeEffect = asObject({
-  type: asValue('unixtime'),
-  timestamp: asNumber
-})
-const asNoopEffect = asObject({
-  type: asValue('noop')
-})
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asSeqEffect,
   asParEffect,
@@ -197,9 +178,7 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asTxConfsEffect,
   asPushEvents,
   asPriceLevelEffect,
-  asDoneEffect,
-  asUnixtimeEffect,
-  asNoopEffect
+  asDoneEffect
 )
 
 //
