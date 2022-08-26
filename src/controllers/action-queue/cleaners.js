@@ -160,10 +160,6 @@ const asPushEventEffect = asObject({
   type: asValue('push-event'),
   eventId: asString
 })
-const asPushEvents = asObject({
-  type: asValue('push-events'),
-  eventIds: asArray(asString)
-})
 const asPriceLevelEffect = asObject({
   type: asValue('price-level'),
   currencyPair: asString,
@@ -186,7 +182,6 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asAddressBalanceEffect,
   asTxConfsEffect,
   asPushEventEffect,
-  asPushEvents,
   asPriceLevelEffect,
   asDoneEffect
 )

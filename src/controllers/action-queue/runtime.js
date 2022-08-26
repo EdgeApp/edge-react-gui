@@ -9,7 +9,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
-import { checkPushEvents, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
+import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
   type ActionEffect,
   type ActionProgram,
@@ -207,15 +207,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       return {
         delay: 15000,
-        isEffective: await checkPushEvents(account, [eventId])
-      }
-    }
-    case 'push-events': {
-      const { eventIds } = effect
-
-      return {
-        delay: 15000,
-        isEffective: await checkPushEvents(account, eventIds)
+        isEffective: await checkPushEvent(account, eventId)
       }
     }
     case 'price-level': {

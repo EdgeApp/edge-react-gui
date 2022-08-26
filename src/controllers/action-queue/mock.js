@@ -85,14 +85,6 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         isEffective: Date.now() >= timestamp
       }
     }
-    case 'push-events': {
-      const { eventIds } = effect
-      const timestamp = parseInt(eventIds[0])
-      return {
-        delay: 300,
-        isEffective: Date.now() >= timestamp
-      }
-    }
     case 'price-level': {
       // TODO: Implement
       throw new Error('No implementation for price effect')
