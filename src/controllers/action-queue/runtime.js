@@ -51,15 +51,12 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
   }
 
   // Await Effect
-  let checkErrors: Error[] = []
+  let retryDelay = 2000
   while (true) {
     if (effect == null) break
 
     try {
       const { isEffective, delay } = await checkActionEffect(account, effect)
-
-      // Reset error aggregation (and failure count)
-      checkErrors = []
 
       // Break out of effect check loop if the ActionEffect passes the check
       if (isEffective) break
@@ -67,15 +64,14 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
       // Delay next check
       await snooze(delay)
     } catch (err) {
-      checkErrors.push(err)
+      console.warn(`Action effect check failed:\n\t${String(err)}`)
+      console.error(err)
 
-      if (checkErrors.length >= 5) {
-        const messages = checkErrors.map(e => e.message).join('\n\t')
-        throw new Error(`Action effect check failed:\n\t${messages}`)
-      }
+      // Increase the retry delay (max 10 minutes)
+      retryDelay = Math.min(retryDelay * 1.2, 600000)
 
       // Delay retry after failure
-      await snooze(1000)
+      await snooze(retryDelay)
     }
   }
 
