@@ -7,6 +7,7 @@ import ENV from '../../../env'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
+import { filterNull } from '../../util/safeFilters'
 import { type ActionEffect, type ActionProgram, type ExecutionContext, type ExecutionOutput } from './types'
 import { type LoginUpdatePayload, type PushRequestBody, asErrorResponse, asLoginPayload, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
 import { type BroadcastTx, type NewPushEvent, type PushEventState, type PushEventStatus, type PushMessage, type PushTrigger } from './types/pushTypes'
@@ -175,8 +176,12 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
 
   switch (effect.type) {
     case 'seq': {
-      if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-      return actionEffectToPushTrigger(context, effect.childEffect)
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Only check the child effect at the current opIndex
+      const childEffect = checkedEffects[effect.opIndex]
+      return actionEffectToPushTrigger(context, childEffect)
     }
     case 'address-balance': {
       const { address, walletId, tokenId, aboveAmount, belowAmount } = effect

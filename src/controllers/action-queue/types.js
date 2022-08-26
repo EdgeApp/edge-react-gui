@@ -104,7 +104,7 @@ export type ActionOp =
 export type SeqEffect = {
   type: 'seq',
   opIndex: number,
-  childEffect: ActionEffect | null // null is only for dryrun
+  childEffects: Array<ActionEffect | null> // null is only for dryrun
 }
 export type ParEffect = {
   type: 'par',

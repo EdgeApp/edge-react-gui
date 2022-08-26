@@ -19,7 +19,8 @@ import {
   type ExecutionContext,
   type ExecutionOutput,
   type ExecutionResults,
-  type PendingTxMap
+  type PendingTxMap,
+  type SeqEffect
 } from './types'
 import { makeWyreClient } from './WyreClient'
 
@@ -38,9 +39,23 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
       await uploadPushEvents(context, newPushEvents)
 
       // Mutate the nextState accordingly; effect should be awaiting push events:
-      const nextEffect = {
-        type: 'push-events',
-        eventIds: newPushEvents.map(event => event.eventId)
+      const nextChildEffects = newPushEvents.map(event => ({
+        type: 'push-event',
+        eventId: event.eventId
+      }))
+      let nextEffect: ActionEffect
+      if (effect.type === 'seq') {
+        // Drop the last effect because it is to be replaced by the first push-event effect
+        const prevOpIndex = effect.opIndex // Same opIndex because the first of nextChildEffects replaces the last or prevChildEffects
+        const prevChildEffects = effect.childEffects.slice(0, -1) // Slice to drop the last of prevChildEffects
+        nextEffect = {
+          type: 'seq',
+          opIndex: prevOpIndex,
+          childEffects: [...prevChildEffects, ...nextChildEffects]
+        }
+      } else {
+        if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
+        nextEffect = nextChildEffects[0]
       }
 
       // Exit early with dryrun results:
@@ -62,6 +77,8 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
       // Break out of effect check loop if the ActionEffect passes the check
       if (isEffective) break
 
+      // TOOD: Handle partial complete effects returned by checkActionEffect here rather than below this while loop
+
       // Delay next check
       await snooze(delay)
     } catch (err) {
@@ -73,6 +90,30 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
 
       // Delay retry after failure
       await snooze(retryDelay)
+    }
+  }
+
+  /**
+   * Partially Complete Effect Check:
+   *
+   * SeqEffect introduced the concept of "partially completed effect" (PCE) in
+   * order to support tracking the progress of precomputed effects which are
+   * delegated to an external execution environment (e.g. push-server).
+   * A SeqEffect is partially-completed when it's opIndex is less then the last
+   * index of it's childEffects.
+   */
+  // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
+  if (effect != null && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
+    // Progress the partially completed effect forward
+    const nextEffect: SeqEffect = {
+      ...effect,
+      opIndex: effect.opIndex + 1
+    }
+    return {
+      nextState: {
+        ...state,
+        effect: nextEffect
+      }
     }
   }
 
@@ -135,14 +176,18 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 
   switch (effect.type) {
     case 'seq': {
-      if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-      return await checkActionEffect(context, effect.childEffect)
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Only check the child effect at the current opIndex
+      const childEffect = checkedEffects[effect.opIndex]
+      return await checkActionEffect(context, childEffect)
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
-
       if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
+      // Check all child effects concurrently
       const promises = checkedEffects.map(async (childEffect, index) => {
         return await checkActionEffect(context, childEffect)
       })
@@ -168,7 +213,7 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 
       return {
         delay: 15000,
-        isEffective: await checkPushEvents(account, [eventId])
+        isEffective: await checkPushEvents(context, [eventId])
       }
     }
     case 'push-events': {
@@ -233,8 +278,7 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 }
 
 function checkEffectForNull(effect: ActionEffect): boolean {
-  if (effect.type === 'seq') return effect.childEffect === null
-  if (effect.type === 'par') return effect.childEffects.some(effect => effect === null || checkEffectForNull(effect))
+  if (effect.type === 'seq' || effect.type === 'par') return effect.childEffects.some(effect => effect === null || checkEffectForNull(effect))
   return false
 }
 
@@ -264,9 +308,10 @@ async function evaluateAction(
 
   switch (actionOp.type) {
     case 'seq': {
-      const opIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const nextOpIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const prevChildEffects = effect != null && effect.type === 'seq' ? effect.childEffects : []
       // Handle done case
-      if (opIndex > actionOp.actions.length - 1) {
+      if (nextOpIndex > actionOp.actions.length - 1) {
         return {
           dryrunOutput: {
             effect: { type: 'done' },
@@ -279,10 +324,10 @@ async function evaluateAction(
         }
       }
       const nextProgram = {
-        programId: `${program.programId}[${opIndex}]`,
-        actionOp: actionOp.actions[opIndex]
+        programId: `${program.programId}[${nextOpIndex}]`,
+        actionOp: actionOp.actions[nextOpIndex]
       }
-      const childOutput = await evaluateAction(context, nextProgram, state, pendingTxMap)
+      const childOutput: ExecutableAction = await evaluateAction(context, nextProgram, state, pendingTxMap)
       const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
       const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
       const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
@@ -291,8 +336,8 @@ async function evaluateAction(
         dryrunOutput: {
           effect: {
             type: 'seq',
-            opIndex,
-            childEffect: childEffect
+            opIndex: nextOpIndex,
+            childEffects: [...prevChildEffects, childEffect]
           },
           broadcastTxs: childBroadcastTxs
         },
@@ -301,8 +346,8 @@ async function evaluateAction(
           return {
             effect: {
               type: 'seq',
-              opIndex,
-              childEffect: output.effect
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, childEffect]
             },
             broadcastTxs: output.broadcastTxs
           }

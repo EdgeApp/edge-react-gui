@@ -15,6 +15,7 @@ import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
+import { filterNull } from '../../util/safeFilters'
 
 export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
   return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
@@ -48,11 +49,12 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
               }
               // Otherwise the effect should be a seq matching the seq actionOp:
               if (effect.type === 'seq') {
-                if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+                const checkedEffects = filterNull(effect.childEffects)
+                if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
                 // Use the opIndex on the effect to determine which child ops are
                 // done and which one inherits the pending effect
                 if (index < effect.opIndex) childEffect = { type: 'done' }
-                if (index === effect.opIndex) childEffect = effect.childEffect
+                if (index === effect.opIndex) childEffect = checkedEffects[effect.opIndex]
               }
             }
 
