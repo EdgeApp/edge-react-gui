@@ -49,12 +49,15 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
   switch (effect.type) {
     case 'seq': {
-      if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-      return await checkActionEffect(account, effect.childEffect)
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Only check the child effect at the current opIndex
+      const childEffect = checkedEffects[effect.opIndex]
+      return await checkActionEffect(account, childEffect)
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
-
       if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       const promises = checkedEffects.map(async (childEffect, index) => {
@@ -122,9 +125,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
   switch (actionOp.type) {
     case 'seq': {
-      const opIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const nextOpIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const prevChildEffects = effect != null && effect.type === 'seq' ? effect.childEffects : []
       // Handle done case
-      if (opIndex > actionOp.actions.length - 1) {
+      if (nextOpIndex > actionOp.actions.length - 1) {
         return {
           dryrunOutput: {
             effect: { type: 'done' },
@@ -137,8 +141,8 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         }
       }
       const nextProgram = {
-        programId: `${program.programId}[${opIndex}]`,
-        actionOp: actionOp.actions[opIndex]
+        programId: `${program.programId}[${nextOpIndex}]`,
+        actionOp: actionOp.actions[nextOpIndex]
       }
       const childOutput = await evaluateAction(account, nextProgram, state, pendingTxMap)
       const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
@@ -149,8 +153,8 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         dryrunOutput: {
           effect: {
             type: 'seq',
-            opIndex,
-            childEffect: childEffect
+            opIndex: nextOpIndex,
+            childEffects: [...prevChildEffects, childEffect]
           },
           broadcastTxs: childBroadcastTxs
         },
@@ -159,8 +163,8 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
           return {
             effect: {
               type: 'seq',
-              opIndex,
-              childEffect: output.effect
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, childEffect]
             },
             broadcastTxs: output.broadcastTxs
           }

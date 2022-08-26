@@ -142,7 +142,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
 const asSeqEffect = asObject({
   type: asValue('seq'),
   opIndex: asNumber,
-  childEffect: asEither((raw: any) => asActionEffect(raw), asNull)
+  childEffects: asArray(asEither((raw: any) => asActionEffect(raw), asNull))
 })
 const asParEffect = asObject({
   type: asValue('par'),
