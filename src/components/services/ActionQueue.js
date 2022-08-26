@@ -53,7 +53,7 @@ export const ActionQueue = () => {
 
           const { program, state } = queue[programId]
 
-          if (state.mockMode) {
+          if (program.mockMode) {
             const { nextState } = await mockActionProgram(account, program, state)
             dispatch(updateActionProgramState(nextState))
             executing[programId] = false

@@ -192,12 +192,12 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 
 export const asActionProgram: Cleaner<ActionProgram> = asObject({
   programId: asString,
-  actionOp: asActionOp
+  actionOp: asActionOp,
+  mockMode: asOptional(asBoolean)
 })
 
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
   deviceId: asString,
   programId: asString,
-  effect: asOptional(asActionEffect),
-  mockMode: asOptional(asBoolean)
+  effect: asOptional(asActionEffect)
 })
