@@ -16,56 +16,61 @@ export const asTxInfo = asObject({
 })
 export type TxInfo = $Call<typeof asTxInfo>
 
-export type CallInfo = {
+export type CallInfo = {|
   tx: TxInfo,
   wallet: EdgeCurrencyWallet,
   spendToken?: EdgeToken,
   metadata?: EdgeMetadata,
-  pendingTxs: EdgeTransaction[],
-  skipChecks?: boolean
-}
+  pendingTxs: EdgeTransaction[]
+|}
 
 export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAction> => {
-  const { tx: txInfo, wallet, spendToken, metadata, pendingTxs, skipChecks = false } = params
+  const { tx: txInfo, wallet, spendToken, metadata, pendingTxs } = params
   const { id: walletId } = wallet
   const { gasLimit, gasPrice } = txInfo
 
   if (gasPrice == null || gasLimit == null) throw new Error('Explicit gas price and limit required for ApprovableAction.')
 
-  const edgeSpendInfo: EdgeSpendInfo = {
-    pluginId: wallet.currencyInfo.pluginId,
-    currencyCode: spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode,
-    spendTargets: [
-      {
-        nativeAmount: txInfo.value ? txInfo.value.toString() : '0',
-        publicAddress: txInfo.to,
-        otherParams: { data: txInfo.data }
-      }
-    ],
-    customNetworkFee: {
-      gasPrice: ethers.utils.formatUnits(gasPrice, 'gwei').toString(),
-      gasLimit: gasLimit.toString()
-    },
-    networkFeeOption: 'custom',
-    metadata,
-    pendingTxs,
-    skipChecks
-  }
-  const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(edgeSpendInfo)
+  const makeSpend = async (dryrun: boolean): Promise<EdgeTransaction> => {
+    const edgeSpendInfo: EdgeSpendInfo = {
+      pluginId: wallet.currencyInfo.pluginId,
+      currencyCode: spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode,
+      skipChecks: dryrun,
+      spendTargets: [
+        {
+          nativeAmount: txInfo.value ? txInfo.value.toString() : '0',
+          publicAddress: txInfo.to,
+          otherParams: { data: txInfo.data }
+        }
+      ],
+      customNetworkFee: {
+        gasPrice: ethers.utils.formatUnits(gasPrice, 'gwei').toString(),
+        gasLimit: gasLimit.toString()
+      },
+      networkFeeOption: 'custom',
+      metadata,
+      pendingTxs
+    }
 
+    const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(edgeSpendInfo)
+    return edgeUnsignedTx
+  }
+
+  const dryrunUnsignedTx = await makeSpend(true)
   const networkFee = {
     currencyCode: wallet.currencyInfo.currencyCode,
-    nativeAmount: edgeUnsignedTx.parentNetworkFee ?? edgeUnsignedTx.networkFee ?? '0'
+    nativeAmount: dryrunUnsignedTx.parentNetworkFee ?? dryrunUnsignedTx.networkFee ?? '0'
   }
 
   return {
     networkFee,
-    unsignedTxs: [edgeUnsignedTx],
+    unsignedTxs: [dryrunUnsignedTx],
     dryrun: async () => {
-      const tx = await wallet.signTx(edgeUnsignedTx)
+      const tx = await wallet.signTx(dryrunUnsignedTx)
       return [{ walletId, networkFee, tx }]
     },
     approve: async () => {
+      const edgeUnsignedTx = await makeSpend(false)
       const tx = await wallet.signTx(edgeUnsignedTx)
       await wallet.broadcastTx(tx)
       await wallet.saveTx(tx)

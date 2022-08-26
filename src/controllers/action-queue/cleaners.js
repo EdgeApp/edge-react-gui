@@ -35,6 +35,10 @@ const asError = asCodec(
     // Handle Error
     if (raw instanceof Error) return raw
 
+    if (typeof raw === 'string') {
+      const error = new Error(raw)
+      return error
+    }
     // Handle JsonError
     const jsonError = asMaybe(asJsonError)(raw)
     if (jsonError != null) {
@@ -43,6 +47,7 @@ const asError = asCodec(
         configurable: true,
         value: jsonError.name
       })
+      // TODO: Copy stack trace
       return error
     }
 
@@ -187,12 +192,12 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 
 export const asActionProgram: Cleaner<ActionProgram> = asObject({
   programId: asString,
-  actionOp: asActionOp
+  actionOp: asActionOp,
+  mockMode: asOptional(asBoolean)
 })
 
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
   deviceId: asString,
   programId: asString,
-  effect: asOptional(asActionEffect),
-  mockMode: asOptional(asBoolean)
+  effect: asOptional(asActionEffect)
 })

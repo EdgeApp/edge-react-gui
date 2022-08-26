@@ -148,14 +148,14 @@ export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEv
 // Storage:
 export type ActionProgram = {
   programId: string,
-  actionOp: ActionOp
+  actionOp: ActionOp,
+  // Development mode flag
+  mockMode?: boolean
 }
 export type ActionProgramState = {
   deviceId: string,
   programId: string,
-  effect?: ActionEffect,
-  // Development mode flag
-  mockMode?: boolean
+  effect?: ActionEffect
 }
 
 export type ActionQueueItem = {

@@ -126,7 +126,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       },
 
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [] } = request
         if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
 
         validateWalletParam(fromWallet)
@@ -161,8 +161,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               category: 'expense',
               notes: `AAVE contract approval`
             },
-            pendingTxs,
-            skipChecks
+            pendingTxs
           })
         }
 
@@ -178,8 +177,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             category: 'transfer',
             notes: `Deposit ${token.currencyCode} collateral`
           },
-          pendingTxs,
-          skipChecks
+          pendingTxs
         })
 
         const actions = await makeTxCalls(txCallInfos)
@@ -187,7 +185,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, toWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        const { nativeAmount, tokenId, toWallet = wallet, pendingTxs = [] } = request
         if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
 
         validateWalletParam(toWallet)
@@ -211,12 +209,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             category: 'transfer',
             notes: `Withdraw ${token.currencyCode} collateral`
           },
-          pendingTxs,
-          skipChecks
+          pendingTxs
         })
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [] } = request
         if (zeroString(nativeAmount)) throw new Error('BorrowEngine: borrow request contains no nativeAmount.')
 
         const token = getToken(tokenId)
@@ -243,12 +240,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             category: 'transfer',
             notes: `Borrow ${token.displayName} loan`
           },
-          pendingTxs,
-          skipChecks
+          pendingTxs
         })
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [] } = request
         if (zeroString(nativeAmount)) throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
         const token = getToken(tokenId)
@@ -283,8 +279,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               category: 'expense',
               notes: `AAVE contract approval`
             },
-            pendingTxs,
-            skipChecks
+            pendingTxs
           })
         }
 
@@ -304,8 +299,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             category: 'transfer',
             notes: `Repay ${token.displayName} loan`
           },
-          pendingTxs,
-          skipChecks
+          pendingTxs
         })
 
         const actions = await makeTxCalls(txCallInfos)

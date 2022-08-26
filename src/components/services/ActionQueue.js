@@ -53,7 +53,7 @@ export const ActionQueue = () => {
 
           const { program, state } = queue[programId]
 
-          if (state.mockMode) {
+          if (program.mockMode) {
             const { nextState } = await mockActionProgram(account, program, state)
             dispatch(updateActionProgramState(nextState))
             executing[programId] = false
@@ -61,7 +61,8 @@ export const ActionQueue = () => {
           }
 
           const { nextState } = await executeActionProgram(account, program, state).catch((error: Error) => {
-            console.error('Action Program Exception:', error.message)
+            console.warn(new Error('Action Program Exception: ' + error.message))
+            console.error(error)
             return {
               nextState: {
                 ...state,

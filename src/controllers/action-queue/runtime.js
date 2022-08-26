@@ -1,9 +1,8 @@
 // @flow
 
-import { add, gt, lt } from 'biggystring'
+import { add, gte, lte } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 
-import { showError } from '../../components/services/AirshipInstance'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -47,20 +46,17 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
       return { nextState: { ...state, effect: nextEffect } }
     } catch (error) {
       // Silently fail dryrun
-      showError(error)
+      console.error(error)
     }
   }
 
   // Await Effect
-  let checkErrors: Error[] = []
+  let retryDelay = 2000
   while (true) {
     if (effect == null) break
 
     try {
       const { isEffective, delay } = await checkActionEffect(account, effect)
-
-      // Reset error aggregation (and failure count)
-      checkErrors = []
 
       // Break out of effect check loop if the ActionEffect passes the check
       if (isEffective) break
@@ -68,15 +64,14 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
       // Delay next check
       await snooze(delay)
     } catch (err) {
-      checkErrors.push(err)
+      console.warn(`Action effect check failed:\n\t${String(err)}`)
+      console.error(err)
 
-      if (checkErrors.length >= 5) {
-        const messages = checkErrors.map(e => e.message).join('\n\t')
-        throw new Error(`Action effect check failed:\n\t${messages}`)
-      }
+      // Increase the retry delay (max 10 minutes)
+      retryDelay = Math.min(retryDelay * 1.2, 600000)
 
       // Delay retry after failure
-      await snooze(1000)
+      await snooze(retryDelay)
     }
   }
 
@@ -163,7 +158,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       return {
         delay: 15000,
-        isEffective: (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
+        isEffective: (aboveAmount != null && gte(walletBalance, aboveAmount)) || (belowAmount != null && lte(walletBalance, belowAmount))
       }
     }
     case 'push-events': {
@@ -343,9 +338,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
       if (address == null) throw new Error(`No fiat-sell support for ${tokenId ?? 'native'} token on ${wallet.type}`)
 
-      const makeExecutionOutput = async (): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
+          skipChecks: dryrun,
           spendTargets: [
             {
               nativeAmount,
@@ -590,12 +586,12 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  * which returns a ExecutionOutput. This is a very basic contract between the
  * two interfaces.
  */
-async function makeExecutableAction(account: EdgeAccount, fn: () => Promise<ExecutionOutput>): Promise<ExecutableAction> {
-  const dryrunOutput = await fn()
+async function makeExecutableAction(account: EdgeAccount, fn: (dryrun: boolean) => Promise<ExecutionOutput>): Promise<ExecutableAction> {
+  const dryrunOutput = await fn(true)
   return {
     dryrunOutput,
     execute: async () => {
-      const output = await fn()
+      const output = await fn(false)
 
       await Promise.all(
         output.broadcastTxs.map(async broadcastTx => {

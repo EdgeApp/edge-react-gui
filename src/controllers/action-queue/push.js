@@ -2,16 +2,16 @@
 
 import { asMaybe } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js'
+import { base58 } from 'edge-core-js/lib/util/encoding'
 import { getUniqueId } from 'react-native-device-info'
 
 import ENV from '../../../env'
 import s from '../../locales/strings'
-import { asBase64 } from '../../util/cleaners/asBase64'
 import { asHex } from '../../util/cleaners/asHex'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { type ActionEffect, type ActionProgram, type ExecutionOutput } from './types'
 import { type LoginUpdatePayload, type PushRequestBody, asErrorResponse, asLoginPayload, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
-import { type BroadcastTx, type NewPushEvent, type PushMessage, type PushTrigger } from './types/pushTypes'
+import { type BroadcastTx, type NewPushEvent, type PushEventState, type PushEventStatus, type PushMessage, type PushTrigger } from './types/pushTypes'
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
@@ -89,11 +89,11 @@ export async function prepareNewPushEvents(
 }
 
 export async function checkPushEvents(account: EdgeAccount, eventIds: string[]): Promise<boolean> {
-  const { rootLoginId: loginId } = account
+  const { rootLoginId } = account
   const requestBody: PushRequestBody = {
     apiKey: AIRBITZ_API_KEY,
     deviceId,
-    loginId: asBase64(loginId)
+    loginId: base58.parse(rootLoginId)
   }
 
   const response = await fetch(`${pushServerUri}/v2/login`, {
@@ -110,11 +110,18 @@ export async function checkPushEvents(account: EdgeAccount, eventIds: string[]):
 
   const data = await response.json()
   const loginPayload = asLoginPayload(data)
-  const eventStatusMap = loginPayload.events.reduce((map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }), {})
+  const eventStatusMap: { [eventId: string]: PushEventStatus } = loginPayload.events.reduce(
+    (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
+    {}
+  )
 
   const isEffective = eventIds.every(eventId => {
-    const status = eventStatusMap[eventId]
-    return status != null && ['triggered', 'complete'].includes(status.state)
+    const status: PushEventStatus = eventStatusMap[eventId]
+    const pushEventState: PushEventState = status.state
+    if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
+      throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
+    }
+    return status != null && pushEventState === 'triggered'
   })
 
   return isEffective
@@ -125,7 +132,7 @@ export async function effectCanBeATrigger(account: EdgeAccount, effect: ActionEf
 }
 
 export async function uploadPushEvents(account: EdgeAccount, newPushEvents: NewPushEvent[]): Promise<void> {
-  const { rootLoginId: loginId } = account
+  const { rootLoginId } = account
   const loginUpdatePayload: LoginUpdatePayload = {
     createEvents: newPushEvents,
     removeEvents: []
@@ -133,7 +140,7 @@ export async function uploadPushEvents(account: EdgeAccount, newPushEvents: NewP
   const requestBody: PushRequestBody = {
     apiKey: AIRBITZ_API_KEY,
     deviceId,
-    loginId: asBase64(loginId)
+    loginId: base58.parse(rootLoginId)
   }
   const response = await fetch(`${pushServerUri}/v2/login/update`, {
     method: 'POST',
