@@ -32,13 +32,6 @@ const strings = {
   // swap
   action_queue_display_swap_title: `Swap %1$s into %2$s`,
   action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
-  // toast
-  action_queue_display_toast_title: `Toast`,
-  action_queue_display_toast_message: `Show toast message`,
-  // delay
-  action_queue_display_delay_title: 'Wait',
-  action_queue_display_delay_message_pending: 'Wait for %1$s millesconds',
-  action_queue_display_delay_message_doing: 'Wait until %1$s',
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
