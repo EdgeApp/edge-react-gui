@@ -156,6 +156,10 @@ const asAddressBalanceEffect = asObject({
   walletId: asString,
   tokenId: asOptional(asString)
 })
+const asPushEventEffect = asObject({
+  type: asValue('push-event'),
+  eventId: asString
+})
 const asPushEvents = asObject({
   type: asValue('push-events'),
   eventIds: asArray(asString)
@@ -181,6 +185,7 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asParEffect,
   asAddressBalanceEffect,
   asTxConfsEffect,
+  asPushEventEffect,
   asPushEvents,
   asPriceLevelEffect,
   asDoneEffect

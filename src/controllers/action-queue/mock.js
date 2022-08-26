@@ -74,6 +74,14 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         isEffective: Date.now() >= timestamp
       }
     }
+    case 'push-event': {
+      const { eventId } = effect
+      const timestamp = parseInt(eventId)
+      return {
+        delay: 300,
+        isEffective: Date.now() >= timestamp
+      }
+    }
     case 'push-events': {
       const { eventIds } = effect
       const timestamp = parseInt(eventIds[0])

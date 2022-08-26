@@ -219,8 +219,11 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     case 'par': {
       return
     }
+    case 'push-event': {
+      return
+    }
+    // Would this cause infinite recursion? We may never want to add conversion support for this.
     case 'push-events': {
-      // Would this cause infinite recursion? We may never want to add conversion support for this.
       return
     }
     default: {
