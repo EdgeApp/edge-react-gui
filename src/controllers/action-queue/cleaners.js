@@ -3,7 +3,7 @@
 //
 // Action Operations
 //
-import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { type Cleaner, asArray, asBoolean, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 
 import { asBase64 } from '../../util/cleaners/asBase64'
 import {
@@ -193,5 +193,6 @@ export const asActionProgram: Cleaner<ActionProgram> = asObject({
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
   deviceId: asString,
   programId: asString,
-  effect: asOptional(asActionEffect)
+  effect: asOptional(asActionEffect),
+  mockMode: asOptional(asBoolean)
 })

@@ -153,7 +153,9 @@ export type ActionProgram = {
 export type ActionProgramState = {
   deviceId: string,
   programId: string,
-  effect?: ActionEffect
+  effect?: ActionEffect,
+  // Development mode flag
+  mockMode?: boolean
 }
 
 export type ActionQueueItem = {
