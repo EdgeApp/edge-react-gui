@@ -14,6 +14,7 @@ import {
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 
 export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
   return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
@@ -176,12 +177,17 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_loan_withdraw_message, displayAmount)
       }
     }
-    default:
+    case 'broadcast-tx': {
       return {
         title: sprintf(s.strings.action_queue_display_unknown_title),
         message: sprintf(s.strings.action_queue_display_unknown_message),
         ...baseDisplayInfo
       }
+    }
+    default: {
+      // $ExpectError
+      throw exhaustiveCheck(actionOp.type)
+    }
   }
 }
 
