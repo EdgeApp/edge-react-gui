@@ -63,6 +63,9 @@ export const makeActionQueueStore = (account: EdgeAccount, deviceId: string): Ac
         programId: programId
       }
 
+      // Only add the mockMode field if environment is configured with the flag enabled
+      if (ENV.ACTION_QUEUE.mockMode) programState.mockMode = true
+
       // Save to disk
       await Promise.all([
         persistToDisk(`${programId}/ActionProgram`, program, asActionProgram),

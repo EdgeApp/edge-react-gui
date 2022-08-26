@@ -176,33 +176,6 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_loan_withdraw_message, displayAmount)
       }
     }
-    case 'toast': {
-      return {
-        title: s.strings.action_queue_display_toast_title,
-        message: s.strings.action_queue_display_toast_message,
-        ...baseDisplayInfo
-      }
-    }
-    case 'delay': {
-      const { ms } = actionOp
-
-      if (effect == null || effect.type !== 'unixtime') {
-        return {
-          title: s.strings.action_queue_display_delay_title,
-          message: sprintf(s.strings.action_queue_display_delay_message_pending, ms),
-          ...baseDisplayInfo
-        }
-      }
-
-      const timestamp = effect.timestamp
-      const moment = new Date(timestamp).toUTCString()
-
-      return {
-        title: s.strings.action_queue_display_delay_title,
-        message: sprintf(s.strings.action_queue_display_delay_message_doing, moment),
-        ...baseDisplayInfo
-      }
-    }
     default:
       return {
         title: sprintf(s.strings.action_queue_display_unknown_title),

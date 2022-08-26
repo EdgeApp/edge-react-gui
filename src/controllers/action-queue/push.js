@@ -208,9 +208,6 @@ async function actionEffectToPushTrigger(account: EdgeAccount, effect: ActionEff
     case 'done': {
       return
     }
-    case 'noop': {
-      return
-    }
     case 'par': {
       return
     }
@@ -218,10 +215,6 @@ async function actionEffectToPushTrigger(account: EdgeAccount, effect: ActionEff
       // Would this cause infinite recursion? We may never want to add conversion support for this.
       return
     }
-    case 'unixtime': {
-      return
-    }
-
     default: {
       // $ExpectError
       throw exhaustiveCheck(effect.type)

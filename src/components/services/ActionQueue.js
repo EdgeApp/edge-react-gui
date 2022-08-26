@@ -4,6 +4,7 @@ import { type EdgeAccount } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
+import { mockActionProgram } from '../../controllers/action-queue/mock'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime'
 import { type ActionQueueMap } from '../../controllers/action-queue/types'
@@ -51,6 +52,14 @@ export const ActionQueue = () => {
           executing[programId] = true
 
           const { program, state } = queue[programId]
+
+          if (state.mockMode) {
+            const { nextState } = await mockActionProgram(account, program, state)
+            dispatch(updateActionProgramState(nextState))
+            executing[programId] = false
+            return
+          }
+
           const { nextState } = await executeActionProgram(account, program, state).catch((error: Error) => {
             console.error('Action Program Exception:', error.message)
             return {
