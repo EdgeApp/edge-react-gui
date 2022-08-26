@@ -87,7 +87,7 @@ export async function prepareNewPushEvents(
   return pushEvents
 }
 
-export async function checkPushEvents(context: ExecutionContext, eventIds: string[]): Promise<boolean> {
+export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {
   const { account, clientId } = context
   const { rootLoginId } = account
   const requestBody: PushRequestBody = {
@@ -98,9 +98,7 @@ export async function checkPushEvents(context: ExecutionContext, eventIds: strin
 
   const response = await fetch(`${pushServerUri}/v2/login`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: wasPushRequestBody(requestBody)
   })
 
@@ -115,14 +113,13 @@ export async function checkPushEvents(context: ExecutionContext, eventIds: strin
     {}
   )
 
-  const isEffective = eventIds.every(eventId => {
-    const status: PushEventStatus = eventStatusMap[eventId]
-    const pushEventState: PushEventState = status.state
-    if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
-      throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
-    }
-    return status != null && pushEventState === 'triggered'
-  })
+  const status: PushEventStatus = eventStatusMap[eventId]
+  const pushEventState: PushEventState = status.state
+  if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
+    throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
+  }
+
+  const isEffective = status != null && pushEventState === 'triggered'
 
   return isEffective
 }
@@ -224,11 +221,8 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     case 'par': {
       return
     }
-    case 'push-event': {
-      return
-    }
     // Would this cause infinite recursion? We may never want to add conversion support for this.
-    case 'push-events': {
+    case 'push-event': {
       return
     }
     default: {

@@ -122,10 +122,6 @@ export type PushEventEffect = {
   type: 'push-event',
   eventId: string
 }
-export type PushEventsEffect = {
-  type: 'push-events',
-  eventIds: string[]
-}
 export type PriceLevelEffect = {
   type: 'price-level',
   currencyPair: string,
@@ -143,7 +139,7 @@ export type DoneEffect = {
   error?: Error
 }
 
-export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PushEventsEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
+export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
 
 //
 // Action Program
