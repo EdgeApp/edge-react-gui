@@ -3,6 +3,7 @@ import * as React from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import { createWallet } from '../../../actions/CreateWalletActions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
@@ -15,7 +16,7 @@ import { type NavigationProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { type FlatListItem } from '../../../types/types'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getCurrencyInfos, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { translateError } from '../../../util/translateError'
 import { Card } from '../../cards/Card'
@@ -45,7 +46,7 @@ export const LoanDashboardScene = (props: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
   const wallets = useWatch(account, 'currencyWallets')
 
-  const hardWalletPluginId = 'ethereum'
+  const hardWalletPluginId = 'polygon'
   const iconUri = getCurrencyIconUris(
     hardWalletPluginId,
     guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: hardWalletPluginId }).tokenId
@@ -82,38 +83,46 @@ export const LoanDashboardScene = (props: Props) => {
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
-  const handleAddLoan = useHandler(() => {
-    Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: 'ethereum' }]} showCreateWallet />
-    )).then(({ walletId }) => {
-      if (walletId != null) {
-        const selectedWallet = wallets[walletId]
+  const handleAddLoan = useHandler(async () => {
+    let newLoanWallet
+    const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === hardWalletPluginId)
 
-        if (borrowInfos != null) {
-          const existingBorrowInfo = borrowInfos.find(borrowInfo => borrowInfo.borrowEngine.currencyWallet.id === walletId)
-          if (existingBorrowInfo != null) {
-            navigation.navigate('loanDetails', { borrowEngine: existingBorrowInfo.borrowEngine, borrowPlugin: existingBorrowInfo.borrowPlugin })
-            return
+    if (hardPluginWalletIds.length > 1)
+      // Only show the wallet picker if the user owns more than one polygon wallet.
+      Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: hardWalletPluginId }]} />).then(
+        ({ walletId }) => {
+          if (walletId != null) {
+            newLoanWallet = wallets[walletId]
           }
         }
+      )
+    else if (hardPluginWalletIds.length === 1) {
+      // If the user owns one polygon wallet, auto-select that wallet for the loan creation
+      newLoanWallet = wallets[hardPluginWalletIds[0]]
+    } else {
+      // If the user owns no polygon wallets, auto-create one
+      const hardCurrencyInfo = getCurrencyInfos(account).find(currencyInfo => currencyInfo.pluginId === hardWalletPluginId)
+      if (hardCurrencyInfo == null) throw new Error(`Could not auto-create ${hardWalletPluginId} wallet`)
+      newLoanWallet = await createWallet(account, { walletName: `AAVE ${hardCurrencyInfo.displayName}`, walletType: hardCurrencyInfo.walletType })
+    }
 
-        setIsNewLoanLoading(true)
-
-        const selectedWalletPluginId = selectedWallet.currencyInfo.pluginId
-        const newBorrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === selectedWalletPluginId)
-        if (newBorrowPlugin == null) throw new Error('Unable to find compatible borrow plugin for ' + selectedWalletPluginId)
-        newBorrowPlugin
-          .makeBorrowEngine(selectedWallet)
-          .then(newBorrowEngine => {
-            setIsNewLoanLoading(false)
-            navigation.navigate('loanCreate', { borrowEngine: newBorrowEngine, borrowPlugin: newBorrowPlugin })
-          })
-          .catch(err => {
-            redText(err.message)
-          })
-          .finally(() => setIsNewLoanLoading(false))
-      }
-    })
+    if (newLoanWallet != null) {
+      // Initialize new loan with the wallet from any of the above sources
+      setIsNewLoanLoading(true)
+      const newLoanWalletPluginId = newLoanWallet.currencyInfo.pluginId
+      const newBorrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === newLoanWalletPluginId)
+      if (newBorrowPlugin == null) throw new Error('Unable to find compatible borrow plugin for ' + newLoanWalletPluginId)
+      newBorrowPlugin
+        .makeBorrowEngine(newLoanWallet)
+        .then(newBorrowEngine => {
+          setIsNewLoanLoading(false)
+          navigation.navigate('loanCreate', { borrowEngine: newBorrowEngine, borrowPlugin: newBorrowPlugin })
+        })
+        .catch(err => {
+          redText(err.message)
+        })
+        .finally(() => setIsNewLoanLoading(false))
+    }
   })
 
   const renderLoanCard = useHandler((item: FlatListItem<TempBorrowInfo>) => {

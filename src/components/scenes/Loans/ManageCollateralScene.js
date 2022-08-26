@@ -6,6 +6,7 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants.js'
+import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram.js'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { scheduleActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
@@ -16,7 +17,6 @@ import type { ApprovableAction, BorrowEngine } from '../../../plugins/borrow-plu
 import { useMemo, useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
-import { makeActionProgram } from '../../../util/ActionProgramUtils'
 import { zeroString } from '../../../util/utils.js'
 import { FlipInputTile } from '../../cards/FlipInputTile.js'
 import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents.js'
@@ -28,7 +28,12 @@ import { InterestRateChangeTile } from '../../tiles/InterestRateChangeTile.js'
 import { LoanToValueTile } from '../../tiles/LoanToValueTile.js'
 import { FormScene } from '../FormScene.js'
 
-const WBTC = { pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599', currencyCode: 'WBTC' }
+// TODO: Integrate future changes to incorporate token contract addresses into the borrow plugin's domain
+const collateralTokenMap = {
+  ethereum: [{ pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599', currencyCode: 'WBTC' }],
+  kovan: [{ pluginId: 'kovan', tokenId: 'd1b98b6607330172f1d991521145a22bce793277', currencyCode: 'WBTC' }],
+  polygon: [{ pluginId: 'polygon', tokenId: '1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', currencyCode: 'WBTC' }]
+}
 
 type ManageCollateralRequest = {
   tokenId?: string,
@@ -78,11 +83,11 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     navigation
   } = props
 
-  const { currencyWallet } = borrowEngine
+  const { currencyWallet: borrowEngineWallet } = borrowEngine
   const {
     currencyConfig: { allTokens },
     currencyInfo
-  } = currencyWallet
+  } = borrowEngineWallet
   const { pluginId } = currencyInfo
 
   // State
@@ -91,20 +96,21 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const wallets = useWatch(account, 'currencyWallets')
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType, currencyWallet.id)
+  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
   if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
 
   // Flip input selected wallet
-  const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(currencyWallet)
+  const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
   const [selectedTokenId, setSelectedTokenId] = useState<string | void>(defaultTokenId)
   const selectedWalletName = useWatch(selectedWallet, 'name') ?? ''
-  const { currencyCode: selectedWalletCurrencyCode } = selectedTokenId == null ? currencyInfo : allTokens[selectedTokenId]
+  const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? currencyInfo : allTokens[selectedTokenId]
   const hasMaxSpend = getSpecialCurrencyInfo(pluginId).noMaxSpend !== true
 
   // Borrow engine stuff
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
   const [actionNativeAmount, setActionNativeAmount] = useState('0')
   const [newDebtApr, setNewDebtApr] = useState(0)
+  const collateralTokens = collateralTokenMap[borrowEngineWallet.currencyInfo.pluginId]
 
   const [actionOp, setactionOp] = useState()
   useAsyncEffect(async () => {
@@ -160,12 +166,12 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       setFirstLaunch(false)
       return
     }
-
+    const spendAddress = collateralTokens.find(collateralToken => collateralToken.currencyCode === selectedCurrencyCode)
     const spendInfo = {
-      currencyCode: selectedWalletCurrencyCode,
+      currencyCode: selectedCurrencyCode,
       spendTargets: [
         {
-          publicAddress: `0x${WBTC.tokenId}` // TODO: replace with aave contract? Just needed a contract address here
+          publicAddress: `0x${spendAddress?.tokenId}` // TODO: replace with aave contract? Just needed a contract address here
         }
       ]
     }
@@ -178,7 +184,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   })
 
   const showWalletPicker = useHandler(() => {
-    const allowedAssets = [WBTC]
+    const allowedAssets = collateralTokens
     Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_src_wallet} showCreateWallet={false} allowedAssets={allowedAssets} />
     )).then(({ walletId, currencyCode, tokenId }: WalletListResult) => {
@@ -221,8 +227,8 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   }, [handleAmountChanged, hasMaxSpend, onMaxSpend, selectedTokenId, selectedWallet, selectedWalletName, showWalletPicker])
 
   const renderExchangeRateTile = useMemo(() => {
-    return showExchangeRateTile ? <ExchangeRateTile wallet={currencyWallet} tokenId={selectedTokenId} key="exchangeRate" /> : null
-  }, [currencyWallet, selectedTokenId, showExchangeRateTile])
+    return showExchangeRateTile ? <ExchangeRateTile wallet={borrowEngineWallet} tokenId={selectedTokenId} key="exchangeRate" /> : null
+  }, [borrowEngineWallet, selectedTokenId, showExchangeRateTile])
 
   const renderNewAprCard = useMemo(() => {
     return showNewDebtAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null
@@ -230,33 +236,33 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   const renderTotalDebtTile = useMemo(() => {
     return showTotalDebtTile ? (
-      <DebtAmountTile title={s.strings.loan_current_principle} wallet={currencyWallet} debts={borrowEngine.debts} key="totalDebt" />
+      <DebtAmountTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debts={borrowEngine.debts} key="totalDebt" />
     ) : null
-  }, [currencyWallet, borrowEngine, showTotalDebtTile])
+  }, [borrowEngineWallet, borrowEngine, showTotalDebtTile])
 
   const renderNewDebtTile = useMemo(() => {
     const multiplier = amountChange === 'increase' ? '1' : '-1'
     const newDebt = { nativeAmount: mul(actionNativeAmount, multiplier), tokenId: selectedTokenId, apr: 0 } // APR is only present to appease Flow. It does not mean anything.
     return showNewDebtTile ? (
-      <DebtAmountTile title={s.strings.loan_new_principle} wallet={currencyWallet} debts={[...borrowEngine.debts, newDebt]} key="newDebt" />
+      <DebtAmountTile title={s.strings.loan_new_principle} wallet={borrowEngineWallet} debts={[...borrowEngine.debts, newDebt]} key="newDebt" />
     ) : null
-  }, [amountChange, actionNativeAmount, selectedTokenId, showNewDebtTile, currencyWallet, borrowEngine.debts])
+  }, [amountChange, actionNativeAmount, selectedTokenId, showNewDebtTile, borrowEngineWallet, borrowEngine.debts])
 
   const renderTotalCollateralTile = useMemo(() => {
     return showTotalCollateralTile ? (
       <CollateralAmountTile
         title={s.strings.loan_total_collateral_value}
-        wallet={currencyWallet}
+        wallet={borrowEngineWallet}
         collaterals={borrowEngine.collaterals}
         key="totalcollateral"
       />
     ) : null
-  }, [currencyWallet, borrowEngine, showTotalCollateralTile])
+  }, [borrowEngineWallet, borrowEngine, showTotalCollateralTile])
 
   const renderFeeTile = useMemo(() => {
     const nativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
-    return <NetworkFeeTile wallet={currencyWallet} nativeAmount={nativeAmount} key="fee" />
-  }, [currencyWallet, approvalAction])
+    return <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={nativeAmount} key="fee" />
+  }, [borrowEngineWallet, approvalAction])
 
   const renderInterestRateChangeTile = useMemo(() => {
     const newDebt = { nativeAmount: actionNativeAmount, tokenId: selectedTokenId, apr: newDebtApr } // APR is only present to appease Flow. It does not mean anything.
