@@ -4,12 +4,11 @@ import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { createWallet } from '../../../actions/CreateWalletActions'
-import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { type TempBorrowInfo, filterActiveBorrowInfos, getAaveBorrowInfos } from '../../../plugins/helpers/getAaveBorrowPlugins'
 import { useEffect, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp } from '../../../types/routerTypes'
@@ -18,7 +17,6 @@ import { type FlatListItem } from '../../../types/types'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getCurrencyInfos, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
-import { translateError } from '../../../util/translateError'
 import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -26,7 +24,6 @@ import { WalletListModal } from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
-import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
@@ -44,6 +41,8 @@ export const LoanDashboardScene = (props: Props) => {
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+
   const wallets = useWatch(account, 'currencyWallets')
 
   const hardWalletPluginId = 'polygon'
@@ -52,23 +51,14 @@ export const LoanDashboardScene = (props: Props) => {
     guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: hardWalletPluginId }).tokenId
   ).symbolImage
 
+  // Auto-Refresh
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
-
-  // Borrow Info & Auto-Refresh
   const [timeoutId, setTimeoutId] = useState()
   const [resetTrigger, setResetTrigger] = useState(false)
-  const [borrowInfos, borrowInfosError] = useAsyncValue(async () => {
-    const retVal = isWalletsLoaded
-      ? await getAaveBorrowInfos(borrowPlugins, account).then(biRes => {
-          return filterActiveBorrowInfos(biRes)
-        })
-      : null
-    return retVal
-  }, [account, isWalletsLoaded, resetTrigger])
 
   useEffect(() => {
     // Wait for the first load after scene mounting before starting the refresh timer
-    if (borrowInfos == null && borrowInfosError == null) return
+    if (loanAccounts == null) return
 
     // Clear previous timeout, setup a new one
     if (timeoutId != null) clearTimeout(timeoutId)
@@ -78,7 +68,7 @@ export const LoanDashboardScene = (props: Props) => {
       }, 10000)
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [borrowInfos, borrowInfosError])
+  }, [loanAccounts])
 
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
 
@@ -125,12 +115,15 @@ export const LoanDashboardScene = (props: Props) => {
     }
   })
 
-  const renderLoanCard = useHandler((item: FlatListItem<TempBorrowInfo>) => {
-    const borrowInfo: TempBorrowInfo = item.item
+  const renderLoanCard = useHandler((item: FlatListItem<string>) => {
+    const loanAccount: LoanAccount = loanAccounts[item.item]
+    const borrowEngine = loanAccount.borrowEngine
     const handleLoanPress = () => {
-      navigation.navigate('loanDetails', { borrowEngine: borrowInfo.borrowEngine, borrowPlugin: borrowInfo.borrowPlugin })
+      navigation.navigate('loanDetails', { borrowEngine, borrowPlugin: loanAccount.borrowPlugin })
     }
-    return <LoanSummaryCard onPress={handleLoanPress} borrowEngine={borrowInfo.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} />
+    return (
+      <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} key={loanAccount.id} />
+    )
   })
 
   const footer = isNewLoanLoading ? (
@@ -145,15 +138,7 @@ export const LoanDashboardScene = (props: Props) => {
     </TouchableOpacity>
   )
 
-  if (borrowInfosError != null)
-    return (
-      <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader underline title={s.strings.loan_dashboard_title} />
-        <Alert title={s.strings.loan_error_title} type="error" message={translateError(borrowInfosError)} />
-      </SceneWrapper>
-    )
-
-  if (borrowInfos == null) {
+  if (loanAccounts == null || !isWalletsLoaded) {
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <SceneHeader underline title={s.strings.loan_dashboard_title} />
@@ -167,12 +152,12 @@ export const LoanDashboardScene = (props: Props) => {
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
       <FlatList
-        data={borrowInfos}
+        data={Object.keys(loanAccounts)}
         keyboardShouldPersistTaps="handled"
         renderItem={renderLoanCard}
         style={margin}
         ListFooterComponent={footer}
-        keyExtractor={(borrowInfo: TempBorrowInfo) => borrowInfo.borrowEngine.currencyWallet.id ?? '0'}
+        keyExtractor={(loanAccount: LoanAccount) => (loanAccount != null ? loanAccount.id : '0')}
       />
     </SceneWrapper>
   )
