@@ -1,23 +1,24 @@
 // @flow
 
 import { type EdgeAccount } from 'edge-core-js'
-import { getUniqueId } from 'react-native-device-info'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
 import { mockActionProgram } from '../../controllers/action-queue/mock'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime'
-import { type ActionQueueMap } from '../../controllers/action-queue/types'
+import { type ActionQueueMap, type ExecutionContext } from '../../controllers/action-queue/types'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useRef } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 
-export const ActionQueue = () => {
-  const deviceId = getUniqueId()
+export const ActionQueueService = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
+  const clientId: string = useSelector(state => state.core.context.clientId)
   const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const executingRef = useRef<{ [programId: string]: boolean }>({})
+
+  const executionContext: ExecutionContext = { account, clientId }
 
   //
   // Initialization
@@ -25,7 +26,7 @@ export const ActionQueue = () => {
 
   useAsyncEffect(async () => {
     if (account?.dataStore != null) {
-      const store = makeActionQueueStore(account, deviceId)
+      const store = makeActionQueueStore(account, clientId)
       const queue = await store.getActionQueueMap()
       dispatch({
         type: 'ACTION_QUEUE/LOAD_QUEUE',
@@ -42,11 +43,7 @@ export const ActionQueue = () => {
     if (queue != null) {
       const executing = executingRef.current
       const promises = Object.keys(queue)
-        .filter(
-          programId =>
-            // Ignore running programs and programs not assigned to this device
-            !executing[programId] && queue[programId].state.deviceId === deviceId
-        )
+        .filter(programId => !executing[programId] && queue[programId].state.clientId === clientId)
         .map(async programId => {
           // Set program to running
           executing[programId] = true
@@ -60,7 +57,7 @@ export const ActionQueue = () => {
             return
           }
 
-          const { nextState } = await executeActionProgram(account, program, state).catch((error: Error) => {
+          const { nextState } = await executeActionProgram(executionContext, program, state).catch((error: Error) => {
             console.warn(new Error('Action Program Exception: ' + error.message))
             console.error(error)
             return {
