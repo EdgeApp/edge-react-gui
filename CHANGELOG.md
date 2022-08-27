@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 2.20.2 (2022-08-26)
+
+- Update MyMonero SDK to fix spending after V16 hard fork
+- Fix detection of incoming transactions from taproot addresses
+
 ## 2.20.1 (2022-08-22)
 
 - Disable swaps for Monero and allow dynamic disabling of swaps for any asset
