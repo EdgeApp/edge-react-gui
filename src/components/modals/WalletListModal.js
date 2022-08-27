@@ -39,6 +39,7 @@ type Props = {|
   headerTitle: string,
   showWithdrawToBank?: boolean,
   showCreateWallet?: boolean,
+  createWalletId?: string,
 
   // Deprecated. Use `allowedAssets` and `excludeAssets` instead.
   // Valid formats include "ETH", "REP", or "ETH-REP",
@@ -68,6 +69,7 @@ export function WalletListModal(props: Props) {
     headerTitle,
     showWithdrawToBank = false,
     showCreateWallet,
+    createWalletId,
 
     // Deprecated:
     allowedCurrencyCodes,
@@ -141,6 +143,7 @@ export function WalletListModal(props: Props) {
         searching={searching}
         searchText={searchText}
         showCreateWallet={showCreateWallet}
+        createWalletId={createWalletId}
         onPress={handleWalletListPress}
       />
       <ModalCloseArrow onPress={handleCancel} />

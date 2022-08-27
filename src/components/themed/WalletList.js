@@ -32,6 +32,7 @@ type Props = {|
   searching: boolean,
   searchText: string,
   showCreateWallet?: boolean,
+  createWalletId?: string,
 
   // Callbacks:
   onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
@@ -65,6 +66,7 @@ export function WalletList(props: Props) {
     searching,
     searchText,
     showCreateWallet,
+    createWalletId,
 
     // Callbacks:
     onPress
@@ -229,7 +231,16 @@ export function WalletList(props: Props) {
     if (item.item.walletId == null) {
       const createItem: WalletCreateItem = item.item
       const { currencyCode, displayName, pluginId, walletType } = createItem
-      return <WalletListCreateRow currencyCode={currencyCode} currencyName={displayName} pluginId={pluginId} walletType={walletType} onPress={handlePress} />
+      return (
+        <WalletListCreateRow
+          currencyCode={currencyCode}
+          currencyName={displayName}
+          pluginId={pluginId}
+          walletType={walletType}
+          onPress={handlePress}
+          createWalletId={createWalletId}
+        />
+      )
     }
 
     const walletItem: WalletListItem = item.item
