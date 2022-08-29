@@ -5,9 +5,9 @@ import { navigateDisklet } from 'disklet'
 import { type EdgeAccount } from 'edge-core-js'
 
 import ENV from '../../../env'
-import { type BorrowActionId } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
+import { type LoanProgramEdge, type LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
 import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from './types'
 
@@ -110,7 +110,18 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
   return instance
 }
 
-export const useRunningActionQueueId = (borrowActionId: BorrowActionId, walletId: string) => {
-  const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  return Object.keys(actionQueue).find(programId => programId.includes(borrowActionId) && programId.includes(walletId))
+export const useRunningActionQueueId = (programType: LoanProgramType, walletId: string): string | void => {
+  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  const loanAccount = useSelector(state => state.loanManager.loanAccounts[walletId])
+  if (loanAccount == null) return
+
+  const programEdge = loanAccount.programEdges.find((programEdge: LoanProgramEdge) => {
+    if (programEdge.programType === programType) {
+      const actionQueueItem = actionQueueMap[programEdge.programId]
+      return actionQueueItem != null && actionQueueItem.state?.effect !== 'done'
+    }
+    return false
+  })
+
+  return programEdge?.programId
 }
