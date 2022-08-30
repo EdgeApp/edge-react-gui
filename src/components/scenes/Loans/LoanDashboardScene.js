@@ -72,9 +72,9 @@ export const LoanDashboardScene = (props: Props) => {
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
+  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === hardWalletPluginId)
   const handleAddLoan = useHandler(async () => {
     let newLoanWallet
-    const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === hardWalletPluginId)
 
     if (hardPluginWalletIds.length > 1)
       // Only show the wallet picker if the user owns more than one polygon wallet.
@@ -130,12 +130,14 @@ export const LoanDashboardScene = (props: Props) => {
     <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
       <FillLoader />
     </Card>
-  ) : (
+  ) : // Don't show the "Add Loan" button if all the user's wallets have associated LoanAccounts.
+  hardPluginWalletIds.length === 0 ||
+    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null) ? (
     <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
       <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
       <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
     </TouchableOpacity>
-  )
+  ) : null
 
   if (!isWalletsLoaded) {
     return (
