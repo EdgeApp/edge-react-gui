@@ -5,6 +5,7 @@ import { Image, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { Card } from '../../../components/cards/Card.js'
 import { SceneWrapper } from '../../../components/common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../../../components/services/ThemeContext.js'
 import { MainButton } from '../../../components/themed/MainButton.js'
@@ -147,15 +148,30 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
           />
         </View>
         {statusTextContent != null ? <Text style={statusTextStyle}>{statusTextContent}</Text> : null}
-        <MainButton label={s.strings.string_next_capitalized} marginRem={[2, 0]} type="secondary" onPress={handleSubmit} />
         {poweredBy != null ? (
-          <TouchableOpacity style={styles.poweredByContainer} onPress={poweredBy.poweredByOnClick}>
-            <Text style={styles.poweredByText}>{s.strings.plugin_powered_by + ' '}</Text>
-            <Image style={styles.poweredByIcon} source={poweredByIconPath} />
-            <Text style={styles.poweredByText}>{' ' + poweredBy.poweredByText}</Text>
-            <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity onPress={poweredBy.poweredByOnClick}>
+              <Card paddingRem={0.5}>
+                <View style={styles.poweredByContainer} onPress={poweredBy.poweredByOnClick}>
+                  <Image style={styles.poweredByIcon} source={poweredByIconPath} />
+
+                  <View style={styles.poweredByContainerColumn}>
+                    <View style={styles.poweredByContainerRow}>
+                      <Text style={styles.poweredByText}>{s.strings.plugin_powered_by}</Text>
+                      <Text style={styles.poweredByText}>{' ' + poweredBy.poweredByText}</Text>
+                    </View>
+                    <View style={styles.poweredByContainerRow}>
+                      <Text style={styles.tapToChangeText}>{s.strings.tap_to_change_provider}</Text>
+                    </View>
+                  </View>
+
+                  <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
+                </View>
+              </Card>
+            </TouchableOpacity>
+          </View>
         ) : null}
+        <MainButton label={s.strings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
       </View>
     </SceneWrapper>
   )
@@ -165,6 +181,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  cardContainer: {
+    paddingTop: theme.rem(1),
+    paddingBottom: theme.rem(1),
     alignItems: 'center'
   },
   container: {
@@ -194,6 +215,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     includeFontPadding: false
   },
+  poweredByContainerRow: {
+    flexDirection: 'row'
+  },
+  poweredByContainerColumn: {
+    paddingHorizontal: theme.rem(0.5),
+    flexDirection: 'column'
+  },
   poweredByContainer: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -202,10 +230,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
+  tapToChangeText: {
+    fontSize: theme.rem(0.75),
+    color: theme.deactivatedText
+  },
   poweredByIcon: {
     aspectRatio: 1,
-    width: theme.rem(0.75),
-    height: theme.rem(0.75)
+    width: theme.rem(2),
+    height: theme.rem(2)
   },
   icon: {
     height: theme.rem(1.5),
