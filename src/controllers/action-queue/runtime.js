@@ -2,6 +2,7 @@
 
 import { add, gte, lte } from 'biggystring'
 
+import ENV from '../../../env'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { account } from '../../reducers/AccountReducer'
@@ -27,7 +28,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   const { effect } = state
 
   // Dry Run
-  if (effect != null && (await effectCanBeATrigger(context, effect))) {
+  if (ENV.ACTION_QUEUE?.enableDryrun && effect != null && (await effectCanBeATrigger(context, effect))) {
     try {
       const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
 
