@@ -5,7 +5,6 @@ import { add, gte, lte } from 'biggystring'
 import ENV from '../../../env'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
-import { account } from '../../reducers/AccountReducer'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
@@ -130,6 +129,7 @@ export async function dryrunActionProgram(
 }
 
 async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<{ isEffective: boolean, delay: number }> {
+  const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
