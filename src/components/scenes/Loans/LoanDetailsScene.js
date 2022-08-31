@@ -3,23 +3,29 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../../assets/vector'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
+import { type ActionDisplayInfo } from '../../../controllers/action-queue/types'
+import { type LoanProgramEdge } from '../../../controllers/loan-manager/store'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useRefresher } from '../../../hooks/useRefresher'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
-import { useCallback } from '../../../types/reactHooks'
+import { useCallback, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
+import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -42,6 +48,8 @@ export const LoanDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
+  const actionQueueMap = useSelector(state => state.actionQueue.queue)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { route, navigation } = props
@@ -62,6 +70,24 @@ export const LoanDetailsScene = (props: Props) => {
   // $FlowFixMe
   const debtTotal = useFiatTotal(wallet, debts)
   const availableEquity = sub(collateralTotal, debtTotal)
+
+  // Running action program display
+  const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
+    const actionQueueItem = actionQueueMap[programEdge.programId]
+    return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
+  })
+  const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
+  const [runningProgramMessage, setRunningProgramMessage] = useState(null)
+
+  useAsyncEffect(async () => {
+    if (runningActionQueueItem != null) {
+      const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
+      const activeStep = displayInfo.steps.find(step => step.status === 'active')
+      setRunningProgramMessage(activeStep != null ? activeStep.title : null)
+    } else {
+      setRunningProgramMessage(null)
+    }
+  }, [account, runningActionQueueItem])
 
   const summaryDetails = [
     { label: s.strings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
@@ -90,11 +116,32 @@ export const LoanDetailsScene = (props: Props) => {
     navigation.navigate('loanClose', { loanAccountId })
   }
 
+  const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
+    // Go to LoanDetailsStatusScene or LoanCreateStatusScene, depending on the action program
+    const statusScene = programEdge.programType === 'loan-create' ? 'loanCreateStatus' : 'loanDetailsStatus'
+    navigation.navigate(statusScene, { actionQueueId: programEdge.programId })
+  }
+  const renderProgramStatusCard = () => {
+    if (runningProgramMessage != null && runningProgramEdge != null) {
+      return (
+        <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
+          <Card marginRem={[0, 0, 1]}>
+            <View style={styles.programStatusContainer}>
+              <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
+              <EdgeText>{runningProgramMessage}</EdgeText>
+            </View>
+          </Card>
+        </TouchableOpacity>
+      )
+    } else return null
+  }
+
   return (
     <SceneWrapper>
       <SceneHeader underline title={s.strings.loan_details_title} style={styles.sceneHeader} />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <Space around>
+          {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
             currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}
             currencyCode={fiatCurrencyCode}
