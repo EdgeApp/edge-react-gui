@@ -5,11 +5,13 @@ import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../../assets/vector'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useRefresher } from '../../../hooks/useRefresher'
+import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
@@ -108,7 +110,7 @@ export const LoanDetailsScene = (props: Props) => {
           {debts.map(debt => {
             const token = getToken(wallet, debt.tokenId)
             const currencyCode = token?.currencyCode ?? 'N/A'
-            const aprText = `APR: ${(debt.apr * 100).toFixed(0)}%`
+            const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
             return (
               <TappableCard key={debt.tokenId} marginRem={[0, 0, 1]} onPress={() => handleBreakdownPress(debt.tokenId)}>
                 <Space right>

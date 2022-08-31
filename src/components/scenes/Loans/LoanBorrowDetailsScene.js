@@ -6,6 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../../assets/vector'
 import { useRefresher } from '../../../hooks/useRefresher'
+import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
@@ -56,7 +57,7 @@ export const LoanBorrowDetailsScene = (props: Props) => {
   const borrowTotalValue = useCryptoTextSimple({ wallet, tokenId: selectedTokenId, nativeAmount: selectedNativeAmount })
   const loanFiatValue = useFiatTotal(wallet, [selectedDebt])
   const debtCurrencyCode = selectedDebtToken.currencyCode
-  const interestRate = `${(selectedApr * 100).toFixed(0)}%`
+  const interestRate = toPercentString(selectedApr)
 
   const handleBorrowMorePress = () => {
     navigation.navigate('loanBorrowMoreScene', { borrowEngine, borrowPlugin })
