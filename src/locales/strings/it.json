@@ -623,6 +623,7 @@
   "user_closed_modal_no_wallet": "Finestra chiusa dall'utente. Nessun portafoglio è stato selezionato",
   "plugin_service_provider_disclaimer": "I seguenti servizi non sono forniti da %1$s.\n\nPer problemi e feedback, si prega di contattare direttamente i rispettivi fornitori di servizi.",
   "plugin_powered_by": "Offerto da",
+  "tap_to_change_provider": "Tap to Change Provider",
   "send_from_wallet": "Invia da %s",
   "send_to_wallet": "Ricevi su %s",
   "exchange_from_wallet": "Scambia da %s",
