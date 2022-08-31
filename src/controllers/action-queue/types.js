@@ -104,7 +104,7 @@ export type ActionOp =
 export type SeqEffect = {
   type: 'seq',
   opIndex: number,
-  childEffect: ActionEffect | null // null is only for dryrun
+  childEffects: Array<ActionEffect | null> // null is only for dryrun
 }
 export type ParEffect = {
   type: 'par',
@@ -118,9 +118,9 @@ export type AddressBalanceEffect = {
   walletId: string,
   tokenId?: string
 }
-export type PushEventsEffect = {
-  type: 'push-events',
-  eventIds: string[]
+export type PushEventEffect = {
+  type: 'push-event',
+  eventId: string
 }
 export type PriceLevelEffect = {
   type: 'price-level',
@@ -139,7 +139,7 @@ export type DoneEffect = {
   error?: Error
 }
 
-export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventsEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
+export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
 
 //
 // Action Program

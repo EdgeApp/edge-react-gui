@@ -142,7 +142,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
 const asSeqEffect = asObject({
   type: asValue('seq'),
   opIndex: asNumber,
-  childEffect: asEither((raw: any) => asActionEffect(raw), asNull)
+  childEffects: asArray(asEither((raw: any) => asActionEffect(raw), asNull))
 })
 const asParEffect = asObject({
   type: asValue('par'),
@@ -156,9 +156,9 @@ const asAddressBalanceEffect = asObject({
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asPushEvents = asObject({
-  type: asValue('push-events'),
-  eventIds: asArray(asString)
+const asPushEventEffect = asObject({
+  type: asValue('push-event'),
+  eventId: asString
 })
 const asPriceLevelEffect = asObject({
   type: asValue('price-level'),
@@ -181,7 +181,7 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asParEffect,
   asAddressBalanceEffect,
   asTxConfsEffect,
-  asPushEvents,
+  asPushEventEffect,
   asPriceLevelEffect,
   asDoneEffect
 )

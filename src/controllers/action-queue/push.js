@@ -7,6 +7,7 @@ import ENV from '../../../env'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
+import { filterNull } from '../../util/safeFilters'
 import { type ActionEffect, type ActionProgram, type ExecutionContext, type ExecutionOutput } from './types'
 import { type LoginUpdatePayload, type PushRequestBody, asErrorResponse, asLoginPayload, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
 import { type BroadcastTx, type NewPushEvent, type PushEventState, type PushEventStatus, type PushMessage, type PushTrigger } from './types/pushTypes'
@@ -86,7 +87,7 @@ export async function prepareNewPushEvents(
   return pushEvents
 }
 
-export async function checkPushEvents(context: ExecutionContext, eventIds: string[]): Promise<boolean> {
+export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {
   const { account, clientId } = context
   const { rootLoginId } = account
   const requestBody: PushRequestBody = {
@@ -97,9 +98,7 @@ export async function checkPushEvents(context: ExecutionContext, eventIds: strin
 
   const response = await fetch(`${pushServerUri}/v2/login`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: wasPushRequestBody(requestBody)
   })
 
@@ -114,14 +113,13 @@ export async function checkPushEvents(context: ExecutionContext, eventIds: strin
     {}
   )
 
-  const isEffective = eventIds.every(eventId => {
-    const status: PushEventStatus = eventStatusMap[eventId]
-    const pushEventState: PushEventState = status.state
-    if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
-      throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
-    }
-    return status != null && pushEventState === 'triggered'
-  })
+  const status: PushEventStatus = eventStatusMap[eventId]
+  const pushEventState: PushEventState = status.state
+  if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
+    throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
+  }
+
+  const isEffective = status != null && pushEventState === 'triggered'
 
   return isEffective
 }
@@ -175,8 +173,12 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
 
   switch (effect.type) {
     case 'seq': {
-      if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-      return actionEffectToPushTrigger(context, effect.childEffect)
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Only check the child effect at the current opIndex
+      const childEffect = checkedEffects[effect.opIndex]
+      return actionEffectToPushTrigger(context, childEffect)
     }
     case 'address-balance': {
       const { address, walletId, tokenId, aboveAmount, belowAmount } = effect
@@ -219,8 +221,8 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     case 'par': {
       return
     }
-    case 'push-events': {
-      // Would this cause infinite recursion? We may never want to add conversion support for this.
+    // Would this cause infinite recursion? We may never want to add conversion support for this.
+    case 'push-event': {
       return
     }
     default: {
