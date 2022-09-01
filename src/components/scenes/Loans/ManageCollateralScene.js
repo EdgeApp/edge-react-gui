@@ -6,14 +6,15 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants.js'
-import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram.js'
+import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
-import { scheduleActionProgram } from '../../../controllers/action-queue/redux/actions'
+import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
+import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../../hooks/useHandler.js'
 import { useWatch } from '../../../hooks/useWatch.js'
 import s from '../../../locales/strings.js'
-import type { ApprovableAction, BorrowEngine } from '../../../plugins/borrow-plugins/types.js'
+import type { ApprovableAction } from '../../../plugins/borrow-plugins/types.js'
 import { useMemo, useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
@@ -47,9 +48,8 @@ type Props<T: $Keys<ParamList>> = {
   actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw',
   actionWallet: 'fromWallet' | 'toWallet',
   amountChange?: 'increase' | 'decrease',
-  borrowEngine: BorrowEngine,
-  borrowPluginId: string,
   defaultTokenId?: string,
+  loanAccount: LoanAccount,
   ltvType: 'debts' | 'collaterals',
 
   showExchangeRateTile?: boolean,
@@ -68,9 +68,8 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     actionOpType,
     actionWallet,
     amountChange = 'increase',
-    borrowEngine,
-    borrowPluginId,
     defaultTokenId,
+    loanAccount,
     ltvType,
 
     showExchangeRateTile,
@@ -83,12 +82,14 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     navigation
   } = props
 
-  const { currencyWallet: borrowEngineWallet } = borrowEngine
+  const { borrowEngine, borrowPlugin } = loanAccount
+  const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const {
     currencyConfig: { allTokens },
-    currencyInfo
+    currencyInfo: borrowEngineCurrencyInfo,
+    id: borrowEngineWalletId
   } = borrowEngineWallet
-  const { pluginId } = currencyInfo
+  const { pluginId: borrowEnginePluginId } = borrowEngineCurrencyInfo
 
   // State
   const account = useSelector(state => state.core.account)
@@ -96,21 +97,21 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const wallets = useWatch(account, 'currencyWallets')
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
+  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWalletId)
+  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
 
   // Flip input selected wallet
   const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
   const [selectedTokenId, setSelectedTokenId] = useState<string | void>(defaultTokenId)
   const selectedWalletName = useWatch(selectedWallet, 'name') ?? ''
-  const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? currencyInfo : allTokens[selectedTokenId]
-  const hasMaxSpend = getSpecialCurrencyInfo(pluginId).noMaxSpend !== true
+  const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? borrowEngineCurrencyInfo : allTokens[selectedTokenId]
+  const hasMaxSpend = getSpecialCurrencyInfo(borrowEnginePluginId).noMaxSpend !== true
 
   // Borrow engine stuff
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
   const [actionNativeAmount, setActionNativeAmount] = useState('0')
   const [newDebtApr, setNewDebtApr] = useState(0)
-  const collateralTokens = collateralTokenMap[borrowEngineWallet.currencyInfo.pluginId]
+  const collateralTokens = collateralTokenMap[borrowEnginePluginId]
 
   const [actionOp, setactionOp] = useState()
   useAsyncEffect(async () => {
@@ -121,7 +122,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         // $FlowFixMe
         {
           type: actionOpType,
-          borrowPluginId,
+          borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
           nativeAmount: actionNativeAmount,
           walletId: selectedWallet.id,
           tokenId: selectedTokenId
@@ -198,10 +199,10 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   const onSliderComplete = async (resetSlider: () => void) => {
     if (actionOp != null) {
-      const actionProgram = await makeActionProgram(actionOp, actionOpType)
+      const actionProgram = await makeActionProgram(actionOp)
       try {
-        await dispatch(scheduleActionProgram(actionProgram))
-        navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
+        await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
+        navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
       } catch (e) {
         showError(e)
       } finally {

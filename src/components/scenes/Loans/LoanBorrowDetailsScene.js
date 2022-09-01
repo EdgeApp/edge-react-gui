@@ -6,9 +6,11 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../../assets/vector'
 import { useRefresher } from '../../../hooks/useRefresher'
+import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
+import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
@@ -25,20 +27,23 @@ import { useFiatTotal } from './LoanDetailsScene'
 
 type Props = {
   route: RouteProp<'loanBorrowDetails'>,
-  navigation: NavigationProp<'loanDetails'>
+  navigation: NavigationProp<'loanBorrowDetails'>
 }
 
 export const LoanBorrowDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { route, navigation } = props
   const { params } = route
-  const { borrowPlugin } = params
+  const { loanAccountId } = route.params
+  const loanAccount = loanAccounts[loanAccountId]
+  const { borrowEngine: initBorrowEngine, borrowPlugin } = loanAccount
 
-  // Refreshing borrowEngine
-  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(params.borrowEngine.currencyWallet), [borrowPlugin, params.borrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, params.borrowEngine, 10000)
+  // Refreshing borrowEngine TODO: refactor common method
+  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
+  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
 
   const { currencyWallet: wallet } = borrowEngine
 
@@ -56,14 +61,14 @@ export const LoanBorrowDetailsScene = (props: Props) => {
   const borrowTotalValue = useCryptoTextSimple({ wallet, tokenId: selectedTokenId, nativeAmount: selectedNativeAmount })
   const loanFiatValue = useFiatTotal(wallet, [selectedDebt])
   const debtCurrencyCode = selectedDebtToken.currencyCode
-  const interestRate = `${(selectedApr * 100).toFixed(0)}%`
+  const interestRate = toPercentString(selectedApr)
 
   const handleBorrowMorePress = () => {
-    navigation.navigate('loanBorrowMoreScene', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanBorrowMoreScene', { loanAccountId })
   }
 
   const handleRepayPress = () => {
-    navigation.navigate('loanRepayScene', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanRepayScene', { loanAccountId })
   }
 
   return (

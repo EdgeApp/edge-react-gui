@@ -3,20 +3,25 @@
 import { add } from 'biggystring'
 import * as React from 'react'
 
-import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
-import { scheduleActionProgram } from '../../../controllers/action-queue/redux/actions'
+import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
+import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
+import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import s from '../../../locales/strings'
 import { type ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useMemo, useState } from '../../../types/reactHooks'
 import { useDispatch } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
-import { makeAaveBorrowAction, makeAaveDepositAction, makeActionProgram } from '../../../util/ActionProgramUtils'
+import { makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
+import { translateError } from '../../../util/translateError'
 import { NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
+import { FillLoader } from '../../progress-indicators/FillLoader'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
+import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { Tile } from '../../tiles/Tile'
 import { FormScene } from '../FormScene'
@@ -31,9 +36,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const { borrowPlugin, borrowEngine, destWallet, destTokenId, isDestBank, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
-  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId('loan-create', borrowEngineWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
+  const [loanAccount, loanAccountError] = useAsyncValue(() => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
   // Setup Borrow Engine transaction requests/actions
   const [depositApprovalAction, setDepositApprovalAction] = useState<ApprovableAction | null>(null)
@@ -86,7 +89,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ).reduce((accum, subActions) => accum.concat(subActions), [])
     }
 
-    const actionProgram = await makeActionProgram(actionOps, 'loan-create')
+    const actionProgram = await makeActionProgram(actionOps)
     setActionProgram(actionProgram)
 
     setDepositApprovalAction(await borrowEngine.deposit(depositRequest))
@@ -107,10 +110,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   }, [borrowApprovalAction, depositApprovalAction, borrowEngineWallet])
 
   const onSliderComplete = async (resetSlider: () => void) => {
-    if (actionProgram != null) {
+    if (actionProgram != null && loanAccount != null) {
       try {
-        await dispatch(scheduleActionProgram(actionProgram))
-        navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
+        await dispatch(createLoanAccount(loanAccount))
+        await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
+        navigation.navigate('loanCreateStatus', { actionQueueId: actionProgram.programId })
       } catch (e) {
         showError(e)
       } finally {
@@ -119,7 +123,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     }
   }
 
-  return (
+  if (loanAccountError != null) return <Alert title={s.strings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
+
+  return loanAccount == null ? (
+    <FillLoader />
+  ) : (
     <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={false} onSliderComplete={onSliderComplete}>
       <Tile type="static" title={s.strings.loan_amount_borrow}>
         <EdgeText>

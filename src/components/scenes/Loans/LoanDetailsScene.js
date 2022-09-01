@@ -3,21 +3,29 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../../assets/vector'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
+import { type ActionDisplayInfo } from '../../../controllers/action-queue/types'
+import { type LoanProgramEdge } from '../../../controllers/loan-manager/store'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useRefresher } from '../../../hooks/useRefresher'
+import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
-import { useCallback } from '../../../types/reactHooks'
+import { useCallback, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
+import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -40,13 +48,19 @@ export const LoanDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
+  const actionQueueMap = useSelector(state => state.actionQueue.queue)
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+
   const { route, navigation } = props
   const { params } = route
-  const { borrowPlugin } = params
+  const { loanAccountId } = params
+  const loanAccount = loanAccounts[loanAccountId]
+  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
 
-  // Refreshing borrowEngine
-  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(params.borrowEngine.currencyWallet), [borrowPlugin, params.borrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, params.borrowEngine, 10000)
+  // Refreshing borrowEngine TODO: refactor common method
+  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
+  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
 
   // Derive state from borrowEngine:
   const { collaterals, debts, currencyWallet: wallet, loanToValue } = borrowEngine
@@ -56,6 +70,24 @@ export const LoanDetailsScene = (props: Props) => {
   // $FlowFixMe
   const debtTotal = useFiatTotal(wallet, debts)
   const availableEquity = sub(collateralTotal, debtTotal)
+
+  // Running action program display
+  const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
+    const actionQueueItem = actionQueueMap[programEdge.programId]
+    return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
+  })
+  const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
+  const [runningProgramMessage, setRunningProgramMessage] = useState(null)
+
+  useAsyncEffect(async () => {
+    if (runningActionQueueItem != null) {
+      const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
+      const activeStep = displayInfo.steps.find(step => step.status === 'active')
+      setRunningProgramMessage(activeStep != null ? activeStep.title : null)
+    } else {
+      setRunningProgramMessage(null)
+    }
+  }, [account, runningActionQueueItem])
 
   const summaryDetails = [
     { label: s.strings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
@@ -72,27 +104,44 @@ export const LoanDetailsScene = (props: Props) => {
       return
     }
 
-    navigation.navigate('loanBorrowDetails', { borrowEngine, borrowPlugin, tokenId })
+    navigation.navigate('loanBorrowDetails', { loanAccountId, tokenId })
   }
   const handleAddCollateralPress = () => {
-    navigation.navigate('loanAddCollateralScene', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanAddCollateralScene', { loanAccountId })
   }
   const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanWithdrawCollateralScene', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanWithdrawCollateralScene', { loanAccountId })
   }
   const handleLoanClosePress = () => {
-    navigation.navigate('loanClose', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanClose', { loanAccountId })
+  }
+
+  const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
+    // Go to LoanDetailsStatusScene or LoanCreateStatusScene, depending on the action program
+    const statusScene = programEdge.programType === 'loan-create' ? 'loanCreateStatus' : 'loanDetailsStatus'
+    navigation.navigate(statusScene, { actionQueueId: programEdge.programId })
+  }
+  const renderProgramStatusCard = () => {
+    if (runningProgramMessage != null && runningProgramEdge != null) {
+      return (
+        <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
+          <Card marginRem={[0, 0, 1]}>
+            <View style={styles.programStatusContainer}>
+              <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
+              <EdgeText>{runningProgramMessage}</EdgeText>
+            </View>
+          </Card>
+        </TouchableOpacity>
+      )
+    } else return null
   }
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_details_title} style={styles.sceneHeader}>
-        <Space right>
-          <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-        </Space>
-      </SceneHeader>
+      <SceneHeader underline title={s.strings.loan_details_title} style={styles.sceneHeader} />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <Space around>
+          {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
             currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}
             currencyCode={fiatCurrencyCode}
@@ -108,7 +157,7 @@ export const LoanDetailsScene = (props: Props) => {
           {debts.map(debt => {
             const token = getToken(wallet, debt.tokenId)
             const currencyCode = token?.currencyCode ?? 'N/A'
-            const aprText = `APR: ${(debt.apr * 100).toFixed(0)}%`
+            const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
             return (
               <TappableCard key={debt.tokenId} marginRem={[0, 0, 1]} onPress={() => handleBreakdownPress(debt.tokenId)}>
                 <Space right>
@@ -160,7 +209,6 @@ const getStyles = cacheStyles(theme => {
       alignItems: 'center',
       marginTop: theme.rem(1)
     },
-
     actionIcon: {
       marginTop: theme.rem(-0.25),
       marginLeft: theme.rem(-0.25),
@@ -169,12 +217,18 @@ const getStyles = cacheStyles(theme => {
     actionLabel: {
       fontFamily: theme.fontFaceMedium
     },
-
+    activityIndicator: {
+      alignSelf: 'flex-start',
+      marginRight: theme.rem(0.5)
+    },
     breakdownText: {
       fontFamily: theme.fontFaceBold
     },
     breakdownSubText: {
       fontSize: theme.rem(0.75)
+    },
+    programStatusContainer: {
+      flexDirection: 'row'
     }
   }
 })

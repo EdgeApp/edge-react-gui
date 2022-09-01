@@ -55,11 +55,7 @@ export const LoanCreateScene = (props: Props) => {
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId('loan-create', beWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
-
-  if (debts.length > 0) {
-    // TODO: transition to "advanced" loan details scene
-  }
+  if (existingProgramId != null) navigation.navigate('loanCreateStatus', { actionQueueId: existingProgramId })
 
   // Wallet/Token Data
   const account = useSelector(state => state.core.account)
@@ -101,10 +97,10 @@ export const LoanCreateScene = (props: Props) => {
   const [apr, setApr] = useState()
   useEffect(() => {
     if (destTokenId != null) {
-      const destDebt = borrowEngine.debts.find(debt => debt.tokenId === destTokenId)
+      const destDebt = debts.find(debt => debt.tokenId === destTokenId)
       if (destDebt != null) setApr(destDebt.apr)
     }
-  }, [borrowEngine.debts, destTokenId])
+  }, [debts, destTokenId])
 
   // Hard-coded src/dest, if src/dest don't involve the wallet from the BorrowEngine
   const { tokenId: hardSrcTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: bePluginId }), [account, bePluginId])

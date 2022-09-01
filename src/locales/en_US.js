@@ -844,6 +844,7 @@ const strings = {
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
     "We're sorry but something went wrong. Please force close the app and reopen to continue using Edge.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem. \n\nNOTE: Do not uninstall the app before contacting Edge.",
+  error_unexpected_title: 'Unexpected Error',
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -944,6 +945,7 @@ const strings = {
   loan_new_loan: 'New Loan',
   loan_new_principle: 'New Principle',
   loan_remaining_principle: 'Remaining Principle',
+  loan_apr_s: 'APR: %1$s',
   loan_s_apr: '%1$s APR',
   loan_select_receiving_wallet: 'Please select a receiving wallet',
   loan_select_source_collateral: 'Please select a source of collateral',

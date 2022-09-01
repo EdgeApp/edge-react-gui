@@ -909,7 +909,15 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key="loanStatus"
+              key="loanCreateStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanDetailsStatus"
               component={withNavigation(ifLoggedIn(LoanStatusScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -966,6 +974,10 @@ export class MainComponent extends React.Component<Props> {
         Actions.popTo('fioAddressRegister')
         return true
       }
+    }
+    if (this.isCurrentScene('loanCreateStatus')) {
+      Actions.jump('loanDashboard')
+      return true
     }
     Actions.pop()
     return true
