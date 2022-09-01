@@ -13,6 +13,7 @@ import { useDispatch } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { makeAaveBorrowAction, makeAaveDepositAction, makeActionProgram } from '../../../util/ActionProgramUtils'
 import { NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
+import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
@@ -124,6 +125,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
         </EdgeText>
+      </Tile>
+      <Tile type="static" title={s.strings.loan_collateral_amount}>
+        <CryptoFiatAmountRow nativeAmount={nativeSrcAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={[0.25, 0, 0, 0]} />
       </Tile>
 
       <Tile type="static" title={s.strings.loan_collateral_source}>
