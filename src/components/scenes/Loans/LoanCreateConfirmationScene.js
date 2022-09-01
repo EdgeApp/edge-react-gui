@@ -93,9 +93,17 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   }, [destTokenId, nativeDestAmount, borrowEngine])
 
   const renderFeeTile = useMemo(() => {
-    if (depositApprovalAction == null || borrowApprovalAction == null) return
-    return <NetworkFeeTile wallet={srcWallet} nativeAmount={add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)} />
-  }, [borrowApprovalAction, depositApprovalAction, srcWallet])
+    return (
+      <NetworkFeeTile
+        wallet={borrowEngineWallet}
+        nativeAmount={
+          depositApprovalAction == null || borrowApprovalAction == null
+            ? '0'
+            : add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)
+        }
+      />
+    )
+  }, [borrowApprovalAction, depositApprovalAction, borrowEngineWallet])
 
   const onSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null) {
