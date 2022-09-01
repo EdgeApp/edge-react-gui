@@ -76,16 +76,13 @@ export const LoanDashboardScene = (props: Props) => {
   const handleAddLoan = useHandler(async () => {
     let newLoanWallet
 
-    if (hardPluginWalletIds.length > 1)
+    if (hardPluginWalletIds.length > 1) {
       // Only show the wallet picker if the user owns more than one polygon wallet.
-      Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: hardWalletPluginId }]} />).then(
-        ({ walletId }) => {
-          if (walletId != null) {
-            newLoanWallet = wallets[walletId]
-          }
-        }
-      )
-    else if (hardPluginWalletIds.length === 1) {
+      const { walletId: newWalletId } = await Airship.show(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: hardWalletPluginId }]} />
+      ))
+      newLoanWallet = newWalletId != null ? wallets[newWalletId] : null
+    } else if (hardPluginWalletIds.length === 1) {
       // If the user owns one polygon wallet, auto-select that wallet for the loan creation
       newLoanWallet = wallets[hardPluginWalletIds[0]]
     } else {
@@ -114,8 +111,8 @@ export const LoanDashboardScene = (props: Props) => {
     }
   })
 
-  const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
-    const loanAccount: LoanAccount = item.item
+  const renderLoanCard = useHandler((item: FlatListItem<string>) => {
+    const loanAccount: LoanAccount = loanAccounts[item.item]
 
     const handleLoanPress = () => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
