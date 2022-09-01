@@ -30,6 +30,7 @@ import { SceneHeader } from '../../themed/SceneHeader'
 type Props = {
   navigation: NavigationProp<'loanDashboard'>
 }
+const HARD_WALLET_PLUGIN_ID = 'polygon'
 
 export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
@@ -45,10 +46,9 @@ export const LoanDashboardScene = (props: Props) => {
 
   const wallets = useWatch(account, 'currencyWallets')
 
-  const hardWalletPluginId = 'polygon'
   const iconUri = getCurrencyIconUris(
-    hardWalletPluginId,
-    guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: hardWalletPluginId }).tokenId
+    HARD_WALLET_PLUGIN_ID,
+    guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: HARD_WALLET_PLUGIN_ID }).tokenId
   ).symbolImage
 
   // Auto-Refresh
@@ -72,14 +72,14 @@ export const LoanDashboardScene = (props: Props) => {
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
-  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === hardWalletPluginId)
+  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
   const handleAddLoan = useHandler(async () => {
     let newLoanWallet
 
     if (hardPluginWalletIds.length > 1) {
       // Only show the wallet picker if the user owns more than one polygon wallet.
       const { walletId: newWalletId } = await Airship.show(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: hardWalletPluginId }]} />
+        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: HARD_WALLET_PLUGIN_ID }]} />
       ))
       newLoanWallet = newWalletId != null ? wallets[newWalletId] : null
     } else if (hardPluginWalletIds.length === 1) {
@@ -87,8 +87,8 @@ export const LoanDashboardScene = (props: Props) => {
       newLoanWallet = wallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
-      const hardCurrencyInfo = getCurrencyInfos(account).find(currencyInfo => currencyInfo.pluginId === hardWalletPluginId)
-      if (hardCurrencyInfo == null) throw new Error(`Could not auto-create ${hardWalletPluginId} wallet`)
+      const hardCurrencyInfo = getCurrencyInfos(account).find(currencyInfo => currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
+      if (hardCurrencyInfo == null) throw new Error(`Could not auto-create ${HARD_WALLET_PLUGIN_ID} wallet`)
       newLoanWallet = await createWallet(account, { walletName: `AAVE ${hardCurrencyInfo.displayName}`, walletType: hardCurrencyInfo.walletType })
     }
 
@@ -111,8 +111,8 @@ export const LoanDashboardScene = (props: Props) => {
     }
   })
 
-  const renderLoanCard = useHandler((item: FlatListItem<string>) => {
-    const loanAccount: LoanAccount = loanAccounts[item.item]
+  const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
+    const loanAccount: LoanAccount = item.item
 
     const handleLoanPress = () => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
@@ -122,14 +122,16 @@ export const LoanDashboardScene = (props: Props) => {
     )
   })
 
+  const isCompatibleWalletsAvailable =
+    hardPluginWalletIds.length === 0 ||
+    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
+
   const footer = isNewLoanLoading ? (
     // Render a loading card in place of the "New Loan" button while initializing a new loan
     <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
       <FillLoader />
     </Card>
-  ) : // Don't show the "Add Loan" button if all the user's wallets have associated LoanAccounts.
-  hardPluginWalletIds.length === 0 ||
-    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null) ? (
+  ) : isCompatibleWalletsAvailable ? ( // Don't show the "Add Loan" button if all the user's wallets have associated LoanAccounts.
     <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
       <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
       <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
