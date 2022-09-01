@@ -833,7 +833,7 @@
   "loan_details_title": "Dettagli del prestito",
   "loan_enter_loan_amount_s": "Inserisci importo prestito (%1$s)",
   "loan_error_title": "Errore Imprevisto",
-  "loan_estimate_fee": "Commissione stimata",
+  "loan_estimate_fee": "Estimated Fee",
   "loan_exchange_rate": "Tasso di cambio",
   "loan_failed_loan": "Impossibile caricare i dati del prestito",
   "loan_fiat_value": "Valore in fiat",
