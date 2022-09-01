@@ -930,7 +930,7 @@ const strings = {
   loan_details_title: 'Loan Details',
   loan_enter_loan_amount_s: 'Enter Loan Amount (%1$s)',
   loan_error_title: 'Unexpected Error',
-  loan_estimate_fee: 'Estimate Fee',
+  loan_estimate_fee: 'Estimated Fee',
   loan_exchange_rate: 'Exchange Rate',
   loan_failed_loan: 'Failed to load loan data',
   loan_fiat_value: 'Fiat Value',
