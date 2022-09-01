@@ -18,6 +18,7 @@ import { translateError } from '../../../util/translateError'
 import { NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
+import { FillLoader } from '../../progress-indicators/FillLoader'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
 import { Alert } from '../../themed/Alert'
@@ -124,7 +125,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   if (loanAccountError != null) return <Alert title={s.strings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
 
-  return (
+  return loanAccount == null ? (
+    <FillLoader />
+  ) : (
     <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={false} onSliderComplete={onSliderComplete}>
       <Tile type="static" title={s.strings.loan_amount_borrow}>
         <EdgeText>
