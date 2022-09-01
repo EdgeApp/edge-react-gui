@@ -13,6 +13,7 @@ import { useDispatch } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { makeAaveBorrowAction, makeAaveDepositAction, makeActionProgram } from '../../../util/ActionProgramUtils'
 import { NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
+import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
@@ -93,9 +94,17 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   }, [destTokenId, nativeDestAmount, borrowEngine])
 
   const renderFeeTile = useMemo(() => {
-    if (depositApprovalAction == null || borrowApprovalAction == null) return
-    return <NetworkFeeTile wallet={srcWallet} nativeAmount={add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)} />
-  }, [borrowApprovalAction, depositApprovalAction, srcWallet])
+    return (
+      <NetworkFeeTile
+        wallet={borrowEngineWallet}
+        nativeAmount={
+          depositApprovalAction == null || borrowApprovalAction == null
+            ? '0'
+            : add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)
+        }
+      />
+    )
+  }, [borrowApprovalAction, depositApprovalAction, borrowEngineWallet])
 
   const onSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null) {
@@ -117,13 +126,16 @@ export const LoanCreateConfirmationScene = (props: Props) => {
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
         </EdgeText>
       </Tile>
+      <Tile type="static" title={s.strings.loan_collateral_amount}>
+        <CryptoFiatAmountRow nativeAmount={nativeSrcAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={[0.25, 0, 0, 0]} />
+      </Tile>
 
       <Tile type="static" title={s.strings.loan_collateral_source}>
-        <CurrencyRow tokenId={srcTokenId} wallet={srcWallet} />
+        <CurrencyRow tokenId={srcTokenId} wallet={srcWallet} marginRem={0} />
       </Tile>
 
       <Tile type="static" title={s.strings.loan_destination}>
-        <CurrencyRow tokenId={destTokenId} wallet={destWallet} />
+        <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
       </Tile>
 
       {renderFeeTile}

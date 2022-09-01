@@ -5,6 +5,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { memo } from '../../../types/reactHooks'
+import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -13,6 +14,7 @@ import { FiatText } from '../../text/FiatText.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 
 type Props = {|
+  marginRem?: number[] | number,
   nativeAmount: string,
   tokenId?: string,
   wallet: EdgeCurrencyWallet
@@ -23,14 +25,15 @@ type Props = {|
 // supports only an input amount of native fiat and a conversion to some token.
 // -----------------------------------------------------------------------------
 const CryptoFiatAmountRowComponent = (props: Props) => {
-  const { nativeAmount, tokenId, wallet } = props
+  const { marginRem, nativeAmount, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
   const { pluginId } = wallet.currencyInfo
 
   // Use nativeAmount in both fiat and crypto display fields because they properly handle any user/locale settings.
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, margin]}>
       <View style={styles.columnLeft}>
         <CryptoIcon sizeRem={1.5} tokenId={tokenId} pluginId={pluginId} hideSecondary />
         <EdgeText style={styles.text}>

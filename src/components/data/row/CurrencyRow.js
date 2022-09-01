@@ -7,6 +7,7 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance.js'
 import { useWalletName } from '../../../hooks/useWalletName.js'
 import { memo } from '../../../types/reactHooks.js'
 import { useSelector } from '../../../types/reactRedux.js'
+import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { CryptoText } from '../../text/CryptoText'
@@ -15,6 +16,7 @@ import { TickerText } from '../../text/TickerText.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 
 type Props = {|
+  marginRem?: number[] | number,
   showRate?: boolean,
   token?: EdgeToken,
   tokenId?: string,
@@ -25,9 +27,10 @@ type Props = {|
 // A view representing the data from a wallet, used for rows, cards, etc.
 // -----------------------------------------------------------------------------
 const CurrencyRowComponent = (props: Props) => {
-  const { showRate = false, token, tokenId, wallet } = props
+  const { marginRem, showRate = false, token, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
 
   // Currency code and wallet name for display:
   const allTokens = wallet.currencyConfig.allTokens
@@ -40,7 +43,7 @@ const CurrencyRowComponent = (props: Props) => {
   const balance = useWalletBalance(wallet, tokenId)
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, margin]}>
       <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
       <View style={styles.nameColumn}>
         <View style={styles.currencyRow}>

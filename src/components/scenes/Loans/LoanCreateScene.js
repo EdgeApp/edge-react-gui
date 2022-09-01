@@ -187,7 +187,7 @@ export const LoanCreateScene = (props: Props) => {
           <EdgeText style={disabled ? styles.textInitialDisabled : styles.textInitial}>{emptyLabel}</EdgeText>
         ) : (
           <View style={styles.currencyRow}>
-            <CurrencyRow tokenId={tokenId} wallet={wallet} />
+            <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
           </View>
         )}
       </TappableCard>
@@ -343,13 +343,13 @@ export const LoanCreateScene = (props: Props) => {
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_required}</EdgeText>
-          <Card marginRem={[0.5, 0.5, 0.5, 0.5]} paddingRem={1}>
+          <Card marginRem={[0.5, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
-              <EdgeText style={styles.textInitial}>
+              <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
               </EdgeText>
             ) : (
-              <CryptoFiatAmountRow nativeAmount={nativeRequiredCrypto} tokenId={srcTokenId} wallet={srcWallet} />
+              <CryptoFiatAmountRow nativeAmount={nativeRequiredCrypto} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
             )}
           </Card>
 
@@ -410,7 +410,7 @@ const getStyles = cacheStyles(theme => {
       alignSelf: 'flex-start',
       fontSize: theme.rem(0.75),
       fontFamily: theme.fontFaceMedium,
-      margin: theme.rem(0.5)
+      margin: theme.rem(1)
     },
     textInitialDisabled: {
       alignSelf: 'center',
