@@ -42,13 +42,17 @@ export const LoanDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+
   const { route, navigation } = props
   const { params } = route
-  const { borrowPlugin } = params
+  const { loanAccountId } = params
+  const loanAccount = loanAccounts[loanAccountId]
+  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
 
-  // Refreshing borrowEngine
-  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(params.borrowEngine.currencyWallet), [borrowPlugin, params.borrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, params.borrowEngine, 10000)
+  // Refreshing borrowEngine TODO: refactor common method
+  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
+  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
 
   // Derive state from borrowEngine:
   const { collaterals, debts, currencyWallet: wallet, loanToValue } = borrowEngine
@@ -74,25 +78,21 @@ export const LoanDetailsScene = (props: Props) => {
       return
     }
 
-    navigation.navigate('loanBorrowDetails', { borrowEngine, borrowPlugin, tokenId })
+    navigation.navigate('loanBorrowDetails', { loanAccountId, tokenId })
   }
   const handleAddCollateralPress = () => {
-    navigation.navigate('loanAddCollateralScene', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanAddCollateralScene', { loanAccountId })
   }
   const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanWithdrawCollateralScene', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanWithdrawCollateralScene', { loanAccountId })
   }
   const handleLoanClosePress = () => {
-    navigation.navigate('loanClose', { borrowEngine, borrowPlugin })
+    navigation.navigate('loanClose', { loanAccountId })
   }
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_details_title} style={styles.sceneHeader}>
-        <Space right>
-          <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-        </Space>
-      </SceneHeader>
+      <SceneHeader underline title={s.strings.loan_details_title} style={styles.sceneHeader} />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <Space around>
           <LoanDetailsSummaryCard
@@ -162,7 +162,6 @@ const getStyles = cacheStyles(theme => {
       alignItems: 'center',
       marginTop: theme.rem(1)
     },
-
     actionIcon: {
       marginTop: theme.rem(-0.25),
       marginLeft: theme.rem(-0.25),
@@ -171,12 +170,18 @@ const getStyles = cacheStyles(theme => {
     actionLabel: {
       fontFamily: theme.fontFaceMedium
     },
-
+    activityIndicator: {
+      alignSelf: 'flex-start',
+      marginRight: theme.rem(0.5)
+    },
     breakdownText: {
       fontFamily: theme.fontFaceBold
     },
     breakdownSubText: {
       fontSize: theme.rem(0.75)
+    },
+    programStatusContainer: {
+      flexDirection: 'row'
     }
   }
 })

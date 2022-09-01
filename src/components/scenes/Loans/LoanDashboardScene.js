@@ -58,7 +58,6 @@ export const LoanDashboardScene = (props: Props) => {
 
   useEffect(() => {
     // Wait for the first load after scene mounting before starting the refresh timer
-    if (loanAccounts == null) return
 
     // Clear previous timeout, setup a new one
     if (timeoutId != null) clearTimeout(timeoutId)
@@ -115,11 +114,11 @@ export const LoanDashboardScene = (props: Props) => {
     }
   })
 
-  const renderLoanCard = useHandler((item: FlatListItem<string>) => {
-    const loanAccount: LoanAccount = loanAccounts[item.item]
-    const borrowEngine = loanAccount.borrowEngine
+  const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
+    const loanAccount: LoanAccount = item.item
+
     const handleLoanPress = () => {
-      navigation.navigate('loanDetails', { borrowEngine, borrowPlugin: loanAccount.borrowPlugin })
+      navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
     }
     return (
       <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} key={loanAccount.id} />
@@ -138,7 +137,7 @@ export const LoanDashboardScene = (props: Props) => {
     </TouchableOpacity>
   )
 
-  if (loanAccounts == null || !isWalletsLoaded) {
+  if (!isWalletsLoaded) {
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <SceneHeader underline title={s.strings.loan_dashboard_title} />
@@ -152,12 +151,12 @@ export const LoanDashboardScene = (props: Props) => {
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
       <FlatList
-        data={Object.keys(loanAccounts)}
+        data={Object.values(loanAccounts)}
         keyboardShouldPersistTaps="handled"
         renderItem={renderLoanCard}
         style={margin}
         ListFooterComponent={footer}
-        keyExtractor={(loanAccount: LoanAccount) => (loanAccount != null ? loanAccount.id : '0')}
+        keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
       />
     </SceneWrapper>
   )

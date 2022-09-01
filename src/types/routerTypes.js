@@ -195,8 +195,7 @@ export type ParamList = {
   |},
   loanDashboard: void,
   loanDetails: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin
+    loanAccountId: string
   |},
   loanCreate: {|
     borrowEngine: BorrowEngine,
@@ -214,31 +213,31 @@ export type ParamList = {
     srcWallet: EdgeCurrencyWallet
   |},
   loanBorrowDetails: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin,
+    loanAccountId: string,
     tokenId: string
   |},
   loanClose: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin
+    loanAccountId: string
   |},
   loanAddCollateralScene: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin
+    loanAccountId: string
   |},
   loanBorrowMoreScene: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin
+    loanAccountId: string
   |},
   loanWithdrawCollateralScene: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin
+    loanAccountId: string
   |},
   loanRepayScene: {|
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin
+    loanAccountId: string
   |},
   loanStatus: {|
+    actionQueueId: string
+  |},
+  loanCreateStatus: {|
+    actionQueueId: string
+  |},
+  loanDetailsStatus: {|
     actionQueueId: string
   |},
   manageTokens: {|
@@ -419,8 +418,9 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
       push(name, params) {
         props.navigation.push(name, { route: { name, params } })
       },
-      replace(name, params) {
-        props.navigation.replace(name, { route: { name, params } })
+      replace(...a) {
+        // prev, next, params) {
+        props.navigation.replace(...a) // prev, next, next, { route: { params } })
       },
       setParams(params) {
         props.navigation.setParams({ route: { name: Actions.currentScene, params } })

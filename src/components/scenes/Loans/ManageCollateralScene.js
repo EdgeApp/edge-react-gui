@@ -9,11 +9,12 @@ import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyCons
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
+import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../../hooks/useHandler.js'
 import { useWatch } from '../../../hooks/useWatch.js'
 import s from '../../../locales/strings.js'
-import type { ApprovableAction, BorrowEngine } from '../../../plugins/borrow-plugins/types.js'
+import type { ApprovableAction } from '../../../plugins/borrow-plugins/types.js'
 import { useMemo, useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
@@ -47,9 +48,8 @@ type Props<T: $Keys<ParamList>> = {
   actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw',
   actionWallet: 'fromWallet' | 'toWallet',
   amountChange?: 'increase' | 'decrease',
-  borrowEngine: BorrowEngine,
-  borrowPluginId: string,
   defaultTokenId?: string,
+  loanAccount: LoanAccount,
   ltvType: 'debts' | 'collaterals',
 
   showExchangeRateTile?: boolean,
@@ -68,9 +68,8 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     actionOpType,
     actionWallet,
     amountChange = 'increase',
-    borrowEngine,
-    borrowPluginId,
     defaultTokenId,
+    loanAccount,
     ltvType,
 
     showExchangeRateTile,
@@ -83,7 +82,8 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     navigation
   } = props
 
-  const { currencyWallet: borrowEngineWallet } = borrowEngine
+  const { borrowEngine, borrowPlugin } = loanAccount
+  const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const {
     currencyConfig: { allTokens },
     currencyInfo: borrowEngineCurrencyInfo,
@@ -96,11 +96,9 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const dispatch = useDispatch()
   const wallets = useWatch(account, 'currencyWallets')
 
-  const loanAccount = useSelector(state => state.loanManager.loanAccounts[borrowEngineWalletId])
-
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWalletId)
-  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
+  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
 
   // Flip input selected wallet
   const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
@@ -124,7 +122,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         // $FlowFixMe
         {
           type: actionOpType,
-          borrowPluginId,
+          borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
           nativeAmount: actionNativeAmount,
           walletId: selectedWallet.id,
           tokenId: selectedTokenId
@@ -204,7 +202,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       const actionProgram = await makeActionProgram(actionOp)
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
-        navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
+        navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
       } catch (e) {
         showError(e)
       } finally {
