@@ -833,7 +833,7 @@
   "loan_details_title": "Darlehensdetails",
   "loan_enter_loan_amount_s": "Kreditbetrag eingeben (%1$s)",
   "loan_error_title": "Unerwarteter Fehler",
-  "loan_estimate_fee": "Geschätzte Gebühren",
+  "loan_estimate_fee": "Estimated Fee",
   "loan_exchange_rate": "Wechselkurs",
   "loan_failed_loan": "Fehler beim Laden der Kreditdaten",
   "loan_fiat_value": "Fiat-Wert",
