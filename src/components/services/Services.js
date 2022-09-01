@@ -26,6 +26,7 @@ import { AutoLogout } from './AutoLogout.js'
 import { ContactsLoader } from './ContactsLoader.js'
 import { DeepLinkingManager } from './DeepLinkingManager.js'
 import { EdgeContextCallbackManager } from './EdgeContextCallbackManager.js'
+import { LoanManagerService } from './LoanManagerService'
 import { NetworkActivity } from './NetworkActivity.js'
 import { PasswordReminderService } from './PasswordReminderService.js'
 import { PermissionsManager } from './PermissionsManager.js'
@@ -97,6 +98,7 @@ export function Services(props: Props) {
         {account == null ? null : <SortedWalletList account={account} />}
         <EdgeContextCallbackManager />
         <PermissionsManager />
+        <LoanManagerService />
         <NetworkActivity />
         <PasswordReminderService />
         <WalletLifecycle />

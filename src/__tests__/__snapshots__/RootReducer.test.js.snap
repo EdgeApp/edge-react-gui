@@ -81,6 +81,9 @@ Object {
     "plugins": Array [],
   },
   "exchangeRates": Object {},
+  "loanManager": Object {
+    "loanAccounts": Object {},
+  },
   "network": Object {
     "isConnected": true,
   },

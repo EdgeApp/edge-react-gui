@@ -15,6 +15,7 @@ import {
 
 import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import { type ActionQueueAction } from '../controllers/action-queue/redux/actions'
+import { type LoanManagerActions } from '../controllers/loan-manager/redux/actions'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
@@ -189,7 +190,8 @@ export type Action =
    All GUI-wide or global actions should be written inline above, but for any
    self-contained code (or package of code), it may isolate the types within
    the codebase's directory. Although, all of redux is global state, this
-   is a way of isolating by convension some state which may only be managed
+   is a way of isolating by convention some state which may only be managed
    by the package.
    */
   | ActionQueueAction
+  | LoanManagerActions
