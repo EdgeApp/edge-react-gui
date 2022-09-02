@@ -4,16 +4,20 @@ import { add, div, mul } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { useCryptoText } from '../../hooks/useCryptoText.js'
-import { formatFiatString, useFiatText } from '../../hooks/useFiatText.js'
-import { useHandler } from '../../hooks/useHandler.js'
-import s from '../../locales/strings.js'
-import type { BorrowCollateral, BorrowDebt } from '../../plugins/borrow-plugins/types.js'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { useRef } from '../../types/reactHooks.js'
-import { useSelector } from '../../types/reactRedux.js'
-import { getDenomFromIsoCode, mulToPrecision } from '../../util/utils.js'
-import { Tile } from '../tiles/Tile.js'
+import { useCryptoText } from '../hooks/useCryptoText.js'
+import { formatFiatString, useFiatText } from '../hooks/useFiatText.js'
+import { useHandler } from '../hooks/useHandler.js'
+import s from '../locales/strings.js'
+import type { BorrowCollateral, BorrowDebt } from '../plugins/borrow-plugins/types.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors.js'
+import { useRef } from '../types/reactHooks.js'
+import { useSelector } from '../types/reactRedux.js'
+import { getDenomFromIsoCode, mulToPrecision } from '../util/utils.js'
+import { Tile } from './tiles/Tile.js'
+
+// TODO: Once AAVE is finalized:
+// 1. Move components that are not reused into their respective scene files.
+// 2. Split reused components into the appropriate component folders.
 
 export const ExchangeRateTile = (props: { wallet: EdgeCurrencyWallet, tokenId?: string }) => {
   const {

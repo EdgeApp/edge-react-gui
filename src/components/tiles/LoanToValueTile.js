@@ -11,7 +11,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors.j
 import { memo } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux.js'
 import { mulToPrecision } from '../../util/utils.js'
-import { TotalFiatAmount } from '../cards/LoanDebtsAndCollateralComponents.js'
+import { TotalFiatAmount } from '../LoanComponents.js'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile.js'
 
 type Props = {
