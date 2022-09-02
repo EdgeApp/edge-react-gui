@@ -105,6 +105,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         instance.collaterals = collaterals
         instance.debts = debts
         instance.loanToValue = loanToValue
+        instance.syncRatio = 1
       } catch (error) {
         console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
         console.error(error)
@@ -126,6 +127,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       collaterals: [],
       debts: [],
       loanToValue: 0,
+      syncRatio: 0,
 
       async getAprQuote(tokenId?: string): Promise<number> {
         const token = getToken(tokenId)

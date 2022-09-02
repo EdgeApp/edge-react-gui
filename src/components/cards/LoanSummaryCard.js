@@ -12,11 +12,13 @@ import s from '../../locales/strings'
 import { type BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { memo } from '../../types/reactHooks.js'
 import { type Theme } from '../../types/Theme'
+import { FillLoader } from '../progress-indicators/FillLoader'
 import { useFiatTotal } from '../scenes/Loans/LoanDetailsScene'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
+import { Card } from './Card'
 import { TappableCard } from './TappableCard'
 
 const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine, iconUri: string, onPress: () => void | void }) => {
@@ -26,6 +28,8 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const { currencyWallet } = borrowEngine
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
+  const syncRatio = useWatch(borrowEngine, 'syncRatio')
+  const isLoading = syncRatio < 1
 
   const isoFiatCurrencyCode = currencyWallet.fiatCurrencyCode
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
@@ -44,9 +48,13 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     // TODO: Calculate amount-adjusted cumulative interest
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
 
-    if (debts.length === 0 || collaterals.length === 0) return null
+    if (!isLoading && (debts.length === 0 || collaterals.length === 0)) return null
 
-    return (
+    return isLoading ? (
+      <Card marginRem={0.5}>
+        <FillLoader />
+      </Card>
+    ) : (
       <TappableCard marginRem={0.5} onPress={onPress}>
         <View style={styles.cardContainer}>
           <View style={styles.row}>

@@ -97,6 +97,7 @@ export type BorrowEngine = {
   loanToValue: number,
 
   +watch: Subscriber<BorrowEngine>,
+  syncRatio: number,
 
   // Returns the APR for borrow a particular token
   getAprQuote: (tokenId?: string) => Promise<number>,
