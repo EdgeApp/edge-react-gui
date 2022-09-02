@@ -191,23 +191,23 @@ export const LoanDetailsScene = (props: Props) => {
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
-            <Space right style={styles.actionIcon}>
-              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
-          </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress}>
             <Space right>
-              <Fontello name="borrow-more" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <Fontello name="borrow-more" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
             <Space right>
-              <Fontello name="make-payment" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <Fontello name="make-payment" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
+          </TappableCard>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
+            <Space right style={styles.actionIcon}>
+              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
           </TappableCard>
         </Space>
       </KeyboardAwareScrollView>
