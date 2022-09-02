@@ -35,6 +35,7 @@ const aaveMaticBlueprint: BorrowPluginBlueprint = {
     borrowPluginId: 'aavePolygon',
     currencyPluginId: 'polygon',
     displayName: 'AAVE',
+    displayTokenId: 'd6df932a45c0f255f85145f286ea0b292b21c90b',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
@@ -68,6 +69,7 @@ const aaveEthBlueprint: BorrowPluginBlueprint = {
     borrowPluginId: 'aaveEth',
     currencyPluginId: 'ethereum',
     displayName: 'AAVE',
+    displayTokenId: '7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({
@@ -117,6 +119,7 @@ const aaveKovBlueprint: BorrowPluginBlueprint = {
     borrowPluginId: 'aaveKovan',
     currencyPluginId: 'kovan',
     displayName: 'AAVE (Kovan)',
+    displayTokenId: 'b597cd8d3217ea6477232f9217fa70837ff667af',
     maxLtvRatio: 0.5
   },
   makeBorrowEngine: makeBorrowEngineFactory({

@@ -21,7 +21,7 @@ import { config } from '../../../theme/appConfig'
 import { useCallback, useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
-import { getCurrencyIconUris } from '../../../util/CdnUris'
+import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
@@ -88,11 +88,6 @@ export const LoanCreateScene = (props: Props) => {
   // BorrowPlugin
   const [borrowAmountFiat, setBorrowAmount] = useState('0')
   const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
-
-  const hardBarCardIconUri = useMemo(
-    () => getCurrencyIconUris('ethereum', guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: 'ethereum' }).tokenId).symbolImage,
-    [account]
-  )
 
   // BorrowPlugin APR
   const [isLoading, setIsLoading] = useState(false)
@@ -300,6 +295,8 @@ export const LoanCreateScene = (props: Props) => {
     [borrowAmountFiat]
   )
 
+  const iconUri = useMemo(() => getBorrowPluginIconUri(borrowPlugin.borrowInfo), [borrowPlugin.borrowInfo])
+
   return (
     <SceneWrapper>
       <SceneHeader underline title={s.strings.loan_create_title} />
@@ -309,7 +306,7 @@ export const LoanCreateScene = (props: Props) => {
           <ValueBarCard
             currencyCode="USD"
             formattedAmount={displayBorrowAmount}
-            iconUri={hardBarCardIconUri}
+            iconUri={iconUri}
             title={s.strings.loan_amount_borrow}
             onPress={handleEditBorrowAmount}
           />
