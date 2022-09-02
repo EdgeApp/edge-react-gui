@@ -6,6 +6,7 @@ import { cacheStyles } from 'react-native-patina'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
+import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import s from '../../locales/strings'
 import { type BorrowEngine } from '../../plugins/borrow-plugins/types'
@@ -22,7 +23,10 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { currencyWallet, collaterals, debts } = borrowEngine
+  const { currencyWallet } = borrowEngine
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
+
   const isoFiatCurrencyCode = currencyWallet.fiatCurrencyCode
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
@@ -39,6 +43,8 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   try {
     // TODO: Calculate amount-adjusted cumulative interest
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
+
+    if (debts.length === 0 || collaterals.length === 0) return null
 
     return (
       <TappableCard marginRem={0.5} onPress={onPress}>

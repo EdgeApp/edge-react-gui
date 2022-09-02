@@ -6,6 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useRefresher } from '../../../hooks/useRefresher'
+import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
@@ -46,7 +47,10 @@ export const LoanCloseScene = (props: Props) => {
 
   // Derived State:
   const networkFee = approvableAction != null ? approvableAction.networkFee.nativeAmount : '0'
-  const { currencyWallet: wallet, collaterals, debts } = borrowEngine
+  const { currencyWallet: wallet } = borrowEngine
+
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
 
   // Handlers:
   const onSliderComplete = async (reset: () => void) => {

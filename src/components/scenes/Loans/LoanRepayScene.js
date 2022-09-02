@@ -1,5 +1,6 @@
 // @flow
 
+import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings.js'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes.js'
@@ -18,13 +19,15 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
   const loanAccount = loanAccounts[loanAccountId]
   const { borrowEngine } = loanAccount
 
+  const debts = useWatch(borrowEngine, 'debts')
+
   return ManageCollateralScene({
     // $FlowFixMe - Get rid of this hasty abstraction
     action: async req => await borrowEngine.repay(req),
     actionOpType: 'loan-repay',
     actionWallet: 'fromWallet',
     amountChange: 'decrease',
-    defaultTokenId: borrowEngine.debts[0].tokenId,
+    defaultTokenId: debts[0].tokenId,
     loanAccount,
     ltvType: 'debts',
 

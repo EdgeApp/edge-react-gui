@@ -15,11 +15,10 @@ import { type ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { type LoanProgramEdge } from '../../../controllers/loan-manager/store'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
-import { useRefresher } from '../../../hooks/useRefresher'
+import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
-import { useCallback, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type GuiExchangeRates } from '../../../types/types'
@@ -56,14 +55,15 @@ export const LoanDetailsScene = (props: Props) => {
   const { params } = route
   const { loanAccountId } = params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
-
-  // Refreshing borrowEngine TODO: refactor common method
-  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
+  const { borrowEngine } = loanAccount
 
   // Derive state from borrowEngine:
-  const { collaterals, debts, currencyWallet: wallet, loanToValue } = borrowEngine
+  const { currencyWallet: wallet } = borrowEngine
+
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
+  const loanToValue = useWatch(borrowEngine, 'loanToValue')
+
   const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
