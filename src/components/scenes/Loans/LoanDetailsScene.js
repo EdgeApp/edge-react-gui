@@ -180,13 +180,13 @@ export const LoanDetailsScene = (props: Props) => {
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
           </Space>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress}>
-            <Space right style={styles.actionIcon}>
+            <Space right>
               <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress}>
-            <Space right style={styles.actionIcon}>
+            <Space right>
               <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
@@ -204,7 +204,7 @@ export const LoanDetailsScene = (props: Props) => {
             <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
-            <Space right style={styles.actionIcon}>
+            <Space right>
               <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
@@ -223,13 +223,9 @@ const getStyles = cacheStyles(theme => {
       alignItems: 'center',
       marginTop: theme.rem(1)
     },
-    actionIcon: {
-      marginTop: theme.rem(-0.25),
-      marginLeft: theme.rem(-0.25),
-      marginBottom: theme.rem(-0.25)
-    },
     actionLabel: {
-      fontFamily: theme.fontFaceMedium
+      fontFamily: theme.fontFaceMedium,
+      alignSelf: 'center'
     },
     activityIndicator: {
       alignSelf: 'flex-start',
