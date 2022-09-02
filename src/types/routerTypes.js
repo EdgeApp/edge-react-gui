@@ -212,10 +212,6 @@ export type ParamList = {
     srcTokenId?: string,
     srcWallet: EdgeCurrencyWallet
   |},
-  loanBorrowDetails: {|
-    loanAccountId: string,
-    tokenId: string
-  |},
   loanClose: {|
     loanAccountId: string
   |},

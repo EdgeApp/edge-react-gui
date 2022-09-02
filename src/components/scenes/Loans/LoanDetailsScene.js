@@ -98,14 +98,6 @@ export const LoanDetailsScene = (props: Props) => {
     }
   ]
 
-  const handleBreakdownPress = (tokenId?: string) => {
-    if (tokenId == null) {
-      showError(`Unwrapped native currency not yet supported`)
-      return
-    }
-
-    navigation.navigate('loanBorrowDetails', { loanAccountId, tokenId })
-  }
   const handleAddCollateralPress = () => {
     navigation.navigate('loanAddCollateralScene', { loanAccountId })
   }
@@ -114,6 +106,12 @@ export const LoanDetailsScene = (props: Props) => {
   }
   const handleLoanClosePress = () => {
     navigation.navigate('loanClose', { loanAccountId })
+  }
+  const handleBorrowMorePress = () => {
+    navigation.navigate('loanBorrowMoreScene', { loanAccountId })
+  }
+  const handleRepayPress = () => {
+    navigation.navigate('loanRepayScene', { loanAccountId })
   }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
@@ -159,20 +157,24 @@ export const LoanDetailsScene = (props: Props) => {
             const currencyCode = token?.currencyCode ?? 'N/A'
             const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
             return (
-              <TappableCard key={debt.tokenId} marginRem={[0, 0, 1]} onPress={() => handleBreakdownPress(debt.tokenId)}>
-                <Space right>
-                  <CryptoIcon currencyCode={currencyCode} hideSecondary />
+              <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
+                <Space sideways>
+                  <Space right>
+                    <CryptoIcon currencyCode={currencyCode} hideSecondary />
+                  </Space>
+                  <Space>
+                    <EdgeText style={styles.breakdownText}>
+                      <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
+                    </EdgeText>
+                    <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
+                  </Space>
                 </Space>
-                <Space>
-                  <EdgeText style={styles.breakdownText}>
-                    <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
-                  </EdgeText>
-                  <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
-                </Space>
-              </TappableCard>
+              </Card>
             )
           })}
         </Space>
+
+        {/* Tappable Action Cards */}
         <Space horizontal>
           <Space bottom>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
@@ -194,6 +196,18 @@ export const LoanDetailsScene = (props: Props) => {
               <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
+          </TappableCard>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress}>
+            <Space right>
+              <Fontello name="borrow-more" size={theme.rem(1.5)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
+          </TappableCard>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
+            <Space right>
+              <Fontello name="make-payment" size={theme.rem(1.5)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
           </TappableCard>
         </Space>
       </KeyboardAwareScrollView>
