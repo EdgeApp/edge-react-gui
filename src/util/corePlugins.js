@@ -104,6 +104,7 @@ export const swapPlugins = {
   // Defi Swaps
   tombSwap: ENV.TOMB_SWAP_INIT,
   spookySwap: false,
+  thorchain: ENV.THORCHAIN_INIT,
 
   transfer: true
 }
