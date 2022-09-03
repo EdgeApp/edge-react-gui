@@ -34,6 +34,7 @@ export const WalletSyncCircle = (props: Props) => {
   useEffect(
     () =>
       wallet.watch('syncRatio', (ratio: number) => {
+        console.warn('bridge syncRatio')
         // If already done but needs to resync reset the flags and animations
         if (isDone.value && ratio < RESYNC_THRESHOLD) {
           isDone.value = false

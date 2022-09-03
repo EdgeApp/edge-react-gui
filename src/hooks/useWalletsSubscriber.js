@@ -35,6 +35,7 @@ export function useWalletsSubscriber(account: EdgeAccount, subscribe: (wallet: E
 
   useEffect(() => {
     function update(wallets: WalletMap) {
+      console.warn('bridge update')
       const { cleanups, lastWallets, subscribe } = state.current
 
       cleanups.forEach((cleanup, walletId) => {

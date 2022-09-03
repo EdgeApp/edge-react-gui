@@ -51,7 +51,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
   // Feed incoming messages into the YAOB bridge (if any):
   const onMessage = event => {
     const message = JSON.parse(event.nativeEvent.data)
-    if (debug) console.info('plugin →', message)
+    if (true) console.warn('plugin →', message)
 
     // This was crashing us, so send to bugsnag:
     if (bridge != null && message.events != null && typeof message.events.find !== 'function') {
@@ -75,7 +75,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
       let firstMessage = true
       bridge = new Bridge({
         sendMessage: message => {
-          if (debug) console.info('plugin ←', message)
+          if (true) console.warn('plugin ←', message)
           if (webview == null) return
 
           const js = `if (window.bridge != null) {${

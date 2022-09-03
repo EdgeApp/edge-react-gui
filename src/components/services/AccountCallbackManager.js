@@ -51,14 +51,16 @@ export function AccountCallbackManager(props: Props) {
   // Subscribe to the account:
   useEffect(() => {
     const cleanups = [
-      account.watch('currencyWallets', () =>
-        setDirty(dirty => ({
+      account.watch('currencyWallets', () => {
+        console.warn('bridge currencyWallets')
+        return setDirty(dirty => ({
           ...dirty,
           walletList: true
         }))
-      ),
+      }),
 
       account.watch('loggedIn', () => {
+        console.warn('bridge loggedIn')
         if (account.loggedIn === false) {
           Airship.clear()
           console.log('onLoggedOut')
@@ -71,12 +73,13 @@ export function AccountCallbackManager(props: Props) {
         }
       }),
 
-      account.rateCache.on('update', () =>
+      account.rateCache.on('update', () => {
+        console.warn('bridge update rateCache')
         setDirty(dirty => ({
           ...dirty,
           rates: true
         }))
-      )
+      })
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
@@ -86,10 +89,12 @@ export function AccountCallbackManager(props: Props) {
   useWalletsSubscriber(account, wallet => {
     const cleanups = [
       wallet.watch('syncRatio', ratio => {
+        console.warn('bridge syncRatio')
         dispatch(updateWalletLoadingProgress(wallet.id, ratio))
       }),
 
       wallet.on('newTransactions', transactions => {
+        console.warn('bridge newTransactions')
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
         dispatch(refreshTransactionsRequest(wallet.id, transactions))
@@ -104,6 +109,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('transactionsChanged', transactions => {
+        console.warn('bridge transactionsChanged')
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
 
         dispatch(refreshTransactionsRequest(wallet.id, transactions))
@@ -111,15 +117,25 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('wcNewContractCall', obj => {
+        console.warn('bridge wcNewContractCall')
         const { dApp, payload, uri, walletId } = obj
         if (walletId == null) return
         Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={walletId} dApp={dApp} payload={payload} uri={uri} />)
       }),
 
       // These ones defer their work until later:
-      wallet.watch('balances', () => addWallet(wallet)),
-      wallet.watch('enabledTokenIds', () => addWallet(wallet)),
-      wallet.watch('name', () => addWallet(wallet))
+      wallet.watch('balances', () => {
+        console.warn('bridge balances')
+        addWallet(wallet)
+      }),
+      wallet.watch('enabledTokenIds', () => {
+        console.warn('bridge enabledTokenIds')
+        addWallet(wallet)
+      }),
+      wallet.watch('name', () => {
+        console.warn('bridge name')
+        addWallet(wallet)
+      })
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
