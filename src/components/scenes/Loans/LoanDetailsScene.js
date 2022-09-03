@@ -15,11 +15,10 @@ import { type ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { type LoanProgramEdge } from '../../../controllers/loan-manager/store'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
-import { useRefresher } from '../../../hooks/useRefresher'
+import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
-import { useCallback, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type GuiExchangeRates } from '../../../types/types'
@@ -56,14 +55,15 @@ export const LoanDetailsScene = (props: Props) => {
   const { params } = route
   const { loanAccountId } = params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
-
-  // Refreshing borrowEngine TODO: refactor common method
-  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
+  const { borrowEngine } = loanAccount
 
   // Derive state from borrowEngine:
-  const { collaterals, debts, currencyWallet: wallet, loanToValue } = borrowEngine
+  const { currencyWallet: wallet } = borrowEngine
+
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
+  const loanToValue = useWatch(borrowEngine, 'loanToValue')
+
   const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
@@ -180,34 +180,34 @@ export const LoanDetailsScene = (props: Props) => {
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
           </Space>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress}>
-            <Space right style={styles.actionIcon}>
+            <Space right>
               <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress}>
-            <Space right style={styles.actionIcon}>
+            <Space right>
               <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
-            <Space right style={styles.actionIcon}>
-              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
-          </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress}>
             <Space right>
-              <Fontello name="borrow-more" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <Fontello name="borrow-more" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
             <Space right>
-              <Fontello name="make-payment" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <Fontello name="make-payment" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
+          </TappableCard>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
+            <Space right>
+              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
+            </Space>
+            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
           </TappableCard>
         </Space>
       </KeyboardAwareScrollView>
@@ -223,13 +223,9 @@ const getStyles = cacheStyles(theme => {
       alignItems: 'center',
       marginTop: theme.rem(1)
     },
-    actionIcon: {
-      marginTop: theme.rem(-0.25),
-      marginLeft: theme.rem(-0.25),
-      marginBottom: theme.rem(-0.25)
-    },
     actionLabel: {
-      fontFamily: theme.fontFaceMedium
+      fontFamily: theme.fontFaceMedium,
+      alignSelf: 'center'
     },
     activityIndicator: {
       alignSelf: 'flex-start',

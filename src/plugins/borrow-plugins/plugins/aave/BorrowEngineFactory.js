@@ -4,7 +4,8 @@ import { type Cleaner, asMaybe } from 'cleaners'
 import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
-import { zeroString } from '../../../../util/utils'
+import { snooze, zeroString } from '../../../../util/utils'
+import { withWatchableProps } from '../../../../util/withWatchableProps'
 import { type CallInfo, asTxInfo, makeApprovableCall, makeTxCalls } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
@@ -71,46 +72,62 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     }
 
     //
-    // Collaterals and Debts
+    // Network Synchronization
     //
 
-    const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-    const collaterals: BorrowCollateral[] = reserveTokenBalances
-      .filter(({ aBalance }) => !aBalance.eq(0))
-      .map(({ address, aBalance }) => {
-        return {
-          tokenId: addressToTokenId(address),
-          nativeAmount: aBalance.toString()
-        }
-      })
-    const debts: BorrowDebt[] = reserveTokenBalances
-      .filter(({ vBalance }) => !vBalance.eq(0))
-      .map(({ address, vBalance, variableApr }) => {
-        return {
-          tokenId: addressToTokenId(address),
-          nativeAmount: vBalance.toString(),
-          apr: variableApr
-        }
-      })
+    const loadNetworkData = async () => {
+      try {
+        // Collaterals and Debts:
+        const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+        const collaterals: BorrowCollateral[] = reserveTokenBalances
+          .filter(({ aBalance }) => !aBalance.eq(0))
+          .map(({ address, aBalance }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: aBalance.toString()
+            }
+          })
+        const debts: BorrowDebt[] = reserveTokenBalances
+          .filter(({ vBalance }) => !vBalance.eq(0))
+          .map(({ address, vBalance, variableApr }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: vBalance.toString(),
+              apr: variableApr
+            }
+          })
 
-    //
-    // Loan to value
-    //
+        // Loan to value:
+        const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
+        const { totalCollateralETH, totalDebtETH } = userData
+        const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
 
-    const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
-    const { totalCollateralETH, totalDebtETH } = userData
-    const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+        instance.collaterals = collaterals
+        instance.debts = debts
+        instance.loanToValue = loanToValue
+        instance.syncRatio = 1
+      } catch (error) {
+        console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
+        console.error(error)
+        await snooze(2000)
+        return await loadNetworkData()
+      } finally {
+        // Re-sync after delay
+        await snooze(15000)
+        await loadNetworkData()
+      }
+    }
 
     //
     // Engine Instance
     //
 
-    const instance = {
+    const instance: BorrowEngine = withWatchableProps({
       currencyWallet: wallet,
-      collaterals,
-      debts,
-
-      loanToValue,
+      collaterals: [],
+      debts: [],
+      loanToValue: 0,
+      syncRatio: 0,
 
       async getAprQuote(tokenId?: string): Promise<number> {
         const token = getToken(tokenId)
@@ -255,7 +272,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
         const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress()).publicAddress
-        const amountToCover = amount.eq(ethers.constants.MaxUint256) ? BigNumber.from(debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0) : amount
+        const amountToCover = amount.eq(ethers.constants.MaxUint256)
+          ? BigNumber.from(instance.debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0)
+          : amount
 
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
@@ -308,7 +327,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       },
       async close(): Promise<ApprovableAction> {
         const repayActions = await Promise.all(
-          debts.map(async debt => {
+          instance.debts.map(async debt => {
             const { tokenId } = debt
 
             return await instance.repay({
@@ -318,7 +337,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           })
         )
         const withdrawActions = await Promise.all(
-          collaterals.map(async collateral => {
+          instance.collaterals.map(async collateral => {
             const { tokenId } = collateral
 
             return await instance.withdraw({
@@ -330,8 +349,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         return composeApprovableActions(...repayActions, ...withdrawActions)
       }
-    }
+    })
 
+    // Initialization:
+    loadNetworkData()
+
+    // Return instance:
     return instance
   }
 }

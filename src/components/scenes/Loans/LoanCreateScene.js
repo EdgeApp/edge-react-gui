@@ -48,7 +48,9 @@ type Props = {
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
-  const { currencyWallet: beWallet, debts } = borrowEngine
+  const { currencyWallet: beWallet } = borrowEngine
+
+  const debts = useWatch(borrowEngine, 'debts')
 
   const theme = useTheme()
   const styles = getStyles(theme)

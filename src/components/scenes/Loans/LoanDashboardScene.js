@@ -9,7 +9,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { useEffect, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
@@ -51,23 +51,7 @@ export const LoanDashboardScene = (props: Props) => {
     guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: HARD_WALLET_PLUGIN_ID }).tokenId
   ).symbolImage
 
-  // Auto-Refresh
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
-  const [timeoutId, setTimeoutId] = useState()
-  const [resetTrigger, setResetTrigger] = useState(false)
-
-  useEffect(() => {
-    // Wait for the first load after scene mounting before starting the refresh timer
-
-    // Clear previous timeout, setup a new one
-    if (timeoutId != null) clearTimeout(timeoutId)
-    setTimeoutId(
-      setTimeout(() => {
-        setResetTrigger(!resetTrigger)
-      }, 10000)
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loanAccounts])
 
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
 

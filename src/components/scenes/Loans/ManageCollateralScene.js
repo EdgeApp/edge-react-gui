@@ -91,6 +91,9 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   } = borrowEngineWallet
   const { pluginId: borrowEnginePluginId } = borrowEngineCurrencyInfo
 
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
+
   // State
   const account = useSelector(state => state.core.account)
   const dispatch = useDispatch()
@@ -236,29 +239,22 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   }, [newDebtApr, showNewDebtAprChange])
 
   const renderTotalDebtTile = useMemo(() => {
-    return showTotalDebtTile ? (
-      <DebtAmountTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debts={borrowEngine.debts} key="totalDebt" />
-    ) : null
-  }, [borrowEngineWallet, borrowEngine, showTotalDebtTile])
+    return showTotalDebtTile ? <DebtAmountTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debts={debts} key="totalDebt" /> : null
+  }, [borrowEngineWallet, debts, showTotalDebtTile])
 
   const renderNewDebtTile = useMemo(() => {
     const multiplier = amountChange === 'increase' ? '1' : '-1'
     const newDebt = { nativeAmount: mul(actionNativeAmount, multiplier), tokenId: selectedTokenId, apr: 0 } // APR is only present to appease Flow. It does not mean anything.
     return showNewDebtTile ? (
-      <DebtAmountTile title={s.strings.loan_new_principle} wallet={borrowEngineWallet} debts={[...borrowEngine.debts, newDebt]} key="newDebt" />
+      <DebtAmountTile title={s.strings.loan_new_principle} wallet={borrowEngineWallet} debts={[...debts, newDebt]} key="newDebt" />
     ) : null
-  }, [amountChange, actionNativeAmount, selectedTokenId, showNewDebtTile, borrowEngineWallet, borrowEngine.debts])
+  }, [amountChange, actionNativeAmount, selectedTokenId, showNewDebtTile, borrowEngineWallet, debts])
 
   const renderTotalCollateralTile = useMemo(() => {
     return showTotalCollateralTile ? (
-      <CollateralAmountTile
-        title={s.strings.loan_total_collateral_value}
-        wallet={borrowEngineWallet}
-        collaterals={borrowEngine.collaterals}
-        key="totalcollateral"
-      />
+      <CollateralAmountTile title={s.strings.loan_total_collateral_value} wallet={borrowEngineWallet} collaterals={collaterals} key="totalcollateral" />
     ) : null
-  }, [borrowEngineWallet, borrowEngine, showTotalCollateralTile])
+  }, [borrowEngineWallet, collaterals, showTotalCollateralTile])
 
   const renderFeeTile = useMemo(() => {
     const nativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'

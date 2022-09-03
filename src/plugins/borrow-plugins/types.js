@@ -1,6 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyWallet, type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
+import { type Subscriber } from 'yaob'
 
 // -----------------------------------------------------------------------------
 // Request Method Types
@@ -94,6 +95,9 @@ export type BorrowEngine = {
   debts: BorrowDebt[],
 
   loanToValue: number,
+
+  +watch: Subscriber<BorrowEngine>,
+  syncRatio: number,
 
   // Returns the APR for borrow a particular token
   getAprQuote: (tokenId?: string) => Promise<number>,
