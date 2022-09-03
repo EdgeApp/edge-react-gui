@@ -205,7 +205,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       const actionProgram = await makeActionProgram(actionOp)
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
-        navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
+        navigation.goBack()
       } catch (e) {
         showError(e)
       } finally {
