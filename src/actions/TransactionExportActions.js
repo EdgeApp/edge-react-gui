@@ -1,6 +1,6 @@
 // @flow
 
-import { abs, add, div, gt, lt, mul } from 'biggystring'
+import { abs, add, div, gt, lt, mul, sub } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
 
@@ -19,7 +19,7 @@ export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, txs: E
     const denomObj = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)
     if (denomObj != null) denomName = denomObj.name
   }
-  return exportTransactionsToCSVInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, denomName)
+  return exportTransactionsToCSVInner(txs, wallet.balances[currencyCode], currencyCode, wallet.fiatCurrencyCode, denomination, denomName)
 }
 
 function padZero(val: string): string {
@@ -281,25 +281,30 @@ export function exportTransactionsToQBOInner(
 
 export function exportTransactionsToCSVInner(
   edgeTransactions: EdgeTransaction[],
+  balance: string,
   currencyCode: string,
   fiatCurrencyCode: string,
   denom?: string,
   denomName: string = ''
 ): string {
   const items: any[] = []
-
+  let runningBalance = balance
   for (const tx of edgeTransactions) {
     const newTxs = getTransferTx(tx)
     if (newTxs != null) {
-      edgeTxToCsv(newTxs[0])
-      edgeTxToCsv(newTxs[1])
+      edgeTxToCsv(runningBalance, newTxs[0])
+      runningBalance = sub(runningBalance, newTxs[0].nativeAmount)
+      edgeTxToCsv(runningBalance, newTxs[1])
+      runningBalance = sub(runningBalance, newTxs[1].nativeAmount)
     } else {
-      edgeTxToCsv(tx)
+      edgeTxToCsv(runningBalance, tx)
+      runningBalance = sub(runningBalance, tx.nativeAmount)
     }
   }
 
-  function edgeTxToCsv(edgeTx: EdgeTransaction) {
+  function edgeTxToCsv(runningBalance: string, edgeTx: EdgeTransaction) {
     const amount: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
+    const balance: string = denom ? div(runningBalance, denom, DECIMAL_PRECISION) : runningBalance
     const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
     let name: string = ''
@@ -319,6 +324,7 @@ export function exportTransactionsToCSVInner(
       TIME: time,
       PAYEE_PAYER_NAME: name,
       AMT_ASSET: amount,
+      RUNNING_BALANCE: balance,
       DENOMINATION: denomName,
       [fiatCurrencyCode]: String(amountFiat),
       CATEGORY: category,
