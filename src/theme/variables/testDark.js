@@ -20,6 +20,7 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
+import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
@@ -377,6 +378,7 @@ export const testDark: Theme = {
   paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
   paymentTypeLogoPayid: paymentTypeLogoPayid,
   paymentTypeLogoPoli: paymentTypeLogoPoli,
+  paymentTypeLogoPaynow,
   paymentTypeLogoSofort: paymentTypeLogoSofort,
   paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
