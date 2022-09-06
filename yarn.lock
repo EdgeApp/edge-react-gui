@@ -6131,10 +6131,10 @@ edge-exchange-plugins@^0.13.7:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.7.tgz#49773367fc8c59e79b8a45a1877a00c305859b32"
-  integrity sha512-iRDYeQbATaVXQXbik+7MMNVK3T42vtwyBT1nq1yT0VOm15vO17yueCKDwU/RET1tNQz7z3O3bbMGHkbK7xxcJQ==
+edge-login-ui-rn@^0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.8.tgz#b41c60a8b2462362a6e378275dadc5bf06b1e524"
+  integrity sha512-cfIiw7gcYTl4DX9y8MrqqQaDlh9LYBJjyugn9+304oY7xl27g1LXNXZZGJAEJgpCMjxmI6Jp9ZdWkHWq2S0rXA==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
