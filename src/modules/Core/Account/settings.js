@@ -151,7 +151,9 @@ export type SpendingLimits = {
 export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { spendingLimits })
-    return setLocalSettings(account, updatedSettings)
+    const out = setLocalSettings(account, updatedSettings)
+    global.logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
+    return out
   })
 }
 export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: number) {
@@ -178,7 +180,8 @@ export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   } catch (e) {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    await setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    return SYNCED_ACCOUNT_DEFAULTS
   }
 }
 

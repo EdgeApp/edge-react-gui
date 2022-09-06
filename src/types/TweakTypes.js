@@ -1,6 +1,6 @@
 // @flow
 
-import { type Cleaner, asBoolean, asDate, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { type Cleaner, asArray, asBoolean, asDate, asMap, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 
 /**
  * A currency code to create a wallet for, normalized to uppercase.
@@ -15,8 +15,16 @@ export const asCurrencyCode: Cleaner<string> = raw => asString(raw).toUpperCase(
  */
 export const asMessageTweak = asObject({
   message: asString,
+  localeMessages: asOptional(asMap(asString)),
   uri: asOptional(asString),
   iconUri: asOptional(asString),
+
+  countryCodes: asOptional(asArray(asString)),
+  hasLinkedBankMap: asOptional(asMap(asBoolean)), // Map of pluginIds
+  exactBuildNum: asOptional(asString),
+  minBuildNum: asOptional(asString),
+  maxBuildNum: asOptional(asString),
+  osTypes: asOptional(asArray(asValue('ios', 'android', 'windows', 'macos', 'web'))),
 
   startDate: asOptional(asDate),
   durationDays: asNumber
@@ -39,3 +47,7 @@ export const asPluginTweak = asObject({
   durationDays: asNumber
 })
 export type PluginTweak = $Call<typeof asPluginTweak, any>
+
+export const asIpApi = asObject({
+  countryCode: asString
+})

@@ -10,11 +10,29 @@ const asConfig = asObject({
   BUGSNAG_API_KEY: asOptional(asString, ''),
 
   ...configComment('GUI plugin options'),
+  ACTION_QUEUE: asOptional(
+    asObject({
+      debugStore: asBoolean,
+      pushServerUri: asString
+    }),
+    {
+      debugStore: false,
+      pushServerUri: 'https://push.edge.app'
+    }
+  ),
   PLUGIN_API_KEYS: asOptional(
     asObject({
       Bitrefill: asOptional(asString, '')
     }),
     { Bitrefill: '' }
+  ),
+  WYRE_CLIENT_INIT: asOptional(
+    asObject({
+      baseUri: asString
+    }),
+    {
+      baseUri: 'https://api.sendwyre.com'
+    }
   ),
 
   ...configComment('core plugin options (remove `x_` to activate)'),
@@ -140,13 +158,14 @@ const asConfig = asObject({
   ),
 
   ...configComment('app options'),
+  APP_CONFIG: asOptional(asString, 'edge'),
+  BETA_FEATURES: asOptional(asBoolean),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   YOLO_DEEP_LINK: asOptional(asEither(asString, asNull), null),
   YOLO_PASSWORD: asOptional(asEither(asString, asNull), null),
   YOLO_PIN: asOptional(asEither(asNumber, asNull), null),
   YOLO_USERNAME: asOptional(asEither(asString, asNull), null),
-  APP_CONFIG: asOptional(asString, 'edge'),
 
   ...configComment('debug options'),
   DEBUG_CORE: asOptional(asBoolean, false),

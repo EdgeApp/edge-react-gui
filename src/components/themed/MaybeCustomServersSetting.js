@@ -35,22 +35,29 @@ function CustomServersSettingComponent(props: Props) {
       enableCustomServers: !enableCustomServers,
       customServers: customServers.length > 0 ? customServers : defaultSetting.customServers
     })
+    global.logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServers.length}`)
   }
 
   async function handleDeleteNode(i: number): Promise<void> {
+    const deletedNode = customServers[i]
     const list = [...customServers]
     list.splice(i, 1)
 
     await onUpdate({ enableCustomServers, customServers: list })
+    global.logActivity(`Delete Custom Node: ${deletedNode}`)
   }
 
   function handleEditNode(i?: number): void {
     async function handleSubmit(text: string) {
+      let before = 'no_node'
       const list = [...customServers]
       if (i == null) list.push(text)
-      else list[i] = text
-
+      else {
+        before = list[i]
+        list[i] = text
+      }
       await onUpdate({ enableCustomServers, customServers: list })
+      global.logActivity(`Edit Custom Node: ${before} -> ${text}`)
       return true
     }
 

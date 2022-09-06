@@ -12,7 +12,7 @@ import { Airship, showError, showToast } from '../components/services/AirshipIns
 import s from '../locales/strings.js'
 import { sendLogs } from '../modules/Logs/api.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
-import { log, readLogs } from '../util/logger.js'
+import { log, logWithType, readLogs } from '../util/logger.js'
 
 export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -35,9 +35,13 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
 }
 
 const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const id = Math.floor(Math.random() * 0xffffff).toString(16)
+  const infoId = id + '_info'
+  const activityId = id + '_activity'
+
   const logOutput: LogOutput = {
     isoDate: new Date().toISOString(),
-    uniqueId: Math.floor(Math.random() * 16777215).toString(16),
+    uniqueId: infoId,
     userMessage: text,
     deviceInfo: `${getBrand()} ${getDeviceId()}`,
     appVersion: packageJson.version,
@@ -45,6 +49,10 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
     accounts: [],
     data: ''
   }
+
+  const activityOutput = { ...logOutput }
+  activityOutput.uniqueId = activityId
+
   const state = getState()
   const { account, context } = state.core
   if (context) {
@@ -93,14 +101,24 @@ os: ${Platform.OS} ${Platform.Version}
 device: ${getBrand()} ${getDeviceId()}
 `
 
-  return log('SENDING LOGS WITH MESSAGE: ' + text)
-    .then(() => readLogs())
+  await logWithType('activity', 'SENDING ACTIVITY LOGS WITH MESSAGE: ' + text)
+    .then(() => readLogs('activity'))
+    .then(logs => {
+      activityOutput.data += logs || ''
+      return sendLogs(activityOutput)
+    })
+    .catch(e => {
+      throw new Error(`${s.strings.settings_modal_send_logs_failure} activity logs code ${e.message}`)
+    })
+
+  await log('SENDING INFO LOGS WITH MESSAGE: ' + text)
+    .then(() => readLogs('info'))
     .then(logs => {
       logOutput.data += logs || ''
       return sendLogs(logOutput)
     })
     .catch(e => {
-      throw new Error(`${s.strings.settings_modal_send_logs_failure} code ${e.message}`)
+      throw new Error(`${s.strings.settings_modal_send_logs_failure} info logs code ${e.message}`)
     })
 }
 

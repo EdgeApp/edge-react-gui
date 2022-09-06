@@ -30,7 +30,9 @@ const CurrencyRowComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   // Currency code and wallet name for display:
-  const { currencyCode } = token == null ? wallet.currencyInfo : token
+  const allTokens = wallet.currencyConfig.allTokens
+  const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
+  const { currencyCode } = tokenFromId == null ? wallet.currencyInfo : tokenFromId
   const name = useWalletName(wallet)
 
   // Balance stuff:
@@ -54,7 +56,7 @@ const CurrencyRowComponent = (props: Props) => {
       {showBalance ? (
         <View style={styles.balanceColumn}>
           <EdgeText>
-            <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} />
+            <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} withSymbol />
           </EdgeText>
           <EdgeText style={styles.fiatBalanceText}>
             <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallet} />

@@ -11,6 +11,8 @@ import { useSelector } from '../../types/reactRedux.js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { makeCurrencyCodeTable } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
+import { EdgeText } from '../themed/EdgeText.js'
+import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -18,7 +20,9 @@ import { WalletList } from '../themed/WalletList.js'
 
 export type WalletListResult = {
   walletId?: string,
-  currencyCode?: string
+  currencyCode?: string,
+  tokenId?: string,
+  isWithdrawToBank?: boolean
 }
 
 type Props = {|
@@ -33,6 +37,7 @@ type Props = {|
 
   // Visuals:
   headerTitle: string,
+  showWithdrawToBank?: boolean,
   showCreateWallet?: boolean,
 
   // Deprecated. Use `allowedAssets` and `excludeAssets` instead.
@@ -61,6 +66,7 @@ export function WalletListModal(props: Props) {
 
     // Visuals:
     headerTitle,
+    showWithdrawToBank = false,
     showCreateWallet,
 
     // Deprecated:
@@ -86,12 +92,13 @@ export function WalletListModal(props: Props) {
   const handleCancel = useHandler(() => {
     bridge.resolve({})
   })
-  const handlePress = useHandler((walletId: string, currencyCode: string) => {
+  const handleWalletListPress = useHandler((walletId: string, currencyCode: string) => {
     if (walletId === '') {
       handleCancel()
       showError(s.strings.network_alert_title)
     } else bridge.resolve({ walletId, currencyCode })
   })
+  const handleWithdrawToBank = useHandler(() => bridge.resolve({ isWithdrawToBank: true }))
   const handleSearchClear = useHandler(() => {
     setSearchText('')
     setSearching(false)
@@ -108,6 +115,12 @@ export function WalletListModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{headerTitle}</ModalTitle>
+      {!showWithdrawToBank ? null : (
+        <>
+          <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleWithdrawToBank} marginRem={[0.5, 0.75, 1.5, 0.75]} />
+          <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
+        </>
+      )}
       <OutlinedTextInput
         returnKeyType="search"
         label={s.strings.search_wallets}
@@ -116,7 +129,7 @@ export function WalletListModal(props: Props) {
         onBlur={handleSearchUnfocus}
         onClear={handleSearchClear}
         value={searchText}
-        marginRem={[0.5, 0.75, 1.25]}
+        marginRem={[1, 0.75, 1.25]}
         searchIcon
       />
       <WalletList
@@ -128,7 +141,7 @@ export function WalletListModal(props: Props) {
         searching={searching}
         searchText={searchText}
         showCreateWallet={showCreateWallet}
-        onPress={handlePress}
+        onPress={handleWalletListPress}
       />
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>

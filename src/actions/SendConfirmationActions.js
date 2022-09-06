@@ -263,6 +263,33 @@ export const signBroadcastAndSave =
         edgeSignedTransaction = await guiMakeSpendInfo.alternateBroadcast(edgeSignedTransaction)
       } else {
         edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+        const { name, type, id } = wallet
+        const {
+          currencyCode,
+          nativeAmount,
+          networkFee,
+          parentNetworkFee,
+          txid,
+          ourReceiveAddresses,
+          deviceDescription,
+          networkFeeOption,
+          requestedCustomFee,
+          feeRateUsed
+        } = edgeSignedTransaction
+
+        global.logActivity(`broadcastTx: ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
+        global.logActivity(`
+  currencyCode: ${currencyCode}
+  nativeAmount: ${nativeAmount}
+  txid: ${txid}
+  networkFee: ${networkFee}
+  parentNetworkFee: ${parentNetworkFee ?? ''}
+  deviceDescription: ${deviceDescription ?? ''}
+  networkFeeOption: ${networkFeeOption ?? ''}
+  ourReceiveAddresses: ${JSON.stringify(ourReceiveAddresses)}
+  requestedCustomFee: ${JSON.stringify(requestedCustomFee)}
+  feeRateUsed ${JSON.stringify(feeRateUsed)}
+      `)
       }
       await wallet.saveTx(edgeSignedTransaction)
       let edgeMetadata = { ...spendInfo.metadata }

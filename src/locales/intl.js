@@ -1,6 +1,6 @@
 // @flow
 
-import { toFixed } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 
@@ -255,4 +255,21 @@ export const trimEnd = (val: string): string => {
     }
   }
   return out
+}
+
+// Return a formatted percent string based on a number or string that is < 1.0
+// and greater than -1.0
+export const toPercentString = (percentVal: string | number, options?: IntlNumberFormatOptionsType): string => {
+  const percentString = mul('100', String(percentVal))
+  return `${formatNumber(toFixed(percentString, 0, 1), options)}%`
+}
+
+const normalizeLang = (l: string) => l.replace('-', '').replace('_', '').toLowerCase()
+
+// Given a language code, ie 'en_US', 'en-US', 'en-us', 'en'. Pick the language that closest matches
+export const pickLanguage = (lang: string, languages: string[]): string | void => {
+  const match = languages.find(l => normalizeLang(l) === normalizeLang(lang))
+  if (match != null) return match
+
+  return languages.find(l => normalizeLang(l.slice(0, 2)) === normalizeLang(lang.slice(0, 2)))
 }

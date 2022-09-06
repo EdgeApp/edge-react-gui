@@ -62,6 +62,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
             label: s.strings.otp_disable,
             async onPress() {
               await account.disableOtp()
+              global.logActivity(`2FA Disable: ${account.username}`)
               return true
             }
           },
@@ -74,6 +75,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
   handleEnable = async (): Promise<void> => {
     const { account } = this.props
     await account.enableOtp()
+    global.logActivity(`2FA Enable: ${account.username}`)
   }
 
   handleToggleKey = (): void => {

@@ -1,6 +1,7 @@
 // @flow
 import { add } from 'biggystring'
 
+import { type BroadcastTx } from '../../../../controllers/action-queue/types'
 import { type ApprovableAction } from '../../types'
 
 export const composeApprovableActions = (...actions: ApprovableAction[]): ApprovableAction => {
@@ -19,10 +20,20 @@ export const composeApprovableActions = (...actions: ApprovableAction[]): Approv
       currencyCode,
       nativeAmount
     },
-    approve: async () => {
+    unsignedTxs: actions.reduce((txs, action) => [...txs, ...action.unsignedTxs], []),
+    dryrun: async () => {
+      const outputs: BroadcastTx[] = []
       for (const action of actions) {
-        await action.approve()
+        outputs.push(...(await action.dryrun()))
       }
+      return outputs
+    },
+    approve: async () => {
+      const outputs: BroadcastTx[] = []
+      for (const action of actions) {
+        outputs.push(...(await action.approve()))
+      }
+      return outputs
     }
   }
 }

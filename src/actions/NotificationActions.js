@@ -33,6 +33,7 @@ export const enableNotifications = (currencyCode: string, hours: string, enabled
   const deviceIdEncoded = encodeURIComponent(deviceId)
   try {
     await notif1.put(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`, { hours, enabled })
+    global.logActivity(`Enable Notification: ${account.username} -- ${currencyCode} -- hours:${hours} -- enabled:${enabled.toString()}`)
   } catch (err) {
     console.log('Failed to enable notifications for user.')
   }

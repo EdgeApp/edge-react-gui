@@ -1,12 +1,56 @@
 // @flow
 
 const strings = {
+  // Action Queue Display Info
+  // Unknown
+  action_queue_display_unknown_title: `Unknown action`,
+  action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
+  // seq
+  action_queue_display_seq_title: `Action sequence`,
+  action_queue_display_seq_message: `Doing a sequence of actions`,
+  // par
+  action_queue_display_par_title: `Action concurrency`,
+  action_queue_display_par_message: `Doing multiple things at once`,
+  // fiat_buy
+  action_queue_display_fiat_buy_title: `Purchase %s`,
+  action_queue_display_fiat_buy_message: `Purchase %1$s from %3$s.`,
+  // fiat_sell
+  action_queue_display_fiat_sell_title: `Deposit funds to bank`,
+  action_queue_display_fiat_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
+  // loan_borrow
+  action_queue_display_loan_borrow_title: `Take out loan`,
+  action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,
+  // loan_deposit
+  action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
+  action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
+  // loan_repay
+  action_queue_display_loan_repay_title: `Repay loan principal`,
+  action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
+  // loan_withdraw
+  action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
+  action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
+  // swap
+  action_queue_display_swap_title: `Swap %1$s into %2$s`,
+  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
+  // toast
+  action_queue_display_toast_title: `Toast`,
+  action_queue_display_toast_message: `Show toast message`,
+  // delay
+  action_queue_display_delay_title: 'Wait',
+  action_queue_display_delay_message_pending: 'Wait for %1$s millesconds',
+  action_queue_display_delay_message_doing: 'Wait until %1$s',
+
+  // Action Queue Push Notifications
+  action_queue_push_notification_title: `Action Complete`,
+  action_queue_push_notification_body: `Edge has finished working on your behalf.`,
+
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
   share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
+  drawer_borrow_dollars: 'Borrow Dollars',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_scan_qr_send: 'Scan QR',
@@ -248,8 +292,6 @@ const strings = {
   search_wallets: 'Search Wallets',
   search_tokens: 'Search Tokens',
   select_wallet: 'Select Wallet',
-  select_recv_wallet: 'Select Receiving Wallet',
-  select_src_wallet: 'Select Source Wallet',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
@@ -428,6 +470,7 @@ const strings = {
   title_change_password: 'Change Password',
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
+  title_deposit_to_edge: 'Deposit to Edge',
   title_export_transactions: 'Export Transactions',
   title_edge_login: 'Edge Login',
   title_exchange: 'Exchange',
@@ -651,6 +694,7 @@ const strings = {
   plugin_service_provider_disclaimer:
     'The following services are not provided by %1$s. \n\nFor issues and feedback please contact the respective service providers.',
   plugin_powered_by: 'Powered by',
+  tap_to_change_provider: 'Tap to Change Provider',
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_from_wallet: 'Exchange from %s',
@@ -806,7 +850,7 @@ const strings = {
 
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
-    "We're sorry but something went wrong. Please kill and restart the app to continue.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem.",
+    "We're sorry but something went wrong. Please force close the app and reopen to continue using Edge.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem. \n\nNOTE: Do not uninstall the app before contacting Edge.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -861,6 +905,72 @@ const strings = {
   select_fio_address_address_from: 'Send from FIO Crypto Handle',
   select_fio_address_address_memo: 'FIO Memo',
   select_fio_address_address_memo_error: 'FIO Memo Error',
+
+  // Loan
+  loan_action_add_collateral: 'Add Collateral',
+  loan_action_close_loan: 'Close Loan',
+  loan_action_withdraw_collateral: 'Withdraw Collateral',
+  loan_actions_title: 'Actions',
+  loan_active_loans_title: 'Active Loans',
+  loan_add_collateral: 'Add Collateral',
+  loan_add_from: 'Add from %s',
+  loan_amount_borrow: 'Amount to Borrow',
+  loan_amount_exceeds_s_collateral: 'Loan exceeds %1$s of collateral value in your %2$s wallet',
+  loan_available_equity: 'Available Equity',
+  loan_borrow_details_title: 'Borrow Details',
+  loan_borrow_more: 'Borrow More',
+  loan_breakdown_title: 'Loan Breakdown',
+  loan_close_loan_message:
+    "Closing your loan will liquidate some of the collateral to pay of the remaining principle and interest of your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principle isn't repaid.",
+  loan_close_loan_title: 'Close Loan',
+  loan_collateral_amount: 'Collateral Amount',
+  loan_collateral_destination: 'Collateral Destination',
+  loan_collateral_required: 'Collateral Amount Required',
+  loan_collateral_source: 'Source of Collateral',
+  loan_collateral_value: 'Collateral Value',
+  loan_create_confirmation_title: 'Borrow Details',
+  loan_create_title: 'Borrow With Aave',
+  loan_current_principle: 'Current Principle',
+  loan_dashboard_title: 'Loan Dashboard',
+  loan_debt_amount_title: 'Principle Amount',
+  loan_destination: 'Fund Destination',
+  loan_details_title: 'Loan Details',
+  loan_enter_loan_amount_s: 'Enter Loan Amount (%1$s)',
+  loan_error_title: 'Unexpected Error',
+  loan_estimate_fee: 'Estimate Fee',
+  loan_exchange_rate: 'Exchange Rate',
+  loan_failed_loan: 'Failed to load loan data',
+  loan_fiat_value: 'Fiat Value',
+  loan_insufficient_funds_warning:
+    'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
+  loan_interest_rate: 'Interest Rate',
+  loan_loan_breakdown_title: 'Loan Breakdown',
+  loan_loan_to_value_ratio: 'Loan to Value Ratio',
+  loan_make_payment: 'Make Payment',
+  loan_must_be_s_or_less: 'Loan must be less than %1$s of your total collateral value',
+  loan_new_loan: 'New Loan',
+  loan_new_principle: 'New Principle',
+  loan_remaining_principle: 'Remaining Principle',
+  loan_s_apr: '%1$s APR',
+  loan_select_receiving_wallet: 'Please select a receiving wallet',
+  loan_select_source_collateral: 'Please select a source of collateral',
+  loan_total_collateral_value: 'Total Collateral Value',
+  loan_withdraw_collateral: 'Withdraw Collateral',
+
+  loan_aave: 'AAVE',
+  loan_status_cancel_txs: 'Cancel Transactions',
+  loan_status_cancel_txs_modal_msg:
+    "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",
+  loan_status_complete: 'Your loan has completed successfully!\nPlease allow time for your account to be credited.',
+  loan_status_title: 'Loan Status',
+  loan_status_step_title_0: 'Swap %1$s into %2$s',
+  loan_status_step_body_0: 'To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.',
+  loan_status_step_title_1: 'Depositing %1$s as collateral',
+  loan_status_step_body_1: 'Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.',
+  loan_status_step_title_2: 'Take out Loan',
+  loan_status_step_body_2: 'A %1$s loan has been requested and is on its way to your wallet.',
+  loan_status_step_title_3: 'Deposit Funds to Bank',
+  loan_status_step_body_3: 'Your %1$s is being sold by our partners and deposited into your bank account through %2$s.',
 
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
@@ -959,6 +1069,12 @@ const strings = {
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
+
+  // Wallet List Modal
+  select_recv_wallet: 'Select Receiving Wallet',
+  select_src_wallet: 'Select Source Wallet',
+  deposit_to_bank: 'Deposit to Bank',
+  deposit_to_edge: 'Deposit to Edge',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

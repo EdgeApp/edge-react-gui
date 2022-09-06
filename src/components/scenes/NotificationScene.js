@@ -73,6 +73,7 @@ class NotificationComponent extends React.Component<Props, State> {
     const encodedUserId = encodeURIComponent(this.props.userId)
     try {
       notif1.post(`user/notifications/toggle?userId=${encodedUserId}`, { enabled: this.state.enabled })
+      global.logActivity(`Set Notifications: ${this.props.userId} -- enabled=${this.state.enabled.toString()}}`)
     } catch (error) {
       showError(error)
       console.log(error)

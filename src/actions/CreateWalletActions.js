@@ -32,7 +32,9 @@ export const createWallet = async (account: EdgeAccount, { walletType, walletNam
     keyOptions: format ? { format } : {},
     importText
   }
-  return await account.createCurrencyWallet(type, opts)
+  const out = await account.createCurrencyWallet(type, opts)
+  global.logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${opts.name ?? ''}`)
+  return out
 }
 
 export const createCurrencyWallet =

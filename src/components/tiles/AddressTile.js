@@ -99,8 +99,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       }
     }
     try {
-      const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await coreWallet.parseUri(address, currencyCode)
-
+      const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await coreWallet.parseUri(address, currencyCode)
       this.setState({ loading: false })
 
       // Check if the URI requires a warning to the user
@@ -108,10 +107,9 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       if (!approved) return
 
       // Missing isPrivateKeyUri Modal
-
       // Check is PaymentProtocolUri
-      if (!!parsedUri.paymentProtocolURL && !parsedUri.publicAddress) {
-        await launchBitPay(parsedUri.paymentProtocolURL, { wallet: coreWallet }).catch(showError)
+      if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
+        await launchBitPay(parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
 
         return
       }

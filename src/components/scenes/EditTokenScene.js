@@ -58,6 +58,10 @@ export function EditTokenScene(props: Props) {
             label: s.strings.string_delete,
             async onPress() {
               await wallet.currencyConfig.removeCustomToken(tokenId)
+              global.logActivity(
+                `Delete Custom Token: ${account.username} -- ${wallet.name ?? 'no_wallet_name'} -- ${wallet.type} -- ${tokenId} -- ${currencyCode}`
+              )
+
               navigation.goBack()
               return true
             }
@@ -101,6 +105,9 @@ export function EditTokenScene(props: Props) {
     } else {
       const tokenId = await wallet.currencyConfig.addCustomToken(token)
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
+      global.logActivity(
+        `Add Custom Token: ${account.username} -- ${wallet.name ?? 'no_wallet_name'} -- ${wallet.type} -- ${tokenId} -- ${currencyCode} -- ${decimals}`
+      )
     }
     navigation.goBack()
   })

@@ -35,6 +35,12 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
   ))
 
   if (resolveValue === 'confirm') {
-    account.changeWalletStates({ [walletId]: { deleted: true } }).catch(showError)
+    const { name, type, id } = currencyWallets[walletId]
+    account
+      .changeWalletStates({ [walletId]: { deleted: true } })
+      .catch(showError)
+      .then(r => {
+        global.logActivity(`Archived Wallet ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
+      })
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyWallet, type EdgeNetworkFee } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Request Method Types
@@ -12,7 +12,12 @@ export type BorrowRequest = {
   nativeAmount: string,
 
   // Optional source for the funds which will borrow on behalf of the borrow engine's currencyWallet
-  fromWallet?: EdgeCurrencyWallet
+  fromWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 // Make payment:
@@ -21,7 +26,12 @@ export type RepayRequest = {
   nativeAmount: string,
 
   // Optional source for the funds which will repay on behalf of the borrow engine's currencyWallet
-  fromWallet?: EdgeCurrencyWallet
+  fromWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 // Deposit collateral:
@@ -30,7 +40,12 @@ export type DepositRequest = {
   nativeAmount: string,
 
   // Optional source for the funds which will deposit on behalf of the borrow engine's currencyWallet
-  fromWallet?: EdgeCurrencyWallet
+  fromWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
 }
 
 // Withdraw collateral:
@@ -39,14 +54,30 @@ export type WithdrawRequest = {
   nativeAmount: string,
 
   // Optional destination for the funds
-  toWallet?: EdgeCurrencyWallet
+  toWallet?: EdgeCurrencyWallet,
+
+  // Optional pending txs to pass along to the wallet when making transactions
+  pendingTxs?: EdgeTransaction[],
+  // Optional control over validation checks such as balance
+  skipChecks?: boolean
+}
+
+export type BroadcastTx = {
+  walletId: string,
+  networkFee: EdgeNetworkFee,
+  tx: EdgeTransaction
 }
 
 // General purpose approvable action
 export type ApprovableAction = {
   +networkFee: EdgeNetworkFee,
-  +approve: () => Promise<void>
+  +unsignedTxs: EdgeTransaction[],
+  +dryrun: () => Promise<BroadcastTx[]>,
+  +approve: () => Promise<BroadcastTx[]>
 }
+
+// HACK: Used to identify running ActionQueue programs by borrow action type.
+export type BorrowActionId = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw'
 
 // -----------------------------------------------------------------------------
 // Engine
@@ -92,7 +123,7 @@ export type BorrowEngine = {
 // -----------------------------------------------------------------------------
 
 export type BorrowPluginInfo = {
-  pluginId: string,
+  borrowPluginId: string,
   displayName: string,
 
   // Defines the relationship to the type of currency plugins which the plugin supports

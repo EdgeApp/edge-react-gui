@@ -1,8 +1,7 @@
 // @flow
 
 import ENV from '../../env.json'
-import { config } from '../theme/appConfig.js'
-import { fetchWaterfall } from '../util/utils'
+import { fetchPush } from '../util/network'
 
 class NotifServer {
   version: number
@@ -26,7 +25,7 @@ class NotifServer {
   }
 
   async request(path: string, method: string, body?: Object, headers: Object = {}) {
-    const response = await fetchWaterfall(config.notificationServers, `v${this.version}/${path}`, {
+    const response = await fetchPush(`v${this.version}/${path}`, {
       method,
       headers: {
         ...headers,

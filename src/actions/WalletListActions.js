@@ -87,6 +87,8 @@ const getFirstCurrencyAddress = async (currencyCode, getState) => {
     fiatCurrencyCode: defaultIsoFiat
   })
   const wallet = await showFullScreenSpinner(s.strings.wallet_list_referral_link_currency_loading, createWallet)
+  global.logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
+
   const receiveAddress = await wallet.getReceiveAddress()
   return receiveAddress.publicAddress
 }

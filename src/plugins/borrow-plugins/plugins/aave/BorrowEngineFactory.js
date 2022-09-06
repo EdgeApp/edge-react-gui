@@ -4,6 +4,7 @@ import { type Cleaner, asMaybe } from 'cleaners'
 import { type EdgeCurrencyWallet, type EdgeToken } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
+import { zeroString } from '../../../../util/utils'
 import { type CallInfo, asTxInfo, makeApprovableCall, makeTxCalls } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
@@ -64,7 +65,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     }
     const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
       if (walletParam.currencyInfo.pluginId !== wallet.currencyInfo.pluginId)
-        throw new Error(`Wallet parameter's plugin ID must match borrow engine's wallet plugin ID`)
+        throw new Error(
+          `Wallet parameter's plugin ID ${walletParam.currencyInfo.pluginId} must match borrow engine's wallet plugin ID ${wallet.currencyInfo.pluginId}`
+        )
     }
 
     //
@@ -123,7 +126,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       },
 
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet } = request
+        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+
         validateWalletParam(fromWallet)
 
         const token = getToken(tokenId)
@@ -134,18 +139,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
         const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress()).publicAddress
-        const amountToCover = amount.eq(ethers.constants.MaxUint256) ? BigNumber.from(debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0) : amount
-
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
-        // Check balance of token
-        const balance = await tokenContract.balanceOf(spenderAddress)
-        if (amountToCover.gt(balance)) {
-          throw new Error(`Insufficient funds to deposit ${token.displayName} collateral`)
-        }
-
         const gasPrice = await aaveNetwork.provider.getGasPrice()
-
         const txCallInfos: CallInfo[] = []
 
         const allowance = await tokenContract.allowance(onBehalfOf, aaveNetwork.lendingPool.address)
@@ -164,7 +160,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               name: 'AAVE',
               category: 'expense',
               notes: `AAVE contract approval`
-            }
+            },
+            pendingTxs,
+            skipChecks
           })
         }
 
@@ -179,7 +177,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             name: 'AAVE',
             category: 'transfer',
             notes: `Deposit ${token.currencyCode} collateral`
-          }
+          },
+          pendingTxs,
+          skipChecks
         })
 
         const actions = await makeTxCalls(txCallInfos)
@@ -187,7 +187,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, toWallet = wallet } = request
+        const { nativeAmount, tokenId, toWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+
         validateWalletParam(toWallet)
 
         const token = getToken(tokenId)
@@ -208,11 +210,14 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             name: 'AAVE',
             category: 'transfer',
             notes: `Withdraw ${token.currencyCode} collateral`
-          }
+          },
+          pendingTxs,
+          skipChecks
         })
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet } = request
+        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: borrow request contains no nativeAmount.')
 
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
@@ -237,11 +242,14 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             name: 'AAVE',
             category: 'transfer',
             notes: `Borrow ${token.displayName} loan`
-          }
+          },
+          pendingTxs,
+          skipChecks
         })
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet } = request
+        const { nativeAmount, tokenId, fromWallet = wallet, pendingTxs = [], skipChecks = false } = request
+        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
@@ -254,12 +262,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const amountToCover = amount.eq(ethers.constants.MaxUint256) ? BigNumber.from(debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0) : amount
 
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
-
-        // Check balance of token
-        const balance = await tokenContract.balanceOf(spenderAddress)
-        if (amountToCover.gt(balance)) {
-          throw new Error(`Insufficient funds to repay ${token.displayName} loan`)
-        }
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
@@ -280,7 +282,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               name: 'AAVE',
               category: 'expense',
               notes: `AAVE contract approval`
-            }
+            },
+            pendingTxs,
+            skipChecks
           })
         }
 
@@ -299,7 +303,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             name: 'AAVE',
             category: 'transfer',
             notes: `Repay ${token.displayName} loan`
-          }
+          },
+          pendingTxs,
+          skipChecks
         })
 
         const actions = await makeTxCalls(txCallInfos)
@@ -331,6 +337,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...repayActions, ...withdrawActions)
       }
     }
+
     return instance
   }
 }

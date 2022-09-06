@@ -1,7 +1,16 @@
 // @flow
 
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgePluginMap, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgePluginMap,
+  EdgeToken,
+  EdgeTokenMap,
+  EdgeTransaction
+} from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
@@ -17,12 +26,12 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl.js'
 import s from '../locales/strings.js'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
-import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
+import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { GuiDenomination, TransactionListTx } from '../types/types.js'
 import { type EdgeTokenId, type GuiExchangeRates } from '../types/types.js'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers.js'
+import { getTokenId } from './CurrencyInfoHelpers'
 
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
@@ -150,6 +159,8 @@ export const convertNativeToDisplay = convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
 export const convertNativeToExchange = convertNativeToDenomination
 
+export const mulToPrecision = (multiplier: string): number => multiplier.match(/0/g)?.length ?? DECIMAL_PRECISION
+
 export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes(item) ? [...array, item] : array)
 
 const restrictedCurrencyCodes = ['BTC']
@@ -204,7 +215,7 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 }
 
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return !isSentTransaction(edgeTransaction)
+  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) !== '0' && edgeTransaction.nativeAmount.charAt(0) !== '-'
 }
 
 export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
@@ -311,42 +322,28 @@ export function snooze(ms: number): Promise<void> {
 }
 
 export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
-  const temporaryTotalCrypto: { [string]: number } = {}
-  const wallets = state.ui.wallets.byId
-
-  // loop through each of the walletId's
-  for (const parentProp of Object.keys(wallets)) {
-    const wallet = wallets[parentProp]
-    // If the GUI wallet exists without the core wallet being loaded, skip that wallet
-    if (state.core.account.currencyWallets[wallet.id] == null) continue
-    // loop through all of the nativeBalances, which includes both parent currency and tokens
-    for (const currencyCode of Object.keys(wallet.nativeBalances)) {
-      // if there is no native balance for the currency / token then assume it's zero
-      if (!temporaryTotalCrypto[currencyCode]) {
-        temporaryTotalCrypto[currencyCode] = 0
-      }
-
-      // get the native balance for this currency
-      const nativeBalance = wallet.nativeBalances[currencyCode]
-      // if it's a token and not enabled
-      const isDisabledToken = currencyCode !== wallet.currencyCode && !wallet.enabledTokens.includes(currencyCode)
-      if (isDisabledToken) continue
-      // if it is a non-zero amount then we will process it
-      if (!zeroString(nativeBalance)) {
-        const exchangeDenomination = getExchangeDenomination(state, state.core.account.currencyWallets[wallet.id].currencyInfo.pluginId, currencyCode)
-        if (!exchangeDenomination) continue
-        // grab the multiplier, which is the ratio that we can multiply and divide by
-        const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-        // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
-        const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-        temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
-      }
-    }
-  }
-
   let total = 0
-  for (const currency of Object.keys(temporaryTotalCrypto)) {
-    total += parseFloat(convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency].toFixed(DECIMAL_PRECISION)))
+  const { exchangeRates } = state
+  for (const walletId of Object.keys(state.core.account.currencyWallets)) {
+    const wallet = state.core.account.currencyWallets[walletId]
+    for (const currencyCode of Object.keys(wallet.balances)) {
+      const nativeBalance = wallet.balances[currencyCode] ?? '0'
+      const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+
+      // Find the currency or token info:
+      let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
+      if (currencyCode !== wallet.currencyInfo.currencyCode) {
+        const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
+        if (tokenId == null) continue
+        info = wallet.currencyConfig.allTokens[tokenId]
+      }
+      const {
+        denominations: [denomination]
+      } = info
+
+      // Do the conversion:
+      total += parseFloat(rate) * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
+    }
   }
   return total
 }
@@ -430,20 +427,6 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
       }
     }
   }
-}
-
-export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
-  if (servers == null) return
-  const funcs = servers.map(server => async () => {
-    const result = await fetch(server + '/' + path, options)
-    if (typeof result !== 'object') {
-      const msg = `Invalid return value ${path} in ${server}`
-      console.log(msg)
-      throw new Error(msg)
-    }
-    return result
-  })
-  return asyncWaterfall(funcs, timeout)
 }
 
 export async function openLink(url: string): Promise<void> {
@@ -643,19 +626,9 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return array
 }
 
-export async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
-  if (servers == null) return
-  return fetchWaterfall(shuffleArray(servers), path, options, timeout)
-}
-
 export const pickRandom = <T>(array?: T[]): T | null => {
   if (array == null || array.length === 0) return null
   return array[Math.floor(Math.random() * array.length)]
-}
-
-const INFO_SERVERS = ['https://info2.edge.app']
-export const fetchInfo = (path: string, options?: Object, timeout?: number): Promise<any> => {
-  return multiFetch(INFO_SERVERS, path, options, timeout)
 }
 
 /**

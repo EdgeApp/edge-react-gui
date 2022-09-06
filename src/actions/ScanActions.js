@@ -354,6 +354,34 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
   })
   const signedTx = await wallet.signTx(unsignedTx)
   await wallet.broadcastTx(signedTx)
+
+  const { name, id, type } = wallet
+  const {
+    currencyCode,
+    nativeAmount,
+    networkFee,
+    parentNetworkFee,
+    txid,
+    ourReceiveAddresses,
+    deviceDescription,
+    networkFeeOption,
+    requestedCustomFee,
+    feeRateUsed
+  } = signedTx
+
+  global.logActivity(`Sweep Private Key: ${name ?? ''} ${type} ${id}`)
+  global.logActivity(`
+    currencyCode: ${currencyCode}
+    nativeAmount: ${nativeAmount}
+    txid: ${txid}
+    networkFee: ${networkFee}
+    parentNetworkFee: ${parentNetworkFee ?? ''}
+    deviceDescription: ${deviceDescription ?? ''}
+    networkFeeOption: ${networkFeeOption ?? ''}
+    ourReceiveAddresses: ${JSON.stringify(ourReceiveAddresses)}
+    requestedCustomFee: ${JSON.stringify(requestedCustomFee)}
+    feeRateUsed ${JSON.stringify(feeRateUsed)}
+  `)
 }
 
 const shownWalletGetCryptoModals = []

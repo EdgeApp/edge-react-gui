@@ -1,7 +1,6 @@
 // @flow
 import { abs, add, div, gt, mul } from 'biggystring'
 import { type JsonObject } from 'edge-core-js/types'
-import { WcRpcPayload } from 'edge-currency-accountbased'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -24,6 +23,12 @@ import { ThemedModal } from '../themed/ThemedModal.js'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
 import { IconTile } from '../tiles/IconTile'
+
+type WcRpcPayload = {
+  id: string | number,
+  method: 'personal_sign' | 'eth_sign' | 'eth_signTypedData' | 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sendRawTransaction',
+  params: any[]
+}
 
 type Props = {
   bridge: AirshipBridge<string | null>,
