@@ -110,6 +110,9 @@ export async function launchBitPay(
     const matchingWallets: string[] = Object.keys(currencyWallets).filter(key => paymentCurrencies.includes(currencyWallets[key].currencyInfo.currencyCode))
     if (matchingWallets.length === 0) {
       throw new BitPayError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
+    } else if (matchingWallets.length === 1) {
+      selectedWallet = currencyWallets[matchingWallets[0]]
+      selectedCurrencyCode = selectedWallet.currencyInfo.currencyCode
     } else {
       const walletListResult = await Airship.show(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
