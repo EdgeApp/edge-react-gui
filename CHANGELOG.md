@@ -1,5 +1,27 @@
 # edge-react-gui
 
+## 2.21.0 (2022-09-05)
+
+- Wyre: Fix Ethereum purchases
+- Make it easier to choose provider in buy scenes
+- Upgrade edge-core-js to v0.19.27
+  - fixed: Correctly pass EdgeSpendInfo.skipChecks to the currency plugin.
+  - added: EdgeContext.clientId.
+  - added: EdgeSpendInfo.pendingTxs and EdgeSpendInfo.skipChecks flags.
+  - fixed: Show useful information when logging errors, instead of just {}.
+- Upgrade edge-currency-accountbased to v0.17.5
+  - Implement new skipChecks and pendingTxs API from EdgeSpendInfo for ETH engines
+  - Allow specifying only gasPrice or gasLimit for custom fees
+  - Remove useless broken dependencies usb and node-hid before building
+  - ZEC: update checkpoint script and checkpoint files
+  - FIO: Update server list
+  - Fix blockbook query txs return object initialization
+  - Only record parent network fee on outgoing transactions
+  - ETH: Update blockbook server list
+  - XRP: Fix API disconnect
+  - ETH: Add NOW Token
+  - Remove unused values from transactions
+
 ## 2.20.2 (2022-08-26)
 
 - Update MyMonero SDK to fix spending after V16 hard fork
