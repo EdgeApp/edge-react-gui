@@ -6,6 +6,7 @@ import { ActivityIndicator, ScrollView } from 'react-native'
 
 import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 import { useHandler } from '../../hooks/useHandler.js'
+import { useWatch } from '../../hooks/useWatch.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
@@ -32,9 +33,12 @@ export const NotificationScene = (props: Props) => {
   const [enabled, setEnabled] = useState(true)
   const [loading, setLoading] = useState(false)
 
-  const userId = useSelector(state => state.core.account.rootLoginId)
+  const account = useSelector(state => state.core.account)
+  const userId = account.rootLoginId
+
   const encodedUserId = encodeURIComponent(userId)
-  const currencyInfos = useSelector(state => getActiveWalletCurrencyInfos(state))
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const currencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
 
   useEffect(() => {
     setLoading(true)

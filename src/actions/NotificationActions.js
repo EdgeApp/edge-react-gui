@@ -3,7 +3,7 @@
 import { getUniqueId } from 'react-native-device-info'
 
 import { notif1 } from '../modules/notifServer.js'
-import { getActiveWalletCurrencyCodes } from '../selectors/WalletSelectors.js'
+import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
 export const fetchSettings = async (userId: string, currencyCode: string) => {
@@ -17,7 +17,9 @@ export const registerNotifications = () => async (dispatch: Dispatch, getState: 
   const state = getState()
   const { account } = state.core
   const encodedUserId = encodeURIComponent(account.rootLoginId)
-  const currencyCodes = getActiveWalletCurrencyCodes(state)
+  const currencyInfos = getActiveWalletCurrencyInfos(state.core.account.currencyWallets)
+  const currencyCodes = currencyInfos.map(info => info.currencyCode)
+
   try {
     await notif1.post(`user/notifications?userId=${encodedUserId}`, { currencyCodes })
   } catch (err) {
