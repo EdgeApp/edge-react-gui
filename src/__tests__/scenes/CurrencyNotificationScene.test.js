@@ -7,15 +7,17 @@ import renderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene.js'
-import { getTheme } from '../../components/services/ThemeContext.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
 import { fakeNavigation } from '../../util/fake/fakeNavigation.js'
 
 describe('CurrencyNotificationComponent', () => {
   const mockStore = {
-    core: {
-      account: {
-        rootLoginId: '332s0ds39f'
+    priceChangeNotifications: {
+      bitcoin: {
+        eventId: '123id',
+        currencyPair: 'BTC_iso:USD',
+        dailyChange: 10,
+        hourlyChange: 3
       }
     }
   }
@@ -28,7 +30,7 @@ describe('CurrencyNotificationComponent', () => {
       route: {
         params: {
           currencyInfo: {
-            pluginId: '',
+            pluginId: 'bitcoin',
             displayName: 'Bitcoin',
             walletType: 'My Bitcoin Wallet',
             currencyCode: 'BTC',
@@ -64,9 +66,7 @@ describe('CurrencyNotificationComponent', () => {
             disklet: () => undefined
           }
         }
-      },
-      enableNotifications: (currencyCode, hours, enabled) => undefined,
-      theme: getTheme()
+      }
     }
 
     const actual = renderer.create(

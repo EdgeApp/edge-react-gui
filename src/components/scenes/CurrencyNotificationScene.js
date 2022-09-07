@@ -4,9 +4,11 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { enableNotifications, fetchSettings } from '../../actions/NotificationActions.js'
+import { newPriceChangeEvent, serverSettingsToState, setDeviceSettings } from '../../actions/NotificationActions.js'
+import { type NewPushEvent } from '../../controllers/action-queue/types/pushTypes.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { useEffect, useMemo, useState } from '../../types/reactHooks.js'
+import { useCallback, useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -21,54 +23,57 @@ type OwnProps = {
 type Props = OwnProps
 
 export const CurrencyNotificationScene = (props: Props) => {
-  const { navigation, route } = props
-  const { currencyCode } = route.params.currencyInfo
-
-  const [hoursMap, setHoursMap] = useState<{ [hours: string]: boolean }>({})
+  const { route } = props
+  const { currencyInfo } = route.params
+  const { pluginId } = currencyInfo
   const dispatch = useDispatch()
 
-  const userId = useSelector(state => state.core.account.rootLoginId)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const deviceId = useSelector(state => state.core.context.clientId)
+  const settings = useSelector(state => state.priceChangeNotifications)
 
-  useEffect(() => {
-    if (Object.keys(hoursMap).length > 0) return
-
-    fetchSettings(userId, currencyCode)
-      .then(settings => {
-        if (settings != null) {
-          setHoursMap(settings)
-        }
-      })
-      .catch(err => {
-        showError(err)
-        navigation.goBack()
-      })
+  const toggleHourlySetting = useHandler(async () => {
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings[pluginId].hourlyChange, !!settings[pluginId].dailyChange)
+    await updateSettings(newEvent)
   })
 
-  const rows = useMemo(() => {
-    const out = []
-    for (const hours of Object.keys(hoursMap)) {
-      const enabled: boolean = hoursMap[hours]
-      const num = Number(hours)
-      const percent = num === 1 ? 3 : 10
-      const label =
-        num === 1
-          ? sprintf(s.strings.settings_currency_notifications_percent_change_hour, percent)
-          : sprintf(s.strings.settings_currency_notifications_percent_change_hours, percent, hours)
+  const toggleDailySetting = useHandler(async () => {
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings[pluginId].hourlyChange, !settings[pluginId].dailyChange)
+    await updateSettings(newEvent)
+  })
 
-      out.push(
-        <SettingsSwitchRow
-          key={hours}
-          label={label}
-          value={enabled}
-          onPress={() => {
-            setHoursMap({ ...hoursMap, [hours]: !enabled })
-            dispatch(enableNotifications(currencyCode, hours, !enabled))
-          }}
-        />
-      )
-    }
-    return out
-  }, [currencyCode, dispatch, hoursMap])
+  const updateSettings = useCallback(
+    async (event: NewPushEvent) => {
+      try {
+        const newSettings = await setDeviceSettings(deviceId, { createEvents: [event] })
+        dispatch({
+          type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
+          data: serverSettingsToState(newSettings)
+        })
+      } catch (e) {
+        showError(e)
+      }
+    },
+    [deviceId, dispatch]
+  )
+
+  const rows = useMemo(
+    () => [
+      <SettingsSwitchRow
+        key="hourly"
+        label={sprintf(s.strings.settings_currency_notifications_percent_change_hour, 3)}
+        value={settings[pluginId].hourlyChange != null}
+        onPress={toggleHourlySetting}
+      />,
+      <SettingsSwitchRow
+        key="daily"
+        label={sprintf(s.strings.settings_currency_notifications_percent_change_hours, 10, 24)}
+        value={settings[pluginId].dailyChange != null}
+        onPress={toggleDailySetting}
+      />
+    ],
+    [pluginId, settings, toggleDailySetting, toggleHourlySetting]
+  )
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
