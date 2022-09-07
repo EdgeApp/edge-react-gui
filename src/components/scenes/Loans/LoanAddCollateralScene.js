@@ -27,7 +27,6 @@ export const LoanAddCollateralScene = (props: Props) => {
     amountChange: 'increase',
     loanAccount,
 
-    showExchangeRateTile: true,
     showTotalDebtTile: true,
     showTotalCollateralTile: true,
 

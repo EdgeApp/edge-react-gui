@@ -19,35 +19,6 @@ import { Tile } from './tiles/Tile.js'
 // 1. Move components that are not reused into their respective scene files.
 // 2. Split reused components into the appropriate component folders.
 
-export const ExchangeRateTile = (props: { wallet: EdgeCurrencyWallet, tokenId?: string }) => {
-  const {
-    wallet: {
-      currencyConfig: { allTokens },
-      currencyInfo,
-      fiatCurrencyCode: isoFiatCurrencyCode
-    },
-    tokenId
-  } = props
-  const { multiplier } = getDenomFromIsoCode(isoFiatCurrencyCode)
-
-  const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId] ?? {}
-
-  const exchangeRateFiatAmount = useFiatText({
-    appendFiatCurrencyCode: false,
-    autoPrecision: false,
-    cryptoCurrencyCode: currencyCode,
-    cryptoExchangeMultiplier: multiplier,
-    fiatSymbolSpace: false,
-    isoFiatCurrencyCode: isoFiatCurrencyCode,
-    nativeCryptoAmount: multiplier
-  })
-
-  const title = `${currencyCode} ${s.strings.loan_exchange_rate}`
-  const body = `1 ${currencyCode} = ${exchangeRateFiatAmount}`
-
-  return <Tile title={title} body={body} type="static" />
-}
-
 // $FlowFixMe - Flow doesn't like that BorrowCollateral doesn't have an apr key despite that value not being relevant anywhere in this function. It doesn't even appear in this file.
 export const TotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowDebt[] | BorrowCollateral[]): string => {
   const {

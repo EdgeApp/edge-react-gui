@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
 import { zeroString } from '../../../util/utils.js'
 import { FlipInputTile } from '../../cards/FlipInputTile.js'
-import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../LoanComponents.js'
+import { CollateralAmountTile, DebtAmountTile, NetworkFeeTile } from '../../LoanComponents.js'
 import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal.js'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { type ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput.js'
@@ -51,7 +51,6 @@ type Props<T: $Keys<ParamList>> = {
   amountChange?: 'increase' | 'decrease',
   loanAccount: LoanAccount,
 
-  showExchangeRateTile?: boolean,
   showNewDebtAprChange?: true,
   showNewDebtTile?: boolean,
   showTotalCollateralTile?: boolean,
@@ -70,7 +69,6 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     amountChange = 'increase',
     loanAccount,
 
-    showExchangeRateTile,
     showNewDebtAprChange,
     showNewDebtTile,
     showTotalCollateralTile,
@@ -233,7 +231,6 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         tokenId={selectedTokenId}
         key="flipInput"
       />
-      {showExchangeRateTile ? <ExchangeRateTile wallet={borrowEngineWallet} tokenId={selectedTokenId} key="exchangeRate" /> : null}
       {showNewDebtAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
       {showTotalDebtTile ? <DebtAmountTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debts={debts} key="totalDebt" /> : null}
       {showNewDebtTile ? (
