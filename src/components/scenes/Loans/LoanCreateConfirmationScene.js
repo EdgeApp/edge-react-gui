@@ -16,6 +16,7 @@ import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { translateError } from '../../../util/translateError'
 import { NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
+import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
 import { FillLoader } from '../../progress-indicators/FillLoader'
@@ -126,7 +127,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   if (loanAccountError != null) return <Alert title={s.strings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
 
   return loanAccount == null ? (
-    <FillLoader />
+    <SceneWrapper background="theme">
+      <FillLoader />
+    </SceneWrapper>
   ) : (
     <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={false} onSliderComplete={onSliderComplete}>
       <Tile type="static" title={s.strings.loan_amount_borrow}>
