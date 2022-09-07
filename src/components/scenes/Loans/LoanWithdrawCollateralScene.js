@@ -21,11 +21,11 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
   return ManageCollateralScene({
     // $FlowFixMe - Get rid of this hasty abstraction
     action: async req => await borrowEngine.withdraw(req),
+    actionOperand: 'collaterals',
     actionOpType: 'loan-withdraw',
     actionWallet: 'toWallet',
     amountChange: 'decrease',
     loanAccount,
-    ltvType: 'collaterals',
 
     showExchangeRateTile: true,
     showTotalDebtTile: true,

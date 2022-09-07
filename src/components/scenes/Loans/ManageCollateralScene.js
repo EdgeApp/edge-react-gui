@@ -45,11 +45,11 @@ type ManageCollateralRequest = {
 type Props<T: $Keys<ParamList>> = {
   // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
   action: (request: ManageCollateralRequest) => Promise<ApprovableAction>,
+  actionOperand: 'debts' | 'collaterals',
   actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw',
   actionWallet: 'fromWallet' | 'toWallet',
   amountChange?: 'increase' | 'decrease',
   loanAccount: LoanAccount,
-  ltvType: 'debts' | 'collaterals',
 
   showExchangeRateTile?: boolean,
   showNewDebtAprChange?: true,
@@ -64,11 +64,11 @@ type Props<T: $Keys<ParamList>> = {
 export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const {
     action,
+    actionOperand,
     actionOpType,
     actionWallet,
     amountChange = 'increase',
     loanAccount,
-    ltvType,
 
     showExchangeRateTile,
     showNewDebtAprChange,
@@ -103,7 +103,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // Flip input selected wallet
   const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
-  const defaultTokenId = ltvType === 'collaterals' ? collaterals[0].tokenId : debts[0].tokenId
+  const defaultTokenId = actionOperand === 'collaterals' ? collaterals[0].tokenId : debts[0].tokenId
   const [selectedTokenId, setSelectedTokenId] = useState<string | void>(defaultTokenId)
   const selectedWalletName = useWatch(selectedWallet, 'name') ?? ''
   const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? borrowEngineCurrencyInfo : allTokens[selectedTokenId]
@@ -248,7 +248,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         borrowEngine={borrowEngine}
         tokenId={selectedTokenId}
         nativeAmount={actionNativeAmount}
-        type={ltvType}
+        type={actionOperand}
         direction={amountChange}
         key="ltv"
       />
