@@ -1,6 +1,6 @@
 // @flow
 
-import { type Cleaner, asArray, asDate, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, uncleaner } from 'cleaners'
+import { type Cleaner, asArray, asBoolean, asDate, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, uncleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import { asBroadcastTx, asNewPushEvent, asPushEventState, asPushMessage, asPushTrigger } from './pushCleaners'
@@ -24,9 +24,10 @@ export type PushRequestBody = {
 }
 
 export type DeviceUpdatePayload = {
-  loginIds: Uint8Array[],
+  loginIds?: Uint8Array[],
   createEvents?: NewPushEvent[],
-  removeEvents?: string[]
+  removeEvents?: string[],
+  ignorePriceChanges?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -52,7 +53,8 @@ export const wasPushRequestBody = uncleaner(asJSON(asPushRequestBody))
  * PUSH /v2/device/update payload.
  */
 export const asDeviceUpdatePayload = asObject({
-  loginIds: asArray(asBase64),
+  loginIds: asOptional(asArray(asBase64), []),
+  ignorePriceChanges: asOptional(asBoolean),
   createEvents: asOptional(asArray(asNewPushEvent), []),
   removeEvents: asOptional(asArray(asString), [])
 })
@@ -96,8 +98,9 @@ export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
  * POST /v2/device response payload.
  */
 export const asDevicePayload = asObject({
-  loginIds: asArray(asBase64),
-  events: asArray(asPushEventStatus)
+  loginIds: asOptional(asArray(asBase64)),
+  events: asArray(asPushEventStatus),
+  ignorePriceChanges: asBoolean
 })
 
 /**

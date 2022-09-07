@@ -94,6 +94,9 @@ Object {
     "contacts": "denied",
     "location": "denied",
   },
+  "priceChangeNotifications": Object {
+    "ignorePriceChanges": false,
+  },
   "sortedWalletList": Array [],
   "ui": Object {
     "fio": Object {

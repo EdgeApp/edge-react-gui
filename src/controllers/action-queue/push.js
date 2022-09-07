@@ -76,7 +76,6 @@ export async function prepareNewPushEvents(
         broadcastTxs,
         // Include pushMessage only for the last event because device should only wake up when the server finishes all push events.
         pushMessage: index === dryrunOutputs.length - 1 ? pushMessage : undefined,
-        recurring: false,
         trigger
       }
 
