@@ -79,23 +79,19 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       try {
         // Collaterals and Debts:
         const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-        const collaterals: BorrowCollateral[] = reserveTokenBalances
-          .filter(({ aBalance }) => !aBalance.eq(0))
-          .map(({ address, aBalance }) => {
-            return {
-              tokenId: addressToTokenId(address),
-              nativeAmount: aBalance.toString()
-            }
-          })
-        const debts: BorrowDebt[] = reserveTokenBalances
-          .filter(({ vBalance }) => !vBalance.eq(0))
-          .map(({ address, vBalance, variableApr }) => {
-            return {
-              tokenId: addressToTokenId(address),
-              nativeAmount: vBalance.toString(),
-              apr: variableApr
-            }
-          })
+        const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
+          return {
+            tokenId: addressToTokenId(address),
+            nativeAmount: aBalance.toString()
+          }
+        })
+        const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
+          return {
+            tokenId: addressToTokenId(address),
+            nativeAmount: vBalance.toString(),
+            apr: variableApr
+          }
+        })
 
         // Loan to value:
         const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
