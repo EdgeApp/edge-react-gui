@@ -79,6 +79,8 @@ export function ControlPanel(props: Props) {
     if (!isDrawerOpen || !isMultiUsers) setIsDropped(false)
   }, [isDrawerOpen, isMultiUsers])
 
+  const [bottomPanelHeight, setBottomPanelHeight] = useState(0)
+
   /// ---- Callbacks ----
 
   const handleDeleteAccount = (username: string) => () => {
@@ -180,16 +182,22 @@ export function ControlPanel(props: Props) {
     drawerClose()
   }
 
+  const handleBottomPanelLayout = (event: any) => {
+    setBottomPanelHeight(event.nativeEvent.layout.height)
+  }
+
   /// ---- Animation ----
 
   // Track the destination height of the dropdown
-  const userListMaxHeight = styles.rowContainer.height * usernames.length + theme.rem(1)
+  const userListDesiredHeight = styles.rowContainer.height * usernames.length + theme.rem(1)
+  const userListHeight = Math.min(userListDesiredHeight, bottomPanelHeight)
+  const isUserListHeightOverflowing = userListDesiredHeight >= bottomPanelHeight
 
   // Height value above can change if users are added/removed
-  const sMaxHeight = useSharedValue(userListMaxHeight)
+  const sMaxHeight = useSharedValue(userListHeight)
   useEffect(() => {
-    sMaxHeight.value = withTiming(userListMaxHeight)
-  }, [sMaxHeight, userListMaxHeight])
+    sMaxHeight.value = withTiming(userListHeight)
+  }, [sMaxHeight, userListHeight])
 
   // Animation completion ratio/multiplier
   // Shared to sync fade & drop animations
@@ -203,6 +211,11 @@ export function ControlPanel(props: Props) {
 
   /// ---- Dynamic CSS ----
 
+  const themeRem2 = theme.rem(2) // We cannot call theme.rem from within worklet
+  const aBorderBottomRightRadius = useAnimatedStyle(() => ({
+    // Use a easeInCirc easing function for the border transition
+    borderBottomRightRadius: isUserListHeightOverflowing ? themeRem2 - themeRem2 * (1 - Math.sqrt(1 - sAnimationMult.value ** 4)) : themeRem2
+  }))
   const aDropdown = useAnimatedStyle(() => ({
     height: sMaxHeight.value * sAnimationMult.value
   }))
@@ -306,9 +319,9 @@ export function ControlPanel(props: Props) {
       </View>
       {/* ==== Top Panel End ==== */}
       {/* ==== Bottom Panel Start ==== */}
-      <View style={styles.bottomPanel}>
+      <View style={styles.bottomPanel} onLayout={handleBottomPanelLayout}>
         {/* === Dropdown Start === */}
-        <Animated.View style={[styles.dropContainer, aDropdown]}>
+        <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
           <ScrollView>
             {usernames.map((username: string) => (
               <View key={username} style={styles.rowContainer}>
@@ -434,7 +447,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   dropContainer: {
     backgroundColor: theme.modal,
     borderBottomLeftRadius: theme.rem(2),
-    borderBottomRightRadius: theme.rem(2),
     zIndex: 2,
     position: 'absolute',
     width: '100%'
