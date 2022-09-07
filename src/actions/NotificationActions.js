@@ -23,34 +23,6 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
   return notif1.get(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
 }
 
-export const registerNotifications = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const encodedUserId = encodeURIComponent(account.rootLoginId)
-  const currencyInfos = getActiveWalletCurrencyInfos(state.core.account.currencyWallets)
-  const currencyCodes = currencyInfos.map(info => info.currencyCode)
-
-  try {
-    await notif1.post(`user/notifications?userId=${encodedUserId}`, { currencyCodes })
-  } catch (err) {
-    console.log('Failed to register user for notifications.')
-  }
-}
-
-export const enableNotifications = (currencyCode: string, hours: string, enabled: boolean) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const encodedUserId = encodeURIComponent(account.rootLoginId)
-  const deviceId = getUniqueId()
-  const deviceIdEncoded = encodeURIComponent(deviceId)
-  try {
-    await notif1.put(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`, { hours, enabled })
-    global.logActivity(`Enable Notification: ${account.username} -- ${currencyCode} -- hours:${hours} -- enabled:${enabled.toString()}`)
-  } catch (err) {
-    console.log('Failed to enable notifications for user.')
-  }
-}
-
 export type PriceChangeNotificationSettings = {
   ignorePriceChanges: boolean,
   [pluginId: string]: {
