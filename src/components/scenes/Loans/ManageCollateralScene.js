@@ -48,7 +48,6 @@ type Props<T: $Keys<ParamList>> = {
   actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw',
   actionWallet: 'fromWallet' | 'toWallet',
   amountChange?: 'increase' | 'decrease',
-  defaultTokenId?: string,
   loanAccount: LoanAccount,
   ltvType: 'debts' | 'collaterals',
 
@@ -68,7 +67,6 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     actionOpType,
     actionWallet,
     amountChange = 'increase',
-    defaultTokenId,
     loanAccount,
     ltvType,
 
@@ -105,6 +103,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // Flip input selected wallet
   const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
+  const defaultTokenId = ltvType === 'collaterals' ? collaterals[0].tokenId : debts[0].tokenId
   const [selectedTokenId, setSelectedTokenId] = useState<string | void>(defaultTokenId)
   const selectedWalletName = useWatch(selectedWallet, 'name') ?? ''
   const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? borrowEngineCurrencyInfo : allTokens[selectedTokenId]
