@@ -140,6 +140,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
   },
+  xanpool: {
+    pluginId: 'xanpool',
+    storeId: 'xanpool',
+    baseUri: 'https://widget.xanpool.com',
+    baseQuery: { apiKey: 'ae524a0144ccd8dc087af39eabb7a02a', isWebView: 'true' },
+    displayName: 'Xanpool',
+    permissions: ['camera']
+  },
   custom: {
     pluginId: 'custom',
     storeId: 'custom',
@@ -157,7 +165,7 @@ export const customPluginRow: GuiPluginRow = {
   title: 'Custom Dev',
   description: '',
   partnerIconPath: undefined,
-  paymentTypeLogoKey: 'credit',
+  paymentTypeLogoKey: 'paynow',
   paymentTypes: [],
   cryptoCodes: []
 }

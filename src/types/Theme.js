@@ -354,6 +354,7 @@ export type Theme = {
   paymentTypeLogoInterac: string,
   paymentTypeLogoNewsagent: string,
   paymentTypeLogoPayid: string,
+  paymentTypeLogoPaynow: string,
   paymentTypeLogoPoli: string,
   paymentTypeLogoSofort: string,
   paymentTypeLogoSwish: string,
