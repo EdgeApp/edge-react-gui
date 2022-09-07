@@ -79,6 +79,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Thorchain',
+    hasThumbnail: true,
+    thumbnailPath: 'thorchain.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Wyre',
     hasThumbnail: true,
     thumbnailPath: 'wyre.png',
