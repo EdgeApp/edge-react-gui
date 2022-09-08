@@ -110,17 +110,23 @@ export const LoanDashboardScene = (props: Props) => {
     hardPluginWalletIds.length === 0 ||
     hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
 
-  const footer = isNewLoanLoading ? (
-    // Render a loading card in place of the "New Loan" button while initializing a new loan
-    <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
-      <FillLoader />
-    </Card>
-  ) : isCompatibleWalletsAvailable ? ( // Don't show the "Add Loan" button if all the user's wallets have associated LoanAccounts.
-    <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
-      <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-      <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
-    </TouchableOpacity>
-  ) : null
+  const renderFooter = () => {
+    return (
+      <>
+        {isNewLoanLoading ? (
+          <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
+            <FillLoader />
+          </Card>
+        ) : null}
+        {isCompatibleWalletsAvailable ? (
+          <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
+            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
+          </TouchableOpacity>
+        ) : null}
+      </>
+    )
+  }
 
   if (!isWalletsLoaded) {
     return (
@@ -140,7 +146,7 @@ export const LoanDashboardScene = (props: Props) => {
         keyboardShouldPersistTaps="handled"
         renderItem={renderLoanCard}
         style={margin}
-        ListFooterComponent={footer}
+        ListFooterComponent={renderFooter()}
         keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
       />
     </SceneWrapper>
