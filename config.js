@@ -13,11 +13,15 @@ const asConfig = asObject({
   ACTION_QUEUE: asOptional(
     asObject({
       debugStore: asBoolean,
-      pushServerUri: asString
+      enableDryrun: asBoolean,
+      pushServerUri: asString,
+      mockMode: asBoolean
     }),
     {
       debugStore: false,
-      pushServerUri: 'https://push.edge.app'
+      enableDryrun: true,
+      pushServerUri: 'https://push.edge.app',
+      mockMode: false
     }
   ),
   PLUGIN_API_KEYS: asOptional(

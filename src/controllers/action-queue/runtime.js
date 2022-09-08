@@ -1,89 +1,124 @@
 // @flow
 
-import { add, gt, lt } from 'biggystring'
-import { type EdgeAccount } from 'edge-core-js'
-import * as React from 'react'
+import { add, gte, lte } from 'biggystring'
 
-import { AirshipToast } from '../../components/common/AirshipToast'
-import { Airship, showError } from '../../components/services/AirshipInstance'
+import ENV from '../../../env'
 import { type ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
-import { checkPushEvents, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
+import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
   type ActionEffect,
   type ActionProgram,
   type ActionProgramState,
   type BroadcastTx,
   type ExecutableAction,
+  type ExecutionContext,
   type ExecutionOutput,
   type ExecutionResults,
-  type PendingTxMap
+  type PendingTxMap,
+  type SeqEffect
 } from './types'
 import { makeWyreClient } from './WyreClient'
 
-export const executeActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
+export const executeActionProgram = async (context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 
   // Dry Run
-  if (effect != null && (await effectCanBeATrigger(account, effect))) {
+  if (ENV.ACTION_QUEUE?.enableDryrun && effect != null && (await effectCanBeATrigger(context, effect))) {
     try {
-      const dryrunOutputs = await dryrunActionProgram(account, program, state, true)
+      const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
 
       // Convert each dryrun result into an array of push events for the push-server.
-      const newPushEvents = await prepareNewPushEvents(account, program, effect, dryrunOutputs)
+      const newPushEvents = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
 
       // Send PushEvents to the push server:
-      await uploadPushEvents(account, newPushEvents)
+      await uploadPushEvents(context, newPushEvents)
 
       // Mutate the nextState accordingly; effect should be awaiting push events:
-      const nextEffect = {
-        type: 'push-events',
-        eventIds: newPushEvents.map(event => event.eventId)
+      const nextChildEffects = newPushEvents.map(event => ({
+        type: 'push-event',
+        eventId: event.eventId
+      }))
+      let nextEffect: ActionEffect
+      if (effect.type === 'seq') {
+        // Drop the last effect because it is to be replaced by the first push-event effect
+        const prevOpIndex = effect.opIndex // Same opIndex because the first of nextChildEffects replaces the last or prevChildEffects
+        const prevChildEffects = effect.childEffects.slice(0, -1) // Slice to drop the last of prevChildEffects
+        nextEffect = {
+          type: 'seq',
+          opIndex: prevOpIndex,
+          childEffects: [...prevChildEffects, ...nextChildEffects]
+        }
+      } else {
+        if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
+        nextEffect = nextChildEffects[0]
       }
 
       // Exit early with dryrun results:
       return { nextState: { ...state, effect: nextEffect } }
     } catch (error) {
       // Silently fail dryrun
-      showError(error)
+      console.error(error)
     }
   }
 
   // Await Effect
-  let checkErrors: Error[] = []
+  let retryDelay = 2000
   while (true) {
     if (effect == null) break
 
     try {
-      const { isEffective, delay } = await checkActionEffect(account, effect)
-
-      // Reset error aggregation (and failure count)
-      checkErrors = []
+      const { isEffective, delay } = await checkActionEffect(context, effect)
 
       // Break out of effect check loop if the ActionEffect passes the check
       if (isEffective) break
 
+      // TOOD: Handle partial complete effects returned by checkActionEffect here rather than below this while loop
+
       // Delay next check
       await snooze(delay)
     } catch (err) {
-      checkErrors.push(err)
+      console.warn(`Action effect check failed:\n\t${String(err)}`)
+      console.error(err)
 
-      if (checkErrors.length >= 5) {
-        const messages = checkErrors.map(e => e.message).join('\n\t')
-        throw new Error(`Action effect check failed:\n\t${messages}`)
-      }
+      // Increase the retry delay (max 10 minutes)
+      retryDelay = Math.min(retryDelay * 1.2, 600000)
 
       // Delay retry after failure
-      await snooze(1000)
+      await snooze(retryDelay)
+    }
+  }
+
+  /**
+   * Partially Complete Effect Check:
+   *
+   * SeqEffect introduced the concept of "partially completed effect" (PCE) in
+   * order to support tracking the progress of precomputed effects which are
+   * delegated to an external execution environment (e.g. push-server).
+   * A SeqEffect is partially-completed when it's opIndex is less then the last
+   * index of it's childEffects.
+   */
+  // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
+  if (effect != null && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
+    // Progress the partially completed effect forward
+    const nextEffect: SeqEffect = {
+      ...effect,
+      opIndex: effect.opIndex + 1
+    }
+    return {
+      nextState: {
+        ...state,
+        effect: nextEffect
+      }
     }
   }
 
   // Execute Action
-  const executableAction = await evaluateAction(account, program, state, {})
+  const executableAction = await evaluateAction(context, program, state, {})
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
 
@@ -94,7 +129,7 @@ export const executeActionProgram = async (account: EdgeAccount, program: Action
 }
 
 export async function dryrunActionProgram(
-  account: EdgeAccount,
+  context: ExecutionContext,
   program: ActionProgram,
   state: ActionProgramState,
   shortCircuit: boolean
@@ -103,7 +138,7 @@ export async function dryrunActionProgram(
   const outputs: ExecutionOutput[] = []
   const simulatedState = { ...state }
   while (true) {
-    const { dryrunOutput } = await evaluateAction(account, program, simulatedState, pendingTxMap)
+    const { dryrunOutput } = await evaluateAction(context, program, simulatedState, pendingTxMap)
 
     // In order to avoid infinite loops, we must break when we reach the end
     // of the program or detect that the last effect in sequence is null, which
@@ -134,22 +169,27 @@ export async function dryrunActionProgram(
   return outputs
 }
 
-async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Promise<{ isEffective: boolean, delay: number }> {
+async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<{ isEffective: boolean, delay: number }> {
+  const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
   switch (effect.type) {
     case 'seq': {
-      if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-      return await checkActionEffect(account, effect.childEffect)
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Only check the child effect at the current opIndex
+      const childEffect = checkedEffects[effect.opIndex]
+      return await checkActionEffect(context, childEffect)
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
-
       if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
+      // Check all child effects concurrently
       const promises = checkedEffects.map(async (childEffect, index) => {
-        return await checkActionEffect(account, childEffect)
+        return await checkActionEffect(context, childEffect)
       })
       return {
         delay: 0,
@@ -165,15 +205,15 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       return {
         delay: 15000,
-        isEffective: (aboveAmount != null && gt(walletBalance, aboveAmount)) || (belowAmount != null && lt(walletBalance, belowAmount))
+        isEffective: (aboveAmount != null && gte(walletBalance, aboveAmount)) || (belowAmount != null && lte(walletBalance, belowAmount))
       }
     }
-    case 'push-events': {
-      const { eventIds } = effect
+    case 'push-event': {
+      const { eventId } = effect
 
       return {
         delay: 15000,
-        isEffective: await checkPushEvents(account, eventIds)
+        isEffective: await checkPushEvent(context, eventId)
       }
     }
     case 'price-level': {
@@ -215,20 +255,8 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         }
       }
     }
-    case 'unixtime': {
-      return {
-        delay: 300,
-        isEffective: Date.now() >= effect.timestamp
-      }
-    }
     case 'done': {
       if (effect.error != null) throw effect.error
-      return {
-        delay: 0,
-        isEffective: true
-      }
-    }
-    case 'noop': {
       return {
         delay: 0,
         isEffective: true
@@ -242,8 +270,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 }
 
 function checkEffectForNull(effect: ActionEffect): boolean {
-  if (effect.type === 'seq') return effect.childEffect === null
-  if (effect.type === 'par') return effect.childEffects.some(effect => effect === null || checkEffectForNull(effect))
+  if (effect.type === 'seq' || effect.type === 'par') return effect.childEffects.some(effect => effect === null || checkEffectForNull(effect))
   return false
 }
 
@@ -261,15 +288,22 @@ function checkEffectForNull(effect: ActionEffect): boolean {
  * be valid except for some special cases which must be specified by the
  * developer (via comments).
  */
-async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, pendingTxMap: PendingTxMap): Promise<ExecutableAction> {
+async function evaluateAction(
+  context: ExecutionContext,
+  program: ActionProgram,
+  state: ActionProgramState,
+  pendingTxMap: PendingTxMap
+): Promise<ExecutableAction> {
+  const { account } = context
   const { actionOp } = program
   const { effect } = state
 
   switch (actionOp.type) {
     case 'seq': {
-      const opIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const nextOpIndex = effect != null && effect.type === 'seq' ? effect.opIndex + 1 : 0
+      const prevChildEffects = effect != null && effect.type === 'seq' ? effect.childEffects : []
       // Handle done case
-      if (opIndex > actionOp.actions.length - 1) {
+      if (nextOpIndex > actionOp.actions.length - 1) {
         return {
           dryrunOutput: {
             effect: { type: 'done' },
@@ -282,10 +316,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         }
       }
       const nextProgram = {
-        programId: `${program.programId}[${opIndex}]`,
-        actionOp: actionOp.actions[opIndex]
+        programId: `${program.programId}[${nextOpIndex}]`,
+        actionOp: actionOp.actions[nextOpIndex]
       }
-      const childOutput = await evaluateAction(account, nextProgram, state, pendingTxMap)
+      const childOutput: ExecutableAction = await evaluateAction(context, nextProgram, state, pendingTxMap)
       const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
       const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
       const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
@@ -294,8 +328,8 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         dryrunOutput: {
           effect: {
             type: 'seq',
-            opIndex,
-            childEffect: childEffect
+            opIndex: nextOpIndex,
+            childEffects: [...prevChildEffects, childEffect]
           },
           broadcastTxs: childBroadcastTxs
         },
@@ -304,8 +338,8 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
           return {
             effect: {
               type: 'seq',
-              opIndex,
-              childEffect: output.effect
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, childEffect]
             },
             broadcastTxs: output.broadcastTxs
           }
@@ -317,7 +351,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(account, subProgram, state, pendingTxMap)
+        return await evaluateAction(context, subProgram, state, pendingTxMap)
       })
       const childOutputs = await Promise.all(promises)
       const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
@@ -357,9 +391,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
       if (address == null) throw new Error(`No fiat-sell support for ${tokenId ?? 'native'} token on ${wallet.type}`)
 
-      const makeExecutionOutput = async (): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
+          skipChecks: dryrun,
           spendTargets: [
             {
               nativeAmount,
@@ -389,7 +424,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         }
       }
 
-      return makeExecutableAction(account, makeExecutionOutput)
+      return makeExecutableAction(context, makeExecutionOutput)
     }
 
     case 'loan-borrow': {
@@ -547,31 +582,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       }
     }
 
-    case 'toast': {
-      const execute = async () => {
-        Airship.show(bridge => <AirshipToast bridge={bridge} message={actionOp.message} />)
-        return {
-          effect: { type: 'noop' },
-          broadcastTxs: []
-        }
-      }
-      return {
-        dryrunOutput: null,
-        execute
-      }
-    }
-
-    case 'delay': {
-      const execute = async () => ({
-        effect: { type: 'unixtime', timestamp: Date.now() + actionOp.ms },
-        broadcastTxs: []
-      })
-      return {
-        dryrunOutput: await execute(),
-        execute
-      }
-    }
-
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
@@ -579,12 +589,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
     case 'fiat-buy': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-    case 'noop': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-    case 'unixtime': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
 
@@ -635,12 +639,13 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  * which returns a ExecutionOutput. This is a very basic contract between the
  * two interfaces.
  */
-async function makeExecutableAction(account: EdgeAccount, fn: () => Promise<ExecutionOutput>): Promise<ExecutableAction> {
-  const dryrunOutput = await fn()
+async function makeExecutableAction(context: ExecutionContext, fn: (dryrun: boolean) => Promise<ExecutionOutput>): Promise<ExecutableAction> {
+  const { account } = context
+  const dryrunOutput = await fn(true)
   return {
     dryrunOutput,
     execute: async () => {
-      const output = await fn()
+      const output = await fn(false)
 
       await Promise.all(
         output.broadcastTxs.map(async broadcastTx => {

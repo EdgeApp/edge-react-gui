@@ -1,21 +1,19 @@
 // @flow
 
 import { asMaybe } from 'cleaners'
-import { type EdgeAccount } from 'edge-core-js'
-import { getUniqueId } from 'react-native-device-info'
+import { base58 } from 'edge-core-js/lib/util/encoding'
 
 import ENV from '../../../env'
 import s from '../../locales/strings'
-import { asBase64 } from '../../util/cleaners/asBase64'
 import { asHex } from '../../util/cleaners/asHex'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
-import { type ActionEffect, type ActionProgram, type ExecutionOutput } from './types'
+import { filterNull } from '../../util/safeFilters'
+import { type ActionEffect, type ActionProgram, type ExecutionContext, type ExecutionOutput } from './types'
 import { type LoginUpdatePayload, type PushRequestBody, asErrorResponse, asLoginPayload, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
-import { type BroadcastTx, type NewPushEvent, type PushMessage, type PushTrigger } from './types/pushTypes'
+import { type BroadcastTx, type NewPushEvent, type PushEventState, type PushEventStatus, type PushMessage, type PushTrigger } from './types/pushTypes'
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
-const deviceId = getUniqueId()
 
 /*
 Each PushEvent's trigger should be the effect of the previous ExecutionOutput:
@@ -35,11 +33,12 @@ Although the last effect is not used here, but the caller may use it to
 determine the final effect in the chain.
 */
 export async function prepareNewPushEvents(
-  account: EdgeAccount,
+  context: ExecutionContext,
   program: ActionProgram,
   initEffect: ActionEffect,
   dryrunOutputs: ExecutionOutput[]
 ): Promise<NewPushEvent[]> {
+  const { account } = context
   const { programId } = program
 
   // Final push message to send to the device once server has finished all events
@@ -65,7 +64,7 @@ export async function prepareNewPushEvents(
           return broadcastTx
         })
       )
-      const trigger = await actionEffectToPushTrigger(account, prevEffect)
+      const trigger = await actionEffectToPushTrigger(context, prevEffect)
 
       // Assert that the given prevEffect is a convertible to a PushTrigger
       if (trigger == null) {
@@ -77,7 +76,6 @@ export async function prepareNewPushEvents(
         broadcastTxs,
         // Include pushMessage only for the last event because device should only wake up when the server finishes all push events.
         pushMessage: index === dryrunOutputs.length - 1 ? pushMessage : undefined,
-        recurring: false,
         trigger
       }
 
@@ -88,19 +86,18 @@ export async function prepareNewPushEvents(
   return pushEvents
 }
 
-export async function checkPushEvents(account: EdgeAccount, eventIds: string[]): Promise<boolean> {
-  const { rootLoginId: loginId } = account
+export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {
+  const { account, clientId } = context
+  const { rootLoginId } = account
   const requestBody: PushRequestBody = {
     apiKey: AIRBITZ_API_KEY,
-    deviceId,
-    loginId: asBase64(loginId)
+    deviceId: clientId,
+    loginId: base58.parse(rootLoginId)
   }
 
   const response = await fetch(`${pushServerUri}/v2/login`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: wasPushRequestBody(requestBody)
   })
 
@@ -110,30 +107,37 @@ export async function checkPushEvents(account: EdgeAccount, eventIds: string[]):
 
   const data = await response.json()
   const loginPayload = asLoginPayload(data)
-  const eventStatusMap = loginPayload.events.reduce((map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }), {})
+  const eventStatusMap: { [eventId: string]: PushEventStatus } = loginPayload.events.reduce(
+    (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
+    {}
+  )
 
-  const isEffective = eventIds.every(eventId => {
-    const status = eventStatusMap[eventId]
-    return status != null && ['triggered', 'complete'].includes(status.state)
-  })
+  const status: PushEventStatus = eventStatusMap[eventId]
+  const pushEventState: PushEventState = status.state
+  if (status.broadcastTxErrors != null && status.broadcastTxErrors.some(error => error != null)) {
+    throw new Error(`Broadcast failed for ${eventId} event:\n\t${status.broadcastTxErrors.join('\n\t')}`)
+  }
+
+  const isEffective = status != null && pushEventState === 'triggered'
 
   return isEffective
 }
 
-export async function effectCanBeATrigger(account: EdgeAccount, effect: ActionEffect): Promise<boolean> {
-  return (await actionEffectToPushTrigger(account, effect)) != null
+export async function effectCanBeATrigger(context: ExecutionContext, effect: ActionEffect): Promise<boolean> {
+  return (await actionEffectToPushTrigger(context, effect)) != null
 }
 
-export async function uploadPushEvents(account: EdgeAccount, newPushEvents: NewPushEvent[]): Promise<void> {
-  const { rootLoginId: loginId } = account
+export async function uploadPushEvents(context: ExecutionContext, newPushEvents: NewPushEvent[]): Promise<void> {
+  const { account, clientId } = context
+  const { rootLoginId } = account
   const loginUpdatePayload: LoginUpdatePayload = {
     createEvents: newPushEvents,
     removeEvents: []
   }
   const requestBody: PushRequestBody = {
     apiKey: AIRBITZ_API_KEY,
-    deviceId,
-    loginId: asBase64(loginId)
+    deviceId: clientId,
+    loginId: base58.parse(rootLoginId)
   }
   const response = await fetch(`${pushServerUri}/v2/login/update`, {
     method: 'POST',
@@ -161,14 +165,19 @@ export async function uploadPushEvents(account: EdgeAccount, newPushEvents: NewP
   }
 }
 
-async function actionEffectToPushTrigger(account: EdgeAccount, effect: ActionEffect): Promise<PushTrigger | void> {
+async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | void> {
+  const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while converting to PushTrigger. ` + `This could be caused by a partial dryrun not properly short-circuiting.`
 
   switch (effect.type) {
     case 'seq': {
-      if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-      return actionEffectToPushTrigger(account, effect.childEffect)
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Only check the child effect at the current opIndex
+      const childEffect = checkedEffects[effect.opIndex]
+      return actionEffectToPushTrigger(context, childEffect)
     }
     case 'address-balance': {
       const { address, walletId, tokenId, aboveAmount, belowAmount } = effect
@@ -208,20 +217,13 @@ async function actionEffectToPushTrigger(account: EdgeAccount, effect: ActionEff
     case 'done': {
       return
     }
-    case 'noop': {
-      return
-    }
     case 'par': {
       return
     }
-    case 'push-events': {
-      // Would this cause infinite recursion? We may never want to add conversion support for this.
+    // Would this cause infinite recursion? We may never want to add conversion support for this.
+    case 'push-event': {
       return
     }
-    case 'unixtime': {
-      return
-    }
-
     default: {
       // $ExpectError
       throw exhaustiveCheck(effect.type)

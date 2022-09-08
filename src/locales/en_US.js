@@ -32,13 +32,6 @@ const strings = {
   // swap
   action_queue_display_swap_title: `Swap %1$s into %2$s`,
   action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
-  // toast
-  action_queue_display_toast_title: `Toast`,
-  action_queue_display_toast_message: `Show toast message`,
-  // delay
-  action_queue_display_delay_title: 'Wait',
-  action_queue_display_delay_message_pending: 'Wait for %1$s millesconds',
-  action_queue_display_delay_message_doing: 'Wait until %1$s',
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
@@ -841,6 +834,14 @@ const strings = {
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
+  price_alert: 'Price Alert',
+  // Ethereum (ETH) is up +15% to $2,290 in the last hour.
+  notification_hourly_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last hour.',
+  notification_hourly_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last hour.',
+  // Ethereum (ETH) is up +15% to $2,290 in the last 24 hours.
+  notification_daily_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.',
+  notification_daily_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.',
+
   // Update notices
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
   update_notice_deprecate_electrum_servers_message:
@@ -851,6 +852,7 @@ const strings = {
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
     "We're sorry but something went wrong. Please force close the app and reopen to continue using Edge.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem. \n\nNOTE: Do not uninstall the app before contacting Edge.",
+  error_unexpected_title: 'Unexpected Error',
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',
@@ -937,7 +939,7 @@ const strings = {
   loan_details_title: 'Loan Details',
   loan_enter_loan_amount_s: 'Enter Loan Amount (%1$s)',
   loan_error_title: 'Unexpected Error',
-  loan_estimate_fee: 'Estimate Fee',
+  loan_estimate_fee: 'Estimated Fee',
   loan_exchange_rate: 'Exchange Rate',
   loan_failed_loan: 'Failed to load loan data',
   loan_fiat_value: 'Fiat Value',
@@ -951,6 +953,7 @@ const strings = {
   loan_new_loan: 'New Loan',
   loan_new_principle: 'New Principle',
   loan_remaining_principle: 'Remaining Principle',
+  loan_apr_s: 'APR: %1$s',
   loan_s_apr: '%1$s APR',
   loan_select_receiving_wallet: 'Please select a receiving wallet',
   loan_select_source_collateral: 'Please select a source of collateral',

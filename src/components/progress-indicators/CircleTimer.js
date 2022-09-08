@@ -11,11 +11,20 @@ type Props = {
 export const TEN_MINUTES = 600
 
 export class CircleTimer extends React.Component<Props> {
+  componentMounted: boolean
+  timeoutId: $Call<typeof setTimeout, any>
   componentDidMount() {
-    setTimeout(this.timerTick, 1000)
+    this.componentMounted = true
+    this.timeoutId = setTimeout(this.timerTick, 1000)
+  }
+
+  componentWillUnmount() {
+    this.componentMounted = false
+    if (this.timeoutId != null) clearTimeout(this.timeoutId)
   }
 
   timerTick = () => {
+    if (!this.componentMounted) return
     const now = new Date()
     const nowMilli = now.getTime()
     const expMil = this.props.expiration.getTime()
@@ -28,12 +37,13 @@ export class CircleTimer extends React.Component<Props> {
     const percentage = (delta / TEN_MINUTES) * 100
     console.log('timer: delta', delta)
     console.log('timer: percentage ', percentage) */
-    setTimeout(this.timerTick, 1000)
+    this.timeoutId = setTimeout(this.timerTick, 1000)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.expiration !== null && nextProps.expiration !== this.props.expiration) {
-      setTimeout(this.timerTick, 1000)
+      if (this.timeoutId != null) clearTimeout(this.timeoutId)
+      this.timeoutId = setTimeout(this.timerTick, 1000)
     }
   }
 

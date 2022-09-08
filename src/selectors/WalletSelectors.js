@@ -1,7 +1,7 @@
 // @flow
 
 import { mul } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
 
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes'
 import { type GuiWallet } from '../types/types.js'
@@ -16,32 +16,16 @@ export function getSelectedCurrencyWallet(state: RootState): EdgeCurrencyWallet 
   return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
 }
 
-export const getActiveWalletCurrencyCodes = (state: RootState) => {
-  const { account } = state.core
-  const { activeWalletIds, currencyWallets } = account
-  const currencyCodesMap = activeWalletIds.reduce((map, id) => {
-    const wallet = currencyWallets[id]
-    if (!wallet) return map
+export const getActiveWalletCurrencyInfos = (currencyWallets: { [walletId: string]: EdgeCurrencyWallet }): EdgeCurrencyInfo[] => {
+  const activeCurrencyInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
 
-    map[wallet.currencyInfo.currencyCode] = true
-    return map
-  }, {})
-  const currencyCodes: string[] = Object.keys(currencyCodesMap)
-  return currencyCodes
-}
-
-export const getActiveWalletCurrencyInfos = (state: RootState) => {
-  const currencyInfos = []
-  const { account } = state.core
-  const { currencyConfig = {} } = account
-  const activeCurrencyCodes = getActiveWalletCurrencyCodes(state)
-  for (const pluginId of Object.keys(currencyConfig)) {
-    const info = currencyConfig[pluginId].currencyInfo
-    if (activeCurrencyCodes.includes(info.currencyCode)) {
-      currencyInfos.push(info)
+  for (const walletId of Object.keys(currencyWallets)) {
+    if (activeCurrencyInfos[currencyWallets[walletId].currencyInfo.pluginId] == null) {
+      activeCurrencyInfos[currencyWallets[walletId].currencyInfo.pluginId] = currencyWallets[walletId].currencyInfo
     }
   }
-  return currencyInfos
+
+  return Object.keys(activeCurrencyInfos).map(pluginId => activeCurrencyInfos[pluginId])
 }
 
 export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): string => {

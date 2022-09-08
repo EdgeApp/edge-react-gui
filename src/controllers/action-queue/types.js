@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
-import { type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeAccount, type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
 
 //
 // Action Operations
@@ -85,15 +85,6 @@ export type SwapActionOp = {
   nativeAmount: string,
   amountFor: 'from' | 'to'
 }
-// Useful for development/testing
-export type ToastActionOp = {
-  type: 'toast',
-  message: string
-}
-export type DelayActionOp = {
-  type: 'delay',
-  ms: number
-}
 export type ActionOp =
   | SeqActionOp
   | ParActionOp
@@ -105,8 +96,6 @@ export type ActionOp =
   | LoanRepayActionOp
   | LoanWithdrawActionOp
   | SwapActionOp
-  | ToastActionOp
-  | DelayActionOp
 
 //
 // Action (After) Effects
@@ -115,7 +104,7 @@ export type ActionOp =
 export type SeqEffect = {
   type: 'seq',
   opIndex: number,
-  childEffect: ActionEffect | null // null is only for dryrun
+  childEffects: Array<ActionEffect | null> // null is only for dryrun
 }
 export type ParEffect = {
   type: 'par',
@@ -129,9 +118,9 @@ export type AddressBalanceEffect = {
   walletId: string,
   tokenId?: string
 }
-export type PushEventsEffect = {
-  type: 'push-events',
-  eventIds: string[]
+export type PushEventEffect = {
+  type: 'push-event',
+  eventId: string
 }
 export type PriceLevelEffect = {
   type: 'price-level',
@@ -149,23 +138,8 @@ export type DoneEffect = {
   type: 'done',
   error?: Error
 }
-// Useful for development/testing
-export type UnixtimeEffect = {
-  type: 'unixtime',
-  timestamp: number
-}
-export type NoopEffect = { type: 'noop' }
 
-export type ActionEffect =
-  | SeqEffect
-  | ParEffect
-  | AddressBalanceEffect
-  | PushEventsEffect
-  | PriceLevelEffect
-  | TxConfsEffect
-  | DoneEffect
-  | UnixtimeEffect
-  | NoopEffect
+export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
 
 //
 // Action Program
@@ -174,10 +148,12 @@ export type ActionEffect =
 // Storage:
 export type ActionProgram = {
   programId: string,
-  actionOp: ActionOp
+  actionOp: ActionOp,
+  // Development mode flag
+  mockMode?: boolean
 }
 export type ActionProgramState = {
-  deviceId: string,
+  clientId: string,
   programId: string,
   effect?: ActionEffect
 }
@@ -199,6 +175,10 @@ export type BroadcastTx = {
 export type ExecutableAction = {
   dryrunOutput: ExecutionOutput | null,
   execute(): Promise<ExecutionOutput>
+}
+export type ExecutionContext = {
+  account: EdgeAccount,
+  clientId: string
 }
 export type ExecutionOutput = {
   effect: ActionEffect,

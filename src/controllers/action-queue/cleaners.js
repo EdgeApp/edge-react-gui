@@ -3,7 +3,7 @@
 //
 // Action Operations
 //
-import { type Cleaner, asArray, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { type Cleaner, asArray, asBoolean, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 
 import { asBase64 } from '../../util/cleaners/asBase64'
 import {
@@ -12,7 +12,6 @@ import {
   type ActionProgram,
   type ActionProgramState,
   type BroadcastTxActionOp,
-  type DelayActionOp,
   type FiatBuyActionOp,
   type FiatSellActionOp,
   type LoanBorrowActionOp,
@@ -21,8 +20,7 @@ import {
   type LoanWithdrawActionOp,
   type ParActionOp,
   type SeqActionOp,
-  type SwapActionOp,
-  type ToastActionOp
+  type SwapActionOp
 } from './types'
 
 // A serializable error object
@@ -37,6 +35,10 @@ const asError = asCodec(
     // Handle Error
     if (raw instanceof Error) return raw
 
+    if (typeof raw === 'string') {
+      const error = new Error(raw)
+      return error
+    }
     // Handle JsonError
     const jsonError = asMaybe(asJsonError)(raw)
     if (jsonError != null) {
@@ -45,6 +47,7 @@ const asError = asCodec(
         configurable: true,
         value: jsonError.name
       })
+      // TODO: Copy stack trace
       return error
     }
 
@@ -119,14 +122,6 @@ const asSwapActionOp: Cleaner<SwapActionOp> = asObject({
   nativeAmount: asString,
   amountFor: asValue('from', 'to')
 })
-const asToastActionOp: Cleaner<ToastActionOp> = asObject({
-  type: asValue('toast'),
-  message: asString
-})
-const asDelayActionOp: Cleaner<DelayActionOp> = asObject({
-  type: asValue('delay'),
-  ms: asNumber
-})
 export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
   asParActionOp,
@@ -137,9 +132,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
   asLoanDepositActionOp,
   asLoanRepayActionOp,
   asLoanWithdrawActionOp,
-  asSwapActionOp,
-  asToastActionOp,
-  asDelayActionOp
+  asSwapActionOp
 )
 
 //
@@ -149,7 +142,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
 const asSeqEffect = asObject({
   type: asValue('seq'),
   opIndex: asNumber,
-  childEffect: asEither((raw: any) => asActionEffect(raw), asNull)
+  childEffects: asArray(asEither((raw: any) => asActionEffect(raw), asNull))
 })
 const asParEffect = asObject({
   type: asValue('par'),
@@ -163,9 +156,9 @@ const asAddressBalanceEffect = asObject({
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asPushEvents = asObject({
-  type: asValue('push-events'),
-  eventIds: asArray(asString)
+const asPushEventEffect = asObject({
+  type: asValue('push-event'),
+  eventId: asString
 })
 const asPriceLevelEffect = asObject({
   type: asValue('price-level'),
@@ -183,23 +176,14 @@ const asDoneEffect = asObject({
   type: asValue('done'),
   error: asOptional(asError)
 })
-const asUnixtimeEffect = asObject({
-  type: asValue('unixtime'),
-  timestamp: asNumber
-})
-const asNoopEffect = asObject({
-  type: asValue('noop')
-})
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asSeqEffect,
   asParEffect,
   asAddressBalanceEffect,
   asTxConfsEffect,
-  asPushEvents,
+  asPushEventEffect,
   asPriceLevelEffect,
-  asDoneEffect,
-  asUnixtimeEffect,
-  asNoopEffect
+  asDoneEffect
 )
 
 //
@@ -208,11 +192,12 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 
 export const asActionProgram: Cleaner<ActionProgram> = asObject({
   programId: asString,
-  actionOp: asActionOp
+  actionOp: asActionOp,
+  mockMode: asOptional(asBoolean)
 })
 
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
-  deviceId: asString,
+  clientId: asString,
   programId: asString,
   effect: asOptional(asActionEffect)
 })

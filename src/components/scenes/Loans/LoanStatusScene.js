@@ -18,8 +18,9 @@ import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
+import { FillLoader } from '../../progress-indicators/FillLoader'
 import { StepProgressBar } from '../../progress-indicators/StepProgressBar'
-import { Airship } from '../../services/AirshipInstance'
+import { Airship, showWarning } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -52,12 +53,14 @@ export const LoanStatusScene = (props: Props) => {
           return step
         })
       )
-    } else {
+    } else if (actionQueueItem != null) {
       // 2. The first step of a seq does not get set to 'active'
       const { program, state } = actionQueueItem
       const displayInfo = await getActionProgramDisplayInfo(account, program, state)
       if (displayInfo.steps[0].status === 'pending') displayInfo.steps[0].status = 'active'
       setSteps([...displayInfo.steps])
+    } else {
+      // 3. ActionQueueItem does not yet exist...
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionQueue])
@@ -75,33 +78,34 @@ export const LoanStatusScene = (props: Props) => {
 
     if (approve) {
       // TODO: Abort action queue
+      showWarning('Cancel not yet implemented...')
       navigation.pop()
     }
   })
 
   const isProgramDone = steps != null && steps[steps.length - 1].status === 'done'
-  return steps == null ? null : (
-    <>
-      <SceneWrapper background="theme" hasHeader hasTabs={false}>
-        <SceneHeader underline title={s.strings.loan_status_title} />
+  return (
+    <SceneWrapper background="theme" hasHeader hasTabs={false}>
+      <SceneHeader underline title={s.strings.loan_status_title} />
+      {steps == null ? (
+        <FillLoader />
+      ) : (
         <View style={{ flex: 1 }}>
           <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
             <StepProgressBar actionDisplayInfos={steps} />
           </ScrollView>
           {isProgramDone ? (
-            <>
-              <View style={styles.footerContainer}>
-                <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
-                <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
-              </View>
-            </>
+            <View style={styles.footerContainer}>
+              <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
+              <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
+            </View>
           ) : (
             <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
           )}
           {isProgramDone ? <ConfettiCannon autostart count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
         </View>
-      </SceneWrapper>
-    </>
+      )}
+    </SceneWrapper>
   )
 }
 

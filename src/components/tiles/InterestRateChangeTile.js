@@ -4,6 +4,7 @@ import { add, div, eq, mul } from 'biggystring'
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler.js'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings.js'
 import type { BorrowDebt, BorrowEngine } from '../../plugins/borrow-plugins/types.js'
 import { memo, useMemo, useRef } from '../../types/reactHooks'
@@ -31,7 +32,10 @@ const weightedAverage = (nums: string[], weights: string[]): string => {
 
 const InterestRateChangeTileComponent = (props: Props) => {
   const { borrowEngine, newDebt } = props
-  const { currencyWallet, debts } = borrowEngine
+  const { currencyWallet } = borrowEngine
+
+  const debts = useWatch(borrowEngine, 'debts')
+
   const {
     currencyConfig: { allTokens },
     currencyInfo,
@@ -55,8 +59,8 @@ const InterestRateChangeTileComponent = (props: Props) => {
   })
 
   // Existing debts
-  const currentAprs = borrowEngine.debts.map(debt => debt.apr.toString())
-  const currentFiatAmounts = borrowEngine.debts.map(debt => {
+  const currentAprs = debts.map(debt => debt.apr.toString())
+  const currentFiatAmounts = debts.map(debt => {
     const { tokenId } = debt
     const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
     const denom = denominations.find(denom => denom.name === currencyCode)

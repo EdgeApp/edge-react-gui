@@ -234,6 +234,9 @@ exports[`createWalletName should render with loading props 1`] = `
       "paymentTypeLogoPayid": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPayid.png",
       },
+      "paymentTypeLogoPaynow": Object {
+        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPaynow.png",
+      },
       "paymentTypeLogoPoli": Object {
         "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",
       },

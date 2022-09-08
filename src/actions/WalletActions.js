@@ -14,7 +14,7 @@ import { Actions } from '../types/routerTypes.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import { getSupportedFiats } from '../util/utils.js'
 import { refreshConnectedWallets } from './FioActions.js'
-import { registerNotifications } from './NotificationActions.js'
+import { registerNotificationsV2 } from './NotificationActions.js'
 
 export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -147,13 +147,17 @@ export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: 
     .catch(showError)
 }
 
+// This gets called a bunch on launch so we need to limit it otherwise duplicate notifications will get registered
+let limitRegistrations = false
 export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
   const { activeWalletIds, currencyWallets } = account
 
-  if (activeWalletIds.length === Object.keys(currencyWallets).length) {
-    dispatch(registerNotifications())
+  if (activeWalletIds.length === Object.keys(currencyWallets).length && !limitRegistrations) {
+    limitRegistrations = true
+    await dispatch(registerNotificationsV2())
+    limitRegistrations = false
   }
 
   dispatch({

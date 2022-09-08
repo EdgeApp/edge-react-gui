@@ -6,9 +6,11 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useRefresher } from '../../../hooks/useRefresher'
+import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { type BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
+import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
 import { DebtAmountTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
@@ -30,18 +32,25 @@ export const LoanCloseScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { route, navigation } = props
-  const { params } = route
-  const { borrowPlugin } = params
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+
+  const { navigation, route } = props
+  const { loanAccountId } = route.params
+  const loanAccount = loanAccounts[loanAccountId]
+  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
 
   // Async State:
-  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(params.borrowEngine.currencyWallet), [borrowPlugin, params.borrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, params.borrowEngine, 10000)
+  // Refreshing borrowEngine TODO: refactor common method
+  const borrowEngineRefresher = useCallback(() => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
+  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
   const [approvableAction, approvableActionError] = useAsyncValue(() => borrowEngine.close(), [borrowEngine])
 
   // Derived State:
   const networkFee = approvableAction != null ? approvableAction.networkFee.nativeAmount : '0'
-  const { currencyWallet: wallet, collaterals, debts } = borrowEngine
+  const { currencyWallet: wallet } = borrowEngine
+
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
 
   // Handlers:
   const onSliderComplete = async (reset: () => void) => {

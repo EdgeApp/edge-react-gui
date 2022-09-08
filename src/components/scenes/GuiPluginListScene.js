@@ -52,6 +52,7 @@ const paymentTypeLogosById = {
   interac: 'paymentTypeLogoInterac',
   newsagent: 'paymentTypeLogoNewsagent',
   payid: 'paymentTypeLogoPayid',
+  paynow: 'paymentTypeLogoPaynow',
   poli: 'paymentTypeLogoPoli',
   sofort: 'paymentTypeLogoSofort',
   swish: 'paymentTypeLogoSwish',

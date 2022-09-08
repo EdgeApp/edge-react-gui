@@ -72,7 +72,6 @@ import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoanAddCollateralScene } from './scenes/Loans/LoanAddCollateralScene.js'
-import { LoanBorrowDetailsScene } from './scenes/Loans/LoanBorrowDetailsScene'
 import { LoanBorrowMoreScene } from './scenes/Loans/LoanBorrowMoreScene'
 import { LoanCloseScene } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene } from './scenes/Loans/LoanCreateConfirmationScene'
@@ -859,15 +858,6 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key="loanBorrowDetails"
-              component={withNavigation(ifLoggedIn(LoanBorrowDetailsScene))}
-              navTransparent
-              renderTitle={<EdgeLogoHeader />}
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
-            <Scene
               key="loanAddCollateralScene"
               component={withNavigation(ifLoggedIn(LoanAddCollateralScene))}
               navTransparent
@@ -909,7 +899,15 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key="loanStatus"
+              key="loanCreateStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanDetailsStatus"
               component={withNavigation(ifLoggedIn(LoanStatusScene))}
               navTransparent
               renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -966,6 +964,10 @@ export class MainComponent extends React.Component<Props> {
         Actions.popTo('fioAddressRegister')
         return true
       }
+    }
+    if (this.isCurrentScene('loanCreateStatus')) {
+      Actions.jump('loanDashboard')
+      return true
     }
     Actions.pop()
     return true
