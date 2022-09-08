@@ -25,7 +25,6 @@ const aaveMaticNetwork = makeAaveNetworkFactory({
   },
   enabledTokens: {
     USDC: true,
-    DAI: true,
     WBTC: true
   }
 })
@@ -59,7 +58,6 @@ const aaveEthNetwork = makeAaveNetworkFactory({
   },
   enabledTokens: {
     USDC: true,
-    DAI: true,
     WBTC: true
   }
 })
