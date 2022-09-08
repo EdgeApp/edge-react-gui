@@ -57,6 +57,15 @@ export const LoanDashboardScene = (props: Props) => {
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
+
+  const isCompatibleWalletsAvailable =
+    hardPluginWalletIds.length === 0 ||
+    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
+
+  //
+  // Handlers
+  //
+
   const handleAddLoan = useHandler(async () => {
     let newLoanWallet
 
@@ -94,10 +103,6 @@ export const LoanDashboardScene = (props: Props) => {
         .finally(() => setIsNewLoanLoading(false))
     }
   })
-
-  const isCompatibleWalletsAvailable =
-    hardPluginWalletIds.length === 0 ||
-    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
 
   //
   // Render
