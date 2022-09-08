@@ -1,28 +1,23 @@
 // @flow
-
 import { add, div, mul } from 'biggystring'
 import * as React from 'react'
 
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings.js'
+import s from '../../locales/strings'
 import { type BorrowEngine } from '../../plugins/borrow-plugins/types'
-import type {} from '../../plugins/borrow-plugins/types.js'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { memo } from '../../types/reactHooks'
-import { useSelector } from '../../types/reactRedux.js'
-import { mulToPrecision } from '../../util/utils.js'
-import { TotalFiatAmount } from '../LoanComponents.js'
-import { PercentageChangeArrowTile } from './PercentageChangeArrowTile.js'
+import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { useSelector } from '../../types/reactRedux'
+import { useTotalFiatAmount } from '../../util/borrowUtils'
+import { mulToPrecision } from '../../util/utils'
+import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
-type Props = {
+export const LtvRatioTile = (props: {
   borrowEngine: BorrowEngine,
   tokenId?: string,
   nativeAmount: string,
   type: 'debts' | 'collaterals',
   direction: 'increase' | 'decrease'
-}
-
-const LoanToValueTileComponent = (props: Props) => {
+}) => {
   const { borrowEngine, direction, nativeAmount, tokenId, type } = props
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
@@ -39,8 +34,8 @@ const LoanToValueTileComponent = (props: Props) => {
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${fiatCurrencyCode}`] ?? '0')
   const multiplier = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode).multiplier)
 
-  let totalDebtFiatValue = TotalFiatAmount(currencyWallet, debts)
-  let totalCollateralFiatValue = TotalFiatAmount(currencyWallet, collaterals)
+  let totalDebtFiatValue = useTotalFiatAmount(currencyWallet, debts)
+  let totalCollateralFiatValue = useTotalFiatAmount(currencyWallet, collaterals)
   const currentValue = div(totalDebtFiatValue, totalCollateralFiatValue, 2)
 
   const changeAmount = mul(mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRate), direction === 'increase' ? '1' : '-1')
@@ -55,5 +50,3 @@ const LoanToValueTileComponent = (props: Props) => {
 
   return <PercentageChangeArrowTile title={s.strings.loan_loan_to_value_ratio} currentValue={currentValue} futureValue={futureValue} />
 }
-
-export const LoanToValueTile = memo(LoanToValueTileComponent)
