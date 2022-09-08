@@ -5,9 +5,9 @@ import { sprintf } from 'sprintf-js'
 
 import {
   type ActionDisplayInfo,
+  type ActionDisplayStatus,
   type ActionEffect,
   type ActionOp,
-  type ActionOpExecStatus,
   type ActionProgram,
   type ActionProgramState
 } from '../../controllers/action-queue/types'
@@ -195,7 +195,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
 // This op is only done if the effect is a 'done' type because the runtime
 // should return a 'done' type after the last effect passes in sequence or parallel (seq/par).
-function stateToStatus(effect?: ActionEffect): ActionOpExecStatus {
+function stateToStatus(effect?: ActionEffect): ActionDisplayStatus {
   if (effect == null) return 'pending'
   if (effect.type === 'done') return effect.error ?? 'done'
   return 'active'

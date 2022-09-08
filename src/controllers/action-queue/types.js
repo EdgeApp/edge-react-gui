@@ -19,8 +19,6 @@ export type ActionOpTypes =
   | 'toast'
   | 'delay'
 
-export type ActionOpExecStatus = 'pending' | 'active' | 'done' | Error
-
 export type SeqActionOp = {
   type: 'seq',
   actions: ActionOp[]
@@ -195,9 +193,11 @@ export type PendingTxMap = {
 // Aciton Display API
 //
 
+export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error
+
 export type ActionDisplayInfo = {
   title: string,
   message: string,
-  status: ActionOpExecStatus,
+  status: ActionDisplayStatus,
   steps: ActionDisplayInfo[]
 }
