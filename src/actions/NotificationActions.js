@@ -67,17 +67,17 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     const userId = state.core.account.rootLoginId
     const encodedUserId = encodeURIComponent(userId)
 
-    const v1Settings: {
+    let v1Settings = {
       notifications: {
-        enabled: true,
-        currencyCodes: {
-          [code: string]: {
-            '1': boolean,
-            '24': boolean
-          }
-        }
+        currencyCodes: {}
       }
-    } = await notif1.get(`/user?userId=${encodedUserId}`)
+    }
+
+    try {
+      v1Settings = await notif1.get(`/user?userId=${encodedUserId}`)
+    } catch (e) {
+      // Failure is ok we'll just create new settings
+    }
 
     if (Object.keys(v1Settings.notifications.currencyCodes).length === 0) {
       // v1 settings don't exist either so let's create them
