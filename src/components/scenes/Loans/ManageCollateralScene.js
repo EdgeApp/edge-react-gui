@@ -5,37 +5,27 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants.js'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
-import { useHandler } from '../../../hooks/useHandler.js'
 import { useWatch } from '../../../hooks/useWatch.js'
 import s from '../../../locales/strings.js'
 import type { ApprovableAction } from '../../../plugins/borrow-plugins/types.js'
-import { useRef, useState } from '../../../types/reactHooks.js'
-import { useDispatch, useSelector } from '../../../types/reactRedux.js'
+import { useCallback, useState } from '../../../types/reactHooks'
+import { useDispatch } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
+import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { zeroString } from '../../../util/utils'
-import { FlipInputTile } from '../../cards/FlipInputTile.js'
-import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal.js'
-import { Airship, showError } from '../../services/AirshipInstance'
-import { type ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput.js'
+import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
+import { showError } from '../../services/AirshipInstance'
 import { AprCard } from '../../tiles/AprCard.js'
 import { InterestRateChangeTile } from '../../tiles/InterestRateChangeTile.js'
 import { LtvRatioTile } from '../../tiles/LtvRatioTile'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile.js'
 import { FormScene } from '../FormScene.js'
-
-// TODO: Integrate future changes to incorporate token contract addresses into the borrow plugin's domain
-const collateralTokenMap = {
-  ethereum: [{ pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599', currencyCode: 'WBTC' }],
-  kovan: [{ pluginId: 'kovan', tokenId: 'd1b98b6607330172f1d991521145a22bce793277', currencyCode: 'WBTC' }],
-  polygon: [{ pluginId: 'polygon', tokenId: '1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', currencyCode: 'WBTC' }]
-}
 
 type ManageCollateralRequest = {
   tokenId?: string,
@@ -59,46 +49,42 @@ type Props<T: $Keys<ParamList>> = {
 }
 
 export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
-  const { action, actionOperand, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
+  // #region Constants
 
+  const { action, actionOperand, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
-
-  const {
-    currencyConfig: { allTokens },
-    currencyInfo: borrowEngineCurrencyInfo,
-    id: borrowEngineWalletId
-  } = borrowEngineWallet
-  const { pluginId: borrowEnginePluginId } = borrowEngineCurrencyInfo
-
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
-
-  // State
-  const account = useSelector(state => state.core.account)
   const dispatch = useDispatch()
-  const wallets = useWatch(account, 'currencyWallets')
 
-  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWalletId)
-  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
-
-  // Flip input selected wallet
-  const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
+  // Selected debt/collateral
   const isDebt = actionOperand === 'debts'
   const defaultTokenId = isDebt ? debts[0].tokenId : collaterals[0].tokenId
-  const [selectedTokenId, setSelectedTokenId] = useState<string | void>(defaultTokenId)
-  const selectedWalletName = useWatch(selectedWallet, 'name') ?? ''
-  const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? borrowEngineCurrencyInfo : allTokens[selectedTokenId]
-  const hasMaxSpend = getSpecialCurrencyInfo(borrowEnginePluginId).noMaxSpend !== true
+  const selectedTokenId = defaultTokenId // TODO: Handle token selection after adding selection controls
 
-  // Borrow engine stuff
+  // Amount card
+  const iconUri = getBorrowPluginIconUri(borrowPlugin.borrowInfo)
+  const { fiatCurrencyCode: isoFiatCurrencyCode } = borrowEngineWallet
+  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+
+  // #endregion Constants
+
+  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
+  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
+  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
+
+  // #region State
+
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
-  const [actionNativeAmount, setActionNativeAmount] = useState('0')
+  const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = useState('0')
   const [newDebtApr, setNewDebtApr] = useState(0)
-  const collateralTokens = collateralTokenMap[borrowEnginePluginId]
+  const [actionOp, setActionOp] = useState()
 
-  const [actionOp, setactionOp] = useState()
+  // #endregion
+
+  // #region Hooks
+
   useAsyncEffect(async () => {
     const actionOp = {
       type: 'seq',
@@ -108,24 +94,24 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         {
           type: actionOpType,
           borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
-          nativeAmount: actionNativeAmount,
-          walletId: selectedWallet.id,
+          nativeAmount: actionNativeCryptoAmount,
+          walletId: borrowEngineWallet.id,
           tokenId: selectedTokenId
         }
       ]
     }
-    setactionOp(actionOp)
-  }, [actionNativeAmount, selectedWallet, selectedTokenId])
+    setActionOp(actionOp)
+  }, [actionNativeCryptoAmount, borrowEngineWallet, selectedTokenId])
 
   useAsyncEffect(async () => {
-    if (zeroString(actionNativeAmount)) {
+    if (zeroString(actionNativeCryptoAmount)) {
       setApprovalAction(null)
       return
     }
 
     const request = {
-      nativeAmount: actionNativeAmount,
-      [actionWallet]: selectedWallet,
+      nativeAmount: actionNativeCryptoAmount,
+      [actionWallet]: borrowEngineWallet,
       tokenId: selectedTokenId
     }
 
@@ -136,53 +122,17 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       const apr = await borrowEngine.getAprQuote(selectedTokenId)
       setNewDebtApr(apr)
     }
-  }, [actionNativeAmount])
+  }, [actionNativeCryptoAmount])
 
-  // Max send utils
-  const toggleMaxSpend = useRef(false)
+  // #endregion Hooks
 
-  const onMaxSpend = useHandler(() => {
-    toggleMaxSpend.current = !toggleMaxSpend.current
-  })
+  // #region Handlers
 
-  const [firstLaunch, setFirstLaunch] = useState(true)
-  useAsyncEffect(async () => {
-    if (firstLaunch) {
-      // Don't call getMaxSpendable when the component is mounted
-      setFirstLaunch(false)
-      return
-    }
-    const spendAddress = collateralTokens.find(collateralToken => collateralToken.currencyCode === selectedCurrencyCode)
-    const spendInfo = {
-      currencyCode: selectedCurrencyCode,
-      spendTargets: [
-        {
-          publicAddress: `0x${spendAddress?.tokenId}` // TODO: replace with aave contract? Just needed a contract address here
-        }
-      ]
-    }
-    const nativeAmount = await selectedWallet.getMaxSpendable(spendInfo)
-    setActionNativeAmount(nativeAmount)
-  }, [toggleMaxSpend.current])
+  const handleFiatAmountChanged = useCallback(({ fiatAmount, nativeCryptoAmount }) => {
+    setActionNativeCryptoAmount(nativeCryptoAmount)
+  }, [])
 
-  const handleAmountChanged = useHandler((amounts: ExchangedFlipInputAmounts) => {
-    setActionNativeAmount(amounts.nativeAmount)
-  })
-
-  const showWalletPicker = useHandler(() => {
-    const allowedAssets = collateralTokens
-    Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_src_wallet} showCreateWallet={false} allowedAssets={allowedAssets} />
-    )).then(({ walletId, currencyCode, tokenId }: WalletListResult) => {
-      if (walletId != null && currencyCode != null) {
-        setSelectedWallet(wallets[walletId])
-        setSelectedTokenId(tokenId)
-        setActionNativeAmount('0')
-      }
-    })
-  })
-
-  const onSliderComplete = async (resetSlider: () => void) => {
+  const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionOp != null) {
       const actionProgram = await makeActionProgram(actionOp)
       try {
@@ -196,25 +146,31 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     }
   }
 
-  // Tile Data
-  const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
-  const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
+  // #endregion Handlers
 
+  // #region Dependent Constants
+
+  // New debt/collateral amount
+  const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
+  const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
+
+  // Fees
   const feeNativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
 
-  const newDebt = { nativeAmount: actionNativeAmount, tokenId: selectedTokenId, apr: newDebtApr }
+  // APR change
+  const newDebt = { nativeAmount: actionNativeCryptoAmount, tokenId: selectedTokenId, apr: newDebtApr }
+
+  // #endregion Dependent Constants
 
   return (
-    <FormScene headerText={headerText} onSliderComplete={onSliderComplete} sliderDisabled={approvalAction == null}>
-      <FlipInputTile
-        hasMaxSpend={hasMaxSpend}
-        onMaxSpend={onMaxSpend}
-        headerText={sprintf(s.strings.loan_add_from, selectedWalletName)}
-        launchWalletSelector={showWalletPicker}
-        onCryptoExchangeAmountChanged={handleAmountChanged}
-        wallet={selectedWallet}
+    <FormScene headerText={headerText} onSliderComplete={handleSliderComplete} sliderDisabled={approvalAction == null}>
+      <FiatAmountInputCard
+        wallet={borrowEngineWallet}
+        iconUri={iconUri}
+        inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
+        inputModalTitle={sprintf(s.strings.loan_enter_loan_amount_s, fiatCurrencyCode)}
         tokenId={selectedTokenId}
-        key="flipInput"
+        onAmountChanged={handleFiatAmountChanged}
       />
       {showAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
       <TotalDebtCollateralTile
@@ -226,7 +182,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       <TotalDebtCollateralTile
         title={s.strings.loan_new_principle}
         wallet={borrowEngineWallet}
-        debtsOrCollaterals={[...debts, pendingDebtOrCollateral]}
+        debtsOrCollaterals={isDebt ? [...debts, pendingDebtOrCollateral] : [...collaterals, pendingDebtOrCollateral]}
         key="newAmount"
       />
       <TotalDebtCollateralTile
@@ -240,7 +196,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       <LtvRatioTile
         borrowEngine={borrowEngine}
         tokenId={selectedTokenId}
-        nativeAmount={actionNativeAmount}
+        nativeAmount={actionNativeCryptoAmount}
         type={actionOperand}
         direction={amountChange}
         key="ltv"
