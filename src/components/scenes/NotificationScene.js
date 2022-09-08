@@ -43,7 +43,7 @@ export const NotificationScene = (props: Props) => {
         data: serverSettingsToState(newSettings)
       })
     } catch (e) {
-      showError(e)
+      showError(`Failed to reach notification server: ${e}`)
     }
   })
 
@@ -52,6 +52,8 @@ export const NotificationScene = (props: Props) => {
       <SettingsSwitchRow key="all" label={s.strings.settings_notifications_switch} value={!settings.ignorePriceChanges} onPress={toggleNotifications} />,
       ...currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
         const { displayName, pluginId } = currencyInfo
+        if (settings[pluginId] == null) return null
+
         const onPress = () =>
           !settings.ignorePriceChanges
             ? navigation.navigate('currencyNotificationSettings', {

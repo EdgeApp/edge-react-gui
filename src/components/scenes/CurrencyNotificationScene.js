@@ -51,7 +51,7 @@ export const CurrencyNotificationScene = (props: Props) => {
           data: serverSettingsToState(newSettings)
         })
       } catch (e) {
-        showError(e)
+        showError(`Failed to reach notification server: ${e}`)
       }
     },
     [deviceId, dispatch]
