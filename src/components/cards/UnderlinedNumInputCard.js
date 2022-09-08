@@ -12,7 +12,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { Card } from './Card'
 
-const ValueBarCardComponent = (props: {
+const UnderlinedNumInputCardComponent = (props: {
   currencyCode: string,
   emptyPlaceholder?: string,
   formattedAmount: string,
@@ -118,4 +118,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const ValueBarCard = memo(ValueBarCardComponent)
+export const UnderlinedNumInputCard = memo(UnderlinedNumInputCardComponent)

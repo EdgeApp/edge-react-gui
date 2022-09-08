@@ -26,7 +26,7 @@ import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { TappableCard } from '../../cards/TappableCard'
-import { ValueBarCard } from '../../cards/ValueBarCard'
+import { UnderlinedNumInputCard } from '../../cards/UnderlinedNumInputCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
@@ -303,7 +303,7 @@ export const LoanCreateScene = (props: Props) => {
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <View style={styles.sceneContainer}>
           {/* Amount  to borrow */}
-          <ValueBarCard
+          <UnderlinedNumInputCard
             currencyCode="USD"
             formattedAmount={displayBorrowAmount}
             iconUri={iconUri}
