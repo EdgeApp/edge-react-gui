@@ -95,6 +95,14 @@ export const LoanDashboardScene = (props: Props) => {
     }
   })
 
+  const isCompatibleWalletsAvailable =
+    hardPluginWalletIds.length === 0 ||
+    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
+
+  //
+  // Render
+  //
+
   const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
     const loanAccount: LoanAccount = item.item
 
@@ -105,10 +113,6 @@ export const LoanDashboardScene = (props: Props) => {
       <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} key={loanAccount.id} />
     )
   })
-
-  const isCompatibleWalletsAvailable =
-    hardPluginWalletIds.length === 0 ||
-    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
 
   const renderFooter = () => {
     return (
