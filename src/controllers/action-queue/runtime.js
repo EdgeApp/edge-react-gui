@@ -38,7 +38,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
       const newPushEvents = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
 
       // Send PushEvents to the push server:
-      await uploadPushEvents(context, newPushEvents)
+      await uploadPushEvents(context, { createEvents: newPushEvents })
 
       // Mutate the nextState accordingly; effect should be awaiting push events:
       const nextChildEffects = newPushEvents.map(event => ({
@@ -310,6 +310,14 @@ export function getEffectErrors(effect?: ActionEffect | null): Error[] {
     if (effect.type === 'done' && effect.error != null) return [effect.error]
     if (effect.type === 'seq' || effect.type === 'par')
       return effect.childEffects.reduce((errors: Error[], effect) => [...errors, ...getEffectErrors(effect)], [])
+  }
+  return []
+}
+export function getEffectPushEventIds(effect?: ActionEffect | null): string[] {
+  if (effect != null) {
+    if (effect.type === 'push-event') return [effect.eventId]
+    if (effect.type === 'seq' || effect.type === 'par')
+      return effect.childEffects.reduce((eventIds: string[], effect) => [...eventIds, ...getEffectPushEventIds(effect)], [])
   }
   return []
 }

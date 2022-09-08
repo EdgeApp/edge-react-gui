@@ -127,13 +127,9 @@ export async function effectCanBeATrigger(context: ExecutionContext, effect: Act
   return (await actionEffectToPushTrigger(context, effect)) != null
 }
 
-export async function uploadPushEvents(context: ExecutionContext, newPushEvents: NewPushEvent[]): Promise<void> {
+export async function uploadPushEvents(context: ExecutionContext, payload: LoginUpdatePayload): Promise<void> {
   const { account, clientId } = context
   const { rootLoginId } = account
-  const loginUpdatePayload: LoginUpdatePayload = {
-    createEvents: newPushEvents,
-    removeEvents: []
-  }
   const requestBody: PushRequestBody = {
     apiKey: AIRBITZ_API_KEY,
     deviceId: clientId,
@@ -144,7 +140,7 @@ export async function uploadPushEvents(context: ExecutionContext, newPushEvents:
     headers: {
       'Content-Type': 'application/json'
     },
-    body: wasPushRequestBody({ ...requestBody, data: wasLoginUpdatePayload(loginUpdatePayload) })
+    body: wasPushRequestBody({ ...requestBody, data: wasLoginUpdatePayload(payload) })
   })
 
   if (!response.ok) {

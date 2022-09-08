@@ -134,7 +134,8 @@ export type TxConfsEffect = {
 }
 export type DoneEffect = {
   type: 'done',
-  error?: Error
+  error?: Error,
+  cancelled?: boolean
 }
 
 export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PriceLevelEffect | TxConfsEffect | DoneEffect

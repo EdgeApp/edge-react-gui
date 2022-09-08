@@ -174,7 +174,8 @@ const asTxConfsEffect = asObject({
 })
 const asDoneEffect = asObject({
   type: asValue('done'),
-  error: asOptional(asError)
+  error: asOptional(asError),
+  cancelled: asOptional(asBoolean)
 })
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asSeqEffect,
