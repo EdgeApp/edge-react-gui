@@ -16,12 +16,13 @@ import { translateError } from '../../../util/translateError'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
-import { DebtAmountTile, NetworkFeeTile } from '../../LoanComponents'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
+import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 
 export type Props = {
   route: RouteProp<'loanClose'>,
@@ -68,7 +69,7 @@ export const LoanCloseScene = (props: Props) => {
         </Space>
       </SceneHeader>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <DebtAmountTile title={s.strings.loan_remaining_principle} wallet={wallet} debts={debts} />
+        <TotalDebtCollateralTile title={s.strings.loan_remaining_principle} wallet={wallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={wallet} nativeAmount={networkFee} />
         {/* TODO: Show a single source wallet picker */}
         <Tile title={s.strings.loan_debt_amount_title} type="static">

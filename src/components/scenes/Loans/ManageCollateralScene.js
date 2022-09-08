@@ -14,19 +14,21 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../../hooks/useHandler.js'
 import { useWatch } from '../../../hooks/useWatch.js'
 import s from '../../../locales/strings.js'
+import { type BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import type { ApprovableAction } from '../../../plugins/borrow-plugins/types.js'
 import { useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
-import { zeroString } from '../../../util/utils.js'
+import { zeroString } from '../../../util/utils'
 import { FlipInputTile } from '../../cards/FlipInputTile.js'
-import { CollateralAmountTile, DebtAmountTile, NetworkFeeTile } from '../../LoanComponents.js'
 import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal.js'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { type ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput.js'
 import { AprCard } from '../../tiles/AprCard.js'
 import { InterestRateChangeTile } from '../../tiles/InterestRateChangeTile.js'
-import { LoanToValueTile } from '../../tiles/LoanToValueTile.js'
+import { LtvRatioTile } from '../../tiles/LtvRatioTile'
+import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
+import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile.js'
 import { FormScene } from '../FormScene.js'
 
 // TODO: Integrate future changes to incorporate token contract addresses into the borrow plugin's domain
@@ -213,7 +215,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // Tile Data
   const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
-  const newLoanAmount = { nativeAmount: mul(actionNativeAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 } // APR is only present to appease Flow. It does not mean anything.
+  const newLoanAmount: BorrowDebt = { nativeAmount: mul(actionNativeAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
 
   const feeNativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
 
@@ -232,16 +234,28 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         key="flipInput"
       />
       {showNewDebtAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
-      {showTotalDebtTile ? <DebtAmountTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debts={debts} key="totalDebt" /> : null}
+      {showTotalDebtTile ? (
+        <TotalDebtCollateralTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debtsOrCollaterals={debts} key="totalDebt" />
+      ) : null}
       {showNewDebtTile ? (
-        <DebtAmountTile title={s.strings.loan_new_principle} wallet={borrowEngineWallet} debts={[...debts, newLoanAmount]} key="newDebt" />
+        <TotalDebtCollateralTile
+          title={s.strings.loan_new_principle}
+          wallet={borrowEngineWallet}
+          debtsOrCollaterals={[...debts, newLoanAmount]}
+          key="newDebt"
+        />
       ) : null}
       {showTotalCollateralTile ? (
-        <CollateralAmountTile title={s.strings.loan_total_collateral_value} wallet={borrowEngineWallet} collaterals={collaterals} key="totalcollateral" />
+        <TotalDebtCollateralTile
+          title={s.strings.loan_total_collateral_value}
+          wallet={borrowEngineWallet}
+          debtsOrCollaterals={collaterals}
+          key="totalcollateral"
+        />
       ) : null}
       <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={feeNativeAmount} key="fee" />
       {showNewDebtAprChange != null ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
-      <LoanToValueTile
+      <LtvRatioTile
         borrowEngine={borrowEngine}
         tokenId={selectedTokenId}
         nativeAmount={actionNativeAmount}
