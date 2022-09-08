@@ -24,6 +24,9 @@ export const loanManager: Reducer<LoanManagerState, Action> = combineReducers({
         const { [id]: _, ...remainingState } = state
         return remainingState
       }
+      case 'LOGOUT': {
+        return {}
+      }
       default:
         return state
     }
