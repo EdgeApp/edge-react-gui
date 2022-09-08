@@ -27,10 +27,7 @@ export const LoanBorrowMoreScene = (props: Props) => {
     amountChange: 'increase',
     loanAccount,
 
-    showTotalDebtTile: true,
-    showNewDebtTile: true,
-    showTotalCollateralTile: true,
-    showNewDebtAprChange: true,
+    showAprChange: true,
 
     headerText: s.strings.loan_borrow_more,
     navigation

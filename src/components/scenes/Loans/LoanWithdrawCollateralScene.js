@@ -27,9 +27,6 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
     amountChange: 'decrease',
     loanAccount,
 
-    showTotalDebtTile: true,
-    showTotalCollateralTile: true,
-
     headerText: s.strings.loan_withdraw_collateral,
     navigation
   })

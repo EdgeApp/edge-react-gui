@@ -14,7 +14,6 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
 import { useHandler } from '../../../hooks/useHandler.js'
 import { useWatch } from '../../../hooks/useWatch.js'
 import s from '../../../locales/strings.js'
-import { type BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import type { ApprovableAction } from '../../../plugins/borrow-plugins/types.js'
 import { useRef, useState } from '../../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../../types/reactRedux.js'
@@ -53,35 +52,18 @@ type Props<T: $Keys<ParamList>> = {
   amountChange?: 'increase' | 'decrease',
   loanAccount: LoanAccount,
 
-  showNewDebtAprChange?: true,
-  showNewDebtTile?: boolean,
-  showTotalCollateralTile?: boolean,
-  showTotalDebtTile?: boolean,
+  showAprChange?: boolean,
 
   headerText: string,
   navigation: NavigationProp<T>
 }
 
 export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
-  const {
-    action,
-    actionOperand,
-    actionOpType,
-    actionWallet,
-    amountChange = 'increase',
-    loanAccount,
-
-    showNewDebtAprChange,
-    showNewDebtTile,
-    showTotalCollateralTile,
-    showTotalDebtTile,
-
-    headerText,
-    navigation
-  } = props
+  const { action, actionOperand, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
 
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
+
   const {
     currencyConfig: { allTokens },
     currencyInfo: borrowEngineCurrencyInfo,
@@ -103,7 +85,8 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // Flip input selected wallet
   const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
-  const defaultTokenId = actionOperand === 'collaterals' ? collaterals[0].tokenId : debts[0].tokenId
+  const isDebt = actionOperand === 'debts'
+  const defaultTokenId = isDebt ? debts[0].tokenId : collaterals[0].tokenId
   const [selectedTokenId, setSelectedTokenId] = useState<string | void>(defaultTokenId)
   const selectedWalletName = useWatch(selectedWallet, 'name') ?? ''
   const { currencyCode: selectedCurrencyCode } = selectedTokenId == null ? borrowEngineCurrencyInfo : allTokens[selectedTokenId]
@@ -149,7 +132,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     const approvalAction = await action(request)
     setApprovalAction(approvalAction)
 
-    if (showNewDebtAprChange) {
+    if (showAprChange) {
       const apr = await borrowEngine.getAprQuote(selectedTokenId)
       setNewDebtApr(apr)
     }
@@ -215,7 +198,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // Tile Data
   const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
-  const newLoanAmount: BorrowDebt = { nativeAmount: mul(actionNativeAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
+  const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
 
   const feeNativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
 
@@ -233,28 +216,27 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         tokenId={selectedTokenId}
         key="flipInput"
       />
-      {showNewDebtAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
-      {showTotalDebtTile ? (
-        <TotalDebtCollateralTile title={s.strings.loan_current_principle} wallet={borrowEngineWallet} debtsOrCollaterals={debts} key="totalDebt" />
-      ) : null}
-      {showNewDebtTile ? (
-        <TotalDebtCollateralTile
-          title={s.strings.loan_new_principle}
-          wallet={borrowEngineWallet}
-          debtsOrCollaterals={[...debts, newLoanAmount]}
-          key="newDebt"
-        />
-      ) : null}
-      {showTotalCollateralTile ? (
-        <TotalDebtCollateralTile
-          title={s.strings.loan_total_collateral_value}
-          wallet={borrowEngineWallet}
-          debtsOrCollaterals={collaterals}
-          key="totalcollateral"
-        />
-      ) : null}
+      {showAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
+      <TotalDebtCollateralTile
+        title={s.strings.loan_current_principle}
+        wallet={borrowEngineWallet}
+        debtsOrCollaterals={isDebt ? debts : collaterals}
+        key="currentAmount"
+      />
+      <TotalDebtCollateralTile
+        title={s.strings.loan_new_principle}
+        wallet={borrowEngineWallet}
+        debtsOrCollaterals={[...debts, pendingDebtOrCollateral]}
+        key="newAmount"
+      />
+      <TotalDebtCollateralTile
+        title={s.strings.loan_total_collateral_value}
+        wallet={borrowEngineWallet}
+        debtsOrCollaterals={isDebt ? collaterals : debts}
+        key="counterAsset"
+      />
       <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={feeNativeAmount} key="fee" />
-      {showNewDebtAprChange != null ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
+      {showAprChange ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
       <LtvRatioTile
         borrowEngine={borrowEngine}
         tokenId={selectedTokenId}

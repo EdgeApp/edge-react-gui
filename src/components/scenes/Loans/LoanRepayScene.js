@@ -27,9 +27,7 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
     amountChange: 'decrease',
     loanAccount,
 
-    showTotalDebtTile: true,
-    showNewDebtTile: true,
-    showTotalCollateralTile: true,
+    showAprChange: true,
 
     headerText: s.strings.loan_make_payment,
     navigation
