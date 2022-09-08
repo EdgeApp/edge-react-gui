@@ -39,6 +39,10 @@ export const LoanDashboardScene = (props: Props) => {
   const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
 
+  //
+  // State
+  //
+
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
