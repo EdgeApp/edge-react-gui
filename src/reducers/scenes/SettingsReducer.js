@@ -2,6 +2,7 @@
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
+import ENV from '../../../env'
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { type DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
@@ -174,15 +175,18 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         passwordRecoveryRemindersShown,
         developerModeOn
       }
+      if (developerModeOn && ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = true
       for (const pluginId of Object.keys(account.currencyConfig)) {
         newState = currencyPluginUtil(newState, account.currencyConfig[pluginId].currencyInfo)
       }
       return newState
     }
     case 'DEVELOPER_MODE_ON': {
+      if (ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = true
       return { ...state, developerModeOn: true }
     }
     case 'DEVELOPER_MODE_OFF': {
+      if (ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = false
       return { ...state, developerModeOn: false }
     }
 
