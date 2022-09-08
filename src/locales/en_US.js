@@ -834,6 +834,14 @@ const strings = {
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
+  price_alert: 'Price Alert',
+  // Ethereum (ETH) is up +15% to $2,290 in the last hour.
+  notification_hourly_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last hour.',
+  notification_hourly_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last hour.',
+  // Ethereum (ETH) is up +15% to $2,290 in the last 24 hours.
+  notification_daily_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.',
+  notification_daily_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.',
+
   // Update notices
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
   update_notice_deprecate_electrum_servers_message:

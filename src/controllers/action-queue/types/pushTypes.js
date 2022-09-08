@@ -16,7 +16,8 @@ export type AddressBalanceTrigger = {
 export type PriceChangeTrigger = {
   +type: 'price-change',
   +pluginId: string,
-  +tokenId?: string,
+  +currencyPair: string, // From our rates server
+  +directions?: [string, string, string, string],
   +dailyChange?: number, // Percentage
   +hourlyChange?: number // Percentage
 }
@@ -86,6 +87,5 @@ export type NewPushEvent = {
   +eventId: string,
   +broadcastTxs?: BroadcastTx[],
   +pushMessage?: PushMessage,
-  +recurring: boolean,
   +trigger: PushTrigger
 }
