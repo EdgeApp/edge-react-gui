@@ -12036,10 +12036,10 @@ react-native-webview@^11.18.1:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.2.2.tgz#7c0c1bd49b600dc65734fe0126abb9cfe11ee5e1"
-  integrity sha512-oD0jKMFh5nEP0RcklXZMRmxLn09H1G2Qh+j1jzDON9jA7dBHt3NWo09lUsjxAw9B4ALK8PMdi1R5UkcKPcZoqQ==
+react-native-zcash@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.2.3.tgz#3e80a0b67809d23b01423959873a2d1a8c5a55f1"
+  integrity sha512-GOVHDEs3tfWSL26ju5Rc/kTuV8IcdflVHGunFp8Xd3H5iZvPXadbXp5B4zcyt1+LlxK1KLltwRPNkhSJzI3XfA==
   dependencies:
     rfc4648 "^1.3.0"
 
