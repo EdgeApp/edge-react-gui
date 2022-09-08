@@ -101,6 +101,7 @@ export const testDark: Theme = {
   backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
   backgroundImageServerUrls: ['https://content-test.edge.app'],
   backgroundImage,
+  backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

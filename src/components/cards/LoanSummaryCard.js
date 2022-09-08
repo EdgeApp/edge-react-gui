@@ -18,7 +18,6 @@ import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
-import { Card } from './Card'
 import { TappableCard } from './TappableCard'
 
 const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine, iconUri: string, onPress: () => void | void }) => {
@@ -48,32 +47,33 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     // TODO: Calculate amount-adjusted cumulative interest
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
 
-    if (!isLoading && (debts.length === 0 || collaterals.length === 0)) return null
-
-    return isLoading ? (
-      <Card marginRem={0.5}>
-        <FillLoader />
-      </Card>
-    ) : (
-      <TappableCard marginRem={0.5} onPress={onPress}>
-        <View style={styles.cardContainer}>
-          <View style={styles.row}>
-            <FastImage style={styles.icon} source={{ uri: iconUri }} />
-            <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>
-            <EdgeText>{fiatCurrencyCode}</EdgeText>
-          </View>
-          <View style={styles.spacedRow}>
-            <View style={styles.column}>
-              <EdgeText style={styles.textSecondary}>{s.strings.loan_collateral_value}</EdgeText>
-              <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
+    return (
+      <View>
+        <TappableCard marginRem={0.5} onPress={onPress}>
+          <View style={styles.cardContainer}>
+            <View style={styles.row}>
+              <FastImage style={styles.icon} source={{ uri: iconUri }} />
+              <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>
+              <EdgeText>{fiatCurrencyCode}</EdgeText>
             </View>
-            <View style={styles.column}>
-              <EdgeText style={styles.textSecondary}>{s.strings.loan_interest_rate}</EdgeText>
-              <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
+            <View style={styles.spacedRow}>
+              <View style={styles.column}>
+                <EdgeText style={styles.textSecondary}>{s.strings.loan_collateral_value}</EdgeText>
+                <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
+              </View>
+              <View style={styles.column}>
+                <EdgeText style={styles.textSecondary}>{s.strings.loan_interest_rate}</EdgeText>
+                <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
+              </View>
             </View>
           </View>
-        </View>
-      </TappableCard>
+        </TappableCard>
+        {isLoading ? (
+          <View style={styles.overlay}>
+            <FillLoader />
+          </View>
+        ) : null}
+      </View>
     )
   } catch (err) {
     showError(err.message)
@@ -85,6 +85,15 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
 
 const getStyles = cacheStyles((theme: Theme) => {
   return {
+    overlay: {
+      position: 'absolute',
+      backgroundColor: theme.backgroundLoadingOverlay,
+      margin: theme.rem(0.5),
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    },
     cardContainer: {
       flex: 1
     },

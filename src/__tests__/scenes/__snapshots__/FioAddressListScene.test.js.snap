@@ -54,6 +54,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "backgroundImageServerUrls": Array [
                 "https://content.edge.app",
               ],
+              "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
               "buttonBorderRadiusRem": 0.25,
               "buySellCustomPluginModalIcon": "#0C446A",
               "cameraOverlayColor": "#000000",
@@ -473,6 +474,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "backgroundImageServerUrls": Array [
                 "https://content.edge.app",
               ],
+              "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
               "buttonBorderRadiusRem": 0.25,
               "buySellCustomPluginModalIcon": "#0C446A",
               "cameraOverlayColor": "#000000",

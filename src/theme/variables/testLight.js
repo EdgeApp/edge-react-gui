@@ -91,6 +91,7 @@ export const testLight: Theme = {
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
   backgroundImageServerUrls: [],
   backgroundImage: undefined,
+  backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,
