@@ -150,6 +150,14 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // #region Dependent Constants
 
+  // Text input modal
+  const opTypeStringMap = {
+    'loan-borrow': s.strings.loan_fragment_loan,
+    'loan-deposit': s.strings.loan_fragment_deposit,
+    'loan-repay': s.strings.loan_fragment_repay,
+    'loan-withdraw': s.strings.loan_fragment_withdraw
+  }
+
   // New debt/collateral amount
   const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
   const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
@@ -168,25 +176,25 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         wallet={borrowEngineWallet}
         iconUri={iconUri}
         inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
-        inputModalTitle={sprintf(s.strings.loan_enter_loan_amount_s, fiatCurrencyCode)}
+        inputModalTitle={sprintf(s.strings.loan_enter_s_amount_s, opTypeStringMap[actionOpType], fiatCurrencyCode)}
         tokenId={selectedTokenId}
         onAmountChanged={handleFiatAmountChanged}
       />
       {showAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
       <TotalDebtCollateralTile
-        title={s.strings.loan_current_principle}
+        title={isDebt ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
         wallet={borrowEngineWallet}
         debtsOrCollaterals={isDebt ? debts : collaterals}
         key="currentAmount"
       />
       <TotalDebtCollateralTile
-        title={s.strings.loan_new_principle}
+        title={isDebt ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
         wallet={borrowEngineWallet}
         debtsOrCollaterals={isDebt ? [...debts, pendingDebtOrCollateral] : [...collaterals, pendingDebtOrCollateral]}
         key="newAmount"
       />
       <TotalDebtCollateralTile
-        title={s.strings.loan_total_collateral_value}
+        title={isDebt ? s.strings.loan_collateral_value : s.strings.loan_principal_value}
         wallet={borrowEngineWallet}
         debtsOrCollaterals={isDebt ? collaterals : debts}
         key="counterAsset"

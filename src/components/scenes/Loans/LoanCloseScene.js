@@ -69,10 +69,10 @@ export const LoanCloseScene = (props: Props) => {
         </Space>
       </SceneHeader>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <TotalDebtCollateralTile title={s.strings.loan_remaining_principle} wallet={wallet} debtsOrCollaterals={debts} />
+        <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={wallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={wallet} nativeAmount={networkFee} />
         {/* TODO: Show a single source wallet picker */}
-        <Tile title={s.strings.loan_debt_amount_title} type="static">
+        <Tile title={s.strings.loan_remaining_principal} type="static">
           {debts.map(debt => (
             <Space key={debt.tokenId} veritcal={0.5}>
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={wallet} />
