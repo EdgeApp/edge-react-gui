@@ -6,7 +6,9 @@ import { type Action } from '../../../types/reduxTypes'
 import { type LoanAccountMap } from '../types'
 
 export type LoanManagerState = {
-  +loanAccounts: LoanAccountMap
+  +loanAccounts: LoanAccountMap,
+  lastResyncTimestamp: number,
+  +syncRatio: number
 }
 
 export const loanManager: Reducer<LoanManagerState, Action> = combineReducers({
@@ -30,5 +32,21 @@ export const loanManager: Reducer<LoanManagerState, Action> = combineReducers({
       default:
         return state
     }
+  },
+  lastResyncTimestamp(state: number = 0, action: Action): number {
+    switch (action.type) {
+      case 'LOAN_MANAGER/SET_SYNC_RATIO': {
+        return Date.now()
+      }
+    }
+    return state
+  },
+  syncRatio(state: number = 0, action: Action): number {
+    switch (action.type) {
+      case 'LOAN_MANAGER/SET_SYNC_RATIO': {
+        return action.syncRatio
+      }
+    }
+    return state
   }
 })

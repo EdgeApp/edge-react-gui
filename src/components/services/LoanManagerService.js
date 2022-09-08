@@ -2,7 +2,6 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 
-import { borrowPluginMap } from '../../controllers/loan-manager/borrowPluginConfig'
 import { loadLoanAccounts } from '../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -17,7 +16,7 @@ export const LoanManagerService = () => {
 
   useAsyncEffect(async () => {
     if (account.disklet != null) {
-      dispatch(loadLoanAccounts(account, borrowPluginMap))
+      dispatch(loadLoanAccounts(account))
     }
   }, [account, dispatch])
 
