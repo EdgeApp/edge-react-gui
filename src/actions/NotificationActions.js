@@ -194,8 +194,8 @@ export const newPriceChangeEvent = (
   const fiatSymbol = fiatDenomination.symbol ?? ''
 
   const fiatSymbolString = `${fiatSymbol}#to_price#`
-  const changeUpString = '+#change#%%'
-  const changeDownString = '-#change#%%'
+  const changeUpString = '+#change#%'
+  const changeDownString = '#change#%'
 
   const pushMessage = {
     title: s.strings.price_alert,
