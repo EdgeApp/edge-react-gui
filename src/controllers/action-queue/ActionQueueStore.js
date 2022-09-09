@@ -60,7 +60,11 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
       // Initial program state
       const programState: ActionProgramState = {
         clientId,
-        programId: programId
+        programId: programId,
+        effective: true,
+        executing: false,
+        lastExecutionTime: 0,
+        nextExecutionTime: 0
       }
 
       // Only add the mockMode field if environment is configured with the flag enabled

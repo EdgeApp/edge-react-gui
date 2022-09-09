@@ -199,5 +199,9 @@ export const asActionProgram: Cleaner<ActionProgram> = asObject({
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
   clientId: asString,
   programId: asString,
-  effect: asOptional(asActionEffect)
+  effect: asOptional(asActionEffect),
+  effective: asOptional(asBoolean, false),
+  executing: asOptional(asBoolean, false),
+  lastExecutionTime: asOptional(asNumber, 0),
+  nextExecutionTime: asOptional(asNumber, 0)
 })

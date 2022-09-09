@@ -8,7 +8,6 @@ import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
-import { snooze } from '../../util/utils'
 import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
   type ActionEffect,
@@ -27,7 +26,10 @@ import { makeWyreClient } from './WyreClient'
 export const executeActionProgram = async (context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 
-  // Dry Run
+  //
+  // Dryrun Phase
+  //
+
   if (ENV.ACTION_QUEUE?.enableDryrun && effect != null && (await effectCanBeATrigger(context, effect))) {
     try {
       const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
@@ -66,65 +68,85 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
     }
   }
 
-  // Await Effect
-  let retryDelay = 2000
-  while (true) {
-    if (effect == null) break
+  //
+  // Check Phase
+  //
+
+  if (!state.effective && effect != null) {
+    let effective = false
+    let delay = 0
 
     try {
-      const { isEffective, delay } = await checkActionEffect(context, effect)
+      const result = await checkActionEffect(context, effect)
+      effective = result.isEffective
 
-      // Break out of effect check loop if the ActionEffect passes the check
-      if (isEffective) break
+      if (!effective) delay = result.delay
 
-      // TOOD: Handle partial complete effects returned by checkActionEffect here rather than below this while loop
-
-      // Delay next check
-      await snooze(delay)
+      /**
+       * Partially Complete Effect Check:
+       *
+       * SeqEffect introduced the concept of "partially completed effect" (PCE) in
+       * order to support tracking the progress of precomputed effects which are
+       * delegated to an external execution environment (e.g. push-server).
+       * A SeqEffect is partially-completed when it's opIndex is less then the last
+       * index of it's childEffects.
+       */
+      // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
+      if (effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
+        // Progress the partially completed effect forward
+        const nextEffect: SeqEffect = {
+          ...effect,
+          opIndex: effect.opIndex + 1
+        }
+        return {
+          nextState: {
+            ...state,
+            effect: nextEffect,
+            effective: false,
+            lastExecutionTime: Date.now(),
+            nextExecutionTime: Date.now()
+          }
+        }
+      }
     } catch (err) {
       console.warn(`Action effect check failed:\n\t${String(err)}`)
       console.error(err)
 
-      // Increase the retry delay (max 10 minutes)
-      retryDelay = Math.min(retryDelay * 1.2, 600000)
-
-      // Delay retry after failure
-      await snooze(retryDelay)
+      // Increase retry delay (min 2 seconds and max 10 minutes)
+      const lastDelay = state.nextExecutionTime - state.lastExecutionTime
+      delay = Math.min(Math.max(lastDelay * 1.2, 2000, 10 * 60 * 1000))
     }
-  }
 
-  /**
-   * Partially Complete Effect Check:
-   *
-   * SeqEffect introduced the concept of "partially completed effect" (PCE) in
-   * order to support tracking the progress of precomputed effects which are
-   * delegated to an external execution environment (e.g. push-server).
-   * A SeqEffect is partially-completed when it's opIndex is less then the last
-   * index of it's childEffects.
-   */
-  // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
-  if (effect != null && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
-    // Progress the partially completed effect forward
-    const nextEffect: SeqEffect = {
-      ...effect,
-      opIndex: effect.opIndex + 1
-    }
+    // Update the nextExecutionTime with the retryDelay
     return {
       nextState: {
         ...state,
-        effect: nextEffect
+        effective,
+        lastExecutionTime: Date.now(),
+        nextExecutionTime: Date.now() + delay
       }
     }
   }
+
+  //
+  // Execution Phase
+  //
 
   // Execute Action
   const executableAction = await evaluateAction(context, program, state, {})
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
+  const isEffectDone = checkEffectIsDone(nextEffect)
 
   // Return results
   return {
-    nextState: { ...state, effect: nextEffect }
+    nextState: {
+      ...state,
+      effect: nextEffect,
+      effective: isEffectDone,
+      lastExecutionTime: Date.now(),
+      nextExecutionTime: isEffectDone ? -1 : Date.now() // -1 means never
+    }
   }
 }
 
@@ -272,6 +294,16 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 function checkEffectForNull(effect: ActionEffect): boolean {
   if (effect.type === 'seq' || effect.type === 'par') return effect.childEffects.some(effect => effect === null || checkEffectForNull(effect))
   return false
+}
+
+function checkEffectIsDone(effect: ActionEffect | null): boolean {
+  return (
+    effect != null &&
+    (effect.type === 'done' ||
+      // Future refactor might included nested done effects:
+      (effect.type === 'seq' && effect.childEffects.some(effect => checkEffectIsDone(effect))) ||
+      (effect.type === 'par' && effect.childEffects.every(effect => checkEffectIsDone(effect))))
+  )
 }
 
 /**

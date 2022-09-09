@@ -153,7 +153,14 @@ export type ActionProgram = {
 export type ActionProgramState = {
   clientId: string,
   programId: string,
-  effect?: ActionEffect
+  effect?: ActionEffect,
+
+  // Flags:
+  effective: boolean, // Whether the effect is observed
+  executing: boolean, // Whether the program is executing
+
+  lastExecutionTime: number, // The time when the effect was checked
+  nextExecutionTime: number // The next time when the effect should be checked again
 }
 
 export type ActionQueueItem = {
