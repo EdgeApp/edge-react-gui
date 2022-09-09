@@ -27,6 +27,14 @@ mkdir -p android/app/build/intermediates/merged_assets/debug/out/saplingtree/mai
 cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ android/app/build/intermediates/merged_assets/debug/out/saplingtree/mainnet 2>/dev/null || :
 cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ ios/Pods/ZcashLightClientKit/Sources/ZcashLightClientKit/Resources/saplingtree-checkpoints/mainnet 2>/dev/null || :
 
+# Copy Firebase configs
+if [ ! -f "ios/edge/GoogleService-Info.plist" ]; then
+  cp ios/edge/GoogleService-Info.sample.plist ios/edge/GoogleService-Info.plist
+fi
+if [ ! -f "android/app/google-services.json" ]; then
+  cp android/app/google-services.sample.json android/app/google-services.json
+fi
+
 # Build the EdgeProvider shim code:
 node ./node_modules/.bin/rollup -c
 node ./scripts/stringifyBridge.js
