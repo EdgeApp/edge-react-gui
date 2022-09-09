@@ -4,6 +4,8 @@ import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { makeWyreClient } from '../../controllers/action-queue/WyreClient.js'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
 import { useMemo, useState } from '../../types/reactHooks.js'
@@ -22,7 +24,9 @@ export type WalletListResult = {
   walletId?: string,
   currencyCode?: string,
   tokenId?: string,
-  isWithdrawToBank?: boolean
+
+  // Fiat buy/sell
+  isBankSignupRequest?: boolean
 }
 
 type Props = {|
@@ -76,11 +80,22 @@ export function WalletListModal(props: Props) {
     excludeCurrencyCodes
   } = props
 
+  // #region Constants
+
   const account = useSelector(state => state.core.account)
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
+  const [bankAccountsMap, setBankAccountsMap] = useState()
+  useAsyncEffect(async () => {
+    const wyreClient = await makeWyreClient({ account })
+    if (wyreClient.isAccountSetup) {
+      setBankAccountsMap(await wyreClient.getPaymentMethods())
+    }
+  }, [account])
+  // #endregion State
 
-  // Upgrade deprecated props:
+  // #region Init - Upgrade deprecated props
+
   const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
     if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
 
@@ -91,6 +106,10 @@ export function WalletListModal(props: Props) {
     return [allowedAssets, excludeAssets]
   }, [account, allowedCurrencyCodes, excludeCurrencyCodes])
 
+  // #endregion Init - Upgrade deprecated props
+
+  // #region Handlers
+
   const handleCancel = useHandler(() => {
     bridge.resolve({})
   })
@@ -100,7 +119,6 @@ export function WalletListModal(props: Props) {
       showError(s.strings.network_alert_title)
     } else bridge.resolve({ walletId, currencyCode })
   })
-  const handleWithdrawToBank = useHandler(() => bridge.resolve({ isWithdrawToBank: true }))
   const handleSearchClear = useHandler(() => {
     setSearchText('')
     setSearching(false)
@@ -108,21 +126,38 @@ export function WalletListModal(props: Props) {
   const handleSearchUnfocus = useHandler(() => setSearching(searchText.length > 0))
   const handleSearchFocus = useHandler(() => setSearching(true))
 
+  // Pull up the signup workflow on the calling scene if the user does not yet have a linked bank account
+  const handleShowBankPlugin = useHandler(() => bridge.resolve({ isBankSignupRequest: true }))
+
+  // #endregion Handlers
+
+  // #region Dependent Constants
+
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
   const walletListExcludeAssets = useMemo(() => {
     const result = excludeAssets ?? legacyExcludeAssets
     return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets, legacyExcludeAssets])
 
+  // #region Bank Button/Row Display
+  const renderBankSignupButton = () => (
+    <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleShowBankPlugin} marginRem={[0.5, 0.75, 1.5, 0.75]} />
+  )
+  const renderBankSection = () =>
+    showWithdrawToBank ? (
+      <>
+        {bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? renderBankSignupButton() : null /* TODO: Show payment methods, if available */}
+        <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
+      </>
+    ) : null
+  // #endregion Bank Button/Row Display
+
+  // #endregion Dependent Constants
+
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{headerTitle}</ModalTitle>
-      {!showWithdrawToBank ? null : (
-        <>
-          <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleWithdrawToBank} marginRem={[0.5, 0.75, 1.5, 0.75]} />
-          <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
-        </>
-      )}
+      {renderBankSection()}
       <OutlinedTextInput
         returnKeyType="search"
         label={s.strings.search_wallets}
