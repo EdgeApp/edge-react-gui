@@ -186,7 +186,7 @@ export async function dryrunActionProgram(
     })
 
     // End of the program
-    if (dryrunOutput.effect.type === 'done') break
+    if (checkEffectIsDone(dryrunOutput.effect)) break
   }
   return outputs
 }
@@ -296,7 +296,7 @@ function checkEffectForNull(effect: ActionEffect): boolean {
   return false
 }
 
-function checkEffectIsDone(effect: ActionEffect | null): boolean {
+export function checkEffectIsDone(effect?: ActionEffect | null): boolean {
   return (
     effect != null &&
     (effect.type === 'done' ||
@@ -304,6 +304,14 @@ function checkEffectIsDone(effect: ActionEffect | null): boolean {
       (effect.type === 'seq' && effect.childEffects.some(effect => checkEffectIsDone(effect))) ||
       (effect.type === 'par' && effect.childEffects.every(effect => checkEffectIsDone(effect))))
   )
+}
+export function getEffectErrors(effect?: ActionEffect | null): Error[] {
+  if (effect != null) {
+    if (effect.type === 'done' && effect.error != null) return [effect.error]
+    if (effect.type === 'seq' || effect.type === 'par')
+      return effect.childEffects.reduce((errors: Error[], effect) => [...errors, ...getEffectErrors(effect)], [])
+  }
+  return []
 }
 
 /**

@@ -16,6 +16,7 @@ import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
+import { checkEffectIsDone, getEffectErrors } from './runtime'
 
 export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
   return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
@@ -44,7 +45,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
               // If the sequence effect is done without an error, then the
               // sequence has completed successfully, and all the child effects
               // would be complete too.
-              if (effect.type === 'done' && effect.error != null) {
+              if (checkEffectIsDone(effect) && getEffectErrors(effect).length === 0) {
                 childEffect = effect
               }
               // Otherwise the effect should be a seq matching the seq actionOp:
@@ -76,7 +77,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
               // If the sequence effect is done without an error, then the
               // sequence has completed successfully, and all the child effects
               // would be complete too.
-              if (effect.type === 'done' && effect.error != null) {
+              if (checkEffectIsDone(effect) && getEffectErrors(effect).length === 0) {
                 childEffect = effect
               }
               // Otherwise the effect should be a seq matching the seq actionOp:
@@ -197,6 +198,10 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 // should return a 'done' type after the last effect passes in sequence or parallel (seq/par).
 function stateToStatus(effect?: ActionEffect): ActionDisplayStatus {
   if (effect == null) return 'pending'
-  if (effect.type === 'done') return effect.error ?? 'done'
+  if (checkEffectIsDone(effect)) {
+    const errors = getEffectErrors(effect)
+    if (errors.length > 0) return errors[0]
+    return 'done'
+  }
   return 'active'
 }
