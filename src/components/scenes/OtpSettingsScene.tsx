@@ -10,6 +10,7 @@ import s from '../../locales/strings'
 import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
+import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -60,7 +61,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
             label: s.strings.otp_disable,
             async onPress() {
               await account.disableOtp()
-              global.logActivity(`2FA Disable: ${account.username}`)
+              logActivity(`2FA Disable: ${account.username}`)
               return true
             }
           },
@@ -73,7 +74,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
   handleEnable = async (): Promise<void> => {
     const { account } = this.props
     await account.enableOtp()
-    global.logActivity(`2FA Enable: ${account.username}`)
+    logActivity(`2FA Enable: ${account.username}`)
   }
 
   handleToggleKey = (): void => {

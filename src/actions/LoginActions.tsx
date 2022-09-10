@@ -22,6 +22,7 @@ import { config } from '../theme/appConfig'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiTouchIdInfo } from '../types/types'
+import { logActivity } from '../util/logger'
 import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { attachToUser } from './DeviceIdActions'
@@ -292,7 +293,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
       data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
     })
   }
-  global.logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
+  logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
 
   return wallet
 }

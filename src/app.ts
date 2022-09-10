@@ -2,7 +2,7 @@
 
 import Bugsnag from '@bugsnag/react-native'
 import { asObject, asString } from 'cleaners'
-import { LogBox, Platform, Text, TextInput } from 'react-native'
+import { LogBox, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import ENV from '../env.json'
@@ -76,8 +76,6 @@ if (!__DEV__) {
   console.warn = log
   console.error = log
 }
-
-global.logActivity = logActivity
 
 if (ENV.LOG_SERVER) {
   console.log = function () {

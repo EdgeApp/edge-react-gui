@@ -26,6 +26,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../selectors/De
 import { Dispatch, GetState, RootState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
+import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
@@ -325,8 +326,8 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
     logEvent('SwapStart')
     const result: EdgeSwapResult = await quote.approve()
 
-    global.logActivity(`Swap Exchange Executed: ${account.username}`)
-    global.logActivity(`
+    logActivity(`Swap Exchange Executed: ${account.username}`)
+    logActivity(`
     fromDisplayAmount: ${fromDisplayAmount}
     fee: ${fee}
     fromFiat: ${fromFiat}

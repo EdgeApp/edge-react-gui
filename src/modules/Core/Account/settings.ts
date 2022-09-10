@@ -7,6 +7,7 @@ import { asSortOption, SortOption } from '../../../components/modals/WalletListS
 import { showError } from '../../../components/services/AirshipInstance'
 import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
 import { currencyPlugins } from '../../../util/corePlugins'
+import { logActivity } from '../../../util/logger'
 import { categories } from './subcategories'
 
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
@@ -150,7 +151,7 @@ export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: Sp
   return await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { spendingLimits })
     const out = setLocalSettings(account, updatedSettings)
-    global.logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
+    logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
     return await out
   })
 }

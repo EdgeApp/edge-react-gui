@@ -10,6 +10,7 @@ import s from '../locales/strings'
 import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Account/settings'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { logActivity } from '../util/logger'
 
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -85,7 +86,7 @@ const getFirstCurrencyAddress = async (currencyCode, getState) => {
     fiatCurrencyCode: defaultIsoFiat
   })
   const wallet = await showFullScreenSpinner(s.strings.wallet_list_referral_link_currency_loading, createWallet)
-  global.logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
+  logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
 
   const receiveAddress = await wallet.getReceiveAddress()
   return receiveAddress.publicAddress

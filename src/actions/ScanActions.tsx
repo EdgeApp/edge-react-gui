@@ -19,6 +19,7 @@ import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser'
+import { logActivity } from '../util/logger'
 import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { launchDeepLink } from './DeepLinkingActions'
@@ -367,8 +368,8 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
     feeRateUsed
   } = signedTx
 
-  global.logActivity(`Sweep Private Key: ${name ?? ''} ${type} ${id}`)
-  global.logActivity(`
+  logActivity(`Sweep Private Key: ${name ?? ''} ${type} ${id}`)
+  logActivity(`
     currencyCode: ${currencyCode}
     nativeAmount: ${nativeAmount}
     txid: ${txid}

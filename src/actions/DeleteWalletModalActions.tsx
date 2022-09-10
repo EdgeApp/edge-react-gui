@@ -7,6 +7,7 @@ import s from '../locales/strings'
 import { B } from '../styles/common/textStyles'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { logActivity } from '../util/logger'
 
 export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -38,7 +39,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
       .changeWalletStates({ [walletId]: { deleted: true } })
       .catch(showError)
       .then(r => {
-        global.logActivity(`Archived Wallet ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
+        logActivity(`Archived Wallet ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
       })
   }
 }

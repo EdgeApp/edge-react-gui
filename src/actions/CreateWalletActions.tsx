@@ -13,6 +13,7 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
+import { logActivity, logActivity } from '../util/logger'
 import { logEvent } from '../util/tracking'
 
 export type CreateWalletOptions = {
@@ -32,7 +33,7 @@ export const createWallet = async (account: EdgeAccount, { walletType, walletNam
     importText
   }
   const out = await account.createCurrencyWallet(type, opts)
-  global.logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${opts.name ?? ''}`)
+  logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${opts.name ?? ''}`)
   return out
 }
 

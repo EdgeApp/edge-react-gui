@@ -16,6 +16,7 @@ import {
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
+import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
@@ -219,7 +220,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
             })
         )
     )
-    global.logActivity(`Restore Wallets: ${account.username}`)
+    logActivity(`Restore Wallets: ${account.username}`)
 
     Actions.jump('walletList')
   }

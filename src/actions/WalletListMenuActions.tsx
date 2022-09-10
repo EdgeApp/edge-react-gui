@@ -12,6 +12,7 @@ import s from '../locales/strings'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { NavigationProp } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
 import { showResyncWalletModal } from './ResyncWalletModalActions'
@@ -165,7 +166,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
 
         if (passwordValid) {
           const { name, id, type } = wallet
-          global.logActivity(`Show Master Private Key: ${account.username} -- ${name ?? ''} -- ${type} -- ${id}`)
+          logActivity(`Show Master Private Key: ${account.username} -- ${name ?? ''} -- ${type} -- ${id}`)
           // Add a copy button only for development
           let devButtons = {}
           if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
