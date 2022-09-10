@@ -30,16 +30,16 @@ const IconDataRowComponent = (props: Props) => {
   return (
     <View style={[styles.container, margin]}>
       {icon}
-      <View style={styles.nameColumn}>
-        <View style={styles.currencyRow}>
-          <EdgeText style={styles.currencyText}>{leftText}</EdgeText>
-          {leftTextExtended != null ? <EdgeText style={styles.exchangeRateText}>{leftTextExtended}</EdgeText> : null}
+      <View style={styles.leftColumn}>
+        <View style={styles.row}>
+          <EdgeText style={styles.leftText}>{leftText}</EdgeText>
+          {leftTextExtended != null ? <EdgeText style={styles.leftTextExtended}>{leftTextExtended}</EdgeText> : null}
         </View>
-        <EdgeText style={styles.nameText}>{leftSubtext}</EdgeText>
+        <EdgeText style={styles.leftSubtext}>{leftSubtext}</EdgeText>
       </View>
-      <View style={styles.balanceColumn}>
+      <View style={styles.rightColumn}>
         {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
-        {rightSubText != null ? <EdgeText style={styles.fiatBalanceText}>{rightSubText}</EdgeText> : null}
+        {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
       </View>
     </View>
   )
@@ -47,12 +47,12 @@ const IconDataRowComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // Layout:
-  balanceColumn: {
+  rightColumn: {
     alignItems: 'flex-end',
     flexDirection: 'column',
     paddingRight: theme.rem(1)
   },
-  nameColumn: {
+  leftColumn: {
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
@@ -65,29 +65,29 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     marginLeft: theme.rem(0.5)
   },
-  currencyRow: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
 
   // Text:
-  fiatBalanceText: {
+  rightSubText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
-  currencyText: {
+  leftText: {
     flexBasis: 'auto',
     flexShrink: 1,
     fontFamily: theme.fontFaceMedium
   },
-  exchangeRateText: {
+  leftTextExtended: {
     textAlign: 'left',
     flexBasis: 'auto',
     flexShrink: 1,
     marginLeft: theme.rem(0.75)
   },
-  nameText: {
+  leftSubtext: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   }
