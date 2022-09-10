@@ -7,13 +7,13 @@ import RNFS from 'react-native-fs'
 
 import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
+import { NumberMap } from './types/types'
 import { log, logActivity, logToServer } from './util/logger'
 
 Bugsnag.start({
   apiKey: ENV.BUGSNAG_API_KEY,
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
-    return event
   }
 })
 
@@ -25,14 +25,15 @@ const asServerDetails = asObject({
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
-const perfTimers = {}
-const perfCounters = {}
-const perfTotals = {}
+const perfTimers: NumberMap = {}
+const perfCounters: NumberMap = {}
+const perfTotals: NumberMap = {}
 
 console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
+// @ts-expect-error
 global.clog = console.log
 
 // TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
@@ -43,7 +44,7 @@ const IGNORED_WARNINGS = [
   'Setting a timer for a long period of time',
   'Warning: isMounted(...) is deprecated'
 ]
-// $FlowExpectedError
+// @ts-expect-error
 console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
@@ -51,55 +52,52 @@ if (ENV.DISABLE_WARNINGS) {
   LogBox.ignoreLogs(IGNORED_WARNINGS)
 }
 
-global.OS = Platform.OS
 // Disable the font scaling
+// @ts-expect-error
 if (!Text.defaultProps) {
+  // @ts-expect-error
   Text.defaultProps = {}
 }
+// @ts-expect-error
 Text.defaultProps.allowFontScaling = false
 
+// @ts-expect-error
 if (!TextInput.defaultProps) {
+  // @ts-expect-error
   TextInput.defaultProps = {}
 }
+// @ts-expect-error
 TextInput.defaultProps.allowFontScaling = false
 
-// @ts-expect-error
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
-  // @ts-expect-error
   console.log = log
-  // @ts-expect-error
   console.info = log
-  // @ts-expect-error
   console.warn = log
-  // @ts-expect-error
   console.error = log
 }
 
 global.logActivity = logActivity
 
 if (ENV.LOG_SERVER) {
-  // @ts-expect-error: suppressing this error until we can find a workaround
   console.log = function () {
     logToServer(arguments)
   }
-  // @ts-expect-error
   console.info = console.log
-  // @ts-expect-error
   console.warn = console.log
-  // @ts-expect-error
   console.error = console.log
 }
 
 const clog = console.log
 
 if (PERF_LOGGING_ONLY) {
-  // @ts-expect-error: suppressing this error until we can find a workaround
   console.log = () => {}
 }
 
 if (ENABLE_PERF_LOGGING) {
+  // @ts-expect-error
   if (!global.nativePerformanceNow && window && window.performance) {
+    // @ts-expect-error
     global.nativePerformanceNow = () => window.performance.now()
   }
   const makeDate = () => {
@@ -111,11 +109,13 @@ if (ENABLE_PERF_LOGGING) {
     return `${h}:${m}:${s}.${ms}`
   }
 
+  // @ts-expect-error
   global.pnow = function (label: string) {
     const d = makeDate()
     clog(`${d} PTIMER PNOW: ${label}`)
   }
 
+  // @ts-expect-error
   global.pstart = function (label: string) {
     const d = makeDate()
     if (!perfTotals[label]) {
@@ -129,6 +129,7 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 
+  // @ts-expect-error
   global.pend = function (label: string) {
     const d = makeDate()
     if (typeof perfTimers[label] === 'number') {
@@ -136,12 +137,13 @@ if (ENABLE_PERF_LOGGING) {
       perfTotals[label] += elapsed
       perfCounters[label]++
       clog(`${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`)
-      perfTimers[label] = undefined
+      delete perfTimers[label]
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)
     }
   }
 
+  // @ts-expect-error
   global.pcount = function (label: string) {
     const d = makeDate()
     if (typeof perfCounters[label] === 'undefined') {
@@ -154,9 +156,13 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 } else {
+  // @ts-expect-error
   global.pnow = function (label: string) {}
+  // @ts-expect-error
   global.pstart = function (label: string) {}
+  // @ts-expect-error
   global.pend = function (label: string) {}
+  // @ts-expect-error
   global.pcount = function (label: string) {}
 }
 
