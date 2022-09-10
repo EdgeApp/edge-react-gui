@@ -23,7 +23,11 @@ if (ENV.CHANGE_NOW_INIT == null && ENV.CHANGE_NOW_API_KEY) {
   }
 }
 
-export const currencyPlugins = {
+export interface CurrencyPlugins {
+  [pluginId: string]: boolean | unknown
+}
+
+export const currencyPlugins: CurrencyPlugins = {
   // edge-currency-accountbased:
   binance: true,
   binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
@@ -36,7 +40,7 @@ export const currencyPlugins = {
   kovan: ENV.KOVAN_INIT,
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
-  fio: ENV.FIO_INIT || true,
+  fio: ENV.FIO_INIT ?? true,
   polygon: ENV.POLYGON_INIT,
   avalanche: true,
   ripple: true,

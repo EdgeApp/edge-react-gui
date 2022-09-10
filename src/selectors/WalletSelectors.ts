@@ -49,7 +49,7 @@ export const convertCurrencyFromState =
   }
 
 export const convertCurrencyFromExchangeRates = (
-  exchangeRates: { [string]: string },
+  exchangeRates: { [pair: string]: string },
   fromCurrencyCode: string,
   toCurrencyCode: string,
   amount: string
@@ -60,7 +60,7 @@ export const convertCurrencyFromExchangeRates = (
   return convertedAmount
 }
 
-export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [string]: string }): string => {
+export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [pair: string]: string }): string => {
   const currencyCode = exchangeDenomination.name
   const nativeBalance = wallet.balances[currencyCode] ?? '0'
   if (zeroString(nativeBalance)) return '0'
@@ -75,7 +75,7 @@ export const findWalletByFioAddress = async (state: RootState, fioAddress: strin
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
 
   if (fioWallets && fioWallets.length) {
-    for (const wallet: EdgeCurrencyWallet of fioWallets) {
+    for (const wallet of fioWallets) {
       const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
       if (fioAddresses.length > 0) {
         for (const address of fioAddresses) {
