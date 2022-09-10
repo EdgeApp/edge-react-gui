@@ -55,7 +55,7 @@ type State = {
 
 type StateProps = {
   denominationMultiplier: string,
-  currencyWallets: { [string]: EdgeCurrencyWallet },
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet },
   fioWallets: EdgeCurrencyWallet[]
 }
 

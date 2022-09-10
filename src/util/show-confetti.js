@@ -9,7 +9,7 @@ export type ConfettiShownTimes = {
   randomShown: boolean
 }
 
-const getConfettiShownTimes = async (disklet: Disklet): Promise<{ [string]: ConfettiShownTimes }> => {
+const getConfettiShownTimes = async (disklet: Disklet): Promise<{ [key: string]: ConfettiShownTimes }> => {
   try {
     const shownTimes = JSON.parse(await disklet.getText(CONFETTI_SHOWN))
     return shownTimes
@@ -57,7 +57,7 @@ const setNewData = (data, userData, userId, disklet) => {
 }
 
 export const needToShowConfetti = async (userId: string, disklet: Disklet): Promise<boolean> => {
-  const data: { [string]: ConfettiShownTimes } = await getConfettiShownTimes(disklet)
+  const data: { [key: string]: ConfettiShownTimes } = await getConfettiShownTimes(disklet)
   const userData: ConfettiShownTimes = data[userId] || { doneAmount: 0, showNext: true, randomShown: false }
 
   const needToShow = userData.showNext

@@ -147,7 +147,7 @@ export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getSt
 }
 
 export const checkExpiredFioDomains =
-  (fioDomains: FioDomain[], fioWalletsById: { string: EdgeCurrencyWallet }) => async (dispatch: Dispatch, getState: GetState) => {
+  (fioDomains: FioDomain[], fioWalletsById: { [key: string]: EdgeCurrencyWallet }) => async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     if (!account) return

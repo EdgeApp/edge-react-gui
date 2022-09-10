@@ -238,7 +238,7 @@ export const COUNTRY_CODES: CountryData[] = [
   { name: 'Zimbabwe', 'alpha-2': 'ZW' }
 ]
 
-export const FIAT_COUNTRY: { [string]: { countryName: string, logoUrl: string } } = {
+export const FIAT_COUNTRY: { [key: string]: { countryName: string, logoUrl: string } } = {
   AFN: { countryName: 'AFGHANISTAN', logoUrl: `${FLAG_LOGO_URL}/afghanistan.png` },
   ALL: { countryName: 'ALBANIA', logoUrl: `${FLAG_LOGO_URL}/albania.png` },
   DZD: { countryName: 'ALGERIA', logoUrl: `${FLAG_LOGO_URL}/algeria.png` },

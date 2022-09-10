@@ -575,7 +575,7 @@ export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain:
  * @param selectedDomain
  * @param displayDenomination
  * @param isFallback
- * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[key: string]: boolean}, paymentInfo: {[key: string]: {amount: string, address: string}}}>}
  */
 export const getRegInfo = async (
   fioPlugin: EdgeCurrencyConfig,
@@ -629,7 +629,7 @@ export const getRegInfo = async (
  * @param fioDomain
  * @param selectedWallet
  * @param displayDenomination
- * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[key: string]: boolean}, paymentInfo: {[key: string]: {amount: string, address: string}}}>}
  */
 export const getDomainRegInfo = async (
   fioPlugin: EdgeCurrencyConfig,

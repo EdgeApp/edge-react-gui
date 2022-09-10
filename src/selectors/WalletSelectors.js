@@ -51,7 +51,7 @@ export const convertCurrencyFromState =
   }
 
 export const convertCurrencyFromExchangeRates = (
-  exchangeRates: { [string]: string },
+  exchangeRates: { [pair: string]: string },
   fromCurrencyCode: string,
   toCurrencyCode: string,
   amount: string

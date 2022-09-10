@@ -27,7 +27,7 @@ import { Tile } from '../tiles/Tile'
 
 type StateProps = {
   state: RootState,
-  wallets: { [string]: GuiWallet },
+  wallets: { [walletId: string]: GuiWallet },
   fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
