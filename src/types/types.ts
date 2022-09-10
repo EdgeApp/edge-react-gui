@@ -14,6 +14,9 @@ import {
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
 
+export type StringMap = { [key: string]: string }
+export type NumberMap = { [key: string]: string }
+
 export type GuiWallet = {
   id: string
   type: string

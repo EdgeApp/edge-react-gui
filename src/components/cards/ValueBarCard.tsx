@@ -15,7 +15,7 @@ const ValueBarCardComponent = (props: {
   emptyPlaceholder?: string
   formattedAmount: string
   iconUri: string
-  onPress?: () => void | (() => Promise<void>)
+  onPress?: () => undefined | (() => Promise<void>)
   title: string
 }) => {
   const { currencyCode, emptyPlaceholder = s.strings.string_amount, formattedAmount, iconUri, onPress, title } = props

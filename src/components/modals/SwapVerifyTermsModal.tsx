@@ -77,17 +77,17 @@ function SwapVerifyTermsModal(props: Props) {
       <MainButton label={s.strings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
-          <Text style={styles.linkText} onPress={() => Linking.openURL(termsUri)}>
+          <Text style={styles.linkText} onPress={async () => Linking.openURL(termsUri)}>
             {s.strings.swap_terms_terms_link}
           </Text>
         )}
         {privacyUri == null ? null : (
-          <Text style={styles.linkText} onPress={() => Linking.openURL(privacyUri)}>
+          <Text style={styles.linkText} onPress={async () => Linking.openURL(privacyUri)}>
             {s.strings.swap_terms_privacy_link}
           </Text>
         )}
         {kycUri == null ? null : (
-          <Text style={styles.linkText} onPress={() => Linking.openURL(kycUri)}>
+          <Text style={styles.linkText} onPress={async () => Linking.openURL(kycUri)}>
             {s.strings.swap_terms_kyc_link}
           </Text>
         )}

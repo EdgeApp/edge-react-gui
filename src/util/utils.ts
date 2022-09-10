@@ -1,5 +1,3 @@
-
-
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
 import {
   EdgeCurrencyConfig,
@@ -28,8 +26,7 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl'
 import s from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
-import { GuiDenomination, TransactionListTx } from '../types/types'
-import { EdgeTokenId, GuiExchangeRates } from '../types/types'
+import { EdgeTokenId, GuiDenomination, GuiExchangeRates, TransactionListTx } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getTokenId } from './CurrencyInfoHelpers'
 
@@ -46,7 +43,7 @@ export function capitalize(string: string): string {
 }
 
 // Replaces extra chars with '...' either in the middle or end of the input string
-export const truncateString = (input: string | number, maxLength: number, isMidTrunc?: boolean = false) => {
+export const truncateString = (input: string | number, maxLength: number, isMidTrunc: boolean = false) => {
   const inputStr = typeof input !== 'string' ? String(input) : input
   const strLen = inputStr.length
   if (strLen >= maxLength) {
@@ -182,7 +179,7 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
   return denom
 }
 
-export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string, value: string }> => {
+export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string; value: string }> => {
   const out = []
   if (defaultCurrencyCode && FIAT_CODES_SYMBOLS[defaultCurrencyCode]) {
     out.push({
@@ -223,8 +220,8 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
 }
 
 export type PrecisionAdjustParams = {
-  exchangeSecondaryToPrimaryRatio: string,
-  secondaryExchangeMultiplier: string,
+  exchangeSecondaryToPrimaryRatio: string
+  secondaryExchangeMultiplier: string
   primaryExchangeMultiplier: string
 }
 
@@ -308,8 +305,8 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
   return ''
 }
 
-export function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
-  const timeout = new Promise((resolve, reject) => {
+export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
+  const timeout: Promise<T> = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)
     promise.then(onDone, onDone)
@@ -317,8 +314,8 @@ export function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error 
   return Promise.race([promise, timeout])
 }
 
-export function snooze(ms: number): Promise<void> {
-  return new Promise((resolve: any) => setTimeout(resolve, ms))
+export async function snooze(ms: number): Promise<void> {
+  return new Promise((resolve: any) => setTimeout(() => resolve(), ms))
 }
 
 export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
@@ -376,7 +373,7 @@ export const getYesterdayDateRoundDownHour = () => {
 }
 
 export function splitTransactionCategory(fullCategory: string): {
-  category: string,
+  category: string
   subCategory: string
 } {
   const splittedCategory = fullCategory.split(':')
@@ -387,11 +384,11 @@ export function splitTransactionCategory(fullCategory: string): {
   }
 }
 
-type AsyncFunction = void => Promise<any>
+type AsyncFunction = () => Promise<any>
 
 export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: number = 5000): Promise<any> {
   let pending = asyncFuncs.length
-  const promises: Promise<any>[] = []
+  const promises: Array<Promise<any>> = []
   for (const func of asyncFuncs) {
     const index = promises.length
     promises.push(
@@ -484,7 +481,7 @@ export const convertTransactionFeeToDisplayFee = (
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
-): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string, nativeCryptoAmount: string } => {
+): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
   const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
   const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
@@ -527,7 +524,7 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 
-export function unixToLocaleDateTime(unixDate: number): { date: string, time: string, dateTime: string } {
+export function unixToLocaleDateTime(unixDate: number): { date: string; time: string; dateTime: string } {
   const date = new Date(unixDate * 1000)
   return {
     date: toLocaleDate(date),
@@ -574,7 +571,7 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
 }
 
 export type MiniCurrencyConfig = {
-  allTokens: EdgeTokenMap,
+  allTokens: EdgeTokenMap
   currencyInfo: EdgeCurrencyInfo
 }
 export type CurrencyConfigMap = EdgePluginMap<EdgeCurrencyConfig> | EdgePluginMap<MiniCurrencyConfig>
@@ -638,7 +635,7 @@ export const pickRandom = <T>(array?: T[]): T | null => {
  * returns the first promise that resolves.
  * If all promises reject, rejects an array of errors.
  */
-export function fuzzyTimeout<T>(promises: Promise<T>[], timeoutMs: number): Promise<T[]> {
+export async function fuzzyTimeout<T>(promises: Array<Promise<T>>, timeoutMs: number): Promise<T[]> {
   return new Promise((resolve, reject) => {
     let done = false
     const results: T[] = []

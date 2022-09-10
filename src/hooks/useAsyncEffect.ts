@@ -1,7 +1,7 @@
 import { showError } from '../components/services/AirshipInstance'
 import { useEffect, useRef } from '../types/reactHooks'
 
-type Cleanup = void | (() => void)
+type Cleanup = undefined | (() => void)
 type AsyncEffect = () => Promise<Cleanup>
 
 type State = {
@@ -9,7 +9,7 @@ type State = {
   dirty: boolean
   effect: AsyncEffect
   lastCleanup: Cleanup
-  lastDeps: void | unknown[]
+  lastDeps: undefined | unknown[]
   running: boolean
 }
 

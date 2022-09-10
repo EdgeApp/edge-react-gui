@@ -12,7 +12,7 @@ function handleErrors(response) {
   return response
 }
 
-const request = (name, path, method, data) => {
+const request = async (name, path, method, data) => {
   console.log(`====== ${name} REQUEST ====== data length: ${data?.length ?? ''}`)
 
   return global
@@ -33,4 +33,4 @@ const request = (name, path, method, data) => {
 }
 
 // @ts-expect-error
-export const sendLogs = logs => request('SENDING LOGS', 'log/', 'PUT', logs)
+export const sendLogs = async logs => request('SENDING LOGS', 'log/', 'PUT', logs)

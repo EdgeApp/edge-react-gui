@@ -1,18 +1,18 @@
-
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import URL from 'url-parse'
 
+import { StringMap } from '../../../types/types'
 import { asFiatPaymentTypes } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
+  FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderError
+  FiatProviderQuote
 } from '../fiatProviderTypes'
 const pluginId = 'moonpay'
 const storeId = 'com.moonpay'
@@ -61,22 +61,22 @@ const asMoonpayCountry = asObject({
 const asMoonpayCountries = asArray(asMoonpayCountry)
 
 type MoonpayWidgetQueryParams = {
-  apiKey: string,
-  currencyCode: string,
-  baseCurrencyCode: string,
-  lockAmount: boolean,
-  walletAddress: string,
-  showAllCurrencies: boolean,
-  enableRecurringBuys: boolean,
-  quoteCurrencyAmount?: number,
+  apiKey: string
+  currencyCode: string
+  baseCurrencyCode: string
+  lockAmount: boolean
+  walletAddress: string
+  showAllCurrencies: boolean
+  enableRecurringBuys: boolean
+  quoteCurrencyAmount?: number
   baseCurrencyAmount?: number
 }
 
-const CURRENCY_CODE_TRANSLATE = {
+const CURRENCY_CODE_TRANSLATE: StringMap = {
   matic_polygon: 'matic'
 }
 
-const CURRENCY_PLUGINID_MAP = {
+const CURRENCY_PLUGINID_MAP: StringMap = {
   bch: 'bitcoincash',
   bnb: 'binancechain',
   btc: 'bitcoin',
@@ -98,7 +98,7 @@ const CURRENCY_PLUGINID_MAP = {
   xtz: 'tezos'
 }
 
-const TOKEN_MAP = {
+const TOKEN_MAP: StringMap = {
   bat: 'ethereum',
   comp: 'ethereum',
   dai: 'ethereum',
@@ -124,7 +124,7 @@ export const moonpayProvider: FiatProviderFactory = {
         let moonpayCurrencies = []
         try {
           moonpayCurrencies = asMoonpayCurrencies(result)
-        } catch (error) {
+        } catch (error: any) {
           console.log(error.message)
           console.log(JSON.stringify(error, null, 2))
           return allowedCurrencyCodes
@@ -167,8 +167,8 @@ export const moonpayProvider: FiatProviderFactory = {
         const { regionCode, paymentTypes } = params
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
         let foundPaymentType = false
-        for (const of paymentTypes) {
-          const t = asFiatPaymentTypes(type)
+        for (const pType of paymentTypes) {
+          const t = asFiatPaymentTypes(pType)
           if (allowedPaymentTypes[t]) {
             foundPaymentType = true
             break

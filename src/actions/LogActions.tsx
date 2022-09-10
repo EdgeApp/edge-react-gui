@@ -101,7 +101,7 @@ device: ${getBrand()} ${getDeviceId()}
 
   await logWithType('activity', 'SENDING ACTIVITY LOGS WITH MESSAGE: ' + text)
     .then(async () => await readLogs('activity'))
-    .then(logs => {
+    .then(async logs => {
       activityOutput.data += logs || ''
       return sendLogs(activityOutput)
     })
@@ -111,7 +111,7 @@ device: ${getBrand()} ${getDeviceId()}
 
   await log('SENDING INFO LOGS WITH MESSAGE: ' + text)
     .then(async () => await readLogs('info'))
-    .then(logs => {
+    .then(async logs => {
       logOutput.data += logs || ''
       return sendLogs(logOutput)
     })

@@ -1,13 +1,10 @@
-
-
 import * as React from 'react'
-import { TextFieldProps, TextField } from 'react-native-material-textfield'
+import { TextField, TextFieldProps } from 'react-native-material-textfield'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 
-type Props = {
-  ...TextFieldProps,
+type Props = TextFieldProps & {
   autoFocus?: boolean
 }
 

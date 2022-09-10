@@ -161,7 +161,8 @@ if (ENABLE_PERF_LOGGING) {
 }
 
 const realFetch = fetch
-fetch = (...args: any) => {
+// @ts-expect-error
+fetch = async (...args: any) => {
   return realFetch(...args).catch(e => {
     Bugsnag.leaveBreadcrumb('realFetchError', {
       url: args[0],

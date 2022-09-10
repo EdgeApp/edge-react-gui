@@ -2,15 +2,14 @@
   "compilerOptions": {
     "declaration": true,
     "outDir": "lib",
-    "emitDeclarationOnly": true,
-
+    "noEmit": true,
     "esModuleInterop": true,
-    "jsx": "react",
-    "lib": ["es2016"],
+    "jsx": "react-native",
+    "lib": ["es2017"],
     "module": "es2015",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "es2015",
+    "target": "esnext",
 
     "strict": true
   },

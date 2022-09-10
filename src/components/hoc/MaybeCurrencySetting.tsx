@@ -9,7 +9,7 @@ import { useMemo } from '../../types/reactHooks'
 /**
  * Specific settings sections will receive these cleaned props.
  */
-export type CurrencySettingProps<T, X = void> = {
+export type CurrencySettingProps<T, X = undefined> = {
   // The starting value, taken from the plugin's currency info:
   defaultSetting: T
 

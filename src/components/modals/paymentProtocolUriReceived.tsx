@@ -11,7 +11,7 @@ const BITPAY = {
   merchantName: (memo: string) => {
     // Example BitPay memo
     // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, merchantName] = memo.split(' for merchant ')
     return merchantName
   }

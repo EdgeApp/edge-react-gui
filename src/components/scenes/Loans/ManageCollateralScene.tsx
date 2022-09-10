@@ -38,8 +38,13 @@ const collateralTokenMap = {
 
 type ManageCollateralRequest = {
   tokenId?: string,
-  ['fromWallet' | 'toWallet']: EdgeCurrencyWallet,
+  fromWallet: EdgeCurrencyWallet,
   nativeAmount: string
+} | {
+  tokenId?: string,
+  toWallet: EdgeCurrencyWallet,
+  nativeAmount: string
+
 }
 
 type Props<T: keyof ParamList> = {

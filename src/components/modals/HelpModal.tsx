@@ -128,7 +128,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           subTitle={s.strings.help_call_text}
           title={s.strings.help_call}
           underline
-          onPress={() => Linking.openURL(`tel:${HELP_URIS.call}`)}
+          onPress={async () => Linking.openURL(`tel:${HELP_URIS.call}`)}
         />
 
         <SelectableRow

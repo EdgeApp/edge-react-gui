@@ -58,11 +58,12 @@ export class SubCategorySelect extends React.Component<Props, State> {
   }
 
   renderSubcategory = (data: SubcategorySearchResultData, filterArray: any[]) => {
+    const plus = '+'
     const renderAdd = () => {
       if (filterArray.find(item => item === data.item)) {
         return (
           <View style={styles.rowPlusWrap}>
-            <FormattedText style={styles.rowPlus}>+</FormattedText>
+            <FormattedText style={styles.rowPlus}>{plus}</FormattedText>
           </View>
         )
       }

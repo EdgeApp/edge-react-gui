@@ -1,5 +1,3 @@
-
-
 import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -13,22 +11,22 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField'
 import { SubCategorySelect } from '../common/TransactionSubCategorySelect'
 
 type CategoriesType = Array<{
-  key: string,
+  key: string
   syntax: string
 }>
 
 type Props = {
-  bridge: AirshipBridge<{ category: string, subCategory: string } | undefined>,
-  categories: Object,
-  subCategories: string[],
-  category: string,
-  subCategory: string,
-  setNewSubcategory: (string, string[]) => void
+  bridge: AirshipBridge<{ category: string; subCategory: string } | undefined>
+  categories: Object
+  subCategories: string[]
+  category: string
+  subCategory: string
+  setNewSubcategory: (arg0: string, arg1: string[]) => void
 }
 
 type State = {
-  categories: CategoriesType,
-  category: string,
+  categories: CategoriesType
+  category: string
   subCategory: string
 }
 

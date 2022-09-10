@@ -25,7 +25,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
       <>
         <ModalMessage>
           {s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
-          <B>{getWalletName(currencyWallets[walletId])}?</B>
+          <B>{getWalletName(currencyWallets[walletId]) + '?'}</B>
         </ModalMessage>
         {additionalMsg == null ? null : <ModalMessage>{additionalMsg}</ModalMessage>}
       </>
