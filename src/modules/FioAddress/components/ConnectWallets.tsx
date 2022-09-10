@@ -17,7 +17,7 @@ import { makeConnectWallets } from '../util'
 type LocalState = {
   connectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
   disconnectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
-  prevItemsConnected: { [string]: boolean }
+  prevItemsConnected: { [key: string]: boolean }
 }
 
 type StateProps = {

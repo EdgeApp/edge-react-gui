@@ -105,5 +105,5 @@ export type StakePlugin = {
 // -----------------------------------------------------------------------------
 
 export type InfoServerResponse = {
-  policies: { [string]: number }
+  policies: { [key: string]: number }
 }

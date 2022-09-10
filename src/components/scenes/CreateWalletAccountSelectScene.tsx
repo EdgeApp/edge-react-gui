@@ -40,7 +40,7 @@ type OwnProps = {
 }
 
 type StateProps = {
-  wallets: { [string]: GuiWallet }
+  wallets: { [key: string]: GuiWallet }
   paymentCurrencyCode: string
   amount: string
   supportedCurrencies: { [currencyCode: string]: boolean }

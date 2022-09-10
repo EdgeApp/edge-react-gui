@@ -3,7 +3,7 @@ import { combineReducers, Reducer } from 'redux'
 import { Action } from '../../types/reduxActions'
 
 export type HandleActivationInfo = {
-  supportedCurrencies: { [string]: boolean }
+  supportedCurrencies: { [key: string]: boolean }
   activationCost: string
 }
 

@@ -34,8 +34,8 @@ type LocalState = {
   fioRequestsSent: FioRequest[]
   prevPendingAmount: number
   prevSentAmount: number
-  pendingRequestPaging: { [string]: number }
-  sentRequestPaging: { [string]: number }
+  pendingRequestPaging: { [key: string]: number }
+  sentRequestPaging: { [key: string]: number }
 }
 
 type StateProps = {
