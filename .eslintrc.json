@@ -1,23 +1,43 @@
 {
   "extends": [
+    "plugin:react-native/all",
     "standard-kit/prettier",
-    "standard-kit/prettier/jsx",
     "standard-kit/prettier/flow",
+    "standard-kit/prettier/jsx",
     "standard-kit/prettier/node",
     "standard-kit/prettier/react",
-    "plugin:react-native/all"
+    "standard-kit/prettier/typescript"
   ],
-  "globals": {
-    "fetch": true
+  "parserOptions": {
+    "project": "tsconfig.json"
   },
-  "plugins": [ "simple-import-sort" ],
+  "plugins": [
+    "simple-import-sort"
+  ],
   "rules": {
-    "react-native/no-inline-styles": "off",
-    "react-native/no-raw-text": ["error", { "skip": ["FormattedText", "T", "B"] }],
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/default-param-last": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/prefer-optional-chain": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/return-await": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+
     "react/jsx-handler-names": "off",
+    "react-native/no-inline-styles": "off",
+    "react-native/no-raw-text": ["error", { "skip": ["EdgeText"] }],
     "simple-import-sort/imports": "error"
   },
+
   "settings": {
-    "react": { "pragma": "React", "version": "16.8.0", "flowVersion": "0.66" }
+    "react": {
+      "version": "16.2"
+    }
   }
 }

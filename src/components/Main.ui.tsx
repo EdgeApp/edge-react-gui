@@ -1,0 +1,1007 @@
+import * as React from 'react'
+import { YellowBox } from 'react-native'
+import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+
+import ENV from '../../env.json'
+import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
+import { registerDevice } from '../actions/DeviceIdActions'
+import { logoutRequest } from '../actions/LoginActions'
+import { checkAndShowGetCryptoModal } from '../actions/ScanActions'
+import { showReEnableOtpModal } from '../actions/SettingsActions'
+import { CreateWalletChoiceScene } from '../components/scenes/CreateWalletChoiceScene'
+import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene'
+import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene'
+import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene'
+import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSelectFiatScene'
+import { CryptoExchangeQuote } from '../components/scenes/CryptoExchangeQuoteScene'
+import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene'
+import { CryptoExchangeSuccessScene } from '../components/scenes/CryptoExchangeSuccessScene'
+import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene'
+import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene'
+import { FioAddressDetailsScene } from '../components/scenes/FioAddressDetailsScene'
+import { FioAddressListScene } from '../components/scenes/FioAddressListScene'
+import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
+import { FioAddressRegisterScene } from '../components/scenes/FioAddressRegisterScene'
+import { FioAddressRegisterSelectWalletScene } from '../components/scenes/FioAddressRegisterSelectWalletScene'
+import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
+import { FioConnectWalletConfirmScene } from '../components/scenes/FioConnectWalletConfirmScene'
+import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsScene'
+import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene'
+import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
+import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
+import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene'
+import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene'
+import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene'
+import { WalletListScene } from '../components/scenes/WalletListScene'
+import { requestPermission } from '../components/services/PermissionsManager'
+import { ControlPanel } from '../components/themed/ControlPanel'
+import s from '../locales/strings'
+import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
+import { Permission } from '../reducers/PermissionsReducer'
+import { connect } from '../types/reactRedux'
+import { Actions, withNavigation } from '../types/routerTypes'
+import { scale } from '../util/scaling'
+import { logEvent } from '../util/tracking'
+import { AirshipToast } from './common/AirshipToast'
+import { ifLoggedIn } from './hoc/IfLoggedIn'
+import { BackButton } from './navigation/BackButton'
+import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
+import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
+import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton'
+import { HeaderTextButton } from './navigation/HeaderTextButton'
+import { HeaderTitle } from './navigation/HeaderTitle'
+import { SideMenuButton } from './navigation/SideMenuButton'
+import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
+import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene'
+import { ChangePasswordScene } from './scenes/ChangePasswordScene'
+import { ChangePinScene } from './scenes/ChangePinScene'
+import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
+import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
+import { CreateWalletName } from './scenes/CreateWalletNameScene'
+import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene'
+import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
+import { EdgeLoginScene } from './scenes/EdgeLoginScene'
+import { EditTokenScene } from './scenes/EditTokenScene'
+import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
+import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
+import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
+import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
+import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene'
+import { GuiPluginListScene } from './scenes/GuiPluginListScene'
+import { GuiPluginViewScene } from './scenes/GuiPluginViewScene'
+import { LoanAddCollateralScene } from './scenes/Loans/LoanAddCollateralScene'
+import { LoanBorrowMoreScene } from './scenes/Loans/LoanBorrowMoreScene'
+import { LoanCloseScene } from './scenes/Loans/LoanCloseScene'
+import { LoanCreateConfirmationScene } from './scenes/Loans/LoanCreateConfirmationScene'
+import { LoanCreateScene } from './scenes/Loans/LoanCreateScene'
+import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
+import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
+import { LoanMakeLoanPaymentScene } from './scenes/Loans/LoanRepayScene'
+import { LoanStatusScene } from './scenes/Loans/LoanStatusScene'
+import { LoanWithdrawCollateralScene } from './scenes/Loans/LoanWithdrawCollateralScene'
+import { LoginScene } from './scenes/LoginScene'
+import { ManageTokensScene } from './scenes/ManageTokensScene'
+import { NotificationScene } from './scenes/NotificationScene'
+import { OtpRepairScene } from './scenes/OtpRepairScene'
+import { OtpSettingsScene } from './scenes/OtpSettingsScene'
+import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene'
+import { Request } from './scenes/RequestScene'
+import { SecurityAlertsScene } from './scenes/SecurityAlertsScene'
+import { SendScene } from './scenes/SendScene'
+import { SettingsScene } from './scenes/SettingsScene'
+import { SpendingLimitsScene } from './scenes/SpendingLimitsScene'
+import { StakeModifyScene } from './scenes/Staking/StakeModifyScene'
+import { StakeOptionsScene } from './scenes/Staking/StakeOptionsScene'
+import { StakeOverviewScene } from './scenes/Staking/StakeOverviewScene'
+import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene'
+import { TransactionDetailsScene } from './scenes/TransactionDetailsScene'
+import { TransactionList } from './scenes/TransactionListScene'
+import { WcConnectionsScene } from './scenes/WcConnectionsScene'
+import { WcConnectScene } from './scenes/WcConnectScene'
+import { WcDisconnectScene } from './scenes/WcDisconnectScene'
+import { Airship } from './services/AirshipInstance'
+import { MenuTab } from './themed/MenuTab'
+
+const RouterWithRedux = connect<
+  {},
+  {},
+  {
+    children?: React.ReactNode
+    backAndroidHandler?: () => boolean
+  }
+>(
+  state => ({}),
+  dispatch => ({})
+)(Router)
+
+type DispatchProps = {
+  registerDevice: () => void
+
+  // Navigation actions:
+  logout: (username?: string) => void
+
+  // Things to do when we enter certain scenes:
+  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void
+  checkEnabledExchanges: () => void
+  dispatchDisableScan: () => void
+  dispatchEnableScan: () => void
+  requestPermission: (permission: Permission) => void
+  showReEnableOtpModal: () => void
+}
+
+type Props = DispatchProps
+
+export class MainComponent extends React.Component<Props> {
+  backPressedOnce: boolean
+
+  constructor(props: Props) {
+    super(props)
+
+    if (ENV.HIDE_IS_MOUNTED) {
+      YellowBox.ignoreWarnings([
+        'Warning: isMounted(...) is deprecated',
+        'Module RCTImageLoader',
+        'The scalesPageToFit property is not supported when useWebKit = true'
+      ])
+    }
+  }
+
+  componentDidMount() {
+    logEvent('AppStart')
+    this.props.registerDevice()
+  }
+
+  render() {
+    return (
+      <>
+        <RouterWithRedux backAndroidHandler={this.handleBack}>
+          <Stack key="root" hideNavBar panHandlers={null}>
+            <Scene key="login" component={withNavigation(LoginScene)} initial />
+            <Scene
+              key="edgeLogin"
+              component={withNavigation(ifLoggedIn(EdgeLoginScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
+            />
+            {this.renderTransactionDetailsView()}
+            {this.renderTabView()}
+          </Stack>
+        </RouterWithRedux>
+      </>
+    )
+  }
+
+  renderTransactionDetailsView = () => {
+    return (
+      <Scene
+        key="transactionDetails"
+        component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+        navTransparent
+        onEnter={() => this.props.requestPermission('contacts')}
+        clone
+        renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+        renderLeftButton={<BackButton onPress={this.handleBack} />}
+        renderRightButton={<SideMenuButton />}
+      />
+    )
+  }
+
+  renderTabView = () => {
+    return (
+      <Drawer
+        hideTabBar
+        drawerBackgroundColor="none"
+        key="edge"
+        hideNavBar
+        contentComponent={withNavigation(ifLoggedIn(ControlPanel))}
+        hideDrawerButton
+        drawerPosition="right"
+        drawerWidth={scale(270)}
+      >
+        {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
+        <Scene key="AllMyTabs" hideNavBar>
+          <Tabs key="edge" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
+            <Stack key="walletList">
+              <Scene
+                key="walletListScene"
+                component={withNavigation(ifLoggedIn(WalletListScene))}
+                navTransparent
+                renderTitle={<EdgeLogoHeader />}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="createWalletChoice"
+                component={withNavigation(ifLoggedIn(CreateWalletChoiceScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+
+              <Scene
+                key="createWalletImport"
+                component={withNavigation(ifLoggedIn(CreateWalletImportScene))}
+                navTransparent
+                renderTitle={<HeaderTitle title={s.strings.create_wallet_import_title} />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+
+              <Scene
+                key="createWalletSelectCrypto"
+                component={withNavigation(ifLoggedIn(CreateWalletSelectCryptoScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+
+              <Scene
+                key="createWalletName"
+                component={withNavigation(ifLoggedIn(CreateWalletName))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+
+              <Scene
+                key="createWalletSelectFiat"
+                component={withNavigation(ifLoggedIn(CreateWalletSelectFiatScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+
+              <Scene
+                key="createWalletReview"
+                component={withNavigation(ifLoggedIn(CreateWalletReviewScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+
+              <Scene
+                key="createWalletAccountSetup"
+                component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
+                navTransparent
+                renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<HeaderTextButton type="help" placement="right" />}
+              />
+
+              <Scene
+                key="createWalletAccountSelect"
+                component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
+                navTransparent
+                renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<HeaderTextButton type="help" placement="right" />}
+              />
+
+              <Scene
+                key="transactionList"
+                component={withNavigation(ifLoggedIn(TransactionList))}
+                onEnter={() => {
+                  this.props.requestPermission('contacts')
+                }}
+                navTransparent
+                renderTitle={<HeaderTitle title=" " />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="stakeModify"
+                navTransparent
+                component={withNavigation(ifLoggedIn(StakeModifyScene))}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="stakeOptions"
+                navTransparent
+                component={withNavigation(ifLoggedIn(StakeOptionsScene))}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="stakeOverview"
+                navTransparent
+                component={withNavigation(ifLoggedIn(StakeOverviewScene))}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="fioStakingOverview"
+                navTransparent
+                component={ifLoggedIn(FioStakingOverviewScene)}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="fioStakingChange"
+                navTransparent
+                component={ifLoggedIn(FioStakingChangeScene)}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="manageTokens"
+                component={withNavigation(ifLoggedIn(ManageTokensScene))}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+                navTransparent
+                renderTitle=""
+                animation="fade"
+                duration={600}
+              />
+              <Scene
+                key="editToken"
+                component={withNavigation(ifLoggedIn(EditTokenScene))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+              <Scene
+                key="transactionsExport"
+                component={withNavigation(ifLoggedIn(TransactionsExportScene))}
+                navTransparent
+                renderTitle={<HeaderTitle title={s.strings.title_export_transactions} />}
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderRightButton={this.renderEmptyButton()}
+              />
+            </Stack>
+            <Stack key="pluginListBuy">
+              <Scene
+                key="pluginListBuy"
+                component={withNavigation(ifLoggedIn(GuiPluginListScene))}
+                navTransparent
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+                route={{ params: { direction: 'buy' } }}
+              />
+              <Scene
+                key="pluginViewBuy"
+                component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+                navTransparent
+                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+                renderLeftButton={renderPluginBackButton()}
+                renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+                hideTabBar
+              />
+              <Scene
+                key="guiPluginEnterAmount"
+                component={withNavigation(ifLoggedIn(FiatPluginEnterAmountScene))}
+                navTransparent
+                renderLeftButton={renderPluginBackButton()}
+                hideTabBar
+              />
+            </Stack>
+            <Stack key="pluginListSell">
+              <Scene
+                key="pluginListSell"
+                component={withNavigation(ifLoggedIn(GuiPluginListScene))}
+                navTransparent
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderRightButton={<SideMenuButton />}
+                onLeft={Actions.pop}
+                route={{ params: { direction: 'sell' } }}
+              />
+              <Scene
+                key="pluginViewSell"
+                component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+                navTransparent
+                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+                renderLeftButton={renderPluginBackButton()}
+                renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+                hideTabBar
+              />
+            </Stack>
+            <Stack key="exchange">
+              <Scene
+                key="exchangeScene"
+                component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
+                navTransparent
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                renderRightButton={<SideMenuButton />}
+                onEnter={() => this.props.checkEnabledExchanges()}
+              />
+              <Scene
+                key="exchangeQuoteProcessing"
+                component={withNavigation(ifLoggedIn(CryptoExchangeQuoteProcessingScreen))}
+                navTransparent
+                hideTabBar
+                renderLeftButton={this.renderEmptyButton()}
+                renderRightButton={this.renderEmptyButton()}
+              />
+              <Scene
+                key="exchangeQuote"
+                component={withNavigation(ifLoggedIn(CryptoExchangeQuote))}
+                navTransparent
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+              />
+              <Scene
+                key="exchangeSuccess"
+                component={withNavigation(ifLoggedIn(CryptoExchangeSuccessScene))}
+                navTransparent
+                renderLeftButton={this.renderEmptyButton()}
+              />
+            </Stack>
+          </Tabs>
+
+          <Stack key="request" hideTabBar>
+            <Scene
+              key="request"
+              component={withNavigation(ifLoggedIn(Request))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              renderTitle={<EdgeLogoHeader />}
+            />
+            <Scene
+              key="fioRequestConfirmation"
+              component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+            />
+          </Stack>
+
+          <Stack key="send" hideTabBar>
+            <Scene
+              key="send"
+              component={withNavigation(ifLoggedIn(SendScene))}
+              navTransparent
+              onEnter={props => {
+                this.props.checkAndShowGetCryptoModal(props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
+              }}
+              onExit={this.props.dispatchDisableScan}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+            <Scene
+              key="changeMiningFee"
+              component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
+            />
+          </Stack>
+
+          <Stack key="passwordRecovery" hideTabBar>
+            <Scene
+              key="passwordRecovery"
+              component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+          </Stack>
+
+          <Stack key="otpRepair" hideNavBar>
+            <Scene key="otpRepair" component={withNavigation(ifLoggedIn(OtpRepairScene))} navTransparent />
+          </Stack>
+
+          <Stack key="securityAlerts" hideNavBar>
+            <Scene key="securityAlerts" component={withNavigation(ifLoggedIn(SecurityAlertsScene))} navTransparent />
+          </Stack>
+
+          <Stack key="manageTokens" hideTabBar>
+            <Scene
+              key="manageTokens_notused"
+              component={withNavigation(ifLoggedIn(ManageTokensScene))}
+              navTransparent
+              renderTitle=""
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+          </Stack>
+
+          <Stack key="settingsOverviewTab" hideDrawerButton>
+            <Scene
+              key="settingsOverview"
+              component={withNavigation(ifLoggedIn(SettingsScene))}
+              navTransparent
+              onEnter={() => this.props.showReEnableOtpModal()}
+              renderTitle={<HeaderTitle title={s.strings.title_settings} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="changePassword"
+              component={withNavigation(ifLoggedIn(ChangePasswordScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="changePin"
+              component={withNavigation(ifLoggedIn(ChangePinScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="otpSetup"
+              component={withNavigation(ifLoggedIn(OtpSettingsScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_otp} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="passwordRecovery"
+              component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="spendingLimits"
+              component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="exchangeSettings"
+              component={withNavigation(ifLoggedIn(SwapSettingsScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="currencySettings"
+              component={withNavigation(ifLoggedIn(CurrencySettingsScene))}
+              navTransparent
+              renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="promotionSettings"
+              component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="defaultFiatSetting"
+              component={withNavigation(ifLoggedIn(DefaultFiatSettingScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key="notificationSettings"
+              component={withNavigation(ifLoggedIn(NotificationScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="currencyNotificationSettings"
+              component={withNavigation(ifLoggedIn(CurrencyNotificationScene))}
+              navTransparent
+              renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="pluginView" hideDrawerButton>
+            <Scene
+              key="pluginView"
+              component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+              navTransparent
+              renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+            />
+          </Stack>
+
+          <Stack key="termsOfService">
+            <Scene
+              key="termsOfService"
+              component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioAddressList">
+            <Scene
+              key="fioAddressList"
+              component={withNavigation(ifLoggedIn(FioAddressListScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioAddressRegister">
+            <Scene
+              key="fioAddressRegister"
+              component={withNavigation(ifLoggedIn(FioAddressRegisterScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioAddressRegisterSelectWallet">
+            <Scene
+              key="fioAddressRegisterSelectWallet"
+              component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioDomainRegister">
+            <Scene
+              key="fioDomainRegister"
+              component={withNavigation(ifLoggedIn(FioDomainRegisterScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="fioDomainRegisterSelectWallet"
+              component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="fioDomainConfirm"
+              component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioNameConfirm">
+            <Scene
+              key="fioNameConfirm"
+              component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioAddressDetails">
+            <Scene
+              key="fioAddressDetails"
+              component={withNavigation(ifLoggedIn(FioAddressDetailsScene))}
+              navTransparent
+              renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="fioConnectToWalletsConfirm"
+              component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioAddressSettings">
+            <Scene
+              key="fioAddressSettings"
+              component={withNavigation(FioAddressSettingsScene)}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioAddressRegisterSuccess">
+            <Scene
+              key="fioAddressRegisterSuccess"
+              component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
+              navTransparent
+              renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
+              renderRightButton={<SideMenuButton />}
+              renderLeftButton={this.renderEmptyButton()}
+            />
+          </Stack>
+
+          <Stack key="fioDomainSettings">
+            <Scene
+              key="fioDomainSettings"
+              component={withNavigation(FioDomainSettingsScene)}
+              navTransparent
+              renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="fioRequestList">
+            <Scene
+              key="fioRequestList"
+              component={withNavigation(ifLoggedIn(FioRequestListScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="fioRequestApproved"
+              component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+              navTransparent
+              onEnter={() => this.props.requestPermission('contacts')}
+              clone
+              renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+            />
+          </Stack>
+
+          <Stack key="fioSentRequestDetails">
+            <Scene
+              key="fioSentRequestDetails"
+              component={withNavigation(ifLoggedIn(FioSentRequestDetailsScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="wcConnections">
+            <Scene
+              key="wcConnections"
+              component={withNavigation(ifLoggedIn(WcConnectionsScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="wcDisconnect"
+              component={withNavigation(ifLoggedIn(WcDisconnectScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="wcConnect"
+              component={withNavigation(ifLoggedIn(WcConnectScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key="loan">
+            <Scene
+              key="loanDashboard"
+              component={withNavigation(ifLoggedIn(LoanDashboardScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanCreate"
+              component={withNavigation(ifLoggedIn(LoanCreateScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanCreateConfirmation"
+              component={withNavigation(ifLoggedIn(LoanCreateConfirmationScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanDetails"
+              component={withNavigation(ifLoggedIn(LoanDetailsScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanAddCollateralScene"
+              component={withNavigation(ifLoggedIn(LoanAddCollateralScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanWithdrawCollateralScene"
+              component={withNavigation(ifLoggedIn(LoanWithdrawCollateralScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanRepayScene"
+              component={withNavigation(ifLoggedIn(LoanMakeLoanPaymentScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanBorrowMoreScene"
+              component={withNavigation(ifLoggedIn(LoanBorrowMoreScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={renderPluginBackButton()}
+              renderRightButton={<SideMenuButton />}
+            />
+            <Scene
+              key="loanClose"
+              component={withNavigation(ifLoggedIn(LoanCloseScene))}
+              navTransparent
+              renderTitle={<EdgeLogoHeader />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanCreateStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key="loanDetailsStatus"
+              component={withNavigation(ifLoggedIn(LoanStatusScene))}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+        </Scene>
+      </Drawer>
+    )
+  }
+
+  renderEmptyButton = () => {
+    return <BackButton isEmpty onPress={this.handleEmpty} />
+  }
+
+  isCurrentScene = (sceneKey: string) => {
+    return Actions.currentScene === sceneKey
+  }
+
+  handleEmpty = () => null
+
+  handleBack = () => {
+    if (this.isCurrentScene('login')) {
+      return false
+    }
+    if (this.isCurrentScene('walletListScene')) {
+      if (this.backPressedOnce) {
+        this.props.logout()
+      } else {
+        this.backPressedOnce = true
+        Airship.show(bridge => <AirshipToast bridge={bridge} message={s.strings.back_button_tap_again_to_exit} />).then(() => {
+          this.backPressedOnce = false
+        })
+      }
+      return true
+    }
+    if (this.isCurrentScene('exchangeQuote')) {
+      Actions.popTo('exchangeScene')
+      return true
+    }
+    if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
+      handlePluginBack()
+      return true
+    }
+    if (this.isCurrentScene('fioAddressRegister')) {
+      if (Actions.currentParams.noAddresses) {
+        Actions.jump('walletListScene')
+        return true
+      }
+    }
+    if (this.isCurrentScene('fioAddressRegisterSelectWallet')) {
+      if (Actions.currentParams.isFallback) {
+        Actions.popTo('fioAddressRegister')
+        return true
+      }
+    }
+    if (this.isCurrentScene('loanCreateStatus')) {
+      Actions.jump('loanDashboard')
+      return true
+    }
+    Actions.pop()
+    return true
+  }
+}
+
+export const Main = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
+    registerDevice() {
+      dispatch(registerDevice())
+    },
+
+    // Navigation actions:
+    logout(username?: string): void {
+      dispatch(logoutRequest(username))
+    },
+
+    // Things to do when we enter certain scenes:
+    checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(checkAndShowGetCryptoModal(selectedWalletId, selectedCurrencyCode))
+    },
+    checkEnabledExchanges() {
+      dispatch(checkEnabledExchanges())
+    },
+    dispatchDisableScan() {
+      dispatch({ type: 'DISABLE_SCAN' })
+    },
+    dispatchEnableScan() {
+      dispatch({ type: 'ENABLE_SCAN' })
+    },
+    requestPermission(permission: Permission) {
+      requestPermission(permission)
+    },
+    showReEnableOtpModal() {
+      dispatch(showReEnableOtpModal())
+    }
+  })
+)(MainComponent)

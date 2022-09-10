@@ -3,6 +3,7 @@
 *.swp
 scratch.*
 temp/
+lib/
 
 # Build & deployment files
 /android/app/google-services.json
