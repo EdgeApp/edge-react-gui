@@ -1,17 +1,21 @@
 // @flow
 
 import * as React from 'react'
+import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { makeWyreClient } from '../../controllers/action-queue/WyreClient.js'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler.js'
+import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings.js'
 import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { makeCurrencyCodeTable } from '../../util/utils.js'
+import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { showError } from '../services/AirshipInstance.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton'
@@ -26,7 +30,8 @@ export type WalletListResult = {
   tokenId?: string,
 
   // Fiat buy/sell
-  isBankSignupRequest?: boolean
+  isBankSignupRequest?: boolean,
+  fiatAccountId?: string
 }
 
 type Props = {|
@@ -81,17 +86,20 @@ export function WalletListModal(props: Props) {
   } = props
 
   // #region Constants
-
   const account = useSelector(state => state.core.account)
+  // #endregion Constants
+
+  // #region State
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [bankAccountsMap, setBankAccountsMap] = useState()
+
   useAsyncEffect(async () => {
     const wyreClient = await makeWyreClient({ account })
     if (wyreClient.isAccountSetup) {
       setBankAccountsMap(await wyreClient.getPaymentMethods())
     }
-  }, [account])
+  })
   // #endregion State
 
   // #region Init - Upgrade deprecated props
@@ -129,6 +137,8 @@ export function WalletListModal(props: Props) {
   // Pull up the signup workflow on the calling scene if the user does not yet have a linked bank account
   const handleShowBankPlugin = useHandler(() => bridge.resolve({ isBankSignupRequest: true }))
 
+  const handleItemLayout = useRowLayout()
+
   // #endregion Handlers
 
   // #region Dependent Constants
@@ -140,16 +150,28 @@ export function WalletListModal(props: Props) {
   }, [allowKeysOnlyMode, excludeAssets, legacyExcludeAssets])
 
   // #region Bank Button/Row Display
-  const renderBankSignupButton = () => (
-    <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleShowBankPlugin} marginRem={[0.5, 0.75, 1.5, 0.75]} />
-  )
-  const renderBankSection = () =>
-    showWithdrawToBank ? (
-      <>
-        {bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? renderBankSignupButton() : null /* TODO: Show payment methods, if available */}
-        <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
-      </>
-    ) : null
+  const bankSignupButton = <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleShowBankPlugin} marginRem={[0.5, 0.75, 1.5, 0.75]} />
+  const renderPaymentMethod = useHandler(item => {
+    return <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" />
+  })
+
+  // TODO: Fix spacings
+  const bankSection = showWithdrawToBank ? (
+    <>
+      {bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? (
+        bankSignupButton
+      ) : (
+        <FlatList
+          data={Object.values(bankAccountsMap)}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderPaymentMethod}
+          getItemLayout={handleItemLayout}
+          keyExtractor={item => item.pluginId}
+        />
+      )}
+      <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
+    </>
+  ) : null
   // #endregion Bank Button/Row Display
 
   // #endregion Dependent Constants
@@ -157,7 +179,14 @@ export function WalletListModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{headerTitle}</ModalTitle>
-      {renderBankSection()}
+      <View
+        style={{
+          width: '100%',
+          padding: 0
+        }}
+      >
+        {bankSection}
+      </View>
       <OutlinedTextInput
         returnKeyType="search"
         label={s.strings.search_wallets}

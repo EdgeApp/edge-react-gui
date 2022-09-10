@@ -40,8 +40,10 @@ const IconDataRowComponent = (props: Props) => {
       </View>
       <View style={styles.rightColumn}>
         {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
-        {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
-        {rightSubTextExtended}
+        <View style={styles.row}>
+          {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
+          {rightSubTextExtended}
+        </View>
       </View>
     </View>
   )
