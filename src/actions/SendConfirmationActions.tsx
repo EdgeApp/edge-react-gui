@@ -217,7 +217,7 @@ export const signBroadcastAndSave =
     if (guiMakeSpendInfo.beforeTransaction) {
       try {
         guiMakeSpendInfo.beforeTransaction && (await guiMakeSpendInfo.beforeTransaction())
-      } catch (e) {
+      } catch (e: any) {
         return
       }
     }
@@ -337,7 +337,7 @@ export const signBroadcastAndSave =
                 txid: edgeSignedTransaction.txid,
                 memo
               })
-            } catch (e) {
+            } catch (e: any) {
               const message = e?.message ?? ''
               message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(s.strings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
             }
@@ -357,7 +357,7 @@ export const signBroadcastAndSave =
                 txid: edgeSignedTransaction.txid,
                 memo
               })
-            } catch (e) {
+            } catch (e: any) {
               showError(e)
             }
           }
@@ -382,7 +382,7 @@ export const signBroadcastAndSave =
           edgeTransaction: edgeSignedTransaction
         })
       }
-    } catch (e) {
+    } catch (e: any) {
       resetSlider()
       console.log(e)
       let message = sprintf(s.strings.transaction_failure_message, e.message)

@@ -227,7 +227,7 @@ export const banxaProvider: FiatProviderFactory = {
         let banxaCrypto
         try {
           banxaCrypto = edgeToBanxaCrypto(tokenId)
-        } catch (e) {
+        } catch (e: any) {
           throw new FiatProviderError({ errorType: 'assetUnsupported' })
         }
 
@@ -239,7 +239,7 @@ export const banxaProvider: FiatProviderFactory = {
         let paymentType
         try {
           paymentType = paymentTypes.find(t => banxaPaymentsMap[fiat][banxaCoin][t] != null)
-        } catch (e) {
+        } catch (e: any) {
           throw new FiatProviderError({ errorType: 'assetUnsupported' })
         }
 

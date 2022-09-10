@@ -73,7 +73,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
             try {
               const fioAddresses = await engine.otherMethods.getFioAddressNames()
               fioAddress = fioAddresses.length ? fioAddresses[0] : ''
-            } catch (e) {
+            } catch (e: any) {
               fioAddress = ''
             }
           }

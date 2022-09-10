@@ -120,7 +120,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     let newRequests = []
     try {
       newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING)
-    } catch (e) {
+    } catch (e: any) {
       showError(e.message)
     }
 
@@ -143,7 +143,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     let newRequests = []
     try {
       newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.SENT)
-    } catch (e) {
+    } catch (e: any) {
       showError(e.message)
     }
 
@@ -166,7 +166,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
           nextFioRequests.push(...fioRequests.map((request: FioRequest) => ({ ...request, fioWalletId: wallet.id })))
           paging[fioPublicKey]++
         }
-      } catch (e) {
+      } catch (e: any) {
         throw new Error(s.strings.fio_get_requests_error)
       }
     }
@@ -226,7 +226,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
           this.removeFioPendingRequest(request.fio_request_id)
           showToast(s.strings.fio_reject_status)
         }
-      } catch (e) {
+      } catch (e: any) {
         showError(s.strings.fio_reject_request_error)
       }
     } else {
@@ -250,7 +250,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         await cancelFioRequest(fioWallet, parseInt(request.fio_request_id), payeeFioAddress)
         this.removeFioSentRequest(request.fio_request_id)
         showToast(s.strings.fio_cancel_status)
-      } catch (e) {
+      } catch (e: any) {
         this.setState({ fullScreenLoader: false })
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.showNoBundledTxsAlert(fioWallet, payeeFioAddress)
@@ -405,7 +405,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
             showError(s.strings.fio_no_bundled_err_msg)
             throw new Error(s.strings.fio_no_bundled_err_msg)
           }
-        } catch (e) {
+        } catch (e: any) {
           showError(s.strings.fio_get_fee_err_msg)
           throw e
         }

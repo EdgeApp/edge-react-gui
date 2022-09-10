@@ -289,7 +289,7 @@ class SendComponent extends React.PureComponent<Props, State> {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
       await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider)
-    } catch (e) {
+    } catch (e: any) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
         const answer = await Airship.show(bridge => (
           <ButtonsModal

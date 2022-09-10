@@ -48,7 +48,7 @@ export const CurrencyNotificationScene = (props: Props) => {
           type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
           data: serverSettingsToState(newSettings)
         })
-      } catch (e) {
+      } catch (e: any) {
         showError(`Failed to reach notification server: ${e}`)
       }
     },

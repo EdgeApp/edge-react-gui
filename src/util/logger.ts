@@ -64,7 +64,7 @@ async function rotateLogs(type: LogType): Promise<void> {
     }
     await RNFS.writeFile(paths[0], '')
     numWrites = 0
-  } catch (e) {
+  } catch (e: any) {
     global.clog(e)
   }
 }
@@ -101,7 +101,7 @@ async function writeLog(type: LogType, content: string): Promise<void> {
     } else {
       return await RNFS.writeFile(path, content)
     }
-  } catch (e) {
+  } catch (e: any) {
     global.clog((e && e.message) || e)
   }
 }
@@ -133,7 +133,7 @@ export async function logWithType(type: LogType, ...info: Array<number | string 
     await lock.acquire('logger', async () => {
       return await writeLog(type, d + ': ' + logs)
     })
-  } catch (e) {
+  } catch (e: any) {
     global.clog(e)
   }
   global.clog(logs)

@@ -126,7 +126,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         })
         await account.disklet.setText(MODAL_DATA_FILE, newText)
       }
-    } catch (e) {
+    } catch (e: any) {
       const json = {
         viewed: 1
       }

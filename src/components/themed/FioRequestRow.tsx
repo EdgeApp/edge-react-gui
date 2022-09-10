@@ -210,7 +210,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
 
       if (plugin == null) throw new Error(`No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`)
       displayDenomination = getDisplayDenomination(state, plugin.pluginId, tokenCode)
-    } catch (e) {
+    } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)

@@ -73,7 +73,7 @@ export const getPublicAddress = (state: RootState): string => {
       state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
       ''
     )
-  } catch (e) {
+  } catch (e: any) {
     return ''
   }
 }
@@ -89,7 +89,7 @@ const getSpendTargetOtherParams = (state: RootState): Object => {
     const { spendInfo } = state.ui.scenes.sendConfirmation
     if (spendInfo == null) return {}
     return spendInfo.spendTargets[0].otherParams || {}
-  } catch (e) {
+  } catch (e: any) {
     return {}
   }
 }

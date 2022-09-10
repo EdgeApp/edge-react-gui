@@ -80,7 +80,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         selectedWallet: wallet,
         walletLoading: false
       })
-    } catch (e) {
+    } catch (e: any) {
       this.setState({ walletLoading: false })
       showError(s.strings.create_wallet_failed_message)
     }
@@ -140,7 +140,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           loading: false,
           errorMessage: ''
         })
-      } catch (e) {
+      } catch (e: any) {
         this.setState({
           loading: false
         })

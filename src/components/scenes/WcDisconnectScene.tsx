@@ -38,7 +38,7 @@ export const WcDisconnectScene = (props: Props) => {
   const handleDisconnect = async () => {
     try {
       await wallet.otherMethods.wcDisconnect(wcConnectionInfo.uri)
-    } catch (e) {
+    } catch (e: any) {
       showError(e)
     }
     navigation.navigate('wcConnections')

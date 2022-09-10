@@ -95,7 +95,7 @@ export const activatePromotion = (installerId: string) => async (dispatch: Dispa
   let reply
   try {
     reply = await fetchReferral(uri)
-  } catch (e) {
+  } catch (e: any) {
     console.warn(`Failed to contact referral server`)
     return
   }
@@ -163,7 +163,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
     const clean = asServerTweaks(await reply.json())
     cache.accountMessages.push(...lockStartDates(clean.messages, creationDate))
     cache.accountPlugins.push(...lockStartDates(clean.plugins, creationDate))
-  } catch (e) {
+  } catch (e: any) {
     console.warn(`Failed to contact referral server: ${e.message}`)
   }
 
@@ -179,7 +179,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
     const clean = asArray(asMessageTweak)(await reply.json())
     const validated = await validatePromoCards(state.core.account, clean)
     cache.accountMessages.push(...lockStartDates(validated, creationDate))
-  } catch (e) {
+  } catch (e: any) {
     console.warn(`Failed to contact info server: ${e.message}`)
   }
 
@@ -203,7 +203,7 @@ const getCountryCodeByIp = async (): Promise<string> => {
     const reply = await fetch(`https://pro.ip-api.com/json/?key=${apiKey}`)
     const { countryCode } = asIpApi(await reply.json())
     out = countryCode
-  } catch (e) {
+  } catch (e: any) {
     console.error(e.message)
   }
   return out

@@ -82,7 +82,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           isFallback
         )
         this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
-      } catch (e) {
+      } catch (e: any) {
         showError(e)
         this.setState({ errorMessage: e.message })
       }

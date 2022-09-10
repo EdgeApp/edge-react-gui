@@ -100,7 +100,7 @@ async function readLastBuildNumber(disklet: Disklet): Promise<number> {
     const text = await disklet.getText('release-version.json')
     const { build } = asVersionFile(text)
     return build
-  } catch (e) {
+  } catch (e: any) {
     return 0
   }
 }
@@ -113,7 +113,7 @@ async function readLegacyBuildNumber(disklet: Disklet, platform: 'ios' | 'androi
     const text = await disklet.getText(`buildnum/${platform}.json`)
     const { buildNum } = asLegacyBuildNumFile(text)
     return Number(buildNum)
-  } catch (e) {
+  } catch (e: any) {
     return 0
   }
 }

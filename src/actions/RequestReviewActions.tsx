@@ -42,7 +42,7 @@ export const updateSwapCount = async (state: RootState) => {
   try {
     const swapCountDataStr = await account.disklet.getText(SWAP_COUNT_DATA_FILE)
     swapCountData = JSON.parse(swapCountDataStr)
-  } catch (e) {
+  } catch (e: any) {
     // File needs init
     swapCountData = {
       swapCount: 0,

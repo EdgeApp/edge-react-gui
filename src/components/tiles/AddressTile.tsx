@@ -89,7 +89,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         const publicAddress = await checkPubAddress(fioPlugin, address.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         fioAddress = address.toLowerCase()
         address = publicAddress
-      } catch (e) {
+      } catch (e: any) {
         if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
           this.setState({ loading: false })
           return showError(e)
@@ -118,7 +118,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
       // set address
       onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
-    } catch (e) {
+    } catch (e: any) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
       const parsedLink = { ...parseDeepLink(address) }
@@ -150,7 +150,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         clipboard: uri,
         loading: false
       })
-    } catch (e) {
+    } catch (e: any) {
       this.setState({ loading: false, clipboard: '' })
       // Failure is acceptable
     }

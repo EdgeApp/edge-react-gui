@@ -51,7 +51,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
     // Check if all required fields are provided in the request
     if (assets.length === 0) throw new Error(s.strings.reqaddr_error_no_currencies_found)
     if ((post == null || post === '') && (redir == null || redir === '')) throw new Error(s.strings.reqaddr_error_post_redir)
-  } catch (e) {
+  } catch (e: any) {
     showError(e.message)
   }
 
@@ -126,7 +126,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
       try {
         const response = await fetch(post, initOpts)
         if (!response.ok) showError(s.strings.fio_get_requests_error)
-      } catch (e) {
+      } catch (e: any) {
         showError(e.message)
       }
     }
@@ -188,7 +188,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
         fioAddress = data.toLowerCase()
         data = publicAddress
-      } catch (e) {
+      } catch (e: any) {
         if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
           return showError(e)
         }
@@ -431,7 +431,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions.jump('exchangeScene')
     }
-  } catch (e) {
+  } catch (e: any) {
     // Don't bother the user with this error, but log it quietly:
     console.log(e)
   }

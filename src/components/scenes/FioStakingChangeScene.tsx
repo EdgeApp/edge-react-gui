@@ -123,7 +123,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       }
       showToast(messages[change])
       navigation.goBack()
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message)
       setLoading(false)
     }

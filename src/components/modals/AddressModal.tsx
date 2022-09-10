@@ -196,7 +196,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         if (!fioPlugin) return
         await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         this.setStatusLabel(s.strings.fragment_send_address)
-      } catch (e) {
+      } catch (e: any) {
         this.setStatusLabel(s.strings.fragment_send_address)
         return this.setState({ fieldError: e.message })
       }
@@ -220,7 +220,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         if (!doesAccountExist) {
           return this.setState({ fieldError: s.strings.err_no_address_title })
         }
-      } catch (e) {
+      } catch (e: any) {
         this.setStatusLabel(s.strings.fragment_send_address)
         return this.setState({ fieldError: e.message })
       }

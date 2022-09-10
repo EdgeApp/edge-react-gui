@@ -80,7 +80,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
 
       try {
         v1Settings = await notif1.get(`/user?userId=${encodedUserId}`)
-      } catch (e) {
+      } catch (e: any) {
         // Failure is ok we'll just create new settings
       }
 
@@ -110,7 +110,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     if (createEvents.length > 0) {
       v2Settings = await setDeviceSettings(deviceId, { createEvents })
     }
-  } catch (e) {
+  } catch (e: any) {
     // If this fails we don't need to bother the user just log and move on.
     console.log('registerNotificationsV2 error:', e.message)
   }

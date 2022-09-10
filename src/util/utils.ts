@@ -432,7 +432,7 @@ export async function openLink(url: string): Promise<void> {
       await SafariView.isAvailable()
       SafariView.show({ url })
       return
-    } catch (e) {
+    } catch (e: any) {
       console.log(e)
     }
   }

@@ -189,7 +189,7 @@ export function formatDate(date: Date, monthShort: boolean = false): string {
   try {
     const dateFormattingLocale = locales[localeIdentifier.replace('_', '-')] ?? locales[localeIdentifier.split('-')?.[0]]
     return format(date, monthShort ? 'PP' : 'PPP', { locale: dateFormattingLocale })
-  } catch (e) {
+  } catch (e: any) {
     //
   }
   return format(date, 'MMM d, yyyy')
@@ -203,7 +203,7 @@ export function formatTime(date: Date): string {
 
   try {
     return format(date, 'p', { locale: locales[localeIdentifier.replace('_', '-')] })
-  } catch (e) {
+  } catch (e: any) {
     //
   }
   return format(date, 'h:mm bb')

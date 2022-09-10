@@ -130,7 +130,7 @@ export const checkWyreHasLinkedBank = async (dataStore: EdgeDataStore): Promise<
     const accountName = paymentMethods.data[0].owner.substring(8)
     const wyreAccount = await getWyreAccount(accountName, key)
     return checkWyreActive(wyreAccount, paymentMethods)
-  } catch (e) {
+  } catch (e: any) {
     console.error(e.message)
   }
 }

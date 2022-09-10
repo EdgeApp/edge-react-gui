@@ -22,7 +22,7 @@ async function main() {
     } else if (argv.length === 3) {
       code = await callAsync(argv[2])
     }
-  } catch (e) {
+  } catch (e: any) {
     console.log(e)
   }
   process.exit(code)

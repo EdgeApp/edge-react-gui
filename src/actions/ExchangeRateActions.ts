@@ -99,7 +99,7 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
           }
           break
         }
-      } catch (e) {
+      } catch (e: any) {
         console.log(`buildExchangeRates error querying rates server ${e.message}`)
       }
     } while (--tries > 0)

@@ -165,7 +165,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
       if (fioRequest || currencyCode === FIO_STR) {
         await checkRecordSendFee(fioWallet, fioAddress)
       }
-    } catch (e) {
+    } catch (e: any) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
         this.props.onSelect(fioAddress, fioWallet, e.message)
         const answer = await Airship.show(bridge => (

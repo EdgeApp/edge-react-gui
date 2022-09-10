@@ -95,7 +95,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
     // Finally, pass the message to the bridge:
     try {
       bridge.handleMessage(message)
-    } catch (e) {
+    } catch (e: any) {
       console.warn('plugin bridge error: ' + String(e))
     }
   }

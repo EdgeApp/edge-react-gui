@@ -80,7 +80,7 @@ export const WcConnectScene = (props: Props) => {
         bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dAppName),
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
-    } catch (e) {
+    } catch (e: any) {
       showError('Failed to connect, try again.')
       navigation.navigate('wcConnections')
     }

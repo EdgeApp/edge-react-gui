@@ -213,7 +213,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
         navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
-      } catch (e) {
+      } catch (e: any) {
         showError(e)
       } finally {
         resetSlider()

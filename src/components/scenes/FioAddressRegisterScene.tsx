@@ -96,7 +96,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
       if (publicDomains.findIndex((publicDomain: FioPublicDomain) => publicDomain.free) > -1) {
         this.setState({ showFreeAddressLink: true })
       }
-    } catch (e) {
+    } catch (e: any) {
       //
       console.log(e)
     }
@@ -119,7 +119,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
         publicDomains: publicDomainsConverted,
         selectedDomain: publicDomainsConverted[0]
       })
-    } catch (e) {
+    } catch (e: any) {
       //
     }
     this.setState({ domainsLoading: false })
@@ -135,7 +135,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
         selectedWallet: wallet,
         walletLoading: false
       })
-    } catch (e) {
+    } catch (e: any) {
       this.setState({ walletLoading: false })
       showError(s.strings.create_wallet_failed_message)
     }
@@ -151,7 +151,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const url = `${fioPlugin.currencyInfo.defaultSettings.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings.freeAddressRef}?publicKey=${publicKey}`
     try {
       openLink(url)
-    } catch (e) {
+    } catch (e: any) {
       showError(sprintf(s.strings.open_url_err, url))
     }
   }
@@ -199,7 +199,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
       if (isCustomDomain) {
         try {
           await checkIsDomainPublic(fioPlugin, domain)
-        } catch (e) {
+        } catch (e: any) {
           showError(e.message)
           return this.setState({
             isAvailable: false,
@@ -227,7 +227,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
           loading: false,
           errorMessage: ''
         })
-      } catch (e) {
+      } catch (e: any) {
         console.log(e.json)
         console.log(e.message)
         this.setState({

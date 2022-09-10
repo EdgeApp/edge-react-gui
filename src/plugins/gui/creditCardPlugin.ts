@@ -53,7 +53,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
     pluginPriority = asFiatPluginPriorities(await response.json())
     priorityArray = createPriorityArray(pluginPriority[pluginId])
-  } catch (e) {
+  } catch (e: any) {
     console.log(e.message)
     // This is ok. We just use default values
   }
@@ -76,7 +76,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               try {
                 const currencyTokenId = getTokenId(account, currencyPluginId, currencyCode)
                 allowedAssets.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
-              } catch (e) {
+              } catch (e: any) {
                 // This is ok. We might not support a specific pluginId
               }
             }

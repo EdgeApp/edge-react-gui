@@ -75,7 +75,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
         if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
           addToFioAddressCache(state.core.account, [name])
         }
-      } catch (e) {
+      } catch (e: any) {
         //
       }
       const obtForTx: FioObtRecord | undefined = obtDataRecords.find(obtRecord => obtRecord.content.obt_id === transaction.txid)
@@ -91,11 +91,11 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
 
       try {
         await wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
-      } catch (e) {
+      } catch (e: any) {
         console.log(e.message)
       }
     }
-  } catch (e) {
+  } catch (e: any) {
     console.log(e)
   }
 }

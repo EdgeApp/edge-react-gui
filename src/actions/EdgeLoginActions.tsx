@@ -36,7 +36,7 @@ export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) =
     setTimeout(() => {
       Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
     }, 750)
-  } catch (e) {
+  } catch (e: any) {
     dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
     Airship.show(bridge => (
       <ButtonsModal

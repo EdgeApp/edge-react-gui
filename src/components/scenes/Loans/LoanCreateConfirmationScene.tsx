@@ -116,7 +116,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         await dispatch(createLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
         navigation.navigate('loanCreateStatus', { actionQueueId: actionProgram.programId })
-      } catch (e) {
+      } catch (e: any) {
         showError(e)
       } finally {
         resetSlider()

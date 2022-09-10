@@ -151,7 +151,7 @@ export class RequestComponent extends React.Component<Props, State> {
       this.setState({
         encodedURI
       })
-    } catch (e) {
+    } catch (e: any) {
       console.log(e)
       publicAddress = s.strings.loading
       legacyAddress = s.strings.loading
@@ -399,7 +399,7 @@ export class RequestComponent extends React.Component<Props, State> {
     let encodedURI
     try {
       encodedURI = this.props.wallet ? await this.props.wallet.encodeUri(edgeEncodeUri) : undefined
-    } catch (e) {
+    } catch (e: any) {
       console.log(e)
     }
 

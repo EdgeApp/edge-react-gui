@@ -207,11 +207,11 @@ if (ENV.DEBUG_THEME) {
             changeTheme(newTheme)
             themeJson = newThemeJson
           }
-        } catch (e) {
+        } catch (e: any) {
           console.log(`Failed get theme`, e.message)
         }
       }, 3000)
-    } catch (e) {
+    } catch (e: any) {
       console.log(`Failed to access theme server`)
     }
   }

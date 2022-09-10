@@ -91,7 +91,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
               }
             }
           }
-        } catch (e) {
+        } catch (e: any) {
           continue
         }
       }
@@ -152,7 +152,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
             }
             return
           }
-        } catch (e) {
+        } catch (e: any) {
           this.setState({ loading: false })
           this.resetSlider()
           return showError(s.strings.fio_get_fee_err_msg)
@@ -162,7 +162,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         try {
           const fioCurrencyCode = fioPlugin.currencyInfo.currencyCode
           payerPublicKey = await checkPubAddress(fioPlugin, this.state.fioAddressTo, fioCurrencyCode, fioCurrencyCode)
-        } catch (e) {
+        } catch (e: any) {
           console.log(e)
         }
 
@@ -274,7 +274,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     try {
       cryptoAmount = div(amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
       exchangeAmount = div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
-    } catch (e) {
+    } catch (e: any) {
       return null
     }
 

@@ -107,7 +107,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       this.setState({ loading: false })
       if (onSuccess) onSuccess(result)
       if (successMessage) showToast(successMessage)
-    } catch (e) {
+    } catch (e: any) {
       this.setState({ loading: false })
       showError(e)
     }

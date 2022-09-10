@@ -126,7 +126,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             })
           )
         }
-      } catch (e) {
+      } catch (e: any) {
         showError(s.strings.fio_register_address_err_msg)
       }
     }
