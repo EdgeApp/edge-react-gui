@@ -256,8 +256,8 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
 // Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
 // between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
 // Returns the element name of the unequal element or '' if objects are equal
-export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
-  const comparedElements = {}
+export function getObjectDiff(obj1: any, obj2: any, traverseObjects?: any, ignoreObjects?: any): string {
+  const comparedElements: any = {}
   for (const e of Object.keys(obj1)) {
     if (ignoreObjects && ignoreObjects[e]) {
       continue
@@ -379,7 +379,7 @@ export function splitTransactionCategory(fullCategory: string): {
   const splittedCategory = fullCategory.split(':')
   const categoryArray = splittedCategory.shift()
   return {
-    category: categoryArray,
+    category: categoryArray ?? '',
     subCategory: splittedCategory.length > 0 ? splittedCategory.join(':') : ''
   }
 }
@@ -414,7 +414,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
       } else {
         return result
       }
-    } catch (e) {
+    } catch (e: any) {
       const i = e.index
       promises.splice(i, 1)
       promises.pop()
@@ -430,7 +430,8 @@ export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {
       await SafariView.isAvailable()
-      return SafariView.show({ url })
+      SafariView.show({ url })
+      return
     } catch (e) {
       console.log(e)
     }
@@ -444,10 +445,12 @@ export async function openLink(url: string): Promise<void> {
 }
 
 export function debounce(func: Function, wait: number, immediate: boolean): any {
-  let timeout
+  let timeout: ReturnType<typeof setTimeout> | null = null
 
   return function executedFunction() {
-    const context = this
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const context: any = this
     const args = arguments
 
     const later = function () {

@@ -1,5 +1,3 @@
-
-
 import { AccountReferral } from '../types/ReferralTypes'
 import { MessageTweak, PluginTweak } from '../types/TweakTypes'
 
@@ -10,7 +8,7 @@ export type TweakSource =
   | { type: 'settings' }
   | { type: 'account' }
   | {
-      type: 'promotion',
+      type: 'promotion'
       installerId: string
     }
 
@@ -18,8 +16,8 @@ export type TweakSource =
  * A message, along with an ID that we can use to cancel it.
  */
 export type MessageSummary = {
-  message: MessageTweak,
-  messageId: string,
+  message: MessageTweak
+  messageId: string
   messageSource: TweakSource
 }
 
@@ -27,10 +25,10 @@ export type MessageSummary = {
  * Combined effects of serveral plugin tweaks.
  */
 export type PluginSummary = {
-  preferredFiatPluginId: string | undefined,
-  preferredSwapPluginId: string | undefined,
-  disabled: { [pluginId: string]: true },
-  promoCodes: { [pluginId: string]: string },
+  preferredFiatPluginId: string | undefined
+  preferredSwapPluginId: string | undefined
+  disabled: { [pluginId: string]: true }
+  promoCodes: { [pluginId: string]: string }
   promoMessages: { [pluginId: string]: string }
 }
 
@@ -46,13 +44,13 @@ export function bestOfMessages(
   let i = accountReferral.promotions.length
   while (--i >= 0) {
     const promo = accountReferral.promotions[i]
-    const source = { type: 'promotion', installerId: promo.installerId }
+    const source: TweakSource = { type: 'promotion', installerId: promo.installerId }
     const topMessage = getTopMessage(promo.messages, source, promo.hiddenMessages, now)
     if (topMessage != null) return topMessage
   }
 
   // Fall back on the account affiliate informaton:
-  const source = { type: 'account' }
+  const source: TweakSource = { type: 'account' }
   return getTopMessage(accountMessages, source, accountReferral.hiddenAccountMessages, now)
 }
 
@@ -98,7 +96,7 @@ export function bestOfPlugins(
 /**
  * Replaces default start dates with definite ones.
  */
-export function lockStartDates<T: { startDate?: Date }>(tweaks: T[], startDate: Date): T[] {
+export function lockStartDates<T extends { startDate?: Date }>(tweaks: T[], startDate: Date): T[] {
   return tweaks.map(tweak => {
     return tweak.startDate == null ? { ...tweak, startDate } : tweak
   })

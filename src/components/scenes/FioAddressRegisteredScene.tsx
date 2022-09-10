@@ -15,6 +15,7 @@ type OwnProps = {
 }
 
 type Props = OwnProps & ThemeProps
+const expiresText = `${s.strings.fio_address_details_screen_expires} `
 
 export class FioAddressRegistered extends React.Component<Props> {
   renderExpDate() {
@@ -25,7 +26,7 @@ export class FioAddressRegistered extends React.Component<Props> {
 
       return (
         <T style={styles.text}>
-          {`${s.strings.fio_address_details_screen_expires} `}
+          {expiresText}
           {formatDate(new Date(expiration))}
         </T>
       )

@@ -1,5 +1,3 @@
-
-
 import { mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
@@ -15,13 +13,14 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
+import { RootState } from '../../../reducers/RootReducer'
 import { useMemo, useRef, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, ParamList } from '../../../types/routerTypes'
 import { zeroString } from '../../../util/utils'
 import { FlipInputTile } from '../../cards/FlipInputTile'
 import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
-import { WalletListResult, WalletListModal } from '../../modals/WalletListModal'
+import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput'
 import { AprCard } from '../../tiles/AprCard'
@@ -29,45 +28,50 @@ import { InterestRateChangeTile } from '../../tiles/InterestRateChangeTile'
 import { LoanToValueTile } from '../../tiles/LoanToValueTile'
 import { FormScene } from '../FormScene'
 
+type CollateralTokenMap = {
+  [pluginId: string]: Array<{ pluginId: string; tokenId: string; currencyCode: string }>
+}
+
 // TODO: Integrate future changes to incorporate token contract addresses into the borrow plugin's domain
-const collateralTokenMap = {
+const collateralTokenMap: CollateralTokenMap = {
   ethereum: [{ pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599', currencyCode: 'WBTC' }],
   kovan: [{ pluginId: 'kovan', tokenId: 'd1b98b6607330172f1d991521145a22bce793277', currencyCode: 'WBTC' }],
   polygon: [{ pluginId: 'polygon', tokenId: '1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', currencyCode: 'WBTC' }]
 }
 
-type ManageCollateralRequest = {
-  tokenId?: string,
-  fromWallet: EdgeCurrencyWallet,
-  nativeAmount: string
-} | {
-  tokenId?: string,
-  toWallet: EdgeCurrencyWallet,
-  nativeAmount: string
+type ManageCollateralRequest =
+  | {
+      tokenId?: string
+      fromWallet: EdgeCurrencyWallet
+      nativeAmount: string
+    }
+  | {
+      tokenId?: string
+      toWallet: EdgeCurrencyWallet
+      nativeAmount: string
+    }
 
-}
-
-type Props<T: keyof ParamList> = {
+type Props<T extends keyof ParamList> = {
   // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
-  action: (request: ManageCollateralRequest) => Promise<ApprovableAction>,
-  actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw',
-  actionWallet: 'fromWallet' | 'toWallet',
-  amountChange?: 'increase' | 'decrease',
-  defaultTokenId?: string,
-  loanAccount: LoanAccount,
-  ltvType: 'debts' | 'collaterals',
+  action: (request: ManageCollateralRequest) => Promise<ApprovableAction>
+  actionOpType: 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw'
+  actionWallet: 'fromWallet' | 'toWallet'
+  amountChange?: 'increase' | 'decrease'
+  defaultTokenId?: string
+  loanAccount: LoanAccount
+  ltvType: 'debts' | 'collaterals'
 
-  showExchangeRateTile?: boolean,
-  showNewDebtAprChange?: true,
-  showNewDebtTile?: boolean,
-  showTotalCollateralTile?: boolean,
-  showTotalDebtTile?: boolean,
+  showExchangeRateTile?: boolean
+  showNewDebtAprChange?: true
+  showNewDebtTile?: boolean
+  showTotalCollateralTile?: boolean
+  showTotalDebtTile?: boolean
 
-  headerText: string,
+  headerText: string
   navigation: NavigationProp<T>
 }
 
-export const ManageCollateralScene = <T: keyof ParamList>(props: Props<T>) => {
+export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>) => {
   const {
     action,
     actionOpType,
@@ -100,7 +104,7 @@ export const ManageCollateralScene = <T: keyof ParamList>(props: Props<T>) => {
   const debts = useWatch(borrowEngine, 'debts')
 
   // State
-  const account = useSelector(state => state.core.account)
+  const account = useSelector((state: RootState) => state.core.account)
   const dispatch = useDispatch()
   const wallets = useWatch(account, 'currencyWallets')
 
@@ -126,8 +130,6 @@ export const ManageCollateralScene = <T: keyof ParamList>(props: Props<T>) => {
     const actionOp = {
       type: 'seq',
       actions: [
-        // TODO: Update typing so Flow doesn't complain
-        // @ts-expect-error
         {
           type: actionOpType,
           borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,

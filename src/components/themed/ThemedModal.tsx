@@ -1,7 +1,5 @@
-
-
 import * as React from 'react'
-import { ViewStyle, StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import { BlurView } from 'rn-id-blurview'
 
@@ -9,17 +7,17 @@ import { fixSides } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
 
 type Props<T> = {
-  bridge: AirshipBridge<T>,
-  children?: React.ReactNode,
-  onCancel: () => void,
+  bridge: AirshipBridge<T>
+  children?: React.ReactNode
+  onCancel: () => void
 
   // Use this to create space at the top for an icon circle:
-  iconRem?: number,
+  iconRem?: number
 
   // Control over the content area:
-  flexDirection?: ViewStyle[ 'flexDirection'],
-  justifyContent?: ViewStyle[ 'justifyContent'],
-  paddingRem?: number[] | number,
+  flexDirection?: ViewStyle['flexDirection']
+  justifyContent?: ViewStyle['justifyContent']
+  paddingRem?: number[] | number
 
   // Gives the box a border:
   warning?: boolean
@@ -28,7 +26,8 @@ type Props<T> = {
 /**
  * The Airship modal, but connected to our theming system.
  */
-export const ThemedModal = <T>(props: Props<T>) => {
+
+export function ThemedModal<T>(props: Props<T>): React.ReactElement {
   const { bridge, children, flexDirection, iconRem = 0, justifyContent, warning = false, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()

@@ -1,5 +1,6 @@
 import { WalletListMenuKey } from '../actions/WalletListMenuActions'
 import s from '../locales/strings'
+import { StringMap } from '../types/types'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -730,7 +731,7 @@ export const getSymbolFromCurrency = (currencyCode: string) => {
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
   return out != null ? out : ''
 }
-export const FIAT_CODES_SYMBOLS = {
+export const FIAT_CODES_SYMBOLS: StringMap = {
   AED: 'د.إ',
   AFN: '؋',
   ALL: 'L',

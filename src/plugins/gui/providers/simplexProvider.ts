@@ -1,5 +1,3 @@
-
-// import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
@@ -10,11 +8,11 @@ import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
+  FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote,
-  FiatProviderError
+  FiatProviderQuote
 } from '../fiatProviderTypes'
 const pluginId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
@@ -215,8 +213,8 @@ export const simplexProvider: FiatProviderFactory = {
         const { regionCode, exchangeAmount, amountType, paymentTypes } = params
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
         let foundPaymentType = false
-        for (const of paymentTypes) {
-          const t = asFiatPaymentTypes(type)
+        for (const pType of paymentTypes) {
+          const t = asFiatPaymentTypes(pType)
           if (allowedPaymentTypes[t]) {
             foundPaymentType = true
             break
@@ -262,7 +260,7 @@ export const simplexProvider: FiatProviderFactory = {
         console.log('Got Simplex quote')
         console.log(JSON.stringify(quote, null, 2))
 
-        if (quote.error != null) {
+        if ('error' in quote) {
           if (quote.type === 'invalidAmountLimit' || quote.type === 'amount_Limit_exceeded') {
             const result3 = quote.error.match(/The (.*) amount must be between (.*) and (.*)/)
             if (result3 == null || result3.length < 4) throw new Error('Simplex unknown error')

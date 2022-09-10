@@ -120,7 +120,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             navigation.setParams({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
             this.resetSlider()
           }
-          throw error || removedError
+          throw error ?? removedError ?? new Error('')
         }
         if (walletsToConnect.length) {
           showToast(s.strings.fio_connect_wallets_success)
@@ -128,7 +128,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           if (walletsToDisconnect.length) showToast(s.strings.fio_disconnect_wallets_success)
         }
         navigation.goBack()
-      } catch (e) {
+      } catch (e: any) {
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.setState({ connectWalletsLoading: false })
           const answer = await Airship.show(bridge => (

@@ -1,9 +1,7 @@
-
-
 import { useRef } from '../types/reactHooks'
 
 type State<T> = {
-  callback: T,
+  callback: T
   bouncer: T
 }
 
@@ -14,7 +12,7 @@ type State<T> = {
  * In the meantime, react-native-reanimated has a hook called `useEvent`,
  * so we don't want to conflict with that.
  */
-export function useHandler<T: Function>(callback: T): T {
+export function useHandler<T extends Function>(callback: T): T {
   const bouncer: any = (...args: any[]) => stateRef.current.callback(...args)
   const stateRef = useRef<State<T>>({ callback, bouncer })
   stateRef.current.callback = callback

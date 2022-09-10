@@ -31,7 +31,7 @@ const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
 class FioNameConfirm extends React.PureComponent<Props> {
   isFioAddress = () => {
     const { fioName } = this.props.route.params
-    return fioName.indexOf(FIO_ADDRESS_DELIMITER) > -1
+    return fioName.includes(FIO_ADDRESS_DELIMITER)
   }
 
   getFee = async () => {

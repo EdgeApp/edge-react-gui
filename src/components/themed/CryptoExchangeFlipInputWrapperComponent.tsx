@@ -1,5 +1,3 @@
-
-
 import { add } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -12,36 +10,35 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { Theme, ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
-import { ExchangedFlipInput } from './ExchangedFlipInput'
+import { ExchangedFlipInput, ExchangedFlipInputAmounts } from './ExchangedFlipInput'
 import { MainButton } from './MainButton'
 import { SelectableRow } from './SelectableRow'
 
 type OwnProps = {
-  walletId: string,
-  buttonText: string,
-  headerText: string,
-  primaryCurrencyInfo: GuiCurrencyInfo,
-  secondaryCurrencyInfo: GuiCurrencyInfo,
-  tokenId?: string,
-  fiatPerCrypto: string,
-  forceUpdateGuiCounter: number,
-  overridePrimaryExchangeAmount: string,
-  isFocused: boolean,
-  isThinking?: boolean,
-  focusMe: () => void,
-  launchWalletSelector: () => void,
-  onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
-  onNext: () => void,
-  onFocus?: () => void,
-  onBlur?: () => void,
+  walletId: string
+  buttonText: string
+  headerText: string
+  primaryCurrencyInfo: GuiCurrencyInfo
+  secondaryCurrencyInfo: GuiCurrencyInfo
+  tokenId?: string
+  fiatPerCrypto: string
+  forceUpdateGuiCounter: number
+  overridePrimaryExchangeAmount: string
+  isFocused: boolean
+  isThinking?: boolean
+  focusMe: () => void
+  launchWalletSelector: () => void
+  onCryptoExchangeAmountChanged: (params: ExchangedFlipInputAmounts) => void
+  onNext: () => void
+  onFocus?: () => void
+  onBlur?: () => void
   children?: React.ReactNode
 }
 
 type StateProps = {
-  name?: string,
+  name?: string
   cryptoAmount?: string
 }
 

@@ -1,15 +1,11 @@
-
-
 import { div } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-import { WalletListResult } from '../../../components/modals/WalletListModal'
-import { WalletListModal } from '../../../components/modals/WalletListModal'
+import { WalletListModal, WalletListResult } from '../../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../../components/services/AirshipInstance'
-import { Theme, ThemeProps } from '../../../components/services/ThemeContext'
-import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { Tile } from '../../../components/tiles/Tile'
@@ -30,32 +26,32 @@ type ActionResult =
     }
   | any
 type OwnProps = {
-  title?: string,
-  successMessage?: string,
-  onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>,
-  onSuccess?: (attrs: ActionResult) => void,
-  cancelOperation?: () => void,
-  goTo?: (params: any) => void,
-  getOperationFee: EdgeCurrencyWallet => Promise<number>,
-  fioWallet: EdgeCurrencyWallet,
-  addressTitles?: boolean,
+  title?: string
+  successMessage?: string
+  onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>
+  onSuccess?: (attrs: ActionResult) => void
+  cancelOperation?: () => void
+  goTo?: (params: any) => void
+  getOperationFee: (wallet: EdgeCurrencyWallet) => Promise<number>
+  fioWallet: EdgeCurrencyWallet
+  addressTitles?: boolean
   showPaymentWalletPicker?: boolean
 }
 
 type State = {
-  showSlider: boolean,
-  loading: boolean,
-  error: string,
-  feeLoading: boolean,
-  fee: number | null,
-  displayFee: number,
-  balance: number,
+  showSlider: boolean
+  loading: boolean
+  error: string
+  feeLoading: boolean
+  fee: number | null
+  displayFee: number
+  balance: number
   paymentWallet?: EdgeCurrencyWallet
 }
 
 type StateProps = {
-  denominationMultiplier: string,
-  currencyWallets: { [string]: EdgeCurrencyWallet },
+  denominationMultiplier: string
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
   fioWallets: EdgeCurrencyWallet[]
 }
 
@@ -121,7 +117,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { fioWallet } = this.props
     const allowedCurrencyCodes: string[] = [fioWallet.currencyInfo.currencyCode]
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />)
-      .then(({ walletId, currencyCode }: WalletListResult) => {
+      .then((value: any) => {
+        const walletListResult: WalletListResult = value
+        const { walletId, currencyCode } = walletListResult
+
         if (walletId && currencyCode) {
           this.props.currencyWallets[walletId] &&
             this.setState({ paymentWallet: this.props.currencyWallets[walletId] }, () => {
@@ -151,7 +150,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
           displayFee = this.formatFio(`${fee}`)
           showSlider = true
         }
-      } catch (e) {
+      } catch (e: any) {
         showError(e)
         this.setState({ error: e.message })
       }
@@ -202,7 +201,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     )
   }
 
-  render(): React$Node {
+  render(): React.ReactNode {
     const { title, showPaymentWalletPicker, fioWallets, theme } = this.props
     const { loading, feeLoading, showSlider, displayFee, paymentWallet, balance } = this.state
     const styles = getStyles(theme)

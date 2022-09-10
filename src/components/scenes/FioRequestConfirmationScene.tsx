@@ -1,5 +1,5 @@
 import { div, mul } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -80,7 +80,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       const { chainCode, currencyCode, connectedWalletsByFioAddress } = this.props
       const walletAddresses = []
       let defaultFioAddressFrom = null
-      for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
+      for (const fioWallet of this.props.fioWallets) {
         try {
           const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {
@@ -181,8 +181,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
         addToFioAddressCache(account, [this.state.fioAddressTo])
-        navigation.navigate('request')
-      } catch (error) {
+        navigation.navigate('request', undefined)
+      } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()
         showError(
@@ -209,7 +209,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   openFioAddressFromModal = async () => {
     const { fioPlugin, walletId, currencyCode } = this.props
     const { walletAddresses } = this.state
-    const fioAddressFrom = await Airship.show(bridge => (
+    const fioAddressFrom: string | null = await Airship.show(bridge => (
       <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
     ))
     if (fioAddressFrom === null) return
@@ -217,7 +217,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
     if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
     if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
-    this.setState({ fioAddressFrom: fioAddressFrom || '' })
+    this.setState({ fioAddressFrom: fioAddressFrom })
   }
 
   showError(error?: string) {
@@ -231,7 +231,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { fioPlugin, walletId, currencyCode } = this.props
 
     this.setState({ settingFioAddressTo: true })
-    const fioAddressTo = await Airship.show(bridge => (
+    const fioAddressTo: string | null = await Airship.show(bridge => (
       <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} isFioOnly />
     ))
     if (fioAddressTo === null) {
@@ -246,7 +246,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openMemoModal = async () => {
-    const memo = await Airship.show(bridge => (
+    const memo: string | undefined = await Airship.show(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.memo}

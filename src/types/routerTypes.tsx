@@ -1,5 +1,3 @@
-
-
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
@@ -24,10 +22,10 @@ import { UriQueryMap } from './WebTypes'
 
 type PluginViewParams = {
   // The GUI plugin we are showing the user:
-  plugin: GuiPlugin,
+  plugin: GuiPlugin
 
   // Set these to add stuff to the plugin URI:
-  deepPath?: string,
+  deepPath?: string
   deepQuery?: UriQueryMap
 }
 /**
@@ -35,272 +33,272 @@ type PluginViewParams = {
  */
 export type ParamList = {
   // Top-level router:
-  root: void,
-  login: void,
-  edge: void,
+  root: undefined
+  login: undefined
+  edge: undefined
 
   // Logged-in scenes:
   changeMiningFee: {
-    guiMakeSpendInfo: GuiMakeSpendInfo,
-    maxSpendSet: boolean,
-    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void,
+    guiMakeSpendInfo: GuiMakeSpendInfo
+    maxSpendSet: boolean
+    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
     wallet: EdgeCurrencyWallet
-  },
-  changePassword: void,
-  changePin: void,
-  controlPanel: void,
+  }
+  changePassword: undefined
+  changePin: undefined
+  controlPanel: undefined
   createWalletAccountSelect: {
-    accountName: string,
-    existingWalletId?: string,
-    selectedFiat: GuiFiatType,
+    accountName: string
+    existingWalletId?: string
+    selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
-  },
+  }
   createWalletAccountSetup: {
-    accountHandle?: string,
-    existingWalletId?: string,
-    isReactivation?: boolean,
-    selectedFiat: GuiFiatType,
+    accountHandle?: string
+    existingWalletId?: string
+    isReactivation?: boolean
+    selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
-  },
+  }
   createWalletChoice: {
     selectedWalletType: CreateWalletType
-  },
+  }
   createWalletImport: {
     selectedWalletType: CreateWalletType
-  },
+  }
   createWalletName: {
-    cleanedPrivateKey?: string,
-    selectedFiat: GuiFiatType,
-    selectedWalletType: CreateWalletType
-  },
-  createWalletReview: {
-    cleanedPrivateKey?: string, // for creating wallet from import private key
-    selectedFiat: GuiFiatType,
-    selectedWalletType: CreateWalletType,
-    walletName: string
-  },
-  createWalletSelectCrypto: void,
-  createWalletSelectFiat: {
-    selectedWalletType: CreateWalletType,
     cleanedPrivateKey?: string
-  },
+    selectedFiat: GuiFiatType
+    selectedWalletType: CreateWalletType
+  }
+  createWalletReview: {
+    cleanedPrivateKey?: string // for creating wallet from import private key
+    selectedFiat: GuiFiatType
+    selectedWalletType: CreateWalletType
+    walletName: string
+  }
+  createWalletSelectCrypto: undefined
+  createWalletSelectFiat: {
+    selectedWalletType: CreateWalletType
+    cleanedPrivateKey?: string
+  }
   currencyNotificationSettings: {
     currencyInfo: EdgeCurrencyInfo
-  },
+  }
   currencySettings: {
     currencyInfo: EdgeCurrencyInfo
-  },
-  defaultFiatSetting: void,
-  edgeLogin: void,
+  }
+  defaultFiatSetting: undefined
+  edgeLogin: undefined
   editToken: {
-    currencyCode?: string,
-    displayName?: string,
-    multiplier?: string,
-    networkLocation?: JsonObject,
-    tokenId?: string, // Acts like "add token" if this is missing
+    currencyCode?: string
+    displayName?: string
+    multiplier?: string
+    networkLocation?: JsonObject
+    tokenId?: string // Acts like "add token" if this is missing
     walletId: string
-  },
-  exchange: void,
+  }
+  exchange: undefined
   exchangeQuote: {
-    swapInfo: GuiSwapInfo,
+    swapInfo: GuiSwapInfo
     onApprove: () => void
-  },
-  exchangeQuoteProcessing: void,
-  exchangeScene: void,
-  exchangeSettings: void,
-  exchangeSuccess: void,
+  }
+  exchangeQuoteProcessing: undefined
+  exchangeScene: undefined
+  exchangeSettings: undefined
+  exchangeSuccess: undefined
   fioAddressDetails: {
-    fioAddressName: string,
+    fioAddressName: string
     bundledTxs: number
-  },
-  fioAddressList: void,
-  fioAddressRegister: void,
+  }
+  fioAddressList: undefined
+  fioAddressRegister: undefined
   fioAddressRegisterSelectWallet: {
-    fioAddress: string,
-    selectedWallet: EdgeCurrencyWallet,
-    selectedDomain: FioDomain,
-    isFallback?: boolean
-  },
-  fioAddressRegisterSuccess: {
-    fioName: string,
-    expiration?: string
-  },
-  fioAddressSettings: {
-    fioWallet: EdgeCurrencyWallet,
-    fioAddressName: string,
-    bundledTxs?: number,
-    showAddBundledTxs?: boolean,
-    refreshAfterAddBundledTxs?: boolean
-  },
-  fioConnectToWalletsConfirm: {
-    fioWallet: EdgeCurrencyWallet,
-    fioAddressName: string,
-    walletsToConnect: FioConnectionWalletItem[],
-    walletsToDisconnect: FioConnectionWalletItem[]
-  },
-  fioDomainConfirm: {
-    fioName: string,
-    paymentWallet: EdgeCurrencyWallet,
-    fee: number,
-    ownerPublicKey: string
-  },
-  fioDomainRegister: void,
-  fioDomainRegisterSelectWallet: {
-    fioDomain: string,
+    fioAddress: string
     selectedWallet: EdgeCurrencyWallet
-  },
-  fioDomainSettings: {
-    fioWallet: EdgeCurrencyWallet,
-    fioDomainName: string,
-    isPublic: boolean,
-    expiration: string,
-    showRenew?: boolean
-  },
-  fioNameConfirm: {
-    fioName: string,
-    paymentWallet: EdgeCurrencyWallet,
-    fee: number,
+    selectedDomain: FioDomain
+    isFallback?: boolean
+  }
+  fioAddressRegisterSuccess: {
+    fioName: string
+    expiration?: string
+  }
+  fioAddressSettings: {
+    fioWallet: EdgeCurrencyWallet
+    fioAddressName: string
+    bundledTxs?: number
+    showAddBundledTxs?: boolean
+    refreshAfterAddBundledTxs?: boolean
+  }
+  fioConnectToWalletsConfirm: {
+    fioWallet: EdgeCurrencyWallet
+    fioAddressName: string
+    walletsToConnect: FioConnectionWalletItem[]
+    walletsToDisconnect: FioConnectionWalletItem[]
+  }
+  fioDomainConfirm: {
+    fioName: string
+    paymentWallet: EdgeCurrencyWallet
+    fee: number
     ownerPublicKey: string
-  },
+  }
+  fioDomainRegister: undefined
+  fioDomainRegisterSelectWallet: {
+    fioDomain: string
+    selectedWallet: EdgeCurrencyWallet
+  }
+  fioDomainSettings: {
+    fioWallet: EdgeCurrencyWallet
+    fioDomainName: string
+    isPublic: boolean
+    expiration: string
+    showRenew?: boolean
+  }
+  fioNameConfirm: {
+    fioName: string
+    paymentWallet: EdgeCurrencyWallet
+    fee: number
+    ownerPublicKey: string
+  }
   fioRequestConfirmation: {
     amounts: ExchangedFlipInputAmounts
-  },
-  fioRequestList: void,
+  }
+  fioRequestList: undefined
   fioRequestApproved: {
-    edgeTransaction: EdgeTransaction,
+    edgeTransaction: EdgeTransaction
     thumbnailPath?: string
-  },
+  }
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest
-  },
+  }
   fioStakingChange: {
-    change: 'add' | 'remove',
-    currencyCode: string,
+    change: 'add' | 'remove'
+    currencyCode: string
     walletId: string
-  },
+  }
   fioStakingOverview: {
-    currencyCode: string,
+    currencyCode: string
     walletId: string
-  },
+  }
   guiPluginEnterAmount: {
-    headerTitle: string,
-    onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>,
-    label1: string,
-    label2: string,
-    onChangeText: (fieldNum: number, value: string) => Promise<void>,
-    convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>,
-    getMethods?: (methods: FiatPluginGetMethodsResponse) => void,
-    initialAmount1?: string,
+    headerTitle: string
+    onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
+    label1: string
+    label2: string
+    onChangeText: (fieldNum: number, value: string) => Promise<void>
+    convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
+    getMethods?: (methods: FiatPluginGetMethodsResponse) => void
+    initialAmount1?: string
     headerIconUri?: string
-  },
-  loanDashboard: void,
+  }
+  loanDashboard: undefined
   loanDetails: {
     loanAccountId: string
-  },
+  }
   loanCreate: {
-    borrowEngine: BorrowEngine,
+    borrowEngine: BorrowEngine
     borrowPlugin: BorrowPlugin
-  },
+  }
   loanCreateConfirmation: {
-    borrowEngine: BorrowEngine,
-    borrowPlugin: BorrowPlugin,
-    destTokenId: string,
-    destWallet: EdgeCurrencyWallet,
-    isDestBank: boolean,
-    nativeDestAmount: string,
-    nativeSrcAmount: string,
-    srcTokenId?: string,
+    borrowEngine: BorrowEngine
+    borrowPlugin: BorrowPlugin
+    destTokenId: string
+    destWallet: EdgeCurrencyWallet
+    isDestBank: boolean
+    nativeDestAmount: string
+    nativeSrcAmount: string
+    srcTokenId?: string
     srcWallet: EdgeCurrencyWallet
-  },
+  }
   loanClose: {
     loanAccountId: string
-  },
+  }
   loanAddCollateralScene: {
     loanAccountId: string
-  },
+  }
   loanBorrowMoreScene: {
     loanAccountId: string
-  },
+  }
   loanWithdrawCollateralScene: {
     loanAccountId: string
-  },
+  }
   loanRepayScene: {
     loanAccountId: string
-  },
+  }
   loanStatus: {
     actionQueueId: string
-  },
+  }
   loanCreateStatus: {
     actionQueueId: string
-  },
+  }
   loanDetailsStatus: {
     actionQueueId: string
-  },
+  }
   manageTokens: {
     walletId: string
-  },
-  notificationSettings: void,
+  }
+  notificationSettings: undefined
   otpRepair: {
     otpError: OtpError
-  },
-  otpSetup: void,
-  passwordRecovery: void,
-  pluginListBuy: { direction: 'buy' },
-  pluginListSell: { direction: 'sell' },
-  pluginViewBuy: PluginViewParams,
-  pluginViewSell: PluginViewParams,
-  pluginView: PluginViewParams,
-  promotionSettings: void,
-  request: void,
+  }
+  otpSetup: undefined
+  passwordRecovery: undefined
+  pluginListBuy: { direction: 'buy' }
+  pluginListSell: { direction: 'sell' }
+  pluginViewBuy: PluginViewParams
+  pluginViewSell: PluginViewParams
+  pluginView: PluginViewParams
+  promotionSettings: undefined
+  request: undefined
   scan: {
     data?: 'sweepPrivateKey' | 'loginQR'
-  }, // TODO
-  securityAlerts: void,
+  } // TODO
+  securityAlerts: undefined
   send: {
-    allowedCurrencyCodes?: string[],
-    guiMakeSpendInfo?: GuiMakeSpendInfo,
-    selectedWalletId?: string,
-    selectedCurrencyCode?: string,
-    isCameraOpen?: boolean,
+    allowedCurrencyCodes?: string[]
+    guiMakeSpendInfo?: GuiMakeSpendInfo
+    selectedWalletId?: string
+    selectedCurrencyCode?: string
+    isCameraOpen?: boolean
     lockTilesMap?: {
-      address?: boolean,
-      wallet?: boolean,
+      address?: boolean
+      wallet?: boolean
       amount?: boolean
-    },
+    }
     hiddenTilesMap?: {
-      address?: boolean,
-      amount?: boolean,
+      address?: boolean
+      amount?: boolean
       fioAddressSelect?: boolean
-    },
-    infoTiles?: Array<{ label: string, value: string }>
-  },
-  settingsOverview: void,
-  settingsOverviewTab: void,
-  spendingLimits: void,
+    }
+    infoTiles?: Array<{ label: string; value: string }>
+  }
+  settingsOverview: undefined
+  settingsOverviewTab: undefined
+  spendingLimits: undefined
   stakeModify: {
-    walletId: string,
-    stakePolicy: StakePolicy,
-    stakePosition: StakePosition,
-    modification: ChangeQuoteRequest[ 'action']
-  },
-  stakeClaim: { walletId: string, stakePolicy: StakePolicy },
-  stakeOptions: { walletId: string, currencyCode: string },
-  stakeOverview: { walletId: string, stakePolicy: StakePolicy },
-  termsOfService: void,
-  testScene: void,
+    walletId: string
+    stakePolicy: StakePolicy
+    stakePosition: StakePosition
+    modification: ChangeQuoteRequest['action']
+  }
+  stakeClaim: { walletId: string; stakePolicy: StakePolicy }
+  stakeOptions: { walletId: string; currencyCode: string }
+  stakeOverview: { walletId: string; stakePolicy: StakePolicy }
+  termsOfService: undefined
+  testScene: undefined
   transactionDetails: {
-    edgeTransaction: EdgeTransaction,
+    edgeTransaction: EdgeTransaction
     thumbnailPath?: string
-  },
-  transactionList: void,
+  }
+  transactionList: undefined
   transactionsExport: {
-    sourceWallet: EdgeCurrencyWallet,
+    sourceWallet: EdgeCurrencyWallet
     currencyCode: string
-  },
-  walletList: void,
-  walletListScene: void,
-  wcConnections: void,
-  wcDisconnect: { wcConnectionInfo: WcConnectionInfo },
+  }
+  walletList: undefined
+  walletListScene: undefined
+  wcConnections: undefined
+  wcDisconnect: { wcConnectionInfo: WcConnectionInfo }
   wcConnect: {
     uri: string
   }
@@ -311,47 +309,37 @@ export type ParamList = {
  */
 export const Actions = {
   get currentParams(): any {
-    // @ts-expect-error
     return Flux.Actions.currentParams
   },
   get currentScene(): keyof ParamList {
-    // @ts-expect-error
     return Flux.Actions.currentScene
   },
 
   drawerClose() {
-    // @ts-expect-error
     Flux.Actions.drawerClose()
   },
   drawerOpen() {
-    // @ts-expect-error
     Flux.Actions.drawerOpen()
   },
 
-  jump<Name: keyof ParamList>(name: Name, params: $ElementType<ParamList, Name>): void {
-    // @ts-expect-error
+  jump<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
     Flux.Actions.jump(name, { route: { name, params } })
   },
-  push<Name: keyof ParamList>(name: Name, params: $ElementType<ParamList, Name>): void {
-    // @ts-expect-error
+  push<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
     Flux.Actions.push(name, { route: { name, params } })
   },
-  replace<Name: keyof ParamList>(name: Name, params: $ElementType<ParamList, Name>): void {
-    // @ts-expect-error
+  replace<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
     Flux.Actions.replace(name, { route: { name, params } })
   },
 
   refresh(params: any): void {
-    // @ts-expect-error
     Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
   },
 
   pop(): void {
-    // @ts-expect-error
     Flux.Actions.pop()
   },
   popTo(name: keyof ParamList): void {
-    // @ts-expect-error
     Flux.Actions.popTo(name)
   }
 }
@@ -361,26 +349,27 @@ type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 /**
  * The of the `navigation` prop passed to each scene.
  */
-export type NavigationProp<Name: keyof ParamList> = {
+
+export type NavigationProp<Name extends keyof ParamList> = {
   // Whether this scene is in the foreground:
-  addListener: (event: NavigationEvent, callback: () => void) => () => void,
-  isFocused: () => boolean,
+  addListener: (event: NavigationEvent, callback: () => void) => () => void
+  isFocused: () => boolean
 
   // Going places:
-  navigate: <Name: keyof ParamList>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  push: <Name: keyof ParamList>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  replace: <Name: keyof ParamList>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  setParams: (params: $ElementType<ParamList, Name>) => void,
+  navigate: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
+  push: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
+  replace: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
+  setParams: (params: ParamList[Name]) => void
 
   // Returning:
-  goBack: () => void,
-  pop: () => void,
-  popToTop: () => void,
+  goBack: () => void
+  pop: () => void
+  popToTop: () => void
 
   // Drawer:
-  closeDrawer: () => void,
-  openDrawer: () => void,
-  toggleDrawer: () => void,
+  closeDrawer: () => void
+  openDrawer: () => void
+  toggleDrawer: () => void
 
   // Internals nobody should need to touch:
   state: unknown
@@ -389,15 +378,15 @@ export type NavigationProp<Name: keyof ParamList> = {
 /**
  * The of the `route` prop passed to each scene.
  */
-export type RouteProp<Name: keyof ParamList> = {
-  name: Name,
-  params: $ElementType<ParamList, Name>
+export type RouteProp<Name extends keyof ParamList> = {
+  name: Name
+  params: ParamList[Name]
 }
 
 /**
  * Adjusts the navigation prop to match the definitions above.
  */
-export function withNavigation<Props>(Component: React.ComponentType<Props>): React.StatelessFunctionalComponent<Props> {
+export function withNavigation<Props>(Component: React.ComponentType<Props>): React.ComponentType<Props> {
   function WithNavigation(props: any) {
     const navigation: NavigationProp<'edge'> = {
       addListener(event, callback) {

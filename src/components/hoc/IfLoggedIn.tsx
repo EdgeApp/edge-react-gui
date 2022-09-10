@@ -1,5 +1,3 @@
-
-
 import * as React from 'react'
 
 import { connect } from '../../types/reactRedux'
@@ -9,7 +7,7 @@ type StateProps = {
   loginStatus: boolean
 }
 
-export function ifLoggedIn<Props: {}>(Component: React.ComponentType<Props>): React.StatelessFunctionalComponent<$Exact<Props>> {
+export function ifLoggedIn<Props extends {}>(Component: React.ComponentType<Props>): React.ComponentType<Props> {
   return connect<StateProps, {}, Props>(
     state => ({
       loginStatus: state.ui.settings.loginStatus ?? false

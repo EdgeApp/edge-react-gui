@@ -47,7 +47,10 @@ export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
   ...guiWallet
 })
 
-export type GuiDenomination = EdgeDenomination
+export type GuiDenomination = EdgeDenomination & {
+  precision?: number
+  currencyCode?: string
+}
 export type GuiCurrencyInfo = {
   walletId: string
   pluginId?: string

@@ -1,5 +1,3 @@
-
-
 import { Subscriber } from 'yaob'
 
 import { useEffect, useState } from '../types/reactHooks'
@@ -7,7 +5,7 @@ import { useEffect, useState } from '../types/reactHooks'
 /**
  * Subscribes to changes in a yaob (core) object's property.
  */
-export const useWatch = <T: Object, Name: keyof T>(object: { +watch: Subscriber<T> }, name: Name): $ElementType<T, Name> => {
+export function useWatch<T extends {}, Name extends keyof T>(object: T & { watch: Subscriber<T> }, name: Name): T[Name] {
   const [out, setOut] = useState(object[name])
 
   useEffect(() => {

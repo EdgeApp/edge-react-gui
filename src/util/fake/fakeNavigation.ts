@@ -1,17 +1,17 @@
 import { NavigationProp } from '../../types/routerTypes'
 
 export const fakeNavigation: NavigationProp<any> = {
-  addListener(event, callback) {
+  addListener() {
     return () => undefined
   },
   isFocused() {
     return true
   },
 
-  navigate(name, params) {},
-  push(name, params) {},
-  replace(name, params) {},
-  setParams(params) {},
+  navigate() {},
+  push() {},
+  replace() {},
+  setParams() {},
 
   goBack() {},
   pop() {},

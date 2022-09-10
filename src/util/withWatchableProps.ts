@@ -1,5 +1,3 @@
-
-
 import { Subscriber } from 'yaob'
 import { Events, makeEvents } from 'yavent'
 
@@ -7,7 +5,7 @@ type WatchableProps<T> = {
   watch: Subscriber<T>
 } & T
 
-export function withWatchableProps<T: Object>(original: T): WatchableProps<T> {
+export function withWatchableProps<T extends {}>(original: T): WatchableProps<T> {
   const [watch, emit]: Events<T> = makeEvents<T>()
   const out = { ...original, watch }
 
