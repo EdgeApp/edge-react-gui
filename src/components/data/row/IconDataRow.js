@@ -15,6 +15,7 @@ type Props = {|
   leftSubtext: string,
   rightText?: string | React.Node,
   rightSubText?: string | React.Node,
+  rightSubTextExtended?: React.Node,
   marginRem?: number[] | number
 |}
 
@@ -22,7 +23,7 @@ type Props = {|
 // A view representing fields of data accompanied by a left-justified icon
 // -----------------------------------------------------------------------------
 const IconDataRowComponent = (props: Props) => {
-  const { icon, leftText, leftSubtext, leftTextExtended, rightText, rightSubText, marginRem } = props
+  const { icon, leftText, leftSubtext, leftTextExtended, rightText, rightSubText, rightSubTextExtended, marginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
@@ -40,6 +41,7 @@ const IconDataRowComponent = (props: Props) => {
       <View style={styles.rightColumn}>
         {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
         {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
+        {rightSubTextExtended}
       </View>
     </View>
   )
