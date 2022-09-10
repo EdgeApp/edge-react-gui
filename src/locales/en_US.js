@@ -686,7 +686,7 @@ const strings = {
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_service_provider_disclaimer:
     'The following services are not provided by %1$s. \n\nFor issues and feedback please contact the respective service providers.',
-  plugin_powered_by: 'Powered by',
+  plugin_powered_by_space: 'Powered by ',
   tap_to_change_provider: 'Tap to Change Provider',
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',

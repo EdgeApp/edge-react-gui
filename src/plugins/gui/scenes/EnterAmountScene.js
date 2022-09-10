@@ -157,8 +157,8 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
 
                   <View style={styles.poweredByContainerColumn}>
                     <View style={styles.poweredByContainerRow}>
-                      <Text style={styles.poweredByText}>{s.strings.plugin_powered_by}</Text>
-                      <Text style={styles.poweredByText}>{' ' + poweredBy.poweredByText}</Text>
+                      <Text style={styles.poweredByText}>{s.strings.plugin_powered_by_space}</Text>
+                      <Text style={styles.poweredByText}>{poweredBy.poweredByText}</Text>
                     </View>
                     <View style={styles.poweredByContainerRow}>
                       <Text style={styles.tapToChangeText}>{s.strings.tap_to_change_provider}</Text>
