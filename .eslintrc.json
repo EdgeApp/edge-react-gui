@@ -2,7 +2,6 @@
   "extends": [
     "plugin:react-native/all",
     "standard-kit/prettier",
-    "standard-kit/prettier/flow",
     "standard-kit/prettier/jsx",
     "standard-kit/prettier/node",
     "standard-kit/prettier/react",

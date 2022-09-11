@@ -2,11 +2,11 @@ language: node_js
 node_js:
   - 16
 before_install:
-  - node scripts/hack-travis.js
+  - node -r sucrase/register scripts/hack-travis.ts
 install:
   - yarn install --frozen-lockfile --network-concurrency 1
   - yarn prepare
 script:
   - yarn lint
-  - yarn flow
+  - yarn tsc
   - yarn test

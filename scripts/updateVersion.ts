@@ -2,7 +2,7 @@
 
 // This script sets up the version numbers for a release build.
 //
-// Run it as `./scripts/updateVersion.js [<branch>]`
+// Run it as `node -r sucrase/register ./scripts/updateVersion.js [<branch>]`
 //
 // Each production build has a version number and a build number.
 // The version number is a human-readable string like, "1.2.3-d",
@@ -134,12 +134,16 @@ async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promis
  * Inserts the build information into the iOS project files.
  */
 function updateIos(cwd: string, versionFile: VersionFile): void {
-  const opts = {
+  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, {
     cwd: path.join(cwd, 'ios'),
-    stdio: 'inherit'
-  }
-  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, opts)
-  childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, opts)
+    stdio: 'inherit',
+    encoding: 'utf8'
+  })
+  childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, {
+    cwd: path.join(cwd, 'ios'),
+    stdio: 'inherit',
+    encoding: 'utf8'
+  })
 }
 
 main().catch(error => console.log(error))

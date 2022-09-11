@@ -1,9 +1,10 @@
-const fs = require('fs')
+export {}
+const fs3 = require('fs')
 
-function editFile(name, cb) {
-  let text = fs.readFileSync(name, 'utf8')
+function editFile(name: string, cb: (text: string) => string) {
+  let text = fs3.readFileSync(name, 'utf8')
   text = cb(text)
-  fs.writeFileSync(name, text, 'utf8')
+  fs3.writeFileSync(name, text, 'utf8')
 }
 
 editFile('package.json', text =>

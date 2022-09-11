@@ -17,7 +17,7 @@ function mylog(...args) {
 
 try {
   envJSON = JSON.parse(fs.readFileSync(envFile, 'utf8'))
-} catch (e: any) {
+} catch (e) {
   console.log(e)
 }
 
@@ -43,7 +43,7 @@ try {
     port: `${PORT}`
   }
   fs.writeFileSync(envFile, JSON.stringify(envJSON, null, 2))
-} catch (e: any) {
+} catch (e) {
   console.log(e)
 }
 
@@ -64,7 +64,7 @@ app.get('/theme', function (req, res) {
   try {
     const theme = JSON.parse(fs.readFileSync(OVERRIDE_THEME_FILE, 'utf8'))
     res.json(theme)
-  } catch (e: any) {
+  } catch (e) {
     res.json(e)
   }
 })
@@ -75,7 +75,7 @@ app.post('/theme', function (req, res) {
     mylog('\n' + jsonString)
     fs.writeFileSync(OVERRIDE_THEME_FILE, jsonString)
     res.sendStatus(200)
-  } catch (e: any) {
+  } catch (e) {
     res.json(e)
   }
 })

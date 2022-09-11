@@ -2,7 +2,7 @@
 
 // This script builds & uploads Javascript sourcemaps to Bugsnag.
 //
-// Run it as `./scripts/uploadSourcemaps.js <platform>`
+// Run it as `node -r sucrase/register ./scripts/uploadSourcemaps.ts <platform>`
 
 import childProcess from 'child_process'
 import { makeNodeDisklet } from 'disklet'
@@ -24,7 +24,6 @@ async function main() {
   }
 
   // Prepare for launch:
-  const opts = { cwd, stdio: 'inherit' }
   const bundle = `${platform}-release.bundle`
   const map = `${platform}-release.bundle.map`
 
@@ -36,7 +35,7 @@ async function main() {
   --entry-file index.js \
   --bundle-output ${bundle} \
   --sourcemap-output ${map}`,
-    opts
+    { cwd, stdio: 'inherit' }
   )
 
   console.log(`Uploading ${map}`)
@@ -50,7 +49,7 @@ async function main() {
   -F sourceMap=@${map} \
   -F bundle=@${bundle} \
   -F projectRoot=${cwd}`,
-    opts
+    { cwd, stdio: 'inherit' }
   )
 }
 

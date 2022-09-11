@@ -1,3 +1,5 @@
+export {}
+
 const { makeConfig } = require('cleaner-config')
 const { asBoolean, asNumber, asObject, asOptional, asString, asArray, asNull, asEither } = require('cleaners')
 

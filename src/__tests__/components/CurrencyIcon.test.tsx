@@ -1,5 +1,4 @@
 /* globals describe beforeEach afterEach it jest expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
 import * as reactRedux from 'react-redux'

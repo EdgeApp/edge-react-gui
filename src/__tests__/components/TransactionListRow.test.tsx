@@ -1,5 +1,4 @@
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
 import { Provider } from 'react-redux'

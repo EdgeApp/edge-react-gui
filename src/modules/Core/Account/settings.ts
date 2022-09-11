@@ -6,7 +6,6 @@ import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
 import { showError } from '../../../components/services/AirshipInstance'
 import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
-import { CurrencyPlugins, currencyPlugins } from '../../../util/corePlugins'
 import { logActivity } from '../../../util/logger'
 import { categories } from './subcategories'
 

@@ -1,7 +1,8 @@
 import { asMaybe } from 'cleaners'
+// @ts-expect-error
 import { base58 } from 'edge-core-js/lib/util/encoding'
 
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { exhaustiveCheck } from '../../util/exhaustiveCheck'
@@ -17,13 +18,13 @@ const { pushServerUri } = ACTION_QUEUE
 Each PushEvent's trigger should be the effect of the previous ExecutionOutput:
 
   [ A, B, C ]
-  -> [ 
+  -> [
     {trigger: initEffect, ...convertToPushEvent(A)},
-    {trigger: A.effect, ...convertToPushEvent(B)}, 
-    {trigger: B.effect, ...convertToPushEvent(C)}, 
+    {trigger: A.effect, ...convertToPushEvent(B)},
+    {trigger: B.effect, ...convertToPushEvent(C)},
   ]
 
-The initEffect is the current effect in the program's state. This should 
+The initEffect is the current effect in the program's state. This should
 always be defined because the first action in the program should be run even
 for new programs.
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 const fs = require('fs')
 const childProcess = require('child_process')

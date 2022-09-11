@@ -9,6 +9,7 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
 import { RouteProp } from '../../types/routerTypes'
+// @ts-expect-error
 import { javascript } from '../../util/bridge/injectThisInWebView'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'

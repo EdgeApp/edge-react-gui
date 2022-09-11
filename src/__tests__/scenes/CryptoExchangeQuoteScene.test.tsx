@@ -1,5 +1,4 @@
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
@@ -97,9 +96,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       toDenomination: 'ETH',
       toWalletCurrencyName: { fromDenomination: '' },
 
-      // eslint-disable-next-line flowtype/no-types-missing-file-annotation
       shift: (swapInfo, onApprove) => undefined,
-      // eslint-disable-next-line flowtype/no-types-missing-file-annotation
       timeExpired: (swapInfo, onApprove) => undefined,
       theme: getTheme()
     }

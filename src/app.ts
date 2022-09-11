@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs'
 import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { NumberMap } from './types/types'
-import { log, logActivity, logToServer } from './util/logger'
+import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
   apiKey: ENV.BUGSNAG_API_KEY,

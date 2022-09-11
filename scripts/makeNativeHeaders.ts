@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+export {}
 
 const fs = require('fs')
 const path = require('path')

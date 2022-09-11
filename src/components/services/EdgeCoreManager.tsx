@@ -1,11 +1,15 @@
 import Bugsnag from '@bugsnag/react-native'
+// @ts-expect-error
 import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+// @ts-expect-error
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io'
+// @ts-expect-error
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { getBrand, getDeviceId } from 'react-native-device-info'
+// @ts-expect-error
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'

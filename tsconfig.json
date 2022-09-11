@@ -1,4 +1,5 @@
 {
+  "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
     "declaration": true,
     "outDir": "lib",
@@ -13,6 +14,6 @@
 
     "strict": true
   },
-  "include": ["./src/**/*.ts", "./scripts/**/*.ts", "./src/__tests__/**/*.ts", "./index.ts", "./config.ts"],
-  "exclude": ["./node_modules/**/*", "./lib/**/*"]
+  "include": ["./src/**/*", "./scripts/**/*", "./config.ts", "./index.ts", "./localizeLanguage.ts", "supressTsErrors.ts"],
+  "exclude": ["node_modules", "./lib/**/*"],
 }

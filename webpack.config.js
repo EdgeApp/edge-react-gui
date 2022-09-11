@@ -1,5 +1,3 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-
 const { exec } = require('child_process')
 const path = require('path')
 

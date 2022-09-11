@@ -32,7 +32,7 @@ node ./node_modules/.bin/rollup -c
 node -r sucrase/register ./scripts/stringifyBridge.ts
 
 # Copy pre-built buy/sell plugins:
-node -r sucrase/register ./copy-plugin.ts
+node -r sucrase/register ./copy-plugin.js
 
 # Copy edge-core-js WebView contents:
 core_assets="./android/app/src/main/assets/edge-core"

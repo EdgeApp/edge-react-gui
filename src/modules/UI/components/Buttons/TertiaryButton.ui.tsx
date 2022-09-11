@@ -5,7 +5,7 @@ import { rawStyles, styles } from './style'
 
 export type TextProps = {
   children: React.ReactNode
-  style?: StyleSheet.Styles
+  style?: StyleSheet
 }
 class Text extends React.Component<TextProps> {
   render() {
@@ -20,7 +20,7 @@ class Text extends React.Component<TextProps> {
 
 export type Props = {
   children: React.ReactNode
-  style?: StyleSheet.Styles
+  style?: StyleSheet
   onPress?: () => unknown
 }
 export class TertiaryButton extends React.Component<Props> {

@@ -13,7 +13,7 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
-import { logActivity, logActivity } from '../util/logger'
+import { logActivity } from '../util/logger'
 import { logEvent } from '../util/tracking'
 
 export type CreateWalletOptions = {

@@ -11,7 +11,7 @@ let envJSON = { LOG_SERVER: {} }
 
 try {
   envJSON = JSON.parse(fs.readFileSync(envFile, 'utf8'))
-} catch (e: any) {
+} catch (e) {
   console.log(e)
 }
 
@@ -37,7 +37,7 @@ try {
     port: `${PORT}`
   }
   fs.writeFileSync(envFile, JSON.stringify(envJSON, null, 2))
-} catch (e: any) {
+} catch (e) {
   console.log(e)
 }
 

@@ -1,5 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
+// @ts-expect-error
 import { isIPhoneX } from 'react-native-safe-area-view'
 
 export const deviceWidth = Dimensions.get('window').width
