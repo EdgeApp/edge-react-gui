@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "target": "esnext",
-
+    "skipLibCheck": true,
     "strict": true
   },
   "include": ["./src/**/*", "./scripts/**/*", "./config.ts", "./index.ts", "./localizeLanguage.ts", "supressTsErrors.ts"],
