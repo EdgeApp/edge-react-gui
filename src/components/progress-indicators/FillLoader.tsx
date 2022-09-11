@@ -1,11 +1,10 @@
 import * as React from 'react'
-// @ts-expect-error
-import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
+import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
 
 type Props = {
-  indicatorStyles?: ViewPropTypes.style
+  indicatorStyles?: ViewStyle
   size?: 'large' | 'small'
 }
 
@@ -20,7 +19,7 @@ export class FillLoader extends React.Component<Props> {
   }
 }
 
-const rawStyles = {
+const rawStyles: { loadingContainer: ViewStyle; indicator: ViewStyle } = {
   loadingContainer: {
     flex: 1
   },
@@ -30,5 +29,4 @@ const rawStyles = {
   }
 }
 
-// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

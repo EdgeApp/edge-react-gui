@@ -51,6 +51,7 @@
   },
   "resolutions": {
     "@ledgerhq/hw-transport-node-hid": "file:./patches/fake-hw-transport-node-hid",
+    "@types/react-native": "0.67.1",
     "axios": "0.19.0",
     "babel-runtime": "6.26.0",
     "base-x": "3.0.4",
@@ -172,7 +173,7 @@
     "@types/async-lock": "^1.1.5",
     "@types/csv-stringify": "^3.1.0",
     "@types/dateformat": "^5.0.0",
-    "@types/react-native": "^0.69.8",
+    "@types/react-native": "0.67.1",
     "@types/react-native-custom-tabs": "^0.1.2",
     "@types/react-native-extra-dimensions-android": "^1.2.0",
     "@types/react-native-material-textfield": "^0.16.5",
