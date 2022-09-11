@@ -21,8 +21,10 @@ export const FiatAmountTile = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
+    // @ts-expect-error
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
       <EdgeText style={styles.tileBodyText}>
+        {/* @ts-expect-error */}
         <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
       </EdgeText>
     </Tile>

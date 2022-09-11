@@ -51,6 +51,7 @@ const crashReporter: EdgeCrashReporter = {
     return Bugsnag.leaveBreadcrumb(event.message, event.metadata)
   },
   logCrash(event) {
+    // @ts-expect-error
     return Bugsnag.notify(event.error, report => {
       report.addMetadata(event.source, event.metadata)
     })
@@ -72,6 +73,7 @@ export function EdgeCoreManager(props: Props) {
   const isAppForeground = useIsAppForeground()
 
   // Keep the core in sync with the application state:
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (context == null) return
     await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
@@ -115,7 +117,9 @@ export function EdgeCoreManager(props: Props) {
       {ENV.USE_FAKE_CORE ? (
         <MakeFakeEdgeWorld
           crashReporter={crashReporter}
+          // @ts-expect-error
           debug={ENV.DEBUG_CORE}
+          // @ts-expect-error
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           users={[fakeUser]}
@@ -126,8 +130,11 @@ export function EdgeCoreManager(props: Props) {
         <MakeEdgeContext
           {...contextOptions}
           crashReporter={crashReporter}
+          // @ts-expect-error
           debug={ENV.DEBUG_CORE}
+          // @ts-expect-error
           allowDebugging={ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
+          // @ts-expect-error
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}

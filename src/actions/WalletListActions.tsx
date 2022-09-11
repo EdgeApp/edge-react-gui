@@ -56,6 +56,7 @@ export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Disp
   }
 }
 
+// @ts-expect-error
 const getFirstCurrencyAddress = async (currencyCode, getState) => {
   // Wallet Check
   const state = getState()
@@ -88,6 +89,7 @@ const getFirstCurrencyAddress = async (currencyCode, getState) => {
   const wallet = await showFullScreenSpinner(s.strings.wallet_list_referral_link_currency_loading, createWallet)
   logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
 
+  // @ts-expect-error
   const receiveAddress = await wallet.getReceiveAddress()
   return receiveAddress.publicAddress
 }

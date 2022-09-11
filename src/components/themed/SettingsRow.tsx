@@ -27,6 +27,7 @@ type Props = {
  * A settings row places an interactive control next to a description,
  * which can be some combination of React children and a plain text label.
  */
+// @ts-expect-error
 const SettingsRowComponent = (props: Props): React$Element<any> => {
   const { children, disabled = false, label = '', right, onPress } = props
   const theme = useTheme()
@@ -38,6 +39,7 @@ const SettingsRowComponent = (props: Props): React$Element<any> => {
     <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
+        {/* @ts-expect-error */}
         <Text style={disabled ? styles.disabledText : styles.text}>{label}</Text>
         {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </>

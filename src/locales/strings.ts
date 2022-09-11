@@ -1,5 +1,6 @@
 import { getLocales } from 'react-native-localize'
 
+// @ts-expect-error
 import en from './en_US'
 import de from './strings/de.json'
 import es from './strings/es.json'
@@ -40,14 +41,18 @@ export function selectLocale(locale: string = 'en'): boolean {
   if (locale === 'en') return true
 
   // Find pure language match first (ie. find 'es' when 'esMX' is chosen)
+  // @ts-expect-error
   if (allLocales[lang] !== undefined) {
     found = true
+    // @ts-expect-error
     mergeStrings(out.strings, allLocales[lang])
   }
 
   // Find an exact match
+  // @ts-expect-error
   if (allLocales[normalizedLocale] !== undefined) {
     found = true
+    // @ts-expect-error
     mergeStrings(out.strings, allLocales[normalizedLocale])
   }
 

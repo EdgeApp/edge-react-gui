@@ -7,6 +7,7 @@ const { UNAVAILABLE, BLOCKED, DENIED, GRANTED, LIMITED } = RNPermissions.RESULTS
 export type Permission = 'camera' | 'contacts' | 'location'
 export type PermissionStatus = typeof UNAVAILABLE | typeof BLOCKED | typeof DENIED | typeof GRANTED | typeof LIMITED
 export type PermissionsState = {
+  // @ts-expect-error
   [permission: Permission]: PermissionStatus
 }
 

@@ -34,16 +34,20 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
     wallets.push(currencyWallets[walletId])
   }
   const connectedWalletsByFioAddress = {}
+  // @ts-expect-error
   for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
     if (!getState().core.account.id) break
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
+    // @ts-expect-error
     for (const fioAddress: string of fioAddresses) {
       if (!getState().core.account.id) break
+      // @ts-expect-error
       connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
         data: {
           fioAddress,
+          // @ts-expect-error
           ccWalletMap: connectedWalletsByFioAddress[fioAddress]
         }
       })
@@ -68,6 +72,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
 
     const obtDataRecords = await getFioObtData(fioWallets)
 
+    // @ts-expect-error
     for (const transaction: EdgeTransaction of transactions) {
       const edgeMetadata: EdgeMetadata = transaction.metadata != null ? transaction.metadata : { notes: '' }
       try {
@@ -107,6 +112,7 @@ export const expiredFioNamesCheckDates = () => async (dispatch: Dispatch, getSta
   setTimeout(() => dispatch(refreshNamesToCheckExpired()), INIT_EXPIRE_CHECK_TIMEOUT)
 }
 
+// @ts-expect-error
 export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -138,6 +144,7 @@ export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getSt
 
   if (namesToCheck.length !== 0) {
     dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
+    // @ts-expect-error
     dispatch(checkExpiredFioDomains(namesToCheck, fioWalletsById))
   }
 
@@ -153,12 +160,14 @@ export const checkExpiredFioDomains =
     const expired: FioDomain[] = getExpiredSoonFioDomains(fioDomains)
     if (expired.length > 0) {
       const first: FioDomain = expired[0]
+      // @ts-expect-error
       const fioWallet: EdgeCurrencyWallet = fioWalletsById[first.walletId]
       await showFioExpiredModal(fioWallet, first)
 
       const expiredLastChecks = { ...state.ui.fio.expiredLastChecks }
       expiredLastChecks[first.name] = new Date()
       dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: expiredLastChecks })
+      // @ts-expect-error
       dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
       setFioExpiredCheckToDisklet(expiredLastChecks, state.core.disklet)
     }
@@ -176,7 +185,6 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: Fio
   const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {
-    // @ts-expect-error
     const { isPublic = false } = fioDomain
     Actions.push('fioDomainSettings', {
       showRenew: true,

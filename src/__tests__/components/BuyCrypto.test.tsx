@@ -8,6 +8,7 @@ import { BuyCrypto } from '../../components/themed/BuyCrypto'
 
 describe('BuyCrypto', () => {
   it('should render with some props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
     const props = {
       theme: getTheme(),
@@ -16,6 +17,7 @@ describe('BuyCrypto', () => {
       currencyImage: 'https://content.edge.app/currencyIcons/bitcoin/bitcoin.png'
     }
 
+    // @ts-expect-error
     const actual = renderer.render(<BuyCrypto {...props} />)
 
     expect(actual).toMatchSnapshot()

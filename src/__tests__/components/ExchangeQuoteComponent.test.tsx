@@ -8,6 +8,7 @@ import { ExchangeQuoteComponent } from '../../components/themed/ExchangeQuoteCom
 
 describe('ExchangeQuote', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

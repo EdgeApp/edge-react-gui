@@ -8,6 +8,7 @@ import { AddressTileComponent } from '../../components/tiles/AddressTile'
 
 describe('AddressTileComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -16,11 +17,15 @@ describe('AddressTileComponent', () => {
         currencyInfo: {
           currencyCode: 'SHIB'
         },
+
+        // @ts-expect-error
         parseUri: (address, currencyCode) => 'wallet'
       },
       currencyCode: 'BTC',
       title: 'Title',
       recipientAddress: 'bc1',
+
+      // @ts-expect-error
       onChangeAddress: async (guiMakeSpendInfo, parsedUri) => undefined,
       resetSendTransaction: () => undefined,
       lockInputs: true,

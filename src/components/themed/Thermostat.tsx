@@ -45,9 +45,12 @@ const getStyles = cacheStyles(theme => {
       flex: 1
     },
     percentText: {
+      // @ts-expect-error
       color: theme.warningText,
+      // @ts-expect-error
       fontSize: theme.rem(0.75),
       fontWeight: 'bold',
+      // @ts-expect-error
       marginLeft: theme.rem(0.5)
     }
   }

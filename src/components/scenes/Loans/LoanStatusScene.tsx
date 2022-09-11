@@ -35,10 +35,13 @@ export const LoanStatusScene = (props: Props) => {
   const { actionQueueId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
+  // @ts-expect-error
   const account: EdgeAccount = useSelector(state => state.core.account)
 
+  // @ts-expect-error
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const [steps, setSteps] = useState<ActionDisplayInfo[] | undefined>()
+  // @ts-expect-error
   useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]
 
@@ -101,6 +104,7 @@ export const LoanStatusScene = (props: Props) => {
           ) : (
             <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
           )}
+          {/* @ts-expect-error */}
           {isProgramDone ? <ConfettiCannon autostart count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
         </View>
       )}

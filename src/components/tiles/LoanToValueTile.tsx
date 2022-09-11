@@ -33,7 +33,9 @@ const LoanToValueTileComponent = (props: Props) => {
   } = currencyWallet
 
   const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
+  // @ts-expect-error
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${fiatCurrencyCode}`] ?? '0')
+  // @ts-expect-error
   const multiplier = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode).multiplier)
 
   let totalDebtFiatValue = TotalFiatAmount(currencyWallet, debts)

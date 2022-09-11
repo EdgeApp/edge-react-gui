@@ -176,6 +176,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
                 [{ text: s.strings.string_ok_cap }]
               )
+              // @ts-expect-error
               navigation.navigate('walletList')
             }
           }
@@ -225,6 +226,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
       <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.header}>
+            {/* @ts-expect-error */}
             <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
             <EdgeText style={styles.instructionalText} numberOfLines={10}>
               {detailsText}

@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('FioConnectWalletConfirm', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -33,9 +34,12 @@ describe('FioConnectWalletConfirm', () => {
           walletsToDisconnect: []
         }
       },
+
+      // @ts-expect-error
       updateConnectedWallets: (fioAddress, ccWalletMap) => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<FioConnectWalletConfirm {...props} />)
 
     expect(actual).toMatchSnapshot()

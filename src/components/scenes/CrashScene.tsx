@@ -47,4 +47,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
+// @ts-expect-error
 export const CrashScene = withTheme(CrashSceneComponent)

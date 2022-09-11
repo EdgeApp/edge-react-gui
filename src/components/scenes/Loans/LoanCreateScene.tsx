@@ -58,6 +58,7 @@ export const LoanCreateScene = (props: Props) => {
   if (existingProgramId != null) navigation.navigate('loanCreateStatus', { actionQueueId: existingProgramId })
 
   // Wallet/Token Data
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const wallets = useWatch(account, 'currencyWallets')
   const allTokens = useAllTokens(account)
@@ -98,6 +99,7 @@ export const LoanCreateScene = (props: Props) => {
   useEffect(() => {
     if (destTokenId != null) {
       const destDebt = debts.find(debt => debt.tokenId === destTokenId)
+      // @ts-expect-error
       if (destDebt != null) setApr(destDebt.apr)
     }
   }, [debts, destTokenId])
@@ -127,6 +129,7 @@ export const LoanCreateScene = (props: Props) => {
         filterActivation
       />
     ))
+      // @ts-expect-error
       .then(async ({ walletId, currencyCode, isWithdrawToBank }) => {
         if (isWithdrawToBank) {
           setIsDestBank(true)
@@ -137,6 +140,7 @@ export const LoanCreateScene = (props: Props) => {
           const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
           if (isSrc) {
             setSrcWalletId(walletId)
+            // @ts-expect-error
             setSrcTokenId(tokenId)
             setSrcCurrencyCode(currencyCode)
           } else {
@@ -148,6 +152,7 @@ export const LoanCreateScene = (props: Props) => {
             // Fetch APR based on borrow destination
             try {
               setIsLoading(true)
+              // @ts-expect-error
               setApr(await borrowEngine.getAprQuote(hardDestTokenAddr))
             } catch (err) {
               showError(err)
@@ -176,6 +181,7 @@ export const LoanCreateScene = (props: Props) => {
     const handleShowWalletPickerModal = useCallback(() => showWalletPickerModal(isSrc), [isSrc])
 
     return (
+      // @ts-expect-error
       <TappableCard disabled={disabled} onPress={handleShowWalletPickerModal} marginRem={0.5} paddingRem={0.5}>
         {withdrawToBankLabel != null ? (
           <EdgeText style={styles.textInitial}>{withdrawToBankLabel}</EdgeText>
@@ -226,6 +232,7 @@ export const LoanCreateScene = (props: Props) => {
     // If the user has not yet selected a destWallet, we wouldn't be showing
     // any exchange rate, anyway, so just pass beWallet to allow this hook not to puke.
   })
+  // @ts-expect-error
   const { denominations: destDenoms } = destTokenId != null ? allTokens[bePluginId][destTokenId] : destWallet != null ? destWallet.currencyInfo : {}
   const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
   const nativeBorrowAmountCrypto = !isUserInputComplete
@@ -247,6 +254,7 @@ export const LoanCreateScene = (props: Props) => {
       />
     )).then(amount => {
       if (amount != null) {
+        // @ts-expect-error
         setBorrowAmount(amount)
       }
     })
@@ -309,6 +317,7 @@ export const LoanCreateScene = (props: Props) => {
             formattedAmount={displayBorrowAmount}
             iconUri={hardBarCardIconUri}
             title={s.strings.loan_amount_borrow}
+            // @ts-expect-error
             onPress={handleEditBorrowAmount}
           />
 
@@ -317,6 +326,7 @@ export const LoanCreateScene = (props: Props) => {
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
             <View style={styles.cardContainer}>
+              {/* @ts-expect-error */}
               <AprCard paddingRem={[0.5, 1]} apr={apr} />
             </View>
           )}
@@ -381,52 +391,71 @@ export const LoanCreateScene = (props: Props) => {
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles(theme => {
   return {
     cardContainer: {
       alignItems: 'center',
       alignSelf: 'center',
       flexDirection: 'column',
+      // @ts-expect-error
       margin: theme.rem(0.5)
     },
     currencyRow: {
       alignItems: 'center',
       flexDirection: 'row',
       justifyContent: 'center',
+      // @ts-expect-error
       marginTop: theme.rem(0.5),
+      // @ts-expect-error
       marginBottom: theme.rem(0.5)
     },
     icon: {
+      // @ts-expect-error
       size: theme.rem(2.5)
     },
     textCardHeader: {
+      // @ts-expect-error
       fontFamily: theme.fontFaceMedium
     },
     textInitial: {
       alignSelf: 'flex-start',
+      // @ts-expect-error
       fontSize: theme.rem(0.75),
+      // @ts-expect-error
       fontFamily: theme.fontFaceMedium,
+      // @ts-expect-error
       margin: theme.rem(1)
     },
     textInitialDisabled: {
       alignSelf: 'center',
+      // @ts-expect-error
       color: theme.deactivatedText,
+      // @ts-expect-error
       fontSize: theme.rem(0.75),
+      // @ts-expect-error
       fontFamily: theme.fontFaceMedium,
+      // @ts-expect-error
       marginLeft: theme.rem(0.5)
     },
     textTitle: {
       alignSelf: 'flex-start',
+      // @ts-expect-error
       color: theme.secondaryText,
+      // @ts-expect-error
       fontFamily: theme.fontFaceBold,
+      // @ts-expect-error
       fontSize: theme.rem(0.75),
+      // @ts-expect-error
       margin: theme.rem(0.5),
       textAlign: 'left'
     },
     sceneContainer: {
       flex: 1,
       flexDirection: 'column',
+      // @ts-expect-error
       margin: theme.rem(0.5),
+      // @ts-expect-error
       marginTop: theme.rem(0)
     }
   }

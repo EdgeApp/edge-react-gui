@@ -24,8 +24,11 @@ export const NotificationScene = (props: Props) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
+  // @ts-expect-error
   const settings = useSelector(state => state.priceChangeNotifications)
+  // @ts-expect-error
   const deviceId = useSelector(state => state.core.context.clientId)
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
 
   const currencyConfigs = useWatch(account, 'currencyConfig')

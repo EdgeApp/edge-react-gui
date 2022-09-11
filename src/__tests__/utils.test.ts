@@ -236,6 +236,7 @@ describe('daysBetween', () => {
     const days = end - start
     const a = new Date(MILLISECONDS_PER_DAY * start)
     const b = new Date(MILLISECONDS_PER_DAY * end)
+    // @ts-expect-error
     expect(daysBetween(a, b)).toEqual(days)
   })
 
@@ -483,6 +484,7 @@ describe('precisionAdjust', function () {
   const tests = fixtures.precisionAdjust
 
   for (const key in tests) {
+    // @ts-expect-error
     const { input, output } = tests[key]
     const { displayDenominationMultiplier, primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio } = input
 
@@ -502,6 +504,7 @@ describe('getDisplayDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency.currencyCode}`, function () {
+      // @ts-expect-error
       expect(getDisplayDenomination(state, currency.pluginId, currency.currencyCode)).toMatchObject(output[index])
     })
   })
@@ -513,6 +516,7 @@ describe('getExchangeDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
+      // @ts-expect-error
       const currencyInfo = currencyInfos[currency] ?? currencyInfos.ETH
       expect(getDenominationFromCurrencyInfo(currencyInfo, currency)).toMatchObject(output[index])
     })

@@ -5,6 +5,7 @@ export function asGraceful<T>(asT: Cleaner<T>, msg: string): Cleaner<T> {
     try {
       return asT(raw)
     } catch (error) {
+      // @ts-expect-error
       error.message = `${msg}: ${error.message}`
       throw error
     }

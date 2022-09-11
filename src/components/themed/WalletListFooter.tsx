@@ -21,9 +21,11 @@ export const WalletListFooter = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
 
   const handleAddWallet = useHandler(() => {
+    // @ts-expect-error
     navigation.navigate('createWalletSelectCrypto')
   })
 
@@ -33,6 +35,7 @@ export const WalletListFooter = (props: Props) => {
       .map(pluginId => ({ pluginId }))
 
     Airship.show(bridge => <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} showCreateWallet />)
+      // @ts-expect-error
       .then(({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
           navigation.navigate('manageTokens', { walletId })

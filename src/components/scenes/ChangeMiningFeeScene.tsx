@@ -53,6 +53,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
+      // @ts-expect-error
       for (const key of customFormat) defaultCustomFee[key] = ''
       this.state = { networkFeeOption, customNetworkFee: defaultCustomFee }
     } else {
@@ -111,11 +112,15 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
+                // @ts-expect-error
                 key={feeOptions[feeSetting].text}
+                // @ts-expect-error
                 label={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
+                // @ts-expect-error
                 onPress={() => this.setState({ networkFeeOption: feeSetting })}
               >
+                {/* @ts-expect-error */}
                 <MaterialCommunityIcons name={feeOptions[feeSetting].icon} style={styles.settingsIcon} />
               </SettingsRadioRow>
             )
@@ -151,12 +156,14 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
             autoFocus={false}
             key={key}
             autoCorrect={false}
+            // @ts-expect-error
             onChangeText={text =>
               this.setState({
                 customNetworkFee: { ...customNetworkFee, [key]: text }
               })
             }
             value={customNetworkFee[key]}
+            // @ts-expect-error
             label={FEE_STRINGS[key] || key}
             returnKeyType="search"
             marginRem={[1.75, 1.75]}

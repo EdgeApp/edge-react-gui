@@ -9,6 +9,7 @@ import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
 describe('TransactionDetailsCategoryInput', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -34,6 +35,7 @@ describe('TransactionDetailsCategoryInput', () => {
       subCategories: ['exchange', 'income', 'expense'],
       category: 'exchange',
       subCategory: '',
+      // @ts-expect-error
       // eslint-disable-next-line no-empty-pattern
       setNewSubcategory: (string, []) => undefined,
       theme: getTheme()

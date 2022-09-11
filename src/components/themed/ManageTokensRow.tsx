@@ -35,6 +35,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  // @ts-expect-error
   const disklet = useSelector(state => state.core.disklet)
 
   // Handle editing custom tokens:

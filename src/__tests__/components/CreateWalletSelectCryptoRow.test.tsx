@@ -7,6 +7,7 @@ import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalle
 
 describe('WalletListRow', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

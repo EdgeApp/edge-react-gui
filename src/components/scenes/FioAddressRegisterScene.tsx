@@ -107,6 +107,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     try {
       const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
       const publicDomainsConverted = publicDomains
+        // @ts-expect-error
         .sort(publicDomain => (publicDomain.domain === FIO_DOMAIN_DEFAULT.name ? -1 : 1))
         .map((publicDomain: FioPublicDomain) => ({
           name: publicDomain.domain,
@@ -147,6 +148,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     if (!fioPlugin) return
     if (!fioWallets.length) return
     if (!selectedWallet) return
+    // @ts-expect-error
     const publicKey = selectedWallet.publicWalletInfo.keys.publicKey
     const url = `${fioPlugin.currencyInfo.defaultSettings.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings.freeAddressRef}?publicKey=${publicKey}`
     try {
@@ -163,11 +165,13 @@ export class FioAddressRegister extends React.Component<Props, State> {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
+        // @ts-expect-error
         if (selectedDomain.isFree) {
           navigation.navigate('fioNameConfirm', {
             fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
+            // @ts-expect-error
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
@@ -255,6 +259,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   handleFioAddressFocus = () => {
     // eslint-disable-next-line react/no-string-refs
+    // @ts-expect-error
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
@@ -276,6 +281,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
         inputLabel={s.strings.fio_address_register_form_field_label}
         title={s.strings.fio_address_choose_label}
       />
+      // @ts-expect-error
     )).then((response: string | undefined) => {
       if (response) {
         this.handleFioAddressChange(response)
@@ -285,6 +291,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   handleFioWalletChange = (walletId: string) => {
     this.setState({
+      // @ts-expect-error
       selectedWallet: this.props.fioWallets.find(fioWallet => fioWallet.id === walletId)
     })
   }
@@ -292,6 +299,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
   selectFioWallet = () => {
     const allowedCurrencyCodes: string[] = [FIO_STR]
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
+      // @ts-expect-error
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           if (currencyCode === FIO_STR) {
@@ -307,6 +315,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
   selectFioDomain = () => {
     const { domainsLoading } = this.state
     if (domainsLoading) return
+    // @ts-expect-error
     Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
       if (response) {
         this.setState({ selectedDomain: response })
@@ -350,6 +359,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { selectedWallet } = this.state
 
     if (fioWallets && fioWallets.length > 1) {
+      // @ts-expect-error
       const title = `${selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}`
       return <Tile type="touchable" title={`${s.strings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
@@ -392,6 +402,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     return (
       <SceneWrapper background="theme">
         <SceneHeader style={styles.header} title={s.strings.title_fio_address_confirmation}>
+          {/* @ts-expect-error */}
           <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
         </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}

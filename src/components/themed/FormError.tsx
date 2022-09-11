@@ -8,6 +8,7 @@ import { EdgeText } from './EdgeText'
 type OwnProps = {
   isVisible: boolean
   children: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 

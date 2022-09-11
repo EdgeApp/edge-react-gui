@@ -9,6 +9,7 @@ const UPPER_RIGHT = { x: 1, y: 0 }
 
 type OwnProps = {
   children?: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 type Props = OwnProps & ThemeProps

@@ -10,6 +10,7 @@ import { fakeUser } from '../../util/fake-user'
 
 describe('CreateWalletSelectCrypto', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -17,6 +18,7 @@ describe('CreateWalletSelectCrypto', () => {
       account: () => fakeUser,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<CreateWalletSelectCryptoComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

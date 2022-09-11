@@ -126,6 +126,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const collateralTokens = collateralTokenMap[borrowEnginePluginId]
 
   const [actionOp, setactionOp] = useState()
+  // @ts-expect-error
   useAsyncEffect(async () => {
     const actionOp = {
       type: 'seq',
@@ -139,9 +140,11 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         }
       ]
     }
+    // @ts-expect-error
     setactionOp(actionOp)
   }, [actionNativeAmount, selectedWallet, selectedTokenId])
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (zeroString(actionNativeAmount)) {
       setApprovalAction(null)
@@ -154,6 +157,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       tokenId: selectedTokenId
     }
 
+    // @ts-expect-error
     const approvalAction = await action(request)
     setApprovalAction(approvalAction)
 
@@ -171,6 +175,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   })
 
   const [firstLaunch, setFirstLaunch] = useState(true)
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (firstLaunch) {
       // Don't call getMaxSpendable when the component is mounted
@@ -198,6 +203,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
     const allowedAssets = collateralTokens
     Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_src_wallet} showCreateWallet={false} allowedAssets={allowedAssets} />
+      // @ts-expect-error
     )).then(({ walletId, currencyCode, tokenId }: WalletListResult) => {
       if (walletId != null && currencyCode != null) {
         setSelectedWallet(wallets[walletId])
@@ -226,6 +232,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
     return (
       <FlipInputTile
         hasMaxSpend={hasMaxSpend}
+        // @ts-expect-error
         onMaxSpend={onMaxSpend}
         headerText={sprintf(s.strings.loan_add_from, selectedWalletName)}
         launchWalletSelector={showWalletPicker}

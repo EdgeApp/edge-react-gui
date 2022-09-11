@@ -217,6 +217,7 @@ export class EdgeProvider extends Bridgeable {
       chainCode: this.selectedChainCode,
       currencyCode,
       fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
+      // @ts-expect-error
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }
@@ -254,6 +255,7 @@ export class EdgeProvider extends Bridgeable {
     await Promise.all(
       Object.keys(data).map(async key => {
         if (data[key] != null) {
+          // @ts-expect-error
           return await store.setItem(this._plugin.storeId, key, data[key])
         } else {
           return await store.deleteItem(this._plugin.storeId, key)
@@ -272,6 +274,7 @@ export class EdgeProvider extends Bridgeable {
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
+      // @ts-expect-error
       returnObj[keys[i]] = await store.getItem(this._plugin.storeId, keys[i]).catch(e => undefined)
     }
     console.log('edgeProvider readData: ', JSON.stringify(returnObj))
@@ -416,6 +419,7 @@ export class EdgeProvider extends Bridgeable {
     guiMakeSpendInfo: GuiMakeSpendInfo,
     coreWallet: EdgeCurrencyWallet,
     orderId?: string,
+    // @ts-expect-error
     selectedCurrencyCode: string
   ): Promise<EdgeTransaction | undefined> {
     const transaction: EdgeTransaction | undefined = await new Promise((resolve, reject) => {
@@ -423,6 +427,7 @@ export class EdgeProvider extends Bridgeable {
         error ? reject(error) : resolve(transaction)
       }
       guiMakeSpendInfo.onBack = () => {
+        // @ts-expect-error
         resolve()
       }
       Actions.push('send', {
@@ -445,6 +450,7 @@ export class EdgeProvider extends Bridgeable {
         trackConversion('EdgeProviderConversion', {
           pluginId: this._plugin.storeId,
           orderId,
+          // @ts-expect-error
           account: this._state.core.account,
           currencyCode: transaction.currencyCode,
           exchangeAmount: Number(abs(exchangeAmount))
@@ -460,6 +466,7 @@ export class EdgeProvider extends Bridgeable {
       this._dispatch(
         trackConversion('EdgeProviderConversion', {
           pluginId: this._plugin.storeId,
+          // @ts-expect-error
           account: this._state.core.account,
           currencyCode,
           exchangeAmount
@@ -481,6 +488,8 @@ export class EdgeProvider extends Bridgeable {
   // window.fetch.catch(console log then throw)
   async deprecatedAndNotSupportedDouble(request: Object, firstURL: string, url2: string): Promise<unknown> {
     console.log('Bity firstURL: ' + firstURL)
+
+    // @ts-expect-error
     const response = await window.fetch(firstURL, request).catch(e => {
       console.log(`throw from fetch firstURL: ${firstURL}`, e)
       throw e
@@ -496,6 +505,8 @@ export class EdgeProvider extends Bridgeable {
       method: 'GET',
       credentials: 'include'
     }
+
+    // @ts-expect-error
     const response2 = await window.fetch(secondURL, request2).catch(e => {
       console.log(`throw from fetch secondURL: ${secondURL}`, e)
       throw e
@@ -519,6 +530,8 @@ export class EdgeProvider extends Bridgeable {
         body: signedTransaction
       }
       console.log('Bity thirdURL: ' + thirdURL)
+
+      // @ts-expect-error
       const signedTransactionResponse = await window.fetch(thirdURL, request).catch(e => {
         console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
         throw e
@@ -534,6 +547,8 @@ export class EdgeProvider extends Bridgeable {
         }
         const detailUrl = firstURL + '/' + orderData.id
         console.log('detailURL: ' + detailUrl)
+
+        // @ts-expect-error
         const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest).catch(e => {
           console.log(`throw from fetch detailUrl: ${detailUrl}`, e)
           throw e
@@ -548,6 +563,7 @@ export class EdgeProvider extends Bridgeable {
     return orderData
   }
 
+  // @ts-expect-error
   async openSafariView(url: string): Promise<unknown> {
     if (Platform.OS === 'ios') SafariView.show({ url })
     else CustomTabs.openURL(url)
@@ -576,6 +592,7 @@ export class EdgeProvider extends Bridgeable {
  */
 export function upgradeExtendedCurrencyCodes(
   currencyConfigMap: CurrencyConfigMap,
+  // @ts-expect-error
   fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeTokenId[] | undefined {

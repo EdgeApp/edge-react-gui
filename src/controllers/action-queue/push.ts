@@ -225,6 +225,7 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     }
     default: {
       // $ExpectError
+      // @ts-expect-error
       throw exhaustiveCheck(effect.type)
     }
   }

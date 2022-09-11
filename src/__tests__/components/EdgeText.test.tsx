@@ -8,6 +8,7 @@ import { EdgeTextComponent } from '../../components/themed/EdgeText'
 
 describe('EdgeText', () => {
   it('should render with some props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

@@ -8,6 +8,7 @@ import STABLE_DEBT_TOKEN_ABI from './abi/STABLE_DEBT_TOKEN_ABI.json'
 import VARIABLE_DEBT_TOKEN_ABI from './abi/VARIABLE_DEBT_TOKEN_ABI.json'
 
 export type AaveNetworkBlueprint = {
+  // @ts-expect-error
   provider: ethers.Provider
 
   // Addresses
@@ -19,6 +20,7 @@ export type AaveNetworkBlueprint = {
 }
 
 export type AaveNetwork = {
+  // @ts-expect-error
   provider: ethers.Provider
 
   // Contracts
@@ -84,6 +86,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
 
         return { address: token.address, aBalance, vBalance, variableApr }
       })
+      // @ts-expect-error
       const reserveTokenBalances: Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: BigNumber }> = await Promise.all(
         whenReserveTokenBalances
       )
@@ -101,6 +104,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         stableApr
       }
     },
+    // @ts-expect-error
     async makeTokenContract(tokenAddress) {
       return new ethers.Contract(tokenAddress, ERC20_ABI, provider)
     }

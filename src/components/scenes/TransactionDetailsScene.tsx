@@ -118,6 +118,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { metadata } = edgeTransaction
     const { name: contactName = '', notes = '', amountFiat } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
+    // @ts-expect-error
     const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
 
     this.state = {
@@ -132,6 +133,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
+  // @ts-expect-error
   initializeFormattedCategories = (metadata: ?EdgeMetadata, direction: string) => {
     const defaultCategory = direction === 'receive' ? categories.income.key : categories.expense.key
     if (metadata) {
@@ -142,6 +144,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         const { subCategory } = splittedFullCategory
         const category = splittedFullCategory.category.toLowerCase()
         return {
+          // @ts-expect-error
           category: categories[category] ? categories[category].key : defaultCategory,
           subCategory
         }
@@ -176,6 +179,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
       />
     )).then(fiatAmount => {
+      // @ts-expect-error
       const amount = fiatAmount != null ? fiatAmount.replace(',', '.') : ''
       if (amount != null && amount !== '' && isValidInput(amount)) {
         const amountFiat = displayFiatAmount(parseFloat(amount))
@@ -277,13 +281,19 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const openUrl = () => {
       const url = swapData.orderUri
       if (Platform.OS === 'ios') {
-        return SafariView.isAvailable()
-          .then(SafariView.show({ url }))
-          .catch(error => {
-            Linking.openURL(url)
-            console.log(error)
-          })
+        return (
+          SafariView.isAvailable()
+
+            // @ts-expect-error
+            .then(SafariView.show({ url }))
+            .catch(error => {
+              // @ts-expect-error
+              Linking.openURL(url)
+              console.log(error)
+            })
+        )
       }
+      // @ts-expect-error
       Linking.openURL(url)
     }
 
@@ -294,6 +304,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       Mailer.mail(
         {
           subject: sprintf(s.strings.transaction_details_exchange_support_request, swapData.plugin.displayName),
+          // @ts-expect-error
           recipients: [email],
           body,
           isHTML: true
@@ -324,6 +335,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   onSaveTxDetails = (newDetails?: any) => {
     if (newDetails == null) return
     const { route } = this.props
+
+    // @ts-expect-error
     const { contactName, notes, bizId, category, subCategory, amountFiat } = { ...this.state, ...newDetails }
     const { edgeTransaction } = route.params
     let finalAmountFiat
@@ -490,6 +503,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               </View>
             </Tile>
             <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
+              {/* @ts-expect-error */}
               <EdgeText style={styles.tileCategory}>{categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')}</EdgeText>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}

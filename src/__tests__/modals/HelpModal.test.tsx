@@ -9,6 +9,7 @@ import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
 describe('HelpModal', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

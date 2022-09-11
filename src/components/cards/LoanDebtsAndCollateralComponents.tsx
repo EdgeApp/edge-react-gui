@@ -42,7 +42,6 @@ export const ExchangeRateTile = (props: { wallet: EdgeCurrencyWallet; tokenId?: 
   return <Tile title={title} body={body} type="static" />
 }
 
-// @ts-expect-error - Flow doesn't like that BorrowCollateral doesn't have an apr key despite that value not being relevant anywhere in this function. It doesn't even appear in this file.
 export const TotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowDebt[] | BorrowCollateral[]): string => {
   const {
     currencyConfig: { allTokens },
@@ -50,6 +49,7 @@ export const TotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowD
     fiatCurrencyCode: isoFiatCurrencyCode
   } = wallet
 
+  // @ts-expect-error
   const necessaryExchangeRates = borrowArray.reduce((pairs, obj) => {
     const { tokenId } = obj
     const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId] ?? {}
@@ -58,13 +58,18 @@ export const TotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowD
   }, [])
 
   const exchangeRateMap = useRef({ current: {} })
+  // @ts-expect-error
   const exchangeRates = useHandler((pair: string) => exchangeRateMap.current[pair] ?? '0')
+  // @ts-expect-error
   useSelector(state => {
+    // @ts-expect-error
     necessaryExchangeRates.forEach(pair => {
+      // @ts-expect-error
       exchangeRateMap.current[pair] = state.exchangeRates[pair]
     })
   })
 
+  // @ts-expect-error
   return borrowArray.reduce((total, obj) => {
     const { currencyCode, denominations } = obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
     const denom = denominations.find(denom => denom.name === currencyCode)
@@ -104,14 +109,21 @@ export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount
   } = props
 
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
+  // @ts-expect-error
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
 
+  // @ts-expect-error
   const exchangeDenominationMultiplier = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).multiplier)
+  // @ts-expect-error
   const exchangeDenominationName = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).name)
+  // @ts-expect-error
   const exchangeDenominationSymbol = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).symbol ?? '')
 
+  // @ts-expect-error
   const displayDenominationMultiplier = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).multiplier)
+  // @ts-expect-error
   const displayDenominationName = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).name)
+  // @ts-expect-error
   const displayDenominationSymbol = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).symbol ?? '')
 
   const feeCryptoAmount = useCryptoText({

@@ -9,6 +9,7 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CreateWalletReviewComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -30,9 +31,12 @@ describe('CreateWalletReviewComponent', () => {
           walletName: 'my bitcoin wallet'
         }
       },
+
+      // @ts-expect-error
       createCurrencyWallet: async (walletName, walletType, fiatCurrencyCode, cleanedPrivateKey) => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<CreateWalletReviewComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

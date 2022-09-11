@@ -19,6 +19,7 @@ export class FullScreenTransitionComponent extends React.Component<FullScreenTra
   constructor(props: FullScreenTransitionProps) {
     super(props)
     this.state = {
+      // @ts-expect-error
       opacity: new Animated.Value(0)
     }
   }
@@ -27,16 +28,19 @@ export class FullScreenTransitionComponent extends React.Component<FullScreenTra
     const { onDone } = this.props
     setTimeout(() => {
       Animated.sequence([
+        // @ts-expect-error
         Animated.timing(this.state.opacity, {
           duration: 1500,
           toValue: 1,
           useNativeDriver: false
         }),
+        // @ts-expect-error
         Animated.timing(this.state.opacity, {
           duration: 1400,
           toValue: 1,
           useNativeDriver: false
         }),
+        // @ts-expect-error
         Animated.timing(this.state.opacity, {
           duration: 1500,
           toValue: 0,
@@ -56,6 +60,7 @@ export class FullScreenTransitionComponent extends React.Component<FullScreenTra
         <Gradient style={styles.gradient} />
         <Animated.View
           style={[
+            // @ts-expect-error
             styles.view,
             {
               flexDirection: 'column',
@@ -89,4 +94,6 @@ const rawStyles = {
     height: PLATFORM.usableHeight
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

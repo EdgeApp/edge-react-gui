@@ -167,8 +167,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <View style={styles.rateBalanceContainer}>
         <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
         <EdgeText style={styles.rateBalanceText}>
-          {balance}
-          (
+          {balance}({/* @ts-expect-error */}
           <FiatText wallet={wallet} tokenId={primaryInfo.tokenId} nativeCryptoAmount={balanceCrypto} />)
         </EdgeText>
       </View>
@@ -216,6 +215,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
+          {/* @ts-expect-error */}
           (<FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} />)
         </EdgeText>
       </View>

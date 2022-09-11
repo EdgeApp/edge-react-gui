@@ -44,6 +44,7 @@ type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 type State = {}
 
 export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
+  // @ts-expect-error
   calledApprove: true
 
   componentDidMount = () => {

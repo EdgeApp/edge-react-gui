@@ -6,6 +6,7 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('spendingLimits', () => {
   it('should render initialState', () => {
+    // @ts-expect-error
     const actual = spendingLimits(undefined, dummyAction)
 
     expect(actual).toMatchSnapshot()
@@ -50,6 +51,7 @@ describe('spendingLimits', () => {
           }
         }
       }
+      // @ts-expect-error
       const actual = spendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()
@@ -73,6 +75,7 @@ describe('spendingLimits', () => {
           }
         }
       }
+      // @ts-expect-error
       const actual = spendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()

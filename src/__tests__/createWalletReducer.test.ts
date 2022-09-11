@@ -21,6 +21,7 @@ test('initialState', () => {
     },
     walletAccountActivationQuoteError: ''
   }
+  // @ts-expect-error
   const actual = createWalletReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)

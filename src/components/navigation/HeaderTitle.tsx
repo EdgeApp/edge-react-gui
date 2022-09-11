@@ -28,6 +28,7 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
+    // @ts-expect-error
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.props.onSelectWallet(walletId, currencyCode)

@@ -38,6 +38,7 @@ export type SetNativeAmountInfo = {
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  // @ts-expect-error
   Actions.push('exchangeQuoteProcessing')
 
   const state = getState()
@@ -106,6 +107,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   if (Actions.currentScene !== 'exchangeQuote') return
+  // @ts-expect-error
   Actions.push('exchangeQuoteProcessing')
 
   try {
@@ -302,6 +304,7 @@ const processSwapQuoteError = (error: unknown) => (dispatch: Dispatch, getState:
   }
 
   // Some plugins get this error wrong:
+  // @ts-expect-error
   if (error.message === 'InsufficientFundsError') {
     return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
   }
@@ -361,6 +364,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
       name,
       category
     }
+    // @ts-expect-error
     Actions.push('exchangeSuccess')
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
@@ -380,12 +384,14 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
     if (result.orderId != null) {
       trackConversionOpts.orderId = result.orderId
     }
+    // @ts-expect-error
     dispatch(trackConversion('SwapSuccess', trackConversionOpts))
   } catch (error) {
     console.log(error)
     logEvent('SwapFailed')
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     setTimeout(() => {
+      // @ts-expect-error
       showError(`${s.strings.exchange_failed}. ${error.message}`)
     }, 1)
   }

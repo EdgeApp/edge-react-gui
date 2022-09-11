@@ -44,6 +44,7 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   footer: {
+    // @ts-expect-error
     margin: theme.rem(2),
     justifyContent: 'center',
     alignItems: 'center'

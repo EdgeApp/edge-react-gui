@@ -45,12 +45,14 @@ export class FioAddressRegistered extends React.Component<Props> {
         <View style={styles.view}>
           <View style={styles.texts}>
             <View style={styles.image}>
+              {/* @ts-expect-error */}
               <Image source={theme.fioAddressLogo} />
             </View>
             <T style={styles.text}>{s.strings.fio_address_details_screen_registered}</T>
             <T style={styles.title}>{fioName}</T>
             {this.renderExpDate()}
           </View>
+          {/* @ts-expect-error */}
           <MainButton marginRem={2} onPress={() => navigation.navigate('fioAddressList')} label={s.strings.title_fio_names} />
         </View>
       </SceneWrapper>

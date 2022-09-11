@@ -94,6 +94,7 @@ export class CreateWalletImportComponent extends React.Component<Props, State> {
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
+          {/* @ts-expect-error */}
           <View style={styles.view}>
             <View style={styles.createWalletPromptArea}>
               <Text style={styles.instructionalText}>{instructionSyntax}</Text>
@@ -109,7 +110,9 @@ export class CreateWalletImportComponent extends React.Component<Props, State> {
               multiline
               error={error}
             />
+            {/* @ts-expect-error */}
             <View style={styles.buttons}>
+              {/* @ts-expect-error */}
               <PrimaryButton style={styles.next} onPress={this.handleNext} disabled={isProcessing}>
                 {isProcessing ? (
                   <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
@@ -159,6 +162,8 @@ const rawStyles = {
     flex: 1
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletImportScene = connect<StateProps, {}, OwnProps>(

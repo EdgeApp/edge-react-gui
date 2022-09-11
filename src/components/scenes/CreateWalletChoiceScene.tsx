@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
+// @ts-expect-error
 import CreateWalletSvg from '../../assets/images/create-wallet.svg'
 import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'

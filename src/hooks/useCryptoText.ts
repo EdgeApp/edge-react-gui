@@ -62,7 +62,9 @@ export const useCryptoText = ({
     // Display with symbol (if available)
     return `${symbol != null ? symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {
+    // @ts-expect-error
     if (error.message === 'Cannot operate on base16 float values') {
+      // @ts-expect-error
       const errorMessage = `${error.message}: Currency - ${exchangeDenomination.name}, amount - ${nativeAmount}, demonination multiplier: ${displayMultiplier}, exchange multiplier: ${exchangeMultiplier}`
       console.error(errorMessage)
     }

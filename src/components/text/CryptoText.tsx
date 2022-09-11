@@ -38,6 +38,7 @@ export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol 
     tokenId,
     wallet
   })
+  // @ts-expect-error
   const state = useSelector(state => state)
   const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, exchangeDenomination.name ?? wallet.currencyInfo.currencyCode)
 

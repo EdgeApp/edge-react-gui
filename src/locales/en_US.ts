@@ -1,4 +1,4 @@
-const strings = {
+export const strings = {
   // Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
@@ -1248,6 +1248,3 @@ const strings = {
   currency_label_ZMW: 'Zambian Kwacha',
   currency_label_ZWL: 'Zimbabwe Dollar'
 }
-
-// export default strings
-module.exports = strings

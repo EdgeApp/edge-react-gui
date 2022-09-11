@@ -11,6 +11,7 @@ test('initialState', () => {
     numTransactions: 0,
     currentWalletId: ''
   }
+  // @ts-expect-error
   const actual = transactionListReducer(undefined, {})
 
   expect(actual).toEqual(expected)

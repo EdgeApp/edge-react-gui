@@ -58,6 +58,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }
   }
 
+  // @ts-expect-error
   static getDerivedStateFromProps(props, state) {
     const { publicDomains, userDomains } = props
 
@@ -111,6 +112,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
   registerNewDomain = () => {
     this.props.bridge.resolve(null)
+    // @ts-expect-error
     Actions.push('fioDomainRegister')
   }
 

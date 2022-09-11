@@ -7,12 +7,14 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 
 export const LoanManagerService = () => {
   const dispatch = useDispatch()
+  // @ts-expect-error
   const account: EdgeAccount = useSelector(state => state.core.account)
 
   //
   // Initialization
   //
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (account.disklet != null) {
       dispatch(loadLoanAccounts(account, borrowPluginMap))

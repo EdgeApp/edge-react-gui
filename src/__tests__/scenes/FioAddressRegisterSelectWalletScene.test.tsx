@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('FioAddressRegistered', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -89,9 +90,11 @@ describe('FioAddressRegistered', () => {
           ],
           enabledTokens: ['FIO'],
           receiveAddress:
+            // @ts-expect-error
             {
               publicAddress: '0x434dsfv455'
             } &
+            // @ts-expect-error
             {
               metadata: {
                 bizId: 20,
@@ -115,9 +118,12 @@ describe('FioAddressRegistered', () => {
           selectedDomain: 'MyFio@edge'
         }
       },
+
+      // @ts-expect-error
       onSelectWallet: (walletId, currencyCode) => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<FioAddressRegistered {...props} />)
 
     expect(actual).toMatchSnapshot()

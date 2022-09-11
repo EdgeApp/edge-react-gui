@@ -2,6 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { gt, lt, lte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
+// @ts-expect-error
 import { ActivityIndicator, InputAccessoryView, Linking, Platform, RefObject, Text, TouchableOpacity, View } from 'react-native'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -73,8 +74,10 @@ type State = {
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestComponent extends React.Component<Props, State> {
+  // @ts-expect-error
   amounts: ExchangedFlipInputAmounts
   flipInput: React.ElementRef<typeof FlipInput> | null = null
+  // @ts-expect-error
   unsubscribeAddressChanged: Function | null
 
   constructor(props: Props) {
@@ -133,6 +136,7 @@ export class RequestComponent extends React.Component<Props, State> {
     let publicAddress = ''
     if (wallet != null) {
       const receiveAddress = await wallet.getReceiveAddress()
+      // @ts-expect-error
       legacyAddress = receiveAddress.legacyAddress
       publicAddress = receiveAddress.publicAddress
     }
@@ -189,6 +193,7 @@ export class RequestComponent extends React.Component<Props, State> {
       this.setState({
         encodedURI,
         publicAddress: publicAddress,
+        // @ts-expect-error
         legacyAddress: legacyAddress
       })
     }
@@ -261,13 +266,16 @@ export class RequestComponent extends React.Component<Props, State> {
         }}
       />
     ))
+      // @ts-expect-error
       .then((result?: string) => {
+        // @ts-expect-error
         return result === 'confirm' ? Linking.openURL(sprintf(addressExplorer, requestAddress)) : null
       })
       .catch(error => console.log(error))
   }
 
   handleOpenWalletListModal = () => {
+    // @ts-expect-error
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.props.onSelectWallet(walletId, currencyCode)
@@ -327,6 +335,7 @@ export class RequestComponent extends React.Component<Props, State> {
           <View style={styles.balanceContainer}>
             <EdgeText>{displayBalanceString}</EdgeText>
             <EdgeText style={styles.exchangeRate}>
+              {/* @ts-expect-error */}
               <FiatText
                 appendFiatCurrencyCode
                 nativeCryptoAmount={primaryCurrencyInfo.displayDenomination.multiplier}
@@ -392,6 +401,7 @@ export class RequestComponent extends React.Component<Props, State> {
     this.amounts = amounts
     if (!currencyCode) return
     const edgeEncodeUri: EdgeEncodeUri =
+      // @ts-expect-error
       this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
     if (gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
@@ -446,7 +456,8 @@ export class RequestComponent extends React.Component<Props, State> {
       if (sharedAddress != null && !sharedAddress.includes('amount')) {
         const edgeEncodeUri: EdgeEncodeUri =
           useLegacyAddress && legacyAddress
-            ? { publicAddress, legacyAddress, currencyCode, nativeAmount: '0' }
+            ? // @ts-expect-error
+              { publicAddress, legacyAddress, currencyCode, nativeAmount: '0' }
             : { publicAddress, currencyCode, nativeAmount: '0' }
         const newUri = await wallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
@@ -498,6 +509,7 @@ export class RequestComponent extends React.Component<Props, State> {
 
   fioMode = () => {
     if (this.flipInput && Platform.OS === 'ios') {
+      // @ts-expect-error
       this.flipInput.textInputBottomFocus()
       this.setState({ isFioMode: true })
     }
@@ -506,6 +518,7 @@ export class RequestComponent extends React.Component<Props, State> {
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
       if (this.flipInput) {
+        // @ts-expect-error
         this.flipInput.textInputBottomBlur()
       }
     })
@@ -516,6 +529,7 @@ export class RequestComponent extends React.Component<Props, State> {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
+        // @ts-expect-error
         this.flipInput.textInputBottomBlur()
       }
       this.onNext()

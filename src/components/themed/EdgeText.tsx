@@ -7,11 +7,13 @@ type OwnProps = {
   children: React.ReactNode
   ellipsizeMode?: string
   numberOfLines?: number
+  // @ts-expect-error
   style?: StyleSheet.Styles
   disableFontScaling?: boolean
   minimumFontScale?: number
 }
 
+// @ts-expect-error
 export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps & Text.props> {
   render() {
     const { children, style, theme, disableFontScaling = false, ...props } = this.props

@@ -1,6 +1,7 @@
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
+// @ts-expect-error
 import ENV from '../../../env'
 
 type WyreClientOptions = {

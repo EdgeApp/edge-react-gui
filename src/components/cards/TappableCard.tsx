@@ -26,7 +26,10 @@ const TappableCardComponent = ({ children, disabled = false, onPress, ...cardPro
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity onPress={disabled ? null : onPress}>
+    <TouchableOpacity
+      // @ts-expect-error
+      onPress={disabled ? null : onPress}
+    >
       <Card {...cardProps}>
         <View style={styles.container}>
           <View style={styles.childrenContainer}>{children}</View>

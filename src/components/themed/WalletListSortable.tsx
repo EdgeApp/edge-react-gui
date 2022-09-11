@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet, EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
+// @ts-expect-error
 import SortableListView from 'react-native-sortable-listview'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -17,6 +18,7 @@ type Props = {}
  */
 export function WalletListSortable(props: Props) {
   // Subscribe to account state:
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
 
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -39,6 +41,7 @@ export function WalletListSortable(props: Props) {
 
   return (
     <SortableListView
+      // @ts-expect-error
       style={StyleSheet.absoltueFill}
       data={currencyWallets}
       order={walletOrder}

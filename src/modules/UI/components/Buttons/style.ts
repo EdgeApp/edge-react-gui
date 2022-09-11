@@ -60,4 +60,5 @@ export const rawStyles = {
   }
 }
 
+// @ts-expect-error
 export const styles = StyleSheet.create(rawStyles)

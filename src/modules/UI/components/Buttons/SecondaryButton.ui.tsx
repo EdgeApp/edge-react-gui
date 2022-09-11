@@ -5,6 +5,7 @@ import { rawStyles, styles } from './style'
 
 export type TextProps = {
   children: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 class Text extends React.Component<TextProps> {
@@ -20,6 +21,7 @@ class Text extends React.Component<TextProps> {
 
 export type Props = {
   children: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Styles
   onPress: () => void
 }

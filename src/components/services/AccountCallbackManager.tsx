@@ -65,6 +65,7 @@ export function AccountCallbackManager(props: Props) {
 
       watchSecurityAlerts(account, hasAlerts => {
         if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
+          // @ts-expect-error
           Actions.push('securityAlerts')
         }
       }),
@@ -124,6 +125,7 @@ export function AccountCallbackManager(props: Props) {
   })
 
   // Do the expensive work with rate limiting:
+  // @ts-expect-error
   useAsyncEffect(async () => {
     setDirty(notDirty)
 

@@ -23,6 +23,7 @@ type Props = {
 
 export type EnterAmountPoweredBy = { poweredByIcon: string; poweredByText: string; poweredByOnClick: () => Promise<void> | undefined }
 
+// @ts-expect-error
 export const FiatPluginEnterAmountScene = memo((props: Props): React.ReactNode => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -150,6 +151,7 @@ export const FiatPluginEnterAmountScene = memo((props: Props): React.ReactNode =
           <View style={styles.cardContainer}>
             <TouchableOpacity onPress={poweredBy.poweredByOnClick}>
               <Card paddingRem={0.5}>
+                {/* @ts-expect-error */}
                 <View style={styles.poweredByContainer} onPress={poweredBy.poweredByOnClick}>
                   <Image style={styles.poweredByIcon} source={poweredByIconPath} />
 

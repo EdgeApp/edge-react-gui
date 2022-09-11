@@ -98,14 +98,20 @@ const getStyles = cacheStyles(theme => ({
     flexGrow: 10,
     flexShrink: 1,
     // Stretch outward to cover the row:
+    // @ts-expect-error
     margin: -theme.rem(0.5),
+    // @ts-expect-error
     padding: theme.rem(0.5)
   },
   labelText: {
+    // @ts-expect-error
     color: theme.primaryText,
     flexShrink: 1,
+    // @ts-expect-error
     fontFamily: theme.fontFaceDefault,
+    // @ts-expect-error
     fontSize: theme.rem(1),
+    // @ts-expect-error
     paddingHorizontal: theme.rem(0.5),
     textAlign: 'left'
   }

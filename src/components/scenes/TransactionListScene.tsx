@@ -144,6 +144,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderTransaction = (transaction: SectionList<TransactionListTx>) => {
     const { selectedWalletId, selectedCurrencyCode } = this.props
+    // @ts-expect-error
     return <TransactionListRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
   }
 
@@ -167,6 +168,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
+        {/* @ts-expect-error */}
         <SectionList
           sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
           renderItem={this.renderTransaction}

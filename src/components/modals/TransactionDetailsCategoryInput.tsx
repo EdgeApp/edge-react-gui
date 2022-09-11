@@ -41,7 +41,9 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
   formattedCategories = (categories: Object): CategoriesType => {
     return Object.keys(categories).map(key => {
       return {
+        // @ts-expect-error
         key: categories[key].key,
+        // @ts-expect-error
         syntax: categories[key].syntax
       }
     })
@@ -70,12 +72,15 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
     const { bridge } = this.props
     const { categories, category, subCategory } = this.state
     return (
+      // @ts-expect-error
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
+        {/* @ts-expect-error */}
         <TouchableWithoutFeedback onPress={() => bridge.resolve()}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
             <View style={styles.inputCategoryMainContainter}>
               <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
+              {/* @ts-expect-error */}
               <View style={styles.inputCategoryRow}>
                 {categories.map(item => {
                   const containterStyle = category === item.key ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter
@@ -92,6 +97,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
             <View style={styles.inputSubCategoryContainter}>
               <FormField
                 {...MaterialInputOnWhite}
+                // @ts-expect-error
                 containerStyle={{
                   ...MaterialInputOnWhite.containerStyle,
                   height: THEME.rem(3.44),
@@ -135,10 +141,12 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
 
     const selectedSubcategories = subCategories.filter(subCategory => {
       const splittedSubCategory = subCategory.split(':')
+      // @ts-expect-error
       return splittedSubCategory[0].toLowerCase() === categories[category].syntax.toLowerCase()
     })
     const filteredSubcategories = subCategories.filter(subCategory => {
       const splittedSubCategory = subCategory.split(':')
+      // @ts-expect-error
       return splittedSubCategory[0].toLowerCase() !== categories[category].syntax.toLowerCase()
     })
     return [...selectedSubcategories, ...filteredSubcategories]
@@ -192,4 +200,5 @@ const rawStyles = {
     marginTop: THEME.rem(0.8)
   }
 }
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

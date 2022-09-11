@@ -117,6 +117,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { pendingRequestPaging, fioRequestsPending } = this.state
     const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
+    // @ts-expect-error
     let newRequests = []
     try {
       newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING)
@@ -128,6 +129,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({
       fioRequestsPending: [
         ...fioRequestsPending,
+        // @ts-expect-error
         ...newRequests.filter(({ payer_fio_address: payerFioAddress }: FioRequest) => fioAddressNames.includes(payerFioAddress))
       ],
       loadingPending: false,
@@ -140,6 +142,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { fioRequestsSent, sentRequestPaging } = this.state
     const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
+    // @ts-expect-error
     let newRequests = []
     try {
       newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.SENT)
@@ -148,6 +151,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     this.setState({
+      // @ts-expect-error
       fioRequestsSent: [...fioRequestsSent, ...newRequests],
       loadingSent: false,
       sentRequestPaging
@@ -315,6 +319,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
     const { wallets = {}, onSelectWallet } = this.props
     const availableWallets: Array<{ id: string; currencyCode: string }> = []
+    // @ts-expect-error
     for (const walletKey: string of Object.keys(wallets)) {
       if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
         availableWallets.push({ id: wallets[walletKey].id, currencyCode: wallets[walletKey].currencyCode })
@@ -410,6 +415,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
           throw e
         }
       },
+
+      // @ts-expect-error
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
@@ -451,6 +458,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       sortedArrayFioRequests.forEach((fioRequest, i) => {
         if (i === 0) {
           requestsInSection = []
+          // @ts-expect-error
           previousTimestamp = fioRequest.time_stamp
         }
         if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(fioRequest.time_stamp))) {
@@ -458,6 +466,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
           requestsInSection = []
         }
         requestsInSection.push(fioRequest)
+        // @ts-expect-error
         previousTimestamp = fioRequest.time_stamp
         previousTitle = formatDate(new Date(fioRequest.time_stamp), true)
       })

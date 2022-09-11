@@ -160,6 +160,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
 
   toggleCryptoOnBottom = () => {
     if (this.flipInput != null) {
+      // @ts-expect-error
       this.flipInput.toggleCryptoOnBottom()
     }
   }
@@ -167,6 +168,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
   render() {
     return (
       <FlipInput
+        // @ts-expect-error
         overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}
         exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
         headerText={this.props.headerText}

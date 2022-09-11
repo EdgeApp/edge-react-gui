@@ -28,6 +28,7 @@ export const updateExchangeRates = () => async (dispatch: Dispatch, getState: Ge
   })
 }
 
+// @ts-expect-error
 async function buildExchangeRates(state: RootState): GuiExchangeRates {
   const { account } = state.core
   const { currencyWallets } = account

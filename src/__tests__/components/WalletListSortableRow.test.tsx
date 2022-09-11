@@ -8,6 +8,7 @@ import { WalletListSortableRowComponent } from '../../components/themed/WalletLi
 
 describe('WalletListSortableRow', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -18,12 +19,15 @@ describe('WalletListSortableRow', () => {
         multiplier: '100000000',
         name: 'BTC'
       },
+
+      // @ts-expect-error
       getDisplayDenomination: (pluginId, currencyCode) => ({
         multiplier: '100000000',
         name: 'BTC'
       }),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<WalletListSortableRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

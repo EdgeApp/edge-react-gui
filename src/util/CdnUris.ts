@@ -28,6 +28,7 @@ export type CurrencyIcons = {
   symbolImageDarkMono: string
 }
 
+// @ts-expect-error
 export function getCurrencyIconUris(pluginId: string, contractAddress?: string = pluginId): CurrencyIcons {
   const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
   return {

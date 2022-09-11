@@ -5,6 +5,7 @@ import { Image, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
+// @ts-expect-error
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
 import s from '../../locales/strings'
@@ -46,8 +47,10 @@ export const WcSmartContractModal = (props: Props) => {
   const params = payload.params[0]
   const toAddress: string | null = params.to
 
+  // @ts-expect-error
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const wallet = currencyWallets[walletId]
+  // @ts-expect-error
   const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
 
   if (wallet == null) return null
@@ -56,6 +59,7 @@ export const WcSmartContractModal = (props: Props) => {
   let amountCurrencyCode = wallet.currencyInfo.currencyCode
   if (toAddress != null) {
     const metaTokens = wallet.currencyInfo.metaTokens
+    // @ts-expect-error
     const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
     if (token != null) amountCurrencyCode = token.currencyCode
   }
@@ -83,6 +87,7 @@ export const WcSmartContractModal = (props: Props) => {
 
   const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
 
+  // @ts-expect-error
   const handleSubmit = reset =>
     wallet.otherMethods
       .wcRequestResponse(uri, true, payload)
@@ -98,6 +103,7 @@ export const WcSmartContractModal = (props: Props) => {
   const renderWarning = () => {
     return isInsufficientBal ? (
       <Alert
+        // @ts-expect-error
         marginTop={0.5}
         title={s.strings.wc_smartcontract_warning_title}
         message={sprintf(s.strings.wc_smartcontract_insufficient_text, feeCurrencyStr)}
@@ -106,6 +112,7 @@ export const WcSmartContractModal = (props: Props) => {
     ) : (
       <Alert
         numberOfLines={0}
+        // @ts-expect-error
         marginTop={0.5}
         title={s.strings.wc_smartcontract_warning_title}
         message={s.strings.wc_smartcontract_warning_text}
@@ -114,6 +121,7 @@ export const WcSmartContractModal = (props: Props) => {
     )
   }
 
+  // @ts-expect-error
   const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
   const walletImageUri = getCurrencyIconUris(pluginId, contractAddress).symbolImage
   const slider = isInsufficientBal ? null : (
@@ -131,6 +139,7 @@ export const WcSmartContractModal = (props: Props) => {
       }}
       paddingRem={[1, 0]}
     >
+      {/* @ts-expect-error */}
       <View style={styles.title} paddingRem={[0, 0, 0, 1]}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>

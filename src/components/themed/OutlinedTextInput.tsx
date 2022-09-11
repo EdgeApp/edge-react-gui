@@ -58,6 +58,7 @@ declare class OutlinedTextInputRef extends React.Component<Props> {
   clear: () => void
 }
 
+// @ts-expect-error
 export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
   const {
     // Contents:
@@ -117,10 +118,12 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
 
   // Captures the width of the placeholder label:
   const [labelWidth, setLabelWidth] = useState(0)
+  // @ts-expect-error
   const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
 
   // Captures the width of the counter label:
   const [counterWidth, setCounterWidth] = useState(0)
+  // @ts-expect-error
   const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
 
   // Animates between 0 and 1 based our error state:
@@ -256,6 +259,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
+  // @ts-expect-error
   const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
   const textStyle = numpad ? styles.numberInput : styles.textInput
 
@@ -319,28 +323,37 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   )
 })
 
+// @ts-expect-error
 const getStyles = cacheStyles(theme => {
   // A top or bottom line in the border puzzle:
   const commonLine = {
+    // @ts-expect-error
     borderTopWidth: theme.outlineTextInputBorderWidth,
     position: 'absolute',
+    // @ts-expect-error
     left: theme.rem(1),
+    // @ts-expect-error
     right: theme.rem(1)
   }
 
   // A left or right C-shape in the border puzzle:
   const commonCap = {
+    // @ts-expect-error
     borderBottomWidth: theme.outlineTextInputBorderWidth,
+    // @ts-expect-error
     borderTopWidth: theme.outlineTextInputBorderWidth,
     position: 'absolute',
     bottom: 0,
     top: 0,
+    // @ts-expect-error
     width: theme.rem(1)
   }
 
   // Common footer attributes, applies to the counter and the error text
   const footerCommon = {
+    // @ts-expect-error
     fontFamily: theme.fontFaceDefault,
+    // @ts-expect-error
     fontSize: theme.rem(0.75),
     position: 'absolute'
   }
@@ -348,17 +361,23 @@ const getStyles = cacheStyles(theme => {
   return {
     // Provides a layout container for the text input:
     container: {
+      // @ts-expect-error
       backgroundColor: theme.outlineTextInputColor,
+      // @ts-expect-error
       borderRadius: theme.rem(0.5),
       justifyContent: 'center',
+      // @ts-expect-error
       minHeight: theme.rem(3),
+      // @ts-expect-error
       paddingHorizontal: theme.rem(1)
     },
 
     // Provides a layout container for the placeholder label:
     labelContainer: {
+      // @ts-expect-error
       height: theme.rem(3),
       justifyContent: 'center',
+      // @ts-expect-error
       paddingHorizontal: theme.rem(1),
       position: 'absolute',
       left: 0,
@@ -370,21 +389,29 @@ const getStyles = cacheStyles(theme => {
     // in their respective containers, allowing React to center them:
     labelText: {
       alignSelf: 'flex-start',
+      // @ts-expect-error
       fontFamily: theme.fontFaceDefault,
+      // @ts-expect-error
       fontSize: theme.rem(1),
       padding: 0
     },
     textInput: {
       alignSelf: 'stretch',
+      // @ts-expect-error
       color: theme.outlineTextInputTextColor,
+      // @ts-expect-error
       fontFamily: theme.fontFaceDefault,
+      // @ts-expect-error
       fontSize: theme.rem(1),
       padding: 0
     },
     numberInput: {
       alignSelf: 'stretch',
+      // @ts-expect-error
       color: theme.outlineTextInputTextColor,
+      // @ts-expect-error
       fontFamily: theme.fontFaceDefault,
+      // @ts-expect-error
       fontSize: theme.rem(1.5),
       padding: 0
     },
@@ -400,25 +427,34 @@ const getStyles = cacheStyles(theme => {
     },
     leftCap: {
       ...commonCap,
+      // @ts-expect-error
       borderLeftWidth: theme.outlineTextInputBorderWidth,
       borderRightWidth: 0,
+      // @ts-expect-error
       borderBottomLeftRadius: theme.rem(0.5),
+      // @ts-expect-error
       borderTopLeftRadius: theme.rem(0.5),
       left: 0
     },
     rightCap: {
       ...commonCap,
       borderLeftWidth: 0,
+      // @ts-expect-error
       borderRightWidth: theme.outlineTextInputBorderWidth,
+      // @ts-expect-error
       borderBottomRightRadius: theme.rem(0.5),
+      // @ts-expect-error
       borderTopRightRadius: theme.rem(0.5),
       right: 0
     },
 
     // Icons:
     searchIcon: {
+      // @ts-expect-error
       color: theme.iconDeactivated,
+      // @ts-expect-error
       fontSize: theme.rem(1),
+      // @ts-expect-error
       padding: theme.rem(1),
       position: 'absolute',
       left: 0,
@@ -430,50 +466,71 @@ const getStyles = cacheStyles(theme => {
       top: 0
     },
     clearIcon: {
+      // @ts-expect-error
       color: theme.iconDeactivated,
+      // @ts-expect-error
       fontSize: theme.rem(1),
+      // @ts-expect-error
       padding: theme.rem(1)
     },
     spinnerIcon: {
+      // @ts-expect-error
       color: theme.icon,
+      // @ts-expect-error
       padding: theme.rem(1)
     },
     eyeIcon: {
       zIndex: 0,
+      // @ts-expect-error
       color: theme.iconTappable,
+      // @ts-expect-error
       fontSize: theme.rem(1),
+      // @ts-expect-error
       padding: theme.rem(1)
     },
     eyeIconHideLine: {
+      // @ts-expect-error
       borderTopWidth: theme.thinLineWidth,
+      // @ts-expect-error
       borderTopColor: theme.modal,
+      // @ts-expect-error
       borderBottomColor: theme.modal,
+      // @ts-expect-error
       borderBottomWidth: theme.thinLineWidth,
+
+      // @ts-expect-error
       top: theme.rem(1.5) - theme.thinLineWidth,
       position: 'absolute',
       alignSelf: 'center',
       zIndex: 2,
       width: '40%',
+      // @ts-expect-error
       height: theme.thinLineWidth * 3
     },
 
     // The error text hangs out in the margin area below the main box:
     errorText: {
       ...footerCommon,
+      // @ts-expect-error
       color: theme.dangerText,
+      // @ts-expect-error
       left: theme.rem(1.25),
+      // @ts-expect-error
       bottom: -theme.rem(1.25)
     },
 
     // The counter text splits the bottom right border line:
     counterText: {
       ...footerCommon,
+      // @ts-expect-error
       right: theme.rem(1.25),
+      // @ts-expect-error
       bottom: -theme.rem(0.45)
     }
   }
 })
 
+// @ts-expect-error
 const getIterpolatedColor = (fromColor, toColor, errorColor) => (errorValue, focusValue) => {
   'worklet'
   const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])

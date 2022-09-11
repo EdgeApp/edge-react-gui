@@ -5,6 +5,7 @@ import { Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+// @ts-expect-error
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { getSymbolFromCurrency, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
@@ -131,24 +132,32 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   currencyLogo: {
+    // @ts-expect-error
     height: theme.rem(1.25),
+    // @ts-expect-error
     width: theme.rem(1.25),
     resizeMode: 'contain',
+    // @ts-expect-error
     marginLeft: theme.rem(1)
   },
   scrollContainer: {
     flex: 1,
+    // @ts-expect-error
     marginVertical: theme.rem(0.5)
   },
   explainerText: {
+    // @ts-expect-error
     marginVertical: theme.rem(0.5),
+    // @ts-expect-error
     marginHorizontal: theme.rem(1)
   },
   buttonContainer: {
     alignItems: 'center',
+    // @ts-expect-error
     marginVertical: theme.rem(0.5)
   },
   fiatAmount: {
+    // @ts-expect-error
     color: theme.secondaryText
   }
 }))

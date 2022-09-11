@@ -28,6 +28,7 @@ export function EditTokenScene(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[walletId]
 

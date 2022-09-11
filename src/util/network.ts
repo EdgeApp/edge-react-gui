@@ -4,6 +4,7 @@ import { asyncWaterfall, shuffleArray } from './utils'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
 
+// @ts-expect-error
 export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
   if (servers == null) return
   const funcs = servers.map(server => async () => {
@@ -18,6 +19,7 @@ export async function fetchWaterfall(servers?: string[], path: string, options?:
   return await asyncWaterfall(funcs, timeout)
 }
 
+// @ts-expect-error
 async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
   if (servers == null) return
   return await fetchWaterfall(shuffleArray(servers), path, options, timeout)

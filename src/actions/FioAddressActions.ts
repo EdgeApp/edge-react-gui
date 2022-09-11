@@ -24,6 +24,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
 
   const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(fioWallets)
 
+  // @ts-expect-error
   window.requestAnimationFrame(() => {
     dispatch({
       type: 'FIO/SET_FIO_ADDRESSES',

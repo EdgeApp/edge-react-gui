@@ -11,6 +11,7 @@ type Props = {
   children?: React.ReactNode
   underline?: boolean
   withTopMargin?: boolean
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 

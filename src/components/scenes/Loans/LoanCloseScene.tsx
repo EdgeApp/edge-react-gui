@@ -30,6 +30,7 @@ export const LoanCloseScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // @ts-expect-error
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { navigation, route } = props
@@ -110,6 +111,7 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    // @ts-expect-error
     marginTop: theme.rem(1)
   }
 }))

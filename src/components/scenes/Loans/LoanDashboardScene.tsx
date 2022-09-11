@@ -38,9 +38,13 @@ export const LoanDashboardScene = (props: Props) => {
   const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
 
+  // @ts-expect-error
   const sortedWalletList = useSelector(state => state.sortedWalletList)
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
+  // @ts-expect-error
   const exchangeRates = useSelector(state => state.exchangeRates)
+  // @ts-expect-error
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const wallets = useWatch(account, 'currencyWallets')
@@ -50,6 +54,7 @@ export const LoanDashboardScene = (props: Props) => {
     guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: HARD_WALLET_PLUGIN_ID }).tokenId
   ).symbolImage
 
+  // @ts-expect-error
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
 
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
@@ -61,6 +66,7 @@ export const LoanDashboardScene = (props: Props) => {
 
     if (hardPluginWalletIds.length > 1) {
       // Only show the wallet picker if the user owns more than one polygon wallet.
+      // @ts-expect-error
       const { walletId: newWalletId } = await Airship.show(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: HARD_WALLET_PLUGIN_ID }]} />
       ))
@@ -101,6 +107,7 @@ export const LoanDashboardScene = (props: Props) => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
     }
     return (
+      // @ts-expect-error
       <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} key={loanAccount.id} />
     )
   })
@@ -135,6 +142,7 @@ export const LoanDashboardScene = (props: Props) => {
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
       <FlatList
+        // @ts-expect-error
         data={Object.values(loanAccounts)}
         keyboardShouldPersistTaps="handled"
         renderItem={renderLoanCard}

@@ -9,6 +9,7 @@ import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
 describe('AddressModalComponent', () => {
   it('should render with loaded props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -21,6 +22,7 @@ describe('AddressModalComponent', () => {
       checkAddressConnected: true,
       account: {
         disklet: {
+          // @ts-expect-error
           getText: async path => {}
         }
       },
@@ -40,6 +42,7 @@ describe('AddressModalComponent', () => {
       refreshAllFioAddresses: () => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<AddressModalComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

@@ -10,6 +10,7 @@ export function useWatch<T extends {}, Name extends keyof T>(object: T & { watch
 
   useEffect(() => {
     setOut(object[name])
+    // @ts-expect-error
     return object.watch(name, setOut)
   }, [object, name])
 

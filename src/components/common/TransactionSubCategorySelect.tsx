@@ -38,6 +38,7 @@ export class SubCategorySelect extends React.Component<Props, State> {
     const { categories } = this.props
     const filteredSubcats = !this.props.enteredSubcategory ? this.props.subcategoriesList : this.filterSubcategory()
     let newPotentialSubCategories = []
+    // @ts-expect-error
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
       newPotentialSubCategories = categories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
@@ -48,10 +49,12 @@ export class SubCategorySelect extends React.Component<Props, State> {
       <FlatList
         style={styles.resultList}
         contentContainerStyle={{ paddingBottom: this.props.bottomGap }}
+        // @ts-expect-error
         data={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         initialNumToRender={12}
         keyboardShouldPersistTaps="handled"
         keyExtractor={this.keyExtractor}
+        // @ts-expect-error
         renderItem={rowData => this.renderSubcategory(rowData, newPotentialSubCategoriesFiltered)}
       />
     )
@@ -62,6 +65,7 @@ export class SubCategorySelect extends React.Component<Props, State> {
     const renderAdd = () => {
       if (filterArray.find(item => item === data.item)) {
         return (
+          // @ts-expect-error
           <View style={styles.rowPlusWrap}>
             <FormattedText style={styles.rowPlus}>{plus}</FormattedText>
           </View>
@@ -70,9 +74,13 @@ export class SubCategorySelect extends React.Component<Props, State> {
     }
 
     return (
+      // @ts-expect-error
       <TouchableHighlight delayPressIn={60} style={styles.rowContainer} underlayColor={THEME.COLORS.GRAY_4} onPress={() => this.props.onPressFxn(data.item)}>
+        {/* @ts-expect-error */}
         <View style={styles.rowContent}>
+          {/* @ts-expect-error */}
           <View style={styles.rowCategoryTextWrap}>
+            {/* @ts-expect-error */}
             <FormattedText style={styles.rowCategoryText} numberOfLines={1}>
               {data.item}
             </FormattedText>
@@ -123,4 +131,5 @@ const rawStyles = {
     fontSize: THEME.rem(0.95)
   }
 }
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

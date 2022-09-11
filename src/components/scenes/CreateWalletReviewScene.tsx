@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Image, Keyboard, View } from 'react-native'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
+// @ts-expect-error
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
@@ -44,18 +45,21 @@ export class CreateWalletReviewComponent extends React.Component<Props, State> {
 
   goToWalletList = () => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('walletListScene')
   }
 
   async createWallet() {
     const { createCurrencyWallet, navigation, route } = this.props
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey } = route.params
+    // @ts-expect-error
     const createdWallet: EdgeCurrencyWallet | undefined = await createCurrencyWallet(
       walletName,
       selectedWalletType.walletType,
       fixFiatCurrencyCode(selectedFiat.value),
       cleanedPrivateKey
     ).catch(showError)
+    // @ts-expect-error
     navigation.navigate('walletListScene')
 
     // note that we will be using cleanedPrivateKey as a flag for an imported private key

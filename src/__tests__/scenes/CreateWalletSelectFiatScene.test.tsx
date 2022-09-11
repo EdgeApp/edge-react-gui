@@ -9,6 +9,7 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CreateWalletSelectFiatComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -33,6 +34,7 @@ describe('CreateWalletSelectFiatComponent', () => {
       ],
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<CreateWalletSelectFiatComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

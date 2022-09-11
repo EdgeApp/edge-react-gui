@@ -6,6 +6,7 @@ test('initialState', () => {
   const expected = {
     subcategories: []
   }
+  // @ts-expect-error
   const actual = transactionDetailsReducer(undefined, {})
 
   expect(actual).toEqual(expected)

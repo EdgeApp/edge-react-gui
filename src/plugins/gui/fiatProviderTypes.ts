@@ -42,6 +42,7 @@ export type FiatProviderQuoteError =
   | { errorType: FiatProviderQuoteErrorTypesLimit; errorAmount: number }
 
 export class FiatProviderError extends Error {
+  // @ts-expect-error
   name: string
   readonly quoteError: FiatProviderQuoteError
 

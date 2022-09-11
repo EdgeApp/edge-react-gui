@@ -45,6 +45,7 @@ test('initialState', () => {
       currentWalletId: ''
     }
   }
+  // @ts-expect-error
   const actual = scenesReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)

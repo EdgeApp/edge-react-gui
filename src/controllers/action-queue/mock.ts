@@ -95,6 +95,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
     }
     default: {
       // $ExpectError
+      // @ts-expect-error
       throw exhaustiveCheck(effect.type)
     }
   }
@@ -160,6 +161,8 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         return await evaluateAction(account, subProgram, state, pendingTxMap)
       })
       const childOutputs = await Promise.all(promises)
+
+      // @ts-expect-error
       const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
 
       return {
@@ -168,16 +171,22 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
             type: 'par',
             childEffects
           },
+
+          // @ts-expect-error
           broadcastTxs: childOutputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
         },
+        // @ts-expect-error
         execute: async () => {
           const outputs = await Promise.all(childOutputs.map(async output => await output.execute()))
+          // @ts-expect-error
           const effects = outputs.reduce((effects, output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
+
+            // @ts-expect-error
             broadcastTxs: outputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
           }
         }
@@ -285,7 +294,9 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
+    // @ts-expect-error
     case 'done': {
+      // @ts-expect-error
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
     case 'fiat-buy': {
@@ -294,6 +305,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
     default: {
       // $ExpectError
+      // @ts-expect-error
       throw exhaustiveCheck(actionOp.type)
     }
   }

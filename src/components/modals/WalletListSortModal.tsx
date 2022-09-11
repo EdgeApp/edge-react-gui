@@ -26,6 +26,7 @@ type Props = {
 }
 
 export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
+  // @ts-expect-error
   const renderRow = useHandler(([key, title]) => {
     return key === 'manual' ? (
       <SettingsTappableRow key={key} label={title} onPress={() => bridge.resolve(key)} />
@@ -34,5 +35,6 @@ export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
     )
   })
 
+  // @ts-expect-error
   return <ListModal bridge={bridge} title={s.strings.wallet_list_sort_title} textInput={false} rowsData={options} rowComponent={renderRow} fullScreen={false} />
 }

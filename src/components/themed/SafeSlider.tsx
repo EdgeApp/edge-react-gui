@@ -23,6 +23,7 @@ type Props = {
   disabled: boolean
 }
 
+// @ts-expect-error
 const clamp = (value, lowerBound, upperBound) => {
   'worklet'
   return Math.min(Math.max(lowerBound, value), upperBound)
@@ -58,11 +59,13 @@ export const SafeSlider = (props: Props) => {
 
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
+      // @ts-expect-error
       if (!sliderDisabled) ctx.offsetX = translateX.value
     },
     onActive: (event, ctx) => {
       if (!sliderDisabled) {
         isSliding.value = true
+        // @ts-expect-error
         translateX.value = clamp(event.translationX + ctx.offsetX, 0, upperBound)
       }
     },

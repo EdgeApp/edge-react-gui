@@ -4,6 +4,7 @@ import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+// @ts-expect-error
 import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings'
@@ -128,6 +129,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 <FioNameRow
                   key={`${address.name}`}
                   name={address.name}
+                  // @ts-expect-error
                   bundledTxs={address.bundledTxs}
                   icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
                   theme={theme}
@@ -144,6 +146,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                   name={domain.name}
                   expiration={domain.expiration}
                   icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                  // @ts-expect-error
                   theme={theme}
                   onPress={() => this.onDomainPress(domain)}
                 />
@@ -155,12 +158,14 @@ export class FioAddressList extends React.Component<Props, LocalState> {
           </ScrollView>
 
           <View>
+            {/* @ts-expect-error */}
             <ClickableText marginRem={[1, 1, 0]} onPress={() => navigation.navigate('fioAddressRegister')}>
               <View style={styles.actionButton}>
                 <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
               </View>
             </ClickableText>
+            {/* @ts-expect-error */}
             <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => navigation.navigate('fioDomainRegister')}>
               <View style={styles.actionButton}>
                 <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />

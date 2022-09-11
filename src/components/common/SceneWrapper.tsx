@@ -64,6 +64,7 @@ export class SceneWrapper extends React.Component<Props> {
             top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
           }
           const downValue = metrics.layout.height - gap.top
+          // @ts-expect-error
           const upValue = keyboardHeight => downValue - keyboardHeight
 
           return avoidKeyboard ? (
@@ -88,13 +89,19 @@ export class SceneWrapper extends React.Component<Props> {
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
     const scene =
       keyboardAnimation != null ? (
+        // @ts-expect-error
         <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
       ) : scroll ? (
         <ScrollView style={{ position: 'absolute', ...gap }} keyboardShouldPersistTaps={keyboardShouldPersistTaps} contentContainerStyle={{ padding }}>
           {finalChildren}
         </ScrollView>
       ) : (
-        <View style={[styles.scene, { ...gap, padding }]}>{finalChildren}</View>
+        <View
+          // @ts-expect-error
+          style={[styles.scene, { ...gap, padding }]}
+        >
+          {finalChildren}
+        </View>
       )
 
     // Render the background, if any:
@@ -104,6 +111,7 @@ export class SceneWrapper extends React.Component<Props> {
     }
     return (
       <Gradient style={styles.gradient}>
+        {/* @ts-expect-error */}
         {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
         {scene}
       </Gradient>
@@ -142,4 +150,5 @@ const rawStyles = {
     justifyContent: 'flex-start'
   }
 }
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

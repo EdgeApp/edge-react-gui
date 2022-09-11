@@ -5,6 +5,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 type Props = {
   children?: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 

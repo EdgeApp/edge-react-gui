@@ -36,6 +36,7 @@ export const useAlertTypeColor = (type: AlerType) => {
 }
 
 // TODO: Implement alert icons such as info and others
+// @ts-expect-error
 export const useAlertTypeIcon = (type: AlerType, color: string, size: number, style: StyleSheet.Styles) => {
   switch (type) {
     case 'warning':

@@ -21,6 +21,7 @@ const PLATFORM = {
   android: 'ANDROID'
 }
 
+// @ts-expect-error
 const OS = PLATFORM[Platform.OS]
 
 const LOCATION = {
@@ -35,15 +36,19 @@ const CONTACTS = {
 
 const PERMISSIONS_ITEM = {
   camera: 'CAMERA',
+  // @ts-expect-error
   contacts: CONTACTS[OS],
+  // @ts-expect-error
   location: LOCATION[OS]
 }
 
 export const PermissionsManager = () => {
   const dispatch = useDispatch()
+  // @ts-expect-error
   const statePermissions = useSelector(state => state.permissions)
   const isAppForeground = useIsAppForeground()
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (!isAppForeground) return
     await dispatch(setNewPermissions(statePermissions))
@@ -53,12 +58,15 @@ export const PermissionsManager = () => {
 }
 
 export async function requestPermission(data: Permission): Promise<PermissionStatus> {
+  // @ts-expect-error
   const status: PermissionStatus = await check(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
 
   if (status === RESULTS.DENIED) {
     if (data === 'contacts') {
+      // @ts-expect-error
       const isContactsPermissionShownBefore: string = await AsyncStorage.getItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE).catch(showError)
 
+      // @ts-expect-error
       if (isContactsPermissionShownBefore === 'true') return
 
       const result: ContactsPermissionResult = await Airship.show(bridge => <ContactsPermissionModal bridge={bridge} />)
@@ -66,6 +74,7 @@ export async function requestPermission(data: Permission): Promise<PermissionSta
 
       if (result === 'deny') return status
     }
+    // @ts-expect-error
     return await request(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
   }
   return status
@@ -84,7 +93,9 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
   // Check to ignore the permission checks if not mandatory and already past the limit
   if (!mandatory && permissionLimit >= SETTINGS_PERMISSION_QUANTITY) return false
 
+  // @ts-expect-error
   const fullPermision: string = PERMISSIONS[OS][PERMISSIONS_ITEM[data]]
+  // @ts-expect-error
   const status: PermissionStatus = await check(fullPermision)
 
   // If permission is unavailable. ie: if there is no camera for the device
@@ -122,15 +133,20 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
 
 export const setNewPermissions = (currentPermissions: PermissionsState) => async (dispatch: Dispatch, getState: GetState) => {
   const names = Object.keys(currentPermissions)
+
+  // @ts-expect-error
   const permissionNames = names.map(name => PERMISSIONS[OS][PERMISSIONS_ITEM[name]])
   const devicePermissions = await checkMultiple(permissionNames)
   // Figure out which ones have changed to avoid a pointless dispatch:
   const newPermissions: PermissionsState = {}
   for (const name of names) {
+    // @ts-expect-error
     const devicePermissionName = PERMISSIONS[OS][PERMISSIONS_ITEM[name]]
     const devicePermission = devicePermissions[devicePermissionName]
     // Only add changed permissions
+    // @ts-expect-error
     if (devicePermission !== currentPermissions[name]) {
+      // @ts-expect-error
       newPermissions[name] = devicePermission
     }
   }

@@ -13,24 +13,30 @@ export function B(props: { children: React.ReactNode }) {
 /**
  * Use this function to build a text style for use on a light background.
  */
+// @ts-expect-error
 export function dayText(...rules: keyof Array<typeof dayRules>): Object {
   const base: Object = {
     color: THEME.COLORS.BLACK,
     fontFamily: THEME.FONTS.DEFAULT,
     fontSize: textSize.normal
   }
+
+  // @ts-expect-error
   return Object.assign(base, ...rules.map(rule => dayRules[rule]))
 }
 
 /**
  * Use this function to build a text style for use on a dark background.
  */
+// @ts-expect-error
 export function nightText(...rules: keyof Array<typeof nightRules>): Object {
   const base: Object = {
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT,
     fontSize: textSize.normal
   }
+
+  // @ts-expect-error
   return Object.assign(base, ...rules.map(rule => nightRules[rule]))
 }
 

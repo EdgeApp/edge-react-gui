@@ -48,13 +48,16 @@ export function Services(props: Props) {
   // The `useState` hook lets us pass an initializer that only runs once:
   const [store] = useState(() => {
     const middleware: Array<Middleware<RootState, Action>> = [errorAlert, loginStatusChecker, thunk]
+    // @ts-expect-error
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
+    // @ts-expect-error
     if (global.__DEV__) {
       const createDebugger = require('redux-flipper').default
       middleware.push(createDebugger())
     }
 
+    // @ts-expect-error
     const store = createStore<RootState, Action, Dispatch>(rootReducer, undefined, applyMiddleware(...middleware))
 
     // Put the context into Redux:
@@ -77,17 +80,20 @@ export function Services(props: Props) {
 
   // Actions to perform at first login:
   useEffect(() => {
+    // @ts-expect-error
     store.dispatch(loadDeviceReferral())
   }, [store])
 
   return (
     <Provider store={store}>
+      {/* @ts-expect-error */}
       <LoginUiProvider themeOverride={theme}>
         <MenuProvider>
           <Airship>
             <Main />
           </Airship>
         </MenuProvider>
+        {/* @ts-expect-error */}
         {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
         <AutoLogout />
         <ContactsLoader />

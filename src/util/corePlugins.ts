@@ -1,24 +1,35 @@
 import ENV from '../../env.json'
 
 // Shim old-format env.json files:
+
+// @ts-expect-error
 if (ENV.ETHEREUM_INIT == null && (ENV.ETHERSCAN_API_KEY || ENV.INFURA_PROJECT_ID)) {
+  // @ts-expect-error
   ENV.ETHEREUM_INIT = {
     // blockcypherApiKey: '...',
+    // @ts-expect-error
     etherscanApiKey: ENV.ETHERSCAN_API_KEY,
+    // @ts-expect-error
     infuraProjectId: ENV.INFURA_PROJECT_ID
   }
 }
 
+// @ts-expect-error
 if (ENV.SHAPESHIFT_INIT == null && ENV.SHAPESHIFT_API_KEY && ENV.SHAPESHIFT_CLIENT_ID && ENV.SHAPESHIFT_SECRET) {
   ENV.SHAPESHIFT_INIT = {
+    // @ts-expect-error
     apiKey: ENV.SHAPESHIFT_API_KEY,
+    // @ts-expect-error
     clientId: ENV.SHAPESHIFT_CLIENT_ID,
+    // @ts-expect-error
     secret: ENV.SHAPESHIFT_SECRET
   }
 }
 
+// @ts-expect-error
 if (ENV.CHANGE_NOW_INIT == null && ENV.CHANGE_NOW_API_KEY) {
   ENV.CHANGE_NOW_INIT = {
+    // @ts-expect-error
     apiKey: ENV.CHANGE_NOW_API_KEY
   }
 }
@@ -37,9 +48,11 @@ export const currencyPlugins: CurrencyPlugins = {
   wax: true,
   polkadot: true,
   ethereum: ENV.ETHEREUM_INIT,
+  // @ts-expect-error
   kovan: ENV.KOVAN_INIT,
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
+  // @ts-expect-error
   fio: ENV.FIO_INIT ?? true,
   polygon: ENV.POLYGON_INIT,
   avalanche: true,

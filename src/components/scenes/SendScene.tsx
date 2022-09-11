@@ -63,6 +63,7 @@ type StateProps = {
 type DispatchProps = {
   reset: () => void
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void
+  // @ts-expect-error
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => Promise<void>
   onChangePin: (pin: string) => void
   selectWallet: (walletId: string, currencyCode: string) => void
@@ -89,6 +90,7 @@ type State = {
 } & WalletStates
 
 class SendComponent extends React.PureComponent<Props, State> {
+  // @ts-expect-error
   addressTile: AddressTile | undefined
   pinInput: { current: TextInput | null } = React.createRef()
 
@@ -166,6 +168,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />)
+      // @ts-expect-error
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
         selectWallet(walletId, currencyCode)
@@ -192,7 +195,9 @@ class SendComponent extends React.PureComponent<Props, State> {
       const nativeAmount = parsedUri.nativeAmount || ''
       const otherParams = {}
       if (newGuiMakeSpendInfo.fioAddress != null) {
+        // @ts-expect-error
         otherParams.fioAddress = newGuiMakeSpendInfo.fioAddress
+        // @ts-expect-error
         otherParams.isSendUsingFioAddress = newGuiMakeSpendInfo.isSendUsingFioAddress
       }
       const spendTargets: EdgeSpendTarget[] = [
@@ -213,6 +218,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       }
     }
     sendConfirmationUpdateTx(newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    // @ts-expect-error
     this.setState({ recipientAddress })
   }
 
@@ -357,6 +363,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (coreWallet && !hiddenTilesMap.address) {
       return (
         <AddressTile
+          // @ts-expect-error
           title={s.strings.send_scene_send_to_address}
           recipientAddress={recipientAddress}
           coreWallet={coreWallet}
@@ -433,6 +440,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
       return (
         <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
+          {/* @ts-expect-error */}
           <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
         </Tile>
       )
@@ -502,6 +510,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           />
         )).then(uniqueIdentifier => {
           if (uniqueIdentifier == null) return
+          // @ts-expect-error
           this.props.sendConfirmationUpdateTx({ uniqueIdentifier })
         })
       }
@@ -634,6 +643,7 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
+    // @ts-expect-error
     async signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) {
       await dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider))
     },

@@ -15,6 +15,7 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
@@ -67,11 +68,13 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const handleRequest = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
+    // @ts-expect-error
     navigation.navigate('request')
   })
 
   const handleSelect = useHandler(() => {
     closeRow()
+    // @ts-expect-error
     dispatch(selectWallet(wallet.id, currencyCode, true)).then(async () => {
       // Go to the transaction list, but only if the wallet exists
       // and does not need activation:
@@ -84,6 +87,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           // Or because it is already activated:
           (await wallet.getReceiveAddress()).publicAddress !== '')
       ) {
+        // @ts-expect-error
         navigation.navigate('transactionList')
       }
     })

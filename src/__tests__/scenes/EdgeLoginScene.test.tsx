@@ -9,6 +9,7 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('EdgeLoginSceneComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

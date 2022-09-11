@@ -16,6 +16,7 @@ type Props = {
 }
 
 export const Top = (props: Props) => {
+  // @ts-expect-error
   const loading = useSelector(state => !state.ui.wallets.byId[props.walletId])
 
   return loading ? (

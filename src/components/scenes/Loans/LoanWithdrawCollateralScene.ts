@@ -10,6 +10,7 @@ type Props = {
 }
 
 export const LoanWithdrawCollateralScene = (props: Props) => {
+  // @ts-expect-error
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { navigation, route } = props
@@ -20,7 +21,6 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
   const collaterals = useWatch(borrowEngine, 'collaterals')
 
   return ManageCollateralScene({
-    // @ts-expect-error - Get rid of this hasty abstraction
     action: async req => await borrowEngine.withdraw(req),
     actionOpType: 'loan-withdraw',
     actionWallet: 'toWallet',

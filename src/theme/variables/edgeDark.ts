@@ -1,29 +1,54 @@
 import { Platform } from 'react-native'
 
+// @ts-expect-error
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
+// @ts-expect-error
 import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+// @ts-expect-error
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+// @ts-expect-error
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
+// @ts-expect-error
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
+// @ts-expect-error
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+// @ts-expect-error
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
+// @ts-expect-error
 import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
+// @ts-expect-error
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
+// @ts-expect-error
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
+// @ts-expect-error
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+// @ts-expect-error
 import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
+// @ts-expect-error
 import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
+// @ts-expect-error
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+// @ts-expect-error
 import paymentTypeLogoGooglePay from '../../assets/images/paymentTypes/paymentTypeLogoGooglePay.png'
+// @ts-expect-error
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
+// @ts-expect-error
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
+// @ts-expect-error
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
+// @ts-expect-error
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
+// @ts-expect-error
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
+// @ts-expect-error
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+// @ts-expect-error
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
+// @ts-expect-error
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
+// @ts-expect-error
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
+// @ts-expect-error
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { textNoShadow, Theme, themeNoShadow } from '../../types/Theme'

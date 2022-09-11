@@ -15,6 +15,7 @@ export const createStore = (storeId: string, store: EdgeDataStore): FiatProvider
   }
 }
 
+// @ts-expect-error
 const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
   underLimit: 1,
   overLimit: 2,
@@ -47,10 +48,14 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
       bestError = errorQuote
       continue
     }
+
+    // @ts-expect-error
     if (ERROR_PRIORITIES[errorQuote.errorType] < ERROR_PRIORITIES[bestError.errorType]) {
       bestError = errorQuote
       continue
     }
+
+    // @ts-expect-error
     if (ERROR_PRIORITIES[errorQuote.errorType] === ERROR_PRIORITIES[bestError.errorType]) {
       if (errorQuote.errorType === 'overLimit' && bestError.errorType === 'overLimit') {
         if (errorQuote.errorAmount > bestError.errorAmount) {
@@ -76,10 +81,12 @@ export const debugSpewStore = async (store: EdgeDataStore): Promise<void> => {
   const theStore = {}
   const storeIds = await store.listStoreIds()
   for (const storeId of storeIds) {
+    // @ts-expect-error
     theStore[storeId] = {}
     const keys = await store.listItemIds(storeId)
     for (const key of keys) {
       const data = await store.getItem(storeId, key)
+      // @ts-expect-error
       theStore[storeId][key] = data
     }
   }

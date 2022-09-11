@@ -9,6 +9,7 @@ import { PromoCard } from '../cards/PromoCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox'
+// @ts-expect-error
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 
 type OwnProps = {
@@ -74,6 +75,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
+              {/* @ts-expect-error */}
               <TouchableOpacity style={styles.addButton} onPress={() => Actions.push('createWalletSelectCrypto')}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>

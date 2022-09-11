@@ -34,11 +34,12 @@ export class BalanceBox extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     // if there is no exchangeRates object, empty object, or object with zero values
-    // @ts-expect-error it appears that Object.values may break flow
+
     const summation = (total: number, rate: number) => {
       if (isNaN(rate)) rate = 0
       return total + rate
     }
+    // @ts-expect-error
     const noExchangeRates = !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (

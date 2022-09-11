@@ -10,6 +10,7 @@ type Props = {
 }
 
 export const LoanAddCollateralScene = (props: Props) => {
+  // @ts-expect-error
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { navigation, route } = props
@@ -20,7 +21,6 @@ export const LoanAddCollateralScene = (props: Props) => {
   const collaterals = useWatch(borrowEngine, 'collaterals')
 
   return ManageCollateralScene({
-    // @ts-expect-error - Get rid of this hasty abstraction
     action: async req => await borrowEngine.deposit(req),
     actionOpType: 'loan-deposit',
     actionWallet: 'fromWallet',

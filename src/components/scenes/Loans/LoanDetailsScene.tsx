@@ -45,8 +45,11 @@ export const LoanDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
+  // @ts-expect-error
   const actionQueueMap = useSelector(state => state.actionQueue.queue)
+  // @ts-expect-error
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { route, navigation } = props
@@ -65,11 +68,12 @@ export const LoanDetailsScene = (props: Props) => {
   const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
-  // @ts-expect-error
+
   const debtTotal = useFiatTotal(wallet, debts)
   const availableEquity = sub(collateralTotal, debtTotal)
 
   // Running action program display
+  // @ts-expect-error
   const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
     const actionQueueItem = actionQueueMap[programEdge.programId]
     return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
@@ -77,10 +81,12 @@ export const LoanDetailsScene = (props: Props) => {
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
   const [runningProgramMessage, setRunningProgramMessage] = useState(null)
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (runningActionQueueItem != null) {
       const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
       const activeStep = displayInfo.steps.find(step => step.status === 'active')
+      // @ts-expect-error
       setRunningProgramMessage(activeStep != null ? activeStep.title : null)
     } else {
       setRunningProgramMessage(null)
@@ -150,26 +156,29 @@ export const LoanDetailsScene = (props: Props) => {
           <Space bottom>
             <SectionHeading>{s.strings.loan_loan_breakdown_title}</SectionHeading>
           </Space>
-          {debts.map(debt => {
-            const token = getToken(wallet, debt.tokenId)
-            const currencyCode = token?.currencyCode ?? 'N/A'
-            const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
-            return (
-              <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <Space sideways>
-                  <Space right>
-                    <CryptoIcon currencyCode={currencyCode} hideSecondary />
+          {
+            // @ts-expect-error
+            debts.map(debt => {
+              const token = getToken(wallet, debt.tokenId)
+              const currencyCode = token?.currencyCode ?? 'N/A'
+              const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
+              return (
+                <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
+                  <Space sideways>
+                    <Space right>
+                      <CryptoIcon currencyCode={currencyCode} hideSecondary />
+                    </Space>
+                    <Space>
+                      <EdgeText style={styles.breakdownText}>
+                        <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
+                      </EdgeText>
+                      <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
+                    </Space>
                   </Space>
-                  <Space>
-                    <EdgeText style={styles.breakdownText}>
-                      <CryptoText wallet={wallet} tokenId={debt.tokenId} nativeAmount={debt.nativeAmount} />
-                    </EdgeText>
-                    <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
-                  </Space>
-                </Space>
-              </Card>
-            )
-          })}
+                </Card>
+              )
+            })
+          }
         </Space>
 
         {/* Tappable Action Cards */}
@@ -177,30 +186,35 @@ export const LoanDetailsScene = (props: Props) => {
           <Space bottom>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
           </Space>
+          {/* @ts-expect-error */}
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress}>
             <Space right>
               <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
+          {/* @ts-expect-error */}
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress}>
             <Space right>
               <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
           </TappableCard>
+          {/* @ts-expect-error */}
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress}>
             <Space right>
               <Fontello name="borrow-more" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
           </TappableCard>
+          {/* @ts-expect-error */}
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
             <Space right>
               <Fontello name="make-payment" size={theme.rem(2)} color={theme.iconTappable} />
             </Space>
             <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
           </TappableCard>
+          {/* @ts-expect-error */}
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
             <Space right>
               <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
@@ -219,20 +233,25 @@ const getStyles = cacheStyles(theme => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      // @ts-expect-error
       marginTop: theme.rem(1)
     },
     actionLabel: {
+      // @ts-expect-error
       fontFamily: theme.fontFaceMedium,
       alignSelf: 'center'
     },
     activityIndicator: {
       alignSelf: 'flex-start',
+      // @ts-expect-error
       marginRight: theme.rem(0.5)
     },
     breakdownText: {
+      // @ts-expect-error
       fontFamily: theme.fontFaceBold
     },
     breakdownSubText: {
+      // @ts-expect-error
       fontSize: theme.rem(0.75)
     },
     programStatusContainer: {
@@ -242,6 +261,7 @@ const getStyles = cacheStyles(theme => {
 })
 
 export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string; nativeAmount: string }>): string => {
+  // @ts-expect-error
   const exchangeRates = useSelector(state => state.exchangeRates)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {

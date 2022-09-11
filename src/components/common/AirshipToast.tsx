@@ -24,6 +24,7 @@ export function AirshipToast(props: Props) {
       autoHideMs={3000}
       backgroundColor={THEME.COLORS.GRAY_3}
       borderRadius={(3 / 2) * toastUnit}
+      // @ts-expect-error
       fontFamily={THEME.FONTS.DEFAULT}
       margin={[toastUnit, toastUnit, 4 * toastUnit]}
       maxWidth={32 * toastUnit}

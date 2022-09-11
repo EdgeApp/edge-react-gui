@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('CryptoExchangeComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -64,11 +65,16 @@ describe('CryptoExchangeComponent', () => {
       hasMaxSpend: true,
       insufficient: false,
       genericError: null,
+
+      // @ts-expect-error
       onSelectWallet: async (walletId, currencyCode, direction) => undefined,
+
+      // @ts-expect-error
       getQuoteForTransaction: (fromWalletNativeAmount, onApprove) => undefined,
       exchangeMax: async () => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<CryptoExchangeComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

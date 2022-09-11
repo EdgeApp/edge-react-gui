@@ -9,6 +9,7 @@ import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
 describe('FlipInputModalComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -46,10 +47,15 @@ describe('FlipInputModalComponent', () => {
       feeExchangeDenomination: { multiplier: '100000000000', name: 'BTC' },
       feeNativeAmount: '1',
       feeAmount: '1',
+
+      // @ts-expect-error
       updateMaxSpend: (walletId, currencyCode) => undefined,
+
+      // @ts-expect-error
       updateTransactionAmount: (nativeAmount, exchangeAmount, walletId, currencyCode) => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<FlipInputModalComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

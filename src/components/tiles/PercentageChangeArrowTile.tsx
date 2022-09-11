@@ -47,6 +47,7 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
   const commonArrow = {
     position: 'absolute',

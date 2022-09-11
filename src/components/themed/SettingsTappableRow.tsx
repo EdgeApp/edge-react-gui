@@ -55,4 +55,5 @@ const SettingsTappableRowComponent = (props: Props): React.ReactNode => {
   )
 }
 
+// @ts-expect-error
 export const SettingsTappableRow = memo(SettingsTappableRowComponent)

@@ -27,7 +27,7 @@ import { Tile } from '../../tiles/Tile'
 import { FormScene } from '../FormScene'
 
 type Props = {
-  navigation: NavigationProp<'loanCreateConfirmation'>,
+  navigation: NavigationProp<'loanCreateConfirmation'>
   route: RouteProp<'loanCreateConfirmation'>
 }
 
@@ -36,7 +36,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const { borrowPlugin, borrowEngine, destWallet, destTokenId, isDestBank, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
-  const [loanAccount, loanAccountError] = useAsyncValue(() => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
+  const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
   // Setup Borrow Engine transaction requests/actions
   const [depositApprovalAction, setDepositApprovalAction] = useState<ApprovableAction | null>(null)
@@ -44,6 +44,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   const dispatch = useDispatch()
   const [actionProgram, setActionProgram] = useState<ActionProgram | undefined>(undefined)
+  // @ts-expect-error
   useAsyncEffect(async () => {
     // TODO: These default tokens will be removed when fee calculations are done using dryruns instead of ApprovableActions
     const allTokens = borrowEngineWallet.currencyConfig.allTokens
@@ -90,7 +91,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ).reduce((accum, subActions) => accum.concat(subActions), [])
     }
 
+    // @ts-expect-error
     const actionProgram = await makeActionProgram(actionOps)
+    // @ts-expect-error
     setActionProgram(actionProgram)
 
     setDepositApprovalAction(await borrowEngine.deposit(depositRequest))
@@ -115,6 +118,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       try {
         await dispatch(createLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
+        // @ts-expect-error
         navigation.navigate('loanCreateStatus', { actionQueueId: actionProgram.programId })
       } catch (e: any) {
         showError(e)

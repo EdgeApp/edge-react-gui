@@ -26,8 +26,10 @@ export function PermissionsSettingModal(props: {
     ? sprintf(s.strings.contacts_permission_modal_enable_settings_mandatory, name, permission)
     : sprintf(s.strings.contacts_permission_modal_enable_settings, name, permission)
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (!isAppForeground || !mandatory) return
+    // @ts-expect-error
     const status = await check(fullPermision)
     if (!checkIfDenied(status)) bridge.resolve(false)
   }, [fullPermision, isAppForeground])

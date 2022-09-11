@@ -4,7 +4,9 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-na
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions'
+// @ts-expect-error
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
+// @ts-expect-error
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import s from '../../locales/strings'
@@ -88,7 +90,9 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   renderButton = () => {
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     return (
+      // @ts-expect-error
       <View style={styles.buttons}>
+        {/* @ts-expect-error */}
         <PrimaryButton style={styles.next} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
           <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
@@ -120,6 +124,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
+          {/* @ts-expect-error */}
           <View style={styles.scrollableView}>
             <CryptoIcon currencyCode={currencyCode} marginRem={[1.5, 0, 0, 0]} pluginId={currencyConfigs[walletTypeValue].currencyInfo.pluginId} sizeRem={4} />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
@@ -132,6 +137,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <FormField
                 {...MaterialInputOnWhite}
+                // @ts-expect-error
                 containerStyle={{
                   ...MaterialInputOnWhite.containerStyle,
                   marginTop: scale(16),
@@ -149,8 +155,10 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
               />
               <View style={{ width: scale(25), height: scale(25) }}>
                 {isCheckingHandleAvailability ? (
+                  // @ts-expect-error
                   <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.feedbackIcon} />
                 ) : (
+                  // @ts-expect-error
                   <Image source={validityIcon} style={styles.feedbackIcon} />
                 )}
               </View>
@@ -201,6 +209,7 @@ const rawStyles = {
     height: scale(25)
   }
 }
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, OwnProps>(

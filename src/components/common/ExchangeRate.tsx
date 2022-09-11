@@ -21,6 +21,7 @@ type OwnProps = {
   primaryDisplayAmount?: string // defaults to '1'
   secondaryInfo: GuiCurrencyInfo
   secondaryDisplayAmount: string
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 
@@ -39,6 +40,7 @@ class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & Stat
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount, style, wallet } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
+    // @ts-expect-error
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
       const primaryRatio = div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       const secondaryRatio = div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
@@ -70,6 +72,7 @@ class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & Stat
     return (
       <EdgeText style={style}>
         {primaryText}
+        {/* @ts-expect-error */}
         <FiatText nativeCryptoAmount={primaryInfo.displayDenomination.multiplier} tokenId={primaryInfo.tokenId} wallet={wallet} />
       </EdgeText>
     )

@@ -53,4 +53,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
+// @ts-expect-error
 export const SettingsHeaderRow = memo(SettingsHeaderRowComponent)

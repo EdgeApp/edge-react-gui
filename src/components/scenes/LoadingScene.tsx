@@ -7,6 +7,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 export const LoadingScene = () => {
   return (
     <SceneWrapper background="header" hasHeader={false} hasTabs={false}>
+      {/* @ts-expect-error */}
       <View style={styles.container}>
         <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" />
       </View>
@@ -21,4 +22,6 @@ const rawStyles = {
     justifyContent: 'center'
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

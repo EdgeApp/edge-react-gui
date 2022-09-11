@@ -21,6 +21,7 @@ describe('CurrencyNotificationComponent', () => {
     }
   }
 
+  // @ts-expect-error
   const store = createStore(rootReducer, mockStore)
 
   it('should render with loading props', () => {
@@ -70,6 +71,7 @@ describe('CurrencyNotificationComponent', () => {
 
     const actual = renderer.create(
       <Provider store={store}>
+        {/* @ts-expect-error */}
         <CurrencyNotificationScene {...props} />
       </Provider>
     )

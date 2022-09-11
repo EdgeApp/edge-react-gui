@@ -8,6 +8,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
       // MATIC and BNB are ambiguous since they could be an ETH token or a mainnet coin. Therefore it should not get included
       // As well, BSC is not an actual currencyCode so it won't be included either. BSC can only be specified using object
       // params with pluginId = binancesmartchain
+      // @ts-expect-error
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, [])
       expect(result).toEqual(undefined)
     })
@@ -15,6 +16,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
       // MATIC and BNB are ambiguous since they could be an ETH token or a mainnet coin. Therefore it should not get included
       // As well, BSC is not an actual currencyCode so it won't be included either. BSC can only be specified using object
       // params with pluginId = binancesmartchain
+      // @ts-expect-error
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, undefined)
       expect(result).toEqual(undefined)
     })
@@ -22,10 +24,12 @@ describe('upgradeExtendedCurrencyCodes', () => {
       // MATIC and BNB are ambiguous since they could be an ETH token or a mainnet coin. Therefore it should not get included
       // As well, BSC is not an actual currencyCode so it won't be included either. BSC can only be specified using object
       // params with pluginId = binancesmartchain
+      // @ts-expect-error
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'ETH', 'MATIC', 'BNB', 'DOGE', 'BSC'])
       expect(result).toEqual([{ pluginId: 'bitcoin' }, { pluginId: 'ethereum' }, { pluginId: 'dogecoin' }])
     })
     test('single code tokens', () => {
+      // @ts-expect-error
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'USDC', 'REP', 'USDT'])
       expect(result).toEqual([
         { pluginId: 'bitcoin' },
@@ -35,6 +39,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
       ])
     })
     test('double code tokens', () => {
+      // @ts-expect-error
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'MATIC-USDC', 'ETH-REP', 'ETH-USDT'])
       expect(result).toEqual([
         { pluginId: 'bitcoin' },
@@ -44,6 +49,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
       ])
     })
     test('object list', () => {
+      // @ts-expect-error
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, [
         { pluginId: 'bitcoin', tokenId: undefined, currencyCode: undefined },
         { pluginId: 'polygon', tokenId: undefined, currencyCode: 'USDC' },
@@ -61,6 +67,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
     })
     test('single code tokens with fixes', () => {
       const result = upgradeExtendedCurrencyCodes(
+        // @ts-expect-error
         currencyConfig,
         { USDTERC20: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' } },
         ['BTC', 'USDC', 'REP', 'USDTERC20']

@@ -9,6 +9,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
+// @ts-expect-error
 import ENV from '../../../env'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { logoutRequest } from '../../actions/LoginActions'
@@ -53,10 +54,14 @@ export function ControlPanel(props: Props) {
 
   // ---- Redux State ----
 
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
+  // @ts-expect-error
   const activeUsername = useSelector(state => state.core.account.username)
+  // @ts-expect-error
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
+  // @ts-expect-error
   const selectedDenomination = useSelector(state => {
     if (selectedWallet == null) return
     return getDisplayDenomination(state, selectedWallet.wallet.currencyInfo.pluginId, selectedWallet.currencyCode)
@@ -128,10 +133,12 @@ export function ControlPanel(props: Props) {
         allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
         showCreateWallet
       />
+      // @ts-expect-error
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
         Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+          // @ts-expect-error
           .then((result: string | undefined) => {
             if (result) {
               dispatch(parseScannedUri(result))
@@ -143,12 +150,14 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
+    // @ts-expect-error
     handleGoToScene('loanDashboard')
   }
 
   const handleLoginQr = () => {
     Actions.drawerClose()
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+      // @ts-expect-error
       .then((result: string | undefined) => {
         if (result) {
           dispatch(parseScannedUri(result))
@@ -216,16 +225,19 @@ export function ControlPanel(props: Props) {
 
   const rowDatas: any[] = [
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('fioAddressList'),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('fioRequestList'),
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('wcConnections'),
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
@@ -238,12 +250,14 @@ export function ControlPanel(props: Props) {
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('termsOfService'),
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('settingsOverviewTab'),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
@@ -256,9 +270,11 @@ export function ControlPanel(props: Props) {
   ]
 
   return (
+    // @ts-expect-error
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
+        {/* @ts-expect-error */}
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
@@ -272,6 +288,7 @@ export function ControlPanel(props: Props) {
               <View style={styles.rowBodyContainer}>
                 <TitleText style={styles.text}>
                   {`1 ${selectedDenomination.name} = `}
+                  {/* @ts-expect-error */}
                   <FiatText
                     appendFiatCurrencyCode
                     autoPrecision

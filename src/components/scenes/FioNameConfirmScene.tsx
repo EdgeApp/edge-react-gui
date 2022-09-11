@@ -64,6 +64,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
         if (response.error) {
           if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
             const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
+            // @ts-expect-error
             const domainExists = publicDomains.find(domain => domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1])
             if (domainExists && !domainExists.free) {
               await Airship.show(bridge => (
@@ -99,6 +100,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             buttons={{ ok: { label: s.strings.string_ok_cap } }}
           />
         ))
+        // @ts-expect-error
         navigation.navigate('walletList')
       } else {
         // no free domains
@@ -108,6 +110,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
       try {
         if (this.isFioAddress()) {
           await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
+          // @ts-expect-error
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
               fioName
@@ -119,6 +122,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             max_fee: fee,
             owner_fio_public_key: ownerPublicKey
           })
+          // @ts-expect-error
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
               fioName,
@@ -135,6 +139,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
   render() {
     const { route } = this.props
     const { fioName, paymentWallet } = route.params
+    // @ts-expect-error
     const styles = getStyles()
 
     return (

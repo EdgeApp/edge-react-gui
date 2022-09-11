@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, ViewStyle } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
+// @ts-expect-error
 import { BlurView } from 'rn-id-blurview'
 
 import { fixSides } from '../../util/sides'

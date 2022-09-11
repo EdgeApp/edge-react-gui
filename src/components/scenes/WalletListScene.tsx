@@ -39,9 +39,13 @@ export function WalletListScene(props: Props) {
   const [searchText, setSearchText] = useState('')
   const [showSlidingTutorial, setShowTutorial] = useState(false)
 
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
+  // @ts-expect-error
   const disklet = useSelector(state => state.core.disklet)
+  // @ts-expect-error
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+  // @ts-expect-error
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   // Subscribe to account state:
@@ -52,6 +56,7 @@ export function WalletListScene(props: Props) {
     Airship.show(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
       .then(sort => {
         if (sort == null) return
+        // @ts-expect-error
         if (sort !== sortOption) dispatch(updateWalletsSort(sort))
         if (sort === 'manual') setSorting(true)
       })
@@ -64,6 +69,7 @@ export function WalletListScene(props: Props) {
 
   // Show the tutorial or password reminder on mount:
   useAsyncEffect(
+    // @ts-expect-error
     async () => {
       if (needsPasswordCheck) {
         await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
@@ -81,6 +87,7 @@ export function WalletListScene(props: Props) {
               }}
             >
               <Image
+                // @ts-expect-error
                 source={theme.walletListSlideTutorialImage}
                 resizeMode="contain"
                 style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}

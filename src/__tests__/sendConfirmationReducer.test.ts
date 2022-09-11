@@ -11,6 +11,7 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('sendConfirmation reducer', () => {
   test('initialState', () => {
+    // @ts-expect-error
     const actual = sendConfirmation(undefined, dummyAction)
 
     expect(actual).toMatchSnapshot()
@@ -18,6 +19,7 @@ describe('sendConfirmation reducer', () => {
 
   test('reset', () => {
     const action = { type: 'UI/SEND_CONFIRMATION/RESET' }
+    // @ts-expect-error
     const actual = sendConfirmation(undefined, action)
 
     expect(actual).toMatchSnapshot()
@@ -54,6 +56,7 @@ describe('sendConfirmation reducer', () => {
             transaction
           }
         }
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
@@ -89,6 +92,7 @@ describe('sendConfirmation reducer', () => {
             transaction
           }
         }
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
@@ -107,6 +111,7 @@ describe('sendConfirmation reducer', () => {
             transaction: null
           }
         }
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
@@ -136,6 +141,7 @@ describe('sendConfirmation reducer', () => {
             transaction
           }
         }
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
@@ -155,6 +161,7 @@ describe('sendConfirmation reducer', () => {
           data: { spendInfo, authRequired: 'none' }
         }
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, action)
 
         expect(actual).toMatchSnapshot()
@@ -172,6 +179,7 @@ describe('sendConfirmation reducer', () => {
           data: { spendInfo, authRequired: 'none' }
         }
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, action)
 
         expect(actual).toMatchSnapshot()
@@ -191,6 +199,7 @@ describe('sendConfirmation reducer', () => {
       }
       const initialStateClone = cloneDeep(initialState)
 
+      // @ts-expect-error
       const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
@@ -203,6 +212,7 @@ describe('sendConfirmation reducer', () => {
       data: { pin: '1234' }
     }
     const initialStateClone = cloneDeep(initialState)
+    // @ts-expect-error
     const actual = sendConfirmation(initialStateClone, action)
 
     expect(actual).toMatchSnapshot()

@@ -85,6 +85,7 @@ export const StakeOptionsScene = (props: Props) => {
     return (
       <View key={key} style={styles.optionContainer}>
         <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>
+          {/* @ts-expect-error */}
           <StakingOptionCard
             currencyLogos={policyIcons.stakeAssetUris}
             primaryText={primaryText}
@@ -126,10 +127,13 @@ export const StakeOptionsScene = (props: Props) => {
 const getStyles = cacheStyles(theme => ({
   optionsContainer: {
     alignItems: 'stretch',
+    // @ts-expect-error
     margin: theme.rem(1),
+    // @ts-expect-error
     marginBottom: theme.rem(6)
   },
   optionContainer: {
+    // @ts-expect-error
     margin: theme.rem(1),
     marginBottom: 0
   },

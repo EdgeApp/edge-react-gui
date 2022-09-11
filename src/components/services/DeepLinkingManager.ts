@@ -14,10 +14,13 @@ type Props = {}
 
 export function DeepLinkingManager(props: Props) {
   const dispatch = useDispatch()
+  // @ts-expect-error
   const pendingDeepLink = useSelector(state => state.pendingDeepLink)
 
   // We don't actually read these, but we need them to trigger updates:
+  // @ts-expect-error
   const accountReferralLoaded = useSelector(state => state.account.accountReferralLoaded)
+  // @ts-expect-error
   const wallets = useSelector(state => state.ui.wallets)
 
   // Retry links that need a different app state:
@@ -28,6 +31,7 @@ export function DeepLinkingManager(props: Props) {
     requestAnimationFrame(() => dispatch(retryPendingDeepLink()))
   }, [accountReferralLoaded, dispatch, pendingDeepLink, wallets])
 
+  // @ts-expect-error
   const handleUrl = url => {
     try {
       dispatch(launchDeepLink(parseDeepLink(url)))
@@ -41,6 +45,8 @@ export function DeepLinkingManager(props: Props) {
     const listener = Linking.addEventListener('url', event => handleUrl(event.url))
 
     let url = await Linking.getInitialURL()
+
+    // @ts-expect-error
     if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
     if (url != null) handleUrl(url)
 

@@ -15,6 +15,7 @@ export function ifLoggedIn<Props extends {}>(Component: React.ComponentType<Prop
     dispatch => ({})
   )((props: Props & StateProps) => {
     const { loginStatus, ...rest } = props
+    // @ts-expect-error
     return loginStatus ? <Component {...rest} /> : <LoadingScene />
   })
 }

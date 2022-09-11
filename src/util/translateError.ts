@@ -9,6 +9,8 @@ import { ResolutionError, translateResolutionError } from '../types/ResolutionEr
  */
 export function makeErrorLog(error: unknown): string {
   let message = String(error)
+
+  // @ts-expect-error
   if (ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS || ENV.DEBUG_VERBOSE_ERRORS) {
     if (error instanceof Error) message += `\n${error.stack}`
     message += `\n${JSON.stringify(error, null, 2)}`

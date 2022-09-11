@@ -83,14 +83,18 @@ export function WalletList(props: Props) {
   )
 
   // Subscribe to the common wallet list:
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
+  // @ts-expect-error
   const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
+  // @ts-expect-error
   const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   // Filter the common wallet list:
   const filteredWalletList = useMemo(() => {
     const excludeWalletSet = new Set<string>(excludeWalletIds)
 
+    // @ts-expect-error
     return sortedWalletList.filter(item => {
       const { tokenId, wallet } = item
 
@@ -119,6 +123,7 @@ export function WalletList(props: Props) {
 
     for (const item of mostRecentWallets) {
       // Find the mentioned wallet, if it still exists:
+      // @ts-expect-error
       const row = filteredWalletList.find(row => {
         const { wallet, token } = row
         if (wallet == null) return false

@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('PromoCard', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -20,10 +21,13 @@ describe('PromoCard', () => {
         hiddenAccountMessages: ['messageId']
       },
 
+      // @ts-expect-error
       hideMessageTweak: (messageId, source) => undefined,
+      // @ts-expect-error
       linkReferralWithCurrencies: uri => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<PromoCardComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

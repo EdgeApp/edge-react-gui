@@ -41,6 +41,7 @@ export function StakingOptionCard({
         <View style={styles.iconsContainer}>
           <View style={styles.middleLine} />
           <View style={styles.icon}>
+            {/* @ts-expect-error */}
             <PairIcons icons={currencyLogos} />
           </View>
           <View style={styles.middleLine} />

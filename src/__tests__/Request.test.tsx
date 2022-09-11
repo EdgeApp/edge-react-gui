@@ -8,6 +8,7 @@ import { getTheme } from '../components/services/ThemeContext'
 
 describe('Request', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -25,12 +26,14 @@ describe('Request', () => {
       wallets: {},
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<RequestComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
 
   it('should render with loaded props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -48,6 +51,7 @@ describe('Request', () => {
       wallets: {},
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<RequestComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

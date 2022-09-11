@@ -11,8 +11,11 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 
 export const ActionQueueService = () => {
   const dispatch = useDispatch()
+  // @ts-expect-error
   const account: EdgeAccount = useSelector(state => state.core.account)
+  // @ts-expect-error
   const clientId: string = useSelector(state => state.core.context.clientId)
+  // @ts-expect-error
   const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const executingRef = useRef<{ [programId: string]: boolean }>({})
 
@@ -22,6 +25,7 @@ export const ActionQueueService = () => {
   // Initialization
   //
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (account?.dataStore != null) {
       const store = makeActionQueueStore(account, clientId)
@@ -37,6 +41,7 @@ export const ActionQueueService = () => {
   // Runtime
   //
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (queue != null) {
       const executing = executingRef.current
@@ -67,6 +72,7 @@ export const ActionQueueService = () => {
           })
 
           // Update program state
+          // @ts-expect-error
           dispatch(updateActionProgramState(nextState))
 
           // Unset program to running

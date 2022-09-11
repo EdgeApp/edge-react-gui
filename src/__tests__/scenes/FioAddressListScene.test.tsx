@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('FioAddressList', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -44,6 +45,7 @@ describe('FioAddressList', () => {
       navigation: undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<FioAddressList {...props} />)
 
     expect(actual).toMatchSnapshot()

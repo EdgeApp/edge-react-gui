@@ -6,6 +6,7 @@ import { THEME } from '../../../../theme/variables/airbitz'
 import { Gradient } from '../../components/Gradient/Gradient.ui'
 
 type props = {
+  // @ts-expect-error
   style?: StyleSheet.Styles
   children: React.ReactNode
 }

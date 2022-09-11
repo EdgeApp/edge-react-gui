@@ -6,6 +6,7 @@ test('initialState', () => {
     useLegacyAddress: false,
     uniqueLegacyAddress: false
   }
+  // @ts-expect-error
   const actual = requestTypeReducer(undefined, {})
 
   expect(actual).toEqual(expected)

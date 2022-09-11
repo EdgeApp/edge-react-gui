@@ -27,6 +27,7 @@ type Props = OwnProps
 export const WcDisconnectScene = (props: Props) => {
   const { navigation } = props
   const { wcConnectionInfo } = props.route.params
+  // @ts-expect-error
   const { wallet } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[wcConnectionInfo.walletId]
@@ -41,6 +42,7 @@ export const WcDisconnectScene = (props: Props) => {
     } catch (e: any) {
       showError(e)
     }
+    // @ts-expect-error
     navigation.navigate('wcConnections')
   }
 

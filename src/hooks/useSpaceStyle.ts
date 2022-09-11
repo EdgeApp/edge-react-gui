@@ -20,6 +20,7 @@ export type SpaceProps = {
   end?: boolean
 }
 
+// @ts-expect-error
 export const useSpaceStyle = (props: SpaceProps): StyleSheet.Styles => {
   const theme = useTheme()
   const { around, horizontal, veritcal } = props

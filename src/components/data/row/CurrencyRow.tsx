@@ -38,6 +38,7 @@ const CurrencyRowComponent = (props: Props) => {
   const name = useWalletName(wallet)
 
   // Balance stuff:
+  // @ts-expect-error
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
   const balance = useWalletBalance(wallet, tokenId)
 
@@ -61,6 +62,7 @@ const CurrencyRowComponent = (props: Props) => {
             <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} withSymbol />
           </EdgeText>
           <EdgeText style={styles.fiatBalanceText}>
+            {/* @ts-expect-error */}
             <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallet} />
           </EdgeText>
         </View>

@@ -38,6 +38,7 @@ export function ManageTokensScene(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[walletId]
   const walletName = useWalletName(wallet)
@@ -93,6 +94,7 @@ export function ManageTokensScene(props: Props) {
       .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
       .map(pluginId => ({ pluginId }))
 
+    // @ts-expect-error
     const { walletId, currencyCode } = await Airship.show(bridge => (
       <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} />
     ))
@@ -133,6 +135,7 @@ export function ManageTokensScene(props: Props) {
     () => (
       <SceneHeader underline>
         <TouchableOpacity onPress={handleSelectWallet}>
+          {/* @ts-expect-error */}
           <Title
             leftIcon={<CryptoIcon sizeRem={1.5} walletId={wallet.id} />}
             rightIcon={<FontAwesomeIcon name="angle-right" size={theme.rem(2)} style={styles.rightIcon} />}
@@ -174,6 +177,7 @@ export function ManageTokensScene(props: Props) {
   )
 }
 
+// @ts-expect-error
 const keyExtractor = tokenId => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({

@@ -17,6 +17,7 @@ const pluginConfigs: { [pluginId: string]: EdgeCorePluginOptions } = {
 }
 
 export const borrowPluginMap: BorrowPluginMap = Object.keys(allPlugins).reduce((map, key) => {
+  // @ts-expect-error
   const factory = allPlugins[key]
   const config = pluginConfigs[key]
   const plugin = factory(config)

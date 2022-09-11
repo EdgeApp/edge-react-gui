@@ -64,12 +64,14 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   return (
     <ThemedModal warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
       <View style={styles.container}>
+        {/* @ts-expect-error */}
         <View style={styles.text}>
           {title != null ? <ModalTitle>{title}</ModalTitle> : null}
           {message != null ? <ModalMessage>{message}</ModalMessage> : null}
           {children}
         </View>
       </View>
+      {/* @ts-expect-error */}
       <View style={styles.buttons}>
         {Object.keys(buttons).map((key, i, arr) => {
           let defaultType
@@ -90,6 +92,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
             )
           }
 
+          // @ts-expect-error
           return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
         })}
         {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}

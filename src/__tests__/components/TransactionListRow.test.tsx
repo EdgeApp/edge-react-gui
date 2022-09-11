@@ -42,6 +42,7 @@ describe('TransactionListRow', () => {
         }
       }
     }
+    // @ts-expect-error
     const store = createStore(rootReducer, mockStore)
 
     const props = {
@@ -51,6 +52,7 @@ describe('TransactionListRow', () => {
     }
     const actual = renderer.create(
       <Provider store={store}>
+        {/* @ts-expect-error */}
         <TransactionListRow {...props} />
       </Provider>
     )

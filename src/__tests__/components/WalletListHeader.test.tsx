@@ -8,6 +8,7 @@ import { WalletListHeaderComponent } from '../../components/themed/WalletListHea
 
 describe('WalletListHeader', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -16,6 +17,7 @@ describe('WalletListHeader', () => {
       searchText: 'string',
       openSortModal: () => undefined,
       onChangeSearchText: () => undefined,
+      // @ts-expect-error
       onChangeSearchingState: searching => undefined,
       theme: getTheme()
     }

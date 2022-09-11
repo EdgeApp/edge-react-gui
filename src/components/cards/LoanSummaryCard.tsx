@@ -41,6 +41,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     currencyWallet,
     debts.map(debt => ({ tokenId: debt.tokenId, nativeAmount: debt.nativeAmount }))
   )
+  // @ts-expect-error
   const displayBorrowTotal = formatFiatString({ autoPrecision: true, fiatAmount: borrowTotal, hideFiatSymbol: true })
 
   try {
@@ -75,6 +76,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
       </TappableCard>
     )
   } catch (err) {
+    // @ts-expect-error
     showError(err.message)
 
     // Render a failed card

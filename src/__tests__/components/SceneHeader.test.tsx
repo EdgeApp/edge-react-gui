@@ -8,6 +8,7 @@ import { SceneHeaderComponent } from '../../components/themed/SceneHeader'
 
 describe('SceneHeader', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

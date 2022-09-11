@@ -2,6 +2,7 @@ import { Subscriber } from 'yaob'
 import { Events, makeEvents } from 'yavent'
 
 type WatchableProps<T> = {
+  // @ts-expect-error
   watch: Subscriber<T>
 } & T
 
@@ -14,10 +15,13 @@ export function withWatchableProps<T extends {}>(original: T): WatchableProps<T>
       configurable: true,
       enumerable: true,
       get() {
+        // @ts-expect-error
         return original[key]
       },
       set(x) {
+        // @ts-expect-error
         original[key] = x
+        // @ts-expect-error
         emit(key, x)
       }
     })

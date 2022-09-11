@@ -26,6 +26,7 @@ export const WcConnectionsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const [connections, setConnections] = useState([])
+  // @ts-expect-error
   const { tempWallet, currencyWallets, wcEnabledWalletIds } = useSelector(state => {
     const { currencyWallets } = state.core.account
 
@@ -48,6 +49,7 @@ export const WcConnectionsScene = (props: Props) => {
   })
 
   useEffect(() => {
+    // @ts-expect-error
     getdAppconnections().then(connections => setConnections(connections))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props])
@@ -102,6 +104,7 @@ export const WcConnectionsScene = (props: Props) => {
 
   const handleNewConnectionPress = () => {
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+      // @ts-expect-error
       .then((result: string | undefined) => {
         console.log(result)
         if (result) {

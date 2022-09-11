@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+// @ts-expect-error
 import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -17,6 +18,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
+// @ts-expect-error
 const title: { [name: keyof ParamList]: string } = {
   walletList: s.strings.title_wallets,
   pluginListBuy: s.strings.title_buy,
@@ -28,12 +30,14 @@ export class MenuTabComponent extends React.PureComponent<Props> {
   handleOnPress = (route: 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange') => {
     switch (route) {
       case 'walletList':
+        // @ts-expect-error
         return Actions.jump('walletListScene')
       case 'pluginListBuy':
         return Actions.jump('pluginListBuy', { direction: 'buy' })
       case 'pluginListSell':
         return Actions.jump('pluginListSell', { direction: 'sell' })
       case 'exchange':
+        // @ts-expect-error
         return Actions.jump('exchange')
     }
   }
@@ -51,21 +55,26 @@ export class MenuTabComponent extends React.PureComponent<Props> {
       <View>
         <DividerLine colors={theme.tabBarTopOutlineColors} />
         <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
-          {state.routes.map((element, index) => {
-            const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
-            const icon = {
-              walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-              pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-              pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-              exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
-            }
-            return (
-              <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
-                {icon[element.key]}
-                <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
-              </TouchableOpacity>
-            )
-          })}
+          {
+            // @ts-expect-error
+            state.routes.map((element, index) => {
+              const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
+              const icon = {
+                walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+                pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+                pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+                exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
+              }
+              return (
+                <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
+                  {/* @ts-expect-error */}
+                  {icon[element.key]}
+                  {/* @ts-expect-error */}
+                  <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
+                </TouchableOpacity>
+              )
+            })
+          }
         </LinearGradient>
       </View>
     )

@@ -24,6 +24,7 @@ describe('PasswordReminder', () => {
             lastLoginDate: Date.now()
           }
         }
+        // @ts-expect-error
         const actual = uut(initialState, action).nonPasswordLoginsCount
 
         expect(actual).toEqual(expected)
@@ -44,6 +45,7 @@ describe('PasswordReminder', () => {
             lastLoginDate: Date.now()
           }
         }
+        // @ts-expect-error
         const actual = uut(initialState, action).nonPasswordLoginsLimit
 
         expect(actual).toEqual(expected)
@@ -73,6 +75,7 @@ describe('PasswordReminder', () => {
             lastLoginDate: testDate
           }
         }
+        // @ts-expect-error
         const actual = uut(initialState, action)
 
         expect(actual).toEqual(expected)
@@ -100,6 +103,7 @@ describe('PasswordReminder', () => {
             lastPasswordUseDate: testDate
           }
         }
+        // @ts-expect-error
         const actual = uut(initialState, action)
 
         expect(actual).toEqual(expected)
@@ -122,6 +126,7 @@ describe('PasswordReminder', () => {
             lastLoginDate: testDate
           }
         }
+        // @ts-expect-error
         const actual = uut(previousState, action).nonPasswordLoginsLimit
 
         expect(actual).toEqual(expected)
@@ -143,6 +148,7 @@ describe('PasswordReminder', () => {
             lastLoginDate: testDate
           }
         }
+        // @ts-expect-error
         const actual = uut(previousState, action).nonPasswordDaysLimit
 
         expect(actual).toEqual(expected)
@@ -168,6 +174,7 @@ describe('PasswordReminder', () => {
           lastLoginDate: testDate
         }
       }
+      // @ts-expect-error
       const actual = uut(previousState, action).needsPasswordCheck
 
       expect(actual).toEqual(expected)
@@ -188,6 +195,7 @@ describe('PasswordReminder', () => {
           lastLoginDate: testDate
         }
       }
+      // @ts-expect-error
       const actual = uut(previousState, action).needsPasswordCheck
 
       expect(actual).toEqual(expected)
@@ -207,6 +215,7 @@ describe('PasswordReminder', () => {
           lastLoginDate: 0
         }
         const expected = daysBetween(previousState.lastPasswordUseDate, previousState.lastLoginDate) + 2
+        // @ts-expect-error
         const actual = uut(previousState, action).nonPasswordDaysLimit
 
         expect(actual).toEqual(expected)
@@ -221,6 +230,7 @@ describe('PasswordReminder', () => {
         }
 
         const expected = 2
+        // @ts-expect-error
         const actual = uut(initialState, action).nonPasswordLoginsLimit
 
         expect(actual).toEqual(expected)
@@ -238,6 +248,7 @@ describe('PasswordReminder', () => {
           needsPasswordCheck: true
         }
         const expected = false
+        // @ts-expect-error
         const actual = uut(state, action).needsPasswordCheck
 
         expect(actual).toEqual(expected)
@@ -259,6 +270,7 @@ describe('PasswordReminder', () => {
           needsPasswordCheck: true
         }
         const expected = false
+        // @ts-expect-error
         const actual = uut(state, action).needsPasswordCheck
 
         expect(actual).toEqual(expected)

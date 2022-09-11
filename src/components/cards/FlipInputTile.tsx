@@ -31,13 +31,20 @@ const FlipInputTileComponent = (props: Props) => {
   const { allTokens } = useWatch(wallet, 'currencyConfig')
 
   const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
+  // @ts-expect-error
   const fiatPerCrypto = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
 
+  // @ts-expect-error
   const selectedWalletExchangeDenominationMultiplier = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).multiplier)
+  // @ts-expect-error
   const selectedWalletExchangeDenominationName = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).name)
+  // @ts-expect-error
   const selectedWalletExchangeDenominationSymbol = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).symbol ?? '')
+  // @ts-expect-error
   const selectedWalletDisplayDenominationMultiplier = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).multiplier)
+  // @ts-expect-error
   const selectedWalletDisplayDenominationName = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).name)
+  // @ts-expect-error
   const selectedWalletDisplayDenominationSymbol = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).symbol ?? '')
 
   const primaryCurrencyInfo = useMemo(

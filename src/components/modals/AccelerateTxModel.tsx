@@ -42,6 +42,7 @@ type State = {
 
 export class AccelerateTxModelComponent extends PureComponent<Props, State> {
   constructor() {
+    // @ts-expect-error
     super()
 
     this.state = {
@@ -94,6 +95,7 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
         })
       } catch (error) {
         this.setState({
+          // @ts-expect-error
           error
         })
       }

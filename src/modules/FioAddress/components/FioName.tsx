@@ -35,6 +35,7 @@ const FioName = (props: FioNameProps & ThemeProps) => {
   }
 
   return (
+    // @ts-expect-error
     <ClickableRow paddingRem={[0, 1]} onPress={() => onPress()}>
       <View style={styles.icon}>{icon}</View>
       <View style={styles.info}>

@@ -13,6 +13,7 @@
  *
  * @param t The which is asserted to be empty.
  */
+// @ts-expect-error
 export function exhaustiveCheck(t: empty): Error {
   return new Error(`IMPOSSIBLE ERROR`)
 }

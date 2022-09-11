@@ -8,6 +8,7 @@ import { SelectFioAddressComponent } from '../../components/themed/SelectFioAddr
 
 describe('SelectFioAddress', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -65,11 +66,14 @@ describe('SelectFioAddress', () => {
       addressLoadingProgress: 11,
       blockHeight: 11,
       refreshAllFioAddresses: () => undefined,
+      // @ts-expect-error
       theme: getTheme({
+        // @ts-expect-error
         theme: dangerText => undefined
       })
     }
 
+    // @ts-expect-error
     const actual = renderer.render(<SelectFioAddressComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

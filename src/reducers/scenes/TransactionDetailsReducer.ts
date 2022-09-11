@@ -17,6 +17,7 @@ const subcategories = (state = [], action: Action): string[] => {
   }
 }
 
+// @ts-expect-error
 export const transactionDetails: Reducer<TransactionDetailsState, Action> = combineReducers({
   subcategories
 })

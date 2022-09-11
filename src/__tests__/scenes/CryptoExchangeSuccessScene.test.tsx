@@ -9,6 +9,7 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CryptoExchangeSuccessComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -26,6 +27,7 @@ describe('CryptoExchangeSuccessComponent', () => {
       theme: getTheme()
     }
 
+    // @ts-expect-error
     const actual = renderer.render(<CryptoExchangeSuccessComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

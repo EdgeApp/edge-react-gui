@@ -136,6 +136,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  // @ts-expect-error
   _setClipboard = async props => {
     const { coreWallet, currencyCode } = props
 
@@ -163,6 +164,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handleScan = () => {
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+      // @ts-expect-error
       .then((result: string | undefined) => {
         if (result) {
           this.onChangeAddress(result)
@@ -176,6 +178,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   handleChangeAddress = async () => {
     const { coreWallet, currencyCode } = this.props
     Airship.show(bridge => <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />)
+      // @ts-expect-error
       .then((result: string | null) => {
         if (result) {
           this.onChangeAddress(result)
@@ -259,4 +262,5 @@ const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   dispatch => ({})
 )(withTheme(AddressTileComponent))
 
+// @ts-expect-error
 export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)

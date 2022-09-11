@@ -41,6 +41,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     showTransfer: false
   }
 
+  // @ts-expect-error
   componentDidMount(): * {
     const { refreshAllFioAddresses, route } = this.props
     const { showAddBundledTxs } = route.params
@@ -60,6 +61,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     showToast(s.strings.fio_request_add_bundled_txs_ok_text)
     navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
     if (result.bundledTxs != null && refreshAfterAddBundledTxs) {
+      // @ts-expect-error
       window.requestAnimationFrame(() => {
         navigation.setParams({
           fioWallet,
@@ -82,6 +84,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
+    // @ts-expect-error
     return navigation.navigate('fioAddressList')
   }
 
@@ -132,6 +135,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
           params: { fioAddress: fioAddressName, maxFee: transferFee }
         }
       },
+
+      // @ts-expect-error
       onDone: (err, edgeTransaction) => {
         if (!err) {
           this.afterTransferSuccess()

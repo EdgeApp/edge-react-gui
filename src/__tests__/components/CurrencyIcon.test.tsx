@@ -13,11 +13,16 @@ jest.mock('react-redux', () => ({
 
 describe('CryptoIcon', () => {
   beforeEach(() => {
+    // @ts-expect-error
     useDispatchMock.mockImplementation(() => () => {})
+
+    // @ts-expect-error
     useSelectorMock.mockImplementation(selector => selector(mockStore))
   })
   afterEach(() => {
+    // @ts-expect-error
     useDispatchMock.mockClear()
+    // @ts-expect-error
     useSelectorMock.mockClear()
   })
 
@@ -38,6 +43,7 @@ describe('CryptoIcon', () => {
   }
 
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

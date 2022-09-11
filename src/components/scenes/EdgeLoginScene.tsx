@@ -2,6 +2,7 @@ import { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+// @ts-expect-error
 import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
 
@@ -43,7 +44,9 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
       message = sprintf(s.strings.edge_description_warning, this.props.lobby.loginRequest.displayName)
     }
     return (
+      // @ts-expect-error
       <View style={styles.body}>
+        {/* @ts-expect-error */}
         <Text style={styles.bodyText}>{message}</Text>
       </View>
     )
@@ -55,6 +58,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
 
     if (this.props.isProcessing) {
       return (
+        // @ts-expect-error
         <View style={styles.buttonsProcessing}>
           <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
         </View>
@@ -62,7 +66,9 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
     }
     if (this.props.error) {
       return (
+        // @ts-expect-error
         <View style={styles.buttonContainer}>
+          {/* @ts-expect-error */}
           <View style={styles.buttons}>
             <SecondaryButton style={styles.cancelSolo} onPress={handleDecline}>
               <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
@@ -72,7 +78,9 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
       )
     }
     return (
+      // @ts-expect-error
       <View style={styles.buttonContainer}>
+        {/* @ts-expect-error */}
         <View style={styles.buttons}>
           <SecondaryButton style={styles.cancel} onPress={handleDecline}>
             <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
@@ -99,17 +107,22 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
     }
     if (this.props.lobby) {
       return (
+        // @ts-expect-error
         <View style={styles.header}>
           <View style={styles.headerTopShim} />
+          {/* @ts-expect-error */}
           <View style={styles.headerImageContainer}>{this.renderImage()}</View>
           <View style={styles.headerTopShim} />
+          {/* @ts-expect-error */}
           <View style={styles.headerTextRow}>
+            {/* @ts-expect-error */}
             <Text style={styles.bodyText}>{title}</Text>
           </View>
           <View style={styles.headerBottomShim} />
         </View>
       )
     }
+    // @ts-expect-error
     return <View style={styles.header} />
   }
 
@@ -117,7 +130,9 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
     if (!this.props.lobby && !this.props.error) {
       return (
         <SceneWrapper background="body">
+          {/* @ts-expect-error */}
           <View style={styles.spinnerContainer}>
+            {/* @ts-expect-error */}
             <Text style={styles.loadingTextBody}>{s.strings.edge_login_fetching}</Text>
             <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
           </View>
@@ -227,6 +242,7 @@ const rawStyles = {
     borderRadius: 3
   }
 }
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(

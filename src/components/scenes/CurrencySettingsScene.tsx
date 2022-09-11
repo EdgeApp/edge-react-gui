@@ -24,7 +24,9 @@ export function CurrencySettingsScene(props: Props) {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
+  // @ts-expect-error
   const selectedDenominationMultiplier = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).multiplier)
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const currencyConfig = account.currencyConfig[pluginId]
 
@@ -58,14 +60,19 @@ export function CurrencySettingsScene(props: Props) {
 
 const getStyles = cacheStyles(theme => ({
   labelText: {
+    // @ts-expect-error
     color: theme.primaryText,
     flexShrink: 1,
+    // @ts-expect-error
     fontFamily: theme.fontFaceDefault,
+    // @ts-expect-error
     fontSize: theme.rem(1),
+    // @ts-expect-error
     paddingHorizontal: theme.rem(0.5),
     textAlign: 'left'
   },
   symbolText: {
+    // @ts-expect-error
     fontFamily: theme.fontFaceSymbols
   }
 }))

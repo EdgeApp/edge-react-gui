@@ -65,6 +65,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         backgroundColor={darkMode ? theme.dateModalBackgroundDark : theme.dateModalBackgroundLight}
       >
         <TouchableOpacity onPress={this.handleDone}>
+          {/* @ts-expect-error */}
           <Text style={textStyle}>{s.strings.string_done_cap}</Text>
         </TouchableOpacity>
         <DateTimePicker display="spinner" mode="date" onChange={this.handleChange} value={date} />
@@ -73,6 +74,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
   }
 
   handleChange = (event: unknown, date?: Date) => {
+    // @ts-expect-error
     this.setState({ date })
   }
 

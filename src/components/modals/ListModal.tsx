@@ -52,7 +52,9 @@ export function ListModal<T>({
 }: Props<T>) {
   const [text, setText] = useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
+  // @ts-expect-error
   const renderItem = ({ item }) => (rowComponent ? rowComponent(item) : null)
+  // @ts-expect-error
   const handleCancel = () => bridge.resolve()
   const handleChangeText = (text: string) => {
     setText(text)
@@ -86,6 +88,7 @@ export function ListModal<T>({
         initialNumToRender={12}
         onScroll={() => Keyboard.dismiss()}
         keyboardShouldPersistTaps="handled"
+        // @ts-expect-error
         renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
       />

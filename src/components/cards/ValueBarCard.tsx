@@ -33,6 +33,7 @@ const ValueBarCardComponent = (props: {
 
   return (
     <View style={styles.container}>
+      {/* @ts-expect-error */}
       <TouchableOpacity onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
         <Card>
           <View style={styles.cardContainer}>

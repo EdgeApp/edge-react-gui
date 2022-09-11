@@ -60,6 +60,7 @@ export const getTransaction = (state: RootState): EdgeTransaction => state.ui.sc
 export const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
 
 const getNetworkFeeOption = (state: RootState): 'high' | 'standard' | 'low' | 'custom' =>
+  // @ts-expect-error
   getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption
 
 const getCustomNetworkFee = (state: RootState): any => getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
@@ -94,6 +95,7 @@ const getSpendTargetOtherParams = (state: RootState): Object => {
   }
 }
 
+// @ts-expect-error
 export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier != null ? newSpendInfo.uniqueIdentifier : getUniqueIdentifier(state)
   let spendTargets = []
@@ -122,7 +124,9 @@ export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo =
   }
 }
 
+// @ts-expect-error
 export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: Object, selectedCurrencyCode: string): EdgeSpendInfo => {
+  // @ts-expect-error
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || sceneState.guiMakeSpendInfo.uniqueIdentifier || ''
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
@@ -130,21 +134,27 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
   } else {
     spendTargets = [
       {
+        // @ts-expect-error
         nativeAmount: newSpendInfo.nativeAmount || sceneState.nativeAmount,
+        // @ts-expect-error
         publicAddress: newSpendInfo.publicAddress || initialState.guiMakeSpendInfo.publicAddress || sceneState.spendInfo.spendTargets[0].publicAddress,
         otherParams: {
           uniqueIdentifier,
+          // @ts-expect-error
           ...sceneState.spendInfo.spendTargets[0].otherParams
         }
       }
     ]
   }
+  // @ts-expect-error
   const metaData = sceneState.guiMakeSpendInfo.metadata || initialState.guiMakeSpendInfo.metadata
+  // @ts-expect-error
   const customNetworkFee = sceneState.guiMakeSpendInfo.customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee
   return {
     currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
     metadata: newSpendInfo.metadata ? { ...metaData, ...newSpendInfo.metadata } : metaData,
     spendTargets,
+    // @ts-expect-error
     networkFeeOption: newSpendInfo.networkFeeOption || sceneState.guiMakeSpendInfo.networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption,
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...customNetworkFee, ...newSpendInfo.customNetworkFee } : customNetworkFee,
     otherParams: newSpendInfo.otherParams || {}

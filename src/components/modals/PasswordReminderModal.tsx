@@ -53,6 +53,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.spinning) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
+      // @ts-expect-error
       setTimeout(() => Actions.jump('changePassword'), 10)
     }
   }
@@ -117,12 +118,15 @@ export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps
   }),
   dispatch => ({
     onSuccess() {
+      // @ts-expect-error
       dispatch(passwordReminderSuccess())
     },
     onRequestChangePassword() {
+      // @ts-expect-error
       dispatch(requestChangePassword())
     },
     onPostpone() {
+      // @ts-expect-error
       dispatch(postponePasswordReminder())
     }
   })

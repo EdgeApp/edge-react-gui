@@ -42,7 +42,9 @@ export function SortedWalletList(props: Props) {
   const activeWalletIds = useWatch(account, 'activeWalletIds')
   const currencyWallets = useWatch(account, 'currencyWallets')
   const enabledTokenIds = useEnabledWalletIds(account)
+  // @ts-expect-error
   const exchangeRates = useSelector(state => state.exchangeRates)
+  // @ts-expect-error
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)
 
   // Phase 1: Gather the active wallets and tokens.

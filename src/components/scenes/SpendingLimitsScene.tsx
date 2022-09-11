@@ -47,6 +47,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="body" hasHeader>
+        {/* @ts-expect-error */}
         <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
           <TextField
             baseColor={THEME.COLORS.GRAY_2}
@@ -56,6 +57,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             onChangeText={this.onPasswordChanged}
           />
 
+          {/* @ts-expect-error */}
           <View style={styles.switchRow}>
             <View style={styles.textBlock}>
               <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_title}</FormattedText>
@@ -107,6 +109,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
       {
         transaction: {
           isEnabled: transactionIsEnabled,
+          // @ts-expect-error
           amount: parseFloat(transactionAmount)
         }
       },
@@ -136,6 +139,8 @@ const rawStyles = {
     fontSize: 14
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(

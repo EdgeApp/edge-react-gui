@@ -19,6 +19,7 @@ export function useAsyncValue<T>(effect: () => Promise<T>, deps?: unknown[]): [T
     } catch (error) {
       if (cancel) return
       setValue(null)
+      // @ts-expect-error
       setError(error)
     }
     return () => {

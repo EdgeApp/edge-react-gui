@@ -10,6 +10,7 @@ import { fakeUser } from '../../util/fake-user'
 
 describe('PasswordReminderModal', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -29,6 +30,7 @@ describe('PasswordReminderModal', () => {
       spinning: true,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<PasswordReminderModalComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

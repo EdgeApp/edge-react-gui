@@ -41,7 +41,9 @@ export const WcConnectScene = (props: Props) => {
   const [dappDetails, setDappDetails] = useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
   const [walletAddress, setWalletAddress] = useState('')
 
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
+  // @ts-expect-error
   const { walletName, wallet, currencyWallets } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const guiWallet = getSelectedWallet(state)
@@ -55,6 +57,7 @@ export const WcConnectScene = (props: Props) => {
   })
 
   useEffect(() => {
+    // @ts-expect-error
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
   }, [wallet])
 
@@ -65,12 +68,15 @@ export const WcConnectScene = (props: Props) => {
       await wallet.otherMethods.wcConnect(uri, walletAddress, wallet.id)
       connected.current = true
       Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_confirm_return_to_browser} onPress={() => {}} />)
+      // @ts-expect-error
       navigation.navigate('wcConnections')
     } catch (error) {
+      // @ts-expect-error
       console.error(`WalletConnect connection error: ${error.message}`)
     }
   }
 
+  // @ts-expect-error
   const handleRequestDapp = async walletId => {
     try {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri })
@@ -78,10 +84,12 @@ export const WcConnectScene = (props: Props) => {
       setDappDetails({
         subTitleText: sprintf(s.strings.wc_confirm_subtitle, dAppName),
         bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dAppName),
+        // @ts-expect-error
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e: any) {
       showError('Failed to connect, try again.')
+      // @ts-expect-error
       navigation.navigate('wcConnections')
     }
   }
@@ -91,6 +99,7 @@ export const WcConnectScene = (props: Props) => {
 
     const allowedAssets = allowedCurrencyWallets.map(walletID => ({ pluginId: currencyWallets[walletID].currencyInfo.pluginId }))
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={allowedAssets} />).then(
+      // @ts-expect-error
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           dispatch(selectWalletFromModal(walletId, currencyCode))

@@ -50,6 +50,7 @@ export async function swapVerifyTerms(swapConfig: EdgeSwapConfig): Promise<boole
     await swapConfig.changeUserSettings({ agreedToTerms: false })
     await swapConfig.changeEnabled(false)
   }
+  // @ts-expect-error
   return result
 }
 
@@ -102,10 +103,14 @@ const getStyles = cacheStyles(theme => ({
     justifyContent: 'space-between'
   },
   linkText: {
+    // @ts-expect-error
     color: theme.iconTappable,
     flexShrink: 1,
+    // @ts-expect-error
     fontFamily: theme.fontFaceDefault,
+    // @ts-expect-error
     fontSize: theme.rem(0.84),
+    // @ts-expect-error
     margin: theme.rem(0.5)
   },
   titleContainer: {
@@ -113,8 +118,11 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row'
   },
   titleImage: {
+    // @ts-expect-error
     height: theme.rem(1.75),
+    // @ts-expect-error
     margin: theme.rem(0.5),
+    // @ts-expect-error
     width: theme.rem(1.75)
   }
 }))

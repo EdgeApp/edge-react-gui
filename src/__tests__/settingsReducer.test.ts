@@ -5,6 +5,7 @@ import { initialState, settings as settingsReducer } from '../reducers/scenes/Se
 test('initialState', () => {
   const expected = initialState
   // $FlowExpectedError
+  // @ts-expect-error
   const actual = settingsReducer(undefined, {})
 
   expect(actual).toEqual(expected)

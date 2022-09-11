@@ -6,6 +6,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 type Props = {
   children: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 

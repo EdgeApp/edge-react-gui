@@ -32,9 +32,11 @@ type Props = {
  * Renders a settings section, but only if the cleaner passes.
  */
 export function maybeCurrencySetting<T, X>(
+  // @ts-expect-error
   Component: React$StatelessFunctionalComponent<CurrencySettingProps<T, X>>,
   cleaner: Cleaner<T>,
   extraInfo: X
+  // @ts-expect-error
 ): React$StatelessFunctionalComponent<Props> {
   const asMaybeSetting = asMaybe(cleaner)
   const wasSetting = uncleaner(cleaner)
@@ -48,6 +50,7 @@ export function maybeCurrencySetting<T, X>(
     const setting = useMemo(() => asMaybeSetting(userSettings), [userSettings])
 
     const handleUpdate = useHandler(
+      // @ts-expect-error
       async settings =>
         await currencyConfig.changeUserSettings({
           ...currencyConfig.userSettings,

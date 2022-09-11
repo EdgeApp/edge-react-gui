@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Animated, Keyboard, KeyboardEvent, Platform } from 'react-native'
 
 type Props = {
+  // @ts-expect-error
   children: (animation: Animated.Value, layout: number) => React.ChildrenArray<React.ReactNode>
   downValue?: number
   upValue?: number | ((keyboardHeight: number) => number)
@@ -27,6 +28,7 @@ type Props = {
  */
 export class KeyboardTracker extends React.Component<Props> {
   animation: Animated.Value
+  // @ts-expect-error
   animationGoal: number
   nextDuration: number
   // eslint-disable-next-line no-use-before-define

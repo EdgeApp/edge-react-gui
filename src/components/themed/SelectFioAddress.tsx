@@ -117,6 +117,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     const { currencyCode, selectedWallet } = this.props
     Airship.show(bridge => (
       <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
+      // @ts-expect-error
     )).then((response: string | null) => {
       if (response) {
         this.setFioAddress(response)
@@ -136,6 +137,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
         title={s.strings.fio_sender_memo_label}
       />
     )).then(memo => {
+      // @ts-expect-error
       if (memo != null) this.handleMemoChange(memo)
     })
   }

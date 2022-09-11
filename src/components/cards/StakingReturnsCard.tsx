@@ -33,8 +33,10 @@ export function StakingReturnsCard({
         <View style={styles.iconsContainer}>
           <View style={styles.middleLine} />
           <View style={styles.icon}>
+            {/* @ts-expect-error */}
             <PairIcons icons={fromCurrencyLogos} />
             {renderArrow()}
+            {/* @ts-expect-error */}
             <PairIcons icons={toCurrencyLogos} />
           </View>
           <View style={styles.middleLine} />
@@ -48,6 +50,7 @@ export function StakingReturnsCard({
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
   const commonCap = {
     borderColor: theme.lineDivider,

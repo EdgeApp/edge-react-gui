@@ -17,6 +17,7 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
+// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from './SwipeableRow'
 
 type OwnProps = {
@@ -108,6 +109,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         rightThreshold={theme.rem(7.5)}
         onRightSwipe={this.onSwipe}
       >
+        {/* @ts-expect-error */}
         <ClickableRow gradient highlight paddingRem={[0, 1]} onPress={this.onPress}>
           <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 

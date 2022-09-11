@@ -19,6 +19,7 @@ export type LayoutMetrics = {
 type Props = {
   // Expects a single child, which is a function
   // that accepts the current layout and returns an element.
+  // @ts-expect-error
   children: (layout: LayoutMetrics) => React.ChildrenArray<React.ReactNode>
 }
 
@@ -41,11 +42,13 @@ export function LayoutContext(props: Props) {
   const isLandscape = height < width
 
   const metrics: LayoutMetrics = {
+    // @ts-expect-error
     layout: { x: 0, y: 0, height, width },
     safeAreaInsets: {
       bottom: isIos ? getInset('bottom', isLandscape) : 0,
       left: isIos ? getInset('left', isLandscape) : 0,
       right: isIos ? getInset('right', isLandscape) : 0,
+      // @ts-expect-error
       top: isIos ? getInset('top', isLandscape) : StatusBar.currentHeight
     }
   }

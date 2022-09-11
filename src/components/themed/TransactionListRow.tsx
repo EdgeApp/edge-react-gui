@@ -35,6 +35,7 @@ export function TransactionListRow(props: Props) {
   const { currencyCode, walletId, transaction } = props
   const { metadata } = transaction
   const { name, amountFiat } = metadata ?? {}
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = currencyWallets[walletId]
@@ -42,20 +43,25 @@ export function TransactionListRow(props: Props) {
   const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
 
+  // @ts-expect-error
   const displayDenomination = useSelector(state => getDisplayDenomination(state, currencyInfo.pluginId, currencyCode))
+  // @ts-expect-error
   const exchangeDenomination = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
 
   const currencyName =
     currencyCode === currencyInfo.currencyCode
       ? currencyInfo.displayName
-      : currencyInfo.metaTokens.find(metaToken => metaToken.currencyCode === currencyCode)?.currencyName
+      : // @ts-expect-error
+        currencyInfo.metaTokens.find(metaToken => metaToken.currencyCode === currencyCode)?.currencyName
 
   // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
   // Thumbnail
+  // @ts-expect-error
   let thumbnailPath
+  // @ts-expect-error
   const contacts: GuiContact[] = useSelector(state => state.contacts) ?? []
   const transactionContactName = name != null ? normalizeForSearch(name) : null
   for (const contact of contacts) {
@@ -69,6 +75,7 @@ export function TransactionListRow(props: Props) {
 
   // CryptoAmount
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
+  // @ts-expect-error
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate) {
@@ -88,6 +95,7 @@ export function TransactionListRow(props: Props) {
     }
     Actions.push('transactionDetails', {
       edgeTransaction: transaction,
+      // @ts-expect-error
       thumbnailPath
     })
   })

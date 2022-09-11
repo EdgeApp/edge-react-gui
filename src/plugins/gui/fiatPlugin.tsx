@@ -36,16 +36,19 @@ export const executePlugin = async (params: {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)
     },
+    // @ts-expect-error
     walletPicker: async (params): Promise<WalletListResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
       const walletListResult = await Airship.show(bridge => (
         <WalletListModal bridge={bridge} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
       ))
+      // @ts-expect-error
       return walletListResult
     },
     showError: async (e: Error): Promise<void> => showError(e),
     listModal: async (params: FiatPluginListModalParams): Promise<string | undefined> => {
       const result = await Airship.show(bridge => <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />)
+      // @ts-expect-error
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
@@ -168,6 +171,7 @@ async function getWyreAccount(account: string, token: string): Promise<GetAccoun
     }
   }
   const url = 'https://api.sendwyre.com/v2/account/' + account + '?timestamp=' + timestamp
+  // @ts-expect-error
   const result = await window.fetch(url, data)
   if (!result.ok) throw new Error('fetchError')
   if (result.status === 204) throw new Error('emptyResponse')

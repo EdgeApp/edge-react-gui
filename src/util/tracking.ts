@@ -31,6 +31,7 @@ export type TrackingValues = {
 if (ENV.USE_FIREBASE) {
   const inner = analytics()
   inner.setUserId(getUniqueId())
+  // @ts-expect-error
   global.firebase = {
     analytics() {
       return inner
@@ -51,6 +52,7 @@ export async function logEvent(event: TrackingEvent, values: TrackingValues = {}
 async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
   const { accountDate, currencyCode, dollarValue, installerId, pluginId } = values
 
+  // @ts-expect-error
   if (!global.firebase) return
 
   // Adjust event name:
@@ -73,20 +75,30 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
 
   // Adjust params:
   const params: Object = {}
+  // @ts-expect-error
   if (accountDate != null) params.adate = accountDate
+  // @ts-expect-error
   if (currencyCode != null) params.currency = currencyCode
   if (dollarValue != null) {
+    // @ts-expect-error
     params.currency = 'USD'
+    // @ts-expect-error
     params.value = Number(dollarValue.toFixed(2))
   }
+  // @ts-expect-error
   if (installerId != null) params.aid = installerId
+  // @ts-expect-error
   if (pluginId != null) params.plugin = pluginId
+  // @ts-expect-error
   global.firebase.analytics().logEvent(name, params)
 
   // If we get passed a dollarValue, translate the event into a purchase:
   if (dollarValue != null) {
+    // @ts-expect-error
     params.items = [name]
+    // @ts-expect-error
     global.firebase.analytics().logEvent('purchase', params)
+    // @ts-expect-error
     global.firebase.analytics().logEvent('ecommerce_purchase', params)
   }
 }

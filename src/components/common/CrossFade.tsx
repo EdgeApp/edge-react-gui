@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Animated, StyleSheet } from 'react-native'
 
+// @ts-expect-error
 type Child = React.Element<any> | null | undefined
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
   activeKey: string | null | undefined
 
   // An array of children to switch between:
+  // @ts-expect-error
   children: React.ChildrenArray<Child>
 
   // The number of milliseconds the animation should take:
@@ -95,6 +97,7 @@ export class CrossFade extends React.Component<Props, State> {
   render() {
     const { activeKey, children } = this.props
 
+    // @ts-expect-error
     const out: Array<React.Element<any>> = []
     const opacities: Opacities = {}
     forEachKey(children, (key, child) => {
@@ -111,6 +114,7 @@ export class CrossFade extends React.Component<Props, State> {
       if (this.state[key]) {
         out.push(
           <Animated.View key={key} style={[StyleSheet.absoluteFill, { opacity: opacities[key].value }]}>
+            {/* @ts-expect-error */}
             {child}
           </Animated.View>
         )
@@ -124,9 +128,12 @@ export class CrossFade extends React.Component<Props, State> {
 /**
  * Iterates over all the React children with `key` properties.
  */
+// @ts-expect-error
 function forEachKey<Child>(children: React.ChildrenArray<Child>, callback: (key: string, child: Child) => void): void {
   React.Children.forEach(children, (child: Child) => {
+    // @ts-expect-error
     if (child != null && child.key != null) {
+      // @ts-expect-error
       callback(String(child.key), child)
     }
   })

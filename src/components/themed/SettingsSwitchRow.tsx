@@ -56,4 +56,5 @@ const SettingsSwitchRowComponent = (props: Props): React.ReactNode => {
   )
 }
 
+// @ts-expect-error
 export const SettingsSwitchRow = memo(SettingsSwitchRowComponent)

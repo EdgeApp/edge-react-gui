@@ -62,6 +62,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     let feeValueText = ''
 
     for (const feeKey of Object.keys(fees)) {
+      // @ts-expect-error
       const feeFullString = `${localizedFeeText[feeKey] ?? feeKey} ${fees[feeKey]}`
       feeValueText = feeValueText === '' ? feeValueText + feeFullString : feeValueText + `\n${feeFullString}`
     }

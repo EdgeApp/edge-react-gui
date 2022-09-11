@@ -9,6 +9,7 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CreateWalletAccountSelect', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -35,9 +36,11 @@ describe('CreateWalletAccountSelect', () => {
       handleAvailableStatus: 'AVAILABLE',
       isCheckingHandleAvailability: true,
       currencyConfigs: { bitcoin: { currencyInfo: { pluginId: 'bitcoin', currencyCode: 'BTC' } } },
+      // @ts-expect-error
       checkHandleAvailability: handle => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<CreateWalletAccountSetup {...props} />)
 
     expect(actual).toMatchSnapshot()

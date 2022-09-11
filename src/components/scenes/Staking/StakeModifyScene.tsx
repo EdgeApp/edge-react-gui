@@ -1,3 +1,4 @@
+// @ts-expect-error
 import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -41,6 +42,7 @@ export const StakeModifyScene = (props: Props) => {
   const { stakePolicyId } = stakePolicy
 
   // Hooks
+  // @ts-expect-error
   const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[walletId]
@@ -132,6 +134,7 @@ export const StakeModifyScene = (props: Props) => {
       if (modification === 'unstake') {
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.currencyCode === modCurrencyCode)
         const modChangeQuoteRequest = { ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
+        // @ts-expect-error
         setChangeQuoteRequest(modChangeQuoteRequest)
       } else if (modification === 'stake' && existingStaked.length === 1) {
         setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balances[modCurrencyCode] })
@@ -139,6 +142,7 @@ export const StakeModifyScene = (props: Props) => {
     }
   }
 
+  // @ts-expect-error
   const handleSlideComplete = reset => {
     if (changeQuote != null) {
       setSliderLocked(true)
@@ -175,6 +179,7 @@ export const StakeModifyScene = (props: Props) => {
         }
       />
     ))
+      // @ts-expect-error
       .then(({ nativeAmount, exchangeAmount }) => {
         // set the modified amount
         if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: currencyCode, nativeAmount: nativeAmount })
@@ -244,6 +249,7 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  // @ts-expect-error
   const renderChangeQuoteAmountTiles = modification => {
     const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
     return (
@@ -267,6 +273,7 @@ export const StakeModifyScene = (props: Props) => {
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={walletId}
+            // @ts-expect-error
             currencyCode={networkFeeQuote?.currencyCode}
             denomination={nativeAssetDenomination}
           />
@@ -334,15 +341,22 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row'
   },
   currencyLogo: {
+    // @ts-expect-error
     height: theme.rem(1.25),
+    // @ts-expect-error
     width: theme.rem(1.25),
     resizeMode: 'contain',
+    // @ts-expect-error
     marginRight: theme.rem(0.5)
   },
   icon: {
+    // @ts-expect-error
     height: theme.rem(1.5),
+    // @ts-expect-error
     width: theme.rem(1.5),
+    // @ts-expect-error
     marginRight: theme.rem(0.5),
+    // @ts-expect-error
     marginLeft: theme.rem(0.5),
     resizeMode: 'contain'
   },
@@ -352,9 +366,11 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   amountTilesContainer: {
+    // @ts-expect-error
     marginBottom: theme.rem(1)
   },
   footer: {
+    // @ts-expect-error
     marginBottom: theme.rem(2)
   }
 }))

@@ -7,6 +7,7 @@ import { OutlinedTextInput } from '../../components/themed/OutlinedTextInput'
 
 describe('OutlinedTextInput', () => {
   it('should render with some props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

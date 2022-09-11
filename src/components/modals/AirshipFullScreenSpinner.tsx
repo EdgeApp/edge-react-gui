@@ -64,8 +64,11 @@ export class AirshipFullScreenSpinner extends React.Component<Props> {
 
   render() {
     return (
+      // @ts-expect-error
       <Animated.View style={[styles.container, { opacity: this.opacity }]}>
+        {/* @ts-expect-error */}
         <View style={styles.darkness} />
+        {/* @ts-expect-error */}
         <View style={styles.body}>{this.renderContent()}</View>
       </Animated.View>
     )
@@ -73,10 +76,12 @@ export class AirshipFullScreenSpinner extends React.Component<Props> {
 
   renderContent() {
     const { activity, message } = this.props
+    // @ts-expect-error
     if (activity == null) return <Text style={styles.text}>{message}</Text>
 
     return (
       <>
+        {/* @ts-expect-error */}
         <Text style={[styles.text, { marginRight: unit }]}>{message}</Text>
         <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
       </>
@@ -138,4 +143,6 @@ const rawStyles = {
     textAlign: 'center'
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -10,6 +10,7 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 

@@ -63,6 +63,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
+      // @ts-expect-error
       Actions.push('edgeLogin')
       return true
 
@@ -99,6 +100,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
     case 'swap': {
       if (!hasCurrentWallet) return false
+      // @ts-expect-error
       Actions.push('exchangeScene')
       return true
     }
@@ -107,6 +109,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
+        // @ts-expect-error
         Actions.push('walletListScene')
         showError(s.strings.azteco_btc_only)
         return false
@@ -118,6 +121,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'walletConnect': {
       if (!hasCurrentWallet) return false
       const { uri, isSigning } = link
+      // @ts-expect-error
       Actions.push('wcConnections')
       // Hack around our router's horrible bugs:
       if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
@@ -132,6 +136,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'other': {
       if (!hasCurrentWallet) return false
       const currencyName = link.protocol
+      // @ts-expect-error
       const currencyCode = CURRENCY_NAMES[currencyName]
 
       // If we don't know what this is, fake a barcode scan:
@@ -161,6 +166,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     }
 
     case 'dev': {
+      // @ts-expect-error
       if (!global.__DEV__) return false
       // @ts-expect-error
       Actions.push(link.sceneName)
@@ -181,6 +187,7 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promis
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
+  // @ts-expect-error
   Actions.push('walletListScene')
 }
 

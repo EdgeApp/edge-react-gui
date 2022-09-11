@@ -146,6 +146,7 @@ export class CreateWalletSelectFiatComponent extends React.Component<Props, Stat
               data={filteredArray}
               initialNumToRender={30}
               keyboardShouldPersistTaps="handled"
+              // @ts-expect-error
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
             />

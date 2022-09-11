@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
+// @ts-expect-error
 import { BlurView } from 'rn-id-blurview'
 
 import { useWindowSize } from '../../hooks/useWindowSize'

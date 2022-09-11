@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('FioAddressRegister', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -46,6 +47,7 @@ describe('FioAddressRegister', () => {
       createFioWallet: async () => 'myFio@fio',
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<FioAddressRegister {...props} />)
 
     expect(actual).toMatchSnapshot()

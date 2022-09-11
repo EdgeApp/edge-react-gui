@@ -18,6 +18,7 @@ export const rpcProviderUrls = [
   // 'https://rpcapi.fantom.network',
   // 'https://rpc.ankr.com/fantom'
 ]
+// @ts-expect-error
 export const providers = rpcProviderUrls.map<ethers.Provider>(url => new ethers.providers.JsonRpcProvider(url))
 
 type ContractInfo = {
@@ -108,10 +109,12 @@ export const getContractInfo = (key: string): ContractInfo => {
 export const makeContract = (key: string) => {
   const contractInfo = getContractInfo(key)
   const { abi, address } = contractInfo
+  // @ts-expect-error
   return new ethers.Contract(address, abi, providers[0])
 }
 
 let lastServerIndex = 0
+// @ts-expect-error
 export const multipass = async (fn: (provider: ethers.Provider) => Promise<any>) => {
   const provider = providers[lastServerIndex % providers.length]
   try {
@@ -123,4 +126,5 @@ export const multipass = async (fn: (provider: ethers.Provider) => Promise<any>)
   }
 }
 
+// @ts-expect-error
 export const makeSigner = (seed: string, provider: ethers.Provider = providers[0]) => new ethers.Wallet(seed, provider)

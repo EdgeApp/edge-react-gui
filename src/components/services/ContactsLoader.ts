@@ -236,9 +236,11 @@ class ContactsLoaderComponent extends React.Component<Props> {
       .then(contacts => {
         const cleanContacts = contacts
           .filter(item => item.givenName)
+          // @ts-expect-error
           .concat(merchantPartners)
           .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
 
+        // @ts-expect-error
         this.props.loadContactsSuccess(cleanContacts)
       })
       .catch(error => {
@@ -254,6 +256,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
 
 export const ContactsLoader = connect<StateProps, DispatchProps, {}>(
   state => ({
+    // @ts-expect-error
     contactsPermission: state.permissions.contacts
   }),
   dispatch => ({

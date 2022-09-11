@@ -6,6 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+// @ts-expect-error
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTimeDate } from '../../locales/intl'
@@ -146,12 +147,14 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   const handleUnlockDate = () => {
     Airship.show(bridge => {
       return (
+        // @ts-expect-error
         <ThemedModal bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
           <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
             {s.strings.staking_change_unlock_explainer_title}
           </ModalTitle>
           <ModalMessage>{s.strings.staking_change_unlock_explainer1}</ModalMessage>
           <ModalMessage>{s.strings.staking_change_unlock_explainer2}</ModalMessage>
+          {/* @ts-expect-error */}
           <ModalCloseArrow onPress={bridge.resolve} />
         </ThemedModal>
       )
@@ -166,6 +169,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
       currencyPlugin.otherMethods
         .getStakeEstReturn(exchangeAmount)
+        // @ts-expect-error
         .then(apy => setApy(parseFloat(apy.toFixed(2))))
         .catch(() => {
           //
@@ -182,8 +186,10 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       // If no address is found, we do not define the selectedFioAddress
       if (fioAddress == null) return
       // Addresses must have at least 1 bundled transaction; we rely on bundle txs and don't yet support fee-based tx for staking
+      // @ts-expect-error
       if (fioAddress.bundledTxs < 1) return setError(new Error(sprintf(s.strings.staking_no_bundled_txs_error, fioAddress.name)))
 
+      // @ts-expect-error
       setSelectedFioAddress(fioAddress.name)
     }
   }, [...fioAddresses, selectedFioAddress])
@@ -196,6 +202,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
     // If the selectedFioAddress is not defined, then we will not be able to complete the transaction.
     if (selectedFioAddress == null) {
+      // @ts-expect-error
       setError(new Error(s.strings.staking_no_fio_address_error))
       return
     }
@@ -221,6 +228,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       .then(tx => {
         if (abort) return
         setError(null)
+        // @ts-expect-error
         setTx(tx)
       })
       .catch(error => {
@@ -256,10 +264,13 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }
 
   const renderRemove = () => {
+    // @ts-expect-error
     const unlockDate = tx?.otherParams?.ui.unlockDate
     const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, true) : ''
     let estReward = '0'
+    // @ts-expect-error
     if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {
+      // @ts-expect-error
       estReward = add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')
     }
     return (
@@ -288,6 +299,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     return (
       <Tile type="static" title={s.strings.send_scene_error_title}>
         <EdgeText style={styles.errorMessage} numberOfLines={3}>
+          {/* @ts-expect-error */}
           {error.toString()}
         </EdgeText>
       </Tile>
@@ -321,29 +333,42 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   currencyLogo: {
+    // @ts-expect-error
     height: theme.rem(1.25),
+    // @ts-expect-error
     width: theme.rem(1.25),
     resizeMode: 'contain',
+    // @ts-expect-error
     marginLeft: theme.rem(1)
   },
   explainer: {
+    // @ts-expect-error
     margin: theme.rem(0.5)
   },
   amountText: {
+    // @ts-expect-error
     fontSize: theme.rem(2)
   },
   sliderContainer: {
+    // @ts-expect-error
     paddingVertical: theme.rem(2)
   },
   errorMessage: {
+    // @ts-expect-error
     color: theme.dangerText
   },
   estReturn: {
+    // @ts-expect-error
     padding: theme.rem(0.75),
+    // @ts-expect-error
     marginTop: theme.rem(1),
+    // @ts-expect-error
     marginHorizontal: theme.rem(2.5),
+    // @ts-expect-error
     borderWidth: theme.thinLineWidth,
+    // @ts-expect-error
     borderColor: theme.cardBorderColor,
+    // @ts-expect-error
     borderRadius: theme.rem(0.5),
     alignItems: 'center',
     justifyContent: 'center'
@@ -367,6 +392,7 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
 
     if (SPECIAL_CURRENCY_INFO[currencyWallet.currencyInfo.pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
+        // @ts-expect-error
         const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
@@ -377,6 +403,7 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
         const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
+        // @ts-expect-error
         stakingBalances[stakingCurrencyCode] = {
           native: stakingNativeAmount,
           crypto: stakingCryptoAmountFormat,

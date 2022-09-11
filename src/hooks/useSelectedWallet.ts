@@ -11,10 +11,13 @@ export type SelectedWallet = {
 }
 
 export function useSelectedWallet(): SelectedWallet | undefined {
+  // @ts-expect-error
   const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  // @ts-expect-error
   const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
 
   // Grab the wallet from the account:
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = currencyWallets[walletId]

@@ -29,7 +29,9 @@ type Props = {
 export class AirshipDropdown extends React.Component<Props> {
   offset: Animated.Value
   timeout: ReturnType<typeof setTimeout> | undefined
+  // @ts-expect-error
   unclear: Unsubscribe
+  // @ts-expect-error
   unresult: Unsubscribe
 
   constructor(props: Props) {
@@ -97,8 +99,14 @@ export class AirshipDropdown extends React.Component<Props> {
           }
 
           return (
-            <View pointerEvents="box-none" touch style={[styles.screen, screenStyle]}>
+            <View
+              pointerEvents="box-none"
+              touch
+              // @ts-expect-error
+              style={[styles.screen, screenStyle]}
+            >
               <TouchableWithoutFeedback onPress={onPress}>
+                {/* @ts-expect-error */}
                 <Animated.View style={[styles.body, bodyStyle]}>{children}</Animated.View>
               </TouchableWithoutFeedback>
             </View>
@@ -142,4 +150,5 @@ const rawStyles = {
     justifyContent: 'center'
   }
 }
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

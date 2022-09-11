@@ -32,6 +32,7 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
     this.state = secondsToDisplay(autoLogoutTimeInSeconds)
 
     // Default to `hours` if it's disabled:
+    // @ts-expect-error
     if (this.state.value === 0) this.state.measurement = 'hours'
   }
 
@@ -56,12 +57,14 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
     }
 
     const numberPicker = (
+      // @ts-expect-error
       <Picker style={{ flex: 1, color: pickerColor }} selectedValue={this.state.value} onValueChange={value => this.setState({ value })}>
         {numberPickerOptions}
       </Picker>
     )
 
     const measurementPicker = (
+      // @ts-expect-error
       <Picker style={{ flex: 1, color: pickerColor }} selectedValue={this.state.measurement} onValueChange={measurement => this.setState({ measurement })}>
         <Picker.Item color={textColor} label={s.strings.settings_seconds} value="seconds" />
         <Picker.Item color={textColor} label={s.strings.settings_minutes} value="minutes" />
@@ -76,14 +79,17 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
           <IonIcon name="ios-time" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
         </IconCircle>
         <ContentArea>
+          {/* @ts-expect-error */}
           <Text style={dayText('title')}>{s.strings.dialog_title}</Text>
           <View style={{ flexDirection: 'row' }}>
+            {/* @ts-expect-error */}
             <LadderLayout horizontal padding={THEME.rem(1)}>
               {numberPicker}
               {measurementPicker}
             </LadderLayout>
           </View>
           <View style={{ flexDirection: 'row' }}>
+            {/* @ts-expect-error */}
             <LadderLayout horizontal padding={THEME.rem(1)}>
               <SecondaryButton onPress={this.handleCancel} style={{ flex: 1 }}>
                 <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>

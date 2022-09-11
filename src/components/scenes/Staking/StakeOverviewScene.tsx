@@ -35,10 +35,12 @@ export const StakeOverviewScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const wallet = account.currencyWallets[walletId]
 
   const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
+    // @ts-expect-error
     denomMap[asset.currencyCode] = dispatch(getDisplayDenominationFromState(wallet.currencyInfo.pluginId, asset.currencyCode))
     return denomMap
   }, {})
@@ -87,13 +89,16 @@ export const StakeOverviewScene = (props: Props) => {
   }
 
   // Renderers
+  // @ts-expect-error
   const renderCFAT = ({ item }) => {
     const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
+    // @ts-expect-error
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = guessFromCurrencyCode(account, { currencyCode, pluginId: wallet.currencyInfo.pluginId }).tokenId
+
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
   }
 
@@ -114,6 +119,7 @@ export const StakeOverviewScene = (props: Props) => {
     <SceneWrapper scroll background="theme">
       {sceneHeader}
       <View style={styles.card}>
+        {/* @ts-expect-error */}
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}
           toCurrencyLogos={policyIcons.rewardAssetUris}
@@ -156,8 +162,11 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   icon: {
+    // @ts-expect-error
     height: theme.rem(1.5),
+    // @ts-expect-error
     width: theme.rem(1.5),
+    // @ts-expect-error
     marginRight: theme.rem(0.5),
     resizeMode: 'contain'
   },

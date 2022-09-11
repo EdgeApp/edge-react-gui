@@ -9,6 +9,7 @@ import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
 describe('AccelerateTxModelComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -31,19 +32,26 @@ describe('AccelerateTxModelComponent', () => {
         currencyInfo: {
           currencyCode: 'SHIB'
         },
+
+        // @ts-expect-error
         parseUri: (address, currencyCode) => {}
       },
       exchangeRates: [''],
+
+      // @ts-expect-error
       getDisplayDenomination: (pluginId, currencyCode) => ({
         multiplier: '1000000',
         name: 'BTC'
       }),
+
+      // @ts-expect-error
       getExchangeDenomination: (pluginIdg, currencyCode) => ({
         multiplier: '1000000',
         name: 'BTC'
       }),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<AccelerateTxModelComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

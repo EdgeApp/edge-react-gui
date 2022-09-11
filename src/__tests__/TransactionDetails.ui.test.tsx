@@ -40,6 +40,7 @@ const settings = {
 
 describe('TransactionDetails.ui', () => {
   it('should render', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
     const props = {
       route: {
@@ -72,12 +73,14 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
 
   it('should render with tx date off by 1000x in future', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
     const props = {
       route: {
@@ -110,12 +113,14 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
 
   it('should render with tx date off by 1000x in past', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -149,12 +154,14 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
 
   it('should render with negative nativeAmount and fiatAmount', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
     const props = {
       route: {
@@ -190,6 +197,7 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

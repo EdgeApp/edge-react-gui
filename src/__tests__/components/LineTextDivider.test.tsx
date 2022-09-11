@@ -8,6 +8,7 @@ import { LineTextDividerComponent } from '../../components/themed/LineTextDivide
 
 describe('LineTextDivider', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {

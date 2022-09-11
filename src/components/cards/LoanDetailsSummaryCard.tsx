@@ -71,9 +71,13 @@ const getStyles = cacheStyles(theme => {
       flexDirection: 'row'
     },
     total: {
+      // @ts-expect-error
       fontFamily: theme.fontFaceMedium,
+      // @ts-expect-error
       fontSize: theme.rem(2),
+      // @ts-expect-error
       marginRight: theme.rem(0.5),
+      // @ts-expect-error
       marginLeft: theme.rem(0.5)
     },
     iconContainer: {
@@ -84,6 +88,7 @@ const getStyles = cacheStyles(theme => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignSelf: 'stretch',
+      // @ts-expect-error
       marginTop: theme.rem(1.5)
     },
     detail: {
@@ -95,20 +100,27 @@ const getStyles = cacheStyles(theme => {
     },
     detailLabel: {
       flexDirection: 'row',
+      // @ts-expect-error
       fontSize: theme.rem(0.75),
+      // @ts-expect-error
       lineHeight: theme.rem(1.5)
     },
     detailValue: {
+      // @ts-expect-error
       fontFamily: theme.fontFaceBold,
+      // @ts-expect-error
       fontSize: theme.rem(0.75)
     },
     detailIconContainer: {
+      // @ts-expect-error
       marginTop: theme.rem(0.25),
+      // @ts-expect-error
       marginLeft: theme.rem(0.5)
     },
     // Loan to value
     ltvContainer: {
       width: '52%',
+      // @ts-expect-error
       marginTop: theme.rem(1),
       flexDirection: 'column'
     }

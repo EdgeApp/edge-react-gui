@@ -167,6 +167,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   buttons={{ ok: { label: s.strings.string_ok_cap } }}
                 />
               ))
+              // @ts-expect-error
               navigation.navigate('walletList')
             }
           }
@@ -206,6 +207,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             title={s.strings.create_wallet_account_select_wallet}
             body={paymentWalletBody}
             onPress={this.onWalletPress}
+            // @ts-expect-error
             disabled={!activationCost || activationCost === 0}
           />
           {!loading && paymentWallet && paymentWallet.id && (

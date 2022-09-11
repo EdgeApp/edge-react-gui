@@ -40,6 +40,7 @@ const updateAmount =
     nativeAmount: string,
     exchangeAmount: string,
     fiatPerCrypto: string,
+    // @ts-expect-error
     forceUpdateGui?: boolean = false,
     selectedWalletId?: string,
     selectedCurrencyCode?: string
@@ -54,6 +55,7 @@ const updateAmount =
 export const sendConfirmationUpdateTx =
   (
     guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
+    // @ts-expect-error
     forceUpdateGui?: boolean = true,
     selectedWalletId?: string,
     selectedCurrencyCode?: string,
@@ -135,6 +137,7 @@ export const sendConfirmationUpdateTx =
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
+              // @ts-expect-error
               Actions.jump('exchangeScene')
               break
           }
@@ -192,6 +195,7 @@ export const updateMaxSpend =
   }
 
 export const signBroadcastAndSave =
+  // @ts-expect-error
   (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
@@ -499,6 +503,7 @@ export const updateTransactionAmount =
         let customError
 
         if (error.labelCode && edgeWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {
+          // @ts-expect-error
           customError = new Error(XRP_DESTINATION_TAG_ERRORS[error.labelCode])
         }
 

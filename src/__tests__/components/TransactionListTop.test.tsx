@@ -8,6 +8,7 @@ import { TransactionListTopComponent } from '../../components/themed/Transaction
 
 describe('TransactionListTop', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -29,6 +30,7 @@ describe('TransactionListTop', () => {
       theme: getTheme()
     }
 
+    // @ts-expect-error
     const actual = renderer.render(<TransactionListTopComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

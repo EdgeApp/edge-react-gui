@@ -5,7 +5,9 @@ import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+// @ts-expect-error
 import ENS_LOGO from '../../assets/images/ens_logo.png'
+// @ts-expect-error
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'

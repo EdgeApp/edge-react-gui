@@ -8,6 +8,7 @@ import { ClickableRowComponent } from '../../components/themed/ClickableRow'
 
 describe('ClickableRow', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -22,6 +23,7 @@ describe('ClickableRow', () => {
       paddingRem: 11,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<ClickableRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

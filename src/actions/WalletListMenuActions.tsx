@@ -124,13 +124,16 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
             message={displayPublicSeed ?? ''}
             title={s.strings.fragment_wallets_view_xpub}
           />
+          // @ts-expect-error
         )).then((result: 'copy' | 'link' | undefined) => {
           switch (result) {
             case 'copy':
+              // @ts-expect-error
               Clipboard.setString(displayPublicSeed)
               showToast(s.strings.fragment_wallets_pubkey_copied_title)
               break
             case 'link':
+              // @ts-expect-error
               if (xpubExplorer != null) Linking.openURL(sprintf(currencyInfo.xpubExplorer, displayPublicSeed))
           }
         })
@@ -169,6 +172,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
           logActivity(`Show Master Private Key: ${account.username} -- ${name ?? ''} -- ${type} -- ${id}`)
           // Add a copy button only for development
           let devButtons = {}
+          // @ts-expect-error
           if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
 
           await Airship.show(bridge => (
@@ -179,7 +183,9 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
               buttons={{ ok: { label: s.strings.string_ok_cap }, ...devButtons }}
             />
           )).then(buttonPressed => {
+            // @ts-expect-error
             if (global.__DEV__ && buttonPressed === 'copy') {
+              // @ts-expect-error
               Clipboard.setString(wallet.displayPrivateSeed)
               showToast(s.strings.fragment_wallets_copied_seed)
             }

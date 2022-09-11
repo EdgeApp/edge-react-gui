@@ -108,6 +108,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       case 'TouchID':
         this.setState({ touchIdText: s.strings.settings_button_use_touchID })
         break
+      // @ts-expect-error
       case 'Fingerprint':
         this.setState({ touchIdText: s.strings.settings_button_use_biometric })
     }
@@ -123,21 +124,25 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleChangePassword = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePassword')
   }
 
   handleChangePin = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePin')
   }
 
   handleChangeOtp = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('otpSetup')
   }
 
   handleChangeRecovery = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery')
   }
 
@@ -178,11 +183,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleExchangeSettings = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('exchangeSettings')
   }
 
   handleSpendingLimits = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('spendingLimits')
   }
 
@@ -196,11 +203,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleDefaultFiat = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('defaultFiatSetting')
   }
 
   handlePromotionSettings = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('promotionSettings')
   }
 
@@ -214,6 +223,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleNotificationSettings = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('notificationSettings')
   }
 
@@ -229,6 +239,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleTermsOfService = (): void => {
     const { navigation } = this.props
+    // @ts-expect-error
     navigation.navigate('termsOfService')
   }
 

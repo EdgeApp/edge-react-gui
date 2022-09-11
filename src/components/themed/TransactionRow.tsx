@@ -29,6 +29,7 @@ type Props = OwnProps & ThemeProps
 class TransactionRowComponent extends React.PureComponent<Props> {
   render() {
     // What is this for?
+    // @ts-expect-error
     global.pcount && global.pcount('TransactionRow:render')
 
     const {
@@ -107,6 +108,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
+      // @ts-expect-error
       <ClickableRow paddingRem={[0, 1]} onPress={onPress}>
         <View style={styles.iconContainer}>
           <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>

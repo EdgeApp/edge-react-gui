@@ -19,6 +19,7 @@ export function RadioListModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  // @ts-expect-error
   function renderRow({ name, icon, text }): React.ReactNode {
     const imageIcon = typeof icon === 'string' ? { uri: icon } : icon
     const radio = selected === name ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
@@ -37,6 +38,7 @@ export function RadioListModal(props: Props) {
     )
   }
 
+  // @ts-expect-error
   return <ListModal bridge={bridge} title={title} textInput={false} rowsData={items} rowComponent={renderRow} fullScreen={false} />
 }
 

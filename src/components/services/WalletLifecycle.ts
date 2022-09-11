@@ -30,7 +30,9 @@ const BOOT_LIMIT = Platform.OS === 'ios' ? 8 : 3
  */
 export class WalletLifecycleComponent extends React.Component<Props> {
   // Core & related subscriptions:
+  // @ts-expect-error
   edgeAccount: EdgeAccount
+  // @ts-expect-error
   edgeContext: EdgeContext
   cleanups: Array<() => void> = []
 

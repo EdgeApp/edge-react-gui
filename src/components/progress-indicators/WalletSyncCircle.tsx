@@ -78,6 +78,7 @@ export const WalletSyncCircle = (props: Props) => {
   )
 
   return (
+    // @ts-expect-error
     <Svg height={svgSize} width={svgSize} viewBox={viewBox} style={svgStyle}>
       <AnimatedCircle
         cx={center}

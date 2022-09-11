@@ -8,6 +8,7 @@ import { BalanceBox } from '../../components/themed/WiredBalanceBox'
 
 describe('BalanceBox', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -18,6 +19,7 @@ describe('BalanceBox', () => {
       toggleAccountBalanceVisibility: () => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<BalanceBox {...props} />)
 
     expect(actual).toMatchSnapshot()

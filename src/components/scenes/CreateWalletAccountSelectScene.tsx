@@ -113,6 +113,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       }
     }
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
+      // @ts-expect-error
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           this.onSelectWallet(walletId, currencyCode)
@@ -160,7 +161,9 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     const isSelectWalletDisabled = !activationCost || activationCost === ''
     return (
       <View style={styles.selectPaymentLower}>
+        {/* @ts-expect-error */}
         <View style={styles.buttons}>
+          {/* @ts-expect-error */}
           <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
             {isSelectWalletDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
@@ -169,6 +172,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
             )}
           </PrimaryButton>
         </View>
+        {/* @ts-expect-error */}
         <View style={styles.paymentArea}>
           <Text style={styles.paymentLeft}>{s.strings.create_wallet_account_amount_due}</Text>
           <Text style={styles.paymentRight}>
@@ -188,20 +192,24 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     if (!wallet) return null
     const { name } = wallet
 
+    // @ts-expect-error
     const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
 
     return (
       <View>
         <View style={styles.selectPaymentLower}>
+          {/* @ts-expect-error */}
           <View style={styles.accountReviewWalletNameArea}>
             <Text style={styles.accountReviewWalletNameText}>
               {name}:{paymentCurrencyCode}
             </Text>
           </View>
+          {/* @ts-expect-error */}
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
               <CryptoIcon currencyCode={wallet.currencyCode} sizeRem={1.5} />
             </View>
+            {/* @ts-expect-error */}
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
                 {paymentDenominationSymbol} {amount} {paymentCurrencyCode}
@@ -227,6 +235,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
+          {/* @ts-expect-error */}
           <PrimaryButton disabled={isContinueButtonDisabled} style={styles.confirmButton} onPress={this.onPressSubmit}>
             {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
             {isContinueButtonDisabled ? (
@@ -273,6 +282,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
         <View style={styles.scene}>
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
+            {/* @ts-expect-error */}
             <View style={styles.scrollableView}>
               <CryptoIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
 
@@ -382,6 +392,8 @@ const rawStyles = {
   },
   confirmButton: {}
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps>(
@@ -400,6 +412,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
 
     let paymentDenominationSymbol
     if (paymentDenomination) {
+      // @ts-expect-error
       paymentDenominationSymbol = paymentDenomination.symbol ? paymentDenomination.symbol : ''
     } else {
       paymentDenominationSymbol = ''

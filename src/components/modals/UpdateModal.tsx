@@ -33,6 +33,7 @@ export function UpdateModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
       <View style={styles.titleContainer}>
+        {/* @ts-expect-error */}
         <Image style={styles.titleImage} resizeMode="contain" source={theme.primaryLogo} />
         <ModalTitle>{s.strings.update_header}</ModalTitle>
       </View>
@@ -50,7 +51,9 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'column'
   },
   titleImage: {
+    // @ts-expect-error
     height: theme.rem(3),
+    // @ts-expect-error
     margin: theme.rem(0.5)
   }
 }))

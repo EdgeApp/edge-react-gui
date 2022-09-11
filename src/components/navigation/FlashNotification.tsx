@@ -18,6 +18,7 @@ export function FlashNotification(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
+    // @ts-expect-error
     <AirshipDropdown bridge={bridge} backgroundColor={theme.modal} onPress={onPress}>
       <AntDesignIcon name="checkcircle" size={theme.rem(2)} style={styles.icon} />
       <Text style={styles.text}>{message}</Text>
@@ -27,6 +28,7 @@ export function FlashNotification(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   text: {
+    // @ts-expect-error
     ...nightText('row-center'),
     padding: theme.rem(0.25)
   },

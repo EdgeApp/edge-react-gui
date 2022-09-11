@@ -24,6 +24,7 @@ type Props = {
 export const CryptoFiatAmountTile = (props: Props) => {
   const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId } = props
   const styles = getStyles(useTheme())
+  // @ts-expect-error
   const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
@@ -41,9 +42,11 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
 
   return (
+    // @ts-expect-error
     <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
       <EdgeText>
         {cryptoAmountText}
+        {/* @ts-expect-error */}
         (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
       </EdgeText>
     </Tile>

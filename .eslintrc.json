@@ -31,6 +31,7 @@
     "@typescript-eslint/strict-boolean-expressions": "off",
 
     "react/jsx-handler-names": "off",
+    "react/no-string-refs": "off",
     "react-native/no-inline-styles": "off",
     "react-native/no-raw-text": ["error", { "skip": ["EdgeText"] }],
     "simple-import-sort/imports": "error"

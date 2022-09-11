@@ -43,10 +43,13 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const styles = getStyles(theme)
 
   const handlePress = useHandler(() => {
+    // @ts-expect-error
     const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)
     if (walletType != null) {
+      // @ts-expect-error
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
     } else if (pluginId != null) {
+      // @ts-expect-error
       dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId })).then(handleRes)
     }
   })

@@ -188,6 +188,7 @@ export const banxaProvider: FiatProviderFactory = {
             consify(cryptoCurrencies)
             for (const coin of cryptoCurrencies.data.coins) {
               for (const chain of coin.blockchains) {
+                // @ts-expect-error
                 const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                 if (currencyPluginId != null) {
                   addToAllowedCurrencies(currencyPluginId, coin.coin_code, coin)
@@ -298,6 +299,7 @@ export const banxaProvider: FiatProviderFactory = {
           pluginId,
           regionCode,
           direction,
+          // @ts-expect-error
           paymentTypes: chosenPaymentTypes,
           partnerIcon,
           pluginDisplayName,
@@ -414,6 +416,7 @@ const findLimit = (fiatCode: string, banxaLimits: BanxaTxLimit[]): BanxaTxLimit 
 const buildPaymentsMap = (banxaPayments: BanxaPaymentMethods, banxaPaymentsMap: BanxaPaymentMap): void => {
   const { payment_methods: methods } = banxaPayments.data
   for (const pm of methods) {
+    // @ts-expect-error
     const pt = typeMap[pm.paymentType]
     if (pt != null) {
       for (const fiat of pm.supported_fiat) {
@@ -457,6 +460,7 @@ const edgeToBanxaCrypto = (tokenId: EdgeTokenId): { banxaChain: string; banxaCoi
   const banxaCoin = asBanxaCryptoCoin(tokens[tokenId?.tokenId ?? ''])
   if (banxaCoin == null) throw new Error(`edgeToBanxaCrypto ${tokenId.pluginId} ${tokenId?.tokenId ?? 'NOTOKENID'} not allowed`)
   for (const chain of banxaCoin.blockchains) {
+    // @ts-expect-error
     const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]
     if (edgePluginId === tokenId.pluginId) {
       return { banxaChain: chain.code, banxaCoin: banxaCoin.coin_code }

@@ -8,6 +8,7 @@ import { TileComponent } from '../../components/tiles/Tile'
 
 describe('Tile', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -21,6 +22,7 @@ describe('Tile', () => {
       maximumHeight: 'small',
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TileComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

@@ -20,6 +20,7 @@ const makePaths = (type: LogType): string[] => {
   return fileArray
 }
 
+// @ts-expect-error
 const logMap: { [type: LogType]: string[] } = {
   info: makePaths('info'),
   activity: makePaths('activity')
@@ -38,6 +39,7 @@ const NUM_WRITES_BEFORE_ROTATE_CHECK = 100
 
 let numWrites = 0
 
+// @ts-expect-error
 async function isLogFileLimitExceeded(filePath) {
   const stats = await RNFS.stat(filePath)
 
@@ -45,6 +47,7 @@ async function isLogFileLimitExceeded(filePath) {
 }
 
 async function rotateLogs(type: LogType): Promise<void> {
+  // @ts-expect-error
   const paths = logMap[type]
   if (!(await RNFS.exists(paths[0]))) {
     return
@@ -65,6 +68,7 @@ async function rotateLogs(type: LogType): Promise<void> {
     await RNFS.writeFile(paths[0], '')
     numWrites = 0
   } catch (e: any) {
+    // @ts-expect-error
     global.clog(e)
   }
 }
@@ -83,6 +87,7 @@ async function migrateLogs(): Promise<void> {
 
 let checkMigrated = false
 async function writeLog(type: LogType, content: string): Promise<void> {
+  // @ts-expect-error
   const path = logMap[type][0]
   try {
     if (!checkMigrated) {
@@ -102,11 +107,13 @@ async function writeLog(type: LogType, content: string): Promise<void> {
       return await RNFS.writeFile(path, content)
     }
   } catch (e: any) {
+    // @ts-expect-error
     global.clog((e && e.message) || e)
   }
 }
 
 export async function readLogs(type: LogType): Promise<string | undefined> {
+  // @ts-expect-error
   const paths = logMap[type]
 
   try {
@@ -119,6 +126,7 @@ export async function readLogs(type: LogType): Promise<string | undefined> {
     }
     return log
   } catch (err) {
+    // @ts-expect-error
     global.clog((err && err.message) || err)
   }
 }
@@ -134,8 +142,10 @@ export async function logWithType(type: LogType, ...info: Array<number | string 
       return await writeLog(type, d + ': ' + logs)
     })
   } catch (e: any) {
+    // @ts-expect-error
     global.clog(e)
   }
+  // @ts-expect-error
   global.clog(logs)
 }
 
@@ -148,6 +158,7 @@ export async function logActivity(...info: Array<number | string | null | {}>): 
 }
 
 async function request(data: string) {
+  // @ts-expect-error
   return global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
     method: 'POST',
     headers: {

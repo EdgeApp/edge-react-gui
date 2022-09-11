@@ -34,6 +34,7 @@ const CryptoIconComponent = (props: Props) => {
   const size = theme.rem(sizeRem ?? 2)
 
   // Track wallets state from account and update the wallet when ready
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const wallet = walletId != null ? account.currencyWallets[walletId] : null
   // If we have a wallet, get the pluginId from it in case it's missing

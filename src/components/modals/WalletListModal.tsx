@@ -74,6 +74,7 @@ export function WalletListModal(props: Props) {
     excludeCurrencyCodes
   } = props
 
+  // @ts-expect-error
   const account = useSelector(state => state.core.account)
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')

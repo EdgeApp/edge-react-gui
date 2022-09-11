@@ -35,6 +35,7 @@ describe('MyComponent', () => {
         supportsTouchId={false}
         touchIdEnabled
         // DispatchProps:
+        // @ts-expect-error
         confirmPassword={nop}
         dispatchUpdateEnableTouchIdEnable={nop}
         handleSendLogs={nop}
@@ -68,6 +69,7 @@ describe('MyComponent', () => {
         supportsTouchId={false}
         touchIdEnabled
         // DispatchProps:
+        // @ts-expect-error
         confirmPassword={nop}
         dispatchUpdateEnableTouchIdEnable={nop}
         lockSettings={nop}

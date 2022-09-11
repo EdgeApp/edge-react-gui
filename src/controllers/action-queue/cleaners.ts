@@ -174,6 +174,7 @@ const asDoneEffect = asObject({
   type: asValue('done'),
   error: asOptional(asError)
 })
+// @ts-expect-error
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asSeqEffect,
   asParEffect,

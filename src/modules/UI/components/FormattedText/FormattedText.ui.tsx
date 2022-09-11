@@ -9,10 +9,12 @@ type Props = {
   children: React.ReactNode
   fontSize?: number
   isBold?: boolean
+  // @ts-expect-error
   style?: StyleSheet.Styles
 }
 
 export class FormattedText extends React.Component<Props> {
+  // @ts-expect-error
   style: StyleSheet.Styles | typeof undefined
   nativeForward: any
 

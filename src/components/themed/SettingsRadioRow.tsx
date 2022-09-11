@@ -44,4 +44,5 @@ const SettingsRadioRowComponent = (props: Props): React.ReactNode => {
   )
 }
 
+// @ts-expect-error
 export const SettingsRadioRow = memo(SettingsRadioRowComponent)

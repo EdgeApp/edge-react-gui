@@ -7,6 +7,7 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = initialState
+  // @ts-expect-error
   const actual = permissionsReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
@@ -18,6 +19,7 @@ test('updatePermissions => UNAVAILABLE', () => {
     camera: RESULTS.UNAVAILABLE
   }
   const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.UNAVAILABLE } }
+  // @ts-expect-error
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -29,6 +31,7 @@ test('updatePermissions => BLOCKED', () => {
     camera: RESULTS.BLOCKED
   }
   const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.BLOCKED } }
+  // @ts-expect-error
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -40,6 +43,7 @@ test('updatePermissions => GRANTED', () => {
     camera: RESULTS.GRANTED
   }
   const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.GRANTED } }
+  // @ts-expect-error
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -51,6 +55,7 @@ test('updatePermissions => DENIED', () => {
     camera: RESULTS.DENIED
   }
   const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.DENIED } }
+  // @ts-expect-error
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -62,6 +67,7 @@ test('updatePermissions => LIMITED', () => {
     camera: RESULTS.LIMITED
   }
   const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.LIMITED } }
+  // @ts-expect-error
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -80,6 +86,7 @@ test('updatePermissions => MULTI', () => {
       contacts: RESULTS.GRANTED
     }
   }
+  // @ts-expect-error
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)

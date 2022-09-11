@@ -11,6 +11,7 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
+  // @ts-expect-error
   apiKey: ENV.BUGSNAG_API_KEY,
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
@@ -48,6 +49,7 @@ const IGNORED_WARNINGS = [
 console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
+// @ts-expect-error
 if (ENV.DISABLE_WARNINGS) {
   LogBox.ignoreLogs(IGNORED_WARNINGS)
 }
@@ -77,6 +79,7 @@ if (!__DEV__) {
   console.error = log
 }
 
+// @ts-expect-error
 if (ENV.LOG_SERVER) {
   console.log = function () {
     logToServer(arguments)
@@ -121,6 +124,7 @@ if (ENABLE_PERF_LOGGING) {
       perfCounters[label] = 0
     }
     if (typeof perfTimers[label] === 'undefined') {
+      // @ts-expect-error
       perfTimers[label] = global.nativePerformanceNow()
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
@@ -131,6 +135,7 @@ if (ENABLE_PERF_LOGGING) {
   global.pend = function (label: string) {
     const d = makeDate()
     if (typeof perfTimers[label] === 'number') {
+      // @ts-expect-error
       const elapsed = global.nativePerformanceNow() - perfTimers[label]
       perfTotals[label] += elapsed
       perfCounters[label]++
@@ -167,6 +172,7 @@ if (ENABLE_PERF_LOGGING) {
 const realFetch = fetch
 // @ts-expect-error
 fetch = async (...args: any) => {
+  // @ts-expect-error
   return realFetch(...args).catch(e => {
     Bugsnag.leaveBreadcrumb('realFetchError', {
       url: args[0],

@@ -44,4 +44,5 @@ export const SettingsLabelRowComponent = (props: Props): React.ReactNode => {
   )
 }
 
+// @ts-expect-error
 export const SettingsLabelRow = memo(SettingsLabelRowComponent)

@@ -8,6 +8,7 @@ export function EdgeLogoHeader() {
   const styles = getStyles(theme)
   return (
     <View style={styles.container}>
+      {/* @ts-expect-error */}
       <Image style={styles.icon} source={theme.headerIcon} resizeMode="contain" />
     </View>
   )

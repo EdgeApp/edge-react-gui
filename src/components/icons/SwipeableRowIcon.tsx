@@ -25,6 +25,7 @@ export function SwipeableRowIcon(props: Props) {
     minWidth,
     transform: [{ scale: withTiming(isActive.value ? 1.5 : 1) }]
   }))
+  // @ts-expect-error
   return <Animated.View style={[styles.center, style]}>{children}</Animated.View>
 }
 
@@ -34,4 +35,6 @@ const rawStyles = {
     justifyContent: 'center'
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

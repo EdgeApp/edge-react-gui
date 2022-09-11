@@ -8,6 +8,7 @@ import { FlipInputComponent } from '../../components/themed/FlipInput'
 
 describe('FlipInputComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -43,6 +44,7 @@ describe('FlipInputComponent', () => {
       theme: getTheme()
     }
 
+    // @ts-expect-error
     const actual = renderer.render(<FlipInputComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

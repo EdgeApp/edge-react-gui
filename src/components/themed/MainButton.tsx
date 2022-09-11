@@ -101,6 +101,7 @@ export function MainButton(props: Props) {
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
   const commonButton = {
     alignItems: 'center',

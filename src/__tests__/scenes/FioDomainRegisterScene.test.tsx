@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('FioDomainRegister', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -34,6 +35,7 @@ describe('FioDomainRegister', () => {
       }),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<FioDomainRegister {...props} />)
 
     expect(actual).toMatchSnapshot()

@@ -1,4 +1,5 @@
 import * as React from 'react'
+// @ts-expect-error
 import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
@@ -28,4 +29,6 @@ const rawStyles = {
     alignSelf: 'center'
   }
 }
+
+// @ts-expect-error
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

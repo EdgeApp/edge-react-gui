@@ -48,6 +48,7 @@ class HelpWebViewModal extends React.Component<Props & { uri: string; title: str
         <ModalTitle center paddingRem={[0, 1, 1]}>
           {title}
         </ModalTitle>
+        {/* @ts-expect-error */}
         <WebView ref={element => (this.webview = element)} source={{ uri }} />
 
         <ModalCloseArrow onPress={this.handleClose} />
@@ -92,6 +93,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
         <View style={styles.titleContainer}>
+          {/* @ts-expect-error */}
           <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
           <ModalTitle center paddingRem={[0, 1, 1]}>
             {helpModalTitle}

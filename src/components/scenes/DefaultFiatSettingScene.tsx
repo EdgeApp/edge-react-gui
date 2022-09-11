@@ -98,6 +98,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               data={filteredArray}
               initialNumToRender={30}
               keyboardShouldPersistTaps="handled"
+              // @ts-expect-error
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
             />

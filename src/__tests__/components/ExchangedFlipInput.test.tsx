@@ -8,6 +8,7 @@ import { ExchangedFlipInput } from '../../components/themed/ExchangedFlipInput'
 
 describe('ExchangedFlipInput', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
 
     const props = {
@@ -43,6 +44,7 @@ describe('ExchangedFlipInput', () => {
       exchangeSecondaryToPrimaryRatio: '0',
       forceUpdateGuiCounter: 11,
       keyboardVisible: true,
+      // @ts-expect-error
       onExchangeAmountChanged: amounts => ['123123', '123123', 'BTC'],
       isEditable: true,
       isFiatOnTop: true,
@@ -50,6 +52,7 @@ describe('ExchangedFlipInput', () => {
       headerText: '123',
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<ExchangedFlipInput {...props} />)
 
     expect(actual).toMatchSnapshot()

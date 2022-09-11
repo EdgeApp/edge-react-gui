@@ -8,6 +8,7 @@ import { getTheme } from '../../components/services/ThemeContext'
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
+    // @ts-expect-error
     const renderer = new ShallowRenderer()
     const swapInfo = {
       quote: {
@@ -96,10 +97,14 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       toDenomination: 'ETH',
       toWalletCurrencyName: { fromDenomination: '' },
 
+      // @ts-expect-error
       shift: (swapInfo, onApprove) => undefined,
+
+      // @ts-expect-error
       timeExpired: (swapInfo, onApprove) => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<CryptoExchangeQuoteScreenComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

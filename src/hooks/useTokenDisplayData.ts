@@ -29,8 +29,11 @@ export const useTokenDisplayData = (props: { tokenId?: string; wallet: EdgeCurre
   // BASE / QUOTE = PRICE, where:
   // - 'Fiat' is the QUOTE, defined by the wallet's fiatCurrencyCode
   // - 'Yest' is an index for a historical price from 24 hours ago.
+  // @ts-expect-error
   const usdFiatPrice = useSelector(state => state.exchangeRates[`iso:USD_${isoFiatCurrencyCode}`])
+  // @ts-expect-error
   const assetFiatPrice = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
+  // @ts-expect-error
   const assetFiatYestPrice = useSelector(state => {
     // The extra _ at the end means there is yesterday's date string at the end of the key
     const pair = Object.keys(state.exchangeRates).find(pair => pair.includes(`${currencyCode}_iso:USD_`))
