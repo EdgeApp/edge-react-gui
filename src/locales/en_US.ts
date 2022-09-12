@@ -1,4 +1,6 @@
-export const strings = {
+import { StringMap } from '../types/types'
+
+const strings: StringMap = {
   // Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
@@ -1248,3 +1250,5 @@ export const strings = {
   currency_label_ZMW: 'Zambian Kwacha',
   currency_label_ZWL: 'Zimbabwe Dollar'
 }
+
+export default strings

@@ -1,6 +1,5 @@
 import { getLocales } from 'react-native-localize'
 
-// @ts-expect-error
 import en from './en_US'
 import de from './strings/de.json'
 import es from './strings/es.json'

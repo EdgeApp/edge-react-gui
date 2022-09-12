@@ -73,7 +73,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   const [nativeAmount, setNativeAmount] = useState('0')
   const [exchangeAmount, setExchangeAmount] = useState('0')
   const [apy, setApy] = useState(0)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
   const [tx, setTx] = useState(null)
   const [selectedFioAddress, setSelectedFioAddress] = useState()
@@ -113,7 +113,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }
 
   const handleSubmit = async () => {
-    if (tx == null) return setError(s.strings.create_wallet_account_error_sending_transaction)
+    if (tx == null) return setError(new Error(s.strings.create_wallet_account_error_sending_transaction))
     setLoading(true)
     try {
       const signedTx = await currencyWallet.signTx(tx)
@@ -186,7 +186,6 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       // If no address is found, we do not define the selectedFioAddress
       if (fioAddress == null) return
       // Addresses must have at least 1 bundled transaction; we rely on bundle txs and don't yet support fee-based tx for staking
-      // @ts-expect-error
       if (fioAddress.bundledTxs < 1) return setError(new Error(sprintf(s.strings.staking_no_bundled_txs_error, fioAddress.name)))
 
       // @ts-expect-error
@@ -202,7 +201,6 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
     // If the selectedFioAddress is not defined, then we will not be able to complete the transaction.
     if (selectedFioAddress == null) {
-      // @ts-expect-error
       setError(new Error(s.strings.staking_no_fio_address_error))
       return
     }
@@ -299,8 +297,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     return (
       <Tile type="static" title={s.strings.send_scene_error_title}>
         <EdgeText style={styles.errorMessage} numberOfLines={3}>
-          {/* @ts-expect-error */}
-          {error.toString()}
+          {error.message.toString()}
         </EdgeText>
       </Tile>
     )
