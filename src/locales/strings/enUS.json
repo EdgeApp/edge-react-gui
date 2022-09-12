@@ -1,5 +1,5 @@
 {
-  "strings": {
+  "default": {
     "action_queue_display_unknown_title": "Unknown action",
     "action_queue_display_unknown_message": "Edge is unable to identify the of action being completed.",
     "action_queue_display_seq_title": "Action sequence",
