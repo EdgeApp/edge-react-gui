@@ -1,12 +1,14 @@
 // @flow
 
+import { add, gt } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 
+import { type BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { type Dispatch, type GetState } from '../../../types/reduxTypes'
 import { makeCleanStore } from '../../../util/CleanStore'
 import { scheduleActionProgram } from '../../action-queue/redux/actions'
 import { type ActionProgram } from '../../action-queue/types'
-import { type BorrowPluginMap } from '../borrowPluginConfig'
+import { borrowPluginMap } from '../borrowPluginConfig'
 import { type LoanAccountEntry, type LoanProgramEdge, type LoanProgramType, asLoanAccountMapRecord, LOAN_ACCOUNT_MAP, LOAN_MANAGER_STORE_ID } from '../store'
 import { type LoanAccount } from '../types'
 
@@ -18,8 +20,12 @@ type DeleteLoanAccountAction = {
   type: 'LOAN_MANAGER/DELETE_LOAN_ACCOUNT',
   id: string
 }
+type UpdateSyncRatio = {
+  type: 'LOAN_MANAGER/SET_SYNC_RATIO',
+  syncRatio: number
+}
 
-export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction
+export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction | UpdateSyncRatio
 
 /**
  * Save a new LoanAccount to disk and sets it in the Redux state.
@@ -54,7 +60,7 @@ export const createLoanAccount = (loanAccount: LoanAccount) => async (dispatch: 
  * Load all LoanAccounts from disk to the redux store and initializes
  * associated BorrowEngines.
  */
-export const loadLoanAccounts = (account: EdgeAccount, borrowPluginMap: BorrowPluginMap) => async (dispatch: Dispatch, getState: GetState) => {
+export const loadLoanAccounts = (account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
   const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
   const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
 
@@ -72,10 +78,15 @@ export const loadLoanAccounts = (account: EdgeAccount, borrowPluginMap: BorrowPl
     }
     dispatch({
       type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
-      loanAccount: loanAccount
+      loanAccount
     })
   }
+  dispatch({
+    type: 'LOAN_MANAGER/SET_SYNC_RATIO',
+    syncRatio: 1
+  })
 }
+
 /**
  * Update an existing LoanAccount.
  * It will throw if specified LoanAccount is not found.
@@ -144,3 +155,91 @@ export const runLoanActionProgram =
 
     return loanAccount
   }
+
+export const resyncLoanAccounts = (account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
+  const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
+  const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
+
+  const borrowPlugins: BorrowPlugin[] = (Object.values(borrowPluginMap): any)
+
+  // `loanAccountIds` is synonymous to `walletIds`
+  const ids = Object.keys(account.currencyWallets)
+
+  dispatch({
+    type: 'LOAN_MANAGER/SET_SYNC_RATIO',
+    syncRatio: 0
+  })
+
+  let progress = 0
+  const promises = ids
+    .map(async (id, i) => {
+      const loanAccountId = id
+      try {
+        const wallet = await account.waitForCurrencyWallet(loanAccountId)
+
+        // Find plugin which support currency wallet
+        const currencyPluginId = wallet.currencyConfig.currencyInfo.pluginId
+        const borrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)
+
+        // Skip wallets that don't have a supported borrow plugin
+        if (borrowPlugin == null) return
+
+        // Make borrow engine
+        const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+
+        // Wait for borrow engine to be fully synced
+        await new Promise(resolve => {
+          borrowEngine.watch('syncRatio', syncRatio => {
+            if (syncRatio >= 1) resolve()
+          })
+        })
+
+        const hasDebt = gt(
+          borrowEngine.debts.reduce((sum, debt) => add(sum, debt.nativeAmount), '0'),
+          '0'
+        )
+        const hasCollateral = gt(
+          borrowEngine.collaterals.reduce((sum, collateral) => add(sum, collateral.nativeAmount), '0'),
+          '0'
+        )
+
+        if (hasDebt && hasCollateral) {
+          // Ignore creating account if already created
+          if (loanAccountMapRecord.data[loanAccountId]) return
+          // Create loan account if not already created
+          const loanAccount: LoanAccount = {
+            id: loanAccountId,
+            borrowPlugin,
+            borrowEngine,
+            programEdges: []
+          }
+          await dispatch(createLoanAccount(loanAccount))
+        } else {
+          // Remove loans "emptied out" loans
+          const existingLoanAccount = loanAccountMapRecord.data[loanAccountId]
+          if (existingLoanAccount != null) {
+            await dispatch(deleteLoanAccount(loanAccountId))
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    })
+    .map(promise =>
+      promise.then(() => {
+        const syncRatio = ++progress / ids.length
+        // console.log('\n###\n', { total: ids.length, progress, syncRatio }, '\n###\n')
+        dispatch({
+          type: 'LOAN_MANAGER/SET_SYNC_RATIO',
+          syncRatio
+        })
+      })
+    )
+
+  await Promise.all(promises)
+
+  dispatch({
+    type: 'LOAN_MANAGER/SET_SYNC_RATIO',
+    syncRatio: 1
+  })
+}

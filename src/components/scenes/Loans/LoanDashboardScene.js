@@ -4,13 +4,14 @@ import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { createWallet } from '../../../actions/CreateWalletActions'
+import { resyncLoanAccounts } from '../../../controllers/loan-manager/redux/actions'
 import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { useState } from '../../../types/reactHooks'
-import { useSelector } from '../../../types/reactRedux'
+import { useEffect, useState } from '../../../types/reactHooks'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { type NavigationProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { type FlatListItem } from '../../../types/types'
@@ -20,6 +21,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { Space } from '../../layout/Space'
 import { WalletListModal } from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, redText } from '../../services/AirshipInstance'
@@ -38,11 +40,18 @@ export const LoanDashboardScene = (props: Props) => {
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
+
+  //
+  // State
+  //
 
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+  const syncRatio = useSelector(state => state.loanManager.syncRatio)
+  const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
 
   const wallets = useWatch(account, 'currencyWallets')
 
@@ -57,6 +66,26 @@ export const LoanDashboardScene = (props: Props) => {
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
+
+  const isCompatibleWalletsAvailable =
+    hardPluginWalletIds.length === 0 ||
+    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
+
+  //
+  // Effects
+  //
+
+  useEffect(() => {
+    // Only resync on scene mount every 5 minutes
+    if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
+      dispatch(resyncLoanAccounts(account))
+    }
+  }, [account, dispatch, lastResyncTimestamp])
+
+  //
+  // Handlers
+  //
+
   const handleAddLoan = useHandler(async () => {
     let newLoanWallet
 
@@ -95,6 +124,10 @@ export const LoanDashboardScene = (props: Props) => {
     }
   })
 
+  //
+  // Render
+  //
+
   const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
     const loanAccount: LoanAccount = item.item
 
@@ -106,21 +139,28 @@ export const LoanDashboardScene = (props: Props) => {
     )
   })
 
-  const isCompatibleWalletsAvailable =
-    hardPluginWalletIds.length === 0 ||
-    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
-
-  const footer = isNewLoanLoading ? (
-    // Render a loading card in place of the "New Loan" button while initializing a new loan
-    <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
-      <FillLoader />
-    </Card>
-  ) : isCompatibleWalletsAvailable ? ( // Don't show the "Add Loan" button if all the user's wallets have associated LoanAccounts.
-    <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
-      <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-      <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
-    </TouchableOpacity>
-  ) : null
+  const renderFooter = () => {
+    return (
+      <>
+        {isNewLoanLoading ? (
+          <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
+            <FillLoader />
+          </Card>
+        ) : null}
+        {syncRatio < 1 ? (
+          <Space around>
+            <FillLoader />
+          </Space>
+        ) : null}
+        {isCompatibleWalletsAvailable ? (
+          <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
+            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
+          </TouchableOpacity>
+        ) : null}
+      </>
+    )
+  }
 
   if (!isWalletsLoaded) {
     return (
@@ -140,7 +180,7 @@ export const LoanDashboardScene = (props: Props) => {
         keyboardShouldPersistTaps="handled"
         renderItem={renderLoanCard}
         style={margin}
-        ListFooterComponent={footer}
+        ListFooterComponent={renderFooter()}
         keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
       />
     </SceneWrapper>
