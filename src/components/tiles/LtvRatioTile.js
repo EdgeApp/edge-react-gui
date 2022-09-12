@@ -1,4 +1,5 @@
 // @flow
+
 import { add, div, mul } from 'biggystring'
 import * as React from 'react'
 
@@ -8,7 +9,7 @@ import { type BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { useTotalFiatAmount } from '../../util/borrowUtils'
-import { mulToPrecision } from '../../util/utils'
+import { mulToPrecision, zeroString } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
 export const LtvRatioTile = (props: {
@@ -36,7 +37,7 @@ export const LtvRatioTile = (props: {
 
   let totalDebtFiatValue = useTotalFiatAmount(currencyWallet, debts)
   let totalCollateralFiatValue = useTotalFiatAmount(currencyWallet, collaterals)
-  const currentValue = div(totalDebtFiatValue, totalCollateralFiatValue, 2)
+  const currentValue = zeroString(totalCollateralFiatValue) ? '0' : div(totalDebtFiatValue, totalCollateralFiatValue, 2)
 
   const changeAmount = mul(mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRate), direction === 'increase' ? '1' : '-1')
 
@@ -46,7 +47,7 @@ export const LtvRatioTile = (props: {
     totalCollateralFiatValue = add(totalCollateralFiatValue, changeAmount)
   }
 
-  const futureValue = div(totalDebtFiatValue, totalCollateralFiatValue, 2)
+  const futureValue = zeroString(totalCollateralFiatValue) ? '0' : div(totalDebtFiatValue, totalCollateralFiatValue, 2)
 
   return <PercentageChangeArrowTile title={s.strings.loan_loan_to_value_ratio} currentValue={currentValue} futureValue={futureValue} />
 }
