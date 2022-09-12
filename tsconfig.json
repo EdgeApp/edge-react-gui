@@ -5,15 +5,16 @@
     "outDir": "lib",
     "noEmit": true,
     "esModuleInterop": true,
-    "jsx": "react-native",
+    "jsx": "react",
     "lib": ["es2017"],
     "module": "es2015",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "isolatedModules": false,
     "target": "esnext",
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["./src/**/*", "./scripts/**/*", "./config.ts", "./index.ts", "./localizeLanguage.ts", "supressTsErrors.ts"],
+  "include": ["./src/**/*", "./scripts/**/*", "./config.ts", "./index.ts", "./localizeLanguage.ts", "supressTsErrors.ts", "jest.config.ts", "jest.async.config.ts"],
   "exclude": ["node_modules", "./lib/**/*"],
 }

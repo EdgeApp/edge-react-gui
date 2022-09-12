@@ -41,8 +41,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     showTransfer: false
   }
 
-  // @ts-expect-error
-  componentDidMount(): * {
+  componentDidMount(): void {
     const { refreshAllFioAddresses, route } = this.props
     const { showAddBundledTxs } = route.params
     refreshAllFioAddresses()

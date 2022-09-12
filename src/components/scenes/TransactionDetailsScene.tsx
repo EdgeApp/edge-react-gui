@@ -118,8 +118,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { metadata } = edgeTransaction
     const { name: contactName = '', notes = '', amountFiat } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
-    // @ts-expect-error
-    const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
+    const { category, subCategory } = this.initializeFormattedCategories(metadata ?? {}, direction)
 
     this.state = {
       amountFiat: displayFiatAmount(amountFiat),
@@ -133,8 +132,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  // @ts-expect-error
-  initializeFormattedCategories = (metadata: ?EdgeMetadata, direction: string) => {
+  initializeFormattedCategories = (metadata: EdgeMetadata, direction: string) => {
     const defaultCategory = direction === 'receive' ? categories.income.key : categories.expense.key
     if (metadata) {
       const fullCategory = metadata.category || ''
