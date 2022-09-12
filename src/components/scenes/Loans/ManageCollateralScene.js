@@ -10,10 +10,11 @@ import { useRunningActionQueueId } from '../../../controllers/action-queue/Actio
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
+import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch.js'
 import s from '../../../locales/strings.js'
 import type { ApprovableAction } from '../../../plugins/borrow-plugins/types.js'
-import { useCallback, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useDispatch } from '../../../types/reactRedux.js'
 import { type NavigationProp, type ParamList } from '../../../types/routerTypes'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -128,11 +129,11 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // #region Handlers
 
-  const handleFiatAmountChanged = useCallback(({ fiatAmount, nativeCryptoAmount }) => {
+  const handleFiatAmountChanged = useHandler(({ fiatAmount, nativeCryptoAmount }) => {
     setActionNativeCryptoAmount(nativeCryptoAmount)
-  }, [])
+  })
 
-  const handleSliderComplete = async (resetSlider: () => void) => {
+  const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
     if (actionOp != null) {
       const actionProgram = await makeActionProgram(actionOp)
       try {
@@ -144,7 +145,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
         resetSlider()
       }
     }
-  }
+  })
 
   // #endregion Handlers
 
