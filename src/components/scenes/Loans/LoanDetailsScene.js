@@ -31,7 +31,6 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
-import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
@@ -269,7 +268,6 @@ export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: G
   const key = `${currencyCode}_${wallet.fiatCurrencyCode}`
   const assetFiatPrice = exchangeRates[key] ?? '0'
   if (zeroString(assetFiatPrice)) {
-    showError(`No exchange rate for ${key}`)
     return '0'
   }
 
