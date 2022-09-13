@@ -35,7 +35,6 @@ export type PriceChangeNotificationSettings = {
 
 export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const deviceId = state.core.context.clientId
   const { defaultIsoFiat } = state.ui.settings
   let v2Settings = {
     loginIds: [],
@@ -43,7 +42,20 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     ignorePriceChanges: false
   }
   try {
-    v2Settings = await getDeviceSettings(deviceId)
+    const body = {
+      apiKey: ENV.AIRBITZ_API_KEY,
+      deviceId: state.core.context.clientId
+    }
+    const opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }
+    const response = await fetchPush('v2/device/', opts)
+
+    v2Settings = await asDevicePayload(await response.json())
 
     const currencyWallets = state.core.account.currencyWallets
     const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
@@ -139,23 +151,6 @@ export const serverSettingsToState = (settings: $Call<typeof asDevicePayload>): 
   }
 
   return data
-}
-
-export const getDeviceSettings = async (deviceId: string): Promise<$Call<typeof asDevicePayload>> => {
-  const body = {
-    apiKey: ENV.AIRBITZ_API_KEY,
-    deviceId
-  }
-  const opts = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  }
-  const response = await fetchPush('v2/device/', opts)
-
-  return asDevicePayload(await response.json())
 }
 
 export const setDeviceSettings =
