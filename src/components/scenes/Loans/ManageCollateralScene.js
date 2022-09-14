@@ -35,7 +35,7 @@ type ManageCollateralRequest = {
   nativeAmount: string
 }
 
-type Props<T: $Keys<ParamList>> = {
+type Props<T extends $Keys<ParamList>> = {
   // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
   action: (request: ManageCollateralRequest) => Promise<ApprovableAction>,
   actionOperand: 'debts' | 'collaterals',
@@ -50,7 +50,7 @@ type Props<T: $Keys<ParamList>> = {
   navigation: NavigationProp<T>
 }
 
-export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
+export const ManageCollateralScene = <T extends $Keys<ParamList>>(props: Props<T>) => {
   // #region Constants
 
   const { action, actionOperand, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props

@@ -98,7 +98,7 @@ export function bestOfPlugins(
 /**
  * Replaces default start dates with definite ones.
  */
-export function lockStartDates<T: { startDate?: Date }>(tweaks: T[], startDate: Date): T[] {
+export function lockStartDates<T extends { startDate?: Date }>(tweaks: T[], startDate: Date): T[] {
   return tweaks.map(tweak => {
     return tweak.startDate == null ? { ...tweak, startDate } : tweak
   })

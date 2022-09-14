@@ -8,7 +8,7 @@ type ForwardRef = (body: (props: any, ref: any) => React.Node) => any
 
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
-type UseCallback = <T: (...args: any[]) => any>(callback: T, deps: any[]) => T
+type UseCallback = <T extends (...args: any[]) => any>(callback: T, deps: any[]) => T
 
 type UseContext = <T>(context: React.Context<T>) => T
 

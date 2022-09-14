@@ -33,7 +33,7 @@ export type ButtonInfo = {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
+export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: {|
   bridge: AirshipBridge<$Keys<Buttons> | void>,
   title?: string,
   message?: string,

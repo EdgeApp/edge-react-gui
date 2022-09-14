@@ -6,10 +6,9 @@ import { type TextFieldProps, TextField } from 'react-native-material-textfield'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 
-type Props = {|
-  ...TextFieldProps,
+interface Props extends TextFieldProps {
   autoFocus?: boolean
-|}
+}
 
 export class FormField extends React.Component<Props> {
   static defaultProps = {

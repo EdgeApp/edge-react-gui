@@ -328,15 +328,15 @@ export const Actions = {
     Flux.Actions.drawerOpen()
   },
 
-  jump<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
+  jump<Name extends $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
     Flux.Actions.jump(name, { route: { name, params } })
   },
-  push<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
+  push<Name extends $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
     Flux.Actions.push(name, { route: { name, params } })
   },
-  replace<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
+  replace<Name extends $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
     Flux.Actions.replace(name, { route: { name, params } })
   },
@@ -361,15 +361,15 @@ type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 /**
  * The type of the `navigation` prop passed to each scene.
  */
-export type NavigationProp<Name: $Keys<ParamList>> = {
+export type NavigationProp<Name extends $Keys<ParamList>> = {
   // Whether this scene is in the foreground:
   addListener: (event: NavigationEvent, callback: () => void) => () => void,
   isFocused: () => boolean,
 
   // Going places:
-  navigate: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  push: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
-  replace: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
+  navigate: <Name extends $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
+  push: <Name extends $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
+  replace: <Name extends $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
   setParams: (params: $ElementType<ParamList, Name>) => void,
 
   // Returning:
@@ -389,7 +389,7 @@ export type NavigationProp<Name: $Keys<ParamList>> = {
 /**
  * The type of the `route` prop passed to each scene.
  */
-export type RouteProp<Name: $Keys<ParamList>> = {
+export type RouteProp<Name extends $Keys<ParamList>> = {
   name: Name,
   params: $ElementType<ParamList, Name>
 }

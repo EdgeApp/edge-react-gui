@@ -1,14 +1,18 @@
-// @flow
-
-import { type Subscriber } from 'yaob'
-
-import { useEffect, useState } from '../types/reactHooks.js'
+import { useEffect, useState } from 'react'
 
 /**
- * Subscribes to changes in a yaob (core) object's property.
+ * Subscribes to changes in a core object's property.
  */
-export const useWatch = <T: Object, Name: $Keys<T>>(object: { +watch: Subscriber<T> }, name: Name): $ElementType<T, Name> => {
-  const [out, setOut] = useState(object[name])
+export function useWatch<
+  T extends {
+    readonly watch: <Name extends keyof T>(
+      name: Name,
+      callback: (value: T[Name]) => void
+    ) => () => void
+  },
+  Name extends keyof T
+>(object: T, name: Name): T[Name] {
+  const [out, setOut] = useState<any>(object[name])
 
   useEffect(() => {
     setOut(object[name])
