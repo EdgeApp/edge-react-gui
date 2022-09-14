@@ -23,6 +23,7 @@ import { FlipInputTile } from '../../cards/FlipInputTile.js'
 import { CollateralAmountTile, DebtAmountTile, ExchangeRateTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents.js'
 import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal.js'
 import { Airship, showError } from '../../services/AirshipInstance'
+import { Alert } from '../../themed/Alert'
 import { type ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput.js'
 import { AprCard } from '../../tiles/AprCard.js'
 import { InterestRateChangeTile } from '../../tiles/InterestRateChangeTile.js'
@@ -101,7 +102,6 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWalletId)
-  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
 
   // Flip input selected wallet
   const [selectedWallet, setSelectedWallet] = useState<EdgeCurrencyWallet>(borrowEngineWallet)
@@ -205,7 +205,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
       const actionProgram = await makeActionProgram(actionOp)
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
-        navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
+        navigation.goBack()
       } catch (e) {
         showError(e)
       } finally {
@@ -279,21 +279,22 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
     )
   }, [borrowEngine, amountChange, ltvType, selectedTokenId, actionNativeAmount])
 
-  const tiles = [
-    renderFlipInput,
-    renderExchangeRateTile,
-    renderNewAprCard,
-    renderTotalDebtTile,
-    renderNewDebtTile,
-    renderTotalCollateralTile,
-    renderFeeTile,
-    renderInterestRateChangeTile,
-    renderLTVRatioTile
-  ]
+  const renderActiveProgramAlert = () => {
+    return <Alert type="warning" title={s.strings.loan_active_program_alert_title} message={s.strings.loan_active_program_alert_message} />
+  }
 
   return (
-    <FormScene headerText={headerText} onSliderComplete={onSliderComplete} sliderDisabled={approvalAction == null}>
-      {tiles}
+    <FormScene headerText={headerText} onSliderComplete={onSliderComplete} sliderDisabled={existingProgramId != null || approvalAction == null}>
+      {renderFlipInput}
+      {renderExchangeRateTile}
+      {renderNewAprCard}
+      {renderTotalDebtTile}
+      {renderNewDebtTile}
+      {renderTotalCollateralTile}
+      {renderFeeTile}
+      {renderInterestRateChangeTile}
+      {renderLTVRatioTile}
+      {existingProgramId != null ? [renderActiveProgramAlert()] : []}
     </FormScene>
   )
 }

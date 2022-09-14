@@ -858,6 +858,8 @@
   "loan_select_source_collateral": "Please select a source of collateral",
   "loan_total_collateral_value": "Total Collateral Value",
   "loan_withdraw_collateral": "Withdraw Collateral",
+  "loan_active_program_alert_title": "Loan Activity In-Progress",
+  "loan_active_program_alert_message": "Cannot complete new loan action while loan activity is in progress.",
   "loan_aave": "AAVE",
   "loan_status_cancel_txs": "Cancel Transactions",
   "loan_status_cancel_txs_modal_msg": "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",

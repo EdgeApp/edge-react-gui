@@ -959,6 +959,8 @@ const strings = {
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_total_collateral_value: 'Total Collateral Value',
   loan_withdraw_collateral: 'Withdraw Collateral',
+  loan_active_program_alert_title: 'Loan Activity In-Progress',
+  loan_active_program_alert_message: 'Cannot complete new loan action while loan activity is in progress.',
 
   loan_aave: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
