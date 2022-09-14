@@ -2,6 +2,8 @@
 
 import { type Dispatch, type GetState } from '../../../types/reduxTypes'
 import { type ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
+import { uploadPushEvents } from '../push'
+import { getEffectPushEventIds } from '../runtime'
 import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from '../types'
 
 type LoadActionQueueStateAction = {
@@ -45,6 +47,25 @@ export const updateActionProgramState = (programState: ActionProgramState) => as
   const state = getState()
   const clientId = state.core.context.clientId
   const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+
+  await store.updateActionQueueItem(programState)
+
+  dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
+}
+
+export const cancelActionProgram = (programId: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = state.core.account
+  const clientId = state.core.context.clientId
+  const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+  const { state: programState } = state.actionQueue.queue[programId]
+
+  const pushEventIds = getEffectPushEventIds(programState.effect)
+  if (pushEventIds.length > 0) {
+    await uploadPushEvents({ account, clientId }, { removeEvents: pushEventIds })
+  }
+
+  programState.effect = { type: 'done', cancelled: true }
 
   await store.updateActionQueueItem(programState)
 

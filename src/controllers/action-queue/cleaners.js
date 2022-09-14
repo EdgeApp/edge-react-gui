@@ -174,7 +174,8 @@ const asTxConfsEffect = asObject({
 })
 const asDoneEffect = asObject({
   type: asValue('done'),
-  error: asOptional(asError)
+  error: asOptional(asError),
+  cancelled: asOptional(asBoolean)
 })
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asSeqEffect,
@@ -199,5 +200,9 @@ export const asActionProgram: Cleaner<ActionProgram> = asObject({
 export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
   clientId: asString,
   programId: asString,
-  effect: asOptional(asActionEffect)
+  effect: asOptional(asActionEffect),
+  effective: asOptional(asBoolean, false),
+  executing: asOptional(asBoolean, false),
+  lastExecutionTime: asOptional(asNumber, 0),
+  nextExecutionTime: asOptional(asNumber, 0)
 })

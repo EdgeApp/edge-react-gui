@@ -7,20 +7,21 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
+import { cancelActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { type ActionDisplayInfo, type ActionQueueMap } from '../../../controllers/action-queue/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useState } from '../../../types/reactHooks'
-import { useSelector } from '../../../types/reactRedux'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { StepProgressBar } from '../../progress-indicators/StepProgressBar'
-import { Airship, showWarning } from '../../services/AirshipInstance'
+import { Airship } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -37,6 +38,7 @@ export const LoanStatusScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const account: EdgeAccount = useSelector(state => state.core.account)
+  const dispatch = useDispatch()
 
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const [steps, setSteps] = useState<ActionDisplayInfo[] | void>()
@@ -77,8 +79,7 @@ export const LoanStatusScene = (props: Props) => {
     ))
 
     if (approve) {
-      // TODO: Abort action queue
-      showWarning('Cancel not yet implemented...')
+      dispatch(cancelActionProgram(actionQueueId))
       navigation.pop()
     }
   })

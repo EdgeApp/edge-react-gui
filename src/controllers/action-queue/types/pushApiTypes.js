@@ -63,11 +63,14 @@ export const asDeviceUpdatePayload = asObject({
  * PUSH /v2/login/update payload.
  */
 
-export const asLoginUpdatePayload = asObject({
-  createEvents: asOptional(asArray(asNewPushEvent), []),
-  removeEvents: asOptional(asArray(asString), [])
+export type LoginUpdatePayload = {
+  createEvents?: NewPushEvent[],
+  removeEvents?: string[]
+}
+export const asLoginUpdatePayload: Cleaner<LoginUpdatePayload> = asObject({
+  createEvents: asOptional(asArray(asNewPushEvent)),
+  removeEvents: asOptional(asArray(asString))
 })
-export type LoginUpdatePayload = $Call<typeof asLoginUpdatePayload>
 
 export const wasLoginUpdatePayload = uncleaner(asLoginUpdatePayload)
 

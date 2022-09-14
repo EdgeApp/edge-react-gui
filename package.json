@@ -96,6 +96,7 @@
     "@react-native-picker/picker": "^2.4.0",
     "assert": "^2.0.0",
     "async-lock": "^1.1.2",
+    "base-x": "^4.0.0",
     "biggystring": "^3.0.2",
     "cleaner-config": "^0.1.8",
     "cleaners": "^0.3.13",

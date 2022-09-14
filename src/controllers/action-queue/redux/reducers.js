@@ -3,6 +3,7 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import { type Action } from '../../../types/reduxTypes'
+import { checkEffectIsDone } from '../runtime'
 import { type ActionQueueMap } from '../types'
 
 export type ActionQueueState = {
@@ -26,7 +27,7 @@ export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
         const { effect } = action.state
 
         // Remove program from action queue if it has finished
-        if (effect?.type === 'done') {
+        if (checkEffectIsDone(effect)) {
           const { [programId]: _removed, ...rest } = state
           return rest
         }

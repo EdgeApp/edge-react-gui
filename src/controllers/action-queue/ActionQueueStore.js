@@ -9,6 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { type LoanProgramEdge, type LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
+import { checkEffectIsDone } from './runtime'
 import { type ActionProgram, type ActionProgramState, type ActionQueueItem, type ActionQueueMap } from './types'
 
 const { debugStore } = ENV.ACTION_QUEUE
@@ -60,7 +61,11 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
       // Initial program state
       const programState: ActionProgramState = {
         clientId,
-        programId: programId
+        programId: programId,
+        effective: true,
+        executing: false,
+        lastExecutionTime: 0,
+        nextExecutionTime: 0
       }
 
       // Only add the mockMode field if environment is configured with the flag enabled
@@ -101,7 +106,7 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
     },
     async getActionQueueMap(): Promise<ActionQueueMap> {
       const queueItems = await instance.getActionQueueItems()
-      const filteredItems = queueItems.filter(item => item.state.effect?.type !== 'done')
+      const filteredItems = queueItems.filter(item => !checkEffectIsDone(item.state.effect))
       const queueMap = filteredItems.reduce((map, item) => ({ ...map, [item.program.programId]: item }), {})
 
       return queueMap

@@ -19,8 +19,6 @@ export type ActionOpTypes =
   | 'toast'
   | 'delay'
 
-export type ActionOpExecStatus = 'pending' | 'active' | 'done' | Error
-
 export type SeqActionOp = {
   type: 'seq',
   actions: ActionOp[]
@@ -136,7 +134,8 @@ export type TxConfsEffect = {
 }
 export type DoneEffect = {
   type: 'done',
-  error?: Error
+  error?: Error,
+  cancelled?: boolean
 }
 
 export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEventEffect | PriceLevelEffect | TxConfsEffect | DoneEffect
@@ -155,7 +154,14 @@ export type ActionProgram = {
 export type ActionProgramState = {
   clientId: string,
   programId: string,
-  effect?: ActionEffect
+  effect?: ActionEffect,
+
+  // Flags:
+  effective: boolean, // Whether the effect is observed
+  executing: boolean, // Whether the program is executing
+
+  lastExecutionTime: number, // The time when the effect was checked
+  nextExecutionTime: number // The next time when the effect should be checked again
 }
 
 export type ActionQueueItem = {
@@ -195,9 +201,11 @@ export type PendingTxMap = {
 // Aciton Display API
 //
 
+export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error
+
 export type ActionDisplayInfo = {
   title: string,
   message: string,
-  status: ActionOpExecStatus,
+  status: ActionDisplayStatus,
   steps: ActionDisplayInfo[]
 }

@@ -1,7 +1,6 @@
 // @flow
 
 import { asMaybe } from 'cleaners'
-import { base58 } from 'edge-core-js/lib/util/encoding'
 
 import ENV from '../../../env'
 import s from '../../locales/strings'
@@ -11,6 +10,7 @@ import { filterNull } from '../../util/safeFilters'
 import { type ActionEffect, type ActionProgram, type ExecutionContext, type ExecutionOutput } from './types'
 import { type LoginUpdatePayload, type PushRequestBody, asErrorResponse, asLoginPayload, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
 import { type BroadcastTx, type NewPushEvent, type PushEventState, type PushEventStatus, type PushMessage, type PushTrigger } from './types/pushTypes'
+import { base58 } from './util/encoding'
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
@@ -127,13 +127,9 @@ export async function effectCanBeATrigger(context: ExecutionContext, effect: Act
   return (await actionEffectToPushTrigger(context, effect)) != null
 }
 
-export async function uploadPushEvents(context: ExecutionContext, newPushEvents: NewPushEvent[]): Promise<void> {
+export async function uploadPushEvents(context: ExecutionContext, payload: LoginUpdatePayload): Promise<void> {
   const { account, clientId } = context
   const { rootLoginId } = account
-  const loginUpdatePayload: LoginUpdatePayload = {
-    createEvents: newPushEvents,
-    removeEvents: []
-  }
   const requestBody: PushRequestBody = {
     apiKey: AIRBITZ_API_KEY,
     deviceId: clientId,
@@ -144,7 +140,7 @@ export async function uploadPushEvents(context: ExecutionContext, newPushEvents:
     headers: {
       'Content-Type': 'application/json'
     },
-    body: wasPushRequestBody({ ...requestBody, data: wasLoginUpdatePayload(loginUpdatePayload) })
+    body: wasPushRequestBody({ ...requestBody, data: wasLoginUpdatePayload(payload) })
   })
 
   if (!response.ok) {
