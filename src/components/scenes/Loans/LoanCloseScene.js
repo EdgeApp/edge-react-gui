@@ -13,7 +13,6 @@ import { useCallback } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { type NavigationProp, type RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
-import { DebtAmountTile, NetworkFeeTile } from '../../cards/LoanDebtsAndCollateralComponents'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
@@ -21,7 +20,9 @@ import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
+import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 
 export type Props = {
   route: RouteProp<'loanClose'>,
@@ -68,10 +69,10 @@ export const LoanCloseScene = (props: Props) => {
         </Space>
       </SceneHeader>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <DebtAmountTile title={s.strings.loan_remaining_principle} wallet={wallet} debts={debts} />
+        <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={wallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={wallet} nativeAmount={networkFee} />
         {/* TODO: Show a single source wallet picker */}
-        <Tile title={s.strings.loan_debt_amount_title} type="static">
+        <Tile title={s.strings.loan_remaining_principal} type="static">
           {debts.map(debt => (
             <Space key={debt.tokenId} veritcal={0.5}>
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={wallet} />

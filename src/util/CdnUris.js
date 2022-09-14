@@ -1,9 +1,14 @@
 // @flow
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
+import { type BorrowPluginInfo } from '../plugins/borrow-plugins/types'
 import { edgeDark } from '../theme/variables/edgeDark'
 import { edgeLight } from '../theme/variables/edgeLight'
 import { type Theme } from '../types/Theme'
 import { removeHexPrefix } from './utils'
+
+export const getBorrowPluginIconUri = (borrowPluginInfo: BorrowPluginInfo) => {
+  return getCurrencyIconUris(borrowPluginInfo.currencyPluginId, borrowPluginInfo.displayTokenId).symbolImage
+}
 
 /**
  * Swap Plugin Icons

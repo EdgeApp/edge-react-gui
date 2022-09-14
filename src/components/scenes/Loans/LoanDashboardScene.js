@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { type NavigationProp } from '../../../types/routerTypes'
 import { type Theme } from '../../../types/Theme'
 import { type FlatListItem } from '../../../types/types'
-import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getCurrencyInfos, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getBorrowPluginIconUri } from '../../../util/CdnUris'
+import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
@@ -54,12 +54,6 @@ export const LoanDashboardScene = (props: Props) => {
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
 
   const wallets = useWatch(account, 'currencyWallets')
-
-  const iconUri = getCurrencyIconUris(
-    HARD_WALLET_PLUGIN_ID,
-    guessFromCurrencyCode(account, { currencyCode: 'AAVE', pluginId: HARD_WALLET_PLUGIN_ID }).tokenId
-  ).symbolImage
-
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
 
   const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
@@ -130,6 +124,7 @@ export const LoanDashboardScene = (props: Props) => {
 
   const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
     const loanAccount: LoanAccount = item.item
+    const iconUri = getBorrowPluginIconUri(loanAccount.borrowPlugin.borrowInfo)
 
     const handleLoanPress = () => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })

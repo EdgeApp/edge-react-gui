@@ -120,7 +120,11 @@ export type BorrowEngine = {
 
 export type BorrowPluginInfo = {
   borrowPluginId: string,
+
+  // Display information
   displayName: string,
+  // A token from the currencyPluginId, for displaying as the Loan provider icon
+  displayTokenId: string,
 
   // Defines the relationship to the type of currency plugins which the plugin supports
   currencyPluginId: string,
