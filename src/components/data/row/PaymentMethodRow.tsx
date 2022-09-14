@@ -24,23 +24,24 @@ type Props = {
 // -----------------------------------------------------------------------------
 const PaymentMethodRowComponent = (props: Props) => {
   const { marginRem, paymentMethod, pluginId } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
 
+  // #region Initialization
+
+  // Validate plugin data
   const buyPluginJson = asGuiPluginJson(require('../../../constants/plugins/buyPluginList.json'))
   const sellPluginJson = asGuiPluginJson(require('../../../constants/plugins/sellPluginList.json'))
   const pluginJson = [...buyPluginJson, ...sellPluginJson]
   const guiPlugin = guiPlugins[pluginId]
-  if (guiPlugin == null) throw new Error(`PaymentMethodRow could not find ${pluginId} plugin`)
 
   const [isFirstRun, setIsFirstRun] = useState(true)
-  // @ts-expect-error
-  const [partnerIconPath, setPartnerIconPath] = useState()
+  const [partnerIconPath, setPartnerIconPath] = useState<string | undefined>(undefined)
+
+  if (guiPlugin == null) throw new Error(`PaymentMethodRow could not find ${pluginId} plugin`)
 
   if (isFirstRun) {
     for (const row of pluginJson) {
       if (typeof row === 'string') continue
-      if (row.pluginId === pluginId && row.partnerIconPath != null) {
+      if (row.pluginId === pluginId && row.partnerIconPath != undefined) {
         setPartnerIconPath(row.partnerIconPath)
         setIsFirstRun(false)
       }
@@ -49,26 +50,37 @@ const PaymentMethodRowComponent = (props: Props) => {
 
   if (!isFirstRun && partnerIconPath == null) throw new Error(`PaymentMethodRow could not find icon for ${pluginId} plugin`)
 
+  // #endregion Initialization
+
+  // #region Constants
+
+  const theme = useTheme()
+  const styles = getStyles(theme)
   const fiatCurrencyCode = paymentMethod.defaultCurrency
   const mainIcon = <FiatIcon fiatCurrencyCode={fiatCurrencyCode} />
   const name = paymentMethod.name
-  // @ts-expect-error
-  const partnerIconUri = partnerIconPath != null ? getPartnerIconUri(partnerIconPath) : null
-  const pluginDisplay = (
+  const partnerIconUri = partnerIconPath != null ? getPartnerIconUri(partnerIconPath) : undefined
+
+  // #endregion Constants
+
+  // #region Renderers
+
+  const renderPluginDisplay = () => (
     <>
-      {/* @ts-expect-error */}
       <FastImage source={{ uri: partnerIconUri }} style={styles.partnerIconImage} />
       <EdgeText style={styles.pluginText}>{guiPlugin.displayName}</EdgeText>
     </>
   )
+
+  // #endregion Renderers
 
   return (
     <IconDataRow
       icon={mainIcon}
       leftText={fiatCurrencyCode}
       leftSubtext={name}
-      rightSubText={s.strings.plugin_powered_by_space + ' '}
-      rightSubTextExtended={pluginDisplay}
+      rightSubText={s.strings.plugin_powered_by_space}
+      rightSubTextExtended={renderPluginDisplay()}
       marginRem={marginRem}
     />
   )
