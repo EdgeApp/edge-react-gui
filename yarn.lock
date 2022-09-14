@@ -5108,10 +5108,10 @@ clean-stack@^2.0.0:
   resolved "https://registry.yarnpkg.com/clean-stack/-/clean-stack-2.2.0.tgz#ee8472dbb129e727b31e8a10a427dee9dfe4008b"
   integrity sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==
 
-cleaner-config@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/cleaner-config/-/cleaner-config-0.1.8.tgz#c1c8ab584281c28701c0003385c80ddcab0fb8fc"
-  integrity sha512-XrxTEHQIdEyeJqoH4qUHYzdfb8rwvjudZQsbIzsF3B9LGkAMJ8BcrZ6U57/bb7tKojYiuhPGWf1RGlFcFspZuQ==
+cleaner-config@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/cleaner-config/-/cleaner-config-0.1.9.tgz#cf44f92b7c0d6ce01268b526fd108b50ed8777a1"
+  integrity sha512-hcojU0ppPMDBC65c1VBb1yyPgHg6fdZWJAOhbEPQscye2aidNQN3LtfKLnTS5hJVv/70X6fk5ZuPnMWZYCFasA==
   dependencies:
     cleaners "^0.3.8"
     minimist "^1.2.5"

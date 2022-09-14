@@ -1,10 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { YellowBox } from 'react-native'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
-import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import { registerDevice } from '../actions/DeviceIdActions.js'
 import { logoutRequest } from '../actions/LoginActions.js'
@@ -135,18 +133,6 @@ type Props = DispatchProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
-
-  constructor(props: Props) {
-    super(props)
-
-    if (ENV.HIDE_IS_MOUNTED) {
-      YellowBox.ignoreWarnings([
-        'Warning: isMounted(...) is deprecated',
-        'Module RCTImageLoader',
-        'The scalesPageToFit property is not supported when useWebKit = true'
-      ])
-    }
-  }
 
   componentDidMount() {
     logEvent('AppStart')
