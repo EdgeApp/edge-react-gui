@@ -79,10 +79,6 @@ export const loadLoanAccounts = (account: EdgeAccount) => async (dispatch: Dispa
       loanAccount
     })
   }
-  dispatch({
-    type: 'LOAN_MANAGER/SET_SYNC_RATIO',
-    syncRatio: 1
-  })
 }
 
 /**
