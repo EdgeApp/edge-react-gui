@@ -4,6 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
+import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { makeWyreClient } from '../../controllers/action-queue/WyreClient.js'
@@ -11,18 +12,20 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler.js'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings.js'
+import { config } from '../../theme/appConfig'
 import { useMemo, useState } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type EdgeTokenId } from '../../types/types.js'
 import { makeCurrencyCodeTable } from '../../util/utils.js'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
-import { showError } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { WalletList } from '../themed/WalletList.js'
+import { ButtonsModal } from './ButtonsModal.js'
 
 export type WalletListResult = {
   walletId?: string,
@@ -135,7 +138,19 @@ export function WalletListModal(props: Props) {
   const handleSearchFocus = useHandler(() => setSearching(true))
 
   // Pull up the signup workflow on the calling scene if the user does not yet have a linked bank account
-  const handleShowBankPlugin = useHandler(() => bridge.resolve({ isBankSignupRequest: true }))
+  const handleShowBankPlugin = useHandler(async () => {
+    const result = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.deposit_to_bank}
+        message={sprintf(s.strings.wallet_list_modal_confirm_s_bank_withdrawal, config.appName)}
+        buttons={{
+          continue: { label: s.strings.legacy_address_modal_continue }
+        }}
+      />
+    ))
+    if (result === 'continue') await bridge.resolve({ isBankSignupRequest: true })
+  })
 
   const handleItemLayout = useRowLayout()
 
