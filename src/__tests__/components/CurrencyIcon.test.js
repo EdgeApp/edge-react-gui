@@ -1,31 +1,16 @@
-/* globals describe beforeEach afterEach it jest expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import * as reactRedux from 'react-redux'
-import { createRenderer } from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
 import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
-
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-  useDispatch: jest.fn()
-}))
+import { rootReducer } from '../../reducers/RootReducer.js'
 
 describe('CryptoIcon', () => {
-  beforeEach(() => {
-    useDispatchMock.mockImplementation(() => () => {})
-    useSelectorMock.mockImplementation(selector => selector(mockStore))
-  })
-  afterEach(() => {
-    useDispatchMock.mockClear()
-    useSelectorMock.mockClear()
-  })
-
-  const useSelectorMock = reactRedux.useSelector
-  const useDispatchMock = reactRedux.useDispatch
-
-  const mockStore = {
+  const mockState: any = {
     core: {
       account: {
         currencyWallets: {
@@ -37,22 +22,15 @@ describe('CryptoIcon', () => {
       }
     }
   }
+  const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
-    const renderer = createRenderer()
+    const actual = renderer.create(
+      <Provider store={store}>
+        <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" walletId="332s0ds39f" size={5} dark resizeMode="contain" marginRem={1} paddingRem={[1, 2]} />
+      </Provider>
+    )
 
-    const props = {
-      pluginId: 'bitcoin',
-      tokenId: 'bitcoin',
-      walletId: '332s0ds39f',
-      size: 5,
-      dark: true,
-      resizeMode: 'contain',
-      marginRem: 1,
-      paddingRem: [1, 2]
-    }
-    const actual = renderer.render(<CryptoIcon {...props} />)
-
-    expect(actual).toMatchSnapshot()
+    expect(actual.toJSON()).toMatchSnapshot()
   })
 })
