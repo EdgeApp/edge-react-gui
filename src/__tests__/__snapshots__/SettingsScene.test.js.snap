@@ -421,7 +421,19 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
-          style={[MockFunction]}
+          animatedStyle={
+            Object {
+              "value": Object {
+                "height": 0,
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "height": 0,
+            }
+          }
         >
           <View
             accessible={true}
@@ -1835,7 +1847,19 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
-          style={[MockFunction]}
+          animatedStyle={
+            Object {
+              "value": Object {
+                "height": 73,
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "height": 73,
+            }
+          }
         >
           <View
             accessible={true}

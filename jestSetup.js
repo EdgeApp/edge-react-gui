@@ -147,24 +147,8 @@ jest.mock('react-native-localize', () => {
 
 jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
 
-global.__reanimatedWorkletInit = jest.fn()
+require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
+
 for (const log in global.console) {
   global.console[log] = jest.fn()
 }
-
-jest.mock('react-native-reanimated', () => {
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    useSharedValue: jest.fn,
-    useAnimatedStyle: jest.fn,
-    withTiming: jest.fn,
-    withSpring: jest.fn,
-    withRepeat: jest.fn,
-    withSequence: jest.fn,
-    useAnimatedProps: jest.fn,
-    Easing: {
-      linear: jest.fn,
-      elastic: jest.fn
-    }
-  }
-})
