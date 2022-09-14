@@ -1,6 +1,6 @@
 // @flow
-/* globals describe it expect */
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'

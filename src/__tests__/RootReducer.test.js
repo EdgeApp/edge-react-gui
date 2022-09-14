@@ -1,5 +1,6 @@
 // @flow
-/* globals test expect */
+
+import { expect, test } from '@jest/globals'
 
 import { rootReducer } from '../reducers/RootReducer.js'
 

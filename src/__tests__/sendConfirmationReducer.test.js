@@ -1,6 +1,6 @@
 // @flow
-/* globals describe test expect */
 
+import { describe, expect, test } from '@jest/globals'
 import { type EdgeTransaction } from 'edge-core-js'
 import { cloneDeep } from 'lodash'
 

@@ -1,5 +1,6 @@
 // @flow
-/* globals describe test expect */
+
+import { describe, expect, test } from '@jest/globals'
 import { sprintf } from 'sprintf-js'
 
 import s from '../locales/strings'

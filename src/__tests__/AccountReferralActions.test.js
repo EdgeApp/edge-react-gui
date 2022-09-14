@@ -1,10 +1,15 @@
 // @flow
-/* globals describe test expect */
 
+import { beforeAll, describe, expect, jest, test } from '@jest/globals'
 import { type EdgeDataStore } from 'edge-core-js'
 
 import { type ValidateFuncs, validatePromoCardsInner } from '../actions/AccountReferralActions'
 import { type MessageTweak } from '../types/TweakTypes'
+
+beforeAll(() => {
+  jest.useRealTimers()
+})
+
 const dummyDataStore: EdgeDataStore = {
   deleteItem: async (storeId: string, itemId: string): Promise<void> => undefined,
   deleteStore: async (storeId: string): Promise<void> => undefined,

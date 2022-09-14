@@ -1,5 +1,6 @@
-/* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
+
+import { describe, expect, it } from '@jest/globals'
 
 import { matchJson } from '../util/matchJson.js'
 
@@ -10,8 +11,8 @@ describe('matchJson', function () {
   it('rejects unequal JSON arrays', function () {
     expect(matchJson([1, 2], [1, 2, 3])).toEqual(false)
     expect(matchJson([1, 2], [1, 3])).toEqual(false)
-    expect(matchJson([1, 2], { 1: 1, 2: 2 })).toEqual(false)
-    expect(matchJson({ 1: 1, 2: 2 }, [1, 2])).toEqual(false)
+    expect(matchJson([1, 2], { '1': 1, '2': 2 })).toEqual(false)
+    expect(matchJson({ '1': 1, '2': 2 }, [1, 2])).toEqual(false)
     expect(matchJson([1, 2], null)).toEqual(false)
   })
   it('rejects unequal JSON objects', function () {

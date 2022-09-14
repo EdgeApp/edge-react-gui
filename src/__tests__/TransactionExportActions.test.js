@@ -1,6 +1,6 @@
 // @flow
-/* globals test expect */
 
+import { expect, test } from '@jest/globals'
 import { type EdgeTransaction } from 'edge-core-js'
 import fs from 'fs'
 

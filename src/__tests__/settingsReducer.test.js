@@ -1,6 +1,6 @@
 // @flow
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 
 import { initialState, settings as settingsReducer } from '../reducers/scenes/SettingsReducer.js'
 

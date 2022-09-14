@@ -41,9 +41,7 @@
     "server": "node ./loggingServer.js",
     "start": "react-native start",
     "start.plugins": "webpack serve",
-    "test": "npm run test:sync && npm run test:async",
-    "test:sync": "jest --config jest.config.js",
-    "test:async": "jest --config jest.async.config.js",
+    "test": "jest --config jest.config.js",
     "theme": "node ./themeServer.js",
     "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"

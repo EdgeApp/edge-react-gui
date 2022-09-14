@@ -1,5 +1,6 @@
 // @flow
-/* globals describe test expect */
+
+import { describe, expect, test } from '@jest/globals'
 import { log10 } from 'biggystring'
 
 import { sanitizeDecimalAmount } from '../components/themed/FlipInput'

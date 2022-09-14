@@ -1,14 +1,16 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 
 import { transactionDetails as transactionDetailsReducer } from '../reducers/scenes/TransactionDetailsReducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
     subcategories: []
   }
-  const actual = transactionDetailsReducer(undefined, {})
+  const actual = transactionDetailsReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })

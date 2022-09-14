@@ -1,6 +1,6 @@
 // @flow
-/* globals describe it expect */
 
+import { describe, expect, it } from '@jest/globals'
 import { type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Provider } from 'react-redux'

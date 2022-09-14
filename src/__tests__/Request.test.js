@@ -1,17 +1,17 @@
-/* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { RequestComponent } from '../components/scenes/RequestScene.js'
 import { getTheme } from '../components/services/ThemeContext.js'
 
 describe('Request', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       currencyCode: null,
       currentScene: 'request',
       wallet: null,
@@ -32,9 +32,9 @@ describe('Request', () => {
   })
 
   it('should render with loaded props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       currencyCode: 'BTC',
       wallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
       exchangeSecondaryToPrimaryRatio: {},

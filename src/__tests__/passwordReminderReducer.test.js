@@ -1,6 +1,6 @@
 // @flow
 
-/* globals test describe expect */
+import { describe, expect, test } from '@jest/globals'
 
 import { initialState, MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, untranslatedReducer as uut } from '../reducers/PasswordReminderReducer.js'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils.js'

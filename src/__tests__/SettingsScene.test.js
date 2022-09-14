@@ -1,6 +1,6 @@
 // @flow
-/* globals describe it expect */
 
+import { describe, expect, it } from '@jest/globals'
 import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 import renderer from 'react-test-renderer'

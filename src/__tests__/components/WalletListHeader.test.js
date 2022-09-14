@@ -1,15 +1,15 @@
-/* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext.js'
 import { WalletListHeaderComponent } from '../../components/themed/WalletListHeader.js'
 
 describe('WalletListHeader', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       sorting: true,

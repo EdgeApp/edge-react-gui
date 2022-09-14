@@ -1,15 +1,15 @@
-/* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const swapInfo = {
       quote: {
         isEstimate: true,
@@ -75,7 +75,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         toFiat: '1'
       }
     }
-    const props = {
+    const props: any = {
       route: {
         params: { swapInfo, onApprove: () => undefined }
       },

@@ -1,6 +1,6 @@
-/* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
@@ -23,7 +23,7 @@ describe('TransactionListRow', () => {
         { name: 'sats', multiplier: '1', symbol: 's' }
       ]
     }
-    const mockStore = {
+    const mockStore: any = {
       core: {
         account: {
           currencyWallets: {
@@ -45,7 +45,7 @@ describe('TransactionListRow', () => {
     }
     const store = createStore(rootReducer, mockStore)
 
-    const props = {
+    const props: any = {
       walletId: 'lmnop',
       currencyCode: 'BTC',
       transaction: '12ser4hh...'

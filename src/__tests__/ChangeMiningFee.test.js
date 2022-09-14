@@ -1,8 +1,8 @@
-/* globals jest describe it expect */
 // @flow
 
+import { describe, expect, it, jest } from '@jest/globals'
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { ChangeMiningFeeComponent } from '../components/scenes/ChangeMiningFeeScene.js'
 import { getTheme } from '../components/services/ThemeContext.js'
@@ -34,25 +34,25 @@ describe('Change Mining Fees', () => {
   }
 
   it('should render with standard props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="standard" />
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with high props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="high" />
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with low props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="low" />
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with custom props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="custom" />
     expect(renderer.render(element)).toMatchSnapshot()
   })

@@ -1,14 +1,14 @@
-/* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { OutlinedTextInput } from '../../components/themed/OutlinedTextInput.js'
 
 describe('OutlinedTextInput', () => {
   it('should render with some props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       value: 'string',

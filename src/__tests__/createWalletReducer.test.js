@@ -1,6 +1,6 @@
 // @flow
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 
 import { createWallet as createWalletReducer } from '../reducers/scenes/CreateWalletReducer.js'
 
