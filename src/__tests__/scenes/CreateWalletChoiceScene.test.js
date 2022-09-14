@@ -2,7 +2,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CreateWalletChoiceScene } from '../../components/scenes/CreateWalletChoiceScene'
 import { getTheme } from '../../components/services/ThemeContext.js'
@@ -10,7 +10,7 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation.js'
 
 describe('CreateWalletChoiceScene', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       navigation: fakeNavigation,

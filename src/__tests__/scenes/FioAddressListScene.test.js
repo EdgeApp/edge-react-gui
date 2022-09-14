@@ -2,14 +2,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressList } from '../../components/scenes/FioAddressListScene'
 import { getTheme } from '../../components/services/ThemeContext.js'
 
 describe('FioAddressList', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       fioAddresses: [

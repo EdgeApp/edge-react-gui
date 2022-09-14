@@ -2,14 +2,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const swapInfo = {
       quote: {
         isEstimate: true,

@@ -2,13 +2,13 @@
 // @flow
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalletSelectCryptoRow.js'
 
 describe('WalletListRow', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       currencyCode: 'BTC',

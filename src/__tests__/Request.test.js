@@ -2,14 +2,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { RequestComponent } from '../components/scenes/RequestScene.js'
 import { getTheme } from '../components/services/ThemeContext.js'
 
 describe('Request', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       currencyCode: null,
@@ -32,7 +32,7 @@ describe('Request', () => {
   })
 
   it('should render with loaded props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       currencyCode: 'BTC',

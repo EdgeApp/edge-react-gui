@@ -2,7 +2,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { PasswordReminderModalComponent } from '../../components/modals/PasswordReminderModal.js'
 import { getTheme } from '../../components/services/ThemeContext.js'
@@ -11,7 +11,7 @@ import { fakeUser } from '../../util/fake-user.js'
 
 describe('PasswordReminderModal', () => {
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       bridge: fakeAirshipBridge,

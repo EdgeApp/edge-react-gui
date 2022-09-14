@@ -2,7 +2,7 @@
 /* globals jest describe it expect */
 
 import * as React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene.js'
 import { getTheme } from '../components/services/ThemeContext.js'
@@ -41,7 +41,7 @@ const settings = {
 
 describe('TransactionDetails.ui', () => {
   it('should render', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const props = {
       route: {
         name: 'transactionDetails',
@@ -79,7 +79,7 @@ describe('TransactionDetails.ui', () => {
   })
 
   it('should render with tx date off by 1000x in future', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const props = {
       route: {
         name: 'transactionDetails',
@@ -117,7 +117,7 @@ describe('TransactionDetails.ui', () => {
   })
 
   it('should render with tx date off by 1000x in past', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       route: {
@@ -156,7 +156,7 @@ describe('TransactionDetails.ui', () => {
   })
 
   it('should render with negative nativeAmount and fiatAmount', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
     const props = {
       route: {
         name: 'transactionDetails',

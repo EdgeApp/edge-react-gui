@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 import * as reactRedux from 'react-redux'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoIcon } from '../../components/icons/CryptoIcon.js'
 
@@ -39,7 +39,7 @@ describe('CryptoIcon', () => {
   }
 
   it('should render with loading props', () => {
-    const renderer = new ShallowRenderer()
+    const renderer = createRenderer()
 
     const props = {
       pluginId: 'bitcoin',
