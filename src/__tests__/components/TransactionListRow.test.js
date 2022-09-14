@@ -1,6 +1,6 @@
-/* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'

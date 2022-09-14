@@ -1,5 +1,6 @@
 // @flow
-/* globals describe it expect */
+
+import { describe, expect, it } from '@jest/globals'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
 import { type GuiPlugin, type GuiPluginRow, asGuiPluginJson } from '../types/GuiPluginTypes.js'

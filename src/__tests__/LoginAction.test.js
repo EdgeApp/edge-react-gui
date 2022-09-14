@@ -1,5 +1,6 @@
 // @flow
-/* globals test expect */
+
+import { expect, test } from '@jest/globals'
 
 import { mergeSettings } from '../actions/LoginActions.js'
 import { asSyncedAccountSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS } from '../modules/Core/Account/settings.js'

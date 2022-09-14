@@ -1,5 +1,6 @@
 // @flow
-/* globals describe test expect beforeEach */
+
+import { beforeEach, describe, expect, test } from '@jest/globals'
 
 import { type IntlLocaleType, formatNumber, formatNumberInput, isValidInput, prettifyNumber, setIntlLocale, truncateDecimalsPeriod } from '../locales/intl'
 import { truncateDecimals } from '../util/utils'

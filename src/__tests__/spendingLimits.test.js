@@ -1,5 +1,6 @@
 // @flow
-/* globals describe it expect */
+
+import { describe, expect, it } from '@jest/globals'
 
 import { initialState, spendingLimits } from '../reducers/SpendingLimitsReducer.js'
 

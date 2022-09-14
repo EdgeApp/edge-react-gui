@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
+
 import { requestType as requestTypeReducer } from '../reducers/RequestTypeReducer.js'
 
 test('initialState', () => {

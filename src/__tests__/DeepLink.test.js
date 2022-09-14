@@ -1,5 +1,6 @@
 // @flow
-/* globals describe it expect */
+
+import { describe, expect, it } from '@jest/globals'
 
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { parseDeepLink } from '../util/DeepLinkParser.js'

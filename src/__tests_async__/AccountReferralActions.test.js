@@ -1,6 +1,6 @@
 // @flow
-/* globals describe test expect */
 
+import { describe, expect, test } from '@jest/globals'
 import { type EdgeDataStore } from 'edge-core-js'
 
 import { type ValidateFuncs, validatePromoCardsInner } from '../actions/AccountReferralActions'

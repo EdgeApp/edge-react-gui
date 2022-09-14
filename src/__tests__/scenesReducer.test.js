@@ -1,6 +1,6 @@
 // @flow
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 
 import { initialState as SendConfirmationInitialState } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { scenes as scenesReducer } from '../reducers/scenes/ScenesReducer.js'

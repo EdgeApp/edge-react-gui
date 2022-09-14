@@ -1,4 +1,5 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-/* globals jest */
+// @flow
+
+import { jest } from '@jest/globals'
 
 jest.useFakeTimers()

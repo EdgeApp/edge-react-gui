@@ -1,6 +1,6 @@
-/* globals describe it expect */
 // @flow
 
+import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 

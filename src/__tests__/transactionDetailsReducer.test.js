@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 
 import { transactionDetails as transactionDetailsReducer } from '../reducers/scenes/TransactionDetailsReducer.js'
 

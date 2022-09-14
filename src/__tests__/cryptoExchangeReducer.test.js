@@ -1,6 +1,6 @@
 // @flow
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 
 import { cryptoExchange } from '../reducers/CryptoExchangeReducer.js'
 

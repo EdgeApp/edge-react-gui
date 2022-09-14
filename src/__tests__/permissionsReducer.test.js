@@ -1,6 +1,6 @@
 // @flow
 
-/* globals test expect */
+import { expect, test } from '@jest/globals'
 import { RESULTS } from 'react-native-permissions'
 
 import { initialState, permissions as permissionsReducer } from '../reducers/PermissionsReducer.js'

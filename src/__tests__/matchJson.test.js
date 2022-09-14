@@ -1,5 +1,6 @@
-/* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
+
+import { describe, expect, it } from '@jest/globals'
 
 import { matchJson } from '../util/matchJson.js'
 
