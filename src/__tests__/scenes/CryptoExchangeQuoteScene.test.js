@@ -97,9 +97,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       toDenomination: 'ETH',
       toWalletCurrencyName: { fromDenomination: '' },
 
-      // eslint-disable-next-line flowtype/no-types-missing-file-annotation
       shift: (swapInfo, onApprove) => undefined,
-      // eslint-disable-next-line flowtype/no-types-missing-file-annotation
       timeExpired: (swapInfo, onApprove) => undefined,
       theme: getTheme()
     }

@@ -1,6 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
+import * as React from 'react'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
@@ -28,7 +29,7 @@ export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, hideFiatSymbol
     wallet
   })
 
-  return useFiatText({
+  const text = useFiatText({
     appendFiatCurrencyCode,
     autoPrecision,
     cryptoCurrencyCode: currencyCode,
@@ -38,4 +39,5 @@ export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, hideFiatSymbol
     isoFiatCurrencyCode,
     nativeCryptoAmount
   })
+  return <>{text}</>
 }

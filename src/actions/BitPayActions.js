@@ -30,7 +30,8 @@ async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Respo
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()
-    const headers = (init.headers: any)
+    const typeHack: any = init.headers
+    const headers = typeHack
     const body = init.body ? JSON.stringify(init.body) : ''
     const method = init.method
 

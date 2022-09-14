@@ -28,7 +28,7 @@ type Props<T> = {
 /**
  * The Airship modal, but connected to our theming system.
  */
-export const ThemedModal = <T>(props: Props<T>) => {
+export function ThemedModal<T>(props: Props<T>) {
   const { bridge, children, flexDirection, iconRem = 0, justifyContent, warning = false, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()

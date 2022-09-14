@@ -293,7 +293,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     return (
       <Tile type="static" title={s.strings.send_scene_error_title}>
         <EdgeText style={styles.errorMessage} numberOfLines={3}>
-          {error.toString()}
+          {String(error)}
         </EdgeText>
       </Tile>
     )

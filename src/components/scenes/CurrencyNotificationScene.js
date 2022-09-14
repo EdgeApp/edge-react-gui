@@ -10,13 +10,12 @@ import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
 import { useCallback, useMemo } from '../../types/reactHooks.js'
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
-import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type OwnProps = {
-  navigation: NavigationProp<'currencyNotificationSettings'>,
   route: RouteProp<'currencyNotificationSettings'>
 }
 

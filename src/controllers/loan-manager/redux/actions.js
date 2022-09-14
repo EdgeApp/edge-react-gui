@@ -160,7 +160,8 @@ export const resyncLoanAccounts = (account: EdgeAccount) => async (dispatch: Dis
   const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
   const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
 
-  const borrowPlugins: BorrowPlugin[] = (Object.values(borrowPluginMap): any)
+  const typeHack: any = Object.values(borrowPluginMap)
+  const borrowPlugins: BorrowPlugin[] = typeHack
 
   // `loanAccountIds` is synonymous to `walletIds`
   const ids = Object.keys(account.currencyWallets)

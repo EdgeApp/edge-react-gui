@@ -93,7 +93,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           updateConnectedWallets(fioAddressName, newCcWalletMap)
         }
 
-        if (error || removedError) {
+        const eitherError = error ?? removedError
+        if (eitherError != null) {
           const walletsToConnectLeft = []
           const walletsToDisconnectLeft = []
           if (updatedCcWallets.length) {
@@ -122,7 +123,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             navigation.setParams({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
             this.resetSlider()
           }
-          throw error || removedError
+          throw eitherError
         }
         if (walletsToConnect.length) {
           showToast(s.strings.fio_connect_wallets_success)
