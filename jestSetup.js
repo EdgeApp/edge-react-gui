@@ -2,6 +2,8 @@
 
 import { jest } from '@jest/globals'
 
+jest.useFakeTimers()
+
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('react-native-gesture-handler', () => ({
