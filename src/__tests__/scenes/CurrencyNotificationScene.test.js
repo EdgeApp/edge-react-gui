@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -11,7 +11,7 @@ import { rootReducer } from '../../reducers/RootReducer.js'
 import { fakeNavigation } from '../../util/fake/fakeNavigation.js'
 
 describe('CurrencyNotificationComponent', () => {
-  const mockStore = {
+  const mockStore: any = {
     priceChangeNotifications: {
       bitcoin: {
         eventId: '123id',
@@ -25,7 +25,7 @@ describe('CurrencyNotificationComponent', () => {
   const store = createStore(rootReducer, mockStore)
 
   it('should render with loading props', () => {
-    const props = {
+    const props: any = {
       navigation: fakeNavigation,
       route: {
         params: {

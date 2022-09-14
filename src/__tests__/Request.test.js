@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -11,7 +11,7 @@ describe('Request', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       currencyCode: null,
       currentScene: 'request',
       wallet: null,
@@ -34,7 +34,7 @@ describe('Request', () => {
   it('should render with loaded props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       currencyCode: 'BTC',
       wallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
       exchangeSecondaryToPrimaryRatio: {},

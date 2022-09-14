@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'

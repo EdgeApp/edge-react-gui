@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -10,7 +10,8 @@ import { BuyCrypto } from '../../components/themed/BuyCrypto.js'
 describe('BuyCrypto', () => {
   it('should render with some props', () => {
     const renderer = createRenderer()
-    const props = {
+
+    const props: any = {
       theme: getTheme(),
       wallet: { id: 'my wallet', currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' } },
       tokenId: undefined,

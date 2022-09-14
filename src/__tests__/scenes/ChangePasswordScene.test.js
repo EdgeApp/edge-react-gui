@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -13,7 +13,7 @@ describe('ChangePasswordComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       navigation: fakeNavigation,
       account: () => fakeUser,
       context: { apiKey: '', appId: '' }, // used  EdgeContextOptions

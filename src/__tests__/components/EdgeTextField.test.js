@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -11,9 +11,8 @@ describe('EdgeTextField', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       marginRem: 11,
-
       theme: getTheme()
     }
     const actual = renderer.render(<EdgeTextFieldComponent {...props} />)

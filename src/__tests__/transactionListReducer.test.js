@@ -1,8 +1,10 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { expect, test } from '@jest/globals'
 
 import { transactionList as transactionListReducer } from '../reducers/scenes/TransactionListReducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
@@ -13,7 +15,7 @@ test('initialState', () => {
     numTransactions: 0,
     currentWalletId: ''
   }
-  const actual = transactionListReducer(undefined, {})
+  const actual = transactionListReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })

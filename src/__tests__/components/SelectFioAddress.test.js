@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -11,7 +11,7 @@ describe('SelectFioAddress', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       selected: 'string',
       memo: 'TX',
       memoError: 'memo error',
@@ -66,9 +66,7 @@ describe('SelectFioAddress', () => {
       addressLoadingProgress: 11,
       blockHeight: 11,
       refreshAllFioAddresses: () => undefined,
-      theme: getTheme({
-        theme: dangerText => undefined
-      })
+      theme: getTheme()
     }
 
     const actual = renderer.render(<SelectFioAddressComponent {...props} />)

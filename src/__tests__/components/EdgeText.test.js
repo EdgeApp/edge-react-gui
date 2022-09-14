@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -11,7 +11,7 @@ describe('EdgeText', () => {
   it('should render with some props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       children: 'Hello world',
       ellipsizeMode: 'tail',
       numberOfLines: 2,

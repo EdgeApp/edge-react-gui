@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -11,7 +11,7 @@ describe('FioAddressRegistered', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       state: {
         contacts: [
           {
@@ -89,17 +89,9 @@ describe('FioAddressRegistered', () => {
             }
           ],
           enabledTokens: ['FIO'],
-          receiveAddress:
-            {
-              publicAddress: '0x434dsfv455'
-            } &
-            {
-              metadata: {
-                bizId: 20,
-                category: 'Fio wallet'
-              },
-              nativeAmount: '100'
-            },
+          receiveAddress: {
+            publicAddress: '0x434dsfv455'
+          },
           blockHeight: 35
         }
       ],

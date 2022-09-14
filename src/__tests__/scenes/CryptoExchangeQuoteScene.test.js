@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
@@ -75,7 +75,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         toFiat: '1'
       }
     }
-    const props = {
+    const props: any = {
       route: {
         params: { swapInfo, onApprove: () => undefined }
       },
