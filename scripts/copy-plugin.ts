@@ -1,8 +1,9 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+import fs from 'fs'
+import path from 'path'
 
-const fs = require('fs')
-const path = require('path')
-const { plugins } = require('./package.json')
+import packageJson from '../package.json'
+
+const { plugins } = packageJson
 
 const androidDir = './android/app/src/main/assets/plugins/'
 const iosDir = './ios/plugins/'
@@ -15,8 +16,8 @@ platforms.forEach(platform => {
   }
 })
 
-function copyAssets(plugin) {
-  const manifest = require(`./node_modules/${plugin}/manifest.json`)
+function copyAssets(plugin: string) {
+  const manifest = require(`../node_modules/${plugin}/manifest.json`)
   platforms.forEach(platformDir => {
     const pluginDir = path.join(platformDir, manifest.pluginId)
     if (!fs.existsSync(pluginDir)) {

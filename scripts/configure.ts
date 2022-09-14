@@ -1,6 +1,5 @@
-// @flow
-const { makeConfig } = require('cleaner-config')
-const { asBoolean, asNumber, asObject, asOptional, asString, asArray, asNull, asEither } = require('cleaners')
+import { makeConfig } from 'cleaner-config'
+import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 const configComment = (comment: string) => ({ [`-------- ${comment} --------`]: asOptional(asNumber, 0) })
 
@@ -179,4 +178,4 @@ const asConfig = asObject({
   DISABLE_WARNINGS: asOptional(asBoolean, false)
 })
 
-module.exports.config = makeConfig(asConfig, 'env.json')
+export const config = makeConfig(asConfig, 'env.json')

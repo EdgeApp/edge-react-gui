@@ -1,8 +1,6 @@
-#!/usr/bin/env node -r sucrase/register
-// @flow
 // This script sets up the version numbers for a release build.
 //
-// Run it as `./scripts/updateVersion.js [<branch>]`
+// Run it as `node -r sucrase/register ./scripts/updateVersion.ts [<branch>]`
 //
 // Each production build has a version number and a build number.
 // The version number is a human-readable string like, "1.2.3-d",
@@ -21,10 +19,10 @@
 // the native project files, leaving the project ready for a release build.
 
 import childProcess from 'child_process'
-import { type Disklet, makeNodeDisklet } from 'disklet'
+import { Disklet, makeNodeDisklet } from 'disklet'
 import path from 'path'
 
-import { type VersionFile, asLegacyBuildNumFile, asVersionFile } from './cleaners.js'
+import { asLegacyBuildNumFile, asVersionFile, VersionFile } from './cleaners'
 
 const specialBranches: { [branch: string]: string } = {
   develop: '-d',
@@ -83,7 +81,7 @@ function pickBuildNumber(now: Date = new Date()) {
 /**
  * Pick a suffix to add to the package.json version.
  */
-function pickVersionSuffix(branch: string | void): string {
+function pickVersionSuffix(branch?: string): string {
   if (branch == null || branch === '') return ''
 
   const specialSuffix = specialBranches[branch]
@@ -134,12 +132,14 @@ async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promis
  * Inserts the build information into the iOS project files.
  */
 function updateIos(cwd: string, versionFile: VersionFile): void {
-  const opts = {
+  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, {
     cwd: path.join(cwd, 'ios'),
     stdio: 'inherit'
-  }
-  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, opts)
-  childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, opts)
+  })
+  childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, {
+    cwd: path.join(cwd, 'ios'),
+    stdio: 'inherit'
+  })
 }
 
 main().catch(error => console.log(error))

@@ -1,8 +1,5 @@
-#!/usr/bin/env node
-// @flow
-
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 
 function makeNativeHeaders() {
   let apiKey = 'Error: Set up env.json & re-run scrips/makeNativeHeaders.js'

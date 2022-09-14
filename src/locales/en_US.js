@@ -1256,5 +1256,5 @@ const strings = {
   currency_label_ZWL: 'Zimbabwe Dollar'
 }
 
-// export default strings
-module.exports = strings
+// eslint-disable-next-line import/no-default-export
+export default strings
