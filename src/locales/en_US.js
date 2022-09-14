@@ -696,6 +696,8 @@ const strings = {
   wallet_list_modal_header_all: 'All Wallets',
   wallet_list_modal_creating_wallet: 'Creating Wallet. Please Wait',
   wallet_list_modal_enabling_token: 'Enabling Token. Please Wait',
+  wallet_list_modal_confirm_s_bank_withdrawal:
+    'Borrowing funds for deposit directly into a bank account requires a linked bank account with an %1$s exchange partner. Tap Continue to proceed to link a bank account. (For US users only)',
   fio_address_first_screen_title: 'Send and Receive with an easy to remember FIO Crypto Handle!',
   fio_address_features: '• Works across all tokens and coins\n• Secured from your wallet\n• Completely decentralized',
   fio_address_first_screen_end:
