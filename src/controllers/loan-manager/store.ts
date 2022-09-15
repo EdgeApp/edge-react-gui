@@ -1,4 +1,4 @@
-import { asArray, asJSON, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asJSON, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
 //
 // Store Types
@@ -15,11 +15,13 @@ export const asLoanProgramEdge: Cleaner<LoanProgramEdge> = asObject({
 })
 
 export type LoanAccountEntry = {
+  closed: boolean
   walletId: string
   borrowPluginId: string
   programEdges: LoanProgramEdge[]
 }
 export const asLoanAccountEntry: Cleaner<LoanAccountEntry> = asObject({
+  closed: asOptional(asBoolean, false),
   walletId: asString,
   borrowPluginId: asString,
   programEdges: asArray(asLoanProgramEdge)

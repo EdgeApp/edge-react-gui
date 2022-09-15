@@ -2,13 +2,14 @@ import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import { updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useRefresher } from '../../../hooks/useRefresher'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useCallback } from '../../../types/reactHooks'
-import { useSelector } from '../../../types/reactRedux'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -30,6 +31,7 @@ export type Props = {
 export const LoanCloseScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
@@ -56,6 +58,7 @@ export const LoanCloseScene = (props: Props) => {
     if (approvableAction == null) return
 
     await approvableAction.approve()
+    await dispatch(updateLoanAccount({ ...loanAccount, closed: true }))
     navigation.popToTop()
   }
 
