@@ -6,7 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
 import s from '../../locales/strings'
-import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
+import { Actions, NavigationProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -17,7 +17,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-const title: { [name: keyof ParamList]: string } = {
+const title = {
   walletList: s.strings.title_wallets,
   pluginListBuy: s.strings.title_buy,
   pluginListSell: s.strings.title_sell,
@@ -51,7 +51,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
       <View>
         <DividerLine colors={theme.tabBarTopOutlineColors} />
         <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
-          {state.routes.map((element, index) => {
+          {state.routes.map((element: any, index: number) => {
             const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
             const icon = {
               walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
@@ -61,8 +61,16 @@ export class MenuTabComponent extends React.PureComponent<Props> {
             }
             return (
               <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
-                {icon[element.key]}
-                <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
+                {
+                  // @ts-expect-error
+                  icon[element.key]
+                }
+                <EdgeText style={{ ...styles.text, color: color }}>
+                  {
+                    // @ts-expect-error
+                    title[element.key]
+                  }
+                </EdgeText>
               </TouchableOpacity>
             )
           })}

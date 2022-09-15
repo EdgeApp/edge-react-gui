@@ -9,8 +9,10 @@ import UNISWAP_V2_PAIR from './abi/UNISWAP_V2_PAIR.json'
 import UNISWAP_V2_ROUTER_02 from './abi/UNISWAP_V2_ROUTER_02.json'
 import WRAPPED_FTM_ABI from './abi/WRAPPED_FTM_ABI.json'
 
+const { quiknodeApiKey = '' } = typeof ENV.FANTOM_INIT === 'object' ? ENV.FANTOM_INIT : { quiknodeApiKey: '' }
+
 export const rpcProviderUrls = [
-  `https://polished-empty-cloud.fantom.quiknode.pro/${ENV.FANTOM_INIT?.quiknodeApiKey ?? ''}/`,
+  `https://polished-empty-cloud.fantom.quiknode.pro/${quiknodeApiKey}/`,
   'https://rpc.ftm.tools'
   // 'https://rpc.fantom.network',
   // 'https://rpc2.fantom.network',

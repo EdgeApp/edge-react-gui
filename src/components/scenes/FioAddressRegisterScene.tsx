@@ -254,6 +254,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
   }
 
   handleFioAddressFocus = () => {
+    // @ts-expect-error
     // eslint-disable-next-line react/no-string-refs
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }

@@ -447,6 +447,7 @@ export function debounce(func: any, wait: number, immediate: boolean): any {
   let timeout
 
   return function executedFunction() {
+    // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this
     const args = arguments

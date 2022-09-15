@@ -46,7 +46,7 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
 
   render() {
     const { bridge, theme } = this.props
-    const pickerColor = Platform.OS === 'android' ? theme.pickerTextLight : null
+    const pickerColor: any = Platform.OS === 'android' ? theme.pickerTextLight : null
     const textColor = Appearance.getColorScheme() === 'dark' && Platform.OS === 'android' ? theme.pickerTextDark : theme.pickerTextLight
 
     const numberPickerOptions = [<Picker.Item key="disable" label={s.strings.string_disable} value={0} color={textColor} />]

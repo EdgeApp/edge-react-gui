@@ -165,6 +165,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   handleFioDomainFocus = () => {
+    // @ts-expect-error
     // eslint-disable-next-line react/no-string-refs
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }

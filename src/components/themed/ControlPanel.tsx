@@ -276,7 +276,12 @@ export function ControlPanel(props: Props) {
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
           {selectedWallet == null || selectedDenomination == null ? (
-            <TitleText style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}>{s.strings.exchange_rate_loading_singular}</TitleText>
+            <TitleText
+              // @ts-expect-error
+              style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}
+            >
+              {s.strings.exchange_rate_loading_singular}
+            </TitleText>
           ) : (
             <>
               <View style={styles.rowIconContainer}>

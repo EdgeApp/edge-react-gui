@@ -68,7 +68,7 @@ export type FlipInputOwnProps = {
   isFiatOnTop: boolean
   isFocus: boolean
 
-  topReturnKeyType?: string
+  topReturnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
   inputAccessoryViewID?: string
   headerText: string
   headerCallback?: () => void
@@ -446,7 +446,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   bottomRow = (isFront: boolean) => {
-    const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
+    const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType = 'done', theme } = this.props
     const { textInputBackFocus, textInputFrontFocus } = this.state
     const showCursor = textInputBackFocus || textInputFrontFocus
     const styles = getStyles(theme)
@@ -487,13 +487,13 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
             onKeyPress={onKeyPress}
             autoCorrect={false}
             keyboardType="numeric"
-            returnKeyType={topReturnKeyType || 'done'}
+            returnKeyType={topReturnKeyType}
             ref={ref}
             onFocus={onFocus}
             onBlur={onBlur}
             editable={isEditable}
             onSubmitEditing={onNext}
-            inputAccessoryViewID={inputAccessoryViewID || null}
+            inputAccessoryViewID={inputAccessoryViewID}
           />
         </View>
       </TouchableWithoutFeedback>

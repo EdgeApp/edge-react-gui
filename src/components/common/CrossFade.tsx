@@ -1,14 +1,12 @@
 import * as React from 'react'
 import { Animated, StyleSheet } from 'react-native'
 
-type Child = React.Element<any> | null | undefined
-
 type Props = {
   // The props.key of the visible child, or undefined to hide everything:
   activeKey: string | null | undefined
 
   // An array of children to switch between:
-  children: React.ChildrenArray<Child>
+  children: React.ReactNode
 
   // The number of milliseconds the animation should take:
   duration?: number
@@ -124,7 +122,7 @@ export class CrossFade extends React.Component<Props, State> {
 /**
  * Iterates over all the React children with `key` properties.
  */
-function forEachKey<Child>(children: React.ChildrenArray<Child>, callback: (key: string, child: Child) => void): void {
+function forEachKey<Child>(children: Child | Child[], callback: (key: string, child: Child) => void): void {
   React.Children.forEach(children, (child: Child) => {
     if (child != null && child.key != null) {
       callback(String(child.key), child)

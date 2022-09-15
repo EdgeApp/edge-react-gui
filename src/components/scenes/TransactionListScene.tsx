@@ -5,7 +5,7 @@ import { RefreshControl, SectionList } from 'react-native'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { TransactionListTx } from '../../types/types'
+import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
@@ -142,7 +142,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return <SectionHeader title={section.section.title} />
   }
 
-  renderTransaction = (transaction: SectionList<TransactionListTx>) => {
+  renderTransaction = (transaction: FlatListItem<TransactionListTx>) => {
     const { selectedWalletId, selectedCurrencyCode } = this.props
     return <TransactionListRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
   }
