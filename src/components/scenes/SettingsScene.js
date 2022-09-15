@@ -125,22 +125,22 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleChangePassword = (): void => {
     const { navigation } = this.props
-    this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePassword')
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePassword', {})
   }
 
   handleChangePin = (): void => {
     const { navigation } = this.props
-    this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePin')
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePin', {})
   }
 
   handleChangeOtp = (): void => {
     const { navigation } = this.props
-    this.props.isLocked ? this.handleUnlock() : navigation.navigate('otpSetup')
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('otpSetup', {})
   }
 
   handleChangeRecovery = (): void => {
     const { navigation } = this.props
-    this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery')
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery', {})
   }
 
   handleDeleteAccount = async (): Promise<void> => {
@@ -180,12 +180,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleExchangeSettings = (): void => {
     const { navigation } = this.props
-    navigation.navigate('exchangeSettings')
+    navigation.navigate('exchangeSettings', {})
   }
 
   handleSpendingLimits = (): void => {
     const { navigation } = this.props
-    navigation.navigate('spendingLimits')
+    navigation.navigate('spendingLimits', {})
   }
 
   handleAutoLogout = (): void => {
@@ -198,12 +198,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleDefaultFiat = (): void => {
     const { navigation } = this.props
-    navigation.navigate('defaultFiatSetting')
+    navigation.navigate('defaultFiatSetting', {})
   }
 
   handlePromotionSettings = (): void => {
     const { navigation } = this.props
-    navigation.navigate('promotionSettings')
+    navigation.navigate('promotionSettings', {})
   }
 
   handlePinToggle = async (): Promise<void> => {
@@ -216,7 +216,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleNotificationSettings = (): void => {
     const { navigation } = this.props
-    navigation.navigate('notificationSettings')
+    navigation.navigate('notificationSettings', {})
   }
 
   handleDeveloperToggle = (): void => {
@@ -231,7 +231,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleTermsOfService = (): void => {
     const { navigation } = this.props
-    navigation.navigate('termsOfService')
+    navigation.navigate('termsOfService', {})
   }
 
   handleVerboseLoggingToggle = (): void => {

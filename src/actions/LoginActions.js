@@ -56,7 +56,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
   const syncedSettings = await getSyncedSettings(account)
   const { walletSort } = syncedSettings
   dispatch({ type: 'LOGIN', data: { account, walletSort } })
-  Actions.push('edge')
+  Actions.push('edge', {})
 
   // Show a notice for deprecated electrum server settings
   const pluginIdsNeedingUserAction: string[] = []
@@ -91,7 +91,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
 
   // Check for security alerts:
   if (hasSecurityAlerts(account)) {
-    Actions.push('securityAlerts')
+    Actions.push('securityAlerts', {})
   }
 
   const state = getState()

@@ -169,7 +169,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   buttons={{ ok: { label: s.strings.string_ok_cap } }}
                 />
               ))
-              navigation.navigate('walletList')
+              navigation.navigate('walletList', {})
             }
           }
         }

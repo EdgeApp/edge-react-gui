@@ -223,7 +223,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
     )
     logActivity(`Restore Wallets: ${account.username}`)
 
-    Actions.jump('walletList')
+    Actions.jump('walletList', {})
   }
 }
 

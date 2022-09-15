@@ -178,7 +178,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
                 [{ text: s.strings.string_ok_cap }]
               )
-              navigation.navigate('walletList')
+              navigation.navigate('walletList', {})
             }
           }
         }

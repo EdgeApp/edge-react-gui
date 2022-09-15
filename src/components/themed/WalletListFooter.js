@@ -26,7 +26,7 @@ export const WalletListFooter = (props: Props) => {
   const account = useSelector(state => state.core.account)
 
   const handleAddWallet = useHandler(() => {
-    navigation.navigate('createWalletSelectCrypto')
+    navigation.navigate('createWalletSelectCrypto', {})
   })
 
   const handleAddToken = useHandler(() => {

@@ -137,7 +137,7 @@ export const sendConfirmationUpdateTx =
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              Actions.jump('exchangeScene')
+              Actions.jump('exchangeScene', {})
               break
           }
         }

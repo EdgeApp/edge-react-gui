@@ -46,7 +46,7 @@ export class CreateWalletReviewComponent extends React.Component<Props, State> {
 
   goToWalletList = () => {
     const { navigation } = this.props
-    navigation.navigate('walletListScene')
+    navigation.navigate('walletListScene', {})
   }
 
   async createWallet() {
@@ -58,7 +58,7 @@ export class CreateWalletReviewComponent extends React.Component<Props, State> {
       fixFiatCurrencyCode(selectedFiat.value),
       cleanedPrivateKey
     ).catch(showError)
-    navigation.navigate('walletListScene')
+    navigation.navigate('walletListScene', {})
 
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
     if (createdWallet && cleanedPrivateKey) {

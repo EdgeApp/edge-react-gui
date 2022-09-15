@@ -42,7 +42,7 @@ export const WcDisconnectScene = (props: Props) => {
     } catch (e) {
       showError(e)
     }
-    navigation.navigate('wcConnections')
+    navigation.navigate('wcConnections', {})
   }
 
   const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])

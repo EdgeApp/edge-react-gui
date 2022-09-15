@@ -55,7 +55,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.spinning) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
-      setTimeout(() => Actions.jump('changePassword'), 10)
+      setTimeout(() => Actions.jump('changePassword', {}), 10)
     }
   }
 

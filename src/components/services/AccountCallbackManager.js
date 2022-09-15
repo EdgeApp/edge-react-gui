@@ -67,7 +67,7 @@ export function AccountCallbackManager(props: Props) {
 
       watchSecurityAlerts(account, hasAlerts => {
         if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
-          Actions.push('securityAlerts')
+          Actions.push('securityAlerts', {})
         }
       }),
 

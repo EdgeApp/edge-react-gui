@@ -171,7 +171,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    Actions.push('request')
+    Actions.push('request', {})
   }
 
   handleSend = (): void => {

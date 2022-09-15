@@ -65,7 +65,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
-      Actions.push('edgeLogin')
+      Actions.push('edgeLogin', {})
       return true
 
     // The login scene always handles this one:
@@ -101,7 +101,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
     case 'swap': {
       if (!hasCurrentWallet) return false
-      Actions.push('exchangeScene')
+      Actions.push('exchangeScene', {})
       return true
     }
 
@@ -109,7 +109,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        Actions.push('walletListScene')
+        Actions.push('walletListScene', {})
         showError(s.strings.azteco_btc_only)
         return false
       }
@@ -120,7 +120,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'walletConnect': {
       if (!hasCurrentWallet) return false
       const { uri, isSigning } = link
-      Actions.push('wcConnections')
+      Actions.push('wcConnections', {})
       // Hack around our router's horrible bugs:
       if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
       return true
@@ -165,7 +165,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'dev': {
       if (!global.__DEV__) return false
       // $FlowFixMe
-      Actions.push(link.sceneName)
+      Actions.push(link.sceneName, {})
       return true
     }
   }
@@ -183,7 +183,7 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promis
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  Actions.push('walletListScene')
+  Actions.push('walletListScene', {})
 }
 
 const CURRENCY_NAMES = {

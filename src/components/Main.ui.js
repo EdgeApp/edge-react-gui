@@ -941,7 +941,7 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        Actions.jump('walletListScene')
+        Actions.jump('walletListScene', {})
         return true
       }
     }
@@ -952,7 +952,7 @@ export class MainComponent extends React.Component<Props> {
       }
     }
     if (this.isCurrentScene('loanCreateStatus')) {
-      Actions.jump('loanDashboard')
+      Actions.jump('loanDashboard', {})
       return true
     }
     Actions.pop()

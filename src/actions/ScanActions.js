@@ -432,7 +432,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       Actions.jump('pluginListBuy', { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-      Actions.jump('exchangeScene')
+      Actions.jump('exchangeScene', {})
     }
   } catch (e) {
     // Don't bother the user with this error, but log it quietly:

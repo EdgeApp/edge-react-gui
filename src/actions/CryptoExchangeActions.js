@@ -40,7 +40,7 @@ export type SetNativeAmountInfo = {
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
-  Actions.push('exchangeQuoteProcessing')
+  Actions.push('exchangeQuoteProcessing', {})
 
   const state = getState()
   const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -108,7 +108,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo, onApprove: () => void) => async (dispatch: Dispatch, getState: GetState) => {
   if (Actions.currentScene !== 'exchangeQuote') return
-  Actions.push('exchangeQuoteProcessing')
+  Actions.push('exchangeQuoteProcessing', {})
 
   try {
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
@@ -363,7 +363,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
       name,
       category
     }
-    Actions.push('exchangeSuccess')
+    Actions.push('exchangeSuccess', {})
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     // Dispatch the success action and callback

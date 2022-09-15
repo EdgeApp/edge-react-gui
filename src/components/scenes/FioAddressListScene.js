@@ -157,13 +157,13 @@ export class FioAddressList extends React.Component<Props, LocalState> {
           </ScrollView>
 
           <View>
-            <ClickableText marginRem={[1, 1, 0]} onPress={() => navigation.navigate('fioAddressRegister')}>
+            <ClickableText marginRem={[1, 1, 0]} onPress={() => navigation.navigate('fioAddressRegister', {})}>
               <View style={styles.actionButton}>
                 <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
               </View>
             </ClickableText>
-            <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => navigation.navigate('fioDomainRegister')}>
+            <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => navigation.navigate('fioDomainRegister', {})}>
               <View style={styles.actionButton}>
                 <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>

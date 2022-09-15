@@ -184,7 +184,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
         addToFioAddressCache(account, [this.state.fioAddressTo])
-        navigation.navigate('request')
+        navigation.navigate('request', {})
       } catch (error) {
         this.setState({ loading: false })
         this.resetSlider()

@@ -49,7 +49,7 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
   done = () => {
     const { navigation } = this.props
     this.setState({ showButton: false })
-    navigation.navigate('exchangeScene')
+    navigation.navigate('exchangeScene', {})
   }
 
   showConfetti = async () => {

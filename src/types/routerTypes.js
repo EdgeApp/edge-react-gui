@@ -35,9 +35,9 @@ type PluginViewParams = {|
  */
 export type ParamList = {
   // Top-level router:
-  root: void,
-  login: void,
-  edge: void,
+  root: {||},
+  login: {||},
+  edge: {||},
 
   // Logged-in scenes:
   changeMiningFee: {|
@@ -46,9 +46,9 @@ export type ParamList = {
     onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void,
     wallet: EdgeCurrencyWallet
   |},
-  changePassword: void,
-  changePin: void,
-  controlPanel: void,
+  changePassword: {||},
+  changePin: {||},
+  controlPanel: {||},
   createWalletAccountSelect: {|
     accountName: string,
     existingWalletId?: string,
@@ -79,7 +79,7 @@ export type ParamList = {
     selectedWalletType: CreateWalletType,
     walletName: string
   |},
-  createWalletSelectCrypto: void,
+  createWalletSelectCrypto: {||},
   createWalletSelectFiat: {|
     selectedWalletType: CreateWalletType,
     cleanedPrivateKey?: string
@@ -90,8 +90,8 @@ export type ParamList = {
   currencySettings: {|
     currencyInfo: EdgeCurrencyInfo
   |},
-  defaultFiatSetting: void,
-  edgeLogin: void,
+  defaultFiatSetting: {||},
+  edgeLogin: {||},
   editToken: {|
     currencyCode?: string,
     displayName?: string,
@@ -100,21 +100,21 @@ export type ParamList = {
     tokenId?: string, // Acts like "add token" if this is missing
     walletId: string
   |},
-  exchange: void,
+  exchange: {||},
   exchangeQuote: {|
     swapInfo: GuiSwapInfo,
     onApprove: () => void
   |},
-  exchangeQuoteProcessing: void,
-  exchangeScene: void,
-  exchangeSettings: void,
-  exchangeSuccess: void,
+  exchangeQuoteProcessing: {||},
+  exchangeScene: {||},
+  exchangeSettings: {||},
+  exchangeSuccess: {||},
   fioAddressDetails: {|
     fioAddressName: string,
     bundledTxs: number
   |},
-  fioAddressList: void,
-  fioAddressRegister: void,
+  fioAddressList: {||},
+  fioAddressRegister: {||},
   fioAddressRegisterSelectWallet: {|
     fioAddress: string,
     selectedWallet: EdgeCurrencyWallet,
@@ -144,7 +144,7 @@ export type ParamList = {
     fee: number,
     ownerPublicKey: string
   |},
-  fioDomainRegister: void,
+  fioDomainRegister: {||},
   fioDomainRegisterSelectWallet: {|
     fioDomain: string,
     selectedWallet: EdgeCurrencyWallet
@@ -165,7 +165,7 @@ export type ParamList = {
   fioRequestConfirmation: {|
     amounts: ExchangedFlipInputAmounts
   |},
-  fioRequestList: void,
+  fioRequestList: {||},
   fioRequestApproved: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string
@@ -193,7 +193,7 @@ export type ParamList = {
     initialAmount1?: string,
     headerIconUri?: string
   |},
-  loanDashboard: void,
+  loanDashboard: {||},
   loanDetails: {|
     loanAccountId: string
   |},
@@ -239,23 +239,23 @@ export type ParamList = {
   manageTokens: {|
     walletId: string
   |},
-  notificationSettings: void,
+  notificationSettings: {||},
   otpRepair: {|
     otpError: OtpError
   |},
-  otpSetup: void,
-  passwordRecovery: void,
+  otpSetup: {||},
+  passwordRecovery: {||},
   pluginListBuy: {| direction: 'buy' |},
   pluginListSell: {| direction: 'sell' |},
   pluginViewBuy: PluginViewParams,
   pluginViewSell: PluginViewParams,
   pluginView: PluginViewParams,
-  promotionSettings: void,
-  request: void,
+  promotionSettings: {||},
+  request: {||},
   scan: {|
     data?: 'sweepPrivateKey' | 'loginQR'
   |}, // TODO
-  securityAlerts: void,
+  securityAlerts: {||},
   send: {|
     allowedCurrencyCodes?: string[],
     guiMakeSpendInfo?: GuiMakeSpendInfo,
@@ -274,9 +274,9 @@ export type ParamList = {
     },
     infoTiles?: Array<{ label: string, value: string }>
   |},
-  settingsOverview: void,
-  settingsOverviewTab: void,
-  spendingLimits: void,
+  settingsOverview: {||},
+  settingsOverviewTab: {||},
+  spendingLimits: {||},
   stakeModify: {|
     walletId: string,
     stakePolicy: StakePolicy,
@@ -286,20 +286,20 @@ export type ParamList = {
   stakeClaim: { walletId: string, stakePolicy: StakePolicy },
   stakeOptions: { walletId: string, currencyCode: string },
   stakeOverview: { walletId: string, stakePolicy: StakePolicy },
-  termsOfService: void,
-  testScene: void,
+  termsOfService: {||},
+  testScene: {||},
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
     thumbnailPath?: string
   |},
-  transactionList: void,
+  transactionList: {||},
   transactionsExport: {|
     sourceWallet: EdgeCurrencyWallet,
     currencyCode: string
   |},
-  walletList: void,
-  walletListScene: void,
-  wcConnections: void,
+  walletList: {||},
+  walletListScene: {||},
+  wcConnections: {||},
   wcDisconnect: {| wcConnectionInfo: WcConnectionInfo |},
   wcConnect: {|
     uri: string

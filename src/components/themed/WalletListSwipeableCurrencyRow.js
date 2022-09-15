@@ -69,7 +69,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const handleRequest = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
-    navigation.navigate('request')
+    navigation.navigate('request', {})
   })
 
   const handleSelect = useHandler(() => {
@@ -86,7 +86,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           // Or because it is already activated:
           (await wallet.getReceiveAddress()).publicAddress !== '')
       ) {
-        navigation.navigate('transactionList')
+        navigation.navigate('transactionList', {})
       }
     })
   })
