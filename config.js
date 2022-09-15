@@ -136,6 +136,12 @@ const asConfig = asObject({
     }),
     { evmScanApiKey: [] }
   ),
+  x_MUMBAI_INIT: asOptional(
+    asObject({
+      evmScanApiKey: asOptional(asArray(asString), [])
+    }),
+    { evmScanApiKey: [] }
+  ),
   X_SIDESHIFT_INIT: asOptional(
     asObject({
       affiliateId: asOptional(asString, '')

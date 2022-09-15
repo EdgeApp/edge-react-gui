@@ -282,6 +282,16 @@ export const SPECIAL_CURRENCY_INFO: {
     noMaxSpend: true,
     isImportKeySupported: false
   },
+  mumbai: {
+    initWalletName: s.strings.string_first_mumbai_wallet_name,
+    chainCode: 'MUMBAI',
+    allowZeroTx: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true
+  },
   eos: {
     initWalletName: s.strings.string_first_eos_wallet_name,
     chainCode: 'EOS',
