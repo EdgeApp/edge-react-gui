@@ -2,7 +2,7 @@ import { add } from 'biggystring'
 import * as React from 'react'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { ActionProgram } from '../../../controllers/action-queue/types'
+import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -33,7 +33,7 @@ type Props = {
 
 export const LoanCreateConfirmationScene = (props: Props) => {
   const { navigation, route } = props
-  const { borrowPlugin, borrowEngine, destWallet, destTokenId, isDestBank, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
+  const { borrowPlugin, borrowEngine, destWallet, destTokenId, destBankId, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
@@ -67,7 +67,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
 
-    const actionOps = {
+    const actionOps: ActionOp = {
       type: 'seq',
       actions: (
         await Promise.all([
@@ -81,17 +81,15 @@ export const LoanCreateConfirmationScene = (props: Props) => {
           }),
           makeAaveBorrowAction({
             borrowPluginId,
-            // @ts-expect-error
-            tokenId: destTokenId,
+            borrowTokenId: destTokenId,
             nativeAmount: nativeDestAmount,
             borrowEngineWallet: borrowEngineWallet,
-            isDestBank
+            destBankId
           })
         ])
       ).reduce((accum, subActions) => accum.concat(subActions), [])
     }
 
-    // @ts-expect-error
     const actionProgram = await makeActionProgram(actionOps)
     setActionProgram(actionProgram)
 

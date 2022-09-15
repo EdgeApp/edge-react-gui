@@ -13,13 +13,13 @@ export const makeAaveBorrowAction = async ({
   borrowEngineWallet,
   borrowPluginId,
   borrowTokenId,
-  isDestBank,
+  destBankId,
   nativeAmount
 }: {
   borrowEngineWallet: EdgeCurrencyWallet
   borrowPluginId: string
   borrowTokenId?: string
-  isDestBank?: boolean
+  destBankId?: string
   nativeAmount: string
 }): Promise<ActionOp[]> => {
   const out = []
@@ -48,10 +48,10 @@ export const makeAaveBorrowAction = async ({
     })
 
   // Construct the Withdraw to Bank action
-  if (isDestBank) {
+  if (destBankId != null) {
     out.push({
       type: 'wyre-sell',
-      wyreAccountId: 'TODO', // TODO: after handling fiatAccountId
+      wyreAccountId: destBankId,
       nativeAmount,
       tokenId: borrowTokenId ?? defaultTokenId,
       walletId: borrowEngineWallet.id
