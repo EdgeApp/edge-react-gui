@@ -188,7 +188,7 @@ export const refreshConnectedWalletsForFioAddress = async (
     if (!enabledTokens.find((enabledToken: string) => enabledToken === wallet.currencyInfo.currencyCode)) {
       enabledTokens.push(wallet.currencyInfo.currencyCode)
     }
-    for (const enabledToken: string of enabledTokens) {
+    for (const enabledToken of enabledTokens) {
       const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${enabledToken}`
       if (connectedWallets[fullCurrencyCode]) continue
       if (await isWalletConnected(fioWallet, fioAddress, wallet, enabledToken, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
@@ -350,7 +350,7 @@ export const removePublicAddresses = async (
  */
 export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
   if (fioWallets) {
-    for (const wallet: EdgeCurrencyWallet of fioWallets) {
+    for (const wallet of fioWallets) {
       const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
       for (const address of fioAddresses) {
         if (address.toLowerCase() === fioAddress.toLowerCase()) {
@@ -522,7 +522,7 @@ export const recordSend = async (
 
 export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
   let obtDataRecords = []
-  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+  for (const fioWallet of fioWallets) {
     try {
       const { obt_data_records: lastRecords } = await fioWallet.otherMethods.fioAction('getObtData', {})
       obtDataRecords = [...obtDataRecords, ...lastRecords]

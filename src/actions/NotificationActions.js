@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import ENV from '../../env.json'
 import { type DeviceUpdatePayload, asDevicePayload } from '../controllers/action-queue/types/pushApiTypes.js'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
-import { type NewPushEvent, type PushEventStatus } from '../controllers/action-queue/types/pushTypes.js'
+import { type NewPushEvent } from '../controllers/action-queue/types/pushTypes.js'
 import s from '../locales/strings.js'
 import { notif1 } from '../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors.js'
@@ -125,7 +125,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
 export const serverSettingsToState = (settings: $Call<typeof asDevicePayload>): PriceChangeNotificationSettings => {
   const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges }
 
-  for (const event: PushEventStatus of settings.events) {
+  for (const event of settings.events) {
     if (event.state !== 'waiting') continue
     const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
     if (trigger == null) continue

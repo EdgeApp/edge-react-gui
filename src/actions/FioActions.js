@@ -36,10 +36,10 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
     wallets.push(currencyWallets[walletId])
   }
   const connectedWalletsByFioAddress = {}
-  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+  for (const fioWallet of fioWallets) {
     if (!getState().core.account.id) break
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
-    for (const fioAddress: string of fioAddresses) {
+    for (const fioAddress of fioAddresses) {
       if (!getState().core.account.id) break
       connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
       dispatch({
@@ -70,7 +70,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
 
     const obtDataRecords = await getFioObtData(fioWallets)
 
-    for (const transaction: EdgeTransaction of transactions) {
+    for (const transaction of transactions) {
       const edgeMetadata: EdgeMetadata = transaction.metadata != null ? transaction.metadata : { notes: '' }
       try {
         const { name } = edgeMetadata

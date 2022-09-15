@@ -318,7 +318,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
     const { wallets = {}, onSelectWallet } = this.props
     const availableWallets: Array<{ id: string, currencyCode: string }> = []
-    for (const walletKey: string of Object.keys(wallets)) {
+    for (const walletKey of Object.keys(wallets)) {
       if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
         availableWallets.push({ id: wallets[walletKey].id, currencyCode: wallets[walletKey].currencyCode })
         if (availableWallets.length > 1) {

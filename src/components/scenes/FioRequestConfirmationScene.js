@@ -83,7 +83,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       const { chainCode, currencyCode, connectedWalletsByFioAddress } = this.props
       const walletAddresses = []
       let defaultFioAddressFrom = null
-      for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
+      for (const fioWallet of this.props.fioWallets) {
         try {
           const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {

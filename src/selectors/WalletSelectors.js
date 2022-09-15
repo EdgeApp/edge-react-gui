@@ -77,7 +77,7 @@ export const findWalletByFioAddress = async (state: RootState, fioAddress: strin
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
 
   if (fioWallets && fioWallets.length) {
-    for (const wallet: EdgeCurrencyWallet of fioWallets) {
+    for (const wallet of fioWallets) {
       const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
       if (fioAddresses.length > 0) {
         for (const address of fioAddresses) {
