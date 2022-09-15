@@ -14,7 +14,7 @@ type Props = {
   text: string
 }
 
-export function Title(props: Props): React.Node {
+export function Title(props: Props) {
   const { leftIcon, text, rightIcon, styleLeftIcon, styleRightIcon } = props
 
   const theme = useTheme()

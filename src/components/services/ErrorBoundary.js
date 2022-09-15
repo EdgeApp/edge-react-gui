@@ -32,7 +32,7 @@ class ErrorBoundaryComponent extends React.Component<Props, State> {
     }
   }
 
-  render(): React.Node {
+  render() {
     const { children, FallbackComponent } = this.props
     if (this.state.hasError) return <FallbackComponent />
 

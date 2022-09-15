@@ -28,7 +28,7 @@ type Props = {
 /**
  * A settings row with a radio selector on the right side.
  */
-const SettingsRadioRowComponent = (props: Props): React.Node => {
+const SettingsRadioRowComponent = (props: Props) => {
   const { children, disabled = false, label, value, onPress } = props
   const theme = useTheme()
 

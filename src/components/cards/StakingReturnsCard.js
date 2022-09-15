@@ -7,15 +7,7 @@ import { PairIcons } from '../icons/PairIcons.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 
-export function StakingReturnsCard({
-  fromCurrencyLogos,
-  toCurrencyLogos,
-  text
-}: {
-  fromCurrencyLogos: string[],
-  toCurrencyLogos: string[],
-  text: string
-}): React.Node {
+export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text }: { fromCurrencyLogos: string[], toCurrencyLogos: string[], text: string }) {
   const styles = getStyles(useTheme())
 
   const renderArrow = () => {

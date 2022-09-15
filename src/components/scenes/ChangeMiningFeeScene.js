@@ -140,7 +140,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     )
   }
 
-  renderCustomFeeTextInput(customFormat: string[]): React.Node {
+  renderCustomFeeTextInput(customFormat: string[]) {
     const { theme } = this.props
     const styles = getStyles(theme)
     const { networkFeeOption, customNetworkFee } = this.state

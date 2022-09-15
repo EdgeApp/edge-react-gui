@@ -28,7 +28,7 @@ type Props = {
 /**
  * A settings row with a switch component on the right side.
  */
-const SettingsSwitchRowComponent = (props: Props): React.Node => {
+const SettingsSwitchRowComponent = (props: Props) => {
   const { children, disabled, label, value, onPress } = props
   const theme = useTheme()
 

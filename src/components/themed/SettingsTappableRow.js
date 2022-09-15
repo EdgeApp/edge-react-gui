@@ -31,7 +31,7 @@ type Props = {
  * A settings row with an icon on the right side.
  * The default icon is a navigation arrow, but other options are available.
  */
-const SettingsTappableRowComponent = (props: Props): React.Node => {
+const SettingsTappableRowComponent = (props: Props) => {
   const { action = 'navigate', children, disabled, label, onPress } = props
   const theme = useTheme()
   const style = {

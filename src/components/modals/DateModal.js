@@ -47,7 +47,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
    * This modal doesn't use the normal theme colors,
    * since the native component inside uses its own phone-based colors.
    */
-  render(): React.Node {
+  render() {
     const { bridge, theme } = this.props
     const { darkMode, date } = this.state
 

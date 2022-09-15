@@ -134,7 +134,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     this.unsubscribe()
   }
 
-  render(): React.Node {
+  render() {
     return null
   }
 }

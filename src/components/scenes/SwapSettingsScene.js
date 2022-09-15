@@ -137,7 +137,7 @@ export class SwapSettings extends React.Component<Props, State> {
     )
   }
 
-  renderPluginIcon(pluginId: string): React.Node {
+  renderPluginIcon(pluginId: string) {
     const { theme } = this.props
     const logoSource = getSwapPluginIconUri(pluginId, theme)
     const styles = getStyles(theme)

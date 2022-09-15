@@ -106,7 +106,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     )
   }
 
-  renderAndroidSwitches(): React.Node {
+  renderAndroidSwitches() {
     const { isExportCsv, isExportQbo } = this.state
     return (
       <>
@@ -116,7 +116,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     )
   }
 
-  renderIosSwitches(): React.Node {
+  renderIosSwitches() {
     const { isExportCsv, isExportQbo } = this.state
     return (
       <>

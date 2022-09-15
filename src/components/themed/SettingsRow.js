@@ -29,7 +29,7 @@ type Props = {
  * A settings row places an interactive control next to a description,
  * which can be some combination of React children and a plain text label.
  */
-const SettingsRowComponent = (props: Props): React$Element<any> => {
+const SettingsRowComponent = (props: Props) => {
   const { children, disabled = false, label = '', right, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

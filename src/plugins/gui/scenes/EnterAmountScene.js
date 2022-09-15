@@ -25,7 +25,7 @@ type Props = {
 
 export type EnterAmountPoweredBy = { poweredByIcon: string, poweredByText: string, poweredByOnClick: () => Promise<void> | void }
 
-export const FiatPluginEnterAmountScene = memo((props: Props): React.Node => {
+export const FiatPluginEnterAmountScene = memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params

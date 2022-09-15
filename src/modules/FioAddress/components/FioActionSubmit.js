@@ -203,7 +203,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     )
   }
 
-  render(): React$Node {
+  render() {
     const { title, showPaymentWalletPicker, fioWallets, theme } = this.props
     const { loading, feeLoading, showSlider, displayFee, paymentWallet, balance } = this.state
     const styles = getStyles(theme)

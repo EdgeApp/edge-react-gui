@@ -16,7 +16,7 @@ type Props = {
 /**
  * A blue header row in a settings scene.
  */
-export const SettingsHeaderRowComponent = (props: Props): React.Node => {
+export const SettingsHeaderRowComponent = (props: Props) => {
   const { icon, label } = props
   const styles = getStyles(useTheme())
 

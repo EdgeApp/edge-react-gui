@@ -20,7 +20,7 @@ export function StakingOptionCard({
   primaryText: string,
   secondaryText: string,
   stakeProviderInfo?: StakeProviderInfo
-}): React.Node {
+}) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
