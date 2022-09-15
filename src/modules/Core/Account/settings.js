@@ -9,6 +9,7 @@ import { asSortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
 import { type MostRecentWallet, type PasswordReminder, asMostRecentWallet } from '../../../types/types.js'
 import { currencyPlugins } from '../../../util/corePlugins.js'
+import { logActivity } from '../../../util/logger'
 import { categories } from './subcategories.js'
 
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
@@ -152,7 +153,7 @@ export const setSpendingLimits = (account: EdgeAccount, spendingLimits: Spending
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { spendingLimits })
     const out = setLocalSettings(account, updatedSettings)
-    global.logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
+    logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
     return out
   })
 }

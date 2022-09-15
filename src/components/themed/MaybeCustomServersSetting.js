@@ -7,6 +7,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
+import { logActivity } from '../../util/logger'
 import { type CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -35,7 +36,7 @@ function CustomServersSettingComponent(props: Props) {
       enableCustomServers: !enableCustomServers,
       customServers: customServers.length > 0 ? customServers : defaultSetting.customServers
     })
-    global.logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServers.length}`)
+    logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServers.length}`)
   }
 
   async function handleDeleteNode(i: number): Promise<void> {
@@ -44,7 +45,7 @@ function CustomServersSettingComponent(props: Props) {
     list.splice(i, 1)
 
     await onUpdate({ enableCustomServers, customServers: list })
-    global.logActivity(`Delete Custom Node: ${deletedNode}`)
+    logActivity(`Delete Custom Node: ${deletedNode}`)
   }
 
   function handleEditNode(i?: number): void {
@@ -57,7 +58,7 @@ function CustomServersSettingComponent(props: Props) {
         list[i] = text
       }
       await onUpdate({ enableCustomServers, customServers: list })
-      global.logActivity(`Edit Custom Node: ${before} -> ${text}`)
+      logActivity(`Edit Custom Node: ${before} -> ${text}`)
       return true
     }
 

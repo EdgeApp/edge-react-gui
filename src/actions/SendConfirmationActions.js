@@ -18,6 +18,7 @@ import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types.js'
+import { logActivity } from '../util/logger'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
@@ -277,8 +278,8 @@ export const signBroadcastAndSave =
           feeRateUsed
         } = edgeSignedTransaction
 
-        global.logActivity(`broadcastTx: ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
-        global.logActivity(`
+        logActivity(`broadcastTx: ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
+        logActivity(`
   currencyCode: ${currencyCode}
   nativeAmount: ${nativeAmount}
   txid: ${txid}

@@ -12,6 +12,7 @@ import { usePendingPressAnimation } from '../../hooks/usePendingPress.js'
 import { memo } from '../../types/reactHooks.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
+import { logActivity } from '../../util/logger'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -58,9 +59,9 @@ export const ManageTokensRowComponent = (props: Props) => {
     const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)
     if (isEnabled) {
-      global.logActivity(`Disable Token: ${wallet.name ?? 'no_wallet_name'} ${wallet.type} ${tokenId}`)
+      logActivity(`Disable Token: ${wallet.name ?? 'no_wallet_name'} ${wallet.type} ${tokenId}`)
     } else {
-      global.logActivity(`Enable Token: ${wallet.name ?? 'no_wallet_name'} ${wallet.type} ${tokenId}`)
+      logActivity(`Enable Token: ${wallet.name ?? 'no_wallet_name'} ${wallet.type} ${tokenId}`)
     }
   })
 

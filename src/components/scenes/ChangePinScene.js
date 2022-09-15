@@ -6,6 +6,7 @@ import * as React from 'react'
 
 import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
+import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type OwnProps = {
@@ -21,7 +22,7 @@ export class ChangePinComponent extends React.Component<Props> {
   render() {
     const { context, account, navigation } = this.props
     const handleComplete = () => {
-      global.logActivity(`PIN Changed: ${account.username}`)
+      logActivity(`PIN Changed: ${account.username}`)
       navigation.goBack()
     }
     return (
