@@ -2,6 +2,7 @@
 const config = {
   preset: 'react-native',
   coverageDirectory: './coverage',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   setupFiles: ['./jestSetup.js'],
 
   // Don't run node_modules through Babel, except specific ones that still need it:

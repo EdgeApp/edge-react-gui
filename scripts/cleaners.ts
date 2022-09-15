@@ -1,5 +1,3 @@
-// @flow
-
 import { asJSON, asMap, asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
 
 /**
@@ -35,13 +33,13 @@ export const asReleaseConfig = asObject({
   // Maps from branch names to env.json settings:
   envJson: asOptional(asMap(asMap(asUnknown)), {})
 })
-export type ReleaseConfig = $Call<typeof asReleaseConfig>
+export type ReleaseConfig = ReturnType<typeof asReleaseConfig>
 
 /**
  * deploy-config.json
  */
 export const asReleaseConfigFile = asJSON(asMap(asReleaseConfig))
-export type ReleaseConfigFile = $Call<typeof asReleaseConfigFile>
+export type ReleaseConfigFile = ReturnType<typeof asReleaseConfigFile>
 
 /**
  * release-version.json
@@ -53,7 +51,7 @@ export const asVersionFile = asJSON(
     version: asString
   })
 )
-export type VersionFile = $Call<typeof asVersionFile>
+export type VersionFile = ReturnType<typeof asVersionFile>
 
 /**
  * Legacy build number files on the Jenkins server.
@@ -63,4 +61,4 @@ export const asLegacyBuildNumFile = asJSON(
     buildNum: asString
   })
 )
-export type LegacyBuildNumFile = $Call<typeof asLegacyBuildNumFile>
+export type LegacyBuildNumFile = ReturnType<typeof asLegacyBuildNumFile>

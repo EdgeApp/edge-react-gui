@@ -107,7 +107,7 @@ The included `deploy.js` is a script to automate building, signing, and deployin
 
 ### To Use
 
-- Run `./scripts/updateVersion.js` to set up your build number & version.
+- Run `yarn update-version` to set up your build number & version.
 - Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
 - Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
 - Put any Android keystore files into `edge-react-gui/keystores/`
@@ -116,8 +116,10 @@ The included `deploy.js` is a script to automate building, signing, and deployin
 
 Run deploy
 
-    ./deploy.js edge ios master
-    ./deploy.js edge android master
+```sh
+yarn deploy edge ios master
+yarn deploy edge android master
+```
 
 ---
 

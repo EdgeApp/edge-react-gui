@@ -1,9 +1,7 @@
-// @flow
-
-const fs = require('fs')
-const os = require('os')
-const express = require('express')
-const bodyParser = require('body-parser')
+import bodyParser from 'body-parser'
+import express from 'express'
+import fs from 'fs'
+import os from 'os'
 
 const ifaces = os.networkInterfaces()
 const PORT = 8080
@@ -22,8 +20,9 @@ try {
   Object.keys(ifaces).forEach(function (ifname) {
     let found = false
 
-    ifaces[ifname].forEach(function (iface) {
-      if (iface.family !== 'IPv4' || iface.internal !== false) {
+    const iface = ifaces[ifname] ?? []
+    iface.forEach(function (iface) {
+      if (iface.family !== 'IPv4' || iface.internal) {
         // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
         return
       }

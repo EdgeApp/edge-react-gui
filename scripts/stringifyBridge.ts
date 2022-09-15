@@ -1,6 +1,4 @@
-// @flow
-
-const fs = require('fs')
+import fs from 'fs'
 
 const text = fs.readFileSync('./src/util/bridge/rolledUp.js', 'utf8')
 const out = `export const javascript = ${JSON.stringify(text)}`

@@ -7,6 +7,9 @@
 set -e
 cd "$(dirname "$0")/.."
 
+# Assemble the env.json config file:
+node -r sucrase/register ./scripts/configure.ts
+
 ## Fix broken packages:
 yarn patch-package
 
@@ -20,7 +23,7 @@ touch node_modules/node-hid/index.js
 npx jetify
 
 # Copy the API key to native code:
-node ./scripts/makeNativeHeaders.js
+node -r sucrase/register ./scripts/makeNativeHeaders.ts
 
 # Create zcash checkpoints
 mkdir -p android/app/build/intermediates/merged_assets/debug/out/saplingtree/mainnet
@@ -37,10 +40,10 @@ fi
 
 # Build the EdgeProvider shim code:
 node ./node_modules/.bin/rollup -c
-node ./scripts/stringifyBridge.js
+node -r sucrase/register ./scripts/stringifyBridge.ts
 
 # Copy pre-built buy/sell plugins:
-node ./copy-plugin.js
+node -r sucrase/register ./scripts/copy-plugin.ts
 
 # Copy edge-core-js WebView contents:
 core_assets="./android/app/src/main/assets/edge-core"

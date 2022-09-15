@@ -162,6 +162,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
   useEffect(() => {
     props.refreshAllFioAddresses()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -188,6 +189,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
       setSelectedFioAddress(fioAddress.name)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...fioAddresses, selectedFioAddress])
 
   // Make spend transaction after amount change
@@ -232,6 +234,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     return () => {
       abort = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nativeAmount])
 
   const renderAdd = () => {

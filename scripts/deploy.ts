@@ -1,9 +1,6 @@
-#!/usr/bin/env node
-/* eslint-disable flowtype/require-valid-file-annotation */
-
-const fs = require('fs')
-const childProcess = require('child_process')
-const sprintf = require('sprintf-js').sprintf
+import childProcess from 'child_process'
+import fs from 'fs'
+import { sprintf } from 'sprintf-js'
 
 const argv = process.argv
 const mylog = console.log
@@ -13,69 +10,69 @@ let _currentPath = __dirname
 /**
  * Things we expect to be set in the config file:
  */
-// type BuildConfigFile = {
-//   // Common build options:
-//   envJson: { [repoBranch: string]: Object },
+type BuildConfigFile = {
+  // Common build options:
+  envJson: { [repoBranch: string]: Object }
 
-//   // Android build options:
-//   androidKeyStore: string,
-//   androidKeyStoreAlias: string,
-//   androidKeyStorePassword: string,
-//   androidTask: string,
+  // Android build options:
+  androidKeyStore: string
+  androidKeyStoreAlias: string
+  androidKeyStorePassword: string
+  androidTask: string
 
-//   // iOS build options:
-//   appleDeveloperTeamId: string,
-//   xcodeScheme: string,
-//   xcodeWorkspace: string,
+  // iOS build options:
+  appleDeveloperTeamId: string
+  xcodeScheme: string
+  xcodeWorkspace: string
 
-//   // Upload options:
-//   appCenterApiToken: string,
-//   appCenterAppName: string,
-//   appCenterDistroGroup: string,
-//   appCenterGroupName: string,
-//   bugsnagApiKey: string,
-//   hockeyAppId: string,
-//   hockeyAppTags: string,
-//   hockeyAppToken: string,
-//   productName: string
-// }
+  // Upload options:
+  appCenterApiToken: string
+  appCenterAppName: string
+  appCenterDistroGroup: string
+  appCenterGroupName: string
+  bugsnagApiKey: string
+  hockeyAppId: string
+  hockeyAppTags: string
+  hockeyAppToken: string
+  productName: string
+}
 
 /**
  * These are basically global variables:
  */
-// type BuildObj = BuildConfigFile & {
-//   // Set in makeCommonPre:
-//   guiDir: string,
-//   guiPlatformDir: string,
-//   platformType: string, // 'android' | 'ios'
-//   repoBranch: string, // 'develop' | 'master' | 'test'
-//   tmpDir: string,
+interface BuildObj extends BuildConfigFile {
+  // Set in makeCommonPre:
+  guiDir: string
+  guiPlatformDir: string
+  platformType: string // 'android' | 'ios'
+  repoBranch: string // 'develop' | 'master' | 'test'
+  tmpDir: string
 
-//   // Set in makeCommonPost:
-//   buildNum: string,
-//   bundleMapFile: string,
-//   bundlePath: string,
-//   bundleUrl: string,
-//   guiHash: string,
-//   version: string,
+  // Set in makeCommonPost:
+  buildNum: string
+  bundleMapFile: string
+  bundlePath: string
+  bundleUrl: string
+  guiHash: string
+  version: string
 
-//   // Set in build steps:
-//   dSymFile: string,
-//   dSymZip: string,
-//   ipaFile: string // Also APK
-// }
+  // Set in build steps:
+  dSymFile: string
+  dSymZip: string
+  ipaFile: string // Also APK
+}
 
 main()
 
 function main() {
   if (argv.length < 4) {
-    mylog('Usage: node deploy.js [project] [platform] [branch]')
+    mylog('Usage: node -r sucrase/register deploy.ts [project] [platform] [branch]')
     mylog('  project options: edge')
     mylog('  platform options: ios, android')
     mylog('  network options: master, develop')
   }
 
-  const buildObj = {} // BuildObj
+  const buildObj: BuildObj = {} as any
 
   makeCommonPre(argv, buildObj)
   makeProject(argv[2], buildObj)
@@ -90,7 +87,7 @@ function main() {
   buildCommonPost(buildObj)
 }
 
-function makeCommonPre(argv, buildObj) {
+function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.guiDir = __dirname
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
@@ -98,7 +95,7 @@ function makeCommonPre(argv, buildObj) {
   buildObj.tmpDir = `${buildObj.guiDir}/temp`
 }
 
-function makeProject(project, buildObj) {
+function makeProject(project: string, buildObj: BuildObj) {
   const config = JSON.parse(fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8'))
 
   Object.assign(buildObj, config[project])
@@ -108,7 +105,7 @@ function makeProject(project, buildObj) {
   console.log(buildObj)
 }
 
-function makeCommonPost(buildObj) {
+function makeCommonPost(buildObj: BuildObj) {
   if (buildObj.envJson != null) {
     const envJsonPath = buildObj.guiDir + '/env.json'
     let envJson = {}
@@ -143,7 +140,7 @@ function makeCommonPost(buildObj) {
 //   call('npm install -g appcenter-cli')
 // }
 
-function buildIos(buildObj) {
+function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
 
   if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
@@ -221,7 +218,7 @@ function buildIos(buildObj) {
   call(cmdStr)
 }
 
-function buildAndroid(buildObj) {
+function buildAndroid(buildObj: BuildObj) {
   if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
     call(`cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`)
   }
@@ -243,7 +240,7 @@ function buildAndroid(buildObj) {
   buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
 }
 
-function buildCommonPost(buildObj) {
+function buildCommonPost(buildObj: BuildObj) {
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -300,35 +297,33 @@ function builddate() {
   return dateStr
 }
 
-function rmNewline(text) {
+function rmNewline(text: string) {
   return text.replace(/(\r\n|\n|\r)/gm, '')
 }
 
-function chdir(path) {
+function chdir(path: string) {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call(cmdstring) {
+function call(cmdstring: string) {
   console.log('call: ' + cmdstring)
-  const opts = {
+  childProcess.execSync(cmdstring, {
     encoding: 'utf8',
     timeout: 3600000,
     stdio: 'inherit',
     cwd: _currentPath,
     killSignal: 'SIGKILL'
-  }
-  childProcess.execSync(cmdstring, opts)
+  })
 }
 
-function cmd(cmdstring) {
+function cmd(cmdstring: string) {
   console.log('cmd: ' + cmdstring)
-  const opts = {
+  const r = childProcess.execSync(cmdstring, {
     encoding: 'utf8',
     timeout: 3600000,
     cwd: _currentPath,
     killSignal: 'SIGKILL'
-  }
-  const r = childProcess.execSync(cmdstring, opts)
+  })
   return r
 }

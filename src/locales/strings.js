@@ -56,4 +56,5 @@ export function selectLocale(locale: string = 'en'): boolean {
   return found
 }
 
+// eslint-disable-next-line import/no-default-export
 export default out

@@ -1,4 +1,6 @@
-const fs = require('fs')
+// @flow
+
+import fs from 'fs'
 
 function editFile(name, cb) {
   let text = fs.readFileSync(name, 'utf8')
@@ -18,7 +20,7 @@ editFile('package.json', text =>
 
 editFile('scripts/prepare.sh', text =>
   text //
-    .replace('node ./copy-plugin.js', '')
+    .replace('node -r sucrase/register ./scripts/copy-plugin.ts', '')
     .replace(/cp -R node_modules\/edge-currency-accountbased.*/g, '')
     .replace(/node .\/node_modules\/.bin\/webpack/, '')
 )
