@@ -128,10 +128,14 @@ export const checkWyreHasLinkedBank = async (dataStore: EdgeDataStore): Promise<
     }
     if (key == null) return false
     const paymentMethods = await getWyrePaymentMethods(key)
+    if (paymentMethods.data.length < 1) return false
     const accountName = paymentMethods.data[0].owner.substring(8)
     const wyreAccount = await getWyreAccount(accountName, key)
     return checkWyreActive(wyreAccount, paymentMethods)
   } catch (e) {
+    if (typeof e.message === 'string' && e.message.includes('No item named')) {
+      return false
+    }
     console.error(e.message)
   }
 }
@@ -189,7 +193,5 @@ async function getWyrePaymentMethods(token: string): Promise<GetPaymentMethods> 
   const result = await fetch(url, request)
   if (!result.ok) throw new Error('fetchError')
   if (result.status === 204) throw new Error('emptyResponse')
-  const newData = asGetPaymentMethods(await result.json())
-  if (newData.data.length < 1) throw new Error('emptyResponse')
-  return newData
+  return asGetPaymentMethods(await result.json())
 }
