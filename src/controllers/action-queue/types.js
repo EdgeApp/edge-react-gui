@@ -42,6 +42,7 @@ export type FiatBuyActionOp = {
 export type FiatSellActionOp = {
   type: 'fiat-sell',
   fiatPluginId: string,
+  fiatAccountId: string,
   nativeAmount: string,
   walletId: string,
   tokenId?: string

@@ -1,27 +1,32 @@
 // @flow
 
-import { asArray, asObject, asOptional, asString } from 'cleaners'
-import { type EdgeAccount, type EdgeCurrencyWallet } from 'edge-core-js'
+import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
+import { type EdgeAccount } from 'edge-core-js'
 
 import ENV from '../../../env'
+
+export type PaymentMethod = {
+  id: string,
+  name: string,
+  defaultCurrency: string,
+  status: string,
+  supportsDeposit: boolean,
+  supportsPayment: boolean,
+  blockchains: { [string]: string }
+}
 
 type WyreClientOptions = {
   account: EdgeAccount
 }
 
 type WyreClient = {
-  // Properties:
   +isAccountSetup: boolean,
-  // Methods:
-  getCryptoPaymentMethod(wallet: EdgeCurrencyWallet): Promise<string | void>
+  getPaymentMethods(): Promise<{ [string]: PaymentMethod } | void>,
+  getCryptoPaymentAddress(fiatAccountId: string, walletId: string): Promise<string>
 }
 
 const { baseUri } = ENV.WYRE_CLIENT_INIT
 
-/*
-This is an intermediary solution to interface with Wyre until the fiat-plugins
-are fully baked.
-*/
 export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient> => {
   const { account } = opt
   const dataStore = account.dataStore
@@ -31,11 +36,12 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
   //
 
   const wyreSecret = await dataStore.getItem('co.edgesecure.wyre', 'wyreSecret').catch(_ => dataStore.getItem('co.edgesecure.wyre', 'wyreAccountId'))
+  const isAccountSetup = !!wyreSecret
+
   const baseHeaders = {
     Authorization: `Bearer ${wyreSecret}`,
     Accept: 'application/json'
   }
-  const isAccountSetup = !!wyreSecret
 
   //
   // Private methods:
@@ -50,15 +56,13 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
   // Public
   //
 
-  return {
+  const instance = {
     // Properties:
     isAccountSetup,
 
     // Methods:
-    async getCryptoPaymentMethod(wallet: EdgeCurrencyWallet): Promise<string | void> {
+    async getPaymentMethods(): Promise<{ [string]: PaymentMethod } | void> {
       if (!isAccountSetup) throw new Error('Wyre account not found for EdgeAccount')
-
-      const parentCurrencyCode = wallet.currencyInfo.currencyCode
 
       const uri = `${baseUri}/v2/paymentMethods`
       const response = await fetch(uri, {
@@ -69,27 +73,47 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
       if (!response.ok) {
         handleHttpError(uri, response.status, responseData)
       }
-
-      const { data } = asPaymentMethodsResponse(JSON.parse(responseData))
-      const [paymentMethod] = data
-      const { blockchains } = paymentMethod
-
-      if (blockchains == null) return
-
-      // Special cases for testnets
-      if (parentCurrencyCode === 'MUMBAI') {
-        return blockchains.MATIC
+      if (response.status === 204) {
+        return
       }
-      if (parentCurrencyCode === 'TESTBTC') {
-        const address = blockchains.BTC
-        if (['m', 'n', '2'].includes(address[0])) {
-          return address
+
+      const { data: paymentMethodsResponse } = asPaymentMethodsResponse(JSON.parse(responseData))
+
+      const paymentMethodsMap: { [string]: PaymentMethod } = {}
+      paymentMethodsResponse.forEach(paymentMethod => {
+        const { blockchains, id } = paymentMethod
+        if (blockchains == null) return
+
+        // Special cases for testnets, if they don't yet support (they currently do not)
+        if (blockchains.MUMBAI == null) blockchains.MUMBAI = blockchains.MATIC
+        if (blockchains.TESTBTC == null) {
+          const address = blockchains.BTC
+          if (['m', 'n', '2'].includes(address[0])) blockchains.TESTBTC = address
         }
-      }
+        paymentMethod.blockchains = blockchains
 
-      return blockchains[parentCurrencyCode]
+        paymentMethodsMap[id] = paymentMethod
+      })
+
+      return paymentMethodsMap
+    },
+
+    async getCryptoPaymentAddress(fiatAccountId: string, walletId: string): Promise<string> {
+      const paymentMethods = await instance.getPaymentMethods()
+      const paymentMethod = paymentMethods != null ? paymentMethods[fiatAccountId] : undefined
+      if (paymentMethod == null) throw new Error(`Could not find fiat-sell accountId ${fiatAccountId}`)
+
+      const { blockchains } = paymentMethod
+      const wallet = account.currencyWallets[walletId]
+      const parentCode = wallet.currencyInfo.currencyCode
+      if (!(parentCode in blockchains)) throw new Error(`No fiat-sell support for ${wallet.type} network assets on wyreAccountId ${fiatAccountId}`)
+      const address = blockchains[parentCode]
+
+      return address
     }
   }
+
+  return instance
 }
 
 // -----------------------------------------------------------------------------
@@ -97,11 +121,15 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
 // -----------------------------------------------------------------------------
 
 const asPaymentMethodsResponse = asObject({
-  data: asArray(
+  data: asArray<PaymentMethod>(
     asObject({
       id: asString,
-      // ...some other stuff
-      blockchains: asOptional(asObject(asString))
+      name: asString,
+      defaultCurrency: asString,
+      status: asString,
+      supportsDeposit: asBoolean,
+      supportsPayment: asBoolean,
+      blockchains: asOptional(asObject(asString), {})
     })
   )
 })

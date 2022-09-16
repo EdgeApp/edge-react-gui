@@ -80,6 +80,7 @@ const asFiatBuyActionOp: Cleaner<FiatBuyActionOp> = asObject({
 })
 const asFiatSellActionOp: Cleaner<FiatSellActionOp> = asObject({
   type: asValue('fiat-sell'),
+  fiatAccountId: asString,
   fiatPluginId: asString,
   nativeAmount: asString,
   walletId: asString,

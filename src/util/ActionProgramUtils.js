@@ -53,6 +53,7 @@ export const makeAaveBorrowAction = async ({
   if (isDestBank) {
     out.push({
       type: 'fiat-sell',
+      fiatAccountId: 'TODO', // TODO: after handling fiatAccountId
       fiatPluginId: 'wyre', // TODO: update after converting fiatPluginId to displayName
       nativeAmount,
       tokenId: borrowTokenId ?? defaultTokenId,
