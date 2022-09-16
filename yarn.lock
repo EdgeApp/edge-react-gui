@@ -11929,10 +11929,10 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.9:
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.9.tgz#6ccb1d430dca3a86c8cd32336c0ad5e0af00e0c8"
-  integrity sha512-WwiukjkQ/5LQ4OiV03XjT5Ic43AdPatZM6SARItRX2piXesGp7VuIWHludbOWCGCmlaqWkD+7cK2vafXsQCIgQ==
+react-native-airship@^0.2.10, react-native-airship@^0.2.9:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.10.tgz#5d93a5707435dab311ae1633a0f64f2ece8a2dbc"
+  integrity sha512-VX+2yC/ZsaV62Y/PdBqvguDUQggCzFwI8dmEBY0QT0jcrCLm4IdhT//KuvsHR7eYTD5zXB0+0fW5VMy95IEvTg==
   dependencies:
     yavent "^0.1.1"
 
