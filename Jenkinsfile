@@ -40,7 +40,7 @@ pipeline {
         copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
 
         // Pick the new build number and version:
-        sh "./scripts/updateVersion.js ${BRANCH_NAME}"
+        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
 
         // Update our description:
         script {
