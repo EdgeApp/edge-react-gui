@@ -117,7 +117,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   scene: {
     alignItems: 'stretch',
     padding: 24
@@ -137,8 +137,7 @@ const rawStyles = {
     fontFamily: THEME.FONTS.DEFAULT,
     fontSize: 14
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
 
 export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(
   state => ({

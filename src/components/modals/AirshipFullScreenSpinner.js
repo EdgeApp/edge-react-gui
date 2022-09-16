@@ -88,7 +88,7 @@ export class AirshipFullScreenSpinner extends React.Component<Props> {
 
 const unit = scale(13)
 
-const rawStyles = {
+const styles = StyleSheet.create({
   body: {
     // Layout:
     maxWidth: 32 * unit,
@@ -139,5 +139,4 @@ const rawStyles = {
     fontSize: unit,
     textAlign: 'center'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})

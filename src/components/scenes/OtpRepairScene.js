@@ -34,14 +34,13 @@ class OtpRepairComponent extends React.Component<Props> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
     backgroundColor: THEME.COLORS.PRIMARY
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
 
 export const OtpRepairScene = connect<StateProps, {}, OwnProps>(
   state => ({

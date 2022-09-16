@@ -113,7 +113,7 @@ export class SceneWrapper extends React.Component<Props> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   body: {
     // Layout:
     position: 'absolute',
@@ -143,5 +143,4 @@ const rawStyles = {
     flexDirection: 'column',
     justifyContent: 'flex-start'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})

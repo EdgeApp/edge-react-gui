@@ -5,7 +5,11 @@ import { StyleSheet } from 'react-native'
 import { THEME } from '../../../../theme/variables/airbitz'
 import { scale } from '../../../../util/scaling.js'
 
-export const rawStyles = {
+export const primaryButtonUnderlay = { color: THEME.COLORS.PRIMARY }
+export const secondaryButtonUnderlay = { color: THEME.COLORS.GRAY_1 }
+export const tertiaryButtonUnderlay = { color: THEME.COLORS.GRAY_3 }
+
+export const styles = StyleSheet.create({
   button: {
     padding: 14,
     borderRadius: 5,
@@ -27,7 +31,6 @@ export const rawStyles = {
   primaryButton: {
     backgroundColor: THEME.COLORS.SECONDARY
   },
-  primaryButtonUnderlay: { color: THEME.COLORS.PRIMARY },
   primaryButtonText: {
     color: THEME.COLORS.WHITE
   },
@@ -36,7 +39,6 @@ export const rawStyles = {
   secondaryButton: {
     backgroundColor: THEME.COLORS.GRAY_2
   },
-  secondaryButtonUnderlay: { color: THEME.COLORS.GRAY_1 },
   secondaryButtonText: {
     color: THEME.COLORS.WHITE
   },
@@ -48,7 +50,6 @@ export const rawStyles = {
     borderColor: THEME.COLORS.SECONDARY,
     padding: scale(12)
   },
-  tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {
     color: THEME.COLORS.PRIMARY
   },
@@ -60,6 +61,4 @@ export const rawStyles = {
   textButtonText: {
     color: THEME.COLORS.WHITE
   }
-}
-
-export const styles = StyleSheet.create(rawStyles)
+})

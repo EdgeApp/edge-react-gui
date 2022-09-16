@@ -166,7 +166,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   scrollableGradient: {
     height: THEME.HEADER
   },
@@ -202,8 +202,7 @@ const rawStyles = {
     width: scale(25),
     height: scale(25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
 
 export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({

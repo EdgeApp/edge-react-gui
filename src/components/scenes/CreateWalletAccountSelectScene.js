@@ -291,7 +291,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
@@ -383,8 +383,7 @@ const rawStyles = {
     marginHorizontal: scale(30)
   },
   confirmButton: {}
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
 
 export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => {

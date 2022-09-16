@@ -30,10 +30,9 @@ export function SwipeableRowIcon(props: Props) {
   return <Animated.View style={[styles.center, style]}>{children}</Animated.View>
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   center: {
     alignItems: 'center',
     justifyContent: 'center'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})

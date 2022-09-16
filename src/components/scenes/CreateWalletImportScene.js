@@ -126,7 +126,7 @@ export class CreateWalletImportComponent extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
@@ -159,8 +159,7 @@ const rawStyles = {
     marginLeft: scale(1),
     flex: 1
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
 
 export const CreateWalletImportScene = connect<StateProps, {}, OwnProps>(
   state => ({

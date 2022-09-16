@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { type TextStyle, Text as RNText, TouchableHighlight, View } from 'react-native'
 
-import { rawStyles, styles } from './style.js'
+import { secondaryButtonUnderlay, styles } from './style.js'
 
 export type TextProps = {
   children: React.Node,
@@ -30,7 +30,7 @@ export class SecondaryButton extends React.Component<Props> {
   render() {
     const { children, style, ...props } = this.props
     return (
-      <TouchableHighlight underlayColor={rawStyles.secondaryButtonUnderlay.color} style={[styles.button, styles.secondaryButton, style]} {...props}>
+      <TouchableHighlight underlayColor={secondaryButtonUnderlay.color} style={[styles.button, styles.secondaryButton, style]} {...props}>
         <View>{children}</View>
       </TouchableHighlight>
     )

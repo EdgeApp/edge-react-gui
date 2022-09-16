@@ -39,6 +39,7 @@
         "skip": ["B", "EdgeText", "FormattedText"]
       }
     ],
+    "react-native/sort-styles": "off",
     "react/jsx-handler-names": "off",
     "simple-import-sort/imports": "error"
   },

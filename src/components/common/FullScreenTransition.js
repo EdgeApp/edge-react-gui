@@ -74,7 +74,7 @@ export class FullScreenTransitionComponent extends React.Component<FullScreenTra
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
@@ -90,5 +90,4 @@ const rawStyles = {
     paddingHorizontal: 20,
     height: PLATFORM.usableHeight
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})

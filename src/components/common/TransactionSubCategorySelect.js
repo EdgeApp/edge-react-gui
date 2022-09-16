@@ -87,7 +87,7 @@ export class SubCategorySelect extends React.Component<Props, State> {
   keyExtractor = (item: any, index: number) => String(index)
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   resultList: {
     backgroundColor: THEME.COLORS.WHITE,
     borderTopColor: THEME.COLORS.GRAY_3,
@@ -123,5 +123,4 @@ const rawStyles = {
   rowPlus: {
     fontSize: THEME.rem(0.95)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})

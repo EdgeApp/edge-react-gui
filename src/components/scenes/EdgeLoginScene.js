@@ -136,7 +136,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   header: {
     position: 'relative',
     flex: 3,
@@ -228,8 +228,7 @@ const rawStyles = {
     alignItems: 'center',
     borderRadius: 3
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
 
 export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({

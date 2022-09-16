@@ -152,7 +152,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   airshipContainer: {
     flex: 1,
     padding: THEME.rem(0.8)
@@ -198,5 +198,4 @@ const rawStyles = {
   inputSubCategoryContainter: {
     marginTop: THEME.rem(0.8)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})

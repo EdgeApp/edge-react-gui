@@ -22,7 +22,7 @@ export class FullScreenLoader extends React.Component<Props> {
   }
 }
 
-const rawStyles = {
+const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     position: 'absolute',
@@ -35,5 +35,4 @@ const rawStyles = {
     flex: 1,
     alignSelf: 'center'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+})
