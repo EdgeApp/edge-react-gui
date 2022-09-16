@@ -60,9 +60,9 @@ export const LoanCreateScene = (props: Props) => {
   const wallets = useWatch(account, 'currencyWallets')
   const allTokens = useAllTokens(account)
 
-  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: beCurrencyInfo } = borrowEngineWallet
+  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
-  const bePluginId = beCurrencyInfo.pluginId
+  const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
 
   // Source Wallet Data
   const [srcWalletId, setSrcWalletId] = useState<string | undefined>(undefined)
@@ -114,17 +114,24 @@ export const LoanCreateScene = (props: Props) => {
   // Hard-coded src/dest, used as intermediate src/dest steps for cases if the
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
-  const { tokenId: hardSrcTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: bePluginId }), [account, bePluginId])
-  const { tokenId: hardDestTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: bePluginId }), [account, bePluginId])
+  const { tokenId: hardSrcTokenAddr } = useMemo(
+    () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
+    [account, borrowEnginePluginId]
+  )
+  const { tokenId: hardDestTokenAddr } = useMemo(
+    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
+    [account, borrowEnginePluginId]
+  )
 
   /**
    * Show a wallet picker modal filtered by the allowed assets defined by the
    * "Source of Collateral" or "Fund Destination" inputs
    */
-  const showWalletPickerModal = (isSrc: boolean) => () => {
+  const handleShowWalletPickerModal = (srcDest: 'source' | 'destination') => () => {
+    const isSrc = srcDest === 'source'
     const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
-    const hardAllowedSrcAsset = [{ pluginId: bePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
-    const hardAllowedDestAsset = [{ pluginId: bePluginId, tokenId: hardDestTokenAddr }]
+    const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
+    const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -286,7 +293,7 @@ export const LoanCreateScene = (props: Props) => {
             emptyLabel={s.strings.loan_select_source_collateral}
             wallet={srcWallet ?? undefined}
             tokenId={srcTokenId}
-            onPress={showWalletPickerModal(true)}
+            onPress={handleShowWalletPickerModal('source')}
           />
 
           {/* Fund Destination */}
@@ -296,7 +303,7 @@ export const LoanCreateScene = (props: Props) => {
             emptyLabel={s.strings.loan_select_receiving_wallet}
             wallet={paymentMethod == null ? destWallet ?? undefined : undefined}
             tokenId={destTokenId}
-            onPress={showWalletPickerModal(false)}
+            onPress={handleShowWalletPickerModal('destination')}
             paymentMethod={paymentMethod}
           />
 
