@@ -1,9 +1,16 @@
 import { makeConfig } from 'cleaner-config'
-import { asArray, asBoolean, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asObject, asOptional, asString, Cleaner } from 'cleaners'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
     if (raw == null) return null
+    return cleaner(raw)
+  }
+}
+
+function asCorePluginInit<T>(cleaner: Cleaner<T>): Cleaner<T | false> {
+  return function asCorePlugin(raw) {
+    if (raw === false || raw == null) return false
     return cleaner(raw)
   }
 }
@@ -31,9 +38,28 @@ const asConfig = asObject({
   ),
   PLUGIN_API_KEYS: asOptional(
     asObject({
-      Bitrefill: asOptional(asString, '')
-    }),
-    { Bitrefill: '' }
+      banxa: asOptional(
+        asObject({
+          partnerUrl: asString,
+          apiKey: asString
+        })
+      ),
+      Bitrefill: asOptional(asString),
+      moonpay: asOptional(asString),
+      simplex: asOptional(
+        asObject({
+          partner: asString,
+          jwtTokenProvider: asString,
+          publicKey: asString
+        })
+      )
+    }).withRest,
+    {
+      banxa: undefined,
+      Bitrefill: undefined,
+      moonpay: undefined,
+      simplex: undefined
+    }
   ),
   WYRE_CLIENT_INIT: asOptional(
     asObject({
@@ -46,27 +72,28 @@ const asConfig = asObject({
   AZTECO_API_KEY: asNullable(asString),
 
   // Core plugin options:
-  BINANCE_SMART_CHAIN_INIT: asNullable(
+  BINANCE_SMART_CHAIN_INIT: asCorePluginInit(
     asObject({
+      bscscanApiKey: asOptional(asArray(asString), []),
       evmScanApiKey: asOptional(asArray(asString), [])
-    })
+    }).withRest
   ),
-  CHANGE_NOW_INIT: asNullable(
+  CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  CHANGEHERO_INIT: asNullable(
+  CHANGEHERO_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  CURRENCYCONVERTERAPI_INIT: asNullable(
+  CURRENCYCONVERTERAPI_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  ETHEREUM_INIT: asNullable(
+  ETHEREUM_INIT: asCorePluginInit(
     asObject({
       alethioApiKey: asOptional(asString, ''),
       amberdataApiKey: asOptional(asString, ''),
@@ -75,85 +102,89 @@ const asConfig = asObject({
       gasStationApiKey: asOptional(asString, ''),
       infuraProjectId: asOptional(asString, ''),
       quiknodeApiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  EXOLIX_INIT: asNullable(
+  EXOLIX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  FANTOM_INIT: asNullable(
+  FANTOM_INIT: asCorePluginInit(
+    asObject({
+      evmScanApiKey: asOptional(asArray(asString), []),
+      ftmscanApiKey: asOptional(asString, ''),
+      quiknodeApiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  FIO_INIT: asEither(
+    asOptional(asBoolean, true), // Defaults to true if missing.
+    asObject({
+      fioRegApiToken: asOptional(asString, ''),
+      tpid: asOptional(asString, 'finance@edge')
+    }).withRest
+  ),
+  FOX_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  GODEX_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  KOVAN_INIT: asCorePluginInit(
     asObject({
       evmScanApiKey: asOptional(asArray(asString), []),
       quiknodeApiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  FIO_INIT: asNullable(
-    asObject({
-      fioRegApiToken: asOptional(asString, '')
-    })
-  ),
-  FOX_INIT: asNullable(
+  LETSEXCHANGE_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  GODEX_INIT: asNullable(
+  MONERO_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  KOVAN_INIT: asNullable(
+  NOMICS_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  POLYGON_INIT: asCorePluginInit(
     asObject({
       evmScanApiKey: asOptional(asArray(asString), []),
-      quiknodeApiKey: asOptional(asString, '') // TODO: is this right?
-    })
+      polygonscanApiKey: asOptional(asArray(asString), [])
+    }).withRest
   ),
-  LETSEXCHANGE_INIT: asNullable(
-    asObject({
-      apiKey: asOptional(asString, '')
-    })
-  ),
-  MONERO_INIT: asNullable(
-    asObject({
-      apiKey: asOptional(asString, '')
-    })
-  ),
-  NOMICS_INIT: asNullable(
-    asObject({
-      apiKey: asOptional(asString, '')
-    })
-  ),
-  POLYGON_INIT: asNullable(
-    asObject({
-      evmScanApiKey: asOptional(asArray(asString), [])
-    })
-  ),
-  SIDESHIFT_INIT: asNullable(
+  SIDESHIFT_INIT: asCorePluginInit(
     asObject({
       affiliateId: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  SPOOKY_SWAP_INIT: asNullable(
+  SPOOKY_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  SWITCHAIN_INIT: asNullable(
+  SWITCHAIN_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
-  THORCHAIN_INIT: asNullable(
+  THORCHAIN_INIT: asCorePluginInit(
     asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       thorname: asOptional(asString, 'ej')
-    })
+    }).withRest
   ),
-  TOMB_SWAP_INIT: asNullable(
+  TOMB_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')
-    })
+    }).withRest
   ),
 
   // App options:
@@ -164,7 +195,7 @@ const asConfig = asObject({
   USE_FIREBASE: asOptional(asBoolean, true),
   YOLO_DEEP_LINK: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
-  YOLO_PIN: asNullable(asNumber),
+  YOLO_PIN: asNullable(asString),
   YOLO_USERNAME: asNullable(asString),
 
   // Debug options:
@@ -187,6 +218,6 @@ const asConfig = asObject({
     }),
     { host: 'localhost', port: '8008' }
   )
-})
+}).withRest
 
 export const config = makeConfig(asConfig, 'env.json')

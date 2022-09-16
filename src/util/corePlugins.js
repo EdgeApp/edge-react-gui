@@ -1,8 +1,10 @@
 // @flow
 
+import { type EdgeCorePluginsInit } from 'edge-core-js'
+
 import ENV from '../../env.json'
 
-export const currencyPlugins = {
+export const currencyPlugins: EdgeCorePluginsInit = {
   // edge-currency-accountbased:
   binance: true,
   binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
@@ -15,7 +17,7 @@ export const currencyPlugins = {
   kovan: ENV.KOVAN_INIT,
   ethereumclassic: true,
   fantom: ENV.FANTOM_INIT,
-  fio: ENV.FIO_INIT || true,
+  fio: ENV.FIO_INIT,
   polygon: ENV.POLYGON_INIT,
   avalanche: true,
   ripple: true,
