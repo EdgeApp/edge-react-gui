@@ -14,7 +14,7 @@ type UseContext = <T>(context: React.Context<T>) => T
 
 type UseDebugValue = <T>(value: T, format?: (value: T) => any) => void
 
-type UseEffect = (effect: () => void | (() => void), deps?: any[]) => void
+type UseEffect = (effect: () => (() => void) | void, deps?: any[]) => void
 
 type UseImperativeHandle = (ref: any, init: () => any, deps?: any[]) => void
 

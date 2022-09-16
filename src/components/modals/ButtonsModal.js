@@ -82,7 +82,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
           }
           const { type = defaultType, label, onPress } = buttons[key]
 
-          const handlePress = (): void | Promise<void> => {
+          const handlePress = (): Promise<void> | void => {
             if (onPress == null) return bridge.resolve(key)
             return onPress().then(
               result => {

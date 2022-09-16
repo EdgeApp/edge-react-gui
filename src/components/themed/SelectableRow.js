@@ -9,7 +9,7 @@ import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
 type Props = {|
-  onPress: () => void | (() => Promise<void>),
+  onPress: () => void | Promise<void>,
   title: string | React.Node,
 
   subTitle?: string,

@@ -23,7 +23,7 @@ type Props = {
   navigation: NavigationProp<'guiPluginEnterAmount'>
 }
 
-export type EnterAmountPoweredBy = { poweredByIcon: string, poweredByText: string, poweredByOnClick: () => Promise<void> | void }
+export type EnterAmountPoweredBy = { poweredByIcon: string, poweredByText: string, poweredByOnClick: () => void | Promise<void> }
 
 export const FiatPluginEnterAmountScene = memo((props: Props) => {
   const theme = useTheme()

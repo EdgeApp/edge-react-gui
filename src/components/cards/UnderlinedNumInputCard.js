@@ -17,7 +17,7 @@ const UnderlinedNumInputCardComponent = (props: {
   emptyPlaceholder?: string,
   formattedAmount: string,
   iconUri: string,
-  onPress?: any => void | (any => Promise<void>),
+  onPress?: () => void | Promise<void>,
   title: string
 }) => {
   const { currencyCode, emptyPlaceholder = s.strings.string_amount, formattedAmount, iconUri, onPress, title } = props

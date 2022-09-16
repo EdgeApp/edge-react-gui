@@ -12,7 +12,7 @@ import { Card } from './Card'
 type Props = {
   children: React.Node,
   disabled?: boolean,
-  onPress?: any => Promise<void> | void,
+  onPress?: () => void,
   warning?: boolean,
   marginRem?: number[] | number,
   paddingRem?: number[] | number

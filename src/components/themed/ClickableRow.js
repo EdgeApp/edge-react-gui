@@ -8,8 +8,8 @@ import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/si
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type Props = {
-  onPress: () => void | (() => Promise<void>),
-  onLongPress?: () => void | (() => Promise<void>),
+  onPress: () => void | Promise<void>,
+  onLongPress?: () => void | Promise<void>,
   highlight?: boolean,
   gradient?: boolean,
   autoHeight?: boolean,

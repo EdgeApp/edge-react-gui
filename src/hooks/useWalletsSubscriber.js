@@ -4,7 +4,7 @@ import { type EdgeAccount, type EdgeCurrencyWallet } from 'edge-core-js'
 
 import { useEffect, useRef } from '../types/reactHooks.js'
 
-type Cleanup = void | (() => void)
+type Cleanup = (() => void) | void
 
 type WalletMap = { [walletId: string]: EdgeCurrencyWallet }
 type State = {

@@ -25,7 +25,7 @@ export type PeriodicTask = {
 /**
  * Schedule a repeating task, with the specified gap between runs.
  */
-export function makePeriodicTask(task: () => Promise<void> | void, msGap: number, opts: PeriodicTaskOptions = {}): PeriodicTask {
+export function makePeriodicTask(task: () => void | Promise<void>, msGap: number, opts: PeriodicTaskOptions = {}): PeriodicTask {
   const { onError = (e: mixed) => {} } = opts
 
   // A started task will keep bouncing between running & waiting.

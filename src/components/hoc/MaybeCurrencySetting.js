@@ -11,7 +11,7 @@ import { useMemo } from '../../types/reactHooks.js'
 /**
  * Specific settings sections will receive these cleaned props.
  */
-export type CurrencySettingProps<T, X = void> = {|
+export type CurrencySettingProps<T, X> = {|
   // The starting value, taken from the plugin's currency info:
   defaultSetting: T,
 

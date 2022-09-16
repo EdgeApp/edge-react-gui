@@ -13,7 +13,7 @@ type DispatchProps = {
 type Props = DispatchProps
 
 class NetworkActivityComponent extends React.Component<Props> {
-  netInfoUnsubscribe: void | (() => void)
+  netInfoUnsubscribe: (() => void) | void
 
   handleNetworkState = (info: NetInfoState) => {
     console.log('NetworkActivity - isConnected changed: ', info.isConnected)

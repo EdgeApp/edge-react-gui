@@ -145,8 +145,8 @@ export class WalletLifecycleComponent extends React.Component<Props> {
  * or cancel the callback.
  */
 function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot {
-  let cleanup: void | (() => void)
-  let timeoutId: void | TimeoutID
+  let cleanup: (() => void) | void
+  let timeoutId: TimeoutID | void
 
   const out: WalletBoot = {
     close() {
