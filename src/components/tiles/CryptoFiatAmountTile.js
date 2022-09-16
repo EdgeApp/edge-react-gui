@@ -8,7 +8,6 @@ import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyC
 import { formatNumber, trimEnd } from '../../locales/intl.js'
 import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { FiatText } from '../text/FiatText.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
@@ -24,7 +23,6 @@ type Props = {
 
 export const CryptoFiatAmountTile = (props: Props) => {
   const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId } = props
-  const styles = getStyles(useTheme())
   const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
@@ -42,7 +40,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
 
   return (
-    <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
+    <Tile type="static" title={title} contentPadding={false}>
       <EdgeText>
         {cryptoAmountText}
         (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
@@ -50,10 +48,3 @@ export const CryptoFiatAmountTile = (props: Props) => {
     </Tile>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  tileContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start'
-  }
-}))

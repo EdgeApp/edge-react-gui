@@ -48,7 +48,6 @@ export const LoanDashboardScene = (props: Props) => {
 
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
-  const exchangeRates = useSelector(state => state.exchangeRates)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
@@ -129,9 +128,7 @@ export const LoanDashboardScene = (props: Props) => {
     const handleLoanPress = () => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
     }
-    return (
-      <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} exchangeRates={exchangeRates} key={loanAccount.id} />
-    )
+    return <LoanSummaryCard onPress={handleLoanPress} borrowEngine={loanAccount.borrowEngine} iconUri={iconUri} key={loanAccount.id} />
   })
 
   const renderFooter = () => {

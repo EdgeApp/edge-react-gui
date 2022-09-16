@@ -270,7 +270,7 @@ export function ControlPanel(props: Props) {
   ]
 
   return (
-    <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
+    <SceneWrapper hasHeader={false} hasTabs={false} background="none">
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />

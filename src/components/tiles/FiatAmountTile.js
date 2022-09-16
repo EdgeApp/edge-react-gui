@@ -4,7 +4,6 @@ import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
@@ -26,9 +25,6 @@ export const FiatAmountTile = (props: Props) => {
   const { fiatAmount, nativeCryptoAmount, title, tokenId, wallet } = props
   if (fiatAmount == null && nativeCryptoAmount == null) throw new Error('Either fiat or crypto amount must be given to FiatAmountTile')
 
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
   const amountValue =
     fiatAmount != null ? (
       `${getDenomFromIsoCode(wallet.fiatCurrencyCode).symbol ?? ''}${formatFiatString({ fiatAmount })}`
@@ -37,15 +33,8 @@ export const FiatAmountTile = (props: Props) => {
     ) : null
 
   return (
-    <Tile type="static" title={title} contentPadding={false} style={styles.tileContainer}>
+    <Tile type="static" title={title} contentPadding={false}>
       <EdgeText>{amountValue}</EdgeText>
     </Tile>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  tileContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start'
-  }
-}))

@@ -46,7 +46,7 @@ export function showToastSpinner<T>(message: string, activity: Promise<T>): Prom
       () => bridge.resolve()
     )
     return (
-      <AirshipToast bridge={bridge} autoHideMs={0} message={message}>
+      <AirshipToast bridge={bridge} message={message}>
         <ActivityIndicator />
       </AirshipToast>
     )

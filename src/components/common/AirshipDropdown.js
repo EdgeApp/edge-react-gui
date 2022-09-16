@@ -99,7 +99,7 @@ export class AirshipDropdown extends React.Component<Props> {
           }
 
           return (
-            <View pointerEvents="box-none" touch style={[styles.screen, screenStyle]}>
+            <View pointerEvents="box-none" style={[styles.screen, screenStyle]}>
               <TouchableWithoutFeedback onPress={onPress}>
                 <Animated.View style={[styles.body, bodyStyle]}>{children}</Animated.View>
               </TouchableWithoutFeedback>

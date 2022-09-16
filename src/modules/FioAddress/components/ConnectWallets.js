@@ -142,7 +142,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       const currencyCode = wallet.currencyCode === info.fioChainCode ? info.chainCode : wallet.currencyCode
 
       return (
-        <View style={[styles.wallet, disabled ? styles.walletDisabled : null]} underlayColor={theme.secondaryButton}>
+        <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>{wallet != null ? <CryptoIcon currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}</View>
             <View style={styles.walletDetailsContainer}>

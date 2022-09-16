@@ -103,7 +103,7 @@ export const LoanStatusScene = (props: Props) => {
           ) : (
             <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
           )}
-          {isProgramDone ? <ConfettiCannon autostart count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
+          {isProgramDone ? <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
         </View>
       )}
     </SceneWrapper>
