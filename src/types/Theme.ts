@@ -1,6 +1,5 @@
 import { asNumber, asObject } from 'cleaners'
-
-type ImageSourcePropType = string
+import { ImageSourcePropType } from 'react-native'
 
 type ThemeShadowParams = {
   shadowColor: string
