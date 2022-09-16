@@ -7,7 +7,9 @@ import { sprintf } from 'sprintf-js'
 
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
+import { makeWyreClient, PaymentMethod } from '../../../controllers/action-queue/WyreClient'
 import { useAllTokens } from '../../../hooks/useAllTokens'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
@@ -24,13 +26,12 @@ import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
-import { TappableCard } from '../../cards/TappableCard'
+import { TappableAccountCard } from '../../cards/TappableAccountCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
-import { CurrencyRow } from '../../data/row/CurrencyRow'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -80,6 +81,17 @@ export const LoanCreateScene = (props: Props) => {
   const [destTokenId, setDestTokenId] = useState<string | undefined>(undefined)
   const [destBankId, setDestBankId] = useState<string | undefined>(undefined)
 
+  const [bankAccountsMap, setBankAccountsMap] = useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
+
+  // @ts-expect-error
+  useAsyncEffect(async () => {
+    const wyreClient = await makeWyreClient({ account })
+    if (wyreClient.isAccountSetup) {
+      setBankAccountsMap(await wyreClient.getPaymentMethods())
+    }
+  }, [account])
+  const paymentMethod = destBankId == null || bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? undefined : bankAccountsMap[destBankId]
+
   // Borrow Amounts
   const [borrowAmountFiat, setBorrowAmountFiat] = useState('0')
   const [nativeCryptoBorrowAmount, setNativeCryptoBorrowAmount] = useState('0')
@@ -109,7 +121,7 @@ export const LoanCreateScene = (props: Props) => {
    * Show a wallet picker modal filtered by the allowed assets defined by the
    * "Source of Collateral" or "Fund Destination" inputs
    */
-  const showWalletPickerModal = (isSrc: boolean) => {
+  const showWalletPickerModal = (isSrc: boolean) => () => {
     const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
     const hardAllowedSrcAsset = [{ pluginId: bePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
     const hardAllowedDestAsset = [{ pluginId: bePluginId, tokenId: hardDestTokenAddr }]
@@ -163,36 +175,6 @@ export const LoanCreateScene = (props: Props) => {
         }
       })
       .catch(e => showError(e.message))
-  }
-
-  /**
-   * 'Source of Collateral' or 'Fund Destination' wallet cards
-   */
-  type WalletCardProps = {
-    disabled?: boolean
-    emptyLabel: string
-    isSrc: boolean
-    tokenId?: string
-    wallet?: EdgeCurrencyWallet
-    withdrawToBankLabel?: string
-  }
-  const WalletCard = (props: WalletCardProps) => {
-    const { disabled, emptyLabel, isSrc, tokenId, wallet, withdrawToBankLabel } = props
-    const handleShowWalletPickerModal = useCallback(() => showWalletPickerModal(isSrc), [isSrc])
-
-    return (
-      <TappableCard disabled={disabled} onPress={handleShowWalletPickerModal} marginRem={0.5} paddingRem={0.5}>
-        {withdrawToBankLabel != null ? (
-          <EdgeText style={styles.textInitial}>{withdrawToBankLabel}</EdgeText>
-        ) : wallet == null ? (
-          <EdgeText style={disabled ? styles.textInitialDisabled : styles.textInitial}>{emptyLabel}</EdgeText>
-        ) : (
-          <View style={styles.currencyRow}>
-            <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
-          </View>
-        )}
-      </TappableCard>
-    )
   }
 
   /**
@@ -300,17 +282,22 @@ export const LoanCreateScene = (props: Props) => {
           {/* Source of Collateral / Source Wallet */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_source}</EdgeText>
 
-          <WalletCard emptyLabel={s.strings.loan_select_source_collateral} isSrc wallet={srcWallet ?? undefined} tokenId={srcTokenId} />
+          <TappableAccountCard
+            emptyLabel={s.strings.loan_select_source_collateral}
+            wallet={srcWallet ?? undefined}
+            tokenId={srcTokenId}
+            onPress={showWalletPickerModal(true)}
+          />
 
           {/* Fund Destination */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_destination}</EdgeText>
 
-          <WalletCard
+          <TappableAccountCard
             emptyLabel={s.strings.loan_select_receiving_wallet}
-            withdrawToBankLabel={destBankId != null ? s.strings.deposit_to_bank : undefined}
-            isSrc={false}
-            wallet={destWallet ?? undefined}
+            wallet={paymentMethod == null ? destWallet ?? undefined : undefined}
             tokenId={destTokenId}
+            onPress={showWalletPickerModal(false)}
+            paymentMethod={paymentMethod}
           />
 
           {/* Collateral Amount Required / Collateral Amount */}
@@ -357,69 +344,35 @@ export const LoanCreateScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+// @ts-expect-error
+const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     alignItems: 'center',
     alignSelf: 'center',
     flexDirection: 'column',
-    // @ts-expect-error
     margin: theme.rem(0.5)
   },
-  currencyRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    // @ts-expect-error
-    marginTop: theme.rem(0.5),
-    // @ts-expect-error
-    marginBottom: theme.rem(0.5)
-  },
   icon: {
-    // @ts-expect-error
     size: theme.rem(2.5)
-  },
-  textCardHeader: {
-    // @ts-expect-error
-    fontFamily: theme.fontFaceMedium
   },
   textInitial: {
     alignSelf: 'flex-start',
-    // @ts-expect-error
     fontSize: theme.rem(0.75),
-    // @ts-expect-error
     fontFamily: theme.fontFaceMedium,
-    // @ts-expect-error
     margin: theme.rem(1)
-  },
-  textInitialDisabled: {
-    alignSelf: 'center',
-    // @ts-expect-error
-    color: theme.deactivatedText,
-    // @ts-expect-error
-    fontSize: theme.rem(0.75),
-    // @ts-expect-error
-    fontFamily: theme.fontFaceMedium,
-    // @ts-expect-error
-    marginLeft: theme.rem(0.5)
   },
   textTitle: {
     alignSelf: 'flex-start',
-    // @ts-expect-error
     color: theme.secondaryText,
-    // @ts-expect-error
     fontFamily: theme.fontFaceBold,
-    // @ts-expect-error
     fontSize: theme.rem(0.75),
-    // @ts-expect-error
     margin: theme.rem(0.5),
     textAlign: 'left'
   },
   sceneContainer: {
     flex: 1,
     flexDirection: 'column',
-    // @ts-expect-error
     margin: theme.rem(0.5),
-    // @ts-expect-error
     marginTop: theme.rem(0)
   }
 }))
