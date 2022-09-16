@@ -145,7 +145,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         <CurrencyRow tokenId={srcTokenId} wallet={srcWallet} marginRem={0} />
       </Tile>
 
-      <Tile type="static" title={s.strings.loan_destination}>
+      <Tile type="static" title={s.strings.loan_debt_destination}>
         <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
       </Tile>
 

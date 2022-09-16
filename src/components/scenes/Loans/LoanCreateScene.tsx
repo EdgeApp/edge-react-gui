@@ -290,7 +290,7 @@ export const LoanCreateScene = (props: Props) => {
           />
 
           {/* Fund Destination */}
-          <EdgeText style={styles.textTitle}>{s.strings.loan_destination}</EdgeText>
+          <EdgeText style={styles.textTitle}>{s.strings.loan_debt_destination}</EdgeText>
 
           <TappableAccountCard
             emptyLabel={s.strings.loan_select_receiving_wallet}
