@@ -43,7 +43,7 @@ export const paymentProtocolUriReceived = async (
     }
   } catch (error) {
     console.log('error', error)
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.scan_invalid_address_error_title}

@@ -22,7 +22,7 @@ import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
-import { WalletListModal } from '../../modals/WalletListModal'
+import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
@@ -85,7 +85,7 @@ export const LoanDashboardScene = (props: Props) => {
 
     if (hardPluginWalletIds.length > 1) {
       // Only show the wallet picker if the user owns more than one polygon wallet.
-      const { walletId: newWalletId } = await Airship.show(bridge => (
+      const { walletId: newWalletId } = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: HARD_WALLET_PLUGIN_ID }]} />
       ))
       newLoanWallet = newWalletId != null ? wallets[newWalletId] : null

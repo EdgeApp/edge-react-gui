@@ -49,13 +49,13 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, inpu
   onAmountChanged({ fiatAmount, nativeCryptoAmount })
 
   const handleEditActionfiatAmount = useCallback(() => {
-    Airship.show(bridge => <TextInputModal title={inputModalTitle} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
-      inputAmount => {
-        if (inputAmount != null) {
-          setFiatAmount(inputAmount)
-        }
+    Airship.show<string | void>(bridge => (
+      <TextInputModal title={inputModalTitle} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />
+    )).then(inputAmount => {
+      if (inputAmount != null) {
+        setFiatAmount(inputAmount)
       }
-    )
+    })
   }, [inputModalMessage, inputModalTitle])
 
   const formattedFiatAmount = useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])

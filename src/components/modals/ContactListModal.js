@@ -13,8 +13,13 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal.js'
 
+export type ContactModalResult = {
+  contactName: string,
+  thumbnailPath?: string | null
+}
+
 type Props = {
-  bridge: AirshipBridge<{ contactName: string, thumbnailPath?: string | null } | void>,
+  bridge: AirshipBridge<ContactModalResult | void>,
   contactType: string,
   contactName: string,
   contacts: GuiContact[]

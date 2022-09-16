@@ -93,7 +93,7 @@ export class SwapSettings extends React.Component<Props, State> {
     }
 
     // Render
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <RadioListModal bridge={bridge} title={s.strings.swap_preferred_header} items={[exchangeDefaultItem, ...exchangeItems]} selected={selected} />
     )).then(result => {
       if (result == null) return

@@ -19,7 +19,7 @@ import { LadderLayout } from '../common/LadderLayout.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<number | null>,
+  bridge: AirshipBridge<number | void>,
   autoLogoutTimeInSeconds: number
 }
 
@@ -43,7 +43,7 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
 
   handleCancel = () => {
     const { bridge } = this.props
-    bridge.resolve(null)
+    bridge.resolve(undefined)
   }
 
   render() {

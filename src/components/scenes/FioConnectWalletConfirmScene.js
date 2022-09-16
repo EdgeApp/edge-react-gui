@@ -133,7 +133,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       } catch (e) {
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.setState({ connectWalletsLoading: false })
-          const answer = await Airship.show(bridge => (
+          const answer = await Airship.show<'ok' | void>(bridge => (
             <ButtonsModal
               bridge={bridge}
               title={s.strings.fio_no_bundled_err_msg}

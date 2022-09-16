@@ -26,7 +26,7 @@ const feeString = {
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<void>,
   transaction: EdgeTransaction,
   url?: string
 }
@@ -120,7 +120,7 @@ export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
 
   handleCancel = () => {
     const { bridge } = this.props
-    bridge.resolve(null)
+    bridge.resolve()
   }
 }
 

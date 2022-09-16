@@ -10,7 +10,7 @@ import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal.js'
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
-import { upgradeCurrencyCodes, WalletListModal } from '../components/modals/WalletListModal'
+import { type WalletListResult, upgradeCurrencyCodes, WalletListModal } from '../components/modals/WalletListModal'
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
@@ -61,7 +61,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
   // Present the request to the user for confirmation
   const payerStr = payer ?? s.strings.reqaddr_application_fragment
   const assetsStr = toListString(assets.map(asset => asset.tokenCode))
-  const confirmResult = await Airship.show(bridge => (
+  const confirmResult = await Airship.show<'yes' | 'no' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.reqaddr_confirm_modal_title}
@@ -100,18 +100,18 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
   for (const supportedAsset of supportedAssets) {
     const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
 
-    await Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />).then(
-      async ({ walletId, currencyCode }) => {
-        if (walletId != null && currencyCode != null) {
-          const { currencyWallets } = account
-          const wallet = currencyWallets[walletId]
+    await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
+    )).then(async ({ walletId, currencyCode }) => {
+      if (walletId != null && currencyCode != null) {
+        const { currencyWallets } = account
+        const wallet = currencyWallets[walletId]
 
-          // TODO: Extend getReceiveAddress() to generate the full bitcion:XXXX address instead of using raw addresses here
-          const { publicAddress } = await wallet.getReceiveAddress({ currencyCode })
-          jsonPayloadMap[`${currencyWallets[walletId].currencyInfo.currencyCode}_${currencyCode}`] = publicAddress
-        }
+        // TODO: Extend getReceiveAddress() to generate the full bitcion:XXXX address instead of using raw addresses here
+        const { publicAddress } = await wallet.getReceiveAddress({ currencyCode })
+        jsonPayloadMap[`${currencyWallets[walletId].currencyInfo.currencyCode}_${currencyCode}`] = publicAddress
       }
-    )
+    })
   }
 
   // Handle POST and redir
@@ -152,7 +152,7 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   if (parsedUri?.metadata?.gateway === true) {
     approve =
       approve &&
-      (await Airship.show(bridge => (
+      (await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
           title={sprintf(s.strings.gateway_agreement_modal_title, currencyCode)}
@@ -165,7 +165,7 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   if (parsedUri.legacyAddress != null) {
     approve =
       approve &&
-      (await Airship.show(bridge => (
+      (await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal bridge={bridge} title={s.strings.legacy_address_modal_title} body={s.strings.legacy_address_modal_warning} isSkippable />
       )))
   }
@@ -328,7 +328,7 @@ const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dis
   const edgeWallet = currencyWallets[selectedWalletId]
   const message = sprintf(s.strings.private_key_modal_sweep_from_private_key_message, config.appName)
 
-  await Airship.show(bridge => (
+  await Airship.show<'confirm' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.private_key_modal_sweep_from_private_address}
@@ -401,7 +401,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
     const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = await Airship.show(bridge => (
+      threeButtonModal = await Airship.show<'buy' | 'exchange' | 'decline' | void>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={s.strings.buy_crypto_modal_title}
@@ -416,7 +416,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
     } else {
       // if we're not targetting for buying, but rather exchange
       const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = await Airship.show(bridge => (
+      threeButtonModal = await Airship.show<'exchange' | 'decline' | void>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={s.strings.buy_crypto_modal_title}

@@ -328,7 +328,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   renderDropUp = (whichWallet: 'from' | 'to') => {
-    Airship.show(bridge => (
+    Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}

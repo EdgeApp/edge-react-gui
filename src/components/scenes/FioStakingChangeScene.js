@@ -21,7 +21,7 @@ import type { NavigationProp, RouteProp } from '../../types/routerTypes'
 import type { FioAddress } from '../../types/types'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { FlipInputModal } from '../modals/FlipInputModal'
+import { type FlipInputModalResult, FlipInputModal } from '../modals/FlipInputModal'
 import { Airship, showToast } from '../services/AirshipInstance'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -132,7 +132,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }
 
   const handleAmount = () => {
-    Airship.show(bridge => (
+    Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal
         bridge={bridge}
         walletId={walletId}

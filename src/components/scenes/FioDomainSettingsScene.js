@@ -66,7 +66,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
     const domainName = `@${fioDomainName || ''}`
     const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | void>(bridge => (
       <ButtonsModal bridge={bridge} title={s.strings.fio_domain_label} buttons={{ ok: { label: s.strings.string_ok_cap } }}>
         <EdgeText style={styles.tileTextBottom}>
           <EdgeText style={styles.cursive}>{domainName}</EdgeText>

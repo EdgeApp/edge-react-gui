@@ -28,10 +28,9 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers.js'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { FlipInputModal } from '../modals/FlipInputModal.js'
+import { type FlipInputModalResult, FlipInputModal } from '../modals/FlipInputModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -168,7 +167,9 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { selectWallet, route } = this.props
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />)
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />
+    ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
         selectWallet(walletId, currencyCode)
@@ -220,7 +221,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFlipInputModal = () => {
-    Airship.show(bridge => (
+    Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal
         bridge={bridge}
         onFeesChange={this.handleFeesChange}
@@ -294,7 +295,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       await signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider)
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && selectedCurrencyCode !== FIO_STR) {
-        const answer = await Airship.show(bridge => (
+        const answer = await Airship.show<'ok' | 'cancel' | void>(bridge => (
           <ButtonsModal
             bridge={bridge}
             title={s.strings.fio_no_bundled_err_msg}
@@ -493,7 +494,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
 
       const handleUniqueIdentifier = () => {
-        Airship.show(bridge => (
+        Airship.show<string | void>(bridge => (
           <TextInputModal
             bridge={bridge}
             inputLabel={identifierName}

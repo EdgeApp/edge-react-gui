@@ -135,7 +135,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           if (getFeeRes.fee || bundledTxs < 2) {
             this.setState({ loading: false })
             this.resetSlider()
-            const answer = await Airship.show(bridge => (
+            const answer = await Airship.show<'ok' | void>(bridge => (
               <ButtonsModal
                 bridge={bridge}
                 title={s.strings.fio_no_bundled_err_msg}
@@ -212,10 +212,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   openFioAddressFromModal = async () => {
     const { fioPlugin, walletId, currencyCode } = this.props
     const { walletAddresses } = this.state
-    const fioAddressFrom = await Airship.show(bridge => (
+    const fioAddressFrom = await Airship.show<string | void>(bridge => (
       <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
     ))
-    if (fioAddressFrom === null) return
+    if (fioAddressFrom == null) return
     if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
     if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
@@ -234,10 +234,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { fioPlugin, walletId, currencyCode } = this.props
 
     this.setState({ settingFioAddressTo: true })
-    const fioAddressTo = await Airship.show(bridge => (
+    const fioAddressTo = await Airship.show<string | void>(bridge => (
       <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} isFioOnly />
     ))
-    if (fioAddressTo === null) {
+    if (fioAddressTo == null) {
       this.showError()
     } else if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
       this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
@@ -249,7 +249,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openMemoModal = async () => {
-    const memo = await Airship.show(bridge => (
+    const memo = await Airship.show<string | void>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.memo}

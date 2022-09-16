@@ -10,7 +10,7 @@ import s from '../../locales/strings.js'
 import { useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { type EdgeTokenId } from '../../types/types.js'
-import { WalletListModal } from '../modals/WalletListModal.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -34,7 +34,9 @@ export const WalletListFooter = (props: Props) => {
       .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
       .map(pluginId => ({ pluginId }))
 
-    Airship.show(bridge => <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} showCreateWallet />)
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} showCreateWallet />
+    ))
       .then(({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
           navigation.navigate('manageTokens', { walletId })

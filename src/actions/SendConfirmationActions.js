@@ -119,7 +119,7 @@ export const sendConfirmationUpdateTx =
           const { currencyCode, networkFee = '' } = insufficientFunds
           const multiplier = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode).multiplier
           const amountString = roundedFee(networkFee, 2, multiplier)
-          const result = await Airship.show(bridge => (
+          const result = await Airship.show<'buy' | 'exchange' | 'cancel' | void>(bridge => (
             <ButtonsModal
               bridge={bridge}
               title={s.strings.buy_crypto_modal_title}
@@ -431,7 +431,7 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
   let additionalMessage = ''
   if (currency === 'ETH') additionalMessage = s.strings.send_confirmation_fee_modal_alert_message_fragment_eth
   const message = `${sprintf(s.strings.send_confirmation_fee_modal_alert_message_fragment, fee)} ${additionalMessage}`
-  const resolveValue = await Airship.show(bridge => (
+  const resolveValue = await Airship.show<'send' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.send_confirmation_fee_modal_alert_title}

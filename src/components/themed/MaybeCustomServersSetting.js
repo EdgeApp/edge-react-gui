@@ -62,7 +62,7 @@ function CustomServersSettingComponent(props: Props) {
       return true
     }
 
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <TextInputModal
         autoCorrect={false}
         bridge={bridge}

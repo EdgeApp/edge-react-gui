@@ -98,7 +98,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => async (dispa
       Actions.push('createWalletAccountSetup', createWalletAccountSetupSceneProps)
     }
 
-    Airship.show(bridge => (
+    Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.create_wallet_account_unfinished_activation_title}

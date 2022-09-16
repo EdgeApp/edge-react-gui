@@ -110,7 +110,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         allowedCurrencyCodes.push(currency)
       }
     }
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
+    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
     if (walletId && currencyCode) {
@@ -161,7 +161,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                 showError(s.strings.create_wallet_account_error_sending_transaction)
               }, 750)
             } else if (edgeTransaction) {
-              Airship.show(bridge => (
+              Airship.show<'ok' | void>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
                   title={`${s.strings.fio_domain_label} ${s.strings.fragment_wallet_unconfirmed}`}

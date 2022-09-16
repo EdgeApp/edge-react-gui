@@ -84,7 +84,7 @@ export function ControlPanel(props: Props) {
   /// ---- Callbacks ----
 
   const handleDeleteAccount = (username: string) => () => {
-    Airship.show(bridge => (
+    Airship.show<'ok' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.forget_account_title}
@@ -123,7 +123,7 @@ export function ControlPanel(props: Props) {
         ({ pluginId, tokenId: undefined })
       )
 
-    Airship.show(bridge => (
+    Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
@@ -134,7 +134,7 @@ export function ControlPanel(props: Props) {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         dispatch(selectWalletFromModal(walletId, currencyCode))
-        Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+        Airship.show<string | void>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | void) => {
             if (result) {
               dispatch(parseScannedUri(result))
@@ -151,7 +151,7 @@ export function ControlPanel(props: Props) {
 
   const handleLoginQr = () => {
     Actions.drawerClose()
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show<string | void>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
           dispatch(parseScannedUri(result))

@@ -217,7 +217,7 @@ export class RequestComponent extends React.Component<Props, State> {
     const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
     if (minimumPopupModals == null) return
 
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.request_minimum_notification_title}
@@ -253,7 +253,7 @@ export class RequestComponent extends React.Component<Props, State> {
     const addressExplorer = wallet != null ? wallet.currencyInfo.addressExplorer : null
     const requestAddress = useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
-    Airship.show(bridge => (
+    Airship.show<'confirm' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.modal_addressexplorer_message}
@@ -271,11 +271,13 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.props.onSelectWallet(walletId, currencyCode)
+        }
       }
-    })
+    )
   }
 
   handleQrCodePress = () => {

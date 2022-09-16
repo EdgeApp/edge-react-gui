@@ -162,7 +162,7 @@ export class EdgeProvider extends Bridgeable {
       throw new Error('No allowed assets specified')
     }
 
-    const selectedWallet: WalletListResult = await Airship.show(bridge => (
+    const selectedWallet = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} showCreateWallet allowedAssets={allowedAssets} headerTitle={s.strings.choose_your_wallet} />
     ))
 
@@ -299,7 +299,7 @@ export class EdgeProvider extends Bridgeable {
     const currencyCode = this.selectedCurrencyCode
 
     // Prompt user with yes/no modal for permission
-    const confirmTxShare = await Airship.show(bridge => (
+    const confirmTxShare = await Airship.show<'ok' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fragment_wallets_export_transactions}

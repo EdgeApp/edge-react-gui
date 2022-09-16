@@ -63,7 +63,7 @@ export async function requestPermission(data: Permission): Promise<PermissionSta
 
       if (isContactsPermissionShownBefore === 'true') return
 
-      const result: ContactsPermissionResult = await Airship.show(bridge => <ContactsPermissionModal bridge={bridge} />)
+      const result = await Airship.show<ContactsPermissionResult | void>(bridge => <ContactsPermissionModal bridge={bridge} />)
       AsyncStorage.setItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE, 'true').catch(showError)
 
       if (result === 'deny') return status
@@ -100,7 +100,7 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
 
   // User not accepting the permission prior
   if (status === RESULTS.BLOCKED) {
-    const isDenied = await Airship.show(bridge => (
+    const isDenied = await Airship.show<boolean>(bridge => (
       <PermissionsSettingModal bridge={bridge} mandatory={mandatory} fullPermision={fullPermision} permission={data.toLowerCase()} name={name} />
     ))
 

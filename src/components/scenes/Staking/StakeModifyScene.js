@@ -17,7 +17,7 @@ import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils.js'
 import { zeroString } from '../../../util/utils.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
-import { FlipInputModal } from '../../modals/FlipInputModal.js'
+import { type FlipInputModalResult, FlipInputModal } from '../../modals/FlipInputModal.js'
 import { FlashNotification } from '../../navigation/FlashNotification.js'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship } from '../../services/AirshipInstance.js'
@@ -161,7 +161,7 @@ export const StakeModifyScene = (props: Props) => {
 
   const handleShowFlipInputModal = (currencyCode: string) => () => {
     const header = modification === 'stake' ? s.strings.stake_modal_modify_stake_title : s.strings.stake_modal_modify_unstake_title
-    Airship.show(bridge => (
+    Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal
         bridge={bridge}
         walletId={walletId}

@@ -17,8 +17,7 @@ import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal.js'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableText } from '../themed/ClickableText.js'
@@ -272,7 +271,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   editAddressPressed = () => {
     this.handleFioAddressFocus()
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.fioAddress}
@@ -294,23 +293,23 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   selectFioWallet = () => {
     const allowedCurrencyCodes: string[] = [FIO_STR]
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          if (currencyCode === FIO_STR) {
-            this.handleFioWalletChange(walletId)
-          } else {
-            showError(`${s.strings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
-          }
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        if (currencyCode === FIO_STR) {
+          this.handleFioWalletChange(walletId)
+        } else {
+          showError(`${s.strings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
         }
       }
-    )
+    })
   }
 
   selectFioDomain = () => {
     const { domainsLoading } = this.state
     if (domainsLoading) return
-    Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
+    Airship.show<FioDomain | void>(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then(response => {
       if (response) {
         this.setState({ selectedDomain: response })
         this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)

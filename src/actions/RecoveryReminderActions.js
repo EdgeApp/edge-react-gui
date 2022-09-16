@@ -44,7 +44,7 @@ export const checkPasswordRecovery =
  * Actually show the password reminder modal.
  */
 async function showReminderModal(level: number, account: EdgeAccount) {
-  const reply = await Airship.show(bridge => (
+  const reply = await Airship.show<'ok' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.password_recovery_reminder_modal_title}

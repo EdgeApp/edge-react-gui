@@ -26,7 +26,7 @@ type Option = {
 }
 
 type Props = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<void>,
   navigation: NavigationProp<'walletList'>,
 
   // Wallet identity:
@@ -103,11 +103,11 @@ export function WalletListMenuModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleCancel = () => props.bridge.resolve(null)
+  const handleCancel = () => props.bridge.resolve()
 
   const optionAction = (option: WalletListMenuKey) => {
     dispatch(walletListMenuAction(navigation, walletId, option, tokenId))
-    bridge.resolve(null)
+    bridge.resolve()
   }
 
   useEffect(() => {

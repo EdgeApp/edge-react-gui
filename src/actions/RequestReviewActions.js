@@ -19,7 +19,7 @@ const requestReview = async () => {
     StoreReview.requestReview()
   } else if (Platform.OS === 'android') {
     const title = sprintf(s.strings.request_review_question_title, config.appNameShort)
-    const result = await Airship.show(bridge => (
+    const result = await Airship.show<'ok' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={title}

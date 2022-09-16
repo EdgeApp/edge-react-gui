@@ -72,7 +72,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     }
   }
   if (pluginIdsNeedingUserAction.length > 0) {
-    await Airship.show(bridge => (
+    await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
         bridge={bridge}
         title={s.strings.update_notice_deprecate_electrum_servers_title}

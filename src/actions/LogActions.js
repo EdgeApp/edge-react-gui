@@ -19,7 +19,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
   const { isConnected } = state.network
   if (!isConnected) return showError(s.strings.network_alert_title)
 
-  Airship.show(bridge => (
+  Airship.show<string | void>(bridge => (
     <TextInputModal
       bridge={bridge}
       inputLabel={s.strings.settings_modal_send_logs_label}

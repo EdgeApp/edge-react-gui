@@ -12,8 +12,7 @@ import { connect } from '../../types/reactRedux.js'
 import { type NavigationProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
@@ -185,7 +184,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   selectFioWallet = async () => {
     const allowedCurrencyCodes: string[] = [FIO_STR]
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
+    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
     if (walletId && currencyCode) {
@@ -200,7 +199,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   setDomain = async () => {
     this.handleFioDomainFocus()
 
-    const fioDomain = await Airship.show(bridge => (
+    const fioDomain = await Airship.show<string | void>(bridge => (
       <TextInputModal bridge={bridge} initialValue={this.state.fioDomain} inputLabel={s.strings.fio_domain_label} title={s.strings.fio_domain_choose_label} />
     ))
     if (fioDomain) this.handleFioDomainChange(fioDomain)

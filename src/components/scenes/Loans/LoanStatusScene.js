@@ -69,7 +69,7 @@ export const LoanStatusScene = (props: Props) => {
 
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {
-    const approve = await Airship.show(bridge => (
+    const approve = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
         bridge={bridge}
         title={s.strings.loan_status_cancel_txs}

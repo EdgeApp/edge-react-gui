@@ -89,11 +89,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.props.onSelectWallet(walletId, currencyCode)
+        }
       }
-    })
+    )
   }
 
   renderBalanceBox = () => {

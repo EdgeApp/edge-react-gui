@@ -31,7 +31,7 @@ type WcRpcPayload = {
 }
 
 type Props = {
-  bridge: AirshipBridge<string | null>,
+  bridge: AirshipBridge<void>,
   walletId: string,
   dApp: JsonObject,
   uri: string,
@@ -92,7 +92,7 @@ export const WcSmartContractModal = (props: Props) => {
       .finally(props.bridge.resolve)
 
   const handleClose = async () => {
-    props.bridge.resolve(null)
+    props.bridge.resolve()
     await wallet.otherMethods.wcRequestResponse(uri, false, payload)
   }
 

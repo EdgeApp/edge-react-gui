@@ -128,14 +128,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   handleStartDate = () => {
     const { startDate } = this.state
-    Airship.show(bridge => <DateModal bridge={bridge} initialValue={startDate} />).then(date => {
+    Airship.show<Date>(bridge => <DateModal bridge={bridge} initialValue={startDate} />).then(date => {
       this.setState({ startDate: date })
     })
   }
 
   handleEndDate = () => {
     const { endDate } = this.state
-    Airship.show(bridge => <DateModal bridge={bridge} initialValue={endDate} />).then(date => {
+    Airship.show<Date>(bridge => <DateModal bridge={bridge} initialValue={endDate} />).then(date => {
       this.setState({ endDate: date })
     })
   }

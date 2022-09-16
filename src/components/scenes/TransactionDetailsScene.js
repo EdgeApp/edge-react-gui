@@ -30,11 +30,11 @@ import {
 } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
-import { ContactListModal } from '../modals/ContactListModal.js'
+import { type ContactModalResult, ContactListModal } from '../modals/ContactListModal.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
-import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
+import { type CategoryModalResult, TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -158,7 +158,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
-    Airship.show(bridge => (
+    Airship.show<ContactModalResult | void>(bridge => (
       <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.contactName} contacts={this.props.contacts} />
     )).then(person => this.onSaveTxDetails(person))
   }
@@ -167,7 +167,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const {
       guiWallet: { fiatCurrencyCode }
     } = this.props
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.amountFiat}
@@ -187,7 +187,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openCategoryInput = () => {
-    Airship.show(bridge => (
+    Airship.show<CategoryModalResult | void>(bridge => (
       <TransactionDetailsCategoryInput
         bridge={bridge}
         categories={categories}
@@ -200,7 +200,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openNotesInput = () => {
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.notes}

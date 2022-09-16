@@ -32,7 +32,7 @@ type StateProps = {
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<FioDomain | null>,
+  bridge: AirshipBridge<FioDomain | void>,
   publicDomains: FioDomain[]
 }
 
@@ -112,7 +112,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
   }
 
   registerNewDomain = () => {
-    this.props.bridge.resolve(null)
+    this.props.bridge.resolve(undefined)
     Actions.push('fioDomainRegister')
   }
 
@@ -153,7 +153,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const { input } = this.state
     const items = this.getItems()
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={[1, 0]}>
+      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]}>
         <ModalTitle center paddingRem={[0, 3, 1]}>
           {s.strings.fio_address_choose_domain_label}
         </ModalTitle>
@@ -171,7 +171,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           />
         </View>
         <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
-        <ModalCloseArrow onPress={() => bridge.resolve(null)} />
+        <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
       </ThemedModal>
     )
   }

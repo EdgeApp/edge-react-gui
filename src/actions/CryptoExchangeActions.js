@@ -78,7 +78,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo, onApprove: () 
       const { currencyCode, networkFee = '' } = insufficientFunds
       const multiplier = getExchangeDenomination(state, state.core.account.currencyWallets[fromWalletId].currencyInfo.pluginId, currencyCode).multiplier
       const amountString = roundedFee(networkFee, 2, multiplier)
-      const result = await Airship.show(bridge => (
+      const result = await Airship.show<'buy' | 'exchange' | 'cancel' | void>(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={s.strings.buy_crypto_modal_title}

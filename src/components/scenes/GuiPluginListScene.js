@@ -121,7 +121,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       if (timesPluginWarningModalViewed < 3) {
         const newNumber = timesPluginWarningModalViewed + 1
         if (newNumber === 3) {
-          await Airship.show(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
+          await Airship.show<'ok' | void>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
         }
         const newText = JSON.stringify({
           viewed: newNumber
@@ -134,7 +134,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
       const text = JSON.stringify(json)
       await account.disklet.setText(MODAL_DATA_FILE, text)
-      await Airship.show(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
+      await Airship.show<'ok' | void>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
     }
   }
 
@@ -163,7 +163,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
-      deepPath = await Airship.show(bridge => (
+      deepPath = await Airship.show<string | void>(bridge => (
         <TextInputModal
           autoCorrect={false}
           autoCapitalize="none"
@@ -201,7 +201,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   async showCountrySelectionModal() {
     const { account, updateCountryCode, countryCode } = this.props
 
-    const selectedCountryCode: string = await Airship.show(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
+    const selectedCountryCode: string = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
         const syncedSettings = await getSyncedSettings(account)

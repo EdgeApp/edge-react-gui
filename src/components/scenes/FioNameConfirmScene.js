@@ -68,7 +68,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
             const domainExists = publicDomains.find(domain => domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1])
             if (domainExists && !domainExists.free) {
-              await Airship.show(bridge => (
+              await Airship.show<'ok' | void>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
                   title={s.strings.fio_address_register_pay_title}
@@ -93,7 +93,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
           throw new Error(response.error)
         }
 
-        await Airship.show(bridge => (
+        await Airship.show<'ok' | void>(bridge => (
           <ButtonsModal
             bridge={bridge}
             title={`${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`}

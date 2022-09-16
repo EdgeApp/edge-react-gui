@@ -175,10 +175,9 @@ export const checkExpiredFioDomains =
   }
 
 const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioDomain: FioDomain) => {
-  const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
+  const answer = await Airship.show<boolean>(bridge => <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />)
 
   if (answer) {
-    // $FlowFixMe
     const { isPublic = false } = fioDomain
     Actions.push('fioDomainSettings', {
       showRenew: true,

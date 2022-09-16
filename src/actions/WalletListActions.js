@@ -95,7 +95,7 @@ const getFirstCurrencyAddress = async (currencyCode, getState) => {
 }
 
 const createWalletCheckModal = async (currencyCode: string): Promise<boolean> => {
-  const result = await Airship.show(bridge => (
+  const result = await Airship.show<'ok' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.fragment_create_wallet_create_wallet}

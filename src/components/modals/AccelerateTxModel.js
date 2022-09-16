@@ -22,7 +22,7 @@ import { Tile } from '../tiles/Tile'
 type Status = 'confirming' | 'sending' | 'sent'
 
 type OwnProps = {
-  bridge: AirshipBridge<Status>,
+  bridge: AirshipBridge<void>,
   edgeTransaction: EdgeTransaction,
   wallet: EdgeCurrencyWallet
 }
@@ -150,7 +150,7 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
     this.setState({
       mounted: false
     })
-    this.props.bridge.resolve(this.state.status)
+    this.props.bridge.resolve()
   }
 
   handleConfirmation = async () => {

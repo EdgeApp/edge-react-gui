@@ -30,11 +30,13 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.props.onSelectWallet(walletId, currencyCode)
+        }
       }
-    })
+    )
   }
 
   renderWalletName = () => {

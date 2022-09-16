@@ -146,7 +146,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   handleDeleteAccount = async (): Promise<void> => {
     if (this.props.isLocked) return this.handleUnlock()
 
-    const approveDelete = await Airship.show(bridge => (
+    const approveDelete = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
         bridge={bridge}
         body={sprintf(s.strings.delete_account_body, config.appName, config.supportSite)}
@@ -159,7 +159,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     if (approveDelete !== true) return
 
     const { username } = this.props.account
-    await Airship.show(bridge => (
+    await Airship.show<string | void>(bridge => (
       <TextInputModal
         bridge={bridge}
         submitLabel={s.strings.string_delete}
@@ -189,7 +189,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleAutoLogout = (): void => {
-    Airship.show(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />).then(result => {
+    Airship.show<number | void>(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />).then(result => {
       if (typeof result === 'number') {
         this.props.setAutoLogoutTimeInSeconds(result)
       }

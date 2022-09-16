@@ -31,8 +31,13 @@ import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/Ex
 import { MiniButton } from '../themed/MiniButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
+export type FlipInputModalResult = {
+  nativeAmount: string,
+  exchangeAmount: string
+}
+
 type OwnProps = {
-  bridge: AirshipBridge<{ nativeAmount: string, exchangeAmount: string }>,
+  bridge: AirshipBridge<FlipInputModalResult>,
   walletId: string,
   currencyCode: string,
   onFeesChange?: () => void,

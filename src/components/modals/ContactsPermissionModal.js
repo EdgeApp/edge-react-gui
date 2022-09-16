@@ -14,7 +14,11 @@ import { EdgeText } from '../themed/EdgeText.js'
 
 export type ContactsPermissionResult = 'allow' | 'deny'
 
-export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
+type Props = {
+  bridge: AirshipBridge<ContactsPermissionResult | void>
+}
+
+export function ContactsPermissionModal(props: Props) {
   const { bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)

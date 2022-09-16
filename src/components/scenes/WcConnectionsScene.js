@@ -102,7 +102,7 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = () => {
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show<string | void>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         console.log(result)
         if (result) {

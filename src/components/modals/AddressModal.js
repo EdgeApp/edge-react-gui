@@ -23,7 +23,7 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
-  bridge: AirshipBridge<string | null>,
+  bridge: AirshipBridge<string | void>,
   // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
   currencyCode: string,
@@ -288,7 +288,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.props.bridge.resolve(submitData)
   }
 
-  handleClose = () => this.props.bridge.resolve(null)
+  handleClose = () => this.props.bridge.resolve(undefined)
   keyExtractor = (item: string, index: number) => index.toString()
 
   render() {

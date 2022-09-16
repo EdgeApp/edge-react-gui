@@ -18,7 +18,7 @@ import { type EdgeTokenId, type FlatListItem } from '../../types/types.js'
 import { normalizeForSearch } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CryptoIcon } from '../icons/CryptoIcon.js'
-import { WalletListModal } from '../modals/WalletListModal.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { DividerLine } from '../themed/DividerLine.js'
@@ -95,7 +95,7 @@ export function ManageTokensScene(props: Props) {
       .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
       .map(pluginId => ({ pluginId }))
 
-    const { walletId, currencyCode } = await Airship.show(bridge => (
+    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} />
     ))
 

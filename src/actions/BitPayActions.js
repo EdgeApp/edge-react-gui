@@ -5,7 +5,7 @@ import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type Ed
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { WalletListModal } from '../components/modals/WalletListModal.js'
+import { type WalletListResult, WalletListModal } from '../components/modals/WalletListModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
@@ -111,7 +111,7 @@ export async function launchBitPay(
     if (matchingWallets.length === 0) {
       throw new BitPayError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     } else {
-      const walletListResult = await Airship.show(bridge => (
+      const walletListResult = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
       ))
       const { walletId, currencyCode } = walletListResult

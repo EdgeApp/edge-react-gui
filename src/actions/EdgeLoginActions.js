@@ -40,7 +40,7 @@ export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) =
     }, 750)
   } catch (e) {
     dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
-    Airship.show(bridge => (
+    Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         buttons={{ ok: { label: s.strings.string_ok } }}

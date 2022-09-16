@@ -165,7 +165,7 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
   const otpResetDate = account.otpResetDate
   if (!otpResetDate) return
 
-  const resolveValue = await Airship.show(bridge => (
+  const resolveValue = await Airship.show<'confirm' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.title_otp_keep_modal}
@@ -199,7 +199,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
 export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const response = await Airship.show(bridge => (
+  const response = await Airship.show<'confirm' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.restore_wallets_modal_title}

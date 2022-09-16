@@ -5,8 +5,7 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-import type { WalletListResult } from '../../../components/modals/WalletListModal'
-import { WalletListModal } from '../../../components/modals/WalletListModal'
+import { type WalletListResult, WalletListModal } from '../../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../../components/services/AirshipInstance'
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
@@ -95,7 +94,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       return
     }
 
-    if (fee === null) {
+    if (fee == null) {
       showError(s.strings.fio_get_fee_err_msg)
       this.setState({ error: s.strings.fio_get_fee_err_msg })
       return
@@ -120,7 +119,9 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   handleWalletPress = () => {
     const { fioWallet } = this.props
     const allowedCurrencyCodes: string[] = [fioWallet.currencyInfo.currencyCode]
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />)
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+    ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           this.props.currencyWallets[walletId] &&

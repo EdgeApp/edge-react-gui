@@ -13,7 +13,7 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
 
-  const resolveValue = await Airship.show(bridge => (
+  const resolveValue = await Airship.show<'confirm' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.fragment_wallets_resync_wallet}

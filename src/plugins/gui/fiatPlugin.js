@@ -39,14 +39,16 @@ export const executePlugin = async (params: {
     },
     walletPicker: async (params): Promise<WalletListResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
-      const walletListResult = await Airship.show(bridge => (
+      const walletListResult = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
       ))
       return walletListResult
     },
     showError: async (e: Error): Promise<void> => showError(e),
     listModal: async (params: FiatPluginListModalParams): Promise<string | void> => {
-      const result = await Airship.show(bridge => <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />)
+      const result = await Airship.show<string | void>(bridge => (
+        <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />
+      ))
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {

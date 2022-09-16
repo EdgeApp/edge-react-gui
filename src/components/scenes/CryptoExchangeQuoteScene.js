@@ -85,7 +85,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   }
 
   showExplanationForEstimate = () => {
-    Airship.show(bridge => (
+    Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.estimated_exchange_rate}

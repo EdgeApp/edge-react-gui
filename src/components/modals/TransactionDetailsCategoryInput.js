@@ -12,13 +12,18 @@ import { AirshipModal } from '../common/AirshipModal.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SubCategorySelect } from '../common/TransactionSubCategorySelect.js'
 
+export type CategoryModalResult = {
+  category: string,
+  subCategory: string
+}
+
 type CategoriesType = Array<{
   key: string,
   syntax: string
 }>
 
 type Props = {
-  bridge: AirshipBridge<{ category: string, subCategory: string } | void>,
+  bridge: AirshipBridge<CategoryModalResult | void>,
   categories: Object,
   subCategories: string[],
   category: string,
@@ -72,8 +77,8 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
     const { bridge } = this.props
     const { categories, category, subCategory } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve()}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(undefined)}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
             <View style={styles.inputCategoryMainContainter}>

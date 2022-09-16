@@ -53,7 +53,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
   handleDisable = (): void => {
     const { account } = this.props
 
-    Airship.show(bridge => (
+    Airship.show<'ok' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.otp_modal_headline}

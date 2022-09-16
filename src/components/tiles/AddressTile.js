@@ -164,7 +164,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleScan = () => {
-    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show<string | void>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | void) => {
         if (result) {
           this.onChangeAddress(result)
@@ -177,8 +177,10 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handleChangeAddress = async () => {
     const { coreWallet, currencyCode } = this.props
-    Airship.show(bridge => <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />)
-      .then((result: string | null) => {
+    Airship.show<string | void>(bridge => (
+      <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />
+    ))
+      .then(result => {
         if (result) {
           this.onChangeAddress(result)
         }

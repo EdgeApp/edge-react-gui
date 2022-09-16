@@ -117,9 +117,9 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
 
   selectAddress = () => {
     const { currencyCode, selectedWallet } = this.props
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
-    )).then((response: string | null) => {
+    )).then(response => {
       if (response) {
         this.setFioAddress(response)
       }
@@ -127,7 +127,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 
   openMessageInput = () => {
-    Airship.show(bridge => (
+    Airship.show<string | void>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.props.memo}
@@ -170,7 +170,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     } catch (e) {
       if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
         this.props.onSelect(fioAddress, fioWallet, e.message)
-        const answer = await Airship.show(bridge => (
+        const answer = await Airship.show<'ok' | 'cancel' | void>(bridge => (
           <ButtonsModal
             bridge={bridge}
             title={s.strings.fio_no_bundled_err_msg}

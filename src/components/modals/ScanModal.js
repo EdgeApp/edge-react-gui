@@ -61,7 +61,7 @@ export const ScanModal = (props: Props) => {
   }
 
   const handleTextInput = async () => {
-    const uri = await Airship.show(bridge => (
+    const uri = await Airship.show<string | void>(bridge => (
       <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
     ))
 

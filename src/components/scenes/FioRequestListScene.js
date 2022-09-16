@@ -17,8 +17,7 @@ import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import type { WalletListResult } from '../modals/WalletListModal'
-import { WalletListModal } from '../modals/WalletListModal'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
 import { FullScreenLoader } from '../progress-indicators/FullScreenLoader'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -178,7 +177,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   showNoBundledTxsAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
     const { navigation } = this.props
-    const answer = await Airship.show(bridge => (
+    const answer = await Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fio_no_bundled_err_msg}
@@ -268,7 +267,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   rejectRowConfirm = async (request: FioRequest) => {
-    const answer = await Airship.show(bridge => (
+    const answer = await Airship.show<'yes' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fio_reject_request_title}
@@ -285,7 +284,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   cancelRowConfirm = async (request: FioRequest) => {
-    const answer = await Airship.show(bridge => (
+    const answer = await Airship.show<'yes' | 'no' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fio_reject_request_title}
@@ -342,7 +341,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       this.sendCrypto(fioRequest, availableWallets[0].id, availableWallets[0].currencyCode)
       return
     }
-    Airship.show(bridge => (
+    Airship.show<'ok' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code.toUpperCase())}
@@ -359,7 +358,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const tokenCode = content.token_code.toUpperCase()
     const allowedFullCurrencyCode: string[] = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}-${tokenCode}`] : [chainCode]
 
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
+    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
     ))
     if (walletId && currencyCode) {

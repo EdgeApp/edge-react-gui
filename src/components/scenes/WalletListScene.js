@@ -16,7 +16,7 @@ import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal.js'
-import { WalletListSortModal } from '../modals/WalletListSortModal.js'
+import { type SortOption, WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -51,7 +51,7 @@ export function WalletListScene(props: Props) {
   const loading = Object.keys(currencyWallets).length <= 0
 
   const handleSort = useHandler(() => {
-    Airship.show(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
+    Airship.show<SortOption>(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
       .then(sort => {
         if (sort == null) return
         if (sort !== sortOption) dispatch(updateWalletsSort(sort))
@@ -74,7 +74,7 @@ export function WalletListScene(props: Props) {
         const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
         if (tutorialCount < 2) {
-          Airship.show(bridge => (
+          Airship.show<'gotIt' | void>(bridge => (
             <ButtonsModal
               bridge={bridge}
               title={s.strings.wallet_list_swipe_tutorial_title}

@@ -16,7 +16,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
   const { account } = state.core
   const { currencyWallets } = account
 
-  const resolveValue = await Airship.show(bridge => (
+  const resolveValue = await Airship.show<'confirm' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.fragment_wallets_delete_wallet}

@@ -19,7 +19,7 @@ export const showSplitWalletModal = (walletId: string, currencyCode: string) => 
     bodyText = s.strings.fragment_wallets_split_wallet_bch_to_bsv
   }
 
-  const resolveValue = await Airship.show(bridge => (
+  const resolveValue = await Airship.show<'confirm' | 'cancel' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.fragment_wallets_split_wallet}

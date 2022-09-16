@@ -49,7 +49,7 @@ export function EditTokenScene(props: Props) {
 
   const handleDelete = useHandler(async () => {
     if (tokenId == null) return
-    await Airship.show(bridge => (
+    await Airship.show<'ok' | 'cancel' | void>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.string_delete}
@@ -175,7 +175,7 @@ export function EditTokenScene(props: Props) {
 const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
 
 async function showMessage(message: string): Promise<void> {
-  Airship.show(bridge => (
+  Airship.show<'ok' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       message={message}

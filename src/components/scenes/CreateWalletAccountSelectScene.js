@@ -114,13 +114,13 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
         allowedCurrencyCodes.push(currency)
       }
     }
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          this.onSelectWallet(walletId, currencyCode)
-        }
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.onSelectWallet(walletId, currencyCode)
       }
-    )
+    })
   }
 
   onPressSubmit = async () => {

@@ -173,7 +173,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
           let devButtons = {}
           if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
 
-          await Airship.show(bridge => (
+          await Airship.show<'copy' | 'ok' | void>(bridge => (
             <ButtonsModal
               title={s.strings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
@@ -217,7 +217,7 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
         const wallet = currencyWallets[walletId]
         const walletName = wallet.name ?? ''
 
-        await Airship.show(bridge => (
+        await Airship.show<string | void>(bridge => (
           <TextInputModal
             autoCorrect={false}
             bridge={bridge}

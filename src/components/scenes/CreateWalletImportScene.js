@@ -65,7 +65,7 @@ export class CreateWalletImportComponent extends React.Component<Props, State> {
         })
       })
       .catch(error =>
-        Airship.show(bridge => (
+        Airship.show<'ok' | void>(bridge => (
           <ButtonsModal
             bridge={bridge}
             buttons={{ ok: { label: s.strings.string_ok } }}

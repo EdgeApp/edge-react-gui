@@ -192,7 +192,7 @@ export const createHandleUnavailableModal = (newWalletId: string, accountName: s
       deleted: true
     }
   })
-  await Airship.show(bridge => (
+  await Airship.show<'ok' | void>(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.create_wallet_account_handle_unavailable_modal_title}
