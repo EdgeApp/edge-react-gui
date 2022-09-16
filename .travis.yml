@@ -8,5 +8,5 @@ install:
   - yarn prepare
 script:
   - yarn lint
-  - yarn flow
+  - yarn tsc
   - yarn test

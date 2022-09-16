@@ -1,5 +1,0 @@
-// @flow
-
-declare module 'react-native-permissions/mock' {
-  declare module.exports: any
-}

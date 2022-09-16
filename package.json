@@ -31,14 +31,11 @@
     "cover": "jest --config jest.config.js --coverage",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
-    "flow-coverage": "flow-coverage-report",
-    "flow:0": "flow; exit 0",
-    "flow": "flow",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "localize": "node -r sucrase/register ./scripts/localizeLanguage.ts; git add ./src/locales/strings",
     "logging-server": "node -r sucrase/register scripts/loggingServer.ts",
-    "precommit": "npm run localize && lint-staged && flow && npm test",
+    "precommit": "npm run localize && lint-staged && tsc && npm test",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
     "prepare": "husky install && ./scripts/prepare.sh",
     "server": "node ./loggingServer.js",
@@ -200,7 +197,6 @@
     "crypto-browserify": "^3.12.0",
     "eslint": "^7.14.0",
     "eslint-config-standard-kit": "0.15.1",
-    "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -210,7 +206,6 @@
     "eslint-plugin-react-native": "^3.8.1",
     "eslint-plugin-simple-import-sort": "^6.0.1",
     "express": "^4.16.2",
-    "flow-bin": "^0.84.0",
     "https-browserify": "^1.0.0",
     "husky": "^7.0.0",
     "jest": "^27.4.7",
@@ -240,17 +235,6 @@
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0",
     "yarn-deduplicate": "^5.0.0"
-  },
-  "flow-coverage-report": {
-    "includeGlob": [
-      "src/**/*.js",
-      "*.js"
-    ],
-    "type": [
-      "text",
-      "html",
-      "json"
-    ]
   },
   "plugins": [
     "edge-plugin-simplex",
