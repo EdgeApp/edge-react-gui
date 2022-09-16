@@ -241,7 +241,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           </View>
           {poweredBy != null && item.partnerIconPath != null ? (
             <View style={styles.pluginRowPoweredByRow}>
-              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space}</EdgeText>
               <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
               <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
             </View>

@@ -426,8 +426,8 @@ async function evaluateAction(
       }
     }
 
-    case 'fiat-sell': {
-      const { nativeAmount, tokenId, walletId } = actionOp
+    case 'wyre-sell': {
+      const { wyreAccountId, nativeAmount, tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(wallet, tokenId)
 
@@ -435,9 +435,7 @@ async function evaluateAction(
         account
       })
 
-      const address = await wyreClient.getCryptoPaymentMethod(wallet)
-
-      if (address == null) throw new Error(`No fiat-sell support for ${tokenId ?? 'native'} token on ${wallet.type}`)
+      const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
       const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
         const unsignedTx = await wallet.makeSpend({
@@ -446,7 +444,7 @@ async function evaluateAction(
           spendTargets: [
             {
               nativeAmount,
-              publicAddress: address
+              publicAddress: paymentAddress
             }
           ]
         })
@@ -636,7 +634,7 @@ async function evaluateAction(
     case 'done': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    case 'fiat-buy': {
+    case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
 

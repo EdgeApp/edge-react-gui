@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useHandler } from '../../../hooks/useHandler'
@@ -124,11 +125,14 @@ export const LoanCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isWithdrawToBank }) => {
-        if (isWithdrawToBank) {
-          setIsDestBank(true)
-          setDestWallet(borrowEngineWallet)
-          setDestTokenId(hardDestTokenAddr)
+      .then(async ({ walletId, currencyCode, isBankSignupRequest }) => {
+        if (isBankSignupRequest) {
+          // Open bank plugin for new user signup
+          navigation.navigate('pluginView', {
+            plugin: guiPlugins.wyre,
+            deepPath: '',
+            deepQuery: {}
+          })
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
           const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })

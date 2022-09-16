@@ -136,7 +136,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             walletName={request.toWallet.name || ''}
           />
           <View style={styles.pluginRowPoweredByRow}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space + ' '}</EdgeText>
             <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
             <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
           </View>

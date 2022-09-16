@@ -59,7 +59,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           }
         }
       >
-        Powered by 
+        Powered by  
       </WithTheme(EdgeTextComponent)>
       <FastImage
         resizeMode="contain"
