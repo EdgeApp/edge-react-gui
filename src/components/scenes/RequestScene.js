@@ -78,7 +78,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 export class RequestComponent extends React.Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: React.ElementRef<typeof FlipInput> | null = null
-  unsubscribeAddressChanged: Function | null
+  unsubscribeAddressChanged: (() => void) | void
 
   constructor(props: Props) {
     super(props)

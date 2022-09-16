@@ -22,8 +22,8 @@ import { requestPermissionOnSettings } from '../services/PermissionsManager.js'
 // WebView bridge managemer --------------------------------------------
 
 type WebViewCallbacks = {
-  onMessage: Function,
-  setRef: Function
+  onMessage: (event: any) => void,
+  setRef: (webView: any) => void
 }
 
 /**

@@ -446,7 +446,7 @@ export async function openLink(url: string): Promise<void> {
   }
 }
 
-export function debounce(func: Function, wait: number, immediate: boolean): any {
+export function debounce(func: any, wait: number, immediate: boolean): any {
   let timeout
 
   return function executedFunction() {

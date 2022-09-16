@@ -12,7 +12,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 type Props = {
   bridge: AirshipBridge<void>,
   message: string,
-  onPress: Function
+  onPress: () => void
 }
 
 export function FlashNotification(props: Props) {

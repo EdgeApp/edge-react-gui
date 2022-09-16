@@ -8,7 +8,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../compo
 import { EdgeText } from '../../components/themed/EdgeText.js'
 
 type Props = {
-  onPress: Function,
+  onPress: () => void,
   title: string | React.Node,
   iconColor?: string,
   iconSize?: number

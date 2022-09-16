@@ -14,7 +14,7 @@ type FullScreenTransitionState = {
 type FullScreenTransitionProps = {
   image: React.Node,
   text: React.Node,
-  onDone: Function
+  onDone: () => void
 }
 
 export class FullScreenTransitionComponent extends React.Component<FullScreenTransitionProps, FullScreenTransitionState> {
