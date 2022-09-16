@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { type ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { type ThemeProps, withTheme } from '../../../../components/services/ThemeContext.js'
@@ -11,7 +11,7 @@ const UPPER_RIGHT = { x: 1, y: 0 }
 
 type OwnProps = {
   children?: React.Node,
-  style?: StyleSheet.Styles
+  style?: ViewStyle
 }
 type Props = OwnProps & ThemeProps
 

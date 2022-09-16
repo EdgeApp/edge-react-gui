@@ -2,6 +2,7 @@
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { type ViewStyle } from 'react-native'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
 
@@ -69,7 +70,7 @@ export const WalletSyncCircle = (props: Props) => {
   }))
 
   // Memoized SvgStyle to reduce rerenders
-  const svgStyle = useMemo(
+  const svgStyle: ViewStyle = useMemo(
     () => ({
       transform: [{ rotateZ: '-90deg' }],
       position: 'absolute',

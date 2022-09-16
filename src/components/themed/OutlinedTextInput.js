@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { type TextStyle, type ViewStyle, ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -323,7 +323,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
 
 const getStyles = cacheStyles((theme: Theme) => {
   // A top or bottom line in the border puzzle:
-  const commonLine = {
+  const commonLine: ViewStyle = {
     borderTopWidth: theme.outlineTextInputBorderWidth,
     position: 'absolute',
     left: theme.rem(1),
@@ -331,7 +331,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   // A left or right C-shape in the border puzzle:
-  const commonCap = {
+  const commonCap: ViewStyle = {
     borderBottomWidth: theme.outlineTextInputBorderWidth,
     borderTopWidth: theme.outlineTextInputBorderWidth,
     position: 'absolute',
@@ -341,7 +341,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   // Common footer attributes, applies to the counter and the error text
-  const footerCommon = {
+  const footerCommon: TextStyle = {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.75),
     position: 'absolute'

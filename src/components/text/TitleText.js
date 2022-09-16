@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, StyleSheet, Text } from 'react-native'
+import { type TextStyle, Platform, Text } from 'react-native'
 
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 type Props = {|
   children?: React.Node,
-  style?: StyleSheet.Styles
+  style?: TextStyle
 |}
 
 export function TitleText(props: Props) {

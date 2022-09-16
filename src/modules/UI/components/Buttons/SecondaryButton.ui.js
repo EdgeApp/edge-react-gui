@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
+import { type TextStyle, Text as RNText, TouchableHighlight, View } from 'react-native'
 
 import { rawStyles, styles } from './style.js'
 
 export type TextProps = {
   children: React.Node,
-  style?: StyleSheet.Styles
+  style?: TextStyle
 }
 class Text extends React.Component<TextProps> {
   render() {
@@ -22,7 +22,7 @@ class Text extends React.Component<TextProps> {
 
 export type Props = {
   children: React.Node,
-  style?: StyleSheet.Styles,
+  style?: TextStyle,
   onPress: () => void
 }
 export class SecondaryButton extends React.Component<Props> {

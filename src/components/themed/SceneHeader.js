@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { type ViewStyle, View } from 'react-native'
 
 import { memo } from '../../types/reactHooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -13,7 +13,7 @@ type Props = {
   children?: React.Node,
   underline?: boolean,
   withTopMargin?: boolean,
-  style?: StyleSheet.Styles
+  style?: ViewStyle
 }
 
 export const SceneHeaderComponent = (props: Props) => {

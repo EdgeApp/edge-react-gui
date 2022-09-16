@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, StyleSheet, Text } from 'react-native'
+import { type TextStyle, Platform, Text } from 'react-native'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
@@ -9,7 +9,7 @@ type OwnProps = {|
   children: React.Node,
   ellipsizeMode?: string,
   numberOfLines?: number,
-  style?: StyleSheet.Styles,
+  style?: TextStyle,
   disableFontScaling?: boolean,
   minimumFontScale?: number
 |}

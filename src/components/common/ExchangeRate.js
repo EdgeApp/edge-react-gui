@@ -3,7 +3,7 @@
 import { div, log10, mul } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { type TextStyle } from 'react-native'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -23,7 +23,7 @@ type OwnProps = {
   primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: GuiCurrencyInfo,
   secondaryDisplayAmount: string,
-  style?: StyleSheet.Styles
+  style?: TextStyle
 }
 
 class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & StateProps> {

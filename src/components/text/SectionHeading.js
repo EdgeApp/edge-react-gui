@@ -1,14 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { type TextStyle } from 'react-native'
 
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 
 type Props = {|
   children: React.Node,
-  style?: StyleSheet.Styles
+  style?: TextStyle
 |}
 
 export function SectionHeading(props: Props) {

@@ -1,6 +1,6 @@
 // @flow
 
-import { type StyleSheet } from 'react-native'
+import { type ViewStyle } from 'react-native'
 
 import { useTheme } from '../components/services/ThemeContext'
 
@@ -22,7 +22,7 @@ export type SpaceProps = {
   end?: boolean
 }
 
-export const useSpaceStyle = (props: SpaceProps): StyleSheet.Styles => {
+export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const theme = useTheme()
   const { around, horizontal, veritcal } = props
 
@@ -42,7 +42,7 @@ export const useSpaceStyle = (props: SpaceProps): StyleSheet.Styles => {
 
   // Alignment:
   const { start = false, center = false, end = false } = props
-  const alignItems = start ? 'flex-start' : center ? 'center' : end ? 'flex-end' : null
+  const alignItems = start ? 'flex-start' : center ? 'center' : end ? 'flex-end' : undefined
 
   return {
     paddingTop,

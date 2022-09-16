@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { type ViewStyle, Platform, TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides.js'
@@ -38,7 +38,7 @@ export const useAlertTypeColor = (type: AlerType) => {
 }
 
 // TODO: Implement alert icons such as info and others
-export const useAlertTypeIcon = (type: AlerType, color: string, size: number, style: StyleSheet.Styles) => {
+export const useAlertTypeIcon = (type: AlerType, color: string, size: number, style: ViewStyle) => {
   switch (type) {
     case 'warning':
     case 'error':

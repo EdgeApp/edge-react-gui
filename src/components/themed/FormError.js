@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { type ViewStyle, View } from 'react-native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -10,7 +10,7 @@ import { EdgeText } from './EdgeText'
 type OwnProps = {
   isVisible: boolean,
   children: React.Node,
-  style?: StyleSheet.Styles
+  style?: ViewStyle
 }
 
 const FormErrorComponent = ({ children, theme, style, isVisible, ...props }: OwnProps & ThemeProps) => {
