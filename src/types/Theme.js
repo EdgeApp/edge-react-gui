@@ -1,6 +1,8 @@
 // @flow
 import { asNumber, asObject } from 'cleaners'
 
+type ImageSourcePropType = string
+
 type ThemeShadowParams = {
   shadowColor: string,
   shadowOffset: {
@@ -76,7 +78,7 @@ export type Theme = {
   // Background
   backgroundGradientColors: string[],
   backgroundImageServerUrls: string[],
-  backgroundImage?: string,
+  backgroundImage?: ImageSourcePropType,
   backgroundLoadingOverlay: string,
 
   // Camera Overlay
@@ -135,7 +137,7 @@ export type Theme = {
   // listHeaderText: string,
 
   // Header
-  headerIcon: string,
+  headerIcon: ImageSourcePropType,
 
   // Buttons
   buttonBorderRadiusRem: number,
@@ -341,30 +343,30 @@ export type Theme = {
   // Images
   iconServerBaseUri: string,
 
-  paymentTypeLogoApplePay: string,
-  paymentTypeLogoAuspost: string,
-  paymentTypeLogoBankgirot: string,
-  paymentTypeLogoBankTransfer: string,
-  paymentTypeLogoCash: string,
-  paymentTypeLogoCreditCard: string,
-  paymentTypeLogoDebitCard: string,
-  paymentTypeLogoFasterPayments: string,
-  paymentTypeLogoGiftCard: string,
-  paymentTypeLogoGooglePay: string,
-  paymentTypeLogoIdeal: string,
-  paymentTypeLogoInterac: string,
-  paymentTypeLogoNewsagent: string,
-  paymentTypeLogoPayid: string,
-  paymentTypeLogoPaynow: string,
-  paymentTypeLogoPoli: string,
-  paymentTypeLogoSofort: string,
-  paymentTypeLogoSwish: string,
-  paymentTypeLogoUpi: string,
+  paymentTypeLogoApplePay: ImageSourcePropType,
+  paymentTypeLogoAuspost: ImageSourcePropType,
+  paymentTypeLogoBankgirot: ImageSourcePropType,
+  paymentTypeLogoBankTransfer: ImageSourcePropType,
+  paymentTypeLogoCash: ImageSourcePropType,
+  paymentTypeLogoCreditCard: ImageSourcePropType,
+  paymentTypeLogoDebitCard: ImageSourcePropType,
+  paymentTypeLogoFasterPayments: ImageSourcePropType,
+  paymentTypeLogoGiftCard: ImageSourcePropType,
+  paymentTypeLogoGooglePay: ImageSourcePropType,
+  paymentTypeLogoIdeal: ImageSourcePropType,
+  paymentTypeLogoInterac: ImageSourcePropType,
+  paymentTypeLogoNewsagent: ImageSourcePropType,
+  paymentTypeLogoPayid: ImageSourcePropType,
+  paymentTypeLogoPaynow: ImageSourcePropType,
+  paymentTypeLogoPoli: ImageSourcePropType,
+  paymentTypeLogoSofort: ImageSourcePropType,
+  paymentTypeLogoSwish: ImageSourcePropType,
+  paymentTypeLogoUpi: ImageSourcePropType,
 
-  primaryLogo: string,
-  fioAddressLogo: string,
-  walletListSlideTutorialImage: string,
+  primaryLogo: ImageSourcePropType,
+  fioAddressLogo: ImageSourcePropType,
+  walletListSlideTutorialImage: ImageSourcePropType,
 
-  guiPluginLogoBitaccess: string,
-  guiPluginLogoMoonpay: string
+  guiPluginLogoBitaccess: ImageSourcePropType,
+  guiPluginLogoMoonpay: ImageSourcePropType
 }
