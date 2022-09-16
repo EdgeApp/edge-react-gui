@@ -1,12 +1,11 @@
 /* eslint-disable quote-props */
 
-import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asBoolean, asMap, asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
 import { showError } from '../../../components/services/AirshipInstance'
 import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
-import { currencyPlugins } from '../../../util/corePlugins'
 import { logActivity } from '../../../util/logger'
 import { categories } from './subcategories'
 
@@ -24,13 +23,7 @@ export const asCurrencyCodeDenom = asObject({
   symbol: asOptional(asString)
 })
 
-const asDenominationSettings = asObject(
-  Object.keys(currencyPlugins).reduce((currencyPluginSettingsMap, pluginId) => {
-    // @ts-expect-error
-    currencyPluginSettingsMap[pluginId] = asOptional(asObject(asMaybe(asCurrencyCodeDenom)), {})
-    return currencyPluginSettingsMap
-  }, {})
-)
+const asDenominationSettings = asMap(asOptional(asObject(asMaybe(asCurrencyCodeDenom))))
 
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
 

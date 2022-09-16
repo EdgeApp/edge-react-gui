@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { CcWalletMap } from '../../reducers/FioReducer'
-import { FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord } from '../../types/types'
+import { BooleanMap, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../../types/types'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -51,8 +51,6 @@ export const FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM = 'Fee exceeds supplied maximum'
 export const FIO_DOMAIN_IS_NOT_PUBLIC = 'FIO_DOMAIN_IS_NOT_PUBLIC'
 export class FioError extends Error {
   code: string
-  // @ts-expect-error
-  message: string
 
   constructor(message: string, code: string) {
     super(message)
@@ -180,7 +178,7 @@ export const refreshConnectedWalletsForFioAddress = async (
   fioWallet: EdgeCurrencyWallet,
   wallets: EdgeCurrencyWallet[]
 ): Promise<CcWalletMap> => {
-  const connectedWallets = {}
+  const connectedWallets: StringMap = {}
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
   for (const wallet of wallets) {
     const enabledTokens = await wallet.getEnabledTokens()
@@ -189,15 +187,28 @@ export const refreshConnectedWalletsForFioAddress = async (
     }
     for (const enabledToken of enabledTokens) {
       const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${enabledToken}`
-      // @ts-expect-error
       if (connectedWallets[fullCurrencyCode]) continue
       if (await isWalletConnected(fioWallet, fioAddress, wallet, enabledToken, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
-        // @ts-expect-error
         connectedWallets[fullCurrencyCode] = wallet.id
       }
     }
   }
   return connectedWallets
+}
+
+type WalletArray = Array<{
+  fullCurrencyCode: string
+  walletId: string
+}>
+
+interface IterationObj {
+  ccWalletArray: WalletArray
+
+  publicAddresses: Array<{
+    token_code: string
+    chain_code: string
+    public_address: string
+  }>
 }
 
 /**
@@ -216,11 +227,10 @@ export const updatePubAddressesForFioAddress = async (
 ): Promise<{ updatedCcWallets: Array<{ fullCurrencyCode: string; walletId: string }>; error?: Error | FioError | null }> => {
   if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
-  // @ts-expect-error
-  let updatedCcWallets = []
-  const iteration = {
+  let updatedCcWallets: WalletArray = []
+  const iteration: IterationObj = {
     publicAddresses: [],
-    ccWalletMap: []
+    ccWalletArray: []
   }
   const limitPerCall = 5
   for (const { walletId, chainCode: cCode, tokenCode: tCode, publicAddress } of publicAddresses) {
@@ -238,12 +248,10 @@ export const updatePubAddressesForFioAddress = async (
       }
       delete connectedWalletsFromDisklet[fullCurrencyCode]
     }
-    // @ts-expect-error
-    iteration.ccWalletMap.push({
+    iteration.ccWalletArray.push({
       fullCurrencyCode,
       walletId
     })
-    // @ts-expect-error
     iteration.publicAddresses.push({
       token_code: tokenCode,
       chain_code: chainCode,
@@ -255,12 +263,10 @@ export const updatePubAddressesForFioAddress = async (
           ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
           : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
         await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
-        // @ts-expect-error
-        updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
+        updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletArray]
         iteration.publicAddresses = []
-        iteration.ccWalletMap = []
+        iteration.ccWalletArray = []
       } catch (e: any) {
-        // @ts-expect-error
         return { updatedCcWallets, error: e }
       }
     }
@@ -272,15 +278,12 @@ export const updatePubAddressesForFioAddress = async (
         ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
         : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
       await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
-      // @ts-expect-error
-      updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
+      updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletArray]
     } catch (e: any) {
-      // @ts-expect-error
       return { updatedCcWallets, error: e }
     }
   }
 
-  // @ts-expect-error
   return { updatedCcWallets }
 }
 
@@ -372,11 +375,15 @@ export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], f
   return null
 }
 
+interface WalletItemMap {
+  [key: string]: FioConnectionWalletItem
+}
+
 export const makeConnectWallets = (
   wallets: { [walletId: string]: EdgeCurrencyWallet },
   ccWalletMap: CcWalletMap
 ): { [key: string]: FioConnectionWalletItem } => {
-  const walletItems = {}
+  const walletItems: WalletItemMap = {}
   for (const walletKey of Object.keys(wallets)) {
     const wallet = wallets[walletKey]
     const {
@@ -390,7 +397,6 @@ export const makeConnectWallets = (
     const currencyCode = info.fioChainCode ?? cCode
     const walletName = wallet.name ?? info.initWalletName
     const fullCurrencyCode = `${currencyCode}:${currencyCode}`
-    // @ts-expect-error
     walletItems[`${wallet.id}-${currencyCode}`] = {
       key: `${wallet.id}-${currencyCode}`,
       id: wallet.id,
@@ -407,7 +413,6 @@ export const makeConnectWallets = (
       if (token == null) continue
 
       const fullCurrencyCode = `${currencyCode}:${token.currencyCode}`
-      // @ts-expect-error
       walletItems[`${wallet.id}-${token.currencyCode}`] = {
         key: `${wallet.id}-${token.currencyCode}`,
         id: wallet.id,
@@ -489,6 +494,21 @@ export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, f
   }
 }
 
+interface RecordObtDataParams {
+  payerFioAddress: string
+  payeeFioAddress: string
+  payerPublicAddress: string
+  payeePublicAddress: string
+  amount: string
+  tokenCode: string
+  chainCode: string
+  obtId: string
+  memo: string
+  maxFee: number
+  status: string
+  fioRequestId?: string
+}
+
 export const recordSend = async (
   senderWallet: EdgeCurrencyWallet,
   senderFioAddress: string,
@@ -506,7 +526,7 @@ export const recordSend = async (
 ) => {
   const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo, fioRequestId } = params
   if (senderFioAddress && senderWallet && payeePublicAddress) {
-    let actionParams = {
+    let actionParams: RecordObtDataParams = {
       payerFioAddress: senderFioAddress,
       payeeFioAddress,
       payerPublicAddress,
@@ -520,7 +540,6 @@ export const recordSend = async (
       status: 'sent_to_blockchain'
     }
     if (fioRequestId) {
-      // @ts-expect-error
       actionParams = { ...actionParams, fioRequestId }
     }
     try {
@@ -533,19 +552,16 @@ export const recordSend = async (
 }
 
 export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
-  // @ts-expect-error
-  let obtDataRecords = []
+  let obtDataRecords: FioObtRecord[] = []
   for (const fioWallet of fioWallets) {
     try {
       const { obt_data_records: lastRecords } = await fioWallet.otherMethods.fioAction('getObtData', {})
-      // @ts-expect-error
       obtDataRecords = [...obtDataRecords, ...lastRecords]
     } catch (e: any) {
       //
     }
   }
 
-  // @ts-expect-error
   return obtDataRecords
 }
 
@@ -603,7 +619,7 @@ export const getRegInfo = async (
   supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
-  paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
+  paymentInfo: PaymentInfo
 }> => {
   let activationCost = 0
   let feeValue = 0
@@ -623,7 +639,6 @@ export const getRegInfo = async (
       paymentInfo: {
         [FIO_STR]: {
           amount: `${activationCost}`,
-          // @ts-expect-error
           nativeAmount: '',
           address: ''
         }
@@ -675,6 +690,10 @@ export const getDomainRegInfo = async (
   }
 }
 
+interface PaymentInfo {
+  [currencyCode: string]: { amount: string; address: string; nativeAmount?: string }
+}
+
 const buyAddressRequest = async (
   fioPlugin: EdgeCurrencyConfig,
   address: string,
@@ -684,7 +703,7 @@ const buyAddressRequest = async (
 ): Promise<{
   supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
-  paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
+  paymentInfo: PaymentInfo
 }> => {
   try {
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
@@ -694,8 +713,8 @@ const buyAddressRequest = async (
     })
 
     if (buyAddressResponse.success) {
-      const supportedCurrencies = { [FIO_STR]: true }
-      const paymentInfo = {
+      const supportedCurrencies: BooleanMap = { [FIO_STR]: true }
+      const paymentInfo: PaymentInfo = {
         [FIO_STR]: {
           amount: `${activationCost}`,
           nativeAmount: '',
@@ -705,10 +724,8 @@ const buyAddressRequest = async (
 
       for (const currencyKey of Object.keys(buyAddressResponse.success.charge.pricing)) {
         const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
-        // @ts-expect-error
         supportedCurrencies[currencyCode] = true
 
-        // @ts-expect-error
         paymentInfo[currencyCode] = {
           amount: buyAddressResponse.success.charge.pricing[currencyKey].amount,
           address: buyAddressResponse.success.charge.addresses[currencyKey]
@@ -910,26 +927,21 @@ export const getExpiredSoonFioDomains = (fioDomains: FioDomain[]): FioDomain[] =
 
 export const refreshFioNames = async (
   fioWallets: EdgeCurrencyWallet[]
-): Promise<{ fioAddresses: FioAddress[]; fioDomains: FioDomain[]; fioWalletsById: { string: EdgeCurrencyWallet } }> => {
-  // @ts-expect-error
-  const fioWalletsById: { [string]: EdgeCurrencyWallet } = {}
+): Promise<{ fioAddresses: FioAddress[]; fioDomains: FioDomain[]; fioWalletsById: { [key: string]: EdgeCurrencyWallet } }> => {
+  const fioWalletsById: { [key: string]: EdgeCurrencyWallet } = {}
   let fioAddresses: FioAddress[] = []
   let fioDomains: FioDomain[] = []
 
   if (fioWallets != null) {
     for (const wallet of fioWallets) {
       const walletId = wallet.id
-      const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
-      // @ts-expect-error
+      const walletFioAddresses: FioAddress[] = await wallet.otherMethods.getFioAddresses()
       fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, bundledTxs }) => ({ name, bundledTxs, walletId }))]
-      const walletFioDomains = await wallet.otherMethods.getFioDomains()
-      // @ts-expect-error
+      const walletFioDomains: FioDomain[] = await wallet.otherMethods.getFioDomains()
       fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
-      // @ts-expect-error
       fioWalletsById[walletId] = wallet
     }
   }
 
-  // @ts-expect-error
   return { fioAddresses, fioDomains, fioWalletsById }
 }

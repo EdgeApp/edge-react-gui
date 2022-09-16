@@ -259,22 +259,17 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
 // Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
 // between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
 // Returns the element name of the unequal element or '' if objects are equal
-export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
-  const comparedElements = {}
+export function getObjectDiff(obj1: any, obj2: any, traverseObjects?: any, ignoreObjects?: any): string {
+  const comparedElements: any = {}
   for (const e of Object.keys(obj1)) {
-    // @ts-expect-error
     if (ignoreObjects && ignoreObjects[e]) {
       continue
     }
-    // @ts-expect-error
     comparedElements[e] = true
     // eslint-disable-next-line no-prototype-builtins
     if (obj2.hasOwnProperty(e)) {
-      // @ts-expect-error
       if (obj1[e] !== obj2[e]) {
-        // @ts-expect-error
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-          // @ts-expect-error
           const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
           if (deepDiff) {
             // console.log(`getObjectDiff:${e}`)
@@ -291,17 +286,13 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
     }
   }
   for (const e of Object.keys(obj2)) {
-    // @ts-expect-error
     if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
     // eslint-disable-next-line no-prototype-builtins
     if (obj1.hasOwnProperty(e)) {
-      // @ts-expect-error
       if (obj1[e] !== obj2[e]) {
-        // @ts-expect-error
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-          // @ts-expect-error
           const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
           if (deepDiff) {
             return e
@@ -318,12 +309,11 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
 }
 
 export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
-  const timeout = new Promise((resolve, reject) => {
+  const timeout: Promise<T> = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)
     promise.then(onDone, onDone)
   })
-  // @ts-expect-error
   return Promise.race([promise, timeout])
 }
 
@@ -392,8 +382,7 @@ export function splitTransactionCategory(fullCategory: string): {
   const splittedCategory = fullCategory.split(':')
   const categoryArray = splittedCategory.shift()
   return {
-    // @ts-expect-error
-    category: categoryArray,
+    category: categoryArray ?? '',
     subCategory: splittedCategory.length > 0 ? splittedCategory.join(':') : ''
   }
 }
@@ -444,8 +433,8 @@ export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {
       await SafariView.isAvailable()
-      // @ts-expect-error
-      return SafariView.show({ url })
+      SafariView.show({ url })
+      return
     } catch (e: any) {
       console.log(e)
     }
@@ -459,8 +448,7 @@ export async function openLink(url: string): Promise<void> {
 }
 
 export function debounce(func: any, wait: number, immediate: boolean): any {
-  // @ts-expect-error
-  let timeout
+  let timeout: ReturnType<typeof setTimeout> | null = null
 
   return function executedFunction() {
     // @ts-expect-error
@@ -473,10 +461,8 @@ export function debounce(func: any, wait: number, immediate: boolean): any {
       if (!immediate) func.apply(context, args)
     }
 
-    // @ts-expect-error
     const callNow = immediate && !timeout
 
-    // @ts-expect-error
     if (timeout) clearTimeout(timeout)
 
     timeout = setTimeout(later, wait)

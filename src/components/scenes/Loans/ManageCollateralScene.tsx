@@ -27,12 +27,17 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 import { FormScene } from '../FormScene'
 
-type ManageCollateralRequest = {
-  tokenId?: string
-  // @ts-expect-error
-  ['fromWallet' | 'toWallet']: EdgeCurrencyWallet
-  nativeAmount: string
-}
+type ManageCollateralRequest =
+  | {
+      tokenId?: string
+      fromWallet: EdgeCurrencyWallet
+      nativeAmount: string
+    }
+  | {
+      tokenId?: string
+      toWallet: EdgeCurrencyWallet
+      nativeAmount: string
+    }
 
 type Props<T extends keyof ParamList> = {
   // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
@@ -120,6 +125,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       tokenId: selectedTokenId
     }
 
+    // @ts-expect-error
     const approvalAction = await action(request)
     setApprovalAction(approvalAction)
 

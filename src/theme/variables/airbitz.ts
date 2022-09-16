@@ -24,8 +24,7 @@ export const THEME = {
     HEIGHT: 44
   },
 
-  // @ts-expect-error
-  HEADER: Platform.OS === 'ios' ? getHeaderHeight() : getHeaderHeight() + StatusBar.currentHeight,
+  HEADER: Platform.OS === 'ios' ? getHeaderHeight() : getHeaderHeight() + (StatusBar.currentHeight ?? 0),
 
   FOOTER_TABS_HEIGHT: 50,
 

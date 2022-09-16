@@ -6,6 +6,7 @@ import { newPriceChangeEvent, serverSettingsToState, setDeviceSettings } from '.
 import { NewPushEvent } from '../../controllers/action-queue/types/pushTypes'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
+import { RootState } from '../../reducers/RootReducer'
 import { useCallback, useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
@@ -25,9 +26,9 @@ export const CurrencyNotificationScene = (props: Props) => {
   const { pluginId } = currencyInfo
   const dispatch = useDispatch()
 
-  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const deviceId = useSelector(state => state.core.context.clientId)
-  const settings = useSelector(state => state.priceChangeNotifications)
+  const defaultIsoFiat = useSelector((state: RootState) => state.ui.settings.defaultIsoFiat)
+  const deviceId = useSelector((state: RootState) => state.core.context.clientId)
+  const settings = useSelector((state: RootState) => state.priceChangeNotifications)
 
   const toggleHourlySetting = useHandler(async () => {
     const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings[pluginId].hourlyChange, !!settings[pluginId].dailyChange)

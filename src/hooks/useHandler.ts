@@ -13,8 +13,7 @@ type State<T> = {
  * so we don't want to conflict with that.
  */
 export function useHandler<T extends (...args: any[]) => any>(callback: T): T {
-  // @ts-expect-error
-  const bouncer: any = (...args) => stateRef.current.callback(...args)
+  const bouncer: any = (...args: any[]) => stateRef.current.callback(...args)
   const stateRef = useRef<State<T>>({ callback, bouncer })
   stateRef.current.callback = callback
 

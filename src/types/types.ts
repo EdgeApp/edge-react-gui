@@ -14,6 +14,10 @@ import {
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
 
+export type BooleanMap = { [key: string]: boolean }
+export type NumberMap = { [key: string]: number }
+export type StringMap = { [key: string]: string }
+
 export type GuiWallet = {
   id: string
   type: string
@@ -243,7 +247,7 @@ export type FioConnectionWalletItem = {
   key: string
   id: string
   edgeWallet: EdgeCurrencyWallet
-  symbolImage: string
+  symbolImage?: string
   name: string
   currencyCode: string
   chainCode: string

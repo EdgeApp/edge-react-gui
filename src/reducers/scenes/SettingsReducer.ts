@@ -131,7 +131,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       for (const pluginId of Object.keys(account.currencyConfig)) {
         const { currencyInfo } = account.currencyConfig[pluginId]
         const { currencyCode } = currencyInfo
-        // @ts-expect-error
         if (newState.denominationSettings[pluginId] == null) state.denominationSettings[pluginId] = {}
         // @ts-expect-error
         if (newState.denominationSettings[pluginId][currencyCode] == null) {

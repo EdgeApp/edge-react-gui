@@ -16,10 +16,9 @@ export const getDisplayDenominationFromState =
   }
 
 export const getDisplayDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  // @ts-expect-error
   const pluginSettings = state.ui.settings.denominationSettings[pluginId]
   if (pluginSettings != null && pluginSettings[currencyCode] != null) {
-    return pluginSettings[currencyCode]
+    return pluginSettings[currencyCode] ?? emptyEdgeDenomination
   }
   return getExchangeDenomination(state, pluginId, currencyCode)
 }

@@ -1,6 +1,5 @@
 import { div, mul } from 'biggystring'
-// @ts-expect-error
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -218,7 +217,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
     if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
     if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
-    this.setState({ fioAddressFrom: fioAddressFrom || '' })
+    this.setState({ fioAddressFrom })
   }
 
   showError(error?: string) {
@@ -242,7 +241,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     } else if (this.state.fioAddressFrom === fioAddressTo) {
       this.showError(s.strings.fio_confirm_request_error_to_same)
     } else {
-      this.setState({ fioAddressTo: fioAddressTo || '', settingFioAddressTo: false })
+      this.setState({ fioAddressTo, settingFioAddressTo: false })
     }
   }
 

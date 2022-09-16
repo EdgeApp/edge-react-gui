@@ -7,14 +7,14 @@ import RNFS from 'react-native-fs'
 
 import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
+import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
-  apiKey: ENV.BUGSNAG_API_KEY,
   // @ts-expect-error
+  apiKey: ENV.BUGSNAG_API_KEY,
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
-    return event
   }
 })
 
@@ -26,9 +26,9 @@ const asServerDetails = asObject({
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
-const perfTimers = {}
-const perfCounters = {}
-const perfTotals = {}
+const perfTimers: NumberMap = {}
+const perfCounters: NumberMap = {}
+const perfTotals: NumberMap = {}
 
 console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
@@ -125,14 +125,10 @@ if (ENABLE_PERF_LOGGING) {
   // @ts-expect-error
   global.pstart = function (label: string) {
     const d = makeDate()
-    // @ts-expect-error
     if (!perfTotals[label]) {
-      // @ts-expect-error
       perfTotals[label] = 0
-      // @ts-expect-error
       perfCounters[label] = 0
     }
-    // @ts-expect-error
     if (typeof perfTimers[label] === 'undefined') {
       // @ts-expect-error
       perfTimers[label] = global.nativePerformanceNow()
@@ -144,18 +140,13 @@ if (ENABLE_PERF_LOGGING) {
   // @ts-expect-error
   global.pend = function (label: string) {
     const d = makeDate()
-    // @ts-expect-error
     if (typeof perfTimers[label] === 'number') {
       // @ts-expect-error
       const elapsed = global.nativePerformanceNow() - perfTimers[label]
-      // @ts-expect-error
       perfTotals[label] += elapsed
-      // @ts-expect-error
       perfCounters[label]++
-      // @ts-expect-error
       clog(`${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`)
-      // @ts-expect-error
-      perfTimers[label] = undefined
+      delete perfTimers[label]
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)
     }
@@ -164,17 +155,12 @@ if (ENABLE_PERF_LOGGING) {
   // @ts-expect-error
   global.pcount = function (label: string) {
     const d = makeDate()
-    // @ts-expect-error
     if (typeof perfCounters[label] === 'undefined') {
-      // @ts-expect-error
       perfCounters[label] = 1
     } else {
-      // @ts-expect-error
       perfCounters[label] = perfCounters[label] + 1
     }
-    // @ts-expect-error
     if (perfCounters[label] % 1 === 0) {
-      // @ts-expect-error
       clog(`${d}: PTIMER PCOUNT ${label}:${perfCounters[label]}`)
     }
   }

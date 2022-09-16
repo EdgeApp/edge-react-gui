@@ -55,26 +55,24 @@ describe('validatePromoCardsInner', () => {
     expect(result[0].message).toBe('Just a message')
   })
   test('Cards for iOS', async () => {
-    const cards = [
+    const cards: MessageTweak[] = [
       { ...dummyCard, osTypes: ['android'], message: 'Android message' },
       { ...dummyCard, osTypes: ['ios'], message: 'iOS Message' },
       { ...dummyCard, osTypes: ['web'], message: 'Web Message' },
       { ...dummyCard, osTypes: ['ios'], message: 'Another iOS Message' }
     ]
-    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', 'ios'))
     expect(result.length).toBe(2)
     expect(result[0].message).toBe('iOS Message')
     expect(result[1].message).toBe('Another iOS Message')
   })
   test('Cards for Android, exactBuildNum', async () => {
-    const cards = [
+    const cards: MessageTweak[] = [
       { ...dummyCard, exactBuildNum: '123', osTypes: ['android'], message: 'Android message' },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['ios'], message: 'iOS Message' },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['web'], message: 'Web Message' },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['android'], message: 'Another Android Message' }
     ]
-    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '432', '', 'android'))
     expect(result.length).toBe(1)
     expect(result[0].message).toBe('Another Android Message')
@@ -115,26 +113,24 @@ describe('validatePromoCardsInner', () => {
     expect(result[0].message).toBe('not linked US')
   })
   test('Localized message no match', async () => {
-    const cards = [
+    const cards: MessageTweak[] = [
       { ...dummyCard, message: '0: plain english', localeMessages: { es_MX: 'Mex Spanish' } },
       { ...dummyCard, message: '1: plain english', localeMessages: { en_US: 'US English' } },
       { ...dummyCard, message: '2: plain english', localeMessages: { it_IT: 'Italy Italian' } },
       { ...dummyCard, message: '3: plain english', localeMessages: { es_SP: 'Spain Spanish' } }
     ]
-    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'ru', ''))
     expect(result.length).toBe(4)
     expect(result[0].message).toBe('0: plain english')
     expect(result[3].message).toBe('3: plain english')
   })
   test('Localized message es match', async () => {
-    const cards = [
+    const cards: MessageTweak[] = [
       { ...dummyCard, message: '0: plain english', localeMessages: { es_MX: 'Mex Spanish' } },
       { ...dummyCard, message: '1: plain english', localeMessages: { en_US: 'US English' } },
       { ...dummyCard, message: '2: plain english', localeMessages: { it_IT: 'Italy Italian' } },
       { ...dummyCard, message: '3: plain english', localeMessages: { es_SP: 'Spain Spanish' } }
     ]
-    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'es', ''))
     expect(result.length).toBe(4)
     expect(result[0].message).toBe('Mex Spanish')

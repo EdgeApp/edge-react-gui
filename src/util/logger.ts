@@ -20,8 +20,7 @@ const makePaths = (type: LogType): string[] => {
   return fileArray
 }
 
-// @ts-expect-error
-const logMap: { [type: LogType]: string[] } = {
+const logMap = {
   info: makePaths('info'),
   activity: makePaths('activity')
 }
@@ -47,7 +46,6 @@ async function isLogFileLimitExceeded(filePath) {
 }
 
 async function rotateLogs(type: LogType): Promise<void> {
-  // @ts-expect-error
   const paths = logMap[type]
   if (!(await RNFS.exists(paths[0]))) {
     return
@@ -87,7 +85,6 @@ async function migrateLogs(): Promise<void> {
 
 let checkMigrated = false
 async function writeLog(type: LogType, content: string): Promise<void> {
-  // @ts-expect-error
   const path = logMap[type][0]
   try {
     if (!checkMigrated) {
@@ -113,7 +110,6 @@ async function writeLog(type: LogType, content: string): Promise<void> {
 }
 
 export async function readLogs(type: LogType): Promise<string | undefined> {
-  // @ts-expect-error
   const paths = logMap[type]
 
   try {
