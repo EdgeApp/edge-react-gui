@@ -9,7 +9,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js
 import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { MaybeBlockbookSetting, MaybeCustomServersSetting, MaybeElectrumSetting } from '../themed/MaybeCustomServersSetting.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
@@ -58,7 +58,7 @@ export function CurrencySettingsScene(props: Props) {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   labelText: {
     color: theme.primaryText,
     flexShrink: 1,

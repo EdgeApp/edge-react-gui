@@ -4,7 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
 
-import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 type Props = {
@@ -35,22 +35,20 @@ export const Thermostat = ({ ratio }: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => {
-  return {
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    barContainer: {
-      borderRadius: 6,
-      overflow: 'hidden',
-      flex: 1
-    },
-    percentText: {
-      color: theme.warningText,
-      fontSize: theme.rem(0.75),
-      fontWeight: 'bold',
-      marginLeft: theme.rem(0.5)
-    }
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  barContainer: {
+    borderRadius: 6,
+    overflow: 'hidden',
+    flex: 1
+  },
+  percentText: {
+    color: theme.warningText,
+    fontSize: theme.rem(0.75),
+    fontWeight: 'bold',
+    marginLeft: theme.rem(0.5)
   }
-})
+}))

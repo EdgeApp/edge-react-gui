@@ -3,7 +3,6 @@
 import { type Cleaner, asArray, asBoolean, asCodec, asObject, asOptional, asString, uncleaner } from 'cleaners'
 import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
-import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
@@ -11,7 +10,7 @@ import { logActivity } from '../../util/logger'
 import { type CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { useTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from './SettingsHeaderRow.js'
 import { SettingsSwitchRow } from './SettingsSwitchRow.js'
 import { SettingsTappableRow } from './SettingsTappableRow.js'
@@ -94,7 +93,7 @@ function CustomServersSettingComponent(props: Props) {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   // We use a hack to make the text tappable separately from the switch.
   labelContainer: {
     flexGrow: 10,

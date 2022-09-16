@@ -21,7 +21,7 @@ import { type FlipInputModalResult, FlipInputModal } from '../../modals/FlipInpu
 import { FlashNotification } from '../../navigation/FlashNotification.js'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship } from '../../services/AirshipInstance.js'
-import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { Alert } from '../../themed/Alert.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
@@ -330,7 +330,7 @@ export const StakeModifyScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   walletContainer: {
     flexDirection: 'row'
   },

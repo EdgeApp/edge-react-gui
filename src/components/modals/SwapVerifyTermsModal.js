@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import s from '../../locales/strings.js'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { Airship } from '../services/AirshipInstance.js'
-import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -98,7 +98,7 @@ function SwapVerifyTermsModal(props: Props) {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   linkContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between'

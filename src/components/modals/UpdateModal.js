@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { config } from '../../theme/appConfig'
-import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -46,7 +46,7 @@ export function UpdateModal(props: Props) {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'column'

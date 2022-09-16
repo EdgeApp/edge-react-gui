@@ -20,7 +20,7 @@ import type { RouteProp } from '../../types/routerTypes'
 import { Actions } from '../../types/routerTypes.js'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableText } from '../themed/ClickableText.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -127,7 +127,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

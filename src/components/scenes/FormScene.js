@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { useMemo } from '../../types/reactHooks.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
 
@@ -39,7 +39,7 @@ export const FormScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

@@ -23,7 +23,7 @@ import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type FlipInputModalResult, FlipInputModal } from '../modals/FlipInputModal'
 import { Airship, showToast } from '../services/AirshipInstance'
-import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader.js'
@@ -319,7 +319,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

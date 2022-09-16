@@ -18,7 +18,7 @@ import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, ge
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { FillLoader } from '../../progress-indicators/FillLoader'
-import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { MainButton } from '../../themed/MainButton.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile.js'
@@ -152,7 +152,7 @@ export const StakeOverviewScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   card: {
     justifyContent: 'flex-start',
     alignItems: 'center'

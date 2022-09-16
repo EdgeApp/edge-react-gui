@@ -4,7 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import s from '../../locales/strings'
-import { cacheStyles, useTheme } from '../services/ThemeContext'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Thermostat } from '../themed/Thermostat'
 import { Card } from './Card'
@@ -62,57 +62,55 @@ export const LoanDetailsSummaryCard = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => {
-  return {
-    container: {
-      flex: 1
-    },
-    // Total
-    totalContainer: {
-      alignItems: 'flex-start',
-      flexDirection: 'row'
-    },
-    total: {
-      fontFamily: theme.fontFaceMedium,
-      fontSize: theme.rem(2),
-      marginRight: theme.rem(0.5),
-      marginLeft: theme.rem(0.5)
-    },
-    iconContainer: {
-      alignSelf: 'center'
-    },
-    // Details
-    details: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignSelf: 'stretch',
-      marginTop: theme.rem(1.5)
-    },
-    detail: {
-      flexDirection: 'row'
-    },
-    detailContainer: {
-      flexDirection: 'column',
-      alignItems: 'flex-start'
-    },
-    detailLabel: {
-      flexDirection: 'row',
-      fontSize: theme.rem(0.75),
-      lineHeight: theme.rem(1.5)
-    },
-    detailValue: {
-      fontFamily: theme.fontFaceBold,
-      fontSize: theme.rem(0.75)
-    },
-    detailIconContainer: {
-      marginTop: theme.rem(0.25),
-      marginLeft: theme.rem(0.5)
-    },
-    // Loan to value
-    ltvContainer: {
-      width: '52%',
-      marginTop: theme.rem(1),
-      flexDirection: 'column'
-    }
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flex: 1
+  },
+  // Total
+  totalContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row'
+  },
+  total: {
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(2),
+    marginRight: theme.rem(0.5),
+    marginLeft: theme.rem(0.5)
+  },
+  iconContainer: {
+    alignSelf: 'center'
+  },
+  // Details
+  details: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+    marginTop: theme.rem(1.5)
+  },
+  detail: {
+    flexDirection: 'row'
+  },
+  detailContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start'
+  },
+  detailLabel: {
+    flexDirection: 'row',
+    fontSize: theme.rem(0.75),
+    lineHeight: theme.rem(1.5)
+  },
+  detailValue: {
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(0.75)
+  },
+  detailIconContainer: {
+    marginTop: theme.rem(0.25),
+    marginLeft: theme.rem(0.5)
+  },
+  // Loan to value
+  ltvContainer: {
+    width: '52%',
+    marginTop: theme.rem(1),
+    flexDirection: 'column'
   }
-})
+}))

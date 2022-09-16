@@ -8,7 +8,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
-import { cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 type Props = {|
   // Contents:
@@ -321,7 +321,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   )
 })
 
-const getStyles = cacheStyles(theme => {
+const getStyles = cacheStyles((theme: Theme) => {
   // A top or bottom line in the border puzzle:
   const commonLine = {
     borderTopWidth: theme.outlineTextInputBorderWidth,

@@ -32,7 +32,7 @@ import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
 import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, useTheme } from '../../services/ThemeContext'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -350,53 +350,51 @@ export const LoanCreateScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => {
-  return {
-    cardContainer: {
-      alignItems: 'center',
-      alignSelf: 'center',
-      flexDirection: 'column',
-      margin: theme.rem(0.5)
-    },
-    currencyRow: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      marginTop: theme.rem(0.5),
-      marginBottom: theme.rem(0.5)
-    },
-    icon: {
-      size: theme.rem(2.5)
-    },
-    textCardHeader: {
-      fontFamily: theme.fontFaceMedium
-    },
-    textInitial: {
-      alignSelf: 'flex-start',
-      fontSize: theme.rem(0.75),
-      fontFamily: theme.fontFaceMedium,
-      margin: theme.rem(1)
-    },
-    textInitialDisabled: {
-      alignSelf: 'center',
-      color: theme.deactivatedText,
-      fontSize: theme.rem(0.75),
-      fontFamily: theme.fontFaceMedium,
-      marginLeft: theme.rem(0.5)
-    },
-    textTitle: {
-      alignSelf: 'flex-start',
-      color: theme.secondaryText,
-      fontFamily: theme.fontFaceBold,
-      fontSize: theme.rem(0.75),
-      margin: theme.rem(0.5),
-      textAlign: 'left'
-    },
-    sceneContainer: {
-      flex: 1,
-      flexDirection: 'column',
-      margin: theme.rem(0.5),
-      marginTop: theme.rem(0)
-    }
+const getStyles = cacheStyles((theme: Theme) => ({
+  cardContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'column',
+    margin: theme.rem(0.5)
+  },
+  currencyRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(0.5)
+  },
+  icon: {
+    size: theme.rem(2.5)
+  },
+  textCardHeader: {
+    fontFamily: theme.fontFaceMedium
+  },
+  textInitial: {
+    alignSelf: 'flex-start',
+    fontSize: theme.rem(0.75),
+    fontFamily: theme.fontFaceMedium,
+    margin: theme.rem(1)
+  },
+  textInitialDisabled: {
+    alignSelf: 'center',
+    color: theme.deactivatedText,
+    fontSize: theme.rem(0.75),
+    fontFamily: theme.fontFaceMedium,
+    marginLeft: theme.rem(0.5)
+  },
+  textTitle: {
+    alignSelf: 'flex-start',
+    color: theme.secondaryText,
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(0.75),
+    margin: theme.rem(0.5),
+    textAlign: 'left'
+  },
+  sceneContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    margin: theme.rem(0.5),
+    marginTop: theme.rem(0)
   }
-})
+}))

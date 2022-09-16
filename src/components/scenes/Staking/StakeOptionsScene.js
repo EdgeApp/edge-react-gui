@@ -16,7 +16,7 @@ import { StakingOptionCard } from '../../cards/StakingOptionCard.js'
 import { SceneWrapper } from '../../common/SceneWrapper.js'
 import { CryptoIcon } from '../../icons/CryptoIcon.js'
 import { FillLoader } from '../../progress-indicators/FillLoader.js'
-import { cacheStyles, useTheme } from '../../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { EdgeText } from '../../themed/EdgeText.js'
 import { SceneHeader } from '../../themed/SceneHeader.js'
 
@@ -125,7 +125,7 @@ export const StakeOptionsScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   optionsContainer: {
     alignItems: 'stretch',
     margin: theme.rem(1),

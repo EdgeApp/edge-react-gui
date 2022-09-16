@@ -31,7 +31,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
-import { cacheStyles, useTheme } from '../../services/ThemeContext'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
 import { EdgeText } from '../../themed/EdgeText'
@@ -214,33 +214,31 @@ export const LoanDetailsScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles(theme => {
-  return {
-    sceneHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginTop: theme.rem(1)
-    },
-    actionLabel: {
-      fontFamily: theme.fontFaceMedium,
-      alignSelf: 'center'
-    },
-    activityIndicator: {
-      alignSelf: 'flex-start',
-      marginRight: theme.rem(0.5)
-    },
-    breakdownText: {
-      fontFamily: theme.fontFaceBold
-    },
-    breakdownSubText: {
-      fontSize: theme.rem(0.75)
-    },
-    programStatusContainer: {
-      flexDirection: 'row'
-    }
+const getStyles = cacheStyles((theme: Theme) => ({
+  sceneHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: theme.rem(1)
+  },
+  actionLabel: {
+    fontFamily: theme.fontFaceMedium,
+    alignSelf: 'center'
+  },
+  activityIndicator: {
+    alignSelf: 'flex-start',
+    marginRight: theme.rem(0.5)
+  },
+  breakdownText: {
+    fontFamily: theme.fontFaceBold
+  },
+  breakdownSubText: {
+    fontSize: theme.rem(0.75)
+  },
+  programStatusContainer: {
+    flexDirection: 'row'
   }
-})
+}))
 
 export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string, nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
