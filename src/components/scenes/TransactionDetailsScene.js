@@ -134,7 +134,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  initializeFormattedCategories = (metadata: ?EdgeMetadata, direction: string) => {
+  initializeFormattedCategories = (metadata: EdgeMetadata | void, direction: string) => {
     const defaultCategory = direction === 'receive' ? categories.income.key : categories.expense.key
     if (metadata) {
       const fullCategory = metadata.category || ''

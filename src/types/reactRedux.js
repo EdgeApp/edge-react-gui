@@ -19,7 +19,7 @@ export function connect<StateProps, DispatchProps, OwnProps>(
 
 type UseDispatch = () => Dispatch
 
-type UseSelector = <T>((state: RootState) => T) => T
+type UseSelector = <T>(selector: (state: RootState) => T) => T
 
 // $FlowFixMe
 export const useDispatch: UseDispatch = ReactRedux.useDispatch

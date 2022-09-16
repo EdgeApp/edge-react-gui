@@ -36,7 +36,7 @@ type OwnProps = {
   onSuccess?: (attrs: ActionResult) => void,
   cancelOperation?: () => void,
   goTo?: (params: any) => void,
-  getOperationFee: EdgeCurrencyWallet => Promise<number>,
+  getOperationFee: (wallet: EdgeCurrencyWallet) => Promise<number>,
   fioWallet: EdgeCurrencyWallet,
   addressTitles?: boolean,
   showPaymentWalletPicker?: boolean

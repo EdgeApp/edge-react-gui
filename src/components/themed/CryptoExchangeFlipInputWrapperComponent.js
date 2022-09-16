@@ -33,7 +33,7 @@ type OwnProps = {
   isThinking?: boolean,
   focusMe: () => void,
   launchWalletSelector: () => void,
-  onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
+  onCryptoExchangeAmountChanged: (amounts: ExchangedFlipInputAmounts) => void,
   onNext: () => void,
   onFocus?: () => void,
   onBlur?: () => void,

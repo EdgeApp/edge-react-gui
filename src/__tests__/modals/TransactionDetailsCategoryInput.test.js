@@ -35,8 +35,7 @@ describe('TransactionDetailsCategoryInput', () => {
       subCategories: ['exchange', 'income', 'expense'],
       category: 'exchange',
       subCategory: '',
-      // eslint-disable-next-line no-empty-pattern
-      setNewSubcategory: (string, []) => undefined,
+      setNewSubcategory: (input: string, subCategories: string[]) => undefined,
       theme: getTheme()
     }
     const actual = renderer.render(<TransactionDetailsCategoryInput {...props} />)

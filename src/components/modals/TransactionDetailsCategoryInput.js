@@ -23,7 +23,7 @@ type Props = {
   subCategories: string[],
   category: string,
   subCategory: string,
-  setNewSubcategory: (string, string[]) => void
+  setNewSubcategory: (input: string, subCategories: string[]) => void
 }
 
 type State = {

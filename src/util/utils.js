@@ -46,7 +46,7 @@ export function capitalize(string: string): string {
 }
 
 // Replaces extra chars with '...' either in the middle or end of the input string
-export const truncateString = (input: string | number, maxLength: number, isMidTrunc?: boolean = false) => {
+export const truncateString = (input: string | number, maxLength: number, isMidTrunc: boolean = false) => {
   const inputStr = typeof input !== 'string' ? String(input) : input
   const strLen = inputStr.length
   if (strLen >= maxLength) {
@@ -318,7 +318,7 @@ export function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error 
 }
 
 export function snooze(ms: number): Promise<void> {
-  return new Promise((resolve: any) => setTimeout(resolve, ms))
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
@@ -387,7 +387,7 @@ export function splitTransactionCategory(fullCategory: string): {
   }
 }
 
-type AsyncFunction = void => Promise<any>
+type AsyncFunction = () => Promise<any>
 
 export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: number = 5000): Promise<any> {
   let pending = asyncFuncs.length
