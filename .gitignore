@@ -22,7 +22,6 @@ overrideTheme.json
 
 # Code Coverage
 coverage/
-flow_coverage/
 
 # Gui plugins
 /android/app/src/main/assets/plugins/

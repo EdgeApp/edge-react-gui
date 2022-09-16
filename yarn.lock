@@ -5965,10 +5965,10 @@ detect-browser@5.2.0:
   resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.2.0.tgz#c9cd5afa96a6a19fda0bbe9e9be48a6b6e1e9c97"
   integrity sha512-tr7XntDAu50BVENgQfajMLzacmSe34D+qZc4zjnniz0ZVuw/TZcLcyxHQjYpJTM36sGEkZZlYLnIM1hH7alTMA==
 
-detect-bundler@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/detect-bundler/-/detect-bundler-1.0.0.tgz#b1445d25baf2e71fa5cf9a61b293e0f49abd63c9"
-  integrity sha1-sURdJbry5x+lz5phspPg9Jq9Y8k=
+detect-bundler@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/detect-bundler/-/detect-bundler-1.1.0.tgz#20e827aebac0d88327e27aa0a2953b63b4a2ffe9"
+  integrity sha512-oXshN71kRb6G5qb63zO4D39+a3rIymiLqU+4wrQ4KTEPTm/LOXypMGLIsyxXOW2X4vy44rTF9RP1U4F6DWw91g==
 
 detect-file@^1.0.0:
   version "1.0.0"
@@ -6675,14 +6675,6 @@ eslint-plugin-es@^3.0.0:
   dependencies:
     eslint-utils "^2.0.0"
     regexpp "^3.0.0"
-
-eslint-plugin-flowtype@^5.2.0:
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-5.7.2.tgz#482a42fe5d15ee614652ed256d37543d584d7bc0"
-  integrity sha512-7Oq/N0+3nijBnYWQYzz/Mp/7ZCpwxYvClRyW/PLAmimY9uLCBvoXsNsERcJdkKceyOjgRbFhhxs058KTrne9Mg==
-  dependencies:
-    lodash "^4.17.15"
-    string-natural-compare "^3.0.1"
 
 eslint-plugin-import@^2.22.1:
   version "2.23.3"
@@ -7544,11 +7536,6 @@ flatted@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.1.tgz#c4b489e80096d9df1dfc97c79871aea7c617c469"
   integrity sha512-zAoAQiudy+r5SvnSw3KJy5os/oRJYHzrzja/tBDqrZtNhUw8bt6y8OBzMWcjWr+8liV8Eb6yOhw8WZ7VFZ5ZzA==
-
-flow-bin@^0.84.0:
-  version "0.84.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.84.0.tgz#4cb2364c750fb37a7840524fa62456b53f64cdcb"
-  integrity sha512-ocji8eEYp+YfICsm+F6cIHUcD7v5sb0/ADEXm6gyUKdjQzmSckMrPUdZtyfP973t3YGHKliUMxMvIBHyR5LbXQ==
 
 flow-parser@0.*:
   version "0.151.0"
@@ -11929,10 +11916,10 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.9:
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.9.tgz#6ccb1d430dca3a86c8cd32336c0ad5e0af00e0c8"
-  integrity sha512-WwiukjkQ/5LQ4OiV03XjT5Ic43AdPatZM6SARItRX2piXesGp7VuIWHludbOWCGCmlaqWkD+7cK2vafXsQCIgQ==
+react-native-airship@^0.2.10, react-native-airship@^0.2.9:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.10.tgz#5d93a5707435dab311ae1633a0f64f2ece8a2dbc"
+  integrity sha512-VX+2yC/ZsaV62Y/PdBqvguDUQggCzFwI8dmEBY0QT0jcrCLm4IdhT//KuvsHR7eYTD5zXB0+0fW5VMy95IEvTg==
   dependencies:
     yavent "^0.1.1"
 
@@ -13666,11 +13653,6 @@ string-length@^4.0.1:
   dependencies:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
-
-string-natural-compare@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/string-natural-compare/-/string-natural-compare-3.0.1.tgz#7a42d58474454963759e8e8b7ae63d71c1e7fdf4"
-  integrity sha512-n3sPwynL1nwKi3WJ6AIsClwBMa0zTi54fn2oLU6ndfTSIO05xaznjSf15PcBZU6FNWbmN5Q6cxT4V5hGvB4taw==
 
 string-width@^2.0.0:
   version "2.1.1"
