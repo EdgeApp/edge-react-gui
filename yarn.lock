@@ -5965,10 +5965,10 @@ detect-browser@5.2.0:
   resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.2.0.tgz#c9cd5afa96a6a19fda0bbe9e9be48a6b6e1e9c97"
   integrity sha512-tr7XntDAu50BVENgQfajMLzacmSe34D+qZc4zjnniz0ZVuw/TZcLcyxHQjYpJTM36sGEkZZlYLnIM1hH7alTMA==
 
-detect-bundler@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/detect-bundler/-/detect-bundler-1.0.0.tgz#b1445d25baf2e71fa5cf9a61b293e0f49abd63c9"
-  integrity sha1-sURdJbry5x+lz5phspPg9Jq9Y8k=
+detect-bundler@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/detect-bundler/-/detect-bundler-1.1.0.tgz#20e827aebac0d88327e27aa0a2953b63b4a2ffe9"
+  integrity sha512-oXshN71kRb6G5qb63zO4D39+a3rIymiLqU+4wrQ4KTEPTm/LOXypMGLIsyxXOW2X4vy44rTF9RP1U4F6DWw91g==
 
 detect-file@^1.0.0:
   version "1.0.0"
