@@ -30,13 +30,16 @@ describe('AccelerateTxModelComponent', () => {
         currencyInfo: {
           currencyCode: 'SHIB'
         },
+        // @ts-expect-error
         parseUri: (address, currencyCode) => {}
       },
       exchangeRates: [''],
+      // @ts-expect-error
       getDisplayDenomination: (pluginId, currencyCode) => ({
         multiplier: '1000000',
         name: 'BTC'
       }),
+      // @ts-expect-error
       getExchangeDenomination: (pluginIdg, currencyCode) => ({
         multiplier: '1000000',
         name: 'BTC'

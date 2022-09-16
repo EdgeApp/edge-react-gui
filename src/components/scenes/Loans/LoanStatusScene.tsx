@@ -40,7 +40,9 @@ export const LoanStatusScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  // @ts-expect-error
   const [steps, setSteps] = useState<ActionDisplayInfo[] | undefined>()
+  // @ts-expect-error
   useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]
 

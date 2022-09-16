@@ -20,6 +20,7 @@ describe('Tile', () => {
       maximumHeight: 'small',
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TileComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

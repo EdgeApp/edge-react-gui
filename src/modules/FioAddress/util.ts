@@ -51,6 +51,7 @@ export const FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM = 'Fee exceeds supplied maximum'
 export const FIO_DOMAIN_IS_NOT_PUBLIC = 'FIO_DOMAIN_IS_NOT_PUBLIC'
 export class FioError extends Error {
   code: string
+  // @ts-expect-error
   message: string
 
   constructor(message: string, code: string) {
@@ -188,8 +189,10 @@ export const refreshConnectedWalletsForFioAddress = async (
     }
     for (const enabledToken of enabledTokens) {
       const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${enabledToken}`
+      // @ts-expect-error
       if (connectedWallets[fullCurrencyCode]) continue
       if (await isWalletConnected(fioWallet, fioAddress, wallet, enabledToken, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
+        // @ts-expect-error
         connectedWallets[fullCurrencyCode] = wallet.id
       }
     }
@@ -213,6 +216,7 @@ export const updatePubAddressesForFioAddress = async (
 ): Promise<{ updatedCcWallets: Array<{ fullCurrencyCode: string; walletId: string }>; error?: Error | FioError | null }> => {
   if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
+  // @ts-expect-error
   let updatedCcWallets = []
   const iteration = {
     publicAddresses: [],
@@ -234,10 +238,12 @@ export const updatePubAddressesForFioAddress = async (
       }
       delete connectedWalletsFromDisklet[fullCurrencyCode]
     }
+    // @ts-expect-error
     iteration.ccWalletMap.push({
       fullCurrencyCode,
       walletId
     })
+    // @ts-expect-error
     iteration.publicAddresses.push({
       token_code: tokenCode,
       chain_code: chainCode,
@@ -249,10 +255,12 @@ export const updatePubAddressesForFioAddress = async (
           ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
           : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
         await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
+        // @ts-expect-error
         updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
         iteration.publicAddresses = []
         iteration.ccWalletMap = []
       } catch (e: any) {
+        // @ts-expect-error
         return { updatedCcWallets, error: e }
       }
     }
@@ -264,12 +272,15 @@ export const updatePubAddressesForFioAddress = async (
         ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
         : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
       await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
+      // @ts-expect-error
       updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
     } catch (e: any) {
+      // @ts-expect-error
       return { updatedCcWallets, error: e }
     }
   }
 
+  // @ts-expect-error
   return { updatedCcWallets }
 }
 
@@ -379,6 +390,7 @@ export const makeConnectWallets = (
     const currencyCode = info.fioChainCode ?? cCode
     const walletName = wallet.name ?? info.initWalletName
     const fullCurrencyCode = `${currencyCode}:${currencyCode}`
+    // @ts-expect-error
     walletItems[`${wallet.id}-${currencyCode}`] = {
       key: `${wallet.id}-${currencyCode}`,
       id: wallet.id,
@@ -395,6 +407,7 @@ export const makeConnectWallets = (
       if (token == null) continue
 
       const fullCurrencyCode = `${currencyCode}:${token.currencyCode}`
+      // @ts-expect-error
       walletItems[`${wallet.id}-${token.currencyCode}`] = {
         key: `${wallet.id}-${token.currencyCode}`,
         id: wallet.id,
@@ -507,6 +520,7 @@ export const recordSend = async (
       status: 'sent_to_blockchain'
     }
     if (fioRequestId) {
+      // @ts-expect-error
       actionParams = { ...actionParams, fioRequestId }
     }
     try {
@@ -519,16 +533,19 @@ export const recordSend = async (
 }
 
 export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
+  // @ts-expect-error
   let obtDataRecords = []
   for (const fioWallet of fioWallets) {
     try {
       const { obt_data_records: lastRecords } = await fioWallet.otherMethods.fioAction('getObtData', {})
+      // @ts-expect-error
       obtDataRecords = [...obtDataRecords, ...lastRecords]
     } catch (e: any) {
       //
     }
   }
 
+  // @ts-expect-error
   return obtDataRecords
 }
 
@@ -606,6 +623,7 @@ export const getRegInfo = async (
       paymentInfo: {
         [FIO_STR]: {
           amount: `${activationCost}`,
+          // @ts-expect-error
           nativeAmount: '',
           address: ''
         }
@@ -687,8 +705,10 @@ const buyAddressRequest = async (
 
       for (const currencyKey of Object.keys(buyAddressResponse.success.charge.pricing)) {
         const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
+        // @ts-expect-error
         supportedCurrencies[currencyCode] = true
 
+        // @ts-expect-error
         paymentInfo[currencyCode] = {
           amount: buyAddressResponse.success.charge.pricing[currencyKey].amount,
           address: buyAddressResponse.success.charge.addresses[currencyKey]
@@ -891,6 +911,7 @@ export const getExpiredSoonFioDomains = (fioDomains: FioDomain[]): FioDomain[] =
 export const refreshFioNames = async (
   fioWallets: EdgeCurrencyWallet[]
 ): Promise<{ fioAddresses: FioAddress[]; fioDomains: FioDomain[]; fioWalletsById: { string: EdgeCurrencyWallet } }> => {
+  // @ts-expect-error
   const fioWalletsById: { [string]: EdgeCurrencyWallet } = {}
   let fioAddresses: FioAddress[] = []
   let fioDomains: FioDomain[] = []
@@ -899,12 +920,16 @@ export const refreshFioNames = async (
     for (const wallet of fioWallets) {
       const walletId = wallet.id
       const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
+      // @ts-expect-error
       fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, bundledTxs }) => ({ name, bundledTxs, walletId }))]
       const walletFioDomains = await wallet.otherMethods.getFioDomains()
+      // @ts-expect-error
       fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
+      // @ts-expect-error
       fioWalletsById[walletId] = wallet
     }
   }
 
+  // @ts-expect-error
   return { fioAddresses, fioDomains, fioWalletsById }
 }

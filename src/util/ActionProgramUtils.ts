@@ -58,6 +58,7 @@ export const makeAaveBorrowAction = async ({
     })
   }
 
+  // @ts-expect-error
   return out
 }
 
@@ -109,6 +110,7 @@ export const makeAaveDepositAction = async ({
     walletId: borrowEngineWallet.id
   })
 
+  // @ts-expect-error
   return out
 }
 

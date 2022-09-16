@@ -18,5 +18,6 @@ export const postponePasswordReminder = () => ({
 export const setPasswordReminder = (passwordReminder: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
+  // @ts-expect-error
   setPasswordReminderRequest(account, passwordReminder).catch(showError)
 }

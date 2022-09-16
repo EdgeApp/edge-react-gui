@@ -78,6 +78,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
+        // @ts-expect-error
         minerFee: '0',
         genericShapeShiftError: null,
         insufficientError: false
@@ -95,6 +96,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
+        // @ts-expect-error
         minerFee: '0',
         genericShapeShiftError: null
       }

@@ -172,6 +172,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
       this.setCryptoAddress(addr)
     } catch (err: any) {
       if (err instanceof ResolutionError) {
+        // @ts-expect-error
         const message = sprintf(s.strings[err.code], domain, currencyTicker)
         if (domain === '') this.setStatusLabel(s.strings.fragment_send_address)
         else {

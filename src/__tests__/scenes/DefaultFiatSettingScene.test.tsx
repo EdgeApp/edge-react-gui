@@ -17,9 +17,11 @@ describe('DefaultFiatSettingComponent', () => {
           value: 'USD'
         }
       ],
+      // @ts-expect-error
       onSelectFiat: selectedDefaultFiat => undefined,
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<DefaultFiatSettingComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

@@ -17,7 +17,6 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
   const { borrowEngine } = loanAccount
 
   return ManageCollateralScene({
-    // @ts-expect-error - Get rid of this hasty abstraction
     action: async req => await borrowEngine.repay(req),
     actionOperand: 'debts',
     actionOpType: 'loan-repay',

@@ -26,6 +26,7 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
     const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
     const containerStyles = [styles.rowContainer, margin, padding, underline ? styles.underline : null, autoHeight ? styles.autoHeight : null]
     if (gradient) {
+      // @ts-expect-error
       return <Gradient style={containerStyles}>{children}</Gradient>
     }
 

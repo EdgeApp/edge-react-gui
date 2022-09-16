@@ -42,7 +42,9 @@ const getPassFuncs = (countryCode: string, wyreHasLinked: boolean, buildNumber: 
 
 describe('validatePromoCardsInner', () => {
   test('No cards', async () => {
+    // @ts-expect-error
     const cards = []
+    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', ''))
     expect(result.length).toBe(0)
   })
@@ -59,6 +61,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, osTypes: ['web'], message: 'Web Message' },
       { ...dummyCard, osTypes: ['ios'], message: 'Another iOS Message' }
     ]
+    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', 'ios'))
     expect(result.length).toBe(2)
     expect(result[0].message).toBe('iOS Message')
@@ -71,6 +74,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, exactBuildNum: '432', osTypes: ['web'], message: 'Web Message' },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['android'], message: 'Another Android Message' }
     ]
+    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '432', '', 'android'))
     expect(result.length).toBe(1)
     expect(result[0].message).toBe('Another Android Message')
@@ -117,6 +121,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, message: '2: plain english', localeMessages: { it_IT: 'Italy Italian' } },
       { ...dummyCard, message: '3: plain english', localeMessages: { es_SP: 'Spain Spanish' } }
     ]
+    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'ru', ''))
     expect(result.length).toBe(4)
     expect(result[0].message).toBe('0: plain english')
@@ -129,6 +134,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, message: '2: plain english', localeMessages: { it_IT: 'Italy Italian' } },
       { ...dummyCard, message: '3: plain english', localeMessages: { es_SP: 'Spain Spanish' } }
     ]
+    // @ts-expect-error
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'es', ''))
     expect(result.length).toBe(4)
     expect(result[0].message).toBe('Mex Spanish')

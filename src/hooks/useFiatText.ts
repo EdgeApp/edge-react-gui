@@ -60,6 +60,7 @@ export const formatFiatString = (props: { autoPrecision?: boolean; fiatAmount: s
 
   // Use US locale delimeters for determining precision
   const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
+  // @ts-expect-error
   let precision: number = parseInt(minPrecision)
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
@@ -80,6 +81,7 @@ export const formatFiatString = (props: { autoPrecision?: boolean; fiatAmount: s
 /**
  * Returns a localized fiat amount string
  * */
+// @ts-expect-error
 export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
   if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
   const initialAmount = fiatAmount.toFixed(precision)

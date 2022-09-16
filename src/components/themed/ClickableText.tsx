@@ -77,6 +77,7 @@ export function ClickableText(props: Props) {
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
   return {
     buttonContainer: {

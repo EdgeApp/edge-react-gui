@@ -40,6 +40,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     currencyWallet,
     debts.map(debt => ({ tokenId: debt.tokenId, nativeAmount: debt.nativeAmount }))
   )
+  // @ts-expect-error
   const displayBorrowTotal = formatFiatString({ autoPrecision: true, fiatAmount: borrowTotal, hideFiatSymbol: true })
 
   try {

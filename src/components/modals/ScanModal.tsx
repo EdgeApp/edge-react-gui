@@ -37,6 +37,7 @@ export const ScanModal = (props: Props) => {
   const { width: windowWidth, height: windowHeight } = useWindowSize()
   const isLandscape = windowWidth > windowHeight
 
+  // @ts-expect-error
   const cameraPermission = useSelector(state => state.permissions.camera)
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [scanEnabled, setScanEnabled] = useState(false)
@@ -74,6 +75,7 @@ export const ScanModal = (props: Props) => {
       {
         mediaType: 'photo'
       },
+      // @ts-expect-error
       async result => {
         if (result.didCancel) return
 
@@ -113,6 +115,7 @@ export const ScanModal = (props: Props) => {
   // }
 
   const handleClose = () => {
+    // @ts-expect-error
     bridge.resolve()
   }
 

@@ -134,6 +134,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
           params: { fioDomain: fioDomainName, maxFee: transferFee }
         }
       },
+      // @ts-expect-error
       onDone: (err, edgeTransaction) => {
         if (!err) {
           this.afterTransferSuccess()

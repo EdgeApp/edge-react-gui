@@ -93,8 +93,10 @@ export function WalletListModal(props: Props) {
   // #region State
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
+  // @ts-expect-error
   const [bankAccountsMap, setBankAccountsMap] = useState()
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     const wyreClient = await makeWyreClient({ account })
     if (wyreClient.isAccountSetup) {
@@ -139,6 +141,7 @@ export function WalletListModal(props: Props) {
   const handleShowBankPlugin = useHandler(async () => {
     const result = await Airship.show(bridge => (
       <ButtonsModal
+        // @ts-expect-error
         bridge={bridge}
         title={s.strings.deposit_to_bank}
         message={sprintf(s.strings.wallet_list_modal_confirm_s_bank_withdrawal, config.appName)}
@@ -147,6 +150,7 @@ export function WalletListModal(props: Props) {
         }}
       />
     ))
+    // @ts-expect-error
     if (result === 'continue') await bridge.resolve({ isBankSignupRequest: true })
   })
 

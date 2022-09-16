@@ -15,6 +15,7 @@ describe('WalletListHeader', () => {
       searchText: 'string',
       openSortModal: () => undefined,
       onChangeSearchText: () => undefined,
+      // @ts-expect-error
       onChangeSearchingState: searching => undefined,
       theme: getTheme()
     }

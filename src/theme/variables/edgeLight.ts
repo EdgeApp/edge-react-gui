@@ -99,6 +99,7 @@ export const edgeLight: Theme = {
 
   // Modal
   modal: palette.lightestGray,
+  // @ts-expect-error
   modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,

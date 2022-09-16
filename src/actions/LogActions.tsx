@@ -56,6 +56,7 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
   if (context) {
     // Get local accounts
     for (const user of context.localUsers) {
+      // @ts-expect-error
       logOutput.accounts.push({ username: user.username, userId: '' })
     }
   }
@@ -87,6 +88,7 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
         logOutput.loggedInUser.wallets.push({
           currencyCode,
           repoId: getRepoId(wallet.keys.syncKey),
+          // @ts-expect-error
           imported: wallet.keys.imported,
           pluginDump: await wallet.dumpData()
         })

@@ -40,6 +40,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     prevItemsConnected: {}
   }
 
+  // @ts-expect-error
   static getDerivedStateFromProps(props, state) {
     const { walletItems } = props
     const { prevItemsConnected } = state
@@ -69,9 +70,11 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (
         !Object.keys(connectWalletsMap).find(
+          // @ts-expect-error
           (cWalletKey: string) => connectWalletsMap[cWalletKey].fullCurrencyCode === disconnectWalletsMap[walletKey].fullCurrencyCode
         )
       ) {
+        // @ts-expect-error
         walletsToDisconnect.push(disconnectWalletsMap[walletKey])
       }
     }
@@ -79,10 +82,12 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     if (fioWallet) {
       this.setState({
         prevItemsConnected: Object.keys(walletItems).reduce((acc, walletKey: string) => {
+          // @ts-expect-error
           acc[walletKey] = walletItems[walletKey].isConnected
           return acc
         }, {})
       })
+      // @ts-expect-error
       const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
       Actions.push('fioConnectToWalletsConfirm', {
         fioAddressName,
@@ -98,15 +103,21 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   selectWallet(value: boolean, wallet: FioConnectionWalletItem): void {
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     if (value) {
+      // @ts-expect-error
       if (disconnectWalletsMap[wallet.key]) {
+        // @ts-expect-error
         delete disconnectWalletsMap[wallet.key]
       } else {
+        // @ts-expect-error
         connectWalletsMap[wallet.key] = wallet
       }
     } else {
+      // @ts-expect-error
       if (connectWalletsMap[wallet.key]) {
+        // @ts-expect-error
         delete connectWalletsMap[wallet.key]
       } else {
+        // @ts-expect-error
         disconnectWalletsMap[wallet.key] = wallet
       }
     }
@@ -122,15 +133,18 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     const styles = getStyles(theme)
 
     if (wallet) {
+      // @ts-expect-error
       const value = wallet.isConnected ? !disconnectWalletsMap[wallet.key] : !!connectWalletsMap[wallet.key]
       const disabled =
         !value &&
+        // @ts-expect-error
         (!!Object.keys(connectWalletsMap).find((walletItemKey: string) => connectWalletsMap[walletItemKey].fullCurrencyCode === wallet.fullCurrencyCode) ||
           !!Object.keys(walletItems).find(
             (walletKey: string) =>
               walletItems[walletKey].fullCurrencyCode === wallet.fullCurrencyCode &&
               walletItems[walletKey].isConnected &&
               walletItems[walletKey].id !== wallet.id &&
+              // @ts-expect-error
               !disconnectWalletsMap[walletKey]
           ))
       const noWalletSymbol = '-'

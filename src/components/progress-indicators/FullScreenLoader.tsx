@@ -5,6 +5,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 
 type Props = {
+  // @ts-expect-error
   indicatorStyles?: ViewPropTypes.style
   size?: 'large' | 'small'
 }

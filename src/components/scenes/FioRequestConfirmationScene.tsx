@@ -1,4 +1,5 @@
 import { div, mul } from 'biggystring'
+// @ts-expect-error
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import * as React from 'react'
 import { View } from 'react-native'

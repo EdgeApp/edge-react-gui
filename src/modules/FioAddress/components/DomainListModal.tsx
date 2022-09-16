@@ -58,6 +58,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }
   }
 
+  // @ts-expect-error
   static getDerivedStateFromProps(props, state) {
     const { publicDomains, userDomains } = props
 

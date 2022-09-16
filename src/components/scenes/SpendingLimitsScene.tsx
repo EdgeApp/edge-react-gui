@@ -107,6 +107,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
       {
         transaction: {
           isEnabled: transactionIsEnabled,
+          // @ts-expect-error
           amount: parseFloat(transactionAmount)
         }
       },

@@ -117,12 +117,15 @@ export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps
   }),
   dispatch => ({
     onSuccess() {
+      // @ts-expect-error
       dispatch(passwordReminderSuccess())
     },
     onRequestChangePassword() {
+      // @ts-expect-error
       dispatch(requestChangePassword())
     },
     onPostpone() {
+      // @ts-expect-error
       dispatch(postponePasswordReminder())
     }
   })

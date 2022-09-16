@@ -328,6 +328,7 @@ const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dis
 
   await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
+      // @ts-expect-error
       bridge={bridge}
       title={s.strings.private_key_modal_sweep_from_private_address}
       message={message}
@@ -383,6 +384,7 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
   `)
 }
 
+// @ts-expect-error
 const shownWalletGetCryptoModals = []
 
 export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -393,6 +395,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
     const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
     // check if balance is zero
     const balance = wallet.balances[currencyCode]
+    // @ts-expect-error
     if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal

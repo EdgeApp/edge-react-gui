@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native
 import { THEME } from '../../theme/variables/airbitz'
 
 type Props = {
+  // @ts-expect-error
   indicatorStyles?: ViewPropTypes.style
   size?: 'large' | 'small'
 }

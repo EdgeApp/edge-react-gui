@@ -48,6 +48,7 @@ class HelpWebViewModal extends React.Component<Props & { uri: string; title: str
         <ModalTitle center paddingRem={[0, 1, 1]}>
           {title}
         </ModalTitle>
+        {/* @ts-expect-error */}
         <WebView ref={element => (this.webview = element)} source={{ uri }} />
 
         <ModalCloseArrow onPress={this.handleClose} />

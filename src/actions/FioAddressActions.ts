@@ -24,6 +24,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
 
   const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(fioWallets)
 
+  // @ts-expect-error
   window.requestAnimationFrame(() => {
     dispatch({
       type: 'FIO/SET_FIO_ADDRESSES',
@@ -39,6 +40,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
   const wallets = Object.keys(currencyWallets).map(walletKey => currencyWallets[walletKey])
   for (const { name, walletId } of fioAddresses) {
     if (!connectedWalletsByFioAddress[name]) {
+      // @ts-expect-error
       const fioWallet = fioWalletsById[walletId]
       if (!fioWallet) continue
       const ccWalletMap = await refreshConnectedWalletsForFioAddress(name, fioWallet, wallets)

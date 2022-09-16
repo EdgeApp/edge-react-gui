@@ -40,14 +40,18 @@ export function selectLocale(locale: string = 'en'): boolean {
   if (locale === 'en') return true
 
   // Find pure language match first (ie. find 'es' when 'esMX' is chosen)
+  // @ts-expect-error
   if (allLocales[lang] !== undefined) {
     found = true
+    // @ts-expect-error
     mergeStrings(out.strings, allLocales[lang])
   }
 
   // Find an exact match
+  // @ts-expect-error
   if (allLocales[normalizedLocale] !== undefined) {
     found = true
+    // @ts-expect-error
     mergeStrings(out.strings, allLocales[normalizedLocale])
   }
 

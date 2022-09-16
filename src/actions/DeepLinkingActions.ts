@@ -132,6 +132,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'other': {
       if (!hasCurrentWallet) return false
       const currencyName = link.protocol
+      // @ts-expect-error
       const currencyCode = CURRENCY_NAMES[currencyName]
 
       // If we don't know what this is, fake a barcode scan:
@@ -161,8 +162,9 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     }
 
     case 'dev': {
-      if (!global.__DEV__) return false
       // @ts-expect-error
+      if (!global.__DEV__) return false
+
       Actions.push(link.sceneName, {})
       return true
     }

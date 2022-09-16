@@ -20,6 +20,7 @@ describe('AddressModalComponent', () => {
       checkAddressConnected: true,
       account: {
         disklet: {
+          // @ts-expect-error
           getText: async path => {}
         }
       },

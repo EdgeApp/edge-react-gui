@@ -54,6 +54,7 @@ export const WcConnectScene = (props: Props) => {
     }
   })
 
+  // @ts-expect-error
   useEffect(() => {
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
   }, [wallet])
@@ -71,6 +72,7 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
+  // @ts-expect-error
   const handleRequestDapp = async walletId => {
     try {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri })
@@ -78,6 +80,7 @@ export const WcConnectScene = (props: Props) => {
       setDappDetails({
         subTitleText: sprintf(s.strings.wc_confirm_subtitle, dAppName),
         bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dAppName),
+        // @ts-expect-error
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e: any) {
@@ -103,6 +106,7 @@ export const WcConnectScene = (props: Props) => {
     )
   }
 
+  // @ts-expect-error
   useEffect(() => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
       showWalletListModal()

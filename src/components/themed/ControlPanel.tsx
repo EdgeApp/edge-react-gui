@@ -9,6 +9,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
+// @ts-expect-error
 import ENV from '../../../env'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { logoutRequest } from '../../actions/LoginActions'
@@ -74,6 +75,7 @@ export function ControlPanel(props: Props) {
   const handleToggleDropdown = () => {
     if (isMultiUsers) setIsDropped(!isDropped)
   }
+  // @ts-expect-error
   useEffect(() => {
     if (!isDrawerOpen || !isMultiUsers) setIsDropped(false)
   }, [isDrawerOpen, isMultiUsers])
@@ -85,6 +87,7 @@ export function ControlPanel(props: Props) {
   const handleDeleteAccount = (username: string) => () => {
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
+        // @ts-expect-error
         bridge={bridge}
         title={s.strings.forget_account_title}
         message={sprintf(s.strings.forget_account_message_common, username)}
@@ -145,6 +148,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
+    // @ts-expect-error
     handleGoToScene('loanDashboard')
   }
 
@@ -194,6 +198,7 @@ export function ControlPanel(props: Props) {
 
   // Height value above can change if users are added/removed
   const sMaxHeight = useSharedValue(userListHeight)
+  // @ts-expect-error
   useEffect(() => {
     sMaxHeight.value = withTiming(userListHeight)
   }, [sMaxHeight, userListHeight])
@@ -201,6 +206,7 @@ export function ControlPanel(props: Props) {
   // Animation completion ratio/multiplier
   // Shared to sync fade & drop animations
   const sAnimationMult = useSharedValue(0)
+  // @ts-expect-error
   useEffect(() => {
     sAnimationMult.value = withTiming(isDropped ? 1 : 0, {
       duration: 500,
@@ -229,16 +235,19 @@ export function ControlPanel(props: Props) {
 
   const rowDatas: any[] = [
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('fioAddressList'),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('fioRequestList'),
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('wcConnections'),
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
@@ -251,12 +260,14 @@ export function ControlPanel(props: Props) {
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('termsOfService'),
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
+      // @ts-expect-error
       pressHandler: () => handleGoToScene('settingsOverviewTab'),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title

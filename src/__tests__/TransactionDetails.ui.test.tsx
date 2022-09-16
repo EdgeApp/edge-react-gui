@@ -71,6 +71,7 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
@@ -109,6 +110,7 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
@@ -148,6 +150,7 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
@@ -189,6 +192,7 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @ts-expect-error
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

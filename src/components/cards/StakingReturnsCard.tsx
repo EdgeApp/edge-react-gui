@@ -40,6 +40,7 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text }:
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
   const commonCap = {
     borderColor: theme.lineDivider,

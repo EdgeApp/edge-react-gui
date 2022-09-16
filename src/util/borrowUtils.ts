@@ -6,7 +6,6 @@ import { useMemo } from '../types/reactHooks'
 import { useSelector } from '../types/reactRedux'
 import { mulToPrecision } from './utils'
 
-// @ts-expect-error - Flow doesn't like that BorrowCollateral doesn't have an apr key despite that value not being relevant anywhere in this function. It doesn't even appear in this file.
 export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowDebt[] | BorrowCollateral[]): string => {
   const {
     currencyConfig: { allTokens },
@@ -18,6 +17,7 @@ export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: Borr
 
   return useMemo(() => {
     const getExchangeRate = (pair: string) => exchangeRates[pair] ?? '0'
+    // @ts-expect-error
     return borrowArray.reduce((total, obj) => {
       const { currencyCode, denominations } = obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
       const denom = denominations.find(denom => denom.name === currencyCode)

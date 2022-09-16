@@ -58,6 +58,7 @@ declare class OutlinedTextInputRef extends React.Component<Props> {
   clear: () => void
 }
 
+// @ts-expect-error
 export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
   const {
     // Contents:
@@ -117,14 +118,17 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
 
   // Captures the width of the placeholder label:
   const [labelWidth, setLabelWidth] = useState(0)
+  // @ts-expect-error
   const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
 
   // Captures the width of the counter label:
   const [counterWidth, setCounterWidth] = useState(0)
+  // @ts-expect-error
   const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
 
   // Animates between 0 and 1 based our error state:
   const errorAnimation = useSharedValue(0)
+  // @ts-expect-error
   useEffect(() => {
     errorAnimation.value = withTiming(hasError ? 1 : 0)
   }, [errorAnimation, hasError])
@@ -256,6 +260,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
+  // @ts-expect-error
   const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
   const textStyle = numpad ? styles.numberInput : styles.textInput
 
@@ -474,6 +479,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
+// @ts-expect-error
 const getIterpolatedColor = (fromColor, toColor, errorColor) => (errorValue, focusValue) => {
   'worklet'
   const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])

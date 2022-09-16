@@ -29,6 +29,7 @@ type Props = OwnProps & ThemeProps
 class TransactionRowComponent extends React.PureComponent<Props> {
   render() {
     // What is this for?
+    // @ts-expect-error
     global.pcount && global.pcount('TransactionRow:render')
 
     const {

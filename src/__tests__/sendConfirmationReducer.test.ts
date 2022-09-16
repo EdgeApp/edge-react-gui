@@ -44,6 +44,7 @@ describe('sendConfirmation reducer', () => {
         }
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -79,6 +80,7 @@ describe('sendConfirmation reducer', () => {
         }
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -97,6 +99,7 @@ describe('sendConfirmation reducer', () => {
         const error = new Error()
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -126,6 +129,7 @@ describe('sendConfirmation reducer', () => {
         const error = new Error(s.strings.incorrect_pin)
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -149,6 +153,7 @@ describe('sendConfirmation reducer', () => {
           metadata: { name: 'airbitz' }
         }
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
@@ -165,6 +170,7 @@ describe('sendConfirmation reducer', () => {
           metadata: {}
         }
         const initialStateClone = cloneDeep(initialState)
+        // @ts-expect-error
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
@@ -183,6 +189,7 @@ describe('sendConfirmation reducer', () => {
       }
       const initialStateClone = cloneDeep(initialState)
 
+      // @ts-expect-error
       const actual = sendConfirmation(initialStateClone, {
         type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
         data: { spendInfo, authRequired: 'none' }
@@ -194,6 +201,7 @@ describe('sendConfirmation reducer', () => {
 
   test('pin', () => {
     const initialStateClone = cloneDeep(initialState)
+    // @ts-expect-error
     const actual = sendConfirmation(initialStateClone, {
       type: 'UI/SEND_CONFIRMATION/NEW_PIN',
       data: { pin: '1234' }

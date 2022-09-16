@@ -44,14 +44,17 @@ const InterestRateChangeTileComponent = (props: Props) => {
   const necessaryExchangeRates = [...debts, newDebt].reduce((pairs, obj) => {
     const { tokenId } = obj
     const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
+    // @ts-expect-error
     pairs.push(`${currencyCode}_${fiatCurrencyCode}`)
     return pairs
   }, [])
 
   const exchangeRateMap = useRef({ current: {} })
+  // @ts-expect-error
   const exchangeRates = useHandler((pair: string) => exchangeRateMap.current[pair] ?? '0')
   useSelector(state => {
     necessaryExchangeRates.forEach(pair => {
+      // @ts-expect-error
       exchangeRateMap.current[pair] = state.exchangeRates[pair]
     })
   })

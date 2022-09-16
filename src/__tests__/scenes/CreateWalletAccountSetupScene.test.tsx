@@ -34,6 +34,7 @@ describe('CreateWalletAccountSelect', () => {
       handleAvailableStatus: 'AVAILABLE',
       isCheckingHandleAvailability: true,
       currencyConfigs: { bitcoin: { currencyInfo: { pluginId: 'bitcoin', currencyCode: 'BTC' } } },
+      // @ts-expect-error
       checkHandleAvailability: handle => undefined,
       theme: getTheme()
     }

@@ -95,7 +95,9 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       toDenomination: 'ETH',
       toWalletCurrencyName: { fromDenomination: '' },
 
+      // @ts-expect-error
       shift: (swapInfo, onApprove) => undefined,
+      // @ts-expect-error
       timeExpired: (swapInfo, onApprove) => undefined,
       theme: getTheme()
     }

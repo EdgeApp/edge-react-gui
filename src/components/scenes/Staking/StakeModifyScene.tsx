@@ -1,3 +1,4 @@
+// @ts-expect-error
 import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -55,6 +56,7 @@ export const StakeModifyScene = (props: Props) => {
   })
 
   // Current Allocation Info
+  // @ts-expect-error
   const [existingAllocations, setExistingAllocations] = useState<{ staked: PositionAllocation[]; earned: PositionAllocation[] } | undefined>()
 
   // ChangeQuote that gets rendered in the rows
@@ -77,6 +79,7 @@ export const StakeModifyScene = (props: Props) => {
   const [errorMessage, setErrorMessage] = useState('')
 
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
+  // @ts-expect-error
   useEffect(() => {
     const existingAllocations = getPositionAllocations(stakePosition)
     setExistingAllocations(existingAllocations)
@@ -132,6 +135,7 @@ export const StakeModifyScene = (props: Props) => {
       if (modification === 'unstake') {
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.currencyCode === modCurrencyCode)
         const modChangeQuoteRequest = { ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
+        // @ts-expect-error
         setChangeQuoteRequest(modChangeQuoteRequest)
       } else if (modification === 'stake' && existingStaked.length === 1) {
         setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balances[modCurrencyCode] })
@@ -139,6 +143,7 @@ export const StakeModifyScene = (props: Props) => {
     }
   }
 
+  // @ts-expect-error
   const handleSlideComplete = reset => {
     if (changeQuote != null) {
       setSliderLocked(true)
@@ -244,6 +249,7 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  // @ts-expect-error
   const renderChangeQuoteAmountTiles = modification => {
     const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
     return (
@@ -267,6 +273,7 @@ export const StakeModifyScene = (props: Props) => {
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={walletId}
+            // @ts-expect-error
             currencyCode={networkFeeQuote?.currencyCode}
             denomination={nativeAssetDenomination}
           />

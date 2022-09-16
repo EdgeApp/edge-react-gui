@@ -15,11 +15,13 @@ describe('AddressTileComponent', () => {
         currencyInfo: {
           currencyCode: 'SHIB'
         },
+        // @ts-expect-error
         parseUri: (address, currencyCode) => 'wallet'
       },
       currencyCode: 'BTC',
       title: 'Title',
       recipientAddress: 'bc1',
+      // @ts-expect-error
       onChangeAddress: async (guiMakeSpendInfo, parsedUri) => undefined,
       resetSendTransaction: () => undefined,
       lockInputs: true,

@@ -50,6 +50,7 @@ export class CreateWalletReviewComponent extends React.Component<Props, State> {
   async createWallet() {
     const { createCurrencyWallet, navigation, route } = this.props
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey } = route.params
+    // @ts-expect-error
     const createdWallet: EdgeCurrencyWallet | undefined = await createCurrencyWallet(
       walletName,
       selectedWalletType.walletType,

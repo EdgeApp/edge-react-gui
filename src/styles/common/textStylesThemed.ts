@@ -32,6 +32,7 @@ export function textStyle(theme: Theme, ...rules: string[]): any {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1)
   }
+  // @ts-expect-error
   return Object.assign(base, ...rules.map(rule => defaultRules[rule]))
 }
 

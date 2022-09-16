@@ -10,11 +10,13 @@ export const AutoLogout = () => {
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
   const isAppForeground = useIsAppForeground()
 
+  // @ts-expect-error
   useEffect(() => {
     // Check if app came back from background
     const appForegrounded = !stateRef.current.isAppForeground && isAppForeground
     // Check if time for logout has expired
     const timestamp = new Date()
+    // @ts-expect-error
     const differenceInSeconds = (timestamp - stateRef.current.timestamp) / 1000
     const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
     // Logout If all the conditions for autoLogout are met

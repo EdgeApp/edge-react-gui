@@ -29,6 +29,7 @@ import { FormScene } from '../FormScene'
 
 type ManageCollateralRequest = {
   tokenId?: string
+  // @ts-expect-error
   ['fromWallet' | 'toWallet']: EdgeCurrencyWallet
   nativeAmount: string
 }
@@ -79,18 +80,20 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
   const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = useState('0')
   const [newDebtApr, setNewDebtApr] = useState(0)
+  // @ts-expect-error
   const [actionOp, setActionOp] = useState<ActionOp | undefined>()
 
   // #endregion
 
   // #region Hooks
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     const actionOp = {
       type: 'seq',
       actions: [
         // TODO: Update typing so Flow doesn't complain
-        // @ts-expect-error
+
         {
           type: actionOpType,
           borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
@@ -100,9 +103,11 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         }
       ]
     }
+    // @ts-expect-error
     setActionOp(actionOp)
   }, [actionNativeCryptoAmount, borrowEngineWallet, selectedTokenId])
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (zeroString(actionNativeCryptoAmount)) {
       setApprovalAction(null)

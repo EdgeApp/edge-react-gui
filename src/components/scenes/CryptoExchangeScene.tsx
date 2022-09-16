@@ -144,10 +144,12 @@ const EXCHANGE_INFO_REFRESH_INTERVAL = 60000
 
 export class CryptoExchangeComponent extends React.Component<Props, State> {
   componentMounted: boolean
+  // @ts-expect-error
   timeoutId: ReturnType<typeof setTimeout>
 
   constructor(props: Props) {
     super(props)
+    // @ts-expect-error
     const newState: State = defaultState
     this.state = newState
     this.componentMounted = true
@@ -244,6 +246,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   resetState = () => {
+    // @ts-expect-error
     this.setState(defaultState)
   }
 

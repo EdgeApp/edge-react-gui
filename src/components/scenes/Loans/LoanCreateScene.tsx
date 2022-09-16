@@ -76,7 +76,9 @@ export const LoanCreateScene = (props: Props) => {
   const srcAssetName = srcToken != null ? srcToken.displayName : srcWallet != null ? srcWallet.currencyInfo.displayName : ''
 
   // Destination Wallet Data
+  // @ts-expect-error
   const [destWallet, setDestWallet] = useState<EdgeCurrencyWallet | undefined>()
+  // @ts-expect-error
   const [destTokenId, setDestTokenId] = useState<string | undefined>()
   const [isDestBank, setIsDestBank] = useState<boolean>(false)
 
@@ -90,6 +92,7 @@ export const LoanCreateScene = (props: Props) => {
   const [apr, setApr] = useState<number | undefined>(undefined)
 
   const debts = useWatch(borrowEngine, 'debts')
+  // @ts-expect-error
   useEffect(() => {
     if (destTokenId != null) {
       const destDebt = debts.find(debt => debt.tokenId === destTokenId)
@@ -284,6 +287,7 @@ export const LoanCreateScene = (props: Props) => {
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
             <View style={styles.cardContainer}>
+              {/* @ts-expect-error */}
               <AprCard paddingRem={[0.5, 1]} apr={apr} />
             </View>
           )}
@@ -348,6 +352,7 @@ export const LoanCreateScene = (props: Props) => {
   )
 }
 
+// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     alignItems: 'center',

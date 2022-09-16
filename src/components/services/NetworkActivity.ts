@@ -15,6 +15,7 @@ class NetworkActivityComponent extends React.Component<Props> {
 
   handleNetworkState = (info: NetInfoState) => {
     console.log('NetworkActivity - isConnected changed: ', info.isConnected)
+    // @ts-expect-error
     this.props.changeConnectivity(info.isConnected)
     if (!info.isConnected) {
       showError(`${s.strings.network_alert_title}`)

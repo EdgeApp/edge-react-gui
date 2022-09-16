@@ -12,8 +12,10 @@ describe('DateModalIos', () => {
 
     const props: any = {
       bridge: fakeAirshipBridge,
+      // @ts-expect-error
       initialValue: () => (number, format) => require('dateformat')(number, format, true),
       darkMode: true,
+      // @ts-expect-error
       date: (number, format) => require('dateformat')(number, format, true),
       theme: getTheme()
     }

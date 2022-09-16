@@ -63,10 +63,12 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const [locks, setLocks] = useState<Lock[]>([])
   const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
 
+  // @ts-expect-error
   useEffect(() => {
     refreshAllFioAddresses()
   }, [refreshAllFioAddresses])
 
+  // @ts-expect-error
   useEffect(() => {
     setLocks(
       stakingStatus.stakedAmounts

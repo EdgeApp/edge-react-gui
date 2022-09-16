@@ -29,7 +29,9 @@ type Props = {
 export class AirshipDropdown extends React.Component<Props> {
   offset: Animated.Value
   timeout: ReturnType<typeof setTimeout> | undefined
+  // @ts-expect-error
   unclear: Unsubscribe
+  // @ts-expect-error
   unresult: Unsubscribe
 
   constructor(props: Props) {

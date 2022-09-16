@@ -52,6 +52,7 @@ export const CreateWalletChoiceScene = (props: Props) => {
     <SceneWrapper avoidKeyboard background="theme">
       {sceneHeader}
       <View style={styles.icon}>
+        {/* @ts-expect-error */}
         <CreateWalletSvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
       </View>
       <EdgeText style={styles.instructionalText} numberOfLines={2}>

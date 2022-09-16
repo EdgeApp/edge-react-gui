@@ -189,6 +189,7 @@ export const resyncLoanAccounts = (account: EdgeAccount) => async (dispatch: Dis
         // Wait for borrow engine to be fully synced
         await new Promise(resolve => {
           borrowEngine.watch('syncRatio', syncRatio => {
+            // @ts-expect-error
             if (syncRatio >= 1) resolve()
           })
         })

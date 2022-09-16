@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { I18nManager, StyleSheet, View } from 'react-native'
+// @ts-expect-error
 import { Gesture, GestureDetector, HitSlop } from 'react-native-gesture-handler'
 import Animated, {
   AnimationCallback,
@@ -71,9 +72,11 @@ declare class SwipableRowRef extends React.Component<Props> {
 /**
  * A row that can be slid left or right to reveal underlying buttons.
  */
+// @ts-expect-error
 export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref) => {
   // Tracks the width of the row:
   const width = useSharedValue(0)
+  // @ts-expect-error
   const handleLayout = event => {
     width.value = event.nativeEvent.layout.width
   }

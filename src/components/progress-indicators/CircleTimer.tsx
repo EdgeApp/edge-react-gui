@@ -9,7 +9,9 @@ type Props = {
 export const TEN_MINUTES = 600
 
 export class CircleTimer extends React.Component<Props> {
+  // @ts-expect-error
   componentMounted: boolean
+  // @ts-expect-error
   timeoutId: ReturnType<typeof setTimeout>
   componentDidMount() {
     this.componentMounted = true

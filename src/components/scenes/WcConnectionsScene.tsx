@@ -47,6 +47,7 @@ export const WcConnectionsScene = (props: Props) => {
     return { tempWallet, currencyWallets, wcEnabledWalletIds }
   })
 
+  // @ts-expect-error
   useEffect(() => {
     getdAppconnections().then(connections => setConnections(connections))
     // eslint-disable-next-line react-hooks/exhaustive-deps

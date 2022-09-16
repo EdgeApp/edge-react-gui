@@ -63,6 +63,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SelectableRow
         icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         paddingRem={[0, 1]}
+        // @ts-expect-error
         subTitle={s.strings[`currency_label_${data.item.value}`]}
         title={data.item.value}
         onPress={() => this.onSelectFiat(data.item)}
@@ -98,6 +99,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               data={filteredArray}
               initialNumToRender={30}
               keyboardShouldPersistTaps="handled"
+              // @ts-expect-error
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
             />

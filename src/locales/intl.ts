@@ -45,6 +45,7 @@ export function formatNumberInput(input: string, options?: IntlNumberFormatOptio
   if (input.includes(NATIVE_DECIMAL_SEPARATOR)) {
     const decimalPart = input.split(NATIVE_DECIMAL_SEPARATOR)[1]
     if (decimalPart) {
+      // @ts-expect-error
       _options.toFixed = decimalPart.length
     }
   }
@@ -122,6 +123,7 @@ export function prettifyNumber(input: string): string {
  * @param allowBlank
  * @returns {string}
  */
+// @ts-expect-error
 export function truncateDecimalsPeriod(input: string, precision?: number, allowBlank?: boolean = false): string {
   if (input === '') {
     if (allowBlank) {
@@ -145,6 +147,7 @@ export function truncateDecimalsPeriod(input: string, precision?: number, allowB
  * @param allowBlank
  * @returns {string}
  */
+// @ts-expect-error
 export function truncateDecimals(input: string, precision?: number, allowBlank?: boolean = false): string {
   const { decimalSeparator } = locale
 
@@ -187,6 +190,7 @@ export function formatDate(date: Date, monthShort: boolean = false): string {
   const { localeIdentifier } = locale
 
   try {
+    // @ts-expect-error
     const dateFormattingLocale = locales[localeIdentifier.replace('_', '-')] ?? locales[localeIdentifier.split('-')?.[0]]
     return format(date, monthShort ? 'PP' : 'PPP', { locale: dateFormattingLocale })
   } catch (e: any) {
@@ -202,6 +206,7 @@ export function formatTime(date: Date): string {
   const { localeIdentifier } = locale
 
   try {
+    // @ts-expect-error
     return format(date, 'p', { locale: locales[localeIdentifier.replace('_', '-')] })
   } catch (e: any) {
     //

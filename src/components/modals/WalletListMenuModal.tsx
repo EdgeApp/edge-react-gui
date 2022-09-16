@@ -108,6 +108,7 @@ export function WalletListMenuModal(props: Props) {
     bridge.resolve()
   }
 
+  // @ts-expect-error
   useEffect(() => {
     getWalletOptions({ wallet, tokenId, account }).then(options => setOptions(options))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,6 +129,7 @@ export function WalletListMenuModal(props: Props) {
       {options.map((option: Option) => (
         <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
           <AntDesignIcon
+            // @ts-expect-error
             name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
             size={theme.rem(1)}
             style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}

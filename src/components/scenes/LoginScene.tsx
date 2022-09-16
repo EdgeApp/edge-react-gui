@@ -4,6 +4,7 @@ import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
+// @ts-expect-error
 import { BlurView } from 'rn-id-blurview'
 
 import ENV from '../../../env.json'
@@ -23,6 +24,7 @@ import { getBackgroundImage } from './../../util/ThemeCache'
 import { LoadingScene } from './LoadingScene'
 
 // Sneak the BlurView over to the login UI:
+// @ts-expect-error
 global.ReactNativeBlurView = BlurView
 
 type StateProps = {
@@ -54,6 +56,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       counter: 0,
+      // @ts-expect-error
       needsUpdate: false,
       backgroundImage: null
     }
@@ -68,6 +71,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
     getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
       .then(backgroundImage => this.setState({ backgroundImage }))
+      // @ts-expect-error
       .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
     if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
@@ -108,12 +112,14 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
       .then(backgroundImage => {
         if (backgroundImage != null && this.state.backgroundImage != null) {
+          // @ts-expect-error
           if (backgroundImage.uri === this.state.backgroundImage.uri) {
             return
           }
         }
         this.setState({ backgroundImage })
       })
+      // @ts-expect-error
       .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
 
     // Did we get a new recovery link?

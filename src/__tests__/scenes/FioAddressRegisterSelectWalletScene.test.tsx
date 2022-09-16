@@ -106,6 +106,7 @@ describe('FioAddressRegistered', () => {
           selectedDomain: 'MyFio@edge'
         }
       },
+      // @ts-expect-error
       onSelectWallet: (walletId, currencyCode) => undefined,
       theme: getTheme()
     }

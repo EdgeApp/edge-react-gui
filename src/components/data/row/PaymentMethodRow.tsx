@@ -34,6 +34,7 @@ const PaymentMethodRowComponent = (props: Props) => {
   if (guiPlugin == null) throw new Error(`PaymentMethodRow could not find ${pluginId} plugin`)
 
   const [isFirstRun, setIsFirstRun] = useState(true)
+  // @ts-expect-error
   const [partnerIconPath, setPartnerIconPath] = useState()
 
   if (isFirstRun) {
@@ -51,9 +52,11 @@ const PaymentMethodRowComponent = (props: Props) => {
   const fiatCurrencyCode = paymentMethod.defaultCurrency
   const mainIcon = <FiatIcon fiatCurrencyCode={fiatCurrencyCode} />
   const name = paymentMethod.name
+  // @ts-expect-error
   const partnerIconUri = partnerIconPath != null ? getPartnerIconUri(partnerIconPath) : null
   const pluginDisplay = (
     <>
+      {/* @ts-expect-error */}
       <FastImage source={{ uri: partnerIconUri }} style={styles.partnerIconImage} />
       <EdgeText style={styles.pluginText}>{guiPlugin.displayName}</EdgeText>
     </>

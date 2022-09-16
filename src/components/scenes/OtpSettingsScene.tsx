@@ -53,6 +53,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
+        // @ts-expect-error
         bridge={bridge}
         title={s.strings.otp_modal_headline}
         message={s.strings.otp_modal_body}

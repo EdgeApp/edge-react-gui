@@ -12,6 +12,7 @@ export const useFadeAnimation = (visible: boolean, options: { noFadeIn?: boolean
     opacity: opacity.value
   }))
 
+  // @ts-expect-error
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false

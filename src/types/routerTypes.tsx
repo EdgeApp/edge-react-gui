@@ -309,47 +309,37 @@ export type ParamList = {
  */
 export const Actions = {
   get currentParams(): any {
-    // @ts-expect-error
     return Flux.Actions.currentParams
   },
   get currentScene(): keyof ParamList {
-    // @ts-expect-error
     return Flux.Actions.currentScene
   },
 
   drawerClose() {
-    // @ts-expect-error
     Flux.Actions.drawerClose()
   },
   drawerOpen() {
-    // @ts-expect-error
     Flux.Actions.drawerOpen()
   },
 
   jump<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
-    // @ts-expect-error
     Flux.Actions.jump(name, { route: { name, params } })
   },
   push<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
-    // @ts-expect-error
     Flux.Actions.push(name, { route: { name, params } })
   },
   replace<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
-    // @ts-expect-error
     Flux.Actions.replace(name, { route: { name, params } })
   },
 
   refresh(params: any): void {
-    // @ts-expect-error
     Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
   },
 
   pop(): void {
-    // @ts-expect-error
     Flux.Actions.pop()
   },
   popTo(name: keyof ParamList): void {
-    // @ts-expect-error
     Flux.Actions.popTo(name)
   }
 }

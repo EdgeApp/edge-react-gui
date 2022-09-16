@@ -18,6 +18,7 @@ type Props = {
   inputModalMessage: string
   inputModalTitle: string
   tokenId?: string
+  // @ts-expect-error
   onAmountChanged: ({ fiatAmount: string, nativeCryptoAmount: string }) => void
 }
 

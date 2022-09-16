@@ -21,6 +21,7 @@ export function DeepLinkingManager(props: Props) {
   const wallets = useSelector(state => state.ui.wallets)
 
   // Retry links that need a different app state:
+  // @ts-expect-error
   useEffect(() => {
     if (pendingDeepLink == null) return
 
@@ -28,6 +29,7 @@ export function DeepLinkingManager(props: Props) {
     requestAnimationFrame(() => dispatch(retryPendingDeepLink()))
   }, [accountReferralLoaded, dispatch, pendingDeepLink, wallets])
 
+  // @ts-expect-error
   const handleUrl = url => {
     try {
       dispatch(launchDeepLink(parseDeepLink(url)))

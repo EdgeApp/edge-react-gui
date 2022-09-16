@@ -15,6 +15,7 @@ export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACT
 export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
+// @ts-expect-error
 const emptyArray = []
 
 export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -27,6 +28,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   // if we are resetting then start over
   if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
     currentEndIndex = 0
+    // @ts-expect-error
     existingTransactions = emptyArray
   }
 
@@ -44,6 +46,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
     nextEndIndex += SUBSEQUENT_TRANSACTION_BATCH_QUANTITY // then the next batch end index will be the addition of the batch quantity
     if (nextEndIndex >= walletTransactionsCount) {
       // if you're at the end
+      // @ts-expect-error
       nextEndIndex = undefined // then don't worry about getting anything more
     }
   }
@@ -75,6 +78,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
   // assume counter starts at zero (eg this is the first fetch)
   let key = 0
   // if there are any options and the starting index is non-zero (eg this is a subsequent fetch)
+  // @ts-expect-error
   if (options && options.startIndex > 0) {
     // then insert the already-loaded transactions into the master array of transactions
     transactionsWithKeys = [...state.ui.scenes.transactionList.transactions] // start off with previous values included
@@ -88,8 +92,10 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
     for (const tx of transactions) {
       // for each transaction, add some meta info
       const { date, time } = unixToLocaleDateTime(tx.date)
+      // @ts-expect-error
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
+        // @ts-expect-error
         transactionIdMap[tx.txid] = key
         // @ts-expect-error
         transactionsWithKeys.push({
@@ -177,7 +183,9 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   const state: RootState = getState()
   let startEntries, startIndex
   if (options) {
+    // @ts-expect-error
     startEntries = options.startEntries || state.ui.scenes.transactionList.currentEndIndex + 1
+    // @ts-expect-error
     startIndex = options.startIndex || 0
   } else {
     startEntries = state.ui.scenes.transactionList.currentEndIndex + 1

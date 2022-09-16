@@ -5,6 +5,7 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
+// @ts-expect-error
 function handleErrors(response) {
   if (!response.ok) {
     throw Error(response.status)
@@ -12,6 +13,7 @@ function handleErrors(response) {
   return response
 }
 
+// @ts-expect-error
 const request = async (name, path, method, data) => {
   console.log(`====== ${name} REQUEST ====== data length: ${data?.length ?? ''}`)
 

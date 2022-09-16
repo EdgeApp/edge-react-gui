@@ -32,7 +32,9 @@ export const FiatPluginEnterAmountScene = memo((props: Props) => {
   const [spinner1, setSpinner1] = useState<boolean>(false)
   const [spinner2, setSpinner2] = useState<boolean>(false)
   const [statusTextContent, setStatusTextContent] = useState<string>('')
+  // @ts-expect-error
   const [statusTextType, setStatusTextType] = useState<'warning' | 'error' | undefined>()
+  // @ts-expect-error
   const [poweredBy, setPoweredBy] = useState<EnterAmountPoweredBy | undefined>()
   const firstRun = useRef<boolean>(true)
   const lastUsed = useRef<number>(1)
@@ -150,6 +152,7 @@ export const FiatPluginEnterAmountScene = memo((props: Props) => {
           <View style={styles.cardContainer}>
             <TouchableOpacity onPress={poweredBy.poweredByOnClick}>
               <Card paddingRem={0.5}>
+                {/* @ts-expect-error */}
                 <View style={styles.poweredByContainer} onPress={poweredBy.poweredByOnClick}>
                   <Image style={styles.poweredByIcon} source={poweredByIconPath} />
 

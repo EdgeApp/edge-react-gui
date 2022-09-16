@@ -174,6 +174,7 @@ export function ManageTokensScene(props: Props) {
   )
 }
 
+// @ts-expect-error
 const keyExtractor = tokenId => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({

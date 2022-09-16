@@ -2,6 +2,7 @@ import { Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
+// @ts-expect-error
 import ENV from '../../env'
 
 type CleanStoreRecord<T> = {
@@ -54,15 +55,18 @@ export const makeCleanStore = (account: EdgeAccount, storeId: string): CleanStor
   //
 
   const instance: CleanStore = {
+    // @ts-expect-error
     async initRecord<T>(key, cleaner: Cleaner<T>): Promise<CleanStoreRecord<T>> {
       const record = await instance.getRecord(key, cleaner)
       if (record == null) {
+        // @ts-expect-error
         const data: T = cleaner()
         await instance.setRecord(key, data, cleaner)
         return makeCleanStoreRecord(key, data, cleaner)
       }
       return record
     },
+    // @ts-expect-error
     async getRecord<T>(key, cleaner: Cleaner<T>): Promise<CleanStoreRecord<T> | undefined> {
       const serializedData = await readData(key)
       if (serializedData == null) return
@@ -73,6 +77,7 @@ export const makeCleanStore = (account: EdgeAccount, storeId: string): CleanStor
         throw new Error(`Failed to read '${key}' from CleanStore: ${String(err)}`)
       }
     },
+    // @ts-expect-error
     async setRecord<T>(key, data: T, cleaner: Cleaner<T>) {
       try {
         const serializedData = uncleaner(cleaner)(data)

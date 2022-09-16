@@ -1,5 +1,6 @@
 import { add, gte, lte } from 'biggystring'
 
+// @ts-expect-error
 import ENV from '../../../env'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
@@ -51,10 +52,12 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
         nextEffect = {
           type: 'seq',
           opIndex: prevOpIndex,
+          // @ts-expect-error
           childEffects: [...prevChildEffects, ...nextChildEffects]
         }
       } else {
         if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
+        // @ts-expect-error
         nextEffect = nextChildEffects[0]
       }
 
@@ -284,6 +287,7 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
     }
     default: {
       // $ExpectError
+      // @ts-expect-error
       throw exhaustiveCheck(effect.type)
     }
   }
@@ -400,6 +404,7 @@ async function evaluateAction(
         return await evaluateAction(context, subProgram, state, pendingTxMap)
       })
       const childOutputs = await Promise.all(promises)
+      // @ts-expect-error
       const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
 
       return {
@@ -408,16 +413,20 @@ async function evaluateAction(
             type: 'par',
             childEffects
           },
+          // @ts-expect-error
           broadcastTxs: childOutputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
         },
+        // @ts-expect-error
         execute: async () => {
           const outputs = await Promise.all(childOutputs.map(async output => await output.execute()))
+          // @ts-expect-error
           const effects = outputs.reduce((effects, output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
+            // @ts-expect-error
             broadcastTxs: outputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
           }
         }
@@ -622,6 +631,7 @@ async function evaluateAction(
       }
       return {
         dryrunOutput: null, // Support dryrun when EdgeSwapQuote returns a signed tx
+        // @ts-expect-error
         execute
       }
     }
@@ -629,7 +639,9 @@ async function evaluateAction(
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
+    // @ts-expect-error
     case 'done': {
+      // @ts-expect-error
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
     case 'wyre-buy': {
@@ -638,6 +650,7 @@ async function evaluateAction(
 
     default: {
       // $ExpectError
+      // @ts-expect-error
       throw exhaustiveCheck(actionOp.type)
     }
   }
@@ -673,7 +686,9 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   }
 
   return {
+    // @ts-expect-error
     dryrunOutput: dryrun,
+    // @ts-expect-error
     execute
   }
 }

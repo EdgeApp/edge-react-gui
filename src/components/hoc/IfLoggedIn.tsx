@@ -7,6 +7,7 @@ type StateProps = {
   loginStatus: boolean
 }
 
+// @ts-expect-error
 export function ifLoggedIn<Props extends {}>(Component: React.ComponentType<Props>): React.FunctionComponent<$Exact<Props>> {
   return connect<StateProps, {}, Props>(
     state => ({
@@ -15,6 +16,7 @@ export function ifLoggedIn<Props extends {}>(Component: React.ComponentType<Prop
     dispatch => ({})
   )((props: Props & StateProps) => {
     const { loginStatus, ...rest } = props
+    // @ts-expect-error
     return loginStatus ? <Component {...rest} /> : <LoadingScene />
   })
 }

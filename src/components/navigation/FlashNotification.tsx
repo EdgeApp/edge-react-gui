@@ -27,6 +27,7 @@ export function FlashNotification(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   text: {
+    // @ts-expect-error
     ...nightText('row-center'),
     padding: theme.rem(0.25)
   },

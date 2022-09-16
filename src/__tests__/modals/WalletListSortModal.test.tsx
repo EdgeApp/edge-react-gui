@@ -13,6 +13,7 @@ describe('WalletListSortModalComponent', () => {
       bridge: fakeAirshipBridge,
       sortOption: 'name'
     }
+    // @ts-expect-error
     const actual = renderer.render(<WalletListSortModal {...props} />)
 
     expect(actual).toMatchSnapshot()

@@ -11,6 +11,7 @@ import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
   apiKey: ENV.BUGSNAG_API_KEY,
+  // @ts-expect-error
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
     return event
@@ -33,6 +34,7 @@ console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
+// @ts-expect-error
 global.clog = console.log
 
 // TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
@@ -44,6 +46,7 @@ const IGNORED_WARNINGS = [
   'Warning: isMounted(...) is deprecated'
 ]
 // $FlowExpectedError
+// @ts-expect-error
 console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
@@ -52,51 +55,56 @@ if (ENV.DISABLE_WARNINGS) {
 }
 
 // Disable the font scaling
+// @ts-expect-error
 if (!Text.defaultProps) {
+  // @ts-expect-error
   Text.defaultProps = {}
 }
+// @ts-expect-error
 Text.defaultProps.allowFontScaling = false
 
+// @ts-expect-error
 if (!TextInput.defaultProps) {
+  // @ts-expect-error
   TextInput.defaultProps = {}
 }
+// @ts-expect-error
 TextInput.defaultProps.allowFontScaling = false
 
-// @ts-expect-error
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
-  // @ts-expect-error
+
   console.log = log
-  // @ts-expect-error
+
   console.info = log
-  // @ts-expect-error
+
   console.warn = log
-  // @ts-expect-error
+
   console.error = log
 }
 
 if (ENV.LOG_SERVER) {
-  // @ts-expect-error: suppressing this error until we can find a workaround
   console.log = function () {
     logToServer(arguments)
   }
-  // @ts-expect-error
+
   console.info = console.log
-  // @ts-expect-error
+
   console.warn = console.log
-  // @ts-expect-error
+
   console.error = console.log
 }
 
 const clog = console.log
 
 if (PERF_LOGGING_ONLY) {
-  // @ts-expect-error: suppressing this error until we can find a workaround
   console.log = () => {}
 }
 
 if (ENABLE_PERF_LOGGING) {
+  // @ts-expect-error
   if (!global.nativePerformanceNow && window && window.performance) {
+    // @ts-expect-error
     global.nativePerformanceNow = () => window.performance.now()
   }
   const makeDate = () => {
@@ -108,57 +116,83 @@ if (ENABLE_PERF_LOGGING) {
     return `${h}:${m}:${s}.${ms}`
   }
 
+  // @ts-expect-error
   global.pnow = function (label: string) {
     const d = makeDate()
     clog(`${d} PTIMER PNOW: ${label}`)
   }
 
+  // @ts-expect-error
   global.pstart = function (label: string) {
     const d = makeDate()
+    // @ts-expect-error
     if (!perfTotals[label]) {
+      // @ts-expect-error
       perfTotals[label] = 0
+      // @ts-expect-error
       perfCounters[label] = 0
     }
+    // @ts-expect-error
     if (typeof perfTimers[label] === 'undefined') {
+      // @ts-expect-error
       perfTimers[label] = global.nativePerformanceNow()
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
   }
 
+  // @ts-expect-error
   global.pend = function (label: string) {
     const d = makeDate()
+    // @ts-expect-error
     if (typeof perfTimers[label] === 'number') {
+      // @ts-expect-error
       const elapsed = global.nativePerformanceNow() - perfTimers[label]
+      // @ts-expect-error
       perfTotals[label] += elapsed
+      // @ts-expect-error
       perfCounters[label]++
+      // @ts-expect-error
       clog(`${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`)
+      // @ts-expect-error
       perfTimers[label] = undefined
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)
     }
   }
 
+  // @ts-expect-error
   global.pcount = function (label: string) {
     const d = makeDate()
+    // @ts-expect-error
     if (typeof perfCounters[label] === 'undefined') {
+      // @ts-expect-error
       perfCounters[label] = 1
     } else {
+      // @ts-expect-error
       perfCounters[label] = perfCounters[label] + 1
     }
+    // @ts-expect-error
     if (perfCounters[label] % 1 === 0) {
+      // @ts-expect-error
       clog(`${d}: PTIMER PCOUNT ${label}:${perfCounters[label]}`)
     }
   }
 } else {
+  // @ts-expect-error
   global.pnow = function (label: string) {}
+  // @ts-expect-error
   global.pstart = function (label: string) {}
+  // @ts-expect-error
   global.pend = function (label: string) {}
+  // @ts-expect-error
   global.pcount = function (label: string) {}
 }
 
 const realFetch = fetch
+// @ts-expect-error
 fetch = async (...args: any) => {
+  // @ts-expect-error
   return realFetch(...args).catch(e => {
     Bugsnag.leaveBreadcrumb('realFetchError', {
       url: args[0],

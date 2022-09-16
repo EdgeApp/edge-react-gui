@@ -26,6 +26,7 @@ export class ChangePasswordComponent extends React.Component<Props> {
     }
     return (
       <SceneWrapper hasTabs={false} background="theme">
+        {/* @ts-expect-error */}
         <ChangePasswordScreen account={account} context={context} onComplete={handleComplete} onCancel={handleComplete} showHeader={false} />
       </SceneWrapper>
     )

@@ -93,6 +93,7 @@ export class CrossFade extends React.Component<Props, State> {
   render() {
     const { activeKey, children } = this.props
 
+    // @ts-expect-error
     const out: Array<React.Element<any>> = []
     const opacities: Opacities = {}
     forEachKey(children, (key, child) => {
@@ -124,7 +125,9 @@ export class CrossFade extends React.Component<Props, State> {
  */
 function forEachKey<Child>(children: Child | Child[], callback: (key: string, child: Child) => void): void {
   React.Children.forEach(children, (child: Child) => {
+    // @ts-expect-error
     if (child != null && child.key != null) {
+      // @ts-expect-error
       callback(String(child.key), child)
     }
   })

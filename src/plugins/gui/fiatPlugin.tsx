@@ -36,6 +36,7 @@ export const executePlugin = async (params: {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)
     },
+    // @ts-expect-error
     walletPicker: async (params): Promise<WalletListResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
       const walletListResult = await Airship.show<WalletListResult>(bridge => (
@@ -174,6 +175,7 @@ async function getWyreAccount(account: string, token: string): Promise<GetAccoun
     }
   }
   const url = 'https://api.sendwyre.com/v2/account/' + account + '?timestamp=' + timestamp
+  // @ts-expect-error
   const result = await window.fetch(url, data)
   if (!result.ok) throw new Error('fetchError')
   if (result.status === 204) throw new Error('emptyResponse')

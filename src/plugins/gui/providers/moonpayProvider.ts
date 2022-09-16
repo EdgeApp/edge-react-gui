@@ -134,14 +134,22 @@ export const moonpayProvider: FiatProviderFactory = {
               addToAllowedCurrencies('ethereum', currency, currency.code)
             } else {
               if (currency.isSuspended) continue
+              // @ts-expect-error
               if (CURRENCY_CODE_TRANSLATE[currency.code] != null) {
+                // @ts-expect-error
                 const currencyCode = CURRENCY_CODE_TRANSLATE[currency.code]
+                // @ts-expect-error
                 addToAllowedCurrencies(CURRENCY_PLUGINID_MAP[currencyCode], currency, currencyCode)
+                // @ts-expect-error
                 currency.code = CURRENCY_CODE_TRANSLATE[currency.code]
+                // @ts-expect-error
               } else if (TOKEN_MAP[currency.code] != null) {
+                // @ts-expect-error
                 addToAllowedCurrencies(TOKEN_MAP[currency.code], currency, currency.code)
               }
+              // @ts-expect-error
               if (CURRENCY_PLUGINID_MAP[currency.code] != null) {
+                // @ts-expect-error
                 addToAllowedCurrencies(CURRENCY_PLUGINID_MAP[currency.code], currency, currency.code)
               }
             }

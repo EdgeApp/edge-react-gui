@@ -89,6 +89,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     return (
       <View style={styles.buttons}>
+        {/* @ts-expect-error */}
         <PrimaryButton style={styles.next} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
           <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
@@ -132,6 +133,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <FormField
                 {...MaterialInputOnWhite}
+                // @ts-expect-error
                 containerStyle={{
                   ...MaterialInputOnWhite.containerStyle,
                   marginTop: scale(16),

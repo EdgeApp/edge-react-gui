@@ -42,6 +42,7 @@ describe('ExchangedFlipInput', () => {
       exchangeSecondaryToPrimaryRatio: '0',
       forceUpdateGuiCounter: 11,
       keyboardVisible: true,
+      // @ts-expect-error
       onExchangeAmountChanged: amounts => ['123123', '123123', 'BTC'],
       isEditable: true,
       isFiatOnTop: true,

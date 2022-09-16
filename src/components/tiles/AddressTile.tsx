@@ -136,6 +136,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  // @ts-expect-error
   _setClipboard = async props => {
     const { coreWallet, currencyCode } = props
 

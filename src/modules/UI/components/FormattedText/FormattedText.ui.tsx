@@ -23,12 +23,15 @@ export class FormattedText extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props)
+    // @ts-expect-error
     this.style = this.props.isBold ? [styles.boldStyle] : [styles.defaultStyle]
 
     if (props.style) {
       if (Array.isArray(props.style)) {
+        // @ts-expect-error
         this.style = this.style.concat(props.style)
       } else {
+        // @ts-expect-error
         this.style.push(props.style)
       }
     }

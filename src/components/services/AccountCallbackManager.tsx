@@ -124,6 +124,7 @@ export function AccountCallbackManager(props: Props) {
   })
 
   // Do the expensive work with rate limiting:
+  // @ts-expect-error
   useAsyncEffect(async () => {
     setDirty(notDirty)
 

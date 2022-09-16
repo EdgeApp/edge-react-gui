@@ -28,9 +28,12 @@ async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Respo
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()
+    // @ts-expect-error
     const typeHack: any = init.headers
     const headers = typeHack
+    // @ts-expect-error
     const body = init.body ? JSON.stringify(init.body) : ''
+    // @ts-expect-error
     const method = init.method
 
     // Parse a useful header string
@@ -146,6 +149,7 @@ export async function launchBitPay(
     throw new BitPayError('MultiInstructionInvoice', { errorData })
   }
   const invoiceInstruction = invoiceResponse.instructions[0]
+  // @ts-expect-error
   errorData = { ...errorData, invoiceInstruction }
   if (!invoiceInstruction.outputs || invoiceInstruction.outputs.length === 0) {
     throw new BitPayError('EmptyOutputInvoice', { errorData })
@@ -156,6 +160,7 @@ export async function launchBitPay(
   // because the protocol doesn't discount segwit transactions and we want to make sure the transaction succeeds.
   if (typeof requiredFeeRate === 'number') requiredFeeRate *= 1.2
   const spendInfo: EdgeSpendInfo = {
+    // @ts-expect-error
     selectedCurrencyCode,
     spendTargets: invoiceInstruction.outputs.map(output => {
       return {
@@ -177,6 +182,7 @@ export async function launchBitPay(
   const signedTx = await selectedWallet.signTx(unsignedTx)
   const signedHex = signedTx.signedTx ?? ''
 
+  // @ts-expect-error
   errorData = { ...errorData, spendInfo, walletId: selectedWallet.id, unsignedTx, signedTx }
   if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
 
@@ -198,6 +204,7 @@ export async function launchBitPay(
   // Verify that the transaction data reply matches
   const verificationPaymentResponse = asBpVerificationResponse(responseJson).payment
   if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
+    // @ts-expect-error
     errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
     errorData.responseJson = responseJson
     throw new BitPayError('TxVerificationMismatch', { errorData })
@@ -217,6 +224,7 @@ export async function launchBitPay(
     nativeAmount: spendTarget.nativeAmount,
     publicAddress: spendTarget.publicAddress,
     networkFeeOption: 'custom',
+    // @ts-expect-error
     customNetworkFee: { satPerByte: Math.ceil(parseFloat(requiredFeeRate) * 1.5) },
     metadata,
     lockInputs: true,
@@ -249,6 +257,7 @@ export async function launchBitPay(
     })
   } else {
     Actions.push('send', {
+      // @ts-expect-error
       guiMakeSpendInfo,
       selectedWalletId: selectedWallet.id,
       selectedCurrencyCode

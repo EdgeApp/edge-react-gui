@@ -267,6 +267,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
         )
       }
 
+      // @ts-expect-error
       const earnedAmount = allocations.find(allocation => allocation.allocationType === 'earned')?.nativeAmount
       if (action === 'unstake') {
         txs.build(
@@ -373,10 +374,12 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
         // Get the amount of staked tokens:
         multipass(p => poolContract.connect(p).balanceOf(signerAddress)),
         // Get the stake allocation lock time:
+        // @ts-expect-error
         getUserUnstakeTime(signerAddress),
         // Get the earned token balance:
         multipass(p => poolContract.connect(p).earned(signerAddress)),
         // Get the earned allocations lock time:
+        // @ts-expect-error
         getUserClaimRewardTime(signerAddress),
         // Get the token balance:
         multipass(p => tokenContract.connect(p).balanceOf(signerAddress))

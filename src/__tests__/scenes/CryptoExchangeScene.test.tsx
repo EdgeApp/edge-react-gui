@@ -63,7 +63,9 @@ describe('CryptoExchangeComponent', () => {
       hasMaxSpend: true,
       insufficient: false,
       genericError: null,
+      // @ts-expect-error
       onSelectWallet: async (walletId, currencyCode, direction) => undefined,
+      // @ts-expect-error
       getQuoteForTransaction: (fromWalletNativeAmount, onApprove) => undefined,
       exchangeMax: async () => undefined,
       theme: getTheme()

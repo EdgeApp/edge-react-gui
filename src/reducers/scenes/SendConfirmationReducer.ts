@@ -30,6 +30,7 @@ export type SendConfirmationState = {
   isSendUsingFioAddress: boolean
 }
 
+// @ts-expect-error
 const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
@@ -233,6 +234,7 @@ const isSendUsingFioAddress = (state: boolean = false, action: Action): boolean 
   }
 }
 
+// @ts-expect-error
 export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIRMATION/RESET') return initialState
 

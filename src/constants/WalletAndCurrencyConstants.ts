@@ -727,6 +727,7 @@ export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {
   if (typeof currencyCode !== 'string') return ''
   const codeWithoutIso = currencyCode.replace('iso:', '')
+  // @ts-expect-error
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
   return out != null ? out : ''
 }

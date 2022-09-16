@@ -29,6 +29,7 @@ describe('CreateWalletReviewComponent', () => {
           walletName: 'my bitcoin wallet'
         }
       },
+      // @ts-expect-error
       createCurrencyWallet: async (walletName, walletType, fiatCurrencyCode, cleanedPrivateKey) => undefined,
       theme: getTheme()
     }

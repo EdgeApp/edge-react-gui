@@ -6,6 +6,7 @@ import { memo } from '../../types/reactHooks'
 
 type OwnProps = {
   children?: React.ReactNode
+  // @ts-expect-error
   style?: StyleSheet.Style
 }
 type Props = OwnProps & SpaceProps

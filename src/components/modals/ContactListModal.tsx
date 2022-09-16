@@ -45,6 +45,7 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
     )
   }
 
+  // @ts-expect-error
   const rowDataFilter = (searchText, contact) => {
     const formattedSearchText = normalizeForSearch(searchText)
     const { givenName, familyName } = contact
@@ -52,6 +53,7 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
     return fullName.includes(formattedSearchText)
   }
 
+  // @ts-expect-error
   const handleSubmitEditing = contactName => bridge.resolve({ contactName, thumbnailPath: null })
 
   return (

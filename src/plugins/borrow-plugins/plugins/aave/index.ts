@@ -11,6 +11,7 @@ import { asEthTokenContractAddress } from './cleaners/asEthTokenContractAddress'
 const maticNetwork = {
   name: 'matic',
   chainId: 137,
+  // @ts-expect-error
   _defaultProvider: providers => new providers.JsonRpcProvider('https://polygon-rpc.com')
 }
 
@@ -121,6 +122,7 @@ const aaveKovBlueprint: BorrowPluginBlueprint = {
   makeBorrowEngine: makeBorrowEngineFactory({
     aaveNetwork: aaveKovanNetwork,
     asTokenContractAddress: asEthTokenContractAddress,
+    // @ts-expect-error
     enabledTokens: {
       DAI: {
         isCollateral: false,

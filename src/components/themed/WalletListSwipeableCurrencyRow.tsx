@@ -15,6 +15,7 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
@@ -42,6 +43,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   // Tutorial mode:
+  // @ts-expect-error
   useEffect(() => {
     if (openTutorial && rowRef.current != null) {
       rowRef.current.openRight()

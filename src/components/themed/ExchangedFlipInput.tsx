@@ -160,6 +160,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
 
   toggleCryptoOnBottom = () => {
     if (this.flipInput != null) {
+      // @ts-expect-error
       this.flipInput.toggleCryptoOnBottom()
     }
   }
@@ -185,6 +186,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         onBlur={this.props.onBlur}
         topReturnKeyType={this.props.topReturnKeyType}
         inputAccessoryViewID={this.props.inputAccessoryViewID}
+        // @ts-expect-error
         ref={ref => (this.flipInput = ref)}
       />
     )

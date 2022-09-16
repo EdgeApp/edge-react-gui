@@ -27,6 +27,7 @@ class ChangeRecoveryComponent extends React.Component<Props> {
           account={account}
           context={context}
           onComplete={handleComplete}
+          // @ts-expect-error
           onCancel={handleComplete}
           showHeader={false}
         />

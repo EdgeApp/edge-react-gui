@@ -77,6 +77,7 @@ export function WalletListSwipeable(props: Props) {
   const handleItemLayout = useRowLayout()
 
   return (
+    // @ts-expect-error
     <FlatList
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
       data={searchedWalletList}

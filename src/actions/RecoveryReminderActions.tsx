@@ -27,6 +27,7 @@ export const checkPasswordRecovery =
 
     // Loop towards the highest non-shown level less than our balance:
     for (const level of levels) {
+      // @ts-expect-error
       if (passwordRecoveryRemindersShown[level]) continue
       if (totalDollars < level) return
 

@@ -36,6 +36,7 @@ const confettiProps = {
 
 export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalState> {
   constructor() {
+    // @ts-expect-error
     super()
     this.state = { showButton: false, showConfetti: false }
   }

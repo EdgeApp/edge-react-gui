@@ -83,6 +83,7 @@ export const WcSmartContractModal = (props: Props) => {
 
   const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
 
+  // @ts-expect-error
   const handleSubmit = reset =>
     wallet.otherMethods
       .wcRequestResponse(uri, true, payload)
@@ -98,6 +99,7 @@ export const WcSmartContractModal = (props: Props) => {
   const renderWarning = () => {
     return isInsufficientBal ? (
       <Alert
+        // @ts-expect-error
         marginTop={0.5}
         title={s.strings.wc_smartcontract_warning_title}
         message={sprintf(s.strings.wc_smartcontract_insufficient_text, feeCurrencyStr)}
@@ -106,6 +108,7 @@ export const WcSmartContractModal = (props: Props) => {
     ) : (
       <Alert
         numberOfLines={0}
+        // @ts-expect-error
         marginTop={0.5}
         title={s.strings.wc_smartcontract_warning_title}
         message={s.strings.wc_smartcontract_warning_text}
@@ -131,6 +134,7 @@ export const WcSmartContractModal = (props: Props) => {
       }}
       paddingRem={[1, 0]}
     >
+      {/* @ts-expect-error */}
       <View style={styles.title} paddingRem={[0, 0, 0, 1]}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>

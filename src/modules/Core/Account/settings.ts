@@ -26,6 +26,7 @@ export const asCurrencyCodeDenom = asObject({
 
 const asDenominationSettings = asObject(
   Object.keys(currencyPlugins).reduce((currencyPluginSettingsMap, pluginId) => {
+    // @ts-expect-error
     currencyPluginSettingsMap[pluginId] = asOptional(asObject(asMaybe(asCurrencyCodeDenom)), {})
     return currencyPluginSettingsMap
   }, {})
@@ -199,6 +200,7 @@ export async function setSubcategoriesRequest(account: EdgeAccount, subcategorie
 export async function setSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
   let finalText = {}
   if (!subcategories.categories) {
+    // @ts-expect-error
     finalText.categories = subcategories
   } else {
     finalText = subcategories
@@ -249,7 +251,9 @@ export const updateCurrencySettings = (currentSettings: Object, pluginId: string
   const updatedSettings = {
     ...currentSettings
   }
+  // @ts-expect-error
   if (updatedSettings.denominationSettings[pluginId] == null) updatedSettings.denominationSettings[pluginId] = {}
+  // @ts-expect-error
   updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
 }

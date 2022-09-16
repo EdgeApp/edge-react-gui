@@ -30,18 +30,24 @@ export function LadderLayout(props: Props) {
 
     const style = {}
     if (needsSpaceBefore) {
+      // @ts-expect-error
       if (horizontal) style.marginLeft = padding
+      // @ts-expect-error
       else style.marginTop = padding
     }
     if (needsSpaceAfter) {
+      // @ts-expect-error
       if (horizontal) style.marginRight = padding
+      // @ts-expect-error
       else style.marginBottom = padding
     }
 
     if (isStyled(child) && (needsSpaceBefore || needsSpaceAfter)) {
       // This child accepts a stylesheet, so use that for spacing:
       newChildren.push(
+        // @ts-expect-error
         React.cloneElement(child, {
+          // @ts-expect-error
           style: child.props.style == null ? style : Array.isArray(child.props.style) ? [...child.props.style, style] : [child.props.style, style]
         })
       )
@@ -64,6 +70,8 @@ export function LadderLayout(props: Props) {
   return <>{newChildren}</>
 }
 
+// @ts-expect-error
 function isStyled(element) {
+  // @ts-expect-error
   return React.isValidElement(element) && (element.type === Image || element.type === Text || element.type === View || element.props.style != null)
 }

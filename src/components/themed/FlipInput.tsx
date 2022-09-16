@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { div, eq, mul } from 'biggystring'
 import * as React from 'react'
+// @ts-expect-error
 import { Animated, Event, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
@@ -164,7 +165,9 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
   backInterpolate: Animated.Value
   androidFrontOpacityInterpolate: Animated.Value
   androidBackOpacityInterpolate: Animated.Value
+  // @ts-expect-error
   textInputFront: TextInput | null
+  // @ts-expect-error
   textInputBack: TextInput | null
   clipboardMenu: any
 
@@ -174,19 +177,23 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
 
     // Mounting Animation
     this.animatedValue = new Animated.Value(0)
+    // @ts-expect-error
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '180deg']
     })
 
+    // @ts-expect-error
     this.backInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['180deg', '360deg']
     })
+    // @ts-expect-error
     this.androidFrontOpacityInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 0.5, 0.5],
       outputRange: [1, 1, 0]
     })
+    // @ts-expect-error
     this.androidBackOpacityInterpolate = this.animatedValue.interpolate({
       inputRange: [0.5, 0.5, 1],
       outputRange: [0, 1, 1]
@@ -381,6 +388,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     this.handleOnError()
   }
 
+  // @ts-expect-error
   onKeyPress(keyPressed: string, decimalAmount: string, maxEntryDecimals: number, setAmounts: (Props, string) => Amounts) {
     keyPressed = keyPressed.replace(',', '.')
     if (keyPressed === 'Backspace') {
@@ -393,6 +401,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  // @ts-expect-error
   setStateAmounts(decimalAmount: string, setAmounts: (Props, string) => Amounts) {
     const amounts = setAmounts(this.props, decimalAmount)
     this.setState(amounts, () => this.props.onAmountChanged(amounts.primaryDecimalAmount))
@@ -525,6 +534,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
         <View style={styles.clipboardContainer}>
+          {/* @ts-expect-error */}
           <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
             <MenuTrigger />
             <MenuOptions>

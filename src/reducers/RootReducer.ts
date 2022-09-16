@@ -60,6 +60,7 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
       case 'LOGOUT':
         return {}
     }
+    // @ts-expect-error
     return state
   },
 
@@ -83,6 +84,7 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
     return state
   },
 
+  // @ts-expect-error
   priceChangeNotifications(state: PriceChangeNotificationSettings = { ignorePriceChanges: false }, action: Action): PriceChangeNotificationSettings {
     switch (action.type) {
       case 'PRICE_CHANGE_NOTIFICATIONS_UPDATE':

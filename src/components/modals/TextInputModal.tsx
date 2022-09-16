@@ -63,6 +63,7 @@ export function TextInputModal(props: Props) {
     warningMessage
   } = props
 
+  // @ts-expect-error
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const [spinning, setSpinning] = useState(false)
   const [text, setText] = useState(initialValue)

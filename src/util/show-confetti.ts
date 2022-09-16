@@ -50,6 +50,7 @@ const calculateNewShownData = (userData: ConfettiShownTimes): ConfettiShownTimes
   return userData
 }
 
+// @ts-expect-error
 const setNewData = (data, userData, userId, disklet) => {
   data[userId] = calculateNewShownData(userData)
   setConfettiShownTimes(data, disklet)

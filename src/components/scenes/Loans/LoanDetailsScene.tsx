@@ -64,18 +64,20 @@ export const LoanDetailsScene = (props: Props) => {
   const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
-  // @ts-expect-error
+
   const debtTotal = useFiatTotal(wallet, debts)
   const availableEquity = sub(collateralTotal, debtTotal)
 
   // Running action program display
   const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
     const actionQueueItem = actionQueueMap[programEdge.programId]
+    // @ts-expect-error
     return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
   const [runningProgramMessage, setRunningProgramMessage] = useState<string | undefined>(undefined)
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (runningActionQueueItem != null) {
       const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)

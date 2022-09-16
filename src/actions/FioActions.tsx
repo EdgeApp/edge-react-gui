@@ -39,11 +39,13 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
     for (const fioAddress of fioAddresses) {
       if (!getState().core.account.id) break
+      // @ts-expect-error
       connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
         data: {
           fioAddress,
+          // @ts-expect-error
           ccWalletMap: connectedWalletsByFioAddress[fioAddress]
         }
       })
@@ -107,6 +109,7 @@ export const expiredFioNamesCheckDates = () => async (dispatch: Dispatch, getSta
   setTimeout(() => dispatch(refreshNamesToCheckExpired()), INIT_EXPIRE_CHECK_TIMEOUT)
 }
 
+// @ts-expect-error
 export const refreshNamesToCheckExpired = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -159,6 +162,7 @@ export const checkExpiredFioDomains =
       const expiredLastChecks = { ...state.ui.fio.expiredLastChecks }
       expiredLastChecks[first.name] = new Date()
       dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: expiredLastChecks })
+      // @ts-expect-error
       dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
       setFioExpiredCheckToDisklet(expiredLastChecks, state.core.disklet)
     }

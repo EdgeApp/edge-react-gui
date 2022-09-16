@@ -32,6 +32,7 @@ describe('FioConnectWalletConfirm', () => {
           walletsToDisconnect: []
         }
       },
+      // @ts-expect-error
       updateConnectedWallets: (fioAddress, ccWalletMap) => undefined,
       theme: getTheme()
     }

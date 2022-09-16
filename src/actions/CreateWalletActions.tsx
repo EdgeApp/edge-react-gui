@@ -79,6 +79,7 @@ export const fetchWalletAccountActivationPaymentInfo =
       }, 26000)
       createdCoreWallet.otherMethods
         .getAccountActivationQuote(paymentParams)
+        // @ts-expect-error
         .then(activationQuote => {
           dispatch({
             type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
@@ -114,6 +115,7 @@ export const checkHandleAvailability = (walletType: string, accountName: string)
     } else if (error.name === 'ErrorInvalidAccountName') {
       data = 'INVALID'
     }
+    // @ts-expect-error
     dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
   }
 }

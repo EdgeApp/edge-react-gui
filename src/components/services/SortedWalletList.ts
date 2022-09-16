@@ -129,6 +129,7 @@ export function SortedWalletList(props: Props) {
   const dispatch = useDispatch()
   const emptyList: WalletListItem[] = [] // Needed for Flow.
   const lastList = useRef(emptyList)
+  // @ts-expect-error
   useEffect(() => {
     if (!matchWalletList(sorted, lastList.current)) {
       dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: sorted })

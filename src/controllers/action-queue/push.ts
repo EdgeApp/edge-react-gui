@@ -1,5 +1,6 @@
 import { asMaybe } from 'cleaners'
 
+// @ts-expect-error
 import ENV from '../../../env'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
@@ -220,6 +221,7 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     }
     default: {
       // $ExpectError
+      // @ts-expect-error
       throw exhaustiveCheck(effect.type)
     }
   }

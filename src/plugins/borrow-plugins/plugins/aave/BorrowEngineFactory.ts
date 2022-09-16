@@ -64,6 +64,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Network Synchronization
     //
 
+    // @ts-expect-error
     const loadNetworkData = async () => {
       try {
         // Collaterals and Debts:
@@ -74,6 +75,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             nativeAmount: aBalance.toString()
           }
         })
+        // @ts-expect-error
         const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
           return {
             tokenId: addressToTokenId(address),
@@ -107,6 +109,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Engine Instance
     //
 
+    // @ts-expect-error
     const instance: BorrowEngine = withWatchableProps({
       currencyWallet: wallet,
       collaterals: [],

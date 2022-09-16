@@ -158,15 +158,18 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     })
   }
 
+  // @ts-expect-error
   useEffect(() => {
     props.refreshAllFioAddresses()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // @ts-expect-error
   useEffect(() => {
     if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
       currencyPlugin.otherMethods
         .getStakeEstReturn(exchangeAmount)
+        // @ts-expect-error
         .then(apy => setApy(parseFloat(apy.toFixed(2))))
         .catch(() => {
           //
@@ -174,6 +177,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     }
   }, [exchangeAmount, currencyPlugin])
 
+  // @ts-expect-error
   useEffect(() => {
     if (!selectedFioAddress && fioAddresses?.length > 0) {
       const fioAddress = fioAddresses
@@ -370,6 +374,7 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
 
     if (SPECIAL_CURRENCY_INFO[currencyWallet.currencyInfo.pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
+        // @ts-expect-error
         const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
@@ -380,6 +385,7 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
         const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
+        // @ts-expect-error
         stakingBalances[stakingCurrencyCode] = {
           native: stakingNativeAmount,
           crypto: stakingCryptoAmountFormat,

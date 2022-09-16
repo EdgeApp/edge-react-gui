@@ -53,6 +53,7 @@ describe('Transaction List Row', () => {
       ourReceiveAddresses: [],
       signedTx: 'no_signature',
       txid: '4e92d23cff1714d52d48c0c5246adf4f6871d6d8d52d774b1b60cc4b28f8f296',
+      // @ts-expect-error
       amountSatoshi: -32295514330000,
       nativeAmount: '-32295514330000',
       networkFee: '0',

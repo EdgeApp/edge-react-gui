@@ -302,6 +302,7 @@ const processSwapQuoteError = (error: unknown) => (dispatch: Dispatch, getState:
   }
 
   // Some plugins get this error wrong:
+  // @ts-expect-error
   if (error.message === 'InsufficientFundsError') {
     return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
   }
@@ -380,6 +381,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
     if (result.orderId != null) {
       trackConversionOpts.orderId = result.orderId
     }
+    // @ts-expect-error
     dispatch(trackConversion('SwapSuccess', trackConversionOpts))
   } catch (error: any) {
     console.log(error)

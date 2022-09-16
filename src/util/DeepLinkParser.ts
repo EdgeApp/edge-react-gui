@@ -21,6 +21,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
   const betterUrl = new URL(uri, true)
 
   if (url.protocol === 'dev:') {
+    // @ts-expect-error
     return { type: 'dev', sceneName: url.pathname }
   }
 
@@ -80,6 +81,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 /**
  * Parse an `edge://` link of some kind.
  */
+// @ts-expect-error
 function parseEdgeProtocol(url: URL): DeepLink {
   const [, ...pathParts] = url.pathname.split('/')
 
@@ -138,6 +140,7 @@ function parseEdgeProtocol(url: URL): DeepLink {
   throw new SyntaxError('Unknown deep link format')
 }
 
+// @ts-expect-error
 function parseDownloadLink(url: URL): PromotionLink {
   const { af } = parseQuery(url.query)
   if (af != null) {
@@ -150,6 +153,7 @@ function parseDownloadLink(url: URL): PromotionLink {
 /**
  * Parse a request for address link.
  */
+// @ts-expect-error
 function parseRequestAddress(url: URL): DeepLink {
   const query = parseQuery(url.query)
   const codesString = query.codes ?? undefined

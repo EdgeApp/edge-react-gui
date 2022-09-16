@@ -14,6 +14,7 @@ export function useWindowSize(): ScaledSize {
   const [windowSize, setWindowSize] = useState<ScaledSize>(() => Dimensions.get('window'))
 
   useEffect(() => {
+    // @ts-expect-error
     const handleChange = ({ window }) => setWindowSize(window)
     const listener = Dimensions.addEventListener('change', handleChange)
     return () => listener.remove()

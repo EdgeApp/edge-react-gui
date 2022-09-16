@@ -33,24 +33,28 @@ describe('Change Mining Fees', () => {
 
   it('should render with standard props', () => {
     const renderer = createRenderer()
+    // @ts-expect-error
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="standard" />
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with high props', () => {
     const renderer = createRenderer()
+    // @ts-expect-error
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="high" />
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with low props', () => {
     const renderer = createRenderer()
+    // @ts-expect-error
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="low" />
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with custom props', () => {
     const renderer = createRenderer()
+    // @ts-expect-error
     const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="custom" />
     expect(renderer.render(element)).toMatchSnapshot()
   })

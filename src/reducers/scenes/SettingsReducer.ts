@@ -1,5 +1,6 @@
 import { EdgeAccount, EdgeCurrencyInfo } from 'edge-core-js'
 
+// @ts-expect-error
 import ENV from '../../../env'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
@@ -84,7 +85,9 @@ export type SettingsState = {
   pinLoginEnabled: boolean
   plugins: {
     [pluginId: string]: EdgeCurrencyInfo
+    // @ts-expect-error
     allCurrencyInfos: EdgeCurrencyInfo[]
+    // @ts-expect-error
     supportedWalletTypes: string[]
   }
   isAccountBalanceVisible: boolean
@@ -107,6 +110,7 @@ function currencyPluginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo
 
   return {
     ...state,
+    // @ts-expect-error
     plugins: {
       ...plugins,
       [pluginId]: currencyInfo,
@@ -116,6 +120,7 @@ function currencyPluginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo
   }
 }
 
+// @ts-expect-error
 export const settingsLegacy = (state: SettingsState = initialState, action: Action): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
@@ -126,12 +131,16 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       for (const pluginId of Object.keys(account.currencyConfig)) {
         const { currencyInfo } = account.currencyConfig[pluginId]
         const { currencyCode } = currencyInfo
+        // @ts-expect-error
         if (newState.denominationSettings[pluginId] == null) state.denominationSettings[pluginId] = {}
+        // @ts-expect-error
         if (newState.denominationSettings[pluginId][currencyCode] == null) {
+          // @ts-expect-error
           newState.denominationSettings[pluginId][currencyCode] = currencyInfo.denominations[0]
         }
         for (const token of currencyInfo.metaTokens) {
           const tokenCode = token.currencyCode
+          // @ts-expect-error
           newState.denominationSettings[pluginId][tokenCode] = token.denominations[0]
         }
       }
@@ -199,6 +208,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
       const { pluginId, currencyCode, denomination } = action.data
       const newDenominationSettings = { ...state.denominationSettings }
+      // @ts-expect-error
       newDenominationSettings[pluginId][currencyCode] = denomination
 
       return {
@@ -272,6 +282,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
       const level = action.data
       const passwordRecoveryRemindersShown = { ...state.passwordRecoveryRemindersShown }
+      // @ts-expect-error
       passwordRecoveryRemindersShown[level] = true
       return { ...state, passwordRecoveryRemindersShown }
     }
@@ -280,6 +291,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   }
 }
 
+// @ts-expect-error
 export const settings = (state: SettingsState = initialState, action: Action): SettingsState => {
   let result = state
   const legacy = settingsLegacy(state, action)

@@ -49,6 +49,7 @@ export function EditTokenScene(props: Props) {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
+        // @ts-expect-error
         bridge={bridge}
         title={s.strings.string_delete}
         message={s.strings.edittoken_delete_prompt}

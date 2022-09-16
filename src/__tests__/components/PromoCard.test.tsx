@@ -19,7 +19,9 @@ describe('PromoCard', () => {
         hiddenAccountMessages: ['messageId']
       },
 
+      // @ts-expect-error
       hideMessageTweak: (messageId, source) => undefined,
+      // @ts-expect-error
       linkReferralWithCurrencies: uri => undefined,
       theme: getTheme()
     }

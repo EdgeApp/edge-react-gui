@@ -40,6 +40,7 @@ type Props = { context: EdgeContext }
  */
 export function Services(props: Props) {
   const { context } = props
+  // @ts-expect-error
   const [account, setAccount] = useState<EdgeAccount | undefined>()
   const theme = useTheme()
 
@@ -50,11 +51,13 @@ export function Services(props: Props) {
     const middleware: Array<Middleware<RootState, Action>> = [errorAlert, loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
+    // @ts-expect-error
     if (global.__DEV__) {
       const createDebugger = require('redux-flipper').default
       middleware.push(createDebugger())
     }
 
+    // @ts-expect-error
     const store = createStore<RootState, Action, Dispatch>(rootReducer, undefined, applyMiddleware(...middleware))
 
     // Put the context into Redux:
@@ -76,12 +79,15 @@ export function Services(props: Props) {
   })
 
   // Actions to perform at first login:
+  // @ts-expect-error
   useEffect(() => {
+    // @ts-expect-error
     store.dispatch(loadDeviceReferral())
   }, [store])
 
   return (
     <Provider store={store}>
+      {/* @ts-expect-error */}
       <LoginUiProvider themeOverride={theme}>
         <MenuProvider>
           <Airship>

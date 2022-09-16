@@ -10,6 +10,7 @@ import { Dispatch, RootState } from '../types/reduxTypes'
 export function connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps: (state: RootState, ownProps: OwnProps) => StateProps,
   mapDispatchToProps: (dispatch: Dispatch, ownProps: OwnProps) => DispatchProps
+  // @ts-expect-error
 ): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => React.FunctionComponent<$Exact<OwnProps>> {
   // @ts-expect-error
   return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
@@ -19,7 +20,6 @@ type UseDispatch = () => Dispatch
 
 type UseSelector = <T>(selector: (state: RootState) => T) => T
 
-// @ts-expect-error
 export const useDispatch: UseDispatch = ReactRedux.useDispatch
-// @ts-expect-error
+
 export const useSelector: UseSelector = ReactRedux.useSelector

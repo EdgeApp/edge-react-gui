@@ -28,6 +28,7 @@ describe('WalletListModal', () => {
       BNB: [{ pluginId: 'binance' }, { pluginId: 'ethereum', tokenId: '1234abcd' }]
     }
     function lookup(currencyCode: string): EdgeTokenId[] {
+      // @ts-expect-error
       return data[currencyCode.toUpperCase()] ?? []
     }
 

@@ -22,6 +22,7 @@ import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+// @ts-expect-error
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
 
@@ -374,6 +375,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
+        // @ts-expect-error
         const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
@@ -384,6 +386,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
         const stakingFiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
+        // @ts-expect-error
         stakingBalances[stakingCurrencyCode] = {
           crypto: stakingCryptoAmountFormat,
           fiat: stakingFiatBalanceFormat

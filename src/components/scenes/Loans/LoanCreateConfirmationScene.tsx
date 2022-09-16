@@ -44,6 +44,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   const dispatch = useDispatch()
   const [actionProgram, setActionProgram] = useState<ActionProgram | undefined>(undefined)
+  // @ts-expect-error
   useAsyncEffect(async () => {
     // TODO: These default tokens will be removed when fee calculations are done using dryruns instead of ApprovableActions
     const allTokens = borrowEngineWallet.currencyConfig.allTokens
@@ -80,6 +81,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
           }),
           makeAaveBorrowAction({
             borrowPluginId,
+            // @ts-expect-error
             tokenId: destTokenId,
             nativeAmount: nativeDestAmount,
             borrowEngineWallet: borrowEngineWallet,
@@ -89,6 +91,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ).reduce((accum, subActions) => accum.concat(subActions), [])
     }
 
+    // @ts-expect-error
     const actionProgram = await makeActionProgram(actionOps)
     setActionProgram(actionProgram)
 

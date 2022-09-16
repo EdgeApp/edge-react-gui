@@ -9,6 +9,7 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
 import { RouteProp } from '../../types/routerTypes'
+// @ts-expect-error
 import { javascript } from '../../util/bridge/injectThisInWebView'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -47,6 +48,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
   }
 
   // Feed incoming messages into the YAOB bridge (if any):
+  // @ts-expect-error
   const onMessage = event => {
     const message = JSON.parse(event.nativeEvent.data)
     if (debug) console.info('plugin →', message)
@@ -63,6 +65,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
 
     // This is a terrible hack. We are using our inside knowledge
     // of YAOB's message format to determine when the client has restarted.
+    // @ts-expect-error
     if (bridge != null && Array.isArray(message.events) && message.events.find(event => event.localId === 0)) {
       bridge.close(new Error('plugin: The WebView has been unmounted.'))
       bridge = undefined
@@ -86,6 +89,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
 
       // Use our inside knowledge of YAOB to directly
       // subscribe to the root object appearing:
+      // @ts-expect-error
       onMethod.call(bridge._state, 'root', root => {
         gatedRoot = root
         tryReleasingRoot()
@@ -101,6 +105,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
   }
 
   // Listen for the webview component to mount:
+  // @ts-expect-error
   const setRef = element => {
     webview = element
     tryReleasingRoot()
@@ -135,6 +140,7 @@ class GuiPluginView extends React.Component<Props, State> {
   _promoMessage: string | undefined
   _webview: WebView | undefined
 
+  // @ts-expect-error
   constructor(props) {
     const { route, dispatch, state } = props
     const { deepPath, deepQuery, plugin } = route.params
@@ -215,11 +221,13 @@ class GuiPluginView extends React.Component<Props, State> {
     return true
   }
 
+  // @ts-expect-error
   onLoadProgress = event => {
     console.log('Plugin navigation: ', event.nativeEvent)
     this._canGoBack = event.nativeEvent.canGoBack
   }
 
+  // @ts-expect-error
   onNavigationStateChange = event => {
     console.log('Plugin navigation: ', event)
     this._canGoBack = event.canGoBack

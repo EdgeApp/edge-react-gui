@@ -17,7 +17,6 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
   const { borrowEngine } = loanAccount
 
   return ManageCollateralScene({
-    // @ts-expect-error - Get rid of this hasty abstraction
     action: async req => await borrowEngine.withdraw(req),
     actionOperand: 'collaterals',
     actionOpType: 'loan-withdraw',

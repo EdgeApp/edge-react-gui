@@ -45,12 +45,14 @@ export function bestOfMessages(
   while (--i >= 0) {
     const promo = accountReferral.promotions[i]
     const source = { type: 'promotion', installerId: promo.installerId }
+    // @ts-expect-error
     const topMessage = getTopMessage(promo.messages, source, promo.hiddenMessages, now)
     if (topMessage != null) return topMessage
   }
 
   // Fall back on the account affiliate informaton:
   const source = { type: 'account' }
+  // @ts-expect-error
   return getTopMessage(accountMessages, source, accountReferral.hiddenAccountMessages, now)
 }
 

@@ -17,6 +17,7 @@ describe('WalletListSortableRow', () => {
         multiplier: '100000000',
         name: 'BTC'
       },
+      // @ts-expect-error
       getDisplayDenomination: (pluginId, currencyCode) => ({
         multiplier: '100000000',
         name: 'BTC'

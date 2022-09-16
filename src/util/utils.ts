@@ -181,8 +181,10 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
 
 export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string; value: string }> => {
   const out = []
+  // @ts-expect-error
   if (defaultCurrencyCode && FIAT_CODES_SYMBOLS[defaultCurrencyCode]) {
     out.push({
+      // @ts-expect-error
       label: `${defaultCurrencyCode} - ${FIAT_CODES_SYMBOLS[defaultCurrencyCode]}`,
       value: defaultCurrencyCode
     })
@@ -192,6 +194,7 @@ export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: 
       continue
     }
     out.push({
+      // @ts-expect-error
       label: `${currencyCode} - ${FIAT_CODES_SYMBOLS[currencyCode]}`,
       value: currencyCode
     })
@@ -259,14 +262,19 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
 export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
   const comparedElements = {}
   for (const e of Object.keys(obj1)) {
+    // @ts-expect-error
     if (ignoreObjects && ignoreObjects[e]) {
       continue
     }
+    // @ts-expect-error
     comparedElements[e] = true
     // eslint-disable-next-line no-prototype-builtins
     if (obj2.hasOwnProperty(e)) {
+      // @ts-expect-error
       if (obj1[e] !== obj2[e]) {
+        // @ts-expect-error
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+          // @ts-expect-error
           const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
           if (deepDiff) {
             // console.log(`getObjectDiff:${e}`)
@@ -283,13 +291,17 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
     }
   }
   for (const e of Object.keys(obj2)) {
+    // @ts-expect-error
     if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
     // eslint-disable-next-line no-prototype-builtins
     if (obj1.hasOwnProperty(e)) {
+      // @ts-expect-error
       if (obj1[e] !== obj2[e]) {
+        // @ts-expect-error
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+          // @ts-expect-error
           const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
           if (deepDiff) {
             return e
@@ -311,6 +323,7 @@ export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: 
     const onDone = () => clearTimeout(timer)
     promise.then(onDone, onDone)
   })
+  // @ts-expect-error
   return Promise.race([promise, timeout])
 }
 
@@ -379,6 +392,7 @@ export function splitTransactionCategory(fullCategory: string): {
   const splittedCategory = fullCategory.split(':')
   const categoryArray = splittedCategory.shift()
   return {
+    // @ts-expect-error
     category: categoryArray,
     subCategory: splittedCategory.length > 0 ? splittedCategory.join(':') : ''
   }
@@ -430,6 +444,7 @@ export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {
       await SafariView.isAvailable()
+      // @ts-expect-error
       return SafariView.show({ url })
     } catch (e: any) {
       console.log(e)
@@ -444,6 +459,7 @@ export async function openLink(url: string): Promise<void> {
 }
 
 export function debounce(func: any, wait: number, immediate: boolean): any {
+  // @ts-expect-error
   let timeout
 
   return function executedFunction() {
@@ -457,8 +473,10 @@ export function debounce(func: any, wait: number, immediate: boolean): any {
       if (!immediate) func.apply(context, args)
     }
 
+    // @ts-expect-error
     const callNow = immediate && !timeout
 
+    // @ts-expect-error
     if (timeout) clearTimeout(timeout)
 
     timeout = setTimeout(later, wait)

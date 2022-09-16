@@ -39,14 +39,18 @@ export const StakeOverviewScene = (props: Props) => {
   const wallet = account.currencyWallets[walletId]
 
   const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
+    // @ts-expect-error
     denomMap[asset.currencyCode] = dispatch(getDisplayDenominationFromState(wallet.currencyInfo.pluginId, asset.currencyCode))
     return denomMap
   }, {})
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
+  // @ts-expect-error
   const [stakeAllocations, setStakeAllocations] = useState<PositionAllocation[] | undefined>()
+  // @ts-expect-error
   const [rewardAllocations, setRewardAllocations] = useState<PositionAllocation[] | undefined>()
+  // @ts-expect-error
   const [stakePosition, setStakePosition] = useState<StakePosition | undefined>()
 
   // Background loop to force fetchStakePosition updates
@@ -87,10 +91,12 @@ export const StakeOverviewScene = (props: Props) => {
   }
 
   // Renderers
+  // @ts-expect-error
   const renderCFAT = ({ item }) => {
     const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
+    // @ts-expect-error
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = guessFromCurrencyCode(account, { currencyCode, pluginId: wallet.currencyInfo.pluginId }).tokenId

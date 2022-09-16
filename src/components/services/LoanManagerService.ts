@@ -12,6 +12,7 @@ export const LoanManagerService = () => {
   // Initialization
   //
 
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (account.disklet != null) {
       dispatch(loadLoanAccounts(account))

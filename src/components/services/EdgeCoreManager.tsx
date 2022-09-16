@@ -1,7 +1,9 @@
 import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+// @ts-expect-error
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io'
+// @ts-expect-error
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -47,6 +49,7 @@ const crashReporter: EdgeCrashReporter = {
     return Bugsnag.leaveBreadcrumb(event.message, event.metadata)
   },
   logCrash(event) {
+    // @ts-expect-error
     return Bugsnag.notify(event.error, report => {
       report.addMetadata(event.source, event.metadata)
     })
@@ -68,6 +71,7 @@ export function EdgeCoreManager(props: Props) {
   const isAppForeground = useIsAppForeground()
 
   // Keep the core in sync with the application state:
+  // @ts-expect-error
   useAsyncEffect(async () => {
     if (context == null) return
     await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
@@ -112,6 +116,7 @@ export function EdgeCoreManager(props: Props) {
         <MakeFakeEdgeWorld
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
+          // @ts-expect-error
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           users={[fakeUser]}
@@ -124,6 +129,7 @@ export function EdgeCoreManager(props: Props) {
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
           allowDebugging={ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
+          // @ts-expect-error
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}

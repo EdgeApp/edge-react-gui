@@ -128,6 +128,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 <FioNameRow
                   key={`${address.name}`}
                   name={address.name}
+                  // @ts-expect-error
                   bundledTxs={address.bundledTxs}
                   icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
                   theme={theme}
@@ -144,6 +145,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                   name={domain.name}
                   expiration={domain.expiration}
                   icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                  // @ts-expect-error
                   theme={theme}
                   onPress={() => this.onDomainPress(domain)}
                 />

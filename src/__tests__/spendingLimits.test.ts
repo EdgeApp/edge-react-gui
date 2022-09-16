@@ -48,6 +48,7 @@ describe('spendingLimits', () => {
           }
         }
       }
+      // @ts-expect-error
       const actual = spendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()
@@ -71,6 +72,7 @@ describe('spendingLimits', () => {
           }
         }
       }
+      // @ts-expect-error
       const actual = spendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()

@@ -161,6 +161,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
+          {/* @ts-expect-error */}
           <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
             {isSelectWalletDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
@@ -188,6 +189,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     if (!wallet) return null
     const { name } = wallet
 
+    // @ts-expect-error
     const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
 
     return (
@@ -227,6 +229,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
+          {/* @ts-expect-error */}
           <PrimaryButton disabled={isContinueButtonDisabled} style={styles.confirmButton} onPress={this.onPressSubmit}>
             {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
             {isContinueButtonDisabled ? (
@@ -399,6 +402,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
 
     let paymentDenominationSymbol
     if (paymentDenomination) {
+      // @ts-expect-error
       paymentDenominationSymbol = paymentDenomination.symbol ? paymentDenomination.symbol : ''
     } else {
       paymentDenominationSymbol = ''

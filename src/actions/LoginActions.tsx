@@ -42,8 +42,10 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
   const currencyCodes = {}
   for (const pluginId of Object.keys(account.currencyConfig)) {
     const { currencyInfo } = account.currencyConfig[pluginId]
+    // @ts-expect-error
     currencyCodes[currencyInfo.walletType] = currencyInfo.currencyCode
   }
+  // @ts-expect-error
   const currencyCode = currencyCodes[walletKey.type]
 
   return { walletId, currencyCode }
@@ -167,9 +169,13 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     const mergedDenominationSettings = {}
 
     for (const plugin of Object.keys(defaultDenominationSettings)) {
+      // @ts-expect-error
       mergedDenominationSettings[plugin] = {}
+      // @ts-expect-error
       for (const code of Object.keys(defaultDenominationSettings[plugin])) {
+        // @ts-expect-error
         mergedDenominationSettings[plugin][code] = {
+          // @ts-expect-error
           ...defaultDenominationSettings[plugin][code],
           ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
         }
@@ -217,30 +223,40 @@ export const mergeSettings = (
   let isDefaultTypeIncorrect = false
   for (const key of Object.keys(defaults)) {
     // if the of the setting default does not meet the enforced type
+    // @ts-expect-error
     const defaultSettingType = typeof defaults[key]
+    // @ts-expect-error
     if (defaultSettingType !== types[key]) {
       isDefaultTypeIncorrect = true
+      // @ts-expect-error
       console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
     }
 
     // if the of the loaded setting does not meet the enforced type
     // eslint-disable-next-line valid-typeof
+    // @ts-expect-error
     const loadedSettingType = typeof loadedSettings[key]
+    // @ts-expect-error
     if (loadedSettingType !== types[key]) {
       isOverwriteNeeded = true
       console.warn(
         'Settings overwrite was needed for: ',
         key,
         ' with loaded value: ',
+        // @ts-expect-error
         loadedSettings[key],
         ', but needed type: ',
+        // @ts-expect-error
         types[key],
         ' so replace with: ',
+        // @ts-expect-error
         defaults[key]
       )
       // change that erroneous value to something that works (default)
+      // @ts-expect-error
       finalSettings[key] = defaults[key]
     } else {
+      // @ts-expect-error
       finalSettings[key] = loadedSettings[key]
     }
   }
@@ -304,9 +320,11 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
  * so we may need to enable tokens on some of the created wallets.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
+  // @ts-expect-error
   const currencyInfos = []
   for (const code of currencyCodes) {
     const [parent] = code.split(':')
+    // @ts-expect-error
     if (currencyInfos.find(info => info.currencyCode === parent)) continue
     const currencyInfo = findCurrencyInfo(account, parent)
     if (currencyInfo != null) currencyInfos.push(currencyInfo)

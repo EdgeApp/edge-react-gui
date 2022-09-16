@@ -19,6 +19,7 @@ export const composeApprovableActions = (...actions: ApprovableAction[]): Approv
       currencyCode,
       nativeAmount
     },
+    // @ts-expect-error
     unsignedTxs: actions.reduce((txs, action) => [...txs, ...action.unsignedTxs], []),
     dryrun: async () => {
       const outputs: BroadcastTx[] = []

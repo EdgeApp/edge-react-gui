@@ -64,6 +64,7 @@ export function WalletListScene(props: Props) {
 
   // Show the tutorial or password reminder on mount:
   useAsyncEffect(
+    // @ts-expect-error
     async () => {
       if (needsPasswordCheck) {
         await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)

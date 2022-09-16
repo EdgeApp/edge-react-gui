@@ -55,6 +55,7 @@ export function TransactionListRow(props: Props) {
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
   // Thumbnail
+  // @ts-expect-error
   let thumbnailPath
   const contacts: GuiContact[] = useSelector(state => state.contacts) ?? []
   const transactionContactName = name != null ? normalizeForSearch(name) : null
@@ -88,6 +89,7 @@ export function TransactionListRow(props: Props) {
     }
     Actions.push('transactionDetails', {
       edgeTransaction: transaction,
+      // @ts-expect-error
       thumbnailPath
     })
   })

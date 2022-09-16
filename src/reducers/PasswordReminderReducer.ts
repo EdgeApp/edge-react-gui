@@ -189,6 +189,7 @@ function translateAction(action: Action): PasswordReminderReducerAction {
       type: 'NEW_ACCOUNT_LOGIN',
       data: {
         lastLoginDate: now,
+        // @ts-expect-error
         lastPasswordUseDate: now
       }
     }

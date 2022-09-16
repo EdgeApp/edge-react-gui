@@ -351,6 +351,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               //
               const receipt = await result.wait(1)
               const transferTopicHash = ethers.utils.id('Transfer(address,address,uint256)')
+              // @ts-expect-error
               const transferTopics = receipt.logs.filter(log => log.topics[0] === transferTopicHash)
               // The last token transfer log is the LP-token transfer
               const lpTokenTransfer = transferTopics.slice(-1)[0]

@@ -38,6 +38,7 @@ const SettingsRowComponent = (props: Props) => {
     <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
+        {/* @ts-expect-error */}
         <Text style={disabled ? styles.disabledText : styles.text}>{label}</Text>
         {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </>

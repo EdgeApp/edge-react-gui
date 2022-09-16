@@ -86,6 +86,7 @@ const currentEndIndex = (state = 0, action: Action): number => {
   }
 }
 
+// @ts-expect-error
 export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,

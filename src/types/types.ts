@@ -156,6 +156,7 @@ export const emptyGuiDenomination: GuiDenomination = {
   name: '',
   symbol: '',
   multiplier: '',
+  // @ts-expect-error
   precision: 0,
   currencyCode: ''
 }

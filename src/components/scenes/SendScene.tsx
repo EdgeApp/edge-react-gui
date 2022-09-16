@@ -63,6 +63,7 @@ type StateProps = {
 type DispatchProps = {
   reset: () => void
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void
+  // @ts-expect-error
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => Promise<void>
   onChangePin: (pin: string) => void
   selectWallet: (walletId: string, currencyCode: string) => void
@@ -89,6 +90,7 @@ type State = {
 } & WalletStates
 
 class SendComponent extends React.PureComponent<Props, State> {
+  // @ts-expect-error
   addressTile: AddressTile | undefined
   pinInput: { current: TextInput | null } = React.createRef()
 
@@ -194,7 +196,9 @@ class SendComponent extends React.PureComponent<Props, State> {
       const nativeAmount = parsedUri.nativeAmount || ''
       const otherParams = {}
       if (newGuiMakeSpendInfo.fioAddress != null) {
+        // @ts-expect-error
         otherParams.fioAddress = newGuiMakeSpendInfo.fioAddress
+        // @ts-expect-error
         otherParams.isSendUsingFioAddress = newGuiMakeSpendInfo.isSendUsingFioAddress
       }
       const spendTargets: EdgeSpendTarget[] = [
@@ -215,6 +219,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       }
     }
     sendConfirmationUpdateTx(newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    // @ts-expect-error
     this.setState({ recipientAddress })
   }
 
@@ -367,6 +372,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           resetSendTransaction={this.resetSendTransaction}
           lockInputs={lockInputs || lockTilesMap.address}
           isCameraOpen={!!isCameraOpen}
+          // @ts-expect-error
           ref={ref => (this.addressTile = ref)}
         />
       )
@@ -435,6 +441,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
       return (
         <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
+          {/* @ts-expect-error */}
           <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
         </Tile>
       )
@@ -636,6 +643,7 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
+    // @ts-expect-error
     async signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) {
       await dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider))
     },

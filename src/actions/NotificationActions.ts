@@ -23,6 +23,7 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
 }
 
 export type PriceChangeNotificationSettings = {
+  // @ts-expect-error
   ignorePriceChanges: boolean
   [pluginId: string]: {
     eventId: string
@@ -42,6 +43,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     ignorePriceChanges: false
   }
   try {
+    // @ts-expect-error
     v2Settings = await getDeviceSettings(deviceId)
 
     const currencyWallets = state.core.account.currencyWallets
@@ -57,6 +59,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
         const currencyPair = `${code}_${defaultIsoFiat}`
         if (
           v2Settings.events.find(event => {
+            // @ts-expect-error
             const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
             if (trigger == null) return false
             if (trigger?.currencyPair !== currencyPair) return false
@@ -108,6 +111,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     }
 
     if (createEvents.length > 0) {
+      // @ts-expect-error
       v2Settings = await setDeviceSettings(deviceId, { createEvents })
     }
   } catch (e: any) {
@@ -122,6 +126,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
 }
 
 export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayload>): PriceChangeNotificationSettings => {
+  // @ts-expect-error
   const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges }
 
   for (const event of settings.events) {
@@ -235,5 +240,6 @@ export const newPriceChangeEvent = (
     }
   }
 
+  // @ts-expect-error
   return event
 }

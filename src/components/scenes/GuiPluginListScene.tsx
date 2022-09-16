@@ -163,6 +163,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
+      // @ts-expect-error
       deepPath = await Airship.show<string | undefined>(bridge => (
         <TextInputModal
           autoCorrect={false}
@@ -221,11 +222,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
+  // @ts-expect-error
   renderPlugin = ({ item }) => {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
+    // @ts-expect-error
     const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
@@ -233,6 +236,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <View style={styles.pluginRowContainer}>
         <TouchableOpacity onPress={async () => this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
+            {/* @ts-expect-error */}
             <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
@@ -271,6 +275,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="header">
+        {/* @ts-expect-error */}
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (

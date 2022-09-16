@@ -45,7 +45,9 @@ describe('FlipInputModalComponent', () => {
       feeExchangeDenomination: { multiplier: '100000000000', name: 'BTC' },
       feeNativeAmount: '1',
       feeAmount: '1',
+      // @ts-expect-error
       updateMaxSpend: (walletId, currencyCode) => undefined,
+      // @ts-expect-error
       updateTransactionAmount: (nativeAmount, exchangeAmount, walletId, currencyCode) => undefined,
       theme: getTheme()
     }

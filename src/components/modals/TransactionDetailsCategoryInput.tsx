@@ -46,7 +46,9 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
   formattedCategories = (categories: Object): CategoriesType => {
     return Object.keys(categories).map(key => {
       return {
+        // @ts-expect-error
         key: categories[key].key,
+        // @ts-expect-error
         syntax: categories[key].syntax
       }
     })
@@ -97,6 +99,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
             <View style={styles.inputSubCategoryContainter}>
               <FormField
                 {...MaterialInputOnWhite}
+                // @ts-expect-error
                 containerStyle={{
                   ...MaterialInputOnWhite.containerStyle,
                   height: THEME.rem(3.44),
@@ -140,10 +143,12 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
 
     const selectedSubcategories = subCategories.filter(subCategory => {
       const splittedSubCategory = subCategory.split(':')
+      // @ts-expect-error
       return splittedSubCategory[0].toLowerCase() === categories[category].syntax.toLowerCase()
     })
     const filteredSubcategories = subCategories.filter(subCategory => {
       const splittedSubCategory = subCategory.split(':')
+      // @ts-expect-error
       return splittedSubCategory[0].toLowerCase() !== categories[category].syntax.toLowerCase()
     })
     return [...selectedSubcategories, ...filteredSubcategories]

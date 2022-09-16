@@ -39,6 +39,7 @@ export function WalletListSortable(props: Props) {
 
   return (
     <SortableListView
+      // @ts-expect-error
       style={StyleSheet.absoltueFill}
       data={currencyWallets}
       order={walletOrder}

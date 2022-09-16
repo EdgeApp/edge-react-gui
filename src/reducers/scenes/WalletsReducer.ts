@@ -20,7 +20,9 @@ const byId = (state = {}, action: Action): WalletsState['byId'] => {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
+        // @ts-expect-error
         out[walletId] = {
+          // @ts-expect-error
           ...state[walletId],
           ...schema(wallets[walletId])
         }
@@ -33,10 +35,13 @@ const byId = (state = {}, action: Action): WalletsState['byId'] => {
       const { wallets } = action.data
       const out = { ...state }
       for (const wallet of wallets) {
+        // @ts-expect-error
         if (!state[wallet.id]) {
           continue
         }
+        // @ts-expect-error
         out[wallet.id] = {
+          // @ts-expect-error
           ...state[wallet.id],
           ...schema(wallet)
         }
@@ -55,6 +60,7 @@ const walletLoadingProgress = (state = {}, action: Action): WalletsState['wallet
       const activeWalletIdList = action.data.activeWalletIds
       const activeWalletIdProgress = {}
       activeWalletIdList.forEach(item => {
+        // @ts-expect-error
         activeWalletIdProgress[item] = 0
       })
       return activeWalletIdProgress
@@ -62,6 +68,7 @@ const walletLoadingProgress = (state = {}, action: Action): WalletsState['wallet
 
     case 'UPDATE_WALLET_LOADING_PROGRESS': {
       // prevent backwards progress
+      // @ts-expect-error
       if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
       return {
         ...state,
@@ -146,6 +153,7 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   })
   if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
     for (const cCodeKey in STAKING_BALANCES) {
+      // @ts-expect-error
       const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
       nativeBalances[stakingCurrencyCode] = wallet.balances[stakingCurrencyCode] ?? '0'
     }
@@ -191,6 +199,7 @@ const fioWallets = (state = [], action: Action): WalletsState['fioWallets'] => {
   }
 }
 
+// @ts-expect-error
 export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   selectedWalletId,

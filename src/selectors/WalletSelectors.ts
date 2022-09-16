@@ -60,6 +60,7 @@ export const convertCurrencyFromExchangeRates = (
   return convertedAmount
 }
 
+// @ts-expect-error
 export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [string]: string }): string => {
   const currencyCode = exchangeDenomination.name
   const nativeBalance = wallet.balances[currencyCode] ?? '0'

@@ -67,6 +67,7 @@ export const LoanDashboardScene = (props: Props) => {
   // Effects
   //
 
+  // @ts-expect-error
   useEffect(() => {
     // Only resync on scene mount every 5 minutes
     if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {

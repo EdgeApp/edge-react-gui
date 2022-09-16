@@ -42,25 +42,25 @@ type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
 
 // @ts-expect-error
 export const forwardRef: ForwardRef = React.forwardRef
-// @ts-expect-error
+
 export const memo: Memo = React.memo
-// @ts-expect-error
+
 export const useCallback: UseCallback = React.useCallback
-// @ts-expect-error
+
 export const useContext: UseContext = React.useContext
-// @ts-expect-error
+
 export const useDebugValue: UseDebugValue = React.useDebugValue
-// @ts-expect-error
+
 export const useEffect: UseEffect = React.useEffect
-// @ts-expect-error
+
 export const useImperativeHandle: UseImperativeHandle = React.useImperativeHandle
-// @ts-expect-error
+
 export const useLayoutEffect: UseEffect = React.useLayoutEffect
-// @ts-expect-error
+
 export const useMemo: UseMemo = React.useMemo
-// @ts-expect-error
+
 export const useReducer: UseReducer = React.useReducer
-// @ts-expect-error
+
 export const useRef: UseRef = React.useRef
-// @ts-expect-error
+
 export const useState: UseState = React.useState

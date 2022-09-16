@@ -170,12 +170,14 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
+  // @ts-expect-error
   fieldViewOnLayout = ({ nativeEvent: { layout: { y } } = { layout: { y: this.state.fieldPos } } }: LayoutChangeEvent) => {
     this.setState({ fieldPos: y })
   }
 
   handleFioWalletChange = (walletId: string) => {
     this.setState({
+      // @ts-expect-error
       selectedWallet: this.props.fioWallets.find(fioWallet => fioWallet.id === walletId)
     })
   }
@@ -231,6 +233,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           type="touchable"
           title={s.strings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
+          // @ts-expect-error
           body={selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}
         />
       )
