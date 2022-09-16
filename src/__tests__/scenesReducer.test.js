@@ -5,8 +5,6 @@ import { expect, test } from '@jest/globals'
 import { initialState as SendConfirmationInitialState } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { scenes as scenesReducer } from '../reducers/scenes/ScenesReducer.js'
 
-const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
-
 test('initialState', () => {
   const expected = {
     createWallet: {
@@ -47,7 +45,7 @@ test('initialState', () => {
       currentWalletId: ''
     }
   }
-  const actual = scenesReducer(undefined, dummyAction)
+  const actual = scenesReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
   expect(actual).toEqual(expected)
 })

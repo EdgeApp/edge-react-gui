@@ -8,18 +8,17 @@ import s from '../locales/strings.js'
 import { initialState } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { sendConfirmation } from '../reducers/scenes/SendConfirmationReducer.js'
 
-const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
-
 describe('sendConfirmation reducer', () => {
   test('initialState', () => {
-    const actual = sendConfirmation(undefined, dummyAction)
+    const actual = sendConfirmation(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
     expect(actual).toMatchSnapshot()
   })
 
   test('reset', () => {
-    const action = { type: 'UI/SEND_CONFIRMATION/RESET' }
-    const actual = sendConfirmation(undefined, action)
+    const actual = sendConfirmation(undefined, {
+      type: 'UI/SEND_CONFIRMATION/RESET'
+    })
 
     expect(actual).toMatchSnapshot()
   })
@@ -45,8 +44,9 @@ describe('sendConfirmation reducer', () => {
           signedTx: '',
           txid: ''
         }
+        // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
-        const action = {
+        const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: null,
@@ -54,8 +54,7 @@ describe('sendConfirmation reducer', () => {
             guiMakeSpendInfo,
             transaction
           }
-        }
-        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+        })
 
         expect(actual).toMatchSnapshot()
       })
@@ -80,8 +79,9 @@ describe('sendConfirmation reducer', () => {
           signedTx: '',
           txid: ''
         }
+        // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
-        const action = {
+        const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: null,
@@ -89,8 +89,7 @@ describe('sendConfirmation reducer', () => {
             guiMakeSpendInfo,
             transaction
           }
-        }
-        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+        })
 
         expect(actual).toMatchSnapshot()
       })
@@ -98,8 +97,9 @@ describe('sendConfirmation reducer', () => {
       test('with error', () => {
         const guiMakeSpendInfo = { nativeAmount: '100000' }
         const error = new Error()
+        // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
-        const action = {
+        const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error,
@@ -107,8 +107,7 @@ describe('sendConfirmation reducer', () => {
             guiMakeSpendInfo,
             transaction: null
           }
-        }
-        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+        })
 
         expect(actual).toMatchSnapshot()
       })
@@ -127,8 +126,9 @@ describe('sendConfirmation reducer', () => {
           txid: ''
         }
         const error = new Error(s.strings.incorrect_pin)
+        // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone = cloneDeep(initialState)
-        const action = {
+        const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error,
@@ -136,8 +136,7 @@ describe('sendConfirmation reducer', () => {
             guiMakeSpendInfo,
             transaction
           }
-        }
-        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+        })
 
         expect(actual).toMatchSnapshot()
       })
@@ -151,12 +150,11 @@ describe('sendConfirmation reducer', () => {
           spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
           metadata: { name: 'airbitz' }
         }
-        const action = {
+        const initialStateClone = cloneDeep(initialState)
+        const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
-        }
-        const initialStateClone = cloneDeep(initialState)
-        const actual = sendConfirmation(initialStateClone, action)
+        })
 
         expect(actual).toMatchSnapshot()
       })
@@ -168,12 +166,11 @@ describe('sendConfirmation reducer', () => {
           spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
           metadata: {}
         }
-        const action = {
+        const initialStateClone = cloneDeep(initialState)
+        const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
-        }
-        const initialStateClone = cloneDeep(initialState)
-        const actual = sendConfirmation(initialStateClone, action)
+        })
 
         expect(actual).toMatchSnapshot()
       })
@@ -186,25 +183,23 @@ describe('sendConfirmation reducer', () => {
         spendTargets: [{ publicAddress: '123123123', nativeAmount: '0' }],
         metadata: {}
       }
-      const action = {
-        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
-        data: { spendInfo, authRequired: 'none' }
-      }
       const initialStateClone = cloneDeep(initialState)
 
-      const actual = sendConfirmation(initialStateClone, action)
+      const actual = sendConfirmation(initialStateClone, {
+        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+        data: { spendInfo, authRequired: 'none' }
+      })
 
       expect(actual).toMatchSnapshot()
     })
   })
 
   test('pin', () => {
-    const action = {
+    const initialStateClone = cloneDeep(initialState)
+    const actual = sendConfirmation(initialStateClone, {
       type: 'UI/SEND_CONFIRMATION/NEW_PIN',
       data: { pin: '1234' }
-    }
-    const initialStateClone = cloneDeep(initialState)
-    const actual = sendConfirmation(initialStateClone, action)
+    })
 
     expect(actual).toMatchSnapshot()
   })

@@ -4,8 +4,6 @@ import { expect, test } from '@jest/globals'
 
 import { transactionList as transactionListReducer } from '../reducers/scenes/TransactionListReducer.js'
 
-const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
-
 test('initialState', () => {
   const expected = {
     transactions: [],
@@ -15,7 +13,7 @@ test('initialState', () => {
     numTransactions: 0,
     currentWalletId: ''
   }
-  const actual = transactionListReducer(undefined, dummyAction)
+  const actual = transactionListReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
   expect(actual).toEqual(expected)
 })

@@ -4,11 +4,9 @@ import { describe, expect, it } from '@jest/globals'
 
 import { initialState, spendingLimits } from '../reducers/SpendingLimitsReducer.js'
 
-const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
-
 describe('spendingLimits', () => {
   it('should render initialState', () => {
-    const actual = spendingLimits(undefined, dummyAction)
+    const actual = spendingLimits(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
     expect(actual).toMatchSnapshot()
   })

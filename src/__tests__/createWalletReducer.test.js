@@ -4,8 +4,6 @@ import { expect, test } from '@jest/globals'
 
 import { createWallet as createWalletReducer } from '../reducers/scenes/CreateWalletReducer.js'
 
-const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
-
 test('initialState', () => {
   const expected = {
     walletAccountActivationPaymentInfo: {
@@ -23,7 +21,7 @@ test('initialState', () => {
     },
     walletAccountActivationQuoteError: ''
   }
-  const actual = createWalletReducer(undefined, dummyAction)
+  const actual = createWalletReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
   expect(actual).toEqual(expected)
 })

@@ -2,15 +2,19 @@
 
 import { describe, expect, test } from '@jest/globals'
 
-import { initialState, MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, untranslatedReducer as uut } from '../reducers/PasswordReminderReducer.js'
+import {
+  type PasswordReminderReducerAction,
+  initialState,
+  MAX_NON_PASSWORD_DAYS_LIMIT,
+  MAX_NON_PASSWORD_LOGINS_LIMIT,
+  untranslatedReducer as uut
+} from '../reducers/PasswordReminderReducer.js'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils.js'
-
-const dummyAction: any = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('PasswordReminder', () => {
   test('initialState', () => {
     const expected = initialState
-    const actual = uut(undefined, dummyAction)
+    const actual = uut(undefined, { type: 'default', data: {} })
 
     expect(actual).toEqual(expected)
   })
@@ -19,7 +23,7 @@ describe('PasswordReminder', () => {
     describe('Increment nonPasswordLoginsCount', () => {
       test('PIN_LOGIN', () => {
         const expected = initialState.nonPasswordLoginsCount + 1
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'NON_PASSWORD_LOGIN',
           data: {
             ...initialState,
@@ -37,7 +41,7 @@ describe('PasswordReminder', () => {
         const nonPasswordLoginsLimit = 12
         const nonPasswordDaysLimit = 6
         const expected = nonPasswordLoginsLimit
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'NON_PASSWORD_LOGIN',
           data: {
             ...initialState,
@@ -69,7 +73,7 @@ describe('PasswordReminder', () => {
           lastPasswordUseDate,
           lastLoginDate
         }
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'NEW_ACCOUNT_LOGIN',
           data: {
             lastLoginDate: testDate
@@ -96,7 +100,7 @@ describe('PasswordReminder', () => {
           nonPasswordDaysLimit,
           nonPasswordLoginsLimit
         }
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_USED',
           data: {
             lastPasswordUseDate: testDate
@@ -117,7 +121,7 @@ describe('PasswordReminder', () => {
           nonPasswordLoginsLimit: MAX_NON_PASSWORD_LOGINS_LIMIT
         }
         const expected = MAX_NON_PASSWORD_LOGINS_LIMIT
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_LOGIN',
           data: {
             ...previousState,
@@ -138,7 +142,7 @@ describe('PasswordReminder', () => {
           passwordUseCount: 100
         }
         const expected = MAX_NON_PASSWORD_DAYS_LIMIT
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_LOGIN',
           data: {
             ...previousState,
@@ -163,7 +167,7 @@ describe('PasswordReminder', () => {
         nonPasswordDaysLimit
       }
       const expected = true
-      const action = {
+      const action: PasswordReminderReducerAction = {
         type: 'NON_PASSWORD_LOGIN',
         data: {
           ...initialState,
@@ -183,7 +187,7 @@ describe('PasswordReminder', () => {
         nonPasswordLoginsRemaining
       }
       const expected = true
-      const action = {
+      const action: PasswordReminderReducerAction = {
         type: 'NON_PASSWORD_LOGIN',
         data: {
           ...previousState,
@@ -199,7 +203,7 @@ describe('PasswordReminder', () => {
   describe('Password Reminder skipped', () => {
     describe('PASSWORD_REMINDER_POSTPONED', () => {
       test('Increase nonPasswordDaysLimit, 2 days into future', () => {
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {}
         }
@@ -215,7 +219,7 @@ describe('PasswordReminder', () => {
       })
 
       test('Set nonPasswordLoginsLimit, 2 more than current count', () => {
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {
             lastLoginDate: Date.now()
@@ -229,7 +233,7 @@ describe('PasswordReminder', () => {
       })
 
       test('Set false needsPasswordCheck', () => {
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {
             lastLoginDate: Date.now()
@@ -250,7 +254,7 @@ describe('PasswordReminder', () => {
   describe('Change Password Requested', () => {
     describe('REQUEST_CHANGE_PASSWORD', () => {
       test('Set false needsPasswordCheck', () => {
-        const action = {
+        const action: PasswordReminderReducerAction = {
           type: 'REQUEST_CHANGE_PASSWORD',
           data: {
             lastLoginDate: Date.now()

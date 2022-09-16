@@ -6,8 +6,7 @@ import { initialState, settings as settingsReducer } from '../reducers/scenes/Se
 
 test('initialState', () => {
   const expected = initialState
-  // $FlowExpectedError
-  const actual = settingsReducer(undefined, {})
+  const actual = settingsReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
   expect(actual).toEqual(expected)
 })
