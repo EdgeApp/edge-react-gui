@@ -1,7 +1,7 @@
 // @flow
 
 import { add, gt } from 'biggystring'
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -74,10 +74,10 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   const [nativeAmount, setNativeAmount] = useState('0')
   const [exchangeAmount, setExchangeAmount] = useState('0')
   const [apy, setApy] = useState(0)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<Error | string | void>(undefined)
   const [loading, setLoading] = useState(false)
-  const [tx, setTx] = useState(null)
-  const [selectedFioAddress, setSelectedFioAddress] = useState()
+  const [tx, setTx] = useState<EdgeTransaction | void>(undefined)
+  const [selectedFioAddress, setSelectedFioAddress] = useState<string | void>(undefined)
   const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
 
   const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
@@ -224,7 +224,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       })
       .then(tx => {
         if (abort) return
-        setError(null)
+        setError(undefined)
         setTx(tx)
       })
       .catch(error => {

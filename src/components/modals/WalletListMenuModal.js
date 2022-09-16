@@ -94,7 +94,7 @@ const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet, tokenId?: 
 export function WalletListMenuModal(props: Props) {
   const { bridge, tokenId, navigation, walletId } = props
 
-  const [options, setOptions] = useState([])
+  const [options, setOptions] = useState<Option[]>([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)

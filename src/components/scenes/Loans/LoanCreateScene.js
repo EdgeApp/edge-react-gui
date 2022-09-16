@@ -66,9 +66,9 @@ export const LoanCreateScene = (props: Props) => {
   const bePluginId = beCurrencyInfo.pluginId
 
   // Source Wallet Data
-  const [srcWalletId, setSrcWalletId] = useState()
-  const [srcTokenId, setSrcTokenId] = useState()
-  const [srcCurrencyCode, setSrcCurrencyCode] = useState()
+  const [srcWalletId, setSrcWalletId] = useState<string | void>(undefined)
+  const [srcTokenId, setSrcTokenId] = useState<string | void>(undefined)
+  const [srcCurrencyCode, setSrcCurrencyCode] = useState<string | void>(undefined)
 
   const srcWallet = srcWalletId == null ? null : wallets[srcWalletId]
   const srcPluginId = srcWallet == null ? null : srcWallet.currencyInfo.pluginId
@@ -89,7 +89,7 @@ export const LoanCreateScene = (props: Props) => {
 
   // APR
   const [isLoading, setIsLoading] = useState(false)
-  const [apr, setApr] = useState()
+  const [apr, setApr] = useState<number | void>(undefined)
 
   const debts = useWatch(borrowEngine, 'debts')
   useEffect(() => {

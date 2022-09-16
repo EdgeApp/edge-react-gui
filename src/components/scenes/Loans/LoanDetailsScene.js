@@ -76,15 +76,15 @@ export const LoanDetailsScene = (props: Props) => {
     return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
-  const [runningProgramMessage, setRunningProgramMessage] = useState(null)
+  const [runningProgramMessage, setRunningProgramMessage] = useState<string | void>(undefined)
 
   useAsyncEffect(async () => {
     if (runningActionQueueItem != null) {
       const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
       const activeStep = displayInfo.steps.find(step => step.status === 'active')
-      setRunningProgramMessage(activeStep != null ? activeStep.title : null)
+      setRunningProgramMessage(activeStep != null ? activeStep.title : undefined)
     } else {
-      setRunningProgramMessage(null)
+      setRunningProgramMessage(undefined)
     }
   }, [account, runningActionQueueItem])
 

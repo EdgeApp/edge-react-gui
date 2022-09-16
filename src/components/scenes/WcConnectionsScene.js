@@ -26,7 +26,7 @@ export const WcConnectionsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [connections, setConnections] = useState([])
+  const [connections, setConnections] = useState<WcConnectionInfo[]>([])
   const { tempWallet, currencyWallets, wcEnabledWalletIds } = useSelector(state => {
     const { currencyWallets } = state.core.account
 

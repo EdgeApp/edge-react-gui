@@ -7,6 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
+import { type ActionOp } from '../../../controllers/action-queue/types.js'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { type LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect.js'
@@ -80,7 +81,7 @@ export const ManageCollateralScene = <T: $Keys<ParamList>>(props: Props<T>) => {
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
   const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = useState('0')
   const [newDebtApr, setNewDebtApr] = useState(0)
-  const [actionOp, setActionOp] = useState()
+  const [actionOp, setActionOp] = useState<ActionOp | void>()
 
   // #endregion
 

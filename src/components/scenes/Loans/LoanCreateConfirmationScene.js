@@ -4,6 +4,7 @@ import { add } from 'biggystring'
 import * as React from 'react'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
+import { type ActionProgram } from '../../../controllers/action-queue/types'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -44,7 +45,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const [borrowApprovalAction, setBorrowApprovalAction] = useState<ApprovableAction | null>(null)
 
   const dispatch = useDispatch()
-  const [actionProgram, setActionProgram] = useState()
+  const [actionProgram, setActionProgram] = useState<ActionProgram | void>(undefined)
   useAsyncEffect(async () => {
     // TODO: These default tokens will be removed when fee calculations are done using dryruns instead of ApprovableActions
     const allTokens = borrowEngineWallet.currencyConfig.allTokens
