@@ -12,15 +12,15 @@ import {
   type ActionProgram,
   type ActionProgramState,
   type BroadcastTxActionOp,
-  type FiatBuyActionOp,
-  type FiatSellActionOp,
   type LoanBorrowActionOp,
   type LoanDepositActionOp,
   type LoanRepayActionOp,
   type LoanWithdrawActionOp,
   type ParActionOp,
   type SeqActionOp,
-  type SwapActionOp
+  type SwapActionOp,
+  type WyreBuyActionOp,
+  type WyreSellActionOp
 } from './types'
 
 // A serializable error object
@@ -71,17 +71,15 @@ const asBroadcastTxActionOp: Cleaner<BroadcastTxActionOp> = asObject({
   pluginId: asString,
   rawTx: asBase64
 })
-const asFiatBuyActionOp: Cleaner<FiatBuyActionOp> = asObject({
-  type: asValue('fiat-buy'),
-  fiatPluginId: asString,
+const asWyreBuyActionOp: Cleaner<WyreBuyActionOp> = asObject({
+  type: asValue('wyre-buy'),
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asFiatSellActionOp: Cleaner<FiatSellActionOp> = asObject({
-  type: asValue('fiat-sell'),
-  fiatAccountId: asString,
-  fiatPluginId: asString,
+const asWyreSellActionOp: Cleaner<WyreSellActionOp> = asObject({
+  type: asValue('wyre-sell'),
+  wyreAccountId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
@@ -127,8 +125,8 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
   asParActionOp,
   asBroadcastTxActionOp,
-  asFiatBuyActionOp,
-  asFiatSellActionOp,
+  asWyreBuyActionOp,
+  asWyreSellActionOp,
   asLoanBorrowActionOp,
   asLoanDepositActionOp,
   asLoanRepayActionOp,

@@ -52,9 +52,8 @@ export const makeAaveBorrowAction = async ({
   // Construct the Withdraw to Bank action
   if (isDestBank) {
     out.push({
-      type: 'fiat-sell',
-      fiatAccountId: 'TODO', // TODO: after handling fiatAccountId
-      fiatPluginId: 'wyre', // TODO: update after converting fiatPluginId to displayName
+      type: 'wyre-sell',
+      wyreAccountId: 'TODO', // TODO: after handling fiatAccountId
       nativeAmount,
       tokenId: borrowTokenId ?? defaultTokenId,
       walletId: borrowEngineWallet.id

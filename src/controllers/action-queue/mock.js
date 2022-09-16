@@ -195,7 +195,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       }
     }
 
-    case 'fiat-sell': {
+    case 'wyre-sell': {
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
@@ -299,7 +299,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'done': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    case 'fiat-buy': {
+    case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
 

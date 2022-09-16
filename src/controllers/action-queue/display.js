@@ -110,30 +110,26 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_swap_message, fromCurrencyCode, toCurrencyCode)
       }
     }
-    case 'fiat-buy': {
-      const { fiatPluginId, tokenId, walletId } = actionOp
+    case 'wyre-buy': {
+      const { tokenId, walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      // TODO: Convert fiatPluginId to displayName
-      const partnerDisplayName = fiatPluginId[0].toUpperCase() + fiatPluginId.substring(1)
 
       return {
         ...baseDisplayInfo,
         title: sprintf(s.strings.action_queue_display_fiat_buy_title, currencyCode),
-        message: sprintf(s.strings.action_queue_display_fiat_buy_message, currencyCode, partnerDisplayName)
+        message: sprintf(s.strings.action_queue_display_fiat_buy_message, currencyCode, 'Wyre')
       }
     }
-    case 'fiat-sell': {
-      const { fiatPluginId, tokenId, walletId } = actionOp
+    case 'wyre-sell': {
+      const { tokenId, walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
-      // TODO: Convert fiatPluginId to displayName
-      const partnerDisplayName = fiatPluginId[0].toUpperCase() + fiatPluginId.substring(1)
 
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_fiat_sell_title,
-        message: sprintf(s.strings.action_queue_display_fiat_sell_message, currencyCode, partnerDisplayName)
+        message: sprintf(s.strings.action_queue_display_fiat_sell_message, currencyCode, 'Wyre')
       }
     }
     case 'loan-borrow': {

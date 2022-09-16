@@ -426,8 +426,8 @@ async function evaluateAction(
       }
     }
 
-    case 'fiat-sell': {
-      const { fiatAccountId, nativeAmount, tokenId, walletId } = actionOp
+    case 'wyre-sell': {
+      const { wyreAccountId, nativeAmount, tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
       const currencyCode = getCurrencyCode(wallet, tokenId)
 
@@ -435,7 +435,7 @@ async function evaluateAction(
         account
       })
 
-      const paymentAddress = await wyreClient.getCryptoPaymentAddress(fiatAccountId, walletId)
+      const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
       const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
         const unsignedTx = await wallet.makeSpend({
@@ -634,7 +634,7 @@ async function evaluateAction(
     case 'done': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    case 'fiat-buy': {
+    case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
 

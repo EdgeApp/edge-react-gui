@@ -29,9 +29,9 @@ export type WalletListResult = {
   currencyCode?: string,
   tokenId?: string,
 
-  // Fiat buy/sell
+  // Wyre buy/sell
   isBankSignupRequest?: boolean,
-  fiatAccountId?: string
+  wyreAccountId?: string
 }
 
 type Props = {|

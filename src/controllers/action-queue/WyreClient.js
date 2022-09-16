@@ -22,7 +22,7 @@ type WyreClientOptions = {
 type WyreClient = {
   +isAccountSetup: boolean,
   getPaymentMethods(): Promise<{ [string]: PaymentMethod } | void>,
-  getCryptoPaymentAddress(fiatAccountId: string, walletId: string): Promise<string>
+  getCryptoPaymentAddress(wyreAccountId: string, walletId: string): Promise<string>
 }
 
 const { baseUri } = ENV.WYRE_CLIENT_INIT
@@ -98,15 +98,15 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
       return paymentMethodsMap
     },
 
-    async getCryptoPaymentAddress(fiatAccountId: string, walletId: string): Promise<string> {
+    async getCryptoPaymentAddress(wyreAccountId: string, walletId: string): Promise<string> {
       const paymentMethods = await instance.getPaymentMethods()
-      const paymentMethod = paymentMethods != null ? paymentMethods[fiatAccountId] : undefined
-      if (paymentMethod == null) throw new Error(`Could not find fiat-sell accountId ${fiatAccountId}`)
+      const paymentMethod = paymentMethods != null ? paymentMethods[wyreAccountId] : undefined
+      if (paymentMethod == null) throw new Error(`Could not find wyre-sell accountId ${wyreAccountId}`)
 
       const { blockchains } = paymentMethod
       const wallet = account.currencyWallets[walletId]
       const parentCode = wallet.currencyInfo.currencyCode
-      if (!(parentCode in blockchains)) throw new Error(`No fiat-sell support for ${wallet.type} network assets on wyreAccountId ${fiatAccountId}`)
+      if (!(parentCode in blockchains)) throw new Error(`No wyre-sell support for ${wallet.type} network assets on wyreAccountId ${wyreAccountId}`)
       const address = blockchains[parentCode]
 
       return address
