@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import { showError } from '../components/services/AirshipInstance'
-import { useRef } from '../types/reactHooks'
 
 type Cleanup = (() => void) | undefined
 type AsyncEffect = () => Promise<Cleanup>
@@ -20,7 +19,7 @@ type State = {
  * but awaits the returned promise before starting the next run.
  */
 export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[]): void {
-  const state = useRef<State>({
+  const state = React.useRef<State>({
     closed: false,
     dirty: false,
     effect,

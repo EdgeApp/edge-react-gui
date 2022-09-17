@@ -1,13 +1,11 @@
 import * as React from 'react'
 import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { useRef } from '../../types/reactHooks'
-
 // Animate the opacity based on the visibility toggle:
 export const useFadeAnimation = (visible: boolean, options: { noFadeIn?: boolean; duration?: number }) => {
   const { noFadeIn = false, duration = 500 } = options
 
-  const firstRender = useRef<boolean>(true)
+  const firstRender = React.useRef<boolean>(true)
   const opacity = useSharedValue(noFadeIn ? 1 : 0)
   const style = useAnimatedStyle(() => ({
     opacity: opacity.value

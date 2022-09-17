@@ -5,7 +5,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { BorrowDebt, BorrowEngine } from '../../plugins/borrow-plugins/types'
-import { useRef } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
@@ -49,7 +48,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
     return pairs
   }, [])
 
-  const exchangeRateMap = useRef({ current: {} })
+  const exchangeRateMap = React.useRef({ current: {} })
   // @ts-expect-error
   const exchangeRates = useHandler((pair: string) => exchangeRateMap.current[pair] ?? '0')
   useSelector(state => {

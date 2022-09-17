@@ -12,7 +12,7 @@ import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { formatNumber, formatToNativeNumber, isValidInput } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { useRef, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 
@@ -35,8 +35,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const [statusTextType, setStatusTextType] = useState<'warning' | 'error' | undefined>()
   // @ts-expect-error
   const [poweredBy, setPoweredBy] = useState<EnterAmountPoweredBy | undefined>()
-  const firstRun = useRef<boolean>(true)
-  const lastUsed = useRef<number>(1)
+  const firstRun = React.useRef<boolean>(true)
+  const lastUsed = React.useRef<number>(1)
 
   const formattedSetValue1 = useHandler((value: string) => {
     setValue1(dotToLocale(value))

@@ -4,7 +4,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { useRef, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -97,7 +97,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
   const handleHidePassword = () => setHidePassword(!hidePassword)
 
   // Imperative methods:
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = React.useRef<TextInput>(null)
   function blur(): void {
     if (inputRef.current != null) inputRef.current.blur()
   }

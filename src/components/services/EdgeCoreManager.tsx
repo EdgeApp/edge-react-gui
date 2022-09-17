@@ -13,7 +13,7 @@ import SplashScreen from 'react-native-smart-splash-screen'
 import ENV from '../../../env.json'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import { useRef, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
@@ -64,8 +64,8 @@ export function EdgeCoreManager(props: Props) {
   const [context, setContext] = useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
-  const counter = useRef<number>(0)
-  const splashHidden = useRef<boolean>(false)
+  const counter = React.useRef<number>(0)
+  const splashHidden = React.useRef<boolean>(false)
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()

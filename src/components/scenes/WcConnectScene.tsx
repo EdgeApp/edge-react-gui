@@ -9,7 +9,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
-import { useRef, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -34,7 +34,7 @@ type Props = {
 export const WcConnectScene = (props: Props) => {
   const { navigation } = props
   const [selectedWallet, setSelectedWallet] = useState({ walletId: '', currencyCode: '' })
-  const connected = useRef(false)
+  const connected = React.useRef(false)
   const theme = useTheme()
   const styles = getStyles(theme)
   const { uri } = props.route.params

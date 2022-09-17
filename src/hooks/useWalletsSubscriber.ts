@@ -1,8 +1,6 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { useRef } from '../types/reactHooks'
-
 type Cleanup = (() => void) | undefined
 
 type WalletMap = { [walletId: string]: EdgeCurrencyWallet }
@@ -23,7 +21,7 @@ type State = {
  * but they will always be stale if you try to read them in here.
  */
 export function useWalletsSubscriber(account: EdgeAccount, subscribe: (wallet: EdgeCurrencyWallet) => Cleanup): void {
-  const state = useRef<State>({
+  const state = React.useRef<State>({
     cleanups: new Map(),
     lastWallets: {},
 

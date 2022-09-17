@@ -2,12 +2,11 @@ import * as React from 'react'
 
 import { logoutRequest } from '../../actions/LoginActions'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import { useRef } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 
 export const AutoLogout = () => {
   const dispatch = useDispatch()
-  const stateRef = useRef({ timestamp: new Date(), isAppForeground: true })
+  const stateRef = React.useRef({ timestamp: new Date(), isAppForeground: true })
   const loginStatus = useSelector(state => state.ui.settings.loginStatus ?? false)
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
   const isAppForeground = useIsAppForeground()
