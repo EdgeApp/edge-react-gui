@@ -2,6 +2,7 @@ import { div, lt, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -46,16 +47,26 @@ type Props = {
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
-  const { currencyWallet: borrowEngineWallet } = borrowEngine
 
-  const theme = useTheme()
-  const styles = getStyles(theme)
+  // -----------------------------------------------------------------------------
+  // #region Initialization
+  // -----------------------------------------------------------------------------
+
+  const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId('loan-create', borrowEngineWallet.id)
   if (existingProgramId != null) navigation.navigate('loanCreateStatus', { actionQueueId: existingProgramId })
 
-  // Wallet/Token Data
+  // #endregion Initialization
+
+  // -----------------------------------------------------------------------------
+  // #region Constants
+  // -----------------------------------------------------------------------------
+
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
   const account = useSelector(state => state.core.account)
   const wallets = useWatch(account, 'currencyWallets')
   const allTokens = useAllTokens(account)
@@ -63,8 +74,33 @@ export const LoanCreateScene = (props: Props) => {
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
+  const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
 
-  // Source Wallet Data
+  // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
+  // user selected src/dest that don't involve the borrowEngineWallet.
+  // Currently, the only use case is selecting fiat (bank) as a src/dest.
+  const { tokenId: hardSrcTokenAddr } = useMemo(
+    () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
+    [account, borrowEnginePluginId]
+  )
+  const { tokenId: hardDestTokenAddr } = useMemo(
+    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
+    [account, borrowEnginePluginId]
+  )
+  const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
+  const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
+
+  const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
+
+  const iconUri = useMemo(() => getBorrowPluginIconUri(borrowPlugin.borrowInfo), [borrowPlugin.borrowInfo])
+
+  // #endregion Constants
+
+  // -----------------------------------------------------------------------------
+  // #region State
+  // -----------------------------------------------------------------------------
+
+  // #region Source Wallet Data
   const [srcWalletId, setSrcWalletId] = useState<string | undefined>(undefined)
   const [srcTokenId, setSrcTokenId] = useState<string | undefined>(undefined)
   const [srcCurrencyCode, setSrcCurrencyCode] = useState<string | undefined>(undefined)
@@ -75,8 +111,9 @@ export const LoanCreateScene = (props: Props) => {
   const srcBalance = useWalletBalance(srcWallet ?? borrowEngineWallet, srcTokenId) // HACK: Balance isn't being used anyway if the src wallet hasn't been chosen yet. Default to the borrow engine wallet in this case so this hook can be used
   const srcWalletName = useWalletName(srcWallet ?? borrowEngineWallet) // HACK: srcWalletName is used for the warning card display, which would never show unless the srcWallet has been set.
   const srcAssetName = srcToken != null ? srcToken.displayName : srcWallet != null ? srcWallet.currencyInfo.displayName : ''
+  // #endregion Source Wallet Data
 
-  // Destination Wallet Data
+  // #region Destination Wallet/Bank Data
   const [destWallet, setDestWallet] = useState<EdgeCurrencyWallet | undefined>(undefined)
   const [destTokenId, setDestTokenId] = useState<string | undefined>(undefined)
   const [destBankId, setDestBankId] = useState<string | undefined>(undefined)
@@ -91,13 +128,14 @@ export const LoanCreateScene = (props: Props) => {
     }
   }, [account])
   const paymentMethod = destBankId == null || bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? undefined : bankAccountsMap[destBankId]
+  // #endregion Destination Wallet/Bank Data
 
-  // Borrow Amounts
+  // #region Borrow Amounts
   const [borrowAmountFiat, setBorrowAmountFiat] = useState('0')
   const [nativeCryptoBorrowAmount, setNativeCryptoBorrowAmount] = useState('0')
-  const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
+  // #endregion Borrow Amounts
 
-  // APR
+  // #region APR
   const [isLoading, setIsLoading] = useState(false)
   // @ts-expect-error
   const [apr, setApr] = useState()
@@ -110,18 +148,39 @@ export const LoanCreateScene = (props: Props) => {
       if (destDebt != null) setApr(destDebt.apr)
     }
   }, [debts, destTokenId])
+  // #endregion APR
 
-  // Hard-coded src/dest, used as intermediate src/dest steps for cases if the
-  // user selected src/dest that don't involve the borrowEngineWallet.
-  // Currently, the only use case is selecting fiat (bank) as a src/dest.
-  const { tokenId: hardSrcTokenAddr } = useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
-  const { tokenId: hardDestTokenAddr } = useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
+  // #region Required Collateral, LTV
+  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
+  // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
+  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION), [borrowAmountFiat, ltvRatio])
+
+  // Convert collateral in fiat -> collateral crypto
+  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
+    tokenId: srcTokenId,
+    wallet: srcWallet ?? borrowEngineWallet
+  })
+
+  const srcDenoms = !isUserInputComplete
+    ? null
+    : srcToken != null
+    ? srcToken.denominations
+    : srcWallet != null && srcWallet.currencyInfo != null
+    ? srcWallet.currencyInfo.denominations
+    : []
+
+  const srcExchangeMultiplier = srcDenoms == null ? '0' : srcDenoms[0].multiplier
+  const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
+
+  const isLtvExceeded = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
+  const displayLtvLimit = useMemo(() => toPercentString(ltvRatio), [ltvRatio])
+  // #endregion Required Collateral, LTV
+
+  // #endregion State
+
+  // -----------------------------------------------------------------------------
+  // #region Handlers
+  // -----------------------------------------------------------------------------
 
   /**
    * Show a wallet picker modal filtered by the allowed assets defined by the
@@ -129,10 +188,7 @@ export const LoanCreateScene = (props: Props) => {
    */
   const handleShowWalletPickerModal = (srcDest: 'source' | 'destination') => () => {
     const isSrc = srcDest === 'source'
-    const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
-    const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
-    const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
-    Airship.show<WalletListResult>(bridge => (
+    Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
@@ -184,46 +240,17 @@ export const LoanCreateScene = (props: Props) => {
       .catch(e => showError(e.message))
   }
 
-  /**
-   * Main Scene Final Props & Calculations
-   */
-
-  // User has made input to all required fields
-  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
-
-  // Required Collateral
-  // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
-  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION), [borrowAmountFiat, ltvRatio])
-
-  // Deposit + Borrow Request Data
-  // Convert collateral in fiat -> collateral crypto
-  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
-    tokenId: srcTokenId,
-    wallet: srcWallet ?? borrowEngineWallet
-  })
-
-  const srcDenoms = !isUserInputComplete
-    ? null
-    : srcToken != null
-    ? srcToken.denominations
-    : srcWallet != null && srcWallet.currencyInfo != null
-    ? srcWallet.currencyInfo.denominations
-    : []
-
-  const srcExchangeMultiplier = srcDenoms == null ? '0' : srcDenoms[0].multiplier
-  const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
-
-  const isLtvExceeded = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
-
-  // Borrow Amount Card
-  const displayLtvLimit = useMemo(() => toPercentString(ltvRatio), [ltvRatio])
-
   const handleBorrowAmountChanged = useCallback(({ fiatAmount, nativeCryptoAmount }) => {
     setBorrowAmountFiat(fiatAmount)
     setNativeCryptoBorrowAmount(nativeCryptoAmount)
   }, [])
 
-  // Warning
+  // #endregion Handlers
+
+  // -----------------------------------------------------------------------------
+  // #region Renderers
+  // -----------------------------------------------------------------------------
+
   const collateralWarningMsg = useMemo(
     () => sprintf(s.strings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
     [srcAssetName, srcCurrencyCode, srcWalletName]
@@ -255,11 +282,7 @@ export const LoanCreateScene = (props: Props) => {
     else return null
   })
 
-  /**
-   * Main Scene Render
-   */
-
-  const iconUri = useMemo(() => getBorrowPluginIconUri(borrowPlugin.borrowInfo), [borrowPlugin.borrowInfo])
+  // #endregion Renderers
 
   return (
     <SceneWrapper>
