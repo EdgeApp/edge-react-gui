@@ -199,7 +199,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
     }
 
     setActionOp(actionOp)
-  }, [actionNativeCryptoAmount, borrowEngineWallet, selectedTokenId])
+  }, [actionNativeCryptoAmount, actionOpType, borrowEngineWallet, borrowPluginId, destBankId, selectedTokenId])
 
   // @ts-expect-error
   useAsyncEffect(async () => {
@@ -228,7 +228,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       const apr = await borrowEngine.getAprQuote(selectedTokenId)
       setNewDebtApr(apr)
     }
-  }, [actionNativeCryptoAmount])
+  }, [action, actionNativeCryptoAmount, actionWallet, borrowEngine, borrowEngineWallet, selectedTokenId, showAprChange])
 
   // #endregion Hooks
 
