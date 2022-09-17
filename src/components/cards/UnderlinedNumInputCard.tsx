@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 
 import { useLayout } from '../../hooks/useLayout'
 import s from '../../locales/strings'
-import { memo, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { zeroString } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -117,4 +117,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const UnderlinedNumInputCard = memo(UnderlinedNumInputCardComponent)
+export const UnderlinedNumInputCard = React.memo(UnderlinedNumInputCardComponent)

@@ -5,7 +5,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { BorrowDebt, BorrowEngine } from '../../plugins/borrow-plugins/types'
-import { memo, useMemo, useRef } from '../../types/reactHooks'
+import { useMemo, useRef } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
@@ -85,4 +85,4 @@ const InterestRateChangeTileComponent = (props: Props) => {
   return <PercentageChangeArrowTile title={s.strings.loan_interest_rate} currentValue={currentWeightedApr} futureValue={futureWeightedApr} />
 }
 
-export const InterestRateChangeTile = memo(InterestRateChangeTileComponent)
+export const InterestRateChangeTile = React.memo(InterestRateChangeTileComponent)

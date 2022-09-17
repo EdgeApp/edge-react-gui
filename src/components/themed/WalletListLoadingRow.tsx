@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 type Props = {
@@ -30,4 +29,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListLoadingRow = memo(WalletListLoadingRowComponent)
+export const WalletListLoadingRow = React.memo(WalletListLoadingRowComponent)

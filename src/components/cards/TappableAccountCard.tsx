@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { PaymentMethod } from '../../controllers/action-queue/WyreClient'
-import { memo, useCallback } from '../../types/reactHooks'
+import { useCallback } from '../../types/reactHooks'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -61,4 +61,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const TappableAccountCard = memo(TappableAccountCardComponent)
+export const TappableAccountCard = React.memo(TappableAccountCardComponent)

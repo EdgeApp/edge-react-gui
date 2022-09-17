@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-type Memo = <T>(component: T) => T
-
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
 type UseCallback = <T extends (...args: any[]) => any>(callback: T, deps: any[]) => T
@@ -35,8 +33,6 @@ type UseRef = {
 }
 
 type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
-
-export const memo: Memo = React.memo
 
 export const useCallback: UseCallback = React.useCallback
 

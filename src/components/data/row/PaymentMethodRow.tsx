@@ -8,7 +8,7 @@ import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { asGuiPluginJson } from '../../../types/GuiPluginTypes'
-import { memo, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -111,4 +111,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const PaymentMethodRow = memo(PaymentMethodRowComponent)
+export const PaymentMethodRow = React.memo(PaymentMethodRowComponent)

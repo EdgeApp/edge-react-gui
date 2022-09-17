@@ -9,7 +9,6 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import s from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
-import { memo } from '../../types/reactHooks'
 import { Theme } from '../../types/Theme'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { useFiatTotal } from '../scenes/Loans/LoanDetailsScene'
@@ -133,4 +132,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const LoanSummaryCard = memo(LoanSummaryCardComponent)
+export const LoanSummaryCard = React.memo(LoanSummaryCardComponent)

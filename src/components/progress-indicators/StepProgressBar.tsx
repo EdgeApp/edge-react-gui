@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { ActionDisplayInfo } from '../../controllers/action-queue/types'
-import { memo, useMemo } from '../../types/reactHooks'
+import { useMemo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -67,7 +67,7 @@ const StepProgressRowComponent = ({
   )
 }
 
-const StepProgressRow = memo(StepProgressRowComponent)
+const StepProgressRow = React.memo(StepProgressRowComponent)
 
 // -----------------------------------------------------------------------------
 // StepProgressBar visualizes the completed, active, and pending steps with a
@@ -183,4 +183,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const StepProgressBar = memo(StepProgressBarComponent)
+export const StepProgressBar = React.memo(StepProgressBarComponent)

@@ -4,7 +4,7 @@ import { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { memo, useRef } from '../../types/reactHooks'
+import { useRef } from '../../types/reactHooks'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -75,4 +75,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeableLoadingRow = memo(WalletListSwipeableLoadingRowComponent)
+export const WalletListSwipeableLoadingRow = React.memo(WalletListSwipeableLoadingRowComponent)

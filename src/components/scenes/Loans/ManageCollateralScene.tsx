@@ -236,7 +236,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // #region Handlers
   // -----------------------------------------------------------------------------
 
-  const handleFiatAmountChanged = useHandler(({ fiatAmount, nativeCryptoAmount }) => {
+  const handleFiatAmountChanged = useHandler((fiatAmount, nativeCryptoAmount) => {
     setActionNativeCryptoAmount(nativeCryptoAmount)
   })
 

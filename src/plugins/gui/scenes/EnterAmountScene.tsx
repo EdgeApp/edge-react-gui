@@ -12,18 +12,17 @@ import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { formatNumber, formatToNativeNumber, isValidInput } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { memo, useRef, useState } from '../../../types/reactHooks'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { useRef, useState } from '../../../types/reactHooks'
+import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 
 type Props = {
   route: RouteProp<'guiPluginEnterAmount'>
-  navigation: NavigationProp<'guiPluginEnterAmount'>
 }
 
 export type EnterAmountPoweredBy = { poweredByIcon: string; poweredByText: string; poweredByOnClick: () => void | Promise<void> }
 
-export const FiatPluginEnterAmountScene = memo((props: Props) => {
+export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params

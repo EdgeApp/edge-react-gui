@@ -3,7 +3,6 @@ import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import { memo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Card } from './Card'
 
@@ -50,4 +49,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TappableCard = memo(TappableCardComponent)
+export const TappableCard = React.memo(TappableCardComponent)

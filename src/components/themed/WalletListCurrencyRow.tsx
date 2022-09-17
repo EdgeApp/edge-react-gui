@@ -3,7 +3,6 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
-import { memo } from '../../types/reactHooks'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -57,4 +56,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListCurrencyRow = memo(WalletListCurrencyRowComponent)
+export const WalletListCurrencyRow = React.memo(WalletListCurrencyRowComponent)

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { memo, useMemo } from '../../types/reactHooks'
+import { useMemo } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -97,4 +97,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoIcon = memo(CryptoIconComponent)
+export const CryptoIcon = React.memo(CryptoIconComponent)

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { truncateDecimals } from '../../locales/intl'
-import { memo, useCallback, useMemo, useState } from '../../types/reactHooks'
+import { useCallback, useMemo, useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
@@ -17,8 +17,7 @@ type Props = {
   inputModalMessage: string
   title: string
   tokenId?: string
-  // @ts-expect-error
-  onAmountChanged: ({ fiatAmount: string, nativeCryptoAmount: string }) => void
+  onAmountChanged: (fiatAmount: string, nativeCryptoAmount: string) => void
 }
 
 /**
@@ -44,7 +43,7 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     0
   )
 
-  onAmountChanged({ fiatAmount, nativeCryptoAmount })
+  onAmountChanged(fiatAmount, nativeCryptoAmount)
 
   const handleEditActionfiatAmount = useCallback(() => {
     Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
@@ -63,4 +62,4 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
   )
 }
 
-export const FiatAmountInputCard = memo(FiatAmountInputCardComponent)
+export const FiatAmountInputCard = React.memo(FiatAmountInputCardComponent)
