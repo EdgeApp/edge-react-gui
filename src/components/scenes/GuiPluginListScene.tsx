@@ -274,8 +274,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="header">
-        {/* @ts-expect-error */}
-        <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline marginTop />
+        <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
             <FastImage

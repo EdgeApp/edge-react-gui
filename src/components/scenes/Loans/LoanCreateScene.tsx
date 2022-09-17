@@ -304,8 +304,7 @@ export const LoanCreateScene = (props: Props) => {
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
             <View style={styles.cardContainer}>
-              {/* @ts-expect-error */}
-              <AprCard paddingRem={[0.5, 1]} apr={apr} />
+              <AprCard apr={apr} />
             </View>
           )}
 

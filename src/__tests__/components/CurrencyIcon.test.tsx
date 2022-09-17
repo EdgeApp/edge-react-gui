@@ -25,8 +25,7 @@ describe('CryptoIcon', () => {
   it('should render with loading props', () => {
     const actual = renderer.create(
       <Provider store={store}>
-        {/* @ts-expect-error */}
-        <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" walletId="332s0ds39f" size={5} dark resizeMode="contain" marginRem={1} paddingRem={[1, 2]} />
+        <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" walletId="332s0ds39f" marginRem={1} />
       </Provider>
     )
 
