@@ -1,11 +1,12 @@
+import * as React from 'react'
 import { AppState } from 'react-native'
 
-import { useEffect, useState } from '../types/reactHooks'
+import { useState } from '../types/reactHooks'
 
 export const useIsAppForeground = (): boolean => {
   const [isForeground, setIsForeground] = useState(true)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const listener = AppState.addEventListener('change', state => setIsForeground(state === 'active'))
     return () => listener.remove()
   })

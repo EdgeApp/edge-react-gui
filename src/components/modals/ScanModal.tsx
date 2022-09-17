@@ -11,7 +11,7 @@ import RNQRGenerator from 'rn-qr-generator'
 import { useLayout } from '../../hooks/useLayout'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import s from '../../locales/strings'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -45,7 +45,7 @@ export const ScanModal = (props: Props) => {
   const handleFlash = () => setTorchEnabled(!torchEnabled)
 
   // Mount effects
-  useEffect(() => {
+  React.useEffect(() => {
     setScanEnabled(true)
     requestPermission('camera')
 

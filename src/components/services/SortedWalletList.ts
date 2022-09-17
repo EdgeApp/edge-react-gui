@@ -1,11 +1,12 @@
 import { EdgeAccount } from 'edge-core-js'
+import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useEffect, useRef, useState } from '../../types/reactHooks'
+import { useRef, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates, WalletListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
@@ -129,8 +130,7 @@ export function SortedWalletList(props: Props) {
   const dispatch = useDispatch()
   const emptyList: WalletListItem[] = [] // Needed for Flow.
   const lastList = useRef(emptyList)
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (!matchWalletList(sorted, lastList.current)) {
       dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: sorted })
     }

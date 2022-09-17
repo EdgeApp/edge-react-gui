@@ -1,4 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
+import * as React from 'react'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
 import { mockActionProgram } from '../../controllers/action-queue/mock'
@@ -6,7 +7,7 @@ import { updateActionProgramState } from '../../controllers/action-queue/redux/a
 import { executeActionProgram } from '../../controllers/action-queue/runtime'
 import { ActionQueueMap, ExecutionContext } from '../../controllers/action-queue/types'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useEffect, useMemo } from '../../types/reactHooks'
+import { useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 
@@ -46,7 +47,7 @@ export const ActionQueueService = () => {
   // Runtime Loop
   //
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (queue == null) return
 
     const { account, clientId } = executionContext

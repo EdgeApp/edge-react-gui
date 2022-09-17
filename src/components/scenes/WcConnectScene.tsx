@@ -9,7 +9,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
-import { useEffect, useMemo, useRef, useState } from '../../types/reactHooks'
+import { useMemo, useRef, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -54,8 +54,7 @@ export const WcConnectScene = (props: Props) => {
     }
   })
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
   }, [wallet])
 
@@ -106,15 +105,14 @@ export const WcConnectScene = (props: Props) => {
     )
   }
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
       showWalletListModal()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWallet.walletId, selectedWallet.currencyCode])
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       if (!connected.current && wallet?.otherMethods?.wcDisconnect != null) wallet.otherMethods.wcDisconnect(uri)
     }

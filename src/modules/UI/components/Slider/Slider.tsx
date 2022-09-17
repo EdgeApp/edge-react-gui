@@ -8,7 +8,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../../component
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import { useHandler } from '../../../../hooks/useHandler'
 import s from '../../../../locales/strings'
-import { useEffect, useState } from '../../../../types/reactHooks'
+import { useState } from '../../../../types/reactHooks'
 
 const COMPLETE_POINT: number = 3
 
@@ -109,8 +109,7 @@ export const SliderComponent = (props: Props) => {
   })
 
   // Reset slider state conditions:
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     // Reset prop set by parent
     if (reset) resetSlider()
     // Completed prop set by parent and no longer showing spinner

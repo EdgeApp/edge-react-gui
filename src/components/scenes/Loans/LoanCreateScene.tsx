@@ -19,7 +19,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { useEffect, useMemo, useState } from '../../../types/reactHooks'
+import { useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -141,8 +141,7 @@ export const LoanCreateScene = (props: Props) => {
   const [apr, setApr] = useState()
 
   const debts = useWatch(borrowEngine, 'debts')
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (destTokenId != null) {
       const destDebt = debts.find(debt => debt.tokenId === destTokenId)
       if (destDebt != null) setApr(destDebt.apr)

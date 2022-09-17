@@ -9,7 +9,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { useEffect, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
@@ -67,8 +67,7 @@ export const LoanDashboardScene = (props: Props) => {
   // Effects
   //
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     // Only resync on scene mount every 5 minutes
     if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
       dispatch(resyncLoanAccounts(account))

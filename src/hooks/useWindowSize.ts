@@ -1,6 +1,7 @@
+import * as React from 'react'
 import { Dimensions } from 'react-native'
 
-import { useEffect, useState } from '../types/reactHooks'
+import { useState } from '../types/reactHooks'
 
 type ScaledSize = {
   width: number
@@ -13,7 +14,7 @@ type ScaledSize = {
 export function useWindowSize(): ScaledSize {
   const [windowSize, setWindowSize] = useState<ScaledSize>(() => Dimensions.get('window'))
 
-  useEffect(() => {
+  React.useEffect(() => {
     // @ts-expect-error
     const handleChange = ({ window }) => setWindowSize(window)
     const listener = Dimensions.addEventListener('change', handleChange)

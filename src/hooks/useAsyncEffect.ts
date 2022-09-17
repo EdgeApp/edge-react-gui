@@ -1,5 +1,7 @@
+import * as React from 'react'
+
 import { showError } from '../components/services/AirshipInstance'
-import { useEffect, useRef } from '../types/reactHooks'
+import { useRef } from '../types/reactHooks'
 
 type Cleanup = (() => void) | undefined
 type AsyncEffect = () => Promise<Cleanup>
@@ -28,7 +30,7 @@ export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[]): void {
   })
 
   // Handle component unmount:
-  useEffect(
+  React.useEffect(
     () => () => {
       state.current.closed = true
       wakeup(state.current)

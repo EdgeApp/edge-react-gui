@@ -13,7 +13,7 @@ import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FioAddress } from '../../types/types'
@@ -158,14 +158,12 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     })
   }
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     props.refreshAllFioAddresses()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
       currencyPlugin.otherMethods
         .getStakeEstReturn(exchangeAmount)
@@ -177,8 +175,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     }
   }, [exchangeAmount, currencyPlugin])
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (!selectedFioAddress && fioAddresses?.length > 0) {
       const fioAddress = fioAddresses
         .filter(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
@@ -195,7 +192,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }, [...fioAddresses, selectedFioAddress])
 
   // Make spend transaction after amount change
-  useEffect(() => {
+  React.useEffect(() => {
     if (nativeAmount === '0') return
 
     let abort = false

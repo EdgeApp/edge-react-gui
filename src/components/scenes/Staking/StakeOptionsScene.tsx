@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings'
 import { StakePolicy } from '../../../plugins/stake-plugins'
 import { RootState } from '../../../reducers/RootReducer'
-import { useEffect, useMemo } from '../../../types/reactHooks'
+import { useMemo } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
@@ -33,7 +33,7 @@ export const StakeOptionsScene = (props: Props) => {
   // Stake Policies
   //
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (stakePolicies.length === 1) {
       // Transition to next scene immediately
       navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })

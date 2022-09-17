@@ -2,8 +2,6 @@ import * as React from 'react'
 
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
-type UseEffect = (effect: () => (() => void) | undefined, deps?: any[]) => void
-
 type UseMemo = <T>(init: () => T, deps?: any[]) => T
 
 type UseRef = {
@@ -16,8 +14,6 @@ type UseRef = {
 }
 
 type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
-
-export const useEffect: UseEffect = React.useEffect
 
 export const useMemo: UseMemo = React.useMemo
 

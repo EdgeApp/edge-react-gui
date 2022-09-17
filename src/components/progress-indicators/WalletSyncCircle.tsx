@@ -4,7 +4,7 @@ import { ViewStyle } from 'react-native'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
 
-import { useEffect, useMemo } from '../../types/reactHooks'
+import { useMemo } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
@@ -30,7 +30,7 @@ export const WalletSyncCircle = (props: Props) => {
   const isDone = useSharedValue(false)
 
   // Subscribe to the sync ratio:
-  useEffect(
+  React.useEffect(
     () =>
       wallet.watch('syncRatio', (ratio: number) => {
         // If already done but needs to resync reset the flags and animations

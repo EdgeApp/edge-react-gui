@@ -4,7 +4,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { useEffect, useMemo, useRef, useState } from '../../types/reactHooks'
+import { useMemo, useRef, useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -127,8 +127,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
 
   // Animates between 0 and 1 based our error state:
   const errorAnimation = useSharedValue(0)
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     errorAnimation.value = withTiming(hasError ? 1 : 0)
   }, [errorAnimation, hasError])
 

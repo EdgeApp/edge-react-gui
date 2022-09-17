@@ -8,7 +8,7 @@ import { newTransactionsRequest, refreshTransactionsRequest } from '../../action
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
 import { isReceivedTransaction, snooze } from '../../util/utils'
@@ -47,7 +47,7 @@ export function AccountCallbackManager(props: Props) {
   }
 
   // Subscribe to the account:
-  useEffect(() => {
+  React.useEffect(() => {
     const cleanups = [
       account.watch('currencyWallets', () =>
         setDirty(dirty => ({

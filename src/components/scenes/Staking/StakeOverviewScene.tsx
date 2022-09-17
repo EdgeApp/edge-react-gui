@@ -8,7 +8,7 @@ import s from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
-import { useEffect, useMemo, useState } from '../../../types/reactHooks'
+import { useMemo, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -56,14 +56,14 @@ export const StakeOverviewScene = (props: Props) => {
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = useState<number>(0)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setUpdateCounter(updateCounter => updateCounter + 1)
     }, 10 * 1000) // ten seconds
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
+  React.useEffect(() => {
     let abort = false
     stakePlugin
       .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })

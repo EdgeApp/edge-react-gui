@@ -5,7 +5,7 @@ import SortableListView from 'react-native-sortable-listview'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { showError } from '../services/AirshipInstance'
 import { WalletListSortableRow } from './WalletListSortableRow'
@@ -28,7 +28,7 @@ export function WalletListSortable(props: Props) {
     setWalletOrder(newOrder)
   })
 
-  useEffect(() => () => {
+  React.useEffect(() => () => {
     const keyStates: EdgeWalletStates = {}
     for (let i = 0; i < walletOrder.length; ++i) {
       const walletId = walletOrder[i]

@@ -10,7 +10,7 @@ import thunk from 'redux-thunk'
 import ENV from '../../../env.json'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { rootReducer } from '../../reducers/RootReducer'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { Action } from '../../types/reduxActions'
 import { Dispatch, RootState } from '../../types/reduxTypes'
 import { errorAlert } from '../../util/middleware/errorAlert'
@@ -79,8 +79,7 @@ export function Services(props: Props) {
   })
 
   // Actions to perform at first login:
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     // @ts-expect-error
     store.dispatch(loadDeviceReferral())
   }, [store])

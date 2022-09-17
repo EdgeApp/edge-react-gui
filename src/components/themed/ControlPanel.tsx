@@ -24,7 +24,7 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
-import { useEffect, useMemo, useState } from '../../types/reactHooks'
+import { useMemo, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
@@ -75,8 +75,7 @@ export function ControlPanel(props: Props) {
   const handleToggleDropdown = () => {
     if (isMultiUsers) setIsDropped(!isDropped)
   }
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isDrawerOpen || !isMultiUsers) setIsDropped(false)
   }, [isDrawerOpen, isMultiUsers])
 
@@ -198,16 +197,14 @@ export function ControlPanel(props: Props) {
 
   // Height value above can change if users are added/removed
   const sMaxHeight = useSharedValue(userListHeight)
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     sMaxHeight.value = withTiming(userListHeight)
   }, [sMaxHeight, userListHeight])
 
   // Animation completion ratio/multiplier
   // Shared to sync fade & drop animations
   const sAnimationMult = useSharedValue(0)
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     sAnimationMult.value = withTiming(isDropped ? 1 : 0, {
       duration: 500,
       easing: Easing.inOut(Easing.circle)

@@ -1,6 +1,8 @@
+import * as React from 'react'
+
 import { logoutRequest } from '../../actions/LoginActions'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import { useEffect, useRef } from '../../types/reactHooks'
+import { useRef } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 
 export const AutoLogout = () => {
@@ -10,8 +12,7 @@ export const AutoLogout = () => {
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
   const isAppForeground = useIsAppForeground()
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     // Check if app came back from background
     const appForegrounded = !stateRef.current.isAppForeground && isAppForeground
     // Check if time for logout has expired

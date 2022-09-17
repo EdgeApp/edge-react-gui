@@ -8,7 +8,7 @@ import { Fontello } from '../../assets/vector/index'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { useEffect, useMemo, useRef } from '../../types/reactHooks'
+import { useMemo, useRef } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
@@ -42,8 +42,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   // Tutorial mode:
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (openTutorial && rowRef.current != null) {
       rowRef.current.openRight()
     }

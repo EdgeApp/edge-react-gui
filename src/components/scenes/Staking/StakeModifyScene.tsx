@@ -10,7 +10,7 @@ import { Slider } from '../../../modules/UI/components/Slider/Slider'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
-import { useEffect, useMemo, useState } from '../../../types/reactHooks'
+import { useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -79,8 +79,7 @@ export const StakeModifyScene = (props: Props) => {
   const [errorMessage, setErrorMessage] = useState('')
 
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     const existingAllocations = getPositionAllocations(stakePosition)
     setExistingAllocations(existingAllocations)
 
@@ -95,7 +94,7 @@ export const StakeModifyScene = (props: Props) => {
   }, [])
 
   // An Effect for updating the ChangeQuote triggered by changes to changeQuoteRequest
-  useEffect(() => {
+  React.useEffect(() => {
     let abort = false
     if (changeQuoteRequest.nativeAmount !== '0') {
       setChangeQuote(null)

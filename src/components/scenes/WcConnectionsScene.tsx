@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings'
-import { useEffect, useMemo, useState } from '../../types/reactHooks'
+import { useMemo, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { WcConnectionInfo, wcGetConnection } from '../../types/types'
@@ -47,8 +47,7 @@ export const WcConnectionsScene = (props: Props) => {
     return { tempWallet, currencyWallets, wcEnabledWalletIds }
   })
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     getdAppconnections().then(connections => setConnections(connections))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props])

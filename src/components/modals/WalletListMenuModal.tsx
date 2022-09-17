@@ -9,7 +9,7 @@ import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletLis
 import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useEffect, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
@@ -108,8 +108,7 @@ export function WalletListMenuModal(props: Props) {
     bridge.resolve()
   }
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     getWalletOptions({ wallet, tokenId, account }).then(options => setOptions(options))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
