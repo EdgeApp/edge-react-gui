@@ -195,6 +195,7 @@ export function WalletListModal(props: Props) {
           <View>
             <FlatList
               data={Object.values(bankAccountsMap)}
+              keyboardShouldPersistTaps="handled"
               renderItem={renderPaymentMethod}
               getItemLayout={handleItemLayout}
               keyExtractor={item => item.id}
