@@ -7,7 +7,7 @@ import { NewPushEvent } from '../../controllers/action-queue/types/pushTypes'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
-import { useCallback, useMemo } from '../../types/reactHooks'
+import { useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -39,7 +39,7 @@ export const CurrencyNotificationScene = (props: Props) => {
     await updateSettings(newEvent)
   })
 
-  const updateSettings = useCallback(
+  const updateSettings = React.useCallback(
     async (event: NewPushEvent) => {
       try {
         const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))

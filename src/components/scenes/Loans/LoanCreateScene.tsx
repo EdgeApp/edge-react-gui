@@ -19,7 +19,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { useCallback, useEffect, useMemo, useState } from '../../../types/reactHooks'
+import { useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -240,7 +240,7 @@ export const LoanCreateScene = (props: Props) => {
       .catch(e => showError(e.message))
   }
 
-  const handleBorrowAmountChanged = useCallback((fiatAmount, nativeCryptoAmount) => {
+  const handleBorrowAmountChanged = React.useCallback((fiatAmount, nativeCryptoAmount) => {
     setBorrowAmountFiat(fiatAmount)
     setNativeCryptoBorrowAmount(nativeCryptoAmount)
   }, [])

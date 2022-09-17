@@ -5,7 +5,7 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { truncateDecimals } from '../../locales/intl'
-import { useCallback, useMemo, useState } from '../../types/reactHooks'
+import { useMemo, useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
@@ -45,7 +45,7 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
 
   onAmountChanged(fiatAmount, nativeCryptoAmount)
 
-  const handleEditActionfiatAmount = useCallback(() => {
+  const handleEditActionfiatAmount = React.useCallback(() => {
     Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
       inputAmount => {
         if (inputAmount != null) {

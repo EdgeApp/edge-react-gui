@@ -4,7 +4,6 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { PaymentMethod } from '../../controllers/action-queue/WyreClient'
-import { useCallback } from '../../types/reactHooks'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -24,7 +23,7 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handlePress = useCallback(() => onPress(), [onPress])
+  const handlePress = React.useCallback(() => onPress(), [onPress])
 
   const renderInitial = () => (paymentMethod == null && wallet == null ? <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText> : null)
 

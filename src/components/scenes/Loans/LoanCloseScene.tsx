@@ -8,7 +8,6 @@ import { useRefresher } from '../../../hooks/useRefresher'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { BorrowEngine } from '../../../plugins/borrow-plugins/types'
-import { useCallback } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
@@ -42,7 +41,7 @@ export const LoanCloseScene = (props: Props) => {
 
   // Async State:
   // Refreshing borrowEngine TODO: refactor common method
-  const borrowEngineRefresher = useCallback(async () => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
+  const borrowEngineRefresher = React.useCallback(async () => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
   const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
   const [approvableAction, approvableActionError] = useAsyncValue(async () => borrowEngine.close(), [borrowEngine])
 
