@@ -110,7 +110,7 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     }
 
     if (createEvents.length > 0) {
-      v2Settings = await setDeviceSettings(deviceId, { createEvents })
+      v2Settings = await dispatch(setDeviceSettings({ createEvents }))
     }
   } catch (e: any) {
     // If this fails we don't need to bother the user just log and move on.
@@ -159,29 +159,33 @@ export const getDeviceSettings = async (deviceId: string): Promise<ReturnType<ty
   return asDevicePayload(await response.json())
 }
 
-export const setDeviceSettings = async (deviceId: string, data: DeviceUpdatePayload): Promise<ReturnType<typeof asDevicePayload>> => {
-  const deviceToken = await messaging()
-    .getToken()
-    .catch(e => console.log('Failed to fetch firebase device token.', e.message))
+export const setDeviceSettings =
+  (data: DeviceUpdatePayload) =>
+  async (dispatch: Dispatch, getState: GetState): Promise<ReturnType<typeof asDevicePayload>> => {
+    const state = getState()
 
-  const body = {
-    apiKey: ENV.AIRBITZ_API_KEY,
-    deviceId,
-    deviceToken,
-    data
+    const deviceToken = await messaging()
+      .getToken()
+      .catch(e => console.log('Failed to fetch firebase device token.', e.message))
+
+    const body = {
+      apiKey: ENV.AIRBITZ_API_KEY,
+      deviceId: state.core.context.clientId,
+      deviceToken,
+      data
+    }
+    const opts = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }
+
+    const response = await fetchPush('v2/device/update/', opts)
+
+    return asDevicePayload(await response.json())
   }
-  const opts = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  }
-
-  const response = await fetchPush('v2/device/update/', opts)
-
-  return asDevicePayload(await response.json())
-}
 
 export const newPriceChangeEvent = (
   currencyInfo: EdgeCurrencyInfo,
