@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import ENV from '../../env.json'
 import { asDevicePayload, DeviceUpdatePayload } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
-import { NewPushEvent } from '../controllers/action-queue/types/pushTypes'
+import { NewPushEvent, PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import s from '../locales/strings'
 import { notif1 } from '../modules/notifServer'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
@@ -37,13 +37,12 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
   const state = getState()
   const deviceId = state.core.context.clientId
   const { defaultIsoFiat } = state.ui.settings
-  let v2Settings = {
+  let v2Settings: ReturnType<typeof asDevicePayload> = {
     loginIds: [],
     events: [],
     ignorePriceChanges: false
   }
   try {
-    // @ts-expect-error
     v2Settings = await getDeviceSettings(deviceId)
 
     const currencyWallets = state.core.account.currencyWallets
@@ -59,7 +58,6 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
         const currencyPair = `${code}_${defaultIsoFiat}`
         if (
           v2Settings.events.find(event => {
-            // @ts-expect-error
             const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
             if (trigger == null) return false
             if (trigger?.currencyPair !== currencyPair) return false
@@ -111,7 +109,6 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     }
 
     if (createEvents.length > 0) {
-      // @ts-expect-error
       v2Settings = await setDeviceSettings(deviceId, { createEvents })
     }
   } catch (e: any) {
@@ -206,40 +203,34 @@ export const newPriceChangeEvent = (
     body: '#direction#'
   }
 
+  const trigger: PriceChangeTrigger = {
+    type: 'price-change',
+    currencyPair: `${currencyInfo.currencyCode}_${isoFiatCurrencyCode}`,
+
+    directions: [
+      // [hourUp, hourDown, dayUp, dayDown]
+      `${sprintf(s.strings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(
+        s.strings.notification_hourly_price_change_down,
+        String.fromCodePoint(0x1f4c9),
+        displayName,
+        currencyCode,
+        changeDownString,
+        fiatSymbolString
+      )}`,
+      `${sprintf(s.strings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(s.strings.notification_daily_price_change_down, String.fromCodePoint(0x1f4c9), displayName, currencyCode, changeDownString, fiatSymbolString)}`
+    ],
+    pluginId: currencyInfo.pluginId,
+    dailyChange: dailyChangeEnabled ? 10 : undefined,
+    hourlyChange: hourlyChangeEnabled ? 3 : undefined
+  }
+
   const event = {
     eventId: currencyInfo.currencyCode,
     pushMessage,
-    trigger: {
-      type: 'price-change',
-      currencyPair: `${currencyInfo.currencyCode}_${isoFiatCurrencyCode}`,
-
-      directions: [
-        // [hourUp, hourDown, dayUp, dayDown]
-        `${sprintf(s.strings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
-        `${sprintf(
-          s.strings.notification_hourly_price_change_down,
-          String.fromCodePoint(0x1f4c9),
-          displayName,
-          currencyCode,
-          changeDownString,
-          fiatSymbolString
-        )}`,
-        `${sprintf(s.strings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
-        `${sprintf(
-          s.strings.notification_daily_price_change_down,
-          String.fromCodePoint(0x1f4c9),
-          displayName,
-          currencyCode,
-          changeDownString,
-          fiatSymbolString
-        )}`
-      ],
-      pluginId: currencyInfo.pluginId,
-      dailyChange: dailyChangeEnabled ? 10 : undefined,
-      hourlyChange: hourlyChangeEnabled ? 3 : undefined
-    }
+    trigger
   }
 
-  // @ts-expect-error
   return event
 }
