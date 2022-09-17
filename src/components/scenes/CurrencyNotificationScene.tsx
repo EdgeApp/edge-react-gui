@@ -31,12 +31,12 @@ export const CurrencyNotificationScene = (props: Props) => {
   const settings = useSelector((state: RootState) => state.priceChangeNotifications)
 
   const toggleHourlySetting = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings[pluginId].hourlyChange, !!settings[pluginId].dailyChange)
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings.plugins[pluginId].hourlyChange, !!settings.plugins[pluginId].dailyChange)
     await updateSettings(newEvent)
   })
 
   const toggleDailySetting = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings[pluginId].hourlyChange, !settings[pluginId].dailyChange)
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings.plugins[pluginId].hourlyChange, !settings.plugins[pluginId].dailyChange)
     await updateSettings(newEvent)
   })
 
@@ -60,13 +60,13 @@ export const CurrencyNotificationScene = (props: Props) => {
       <SettingsSwitchRow
         key="hourly"
         label={sprintf(s.strings.settings_currency_notifications_percent_change_hour, 3)}
-        value={settings[pluginId].hourlyChange != null}
+        value={settings.plugins[pluginId].hourlyChange != null}
         onPress={toggleHourlySetting}
       />,
       <SettingsSwitchRow
         key="daily"
         label={sprintf(s.strings.settings_currency_notifications_percent_change_hours, 10, 24)}
-        value={settings[pluginId].dailyChange != null}
+        value={settings.plugins[pluginId].dailyChange != null}
         onPress={toggleDailySetting}
       />
     ],

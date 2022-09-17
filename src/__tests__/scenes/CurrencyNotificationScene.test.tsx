@@ -11,11 +11,13 @@ import { fakeNavigation } from '../../util/fake/fakeNavigation'
 describe('CurrencyNotificationComponent', () => {
   const mockStore: any = {
     priceChangeNotifications: {
-      bitcoin: {
-        eventId: '123id',
-        currencyPair: 'BTC_iso:USD',
-        dailyChange: 10,
-        hourlyChange: 3
+      plugins: {
+        bitcoin: {
+          eventId: '123id',
+          currencyPair: 'BTC_iso:USD',
+          dailyChange: 10,
+          hourlyChange: 3
+        }
       }
     }
   }
