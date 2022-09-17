@@ -1,8 +1,7 @@
 import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 
 export type PaymentMethod = {
   id: string
@@ -11,8 +10,11 @@ export type PaymentMethod = {
   status: string
   supportsDeposit: boolean
   supportsPayment: boolean
-  // @ts-expect-error
-  blockchains: { [string]: string }
+  blockchains: { [key: string]: string }
+}
+
+export type PaymentMethodsMap = {
+  [key: string]: PaymentMethod
 }
 
 type WyreClientOptions = {
@@ -21,8 +23,7 @@ type WyreClientOptions = {
 
 type WyreClient = {
   readonly isAccountSetup: boolean
-  // @ts-expect-error
-  getPaymentMethods: () => Promise<{ [string]: PaymentMethod } | undefined>
+  getPaymentMethods: () => Promise<PaymentMethodsMap | undefined>
   getCryptoPaymentAddress: (wyreAccountId: string, walletId: string) => Promise<string>
 }
 
@@ -62,8 +63,7 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
     isAccountSetup,
 
     // Methods:
-    // @ts-expect-error
-    async getPaymentMethods(): Promise<{ [string]: PaymentMethod } | undefined> {
+    async getPaymentMethods(): Promise<PaymentMethodsMap | undefined> {
       if (!isAccountSetup) throw new Error('Wyre account not found for EdgeAccount')
 
       const uri = `${baseUri}/v2/paymentMethods`
@@ -81,25 +81,19 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
 
       const { data: paymentMethodsResponse } = asPaymentMethodsResponse(JSON.parse(responseData))
 
-      // @ts-expect-error
-      const paymentMethodsMap: { [string]: PaymentMethod } = {}
+      const paymentMethodsMap: PaymentMethodsMap = {}
       paymentMethodsResponse.forEach(paymentMethod => {
         const { blockchains, id } = paymentMethod
         if (blockchains == null) return
 
         // Special cases for testnets, if they don't yet support (they currently do not)
-        // @ts-expect-error
         if (blockchains.MUMBAI == null) blockchains.MUMBAI = blockchains.MATIC
-        // @ts-expect-error
         if (blockchains.TESTBTC == null) {
-          // @ts-expect-error
           const address = blockchains.BTC
-          // @ts-expect-error
           if (['m', 'n', '2'].includes(address[0])) blockchains.TESTBTC = address
         }
         paymentMethod.blockchains = blockchains
 
-        // @ts-expect-error
         paymentMethodsMap[id] = paymentMethod
       })
 
@@ -108,7 +102,6 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
 
     async getCryptoPaymentAddress(wyreAccountId: string, walletId: string): Promise<string> {
       const paymentMethods = await instance.getPaymentMethods()
-      // @ts-expect-error
       const paymentMethod = paymentMethods != null ? paymentMethods[wyreAccountId] : undefined
       if (paymentMethod == null) throw new Error(`Could not find wyre-sell accountId ${wyreAccountId}`)
 
