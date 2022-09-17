@@ -5,7 +5,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { BorrowDebt, BorrowEngine } from '../../plugins/borrow-plugins/types'
-import { useMemo, useRef } from '../../types/reactHooks'
+import { useRef } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
@@ -76,8 +76,8 @@ const InterestRateChangeTileComponent = (props: Props) => {
   const multiplier = denom?.multiplier ?? '1'
   const incomingDebtFiatAmount = mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${fiatCurrencyCode}`))
 
-  const currentWeightedApr = useMemo(() => weightedAverage(currentAprs, currentFiatAmounts), [currentAprs, currentFiatAmounts])
-  const futureWeightedApr = useMemo(
+  const currentWeightedApr = React.useMemo(() => weightedAverage(currentAprs, currentFiatAmounts), [currentAprs, currentFiatAmounts])
+  const futureWeightedApr = React.useMemo(
     () => weightedAverage([...currentAprs, apr.toString()], [...currentFiatAmounts, incomingDebtFiatAmount]),
     [currentAprs, apr, currentFiatAmounts, incomingDebtFiatAmount]
   )

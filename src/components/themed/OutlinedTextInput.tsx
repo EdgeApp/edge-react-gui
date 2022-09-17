@@ -4,7 +4,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { useMemo, useRef, useState } from '../../types/reactHooks'
+import { useRef, useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -197,12 +197,15 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
   }
 
   // Animated styles:
-  const getBorderColor = useMemo(
+  const getBorderColor = React.useMemo(
     () => getIterpolatedColor(theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused, theme.dangerText),
     [theme]
   )
 
-  const getLabelColor = useMemo(() => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText), [theme])
+  const getLabelColor = React.useMemo(
+    () => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText),
+    [theme]
+  )
 
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value

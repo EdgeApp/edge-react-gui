@@ -4,7 +4,6 @@ import { ViewStyle } from 'react-native'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
 
-import { useMemo } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
@@ -68,7 +67,7 @@ export const WalletSyncCircle = (props: Props) => {
   }))
 
   // Memoized SvgStyle to reduce rerenders
-  const svgStyle: ViewStyle = useMemo(
+  const svgStyle: ViewStyle = React.useMemo(
     () => ({
       transform: [{ rotateZ: '-90deg' }],
       position: 'absolute',

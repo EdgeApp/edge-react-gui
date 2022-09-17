@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings'
-import { useMemo, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { WcConnectionInfo, wcGetConnection } from '../../types/types'
@@ -115,7 +115,7 @@ export const WcConnectionsScene = (props: Props) => {
       })
   }
 
-  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
+  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { useMemo } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -48,7 +47,7 @@ const CryptoIconComponent = (props: Props) => {
   // //////////////////////////////////////////////////////////////////////////////// //
 
   // Primary Currency icon
-  const primaryCurrencyIcon = useMemo(() => {
+  const primaryCurrencyIcon = React.useMemo(() => {
     if (pluginId == null) return null
     // Get Currency Icon URI
     const icon = getCurrencyIconUris(pluginId, tokenId)
@@ -58,7 +57,7 @@ const CryptoIconComponent = (props: Props) => {
   }, [pluginId, tokenId, mono])
 
   // Secondary (parent) currency icon (if it's a token)
-  const secondaryCurrencyIcon = useMemo(() => {
+  const secondaryCurrencyIcon = React.useMemo(() => {
     // Return null if no plugin id or not a token
     if (pluginId == null || tokenId == null || tokenId === pluginId) return null
     // Get Parent Icon URI
@@ -69,7 +68,7 @@ const CryptoIconComponent = (props: Props) => {
   }, [tokenId, pluginId, mono, styles.parentIcon])
 
   // Main view styling
-  const spacingStyle = useMemo(
+  const spacingStyle = React.useMemo(
     () => ({
       ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
       height: size,

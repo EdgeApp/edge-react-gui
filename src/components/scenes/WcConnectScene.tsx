@@ -9,7 +9,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
-import { useMemo, useRef, useState } from '../../types/reactHooks'
+import { useRef, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -135,7 +135,7 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
-  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
+  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>

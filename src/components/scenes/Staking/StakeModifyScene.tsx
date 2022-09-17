@@ -10,7 +10,7 @@ import { Slider } from '../../../modules/UI/components/Slider/Slider'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
-import { useMemo, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -282,7 +282,7 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  const sceneTitleMap = useMemo(
+  const sceneTitleMap = React.useMemo(
     () => ({
       stake: getPolicyTitleName(stakePolicy),
       claim: s.strings.stake_claim_rewards,
@@ -292,12 +292,12 @@ export const StakeModifyScene = (props: Props) => {
   )
 
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
-  const icon = useMemo(
+  const icon = React.useMemo(
     () => (modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />),
     [modification, policyIcons.rewardAssetUris, styles.icon]
   )
 
-  const sceneHeader = useMemo(
+  const sceneHeader = React.useMemo(
     () => (
       <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
         {icon}

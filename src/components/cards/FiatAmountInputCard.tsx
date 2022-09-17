@@ -5,7 +5,7 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { truncateDecimals } from '../../locales/intl'
-import { useMemo, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
@@ -55,7 +55,7 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     )
   }, [inputModalMessage, title])
 
-  const formattedFiatAmount = useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
+  const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
 
   return (
     <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />

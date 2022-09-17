@@ -3,7 +3,6 @@ import { FlatList, RefreshControl } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
-import { useMemo } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem, WalletListItem } from '../../types/types'
@@ -45,10 +44,10 @@ export function WalletListSwipeable(props: Props) {
   const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   // Filter based on the search text:
-  const searchedWalletList = useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
+  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
 
   // Render the refresh control:
-  const refreshControl = useMemo(() => {
+  const refreshControl = React.useMemo(() => {
     if (onRefresh == null) return null
     return <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
   }, [theme, onRefresh])

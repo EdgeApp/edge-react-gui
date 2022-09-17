@@ -5,7 +5,6 @@ import { selectWallet } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
-import { useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers'
@@ -73,7 +72,7 @@ export function WalletList(props: Props) {
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
 
-  const handlePress = useMemo(
+  const handlePress = React.useMemo(
     () =>
       onPress ??
       ((walletId: string, currencyCode: string) => {
@@ -88,7 +87,7 @@ export function WalletList(props: Props) {
   const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   // Filter the common wallet list:
-  const filteredWalletList = useMemo(() => {
+  const filteredWalletList = React.useMemo(() => {
     const excludeWalletSet = new Set<string>(excludeWalletIds)
 
     return sortedWalletList.filter(item => {
@@ -107,7 +106,7 @@ export function WalletList(props: Props) {
   }, [allowedAssets, excludeAssets, excludeWalletIds, sortedWalletList])
 
   // Extract recent wallets:
-  const recentWalletList = useMemo(() => {
+  const recentWalletList = React.useMemo(() => {
     const out: WalletListItem[] = []
 
     function pickLength() {
@@ -135,7 +134,7 @@ export function WalletList(props: Props) {
   }, [filteredWalletList, mostRecentWallets])
 
   // Assemble create-wallet rows:
-  const createWalletList: WalletCreateItem[] = useMemo(() => {
+  const createWalletList: WalletCreateItem[] = React.useMemo(() => {
     const out: WalletCreateItem[] = []
 
     // Add top-level wallet types:
@@ -185,7 +184,7 @@ export function WalletList(props: Props) {
   }, [account, allowedAssets, excludeAssets, filterActivation, filteredWalletList])
 
   // Merge the lists, filtering based on the search term:
-  const { walletList, sectionList } = useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>; sectionList?: Section[] }>(() => {
+  const { walletList, sectionList } = React.useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>; sectionList?: Section[] }>(() => {
     const walletList: Array<WalletListItem | WalletCreateItem> = [
       // Search the wallet list:
       ...searchWalletList(filteredWalletList, searching, searchText)

@@ -24,7 +24,7 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
-import { useMemo, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
@@ -67,7 +67,7 @@ export function ControlPanel(props: Props) {
 
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
-  const usernames = useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
+  const usernames = React.useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = useState(false)

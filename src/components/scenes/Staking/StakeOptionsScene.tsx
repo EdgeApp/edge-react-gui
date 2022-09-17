@@ -6,7 +6,6 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings'
 import { StakePolicy } from '../../../plugins/stake-plugins'
 import { RootState } from '../../../reducers/RootReducer'
-import { useMemo } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
@@ -27,7 +26,7 @@ export const StakeOptionsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const icon = useMemo(() => <CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />, [])
+  const icon = React.useMemo(() => <CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />, [])
 
   //
   // Stake Policies

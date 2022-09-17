@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { useMemo, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
@@ -110,7 +110,7 @@ export function EditTokenScene(props: Props) {
     navigation.goBack()
   })
 
-  const sceneHeader = useMemo(() => <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />, [tokenId])
+  const sceneHeader = React.useMemo(() => <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />, [tokenId])
 
   return (
     <SceneWrapper avoidKeyboard>

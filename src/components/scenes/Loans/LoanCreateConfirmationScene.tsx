@@ -9,7 +9,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
-import { useMemo, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useDispatch } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
@@ -97,7 +97,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     setBorrowApprovalAction(await borrowEngine.borrow(borrowRequest))
   }, [destTokenId, nativeDestAmount, borrowEngine])
 
-  const renderFeeTile = useMemo(() => {
+  const renderFeeTile = React.useMemo(() => {
     return (
       <NetworkFeeTile
         wallet={borrowEngineWallet}

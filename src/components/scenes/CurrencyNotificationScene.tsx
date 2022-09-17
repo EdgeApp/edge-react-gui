@@ -7,7 +7,6 @@ import { NewPushEvent } from '../../controllers/action-queue/types/pushTypes'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
-import { useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -54,7 +53,7 @@ export const CurrencyNotificationScene = (props: Props) => {
     [dispatch]
   )
 
-  const rows = useMemo(
+  const rows = React.useMemo(
     () => [
       <SettingsSwitchRow
         key="hourly"

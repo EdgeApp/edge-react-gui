@@ -17,7 +17,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
-import { useMemo, useState } from '../../../types/reactHooks'
+import { useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, ParamList } from '../../../types/routerTypes'
 import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
@@ -101,11 +101,11 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const { tokenId: hardDebtAddr } = useMemo(
+  const { tokenId: hardDebtAddr } = React.useMemo(
     () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
-  const { tokenId: hardCollateralAddr } = useMemo(
+  const { tokenId: hardCollateralAddr } = React.useMemo(
     () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )

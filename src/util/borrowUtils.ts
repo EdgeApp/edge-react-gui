@@ -1,8 +1,8 @@
 import { add, div, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
+import * as React from 'react'
 
 import { BorrowCollateral, BorrowDebt } from '../plugins/borrow-plugins/types'
-import { useMemo } from '../types/reactHooks'
 import { useSelector } from '../types/reactRedux'
 import { mulToPrecision } from './utils'
 
@@ -15,7 +15,7 @@ export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: Borr
 
   const exchangeRates = useSelector(state => state.exchangeRates)
 
-  return useMemo(() => {
+  return React.useMemo(() => {
     const getExchangeRate = (pair: string) => exchangeRates[pair] ?? '0'
     // @ts-expect-error
     return borrowArray.reduce((total, obj) => {

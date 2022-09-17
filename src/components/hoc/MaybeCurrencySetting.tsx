@@ -4,7 +4,6 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import { useMemo } from '../../types/reactHooks'
 
 /**
  * Specific settings sections will receive these cleaned props.
@@ -42,10 +41,10 @@ export function maybeCurrencySetting<T, X>(
   return function CurrencySettingsSection(props: Props) {
     const { currencyConfig } = props
 
-    const defaultSetting = useMemo(() => asMaybeSetting(currencyConfig.currencyInfo.defaultSettings), [currencyConfig])
+    const defaultSetting = React.useMemo(() => asMaybeSetting(currencyConfig.currencyInfo.defaultSettings), [currencyConfig])
 
     const userSettings = useWatch(currencyConfig, 'userSettings')
-    const setting = useMemo(() => asMaybeSetting(userSettings), [userSettings])
+    const setting = React.useMemo(() => asMaybeSetting(userSettings), [userSettings])
 
     const handleUpdate = useHandler(async settings =>
       currencyConfig.changeUserSettings({

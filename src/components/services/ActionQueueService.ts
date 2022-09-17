@@ -7,7 +7,6 @@ import { updateActionProgramState } from '../../controllers/action-queue/redux/a
 import { executeActionProgram } from '../../controllers/action-queue/runtime'
 import { ActionQueueMap, ExecutionContext } from '../../controllers/action-queue/types'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
 
@@ -19,7 +18,7 @@ export const ActionQueueService = () => {
   const clientId: string = useSelector(state => state.core.context.clientId)
   const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
 
-  const executionContext: ExecutionContext = useMemo(
+  const executionContext: ExecutionContext = React.useMemo(
     () => ({
       account,
       clientId
