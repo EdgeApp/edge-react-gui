@@ -11,6 +11,7 @@ export const makeLoanAccount = async (borrowPlugin: BorrowPlugin, wallet: EdgeCu
     id,
     borrowPlugin,
     borrowEngine,
+    closed: false,
     programEdges: []
   }
   return loanAccount

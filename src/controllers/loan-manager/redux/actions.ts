@@ -1,4 +1,3 @@
-import { add, gt } from 'biggystring'
 import { EdgeAccount } from 'edge-core-js'
 
 import { BorrowPlugin } from '../../../plugins/borrow-plugins/types'
@@ -9,6 +8,7 @@ import { ActionProgram } from '../../action-queue/types'
 import { borrowPluginMap } from '../borrowPluginConfig'
 import { asLoanAccountMapRecord, LOAN_ACCOUNT_MAP, LOAN_MANAGER_STORE_ID, LoanAccountEntry, LoanProgramEdge, LoanProgramType } from '../store'
 import { LoanAccount } from '../types'
+import { checkLoanHasFunds } from '../util/checkLoanHasFunds'
 
 type SetLoanAccountAction = {
   type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT'
@@ -36,8 +36,9 @@ export const createLoanAccount = (loanAccount: LoanAccount) => async (dispatch: 
   const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
 
   if (loanAccountMapRecord.data[loanAccount.id] == null) {
-    const { borrowPlugin, borrowEngine, programEdges } = loanAccount
+    const { borrowPlugin, borrowEngine, closed, programEdges } = loanAccount
     const loanEntry: LoanAccountEntry = {
+      closed,
       walletId: borrowEngine.currencyWallet.id,
       borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
       programEdges
@@ -63,8 +64,8 @@ export const loadLoanAccounts = (account: EdgeAccount) => async (dispatch: Dispa
   const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
 
   for (const key of Object.keys(loanAccountMapRecord.data)) {
-    const record = loanAccountMapRecord.data[key]
-    const { walletId, borrowPluginId, programEdges } = record
+    const loanAccountEntry = loanAccountMapRecord.data[key]
+    const { walletId, borrowPluginId, closed, programEdges } = loanAccountEntry
     const wallet = await account.waitForCurrencyWallet(walletId)
     const borrowPlugin = borrowPluginMap[borrowPluginId]
     const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
@@ -72,6 +73,7 @@ export const loadLoanAccounts = (account: EdgeAccount) => async (dispatch: Dispa
       id: walletId,
       borrowPlugin,
       borrowEngine,
+      closed,
       programEdges
     }
     dispatch({
@@ -79,10 +81,6 @@ export const loadLoanAccounts = (account: EdgeAccount) => async (dispatch: Dispa
       loanAccount
     })
   }
-  dispatch({
-    type: 'LOAN_MANAGER/SET_SYNC_RATIO',
-    syncRatio: 1
-  })
 }
 
 /**
@@ -98,14 +96,10 @@ export const updateLoanAccount = (loanAccount: LoanAccount) => async (dispatch: 
   if (loanAccountMapRecord.data[loanAccount.id] == null) {
     throw new Error('Could not find LoanAccount id: ' + loanAccount.id)
   } else {
-    const { borrowPlugin, borrowEngine, programEdges } = loanAccount
-    const loanEntry: LoanAccountEntry = {
-      walletId: borrowEngine.currencyWallet.id,
-      borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
-      programEdges
-    }
-
-    loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
+    const { closed, programEdges } = loanAccount
+    loanAccountMapRecord.data[loanAccount.id].closed = closed
+    loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
+    loanAccountMapRecord.update(loanAccountMapRecord.data)
   }
 
   dispatch({
@@ -176,17 +170,13 @@ export const resyncLoanAccounts = (account: EdgeAccount) => async (dispatch: Dis
       try {
         const wallet = await account.waitForCurrencyWallet(loanAccountId)
 
-        // Find plugin which support currency wallet
         const currencyPluginId = wallet.currencyConfig.currencyInfo.pluginId
         const borrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)
 
-        // Skip wallets that don't have a supported borrow plugin
         if (borrowPlugin == null) return
 
-        // Make borrow engine
         const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
-        // Wait for borrow engine to be fully synced
         await new Promise(resolve => {
           borrowEngine.watch('syncRatio', syncRatio => {
             // @ts-expect-error
@@ -194,30 +184,21 @@ export const resyncLoanAccounts = (account: EdgeAccount) => async (dispatch: Dis
           })
         })
 
-        const hasDebt = gt(
-          borrowEngine.debts.reduce((sum, debt) => add(sum, debt.nativeAmount), '0'),
-          '0'
-        )
-        const hasCollateral = gt(
-          borrowEngine.collaterals.reduce((sum, collateral) => add(sum, collateral.nativeAmount), '0'),
-          '0'
-        )
-
-        if (hasDebt && hasCollateral) {
-          // Ignore creating account if already created
+        if (checkLoanHasFunds(borrowEngine)) {
           if (loanAccountMapRecord.data[loanAccountId]) return
-          // Create loan account if not already created
+
+          // Create a loan account for the wallet
           const loanAccount: LoanAccount = {
             id: loanAccountId,
             borrowPlugin,
             borrowEngine,
+            closed: false,
             programEdges: []
           }
           await dispatch(createLoanAccount(loanAccount))
         } else {
-          // Remove loans "emptied out" loans
           const existingLoanAccount = loanAccountMapRecord.data[loanAccountId]
-          if (existingLoanAccount != null) {
+          if (existingLoanAccount != null && existingLoanAccount.closed) {
             await dispatch(deleteLoanAccount(loanAccountId))
           }
         }

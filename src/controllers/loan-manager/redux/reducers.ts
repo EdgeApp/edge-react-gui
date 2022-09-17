@@ -5,7 +5,7 @@ import { LoanAccountMap } from '../types'
 
 export type LoanManagerState = {
   readonly loanAccounts: LoanAccountMap
-  lastResyncTimestamp: number
+  readonly lastResyncTimestamp: number
   readonly syncRatio: number
 }
 

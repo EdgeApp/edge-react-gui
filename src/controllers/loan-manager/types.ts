@@ -8,6 +8,7 @@ export type LoanAccount = {
 
   // Action Program Relationships
   programEdges: LoanProgramEdge[]
+  closed: boolean
 }
 
 export type LoanAccountMap = {
