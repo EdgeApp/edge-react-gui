@@ -23,13 +23,14 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
 }
 
 export type PriceChangeNotificationSettings = {
-  // @ts-expect-error
   ignorePriceChanges: boolean
-  [pluginId: string]: {
-    eventId: string
-    currencyPair: string
-    dailyChange?: number
-    hourlyChange?: number
+  plugins: {
+    [pluginId: string]: {
+      eventId: string
+      currencyPair: string
+      dailyChange?: number
+      hourlyChange?: number
+    }
   }
 }
 
@@ -123,15 +124,14 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
 }
 
 export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayload>): PriceChangeNotificationSettings => {
-  // @ts-expect-error
-  const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges }
+  const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges, plugins: {} }
 
   for (const event of settings.events) {
     if (event.state !== 'waiting') continue
     const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
     if (trigger == null) continue
 
-    data[trigger.pluginId] = {
+    data.plugins[trigger.pluginId] = {
       eventId: event.eventId,
       currencyPair: trigger.currencyPair,
       dailyChange: trigger.dailyChange,

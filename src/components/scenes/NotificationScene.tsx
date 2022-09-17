@@ -46,7 +46,7 @@ export const NotificationScene = (props: Props) => {
     () => [
       <SettingsSwitchRow key="all" label={s.strings.settings_notifications_switch} value={!settings.ignorePriceChanges} onPress={toggleNotifications} />,
       ...Object.keys(currencyConfigs)
-        .filter(pluginId => settings[pluginId] != null)
+        .filter(pluginId => settings.plugins[pluginId] != null)
         .sort((a, b) => a.localeCompare(b))
         .map(pluginId => {
           const { currencyInfo } = currencyConfigs[pluginId]
