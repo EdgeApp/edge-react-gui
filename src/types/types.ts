@@ -8,7 +8,8 @@ import {
   EdgeSwapQuote,
   EdgeSwapRequest,
   EdgeToken,
-  EdgeTransaction
+  EdgeTransaction,
+  JsonObject
 } from 'edge-core-js/types'
 
 import { RootState } from './reduxTypes'
@@ -149,7 +150,7 @@ export type FlipInputFieldInfo = GuiCurrencyInfo & {
 export type SubcategorySearchResultData = {
   index: number
   item: string
-  separators: Object
+  separators: object
 }
 
 export type CurrencyConverter = {
@@ -276,12 +277,12 @@ export type GuiMakeSpendInfo = {
   metadata?: any
   nativeAmount?: string
   networkFeeOption?: FeeOption
-  customNetworkFee?: Object
+  customNetworkFee?: JsonObject
   publicAddress?: string
   spendTargets?: EdgeSpendTarget[]
   lockInputs?: boolean
   uniqueIdentifier?: string
-  otherParams?: Object
+  otherParams?: JsonObject
   dismissAlert?: boolean
   fioAddress?: string
   fioPendingRequest?: FioRequest

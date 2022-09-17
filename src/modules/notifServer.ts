@@ -14,15 +14,15 @@ class NotifServer {
     return this.request(path, 'GET')
   }
 
-  async post(path: string, body?: Object) {
+  async post(path: string, body?: object) {
     return this.request(path, 'POST', body)
   }
 
-  async put(path: string, body?: Object) {
+  async put(path: string, body?: object) {
     return this.request(path, 'PUT', body)
   }
 
-  async request(path: string, method: string, body?: Object, headers: any = {}) {
+  async request(path: string, method: string, body?: object, headers: any = {}) {
     const response = await fetchPush(`v${this.version}/${path}`, {
       method,
       headers: {

@@ -22,7 +22,7 @@ import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
-export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
+export const updateOneSetting = (setting: object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const settings = state.ui.settings
   const updatedSettings = {
