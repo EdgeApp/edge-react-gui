@@ -48,7 +48,7 @@
     "watch": "npm test -- --watch"
   },
   "lint-staged": {
-    "*.{js,jsx}": "eslint"
+    "*.{js,jsx,ts,tsx}": "eslint"
   },
   "resolutions": {
     "@ledgerhq/hw-transport-node-hid": "file:./patches/fake-hw-transport-node-hid",
