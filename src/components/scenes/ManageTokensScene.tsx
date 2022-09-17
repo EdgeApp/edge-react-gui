@@ -9,7 +9,6 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
@@ -43,7 +42,7 @@ export function ManageTokensScene(props: Props) {
   const walletName = useWalletName(wallet)
   const isCustomTokensSupported = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isCustomTokensSupported ?? false
 
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = React.useState('')
 
   // Subscribe to the account's token lists:
   const { currencyConfig } = wallet

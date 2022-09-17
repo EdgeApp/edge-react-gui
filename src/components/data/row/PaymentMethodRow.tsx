@@ -8,7 +8,6 @@ import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { asGuiPluginJson } from '../../../types/GuiPluginTypes'
-import { useState } from '../../../types/reactHooks'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -36,8 +35,8 @@ const PaymentMethodRowComponent = (props: Props) => {
   const pluginJson = [...buyPluginJson, ...sellPluginJson]
   const guiPlugin = guiPlugins[pluginId]
 
-  const [isFirstRun, setIsFirstRun] = useState(true)
-  const [partnerIconPath, setPartnerIconPath] = useState<string | undefined>(undefined)
+  const [isFirstRun, setIsFirstRun] = React.useState(true)
+  const [partnerIconPath, setPartnerIconPath] = React.useState<string | undefined>(undefined)
 
   if (guiPlugin == null) throw new Error(`PaymentMethodRow could not find ${pluginId} plugin`)
 

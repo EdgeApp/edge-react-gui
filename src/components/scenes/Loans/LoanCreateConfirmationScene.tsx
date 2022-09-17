@@ -9,7 +9,6 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
-import { useState } from '../../../types/reactHooks'
 import { useDispatch } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
@@ -39,11 +38,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
   // Setup Borrow Engine transaction requests/actions
-  const [depositApprovalAction, setDepositApprovalAction] = useState<ApprovableAction | null>(null)
-  const [borrowApprovalAction, setBorrowApprovalAction] = useState<ApprovableAction | null>(null)
+  const [depositApprovalAction, setDepositApprovalAction] = React.useState<ApprovableAction | null>(null)
+  const [borrowApprovalAction, setBorrowApprovalAction] = React.useState<ApprovableAction | null>(null)
 
   const dispatch = useDispatch()
-  const [actionProgram, setActionProgram] = useState<ActionProgram | undefined>(undefined)
+  const [actionProgram, setActionProgram] = React.useState<ActionProgram>()
   // @ts-expect-error
   useAsyncEffect(async () => {
     // TODO: These default tokens will be removed when fee calculations are done using dryruns instead of ApprovableActions

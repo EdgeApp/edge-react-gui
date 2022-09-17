@@ -11,7 +11,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeTokenId } from '../../types/types'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
@@ -97,10 +96,10 @@ export function WalletListModal(props: Props) {
 
   // #region State
 
-  const [searching, setSearching] = useState(false)
-  const [searchText, setSearchText] = useState('')
+  const [searching, setSearching] = React.useState(false)
+  const [searchText, setSearchText] = React.useState('')
 
-  const [bankAccountsMap, setBankAccountsMap] = useState<PaymentMethodsMap | undefined>(undefined)
+  const [bankAccountsMap, setBankAccountsMap] = React.useState<PaymentMethodsMap | undefined>(undefined)
 
   useAsyncEffect(
     // @ts-expect-error

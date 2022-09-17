@@ -4,7 +4,6 @@ import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
 
-import { useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -22,7 +21,7 @@ export function QrCode(props: Props) {
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 2), theme.rem))
 
   // Scale the surface to match the container's size (minus padding):
-  const [containerHeight, setContainerHeight] = useState<number>(0)
+  const [containerHeight, setContainerHeight] = React.useState<number>(0)
   const size = containerHeight - theme.rem(1)
 
   const handleLayout = (event: any) => {

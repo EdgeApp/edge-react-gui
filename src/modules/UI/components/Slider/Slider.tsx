@@ -8,7 +8,6 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../../component
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import { useHandler } from '../../../../hooks/useHandler'
 import s from '../../../../locales/strings'
-import { useState } from '../../../../types/reactHooks'
 
 const COMPLETE_POINT: number = 3
 
@@ -48,7 +47,7 @@ export const SliderComponent = (props: Props) => {
     width = props.theme.confirmationSliderWidth
   } = props
   const styles = getStyles(theme)
-  const [completed, setCompleted] = useState(false)
+  const [completed, setCompleted] = React.useState(false)
 
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }

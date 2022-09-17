@@ -9,7 +9,6 @@ import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletLis
 import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
@@ -92,7 +91,7 @@ const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet; tokenId?: 
 export function WalletListMenuModal(props: Props) {
   const { bridge, tokenId, navigation, walletId } = props
 
-  const [options, setOptions] = useState<Option[]>([])
+  const [options, setOptions] = React.useState<Option[]>([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)

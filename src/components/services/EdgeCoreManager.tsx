@@ -13,7 +13,6 @@ import SplashScreen from 'react-native-smart-splash-screen'
 import ENV from '../../../env.json'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import { useState } from '../../types/reactHooks'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
@@ -61,7 +60,7 @@ const crashReporter: EdgeCrashReporter = {
  * once the core context is ready.
  */
 export function EdgeCoreManager(props: Props) {
-  const [context, setContext] = useState<EdgeContext | null>(null)
+  const [context, setContext] = React.useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
   const counter = React.useRef<number>(0)

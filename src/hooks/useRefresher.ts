@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-import { useState } from '../types/reactHooks'
-
 export function useRefresher<T>(cb: () => Promise<T>, defaultValue: T, delay: number): T {
-  const [value, setValue] = useState<T>(defaultValue)
+  const [value, setValue] = React.useState<T>(defaultValue)
 
   React.useEffect(() => {
     let abort = false

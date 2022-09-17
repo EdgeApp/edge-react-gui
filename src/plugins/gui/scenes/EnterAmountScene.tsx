@@ -12,7 +12,6 @@ import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { formatNumber, formatToNativeNumber, isValidInput } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { useState } from '../../../types/reactHooks'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 
@@ -26,15 +25,13 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
-  const [value1, setValue1] = useState<string>(initialAmount1)
-  const [value2, setValue2] = useState<string>('')
-  const [spinner1, setSpinner1] = useState<boolean>(false)
-  const [spinner2, setSpinner2] = useState<boolean>(false)
-  const [statusTextContent, setStatusTextContent] = useState<string>('')
-  // @ts-expect-error
-  const [statusTextType, setStatusTextType] = useState<'warning' | 'error' | undefined>()
-  // @ts-expect-error
-  const [poweredBy, setPoweredBy] = useState<EnterAmountPoweredBy | undefined>()
+  const [value1, setValue1] = React.useState<string>(initialAmount1)
+  const [value2, setValue2] = React.useState<string>('')
+  const [spinner1, setSpinner1] = React.useState<boolean>(false)
+  const [spinner2, setSpinner2] = React.useState<boolean>(false)
+  const [statusTextContent, setStatusTextContent] = React.useState<string>('')
+  const [statusTextType, setStatusTextType] = React.useState<'warning' | 'error' | undefined>()
+  const [poweredBy, setPoweredBy] = React.useState<EnterAmountPoweredBy | undefined>()
   const firstRun = React.useRef<boolean>(true)
   const lastUsed = React.useRef<number>(1)
 

@@ -4,7 +4,6 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -93,7 +92,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
   const hasValue = value !== ''
 
   // Show/Hide password input:
-  const [hidePassword, setHidePassword] = useState(secureTextEntry ?? false)
+  const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
   const handleHidePassword = () => setHidePassword(!hidePassword)
 
   // Imperative methods:
@@ -116,12 +115,12 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
   React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
 
   // Captures the width of the placeholder label:
-  const [labelWidth, setLabelWidth] = useState(0)
+  const [labelWidth, setLabelWidth] = React.useState(0)
   // @ts-expect-error
   const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
 
   // Captures the width of the counter label:
-  const [counterWidth, setCounterWidth] = useState(0)
+  const [counterWidth, setCounterWidth] = React.useState(0)
   // @ts-expect-error
   const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
 

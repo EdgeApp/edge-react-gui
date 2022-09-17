@@ -13,7 +13,6 @@ import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
-import { useState } from '../../types/reactHooks'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FioAddress } from '../../types/types'
@@ -69,13 +68,13 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
   const maxApy = SPECIAL_CURRENCY_INFO[pluginId]?.stakeMaxApy
 
-  const [nativeAmount, setNativeAmount] = useState('0')
-  const [exchangeAmount, setExchangeAmount] = useState('0')
-  const [apy, setApy] = useState(0)
-  const [error, setError] = useState<Error | string | undefined>(undefined)
-  const [loading, setLoading] = useState(false)
-  const [tx, setTx] = useState<EdgeTransaction | undefined>(undefined)
-  const [selectedFioAddress, setSelectedFioAddress] = useState<string | undefined>(undefined)
+  const [nativeAmount, setNativeAmount] = React.useState('0')
+  const [exchangeAmount, setExchangeAmount] = React.useState('0')
+  const [apy, setApy] = React.useState(0)
+  const [error, setError] = React.useState<Error | string | undefined>(undefined)
+  const [loading, setLoading] = React.useState(false)
+  const [tx, setTx] = React.useState<EdgeTransaction | undefined>(undefined)
+  const [selectedFioAddress, setSelectedFioAddress] = React.useState<string | undefined>(undefined)
   const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
 
   const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {

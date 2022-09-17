@@ -2,7 +2,6 @@ import * as React from 'react'
 import { SharedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { showError } from '../components/services/AirshipInstance'
-import { useState } from '../types/reactHooks'
 
 export type OnPress = () => void | Promise<void>
 
@@ -12,7 +11,7 @@ export type OnPress = () => void | Promise<void>
  * and showing errors.
  */
 export function usePendingPress(onPress?: OnPress): [boolean, () => void] {
-  const [pending, setPending] = useState(false)
+  const [pending, setPending] = React.useState(false)
 
   function handlePress() {
     if (onPress == null || pending) return

@@ -6,7 +6,6 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -34,7 +33,7 @@ export const SafeSlider = (props: Props) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [completed, setCompleted] = useState(false)
+  const [completed, setCompleted] = React.useState(false)
 
   const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth

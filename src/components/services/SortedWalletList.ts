@@ -6,7 +6,6 @@ import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates, WalletListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
@@ -144,7 +143,7 @@ export function SortedWalletList(props: Props) {
  * Subscribes to all the enabled token lists in the account.
  */
 function useEnabledWalletIds(account: EdgeAccount): EnabledTokenIds {
-  const [out, setOut] = useState<EnabledTokenIds>(() => {
+  const [out, setOut] = React.useState<EnabledTokenIds>(() => {
     const out: EnabledTokenIds = {}
     for (const walletId of account.activeWalletIds) {
       const wallet = account.currencyWallets[walletId]

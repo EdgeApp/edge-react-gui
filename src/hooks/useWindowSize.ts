@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { Dimensions } from 'react-native'
 
-import { useState } from '../types/reactHooks'
-
 type ScaledSize = {
   width: number
   height: number
@@ -12,7 +10,7 @@ type ScaledSize = {
  * Subscribes to the window dimensions, for use in style calculations.
  */
 export function useWindowSize(): ScaledSize {
-  const [windowSize, setWindowSize] = useState<ScaledSize>(() => Dimensions.get('window'))
+  const [windowSize, setWindowSize] = React.useState<ScaledSize>(() => Dimensions.get('window'))
 
   React.useEffect(() => {
     // @ts-expect-error

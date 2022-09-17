@@ -12,7 +12,6 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
@@ -40,8 +39,7 @@ export const LoanStatusScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  // @ts-expect-error
-  const [steps, setSteps] = useState<ActionDisplayInfo[] | undefined>()
+  const [steps, setSteps] = React.useState<ActionDisplayInfo[]>()
   // @ts-expect-error
   useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]

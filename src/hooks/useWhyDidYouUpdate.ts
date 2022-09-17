@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-// Hook
 export const useWhyDidYouUpdate = <T extends object>(name: string, props: T) => {
   // Get a mutable ref object where we can store props ...
   // ... for comparison next time this hook runs.

@@ -1,4 +1,5 @@
-import { useState } from '../types/reactHooks'
+import * as React from 'react'
+
 import { useAsyncEffect } from './useAsyncEffect'
 
 /**
@@ -6,8 +7,8 @@ import { useAsyncEffect } from './useAsyncEffect'
  * Re-runs when its dependencies change, just like `useAsyncEffect`.
  */
 export function useAsyncValue<T>(effect: () => Promise<T>, deps?: unknown[]): [T | null, Error | null] {
-  const [value, setValue] = useState<T | null>(null)
-  const [error, setError] = useState<Error | null>(null)
+  const [value, setValue] = React.useState<T | null>(null)
+  const [error, setError] = React.useState<Error | null>(null)
 
   let cancel = false
   useAsyncEffect(async () => {

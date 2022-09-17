@@ -183,7 +183,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         onNext={this.props.onNext}
         onFocus={this.props.onFocus}
         onBlur={this.props.onBlur}
-        topReturnKeyType={this.props.topReturnKeyType}
+        topReturnKeyType={this.props.topReturnKeyType as any}
         inputAccessoryViewID={this.props.inputAccessoryViewID}
         ref={ref => (this.flipInput = ref)}
       />

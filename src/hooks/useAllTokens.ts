@@ -1,8 +1,6 @@
 import { EdgeAccount, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 
-import { useState } from '../types/reactHooks'
-
 type EdgeTokenMaps = { [pluginId: string]: EdgeTokenMap }
 
 /**
@@ -10,7 +8,7 @@ type EdgeTokenMaps = { [pluginId: string]: EdgeTokenMap }
  */
 export function useAllTokens(account: EdgeAccount): EdgeTokenMaps {
   // Gather the tokens from all the plugins:
-  const [out, setOut] = useState<EdgeTokenMaps>(() => {
+  const [out, setOut] = React.useState<EdgeTokenMaps>(() => {
     const out: EdgeTokenMaps = {}
     for (const pluginId of Object.keys(account.currencyConfig)) {
       out[pluginId] = account.currencyConfig[pluginId].allTokens

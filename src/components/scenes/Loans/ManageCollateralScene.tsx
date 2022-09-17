@@ -17,7 +17,6 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
-import { useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, ParamList } from '../../../types/routerTypes'
 import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
@@ -135,13 +134,13 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // #region State
   // -----------------------------------------------------------------------------
 
-  const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
-  const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = useState('0')
-  const [newDebtApr, setNewDebtApr] = useState(0)
-  const [actionOp, setActionOp] = useState<ActionOp | undefined>(undefined)
-  const [bankAccountsMap, setBankAccountsMap] = useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
-  const [destBankId, setDestBankId] = useState<string | undefined>(undefined)
-  const [selectedTokenId, setSelectedTokenId] = useState(defaultTokenId)
+  const [approvalAction, setApprovalAction] = React.useState<ApprovableAction | null>(null)
+  const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = React.useState('0')
+  const [newDebtApr, setNewDebtApr] = React.useState(0)
+  const [actionOp, setActionOp] = React.useState<ActionOp | undefined>(undefined)
+  const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
+  const [destBankId, setDestBankId] = React.useState<string | undefined>(undefined)
+  const [selectedTokenId, setSelectedTokenId] = React.useState(defaultTokenId)
 
   // New debt/collateral amount
   const actionAmountChange = amountChange === 'increase' ? '1' : '-1'

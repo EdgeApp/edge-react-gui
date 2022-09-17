@@ -24,7 +24,6 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
-import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
@@ -70,7 +69,7 @@ export function ControlPanel(props: Props) {
   const usernames = React.useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
 
   // User List dropdown/open state:
-  const [isDropped, setIsDropped] = useState(false)
+  const [isDropped, setIsDropped] = React.useState(false)
   const isMultiUsers = usernames.length > 0
   const handleToggleDropdown = () => {
     if (isMultiUsers) setIsDropped(!isDropped)
@@ -79,7 +78,7 @@ export function ControlPanel(props: Props) {
     if (!isDrawerOpen || !isMultiUsers) setIsDropped(false)
   }, [isDrawerOpen, isMultiUsers])
 
-  const [bottomPanelHeight, setBottomPanelHeight] = useState(0)
+  const [bottomPanelHeight, setBottomPanelHeight] = React.useState(0)
 
   /// ---- Callbacks ----
 

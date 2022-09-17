@@ -11,7 +11,6 @@ import RNQRGenerator from 'rn-qr-generator'
 import { useLayout } from '../../hooks/useLayout'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -39,8 +38,8 @@ export const ScanModal = (props: Props) => {
 
   // @ts-expect-error
   const cameraPermission = useSelector(state => state.permissions.camera)
-  const [torchEnabled, setTorchEnabled] = useState(false)
-  const [scanEnabled, setScanEnabled] = useState(false)
+  const [torchEnabled, setTorchEnabled] = React.useState(false)
+  const [scanEnabled, setScanEnabled] = React.useState(false)
 
   const handleFlash = () => setTorchEnabled(!torchEnabled)
 

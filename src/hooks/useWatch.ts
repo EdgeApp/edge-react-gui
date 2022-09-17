@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import * as React from 'react'
 
 /**
@@ -10,7 +9,7 @@ export function useWatch<
   },
   Name extends keyof T
 >(object: T, name: Name): T[Name] {
-  const [out, setOut] = useState<any>(object[name])
+  const [out, setOut] = React.useState<any>(object[name])
 
   React.useEffect(() => {
     setOut(object[name])
