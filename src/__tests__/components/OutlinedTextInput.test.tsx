@@ -8,7 +8,7 @@ describe('OutlinedTextInput', () => {
   it('should render with some props', () => {
     const renderer = createRenderer()
 
-    const props = {
+    const props: any = {
       value: 'string',
       error: 'string',
       label: 'string',

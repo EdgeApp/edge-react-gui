@@ -156,7 +156,6 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
             autoFocus={false}
             key={key}
             autoCorrect={false}
-            // @ts-expect-error
             onChangeText={text =>
               this.setState({
                 customNetworkFee: { ...customNetworkFee, [key]: text }

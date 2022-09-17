@@ -21,7 +21,6 @@ import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-// @ts-expect-error
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
 

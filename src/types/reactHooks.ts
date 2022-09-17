@@ -2,8 +2,6 @@ import * as React from 'react'
 
 type Memo = <T>(component: T) => T
 
-type ForwardRef = (body: (props: any, ref: any) => React.ReactNode) => any
-
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
 type UseCallback = <T extends (...args: any[]) => any>(callback: T, deps: any[]) => T
@@ -13,8 +11,6 @@ type UseContext = <T>(context: React.Context<T>) => T
 type UseDebugValue = <T>(value: T, format?: (value: T) => any) => void
 
 type UseEffect = (effect: () => (() => void) | undefined, deps?: any[]) => void
-
-type UseImperativeHandle = (ref: any, init: () => any, deps?: any[]) => void
 
 type UseMemo = <T>(init: () => T, deps?: any[]) => T
 
@@ -40,9 +36,6 @@ type UseRef = {
 
 type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]
 
-// @ts-expect-error
-export const forwardRef: ForwardRef = React.forwardRef
-
 export const memo: Memo = React.memo
 
 export const useCallback: UseCallback = React.useCallback
@@ -52,8 +45,6 @@ export const useContext: UseContext = React.useContext
 export const useDebugValue: UseDebugValue = React.useDebugValue
 
 export const useEffect: UseEffect = React.useEffect
-
-export const useImperativeHandle: UseImperativeHandle = React.useImperativeHandle
 
 export const useLayoutEffect: UseEffect = React.useLayoutEffect
 

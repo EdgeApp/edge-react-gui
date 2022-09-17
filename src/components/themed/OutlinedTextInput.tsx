@@ -4,7 +4,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks'
+import { useEffect, useMemo, useRef, useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -51,15 +51,14 @@ type Props = {
  * Create a ref object using `useRef<OutlinedTextInputRef>(null)` or
  * `const ref: { current: OutlinedTextInputRef | null } = createRef()`
  */
-declare class OutlinedTextInputRef extends React.Component<Props> {
+export interface OutlinedTextInputRef {
   focus: () => void
   blur: () => void
   isFocused: () => boolean
   clear: () => void
 }
 
-// @ts-expect-error
-export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
+export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((props: Props, ref) => {
   const {
     // Contents:
     error,
@@ -114,7 +113,7 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   function isFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
   }
-  useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
+  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
 
   // Captures the width of the placeholder label:
   const [labelWidth, setLabelWidth] = useState(0)
