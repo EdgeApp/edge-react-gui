@@ -116,7 +116,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       date: autoCorrectDate(edgeTx.date)
     }
     const { metadata } = edgeTransaction
-    const { name: contactName = '', notes = '', amountFiat } = metadata ?? {}
+    const { name: contactName = '', notes = '', amountFiat = 0 } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
 
@@ -152,7 +152,14 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const { route } = this.props
+    const { amountFiat: defaultAmountFiat } = route.params
+
     this.props.getSubcategories()
+
+    if (Number(this.state.amountFiat.replace(',', '.')) === 0 && defaultAmountFiat != null) {
+      this.setState({ amountFiat: displayFiatAmount(defaultAmountFiat) })
+    }
   }
 
   openPersonInput = () => {

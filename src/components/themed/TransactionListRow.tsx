@@ -111,7 +111,8 @@ export function TransactionListRow(props: Props) {
     Actions.push('transactionDetails', {
       edgeTransaction: transaction,
       // @ts-expect-error
-      thumbnailPath
+      thumbnailPath,
+      amountFiat
     })
   })
 
