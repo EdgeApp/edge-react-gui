@@ -66,24 +66,15 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
 
     const currencyWallets = state.core.account.currencyWallets
     const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
-    const currencyCodes = activeCurrencyInfos.map(info => info.currencyCode)
 
     const createEvents: NewPushEvent[] = []
 
     if (v2Settings.events.length !== 0) {
       // v2 settings exist already, see if we need to add new ones
       const missingInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
-      for (const [i, code] of currencyCodes.entries()) {
-        const currencyPair = `${code}_${defaultIsoFiat}`
-        if (
-          v2Settings.events.find(event => {
-            const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
-            if (trigger == null) return false
-            if (trigger?.currencyPair !== currencyPair) return false
-            return true
-          }) == null
-        ) {
-          if (missingInfos[activeCurrencyInfos[i].pluginId] == null) missingInfos[activeCurrencyInfos[i].pluginId] = activeCurrencyInfos[i]
+      for (const currencyInfo of activeCurrencyInfos) {
+        if (!v2Settings.events.some(event => event.trigger.type === 'price-change' && event.trigger.pluginId === currencyInfo.pluginId)) {
+          missingInfos[currencyInfo.pluginId] = currencyInfo
         }
       }
       Object.keys(missingInfos).forEach(pluginId => createEvents.push(newPriceChangeEvent(missingInfos[pluginId], defaultIsoFiat, true, true)))
