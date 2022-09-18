@@ -2,12 +2,14 @@ import messaging from '@react-native-firebase/messaging'
 import { asMaybe } from 'cleaners'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
+import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
 import ENV from '../../env.json'
 import { asDevicePayload, DeviceUpdatePayload } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { NewPushEvent, PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
+import { base58 } from '../controllers/action-queue/util/encoding'
 import s from '../locales/strings'
 import { notif1 } from '../modules/notifServer'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
@@ -43,9 +45,13 @@ export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState
     ignorePriceChanges: false
   }
   try {
+    const deviceToken = await messaging().getToken()
+
     const body = {
       apiKey: ENV.AIRBITZ_API_KEY,
-      deviceId: state.core.context.clientId
+      deviceId: state.core.context.clientId,
+      deviceToken,
+      loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
     }
     const opts = {
       method: 'POST',
@@ -159,15 +165,13 @@ export const setDeviceSettings =
   async (dispatch: Dispatch, getState: GetState): Promise<ReturnType<typeof asDevicePayload>> => {
     const state = getState()
 
-    const deviceToken = await messaging()
-      .getToken()
-      .catch(e => console.log('Failed to fetch firebase device token.', e.message))
+    const deviceToken = await messaging().getToken()
 
     const body = {
       apiKey: ENV.AIRBITZ_API_KEY,
       deviceId: state.core.context.clientId,
       deviceToken,
-      data
+      data: { ...data, loginIds: state.core.context.localUsers.map(row => base64.stringify(base58.parse(row.loginId))) }
     }
     const opts = {
       method: 'POST',
