@@ -20,6 +20,7 @@ import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
+import { registerNotificationsV2 } from './NotificationActions'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -89,6 +90,8 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
         data: { spendingLimits: nextSpendingLimits }
       })
       dispatch(updateExchangeRates())
+      // Update push notifications
+      dispatch(registerNotificationsV2(true))
     })
     .catch(showError)
 }

@@ -27,23 +27,22 @@ export const CurrencyNotificationScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const defaultIsoFiat = useSelector((state: RootState) => state.ui.settings.defaultIsoFiat)
-  const deviceId = useSelector((state: RootState) => state.core.context.clientId)
   const settings = useSelector((state: RootState) => state.priceChangeNotifications)
 
   const toggleHourlySetting = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings[pluginId].hourlyChange, !!settings[pluginId].dailyChange)
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings.plugins[pluginId].hourlyChange, !!settings.plugins[pluginId].dailyChange)
     await updateSettings(newEvent)
   })
 
   const toggleDailySetting = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings[pluginId].hourlyChange, !settings[pluginId].dailyChange)
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings.plugins[pluginId].hourlyChange, !settings.plugins[pluginId].dailyChange)
     await updateSettings(newEvent)
   })
 
   const updateSettings = useCallback(
     async (event: NewPushEvent) => {
       try {
-        const newSettings = await setDeviceSettings(deviceId, { createEvents: [event] })
+        const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
         dispatch({
           type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
           data: serverSettingsToState(newSettings)
@@ -52,7 +51,7 @@ export const CurrencyNotificationScene = (props: Props) => {
         showError(`Failed to reach notification server: ${e}`)
       }
     },
-    [deviceId, dispatch]
+    [dispatch]
   )
 
   const rows = useMemo(
@@ -60,13 +59,13 @@ export const CurrencyNotificationScene = (props: Props) => {
       <SettingsSwitchRow
         key="hourly"
         label={sprintf(s.strings.settings_currency_notifications_percent_change_hour, 3)}
-        value={settings[pluginId].hourlyChange != null}
+        value={settings.plugins[pluginId].hourlyChange != null}
         onPress={toggleHourlySetting}
       />,
       <SettingsSwitchRow
         key="daily"
         label={sprintf(s.strings.settings_currency_notifications_percent_change_hours, 10, 24)}
-        value={settings[pluginId].dailyChange != null}
+        value={settings.plugins[pluginId].dailyChange != null}
         onPress={toggleDailySetting}
       />
     ],

@@ -51,7 +51,7 @@ export const wasPushRequestBody = uncleaner(asJSON(asPushRequestBody))
  * PUSH /v2/device/update payload.
  */
 export const asDeviceUpdatePayload = asObject({
-  loginIds: asOptional(asArray(asBase64), []),
+  loginIds: asArray(asBase64),
   ignorePriceChanges: asOptional(asBoolean),
   createEvents: asOptional(asArray(asNewPushEvent), []),
   removeEvents: asOptional(asArray(asString), [])
@@ -99,7 +99,7 @@ export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
  * POST /v2/device response payload.
  */
 export const asDevicePayload = asObject({
-  loginIds: asOptional(asArray(asBase64)),
+  loginIds: asArray(asBase64),
   events: asArray(asPushEventStatus),
   ignorePriceChanges: asBoolean
 })
