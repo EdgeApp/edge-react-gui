@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
+import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import s from '../locales/strings'
@@ -126,6 +127,11 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
     case 'bitPay': {
       launchBitPay(link.uri, { currencyWallets }).catch(showError)
+      return true
+    }
+
+    case 'price-change': {
+      dispatch(launchPriceChangeBuySellSwapModal(link))
       return true
     }
 

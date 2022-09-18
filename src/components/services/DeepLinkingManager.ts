@@ -1,9 +1,11 @@
 /* global requestAnimationFrame */
 
+import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
 import { Linking } from 'react-native'
 
 import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions'
+import { pushMessagePayloadToEdgeUri } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useEffect } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -47,6 +49,44 @@ export function DeepLinkingManager(props: Props) {
     if (url != null) handleUrl(url)
 
     return () => listener.remove()
+  }, [])
+
+  const handlePushMessage = (message: FirebaseMessagingTypes.RemoteMessage) => {
+    try {
+      handleUrl(pushMessagePayloadToEdgeUri(message))
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  // Firebase messaging
+  useAsyncEffect(async () => {
+    /**
+     * Fires when the app launches from push notification
+     * */
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage != null) {
+          handlePushMessage(remoteMessage)
+        }
+      })
+
+    /**
+     * Fires when the app is in background
+     * */
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      handlePushMessage(remoteMessage)
+    })
+
+    /**
+     * Fires when the app is in foreground and receives a notification
+     * */
+    const unsubscribe = messaging().onMessage(remoteMessage => {
+      // do nothing for now except return the unsubscribe function
+    })
+
+    return () => unsubscribe()
   }, [])
 
   return null
