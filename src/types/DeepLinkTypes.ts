@@ -33,6 +33,7 @@
  * Besides the edge:// protocol, there are also various coin-specific URI
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
+import { PriceChangePayload } from '../controllers/action-queue/types/pushPayloadTypes'
 import { ParamList } from './routerTypes'
 
 export type AztecoLink = {
@@ -96,6 +97,7 @@ export type DeepLink =
   | EdgeLoginLink
   | PasswordRecoveryLink
   | PluginLink
+  | PriceChangePayload
   | PromotionLink
   | RequestAddressLink
   | WalletConnectLink
