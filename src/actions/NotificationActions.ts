@@ -36,101 +36,113 @@ export type PriceChangeNotificationSettings = {
   }
 }
 
-export const registerNotificationsV2 = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { defaultIsoFiat } = state.ui.settings
-  let v2Settings: ReturnType<typeof asDevicePayload> = {
-    loginIds: [],
-    events: [],
-    ignorePriceChanges: false
-  }
-  try {
-    const deviceToken = await messaging().getToken()
-
-    const body = {
-      apiKey: ENV.AIRBITZ_API_KEY,
-      deviceId: state.core.context.clientId,
-      deviceToken,
-      loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
+export const registerNotificationsV2 =
+  (changeFiat: boolean = false) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { defaultIsoFiat } = state.ui.settings
+    let v2Settings: ReturnType<typeof asDevicePayload> = {
+      loginIds: [],
+      events: [],
+      ignorePriceChanges: false
     }
-    const opts = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }
-    const response = await fetchPush('v2/device/', opts)
+    try {
+      const deviceToken = await messaging().getToken()
 
-    v2Settings = await asDevicePayload(await response.json())
-
-    const currencyWallets = state.core.account.currencyWallets
-    const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
-
-    const createEvents: NewPushEvent[] = []
-
-    if (v2Settings.events.length !== 0) {
-      // v2 settings exist already, see if we need to add new ones
-      const missingInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
-      for (const currencyInfo of activeCurrencyInfos) {
-        if (!v2Settings.events.some(event => event.trigger.type === 'price-change' && event.trigger.pluginId === currencyInfo.pluginId)) {
-          missingInfos[currencyInfo.pluginId] = currencyInfo
-        }
+      const body = {
+        apiKey: ENV.AIRBITZ_API_KEY,
+        deviceId: state.core.context.clientId,
+        deviceToken,
+        loginId: base64.stringify(base58.parse(state.core.account.rootLoginId))
       }
-      Object.keys(missingInfos).forEach(pluginId => createEvents.push(newPriceChangeEvent(missingInfos[pluginId], defaultIsoFiat, true, true)))
-    } else {
-      // No v2 settings exist so let's check v1
-      const userId = state.core.account.rootLoginId
-      const encodedUserId = encodeURIComponent(userId)
-
-      let v1Settings = {
-        notifications: {
-          currencyCodes: {}
-        }
+      const opts = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
       }
+      const response = await fetchPush('v2/device/', opts)
 
-      try {
-        v1Settings = await notif1.get(`/user?userId=${encodedUserId}`)
-      } catch (e: any) {
-        // Failure is ok we'll just create new settings
-      }
+      v2Settings = await asDevicePayload(await response.json())
 
-      if (Object.keys(v1Settings.notifications.currencyCodes).length === 0) {
-        // v1 settings don't exist either so let's create them
+      const currencyWallets = state.core.account.currencyWallets
+      const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
+
+      const createEvents: NewPushEvent[] = []
+
+      if (v2Settings.events.length !== 0) {
+        // v2 settings exist already, see if we need to add new ones
+        const missingInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
         for (const currencyInfo of activeCurrencyInfos) {
-          createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
+          if (
+            !v2Settings.events.some(event => {
+              if (event.trigger.type === 'price-change' && event.trigger.pluginId === currencyInfo.pluginId) {
+                // An event for this plugin exists already we need to check if the user is changing the default fiat currency
+                if (changeFiat && !event.trigger.currencyPair.includes(defaultIsoFiat)) return false
+                return true
+              } else {
+                return false
+              }
+            })
+          ) {
+            missingInfos[currencyInfo.pluginId] = currencyInfo
+          }
         }
+        Object.keys(missingInfos).forEach(pluginId => createEvents.push(newPriceChangeEvent(missingInfos[pluginId], defaultIsoFiat, true, true)))
       } else {
-        // v1 settings do exist let's migrate them to v2
-        const currencySettings: Array<{ '1': boolean; '24': boolean; fallbackSettings?: boolean }> = await Promise.all(
-          activeCurrencyInfos.map(async info => fetchSettings(userId, info.currencyCode))
-        )
+        // No v2 settings exist so let's check v1
+        const userId = state.core.account.rootLoginId
+        const encodedUserId = encodeURIComponent(userId)
 
-        for (const [i, setting] of currencySettings.entries()) {
-          if (setting.fallbackSettings) {
-            // Settings didn't exist for that currency code so we'll create them using default options
-            createEvents.push(newPriceChangeEvent(activeCurrencyInfos[i], defaultIsoFiat, true, true))
-          } else {
-            // Settings did exist for that currency code so we'll use them
-            createEvents.push(newPriceChangeEvent(activeCurrencyInfos[i], defaultIsoFiat, setting[1], setting[24]))
+        let v1Settings = {
+          notifications: {
+            currencyCodes: {}
+          }
+        }
+
+        try {
+          v1Settings = await notif1.get(`/user?userId=${encodedUserId}`)
+        } catch (e: any) {
+          // Failure is ok we'll just create new settings
+        }
+
+        if (Object.keys(v1Settings.notifications.currencyCodes).length === 0) {
+          // v1 settings don't exist either so let's create them
+          for (const currencyInfo of activeCurrencyInfos) {
+            createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
+          }
+        } else {
+          // v1 settings do exist let's migrate them to v2
+          const currencySettings: Array<{ '1': boolean; '24': boolean; fallbackSettings?: boolean }> = await Promise.all(
+            activeCurrencyInfos.map(async info => fetchSettings(userId, info.currencyCode))
+          )
+
+          for (const [i, setting] of currencySettings.entries()) {
+            if (setting.fallbackSettings) {
+              // Settings didn't exist for that currency code so we'll create them using default options
+              createEvents.push(newPriceChangeEvent(activeCurrencyInfos[i], defaultIsoFiat, true, true))
+            } else {
+              // Settings did exist for that currency code so we'll use them
+              createEvents.push(newPriceChangeEvent(activeCurrencyInfos[i], defaultIsoFiat, setting[1], setting[24]))
+            }
           }
         }
       }
+
+      if (createEvents.length > 0) {
+        v2Settings = await dispatch(setDeviceSettings({ createEvents }))
+      }
+    } catch (e: any) {
+      // If this fails we don't need to bother the user just log and move on.
+      console.log('registerNotificationsV2 error:', e.message)
     }
 
-    if (createEvents.length > 0) {
-      v2Settings = await dispatch(setDeviceSettings({ createEvents }))
-    }
-  } catch (e: any) {
-    // If this fails we don't need to bother the user just log and move on.
-    console.log('registerNotificationsV2 error:', e.message)
+    dispatch({
+      type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
+      data: serverSettingsToState(v2Settings)
+    })
   }
-
-  dispatch({
-    type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
-    data: serverSettingsToState(v2Settings)
-  })
-}
 
 export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayload>): PriceChangeNotificationSettings => {
   const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges, plugins: {} }
