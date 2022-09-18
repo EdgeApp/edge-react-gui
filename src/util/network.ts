@@ -1,14 +1,19 @@
+import { EdgeFetchFunction, EdgeFetchResponse } from 'edge-core-js'
+
 import { config } from '../theme/appConfig'
 import { asyncWaterfall, shuffleArray } from './utils'
-
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
 
-// @ts-expect-error
-export async function fetchWaterfall(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
-  if (servers == null) return
+export async function fetchWaterfall(
+  servers: string[],
+  path: string,
+  options?: any,
+  timeout: number = 5000,
+  doFetch: EdgeFetchFunction = fetch
+): Promise<EdgeFetchResponse> {
   const funcs = servers.map(server => async () => {
-    const result = await fetch(server + '/' + path, options)
+    const result = await doFetch(server + '/' + path, options)
     if (typeof result !== 'object') {
       const msg = `Invalid return value ${path} in ${server}`
       console.log(msg)
@@ -20,20 +25,19 @@ export async function fetchWaterfall(servers?: string[], path: string, options?:
 }
 
 // @ts-expect-error
-async function multiFetch(servers?: string[], path: string, options?: any, timeout?: number = 5000): Promise<any> {
-  if (servers == null) return
-  return fetchWaterfall(shuffleArray(servers), path, options, timeout)
+async function multiFetch(servers: string[], path: string, options?: any, timeout?: number = 5000, doFetch?: EdgeFetchFunction): Promise<any> {
+  return fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
 }
 
-export const fetchInfo = async (path: string, options?: Object, timeout?: number): Promise<any> => {
-  return multiFetch(INFO_SERVERS, path, options, timeout)
+export const fetchInfo = async (path: string, options?: Object, timeout?: number, doFetch?: EdgeFetchFunction): Promise<any> => {
+  return multiFetch(INFO_SERVERS, path, options, timeout, doFetch)
 }
-export const fetchRates = async (path: string, options?: Object, timeout?: number): Promise<any> => {
-  return multiFetch(RATES_SERVERS, path, options, timeout)
+export const fetchRates = async (path: string, options?: Object, timeout?: number, doFetch?: EdgeFetchFunction): Promise<any> => {
+  return multiFetch(RATES_SERVERS, path, options, timeout, doFetch)
 }
-export const fetchReferral = async (path: string, options?: Object, timeout?: number): Promise<any> => {
-  return multiFetch(config.referralServers, path, options, timeout)
+export const fetchReferral = async (path: string, options?: Object, timeout?: number, doFetch?: EdgeFetchFunction): Promise<any> => {
+  return multiFetch(config.referralServers ?? [], path, options, timeout, doFetch)
 }
-export const fetchPush = async (path: string, options?: Object, timeout?: number): Promise<any> => {
-  return multiFetch(config.notificationServers, path, options, timeout)
+export const fetchPush = async (path: string, options?: Object, timeout?: number, doFetch?: EdgeFetchFunction): Promise<any> => {
+  return multiFetch(config.notificationServers, path, options, timeout, doFetch)
 }
