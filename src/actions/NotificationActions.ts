@@ -195,7 +195,7 @@ export const newPriceChangeEvent = (
   hourlyChangeEnabled: boolean,
   dailyChangeEnabled: boolean
 ): NewPushEvent => {
-  const { currencyCode, displayName } = currencyInfo
+  const { currencyCode, displayName, pluginId } = currencyInfo
 
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode.replace('iso:', ''))
   const fiatSymbol = fiatDenomination.symbol ?? ''
@@ -206,7 +206,11 @@ export const newPriceChangeEvent = (
 
   const pushMessage = {
     title: s.strings.price_alert,
-    body: '#direction#'
+    body: '#direction#',
+    data: {
+      type: 'price-change',
+      pluginId
+    }
   }
 
   const trigger: PriceChangeTrigger = {
