@@ -5,7 +5,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { makeWyreClient } from '../../controllers/action-queue/WyreClient'
+import { makeWyreClient, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
@@ -93,8 +93,7 @@ export function WalletListModal(props: Props) {
   // #region State
   const [searching, setSearching] = useState(false)
   const [searchText, setSearchText] = useState('')
-  // @ts-expect-error
-  const [bankAccountsMap, setBankAccountsMap] = useState()
+  const [bankAccountsMap, setBankAccountsMap] = useState<PaymentMethodsMap | undefined>(undefined)
 
   // @ts-expect-error
   useAsyncEffect(async () => {
@@ -183,7 +182,7 @@ export function WalletListModal(props: Props) {
           keyboardShouldPersistTaps="handled"
           renderItem={renderPaymentMethod}
           getItemLayout={handleItemLayout}
-          keyExtractor={item => item.pluginId}
+          keyExtractor={item => item.id}
         />
       )}
       <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
