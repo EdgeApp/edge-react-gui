@@ -2,7 +2,9 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
+import { type PriceChangeNotificationSettings } from '../actions/NotificationActions.js'
 import { type ActionQueueState, actionQueue } from '../controllers/action-queue/redux/reducers'
+import { type LoanManagerState, loanManager } from '../controllers/loan-manager/redux/reducers'
 import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLinkTypes.js'
 import { type Action } from '../types/reduxTypes.js'
@@ -27,6 +29,9 @@ export type RootState = {
   // Deep link waiting to be fulfilled:
   +pendingDeepLink: DeepLink | null,
 
+  // Hourly and daily price change notification settings
+  +priceChangeNotifications: PriceChangeNotificationSettings,
+
   // The user's sorted wallet list:
   +sortedWalletList: WalletListItem[],
 
@@ -35,6 +40,7 @@ export type RootState = {
   +actionQueue: ActionQueueState,
   +core: CoreState,
   +cryptoExchange: CryptoExchangeState,
+  +loanManager: LoanManagerState,
   +permissions: PermissionsState,
   +ui: UiState,
   +network: NetworkState
@@ -79,6 +85,14 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
     return state
   },
 
+  priceChangeNotifications(state: PriceChangeNotificationSettings = { ignorePriceChanges: false }, action: Action): PriceChangeNotificationSettings {
+    switch (action.type) {
+      case 'PRICE_CHANGE_NOTIFICATIONS_UPDATE':
+        return action.data
+    }
+    return state
+  },
+
   sortedWalletList(state: WalletListItem[] = [], action: Action): WalletListItem[] {
     return action.type === 'UPDATE_SORTED_WALLET_LIST' ? action.data : state
   },
@@ -88,6 +102,7 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
   actionQueue,
   core,
   cryptoExchange,
+  loanManager,
   permissions,
   ui,
   network

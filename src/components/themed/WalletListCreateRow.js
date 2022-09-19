@@ -22,6 +22,7 @@ import { EdgeText } from './EdgeText.js'
 export type WalletListCreateRowProps = {|
   currencyCode: string,
   currencyName: string,
+  createWalletId?: string,
   pluginId?: string,
   walletType?: string,
 
@@ -32,6 +33,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const {
     currencyCode = '',
     currencyName = '',
+    createWalletId,
     walletType,
     pluginId,
 
@@ -47,7 +49,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
     } else if (pluginId != null) {
-      dispatch(createAndSelectToken({ currencyCode, pluginId })).then(handleRes)
+      dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId })).then(handleRes)
     }
   })
 
@@ -66,29 +68,32 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 }
 
 const createAndSelectToken =
-  ({ currencyCode, pluginId }: { currencyCode: string, pluginId: string }) =>
+  ({ tokenCode, pluginId, createWalletId }: { tokenCode: string, pluginId: string, createWalletId?: string }) =>
   async (dispatch: Dispatch, getState: GetState): Promise<string> => {
     const state = getState()
     const { account, disklet } = state.core
-    // const { wallets } = state.ui.wallets.byId
     const { defaultIsoFiat } = state.ui.settings
     const parentCurrencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
     try {
       // Show the user the token terms modal only once
       await approveTokenTerms(disklet, parentCurrencyCode)
-      // Try to find existing Parent Edge Wallet
+
+      // Try to find existing Parent Edge Wallet, if no specific wallet was given
       const { currencyWallets } = account
-      const walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === currencyCode)
-      let wallet = walletId != null ? currencyWallets[walletId] : null
+      const parentWalletId =
+        createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === parentCurrencyCode)
+      let wallet = parentWalletId != null ? currencyWallets[parentWalletId] : null
+
       // If no parent chain wallet exists, create it
       if (wallet == null) {
         const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
         if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
         wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
+      } else {
+        await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([tokenCode]))
+        return wallet.id
       }
-      await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([currencyCode]))
-      return wallet.id
     } catch (error) {
       showError(error)
     }

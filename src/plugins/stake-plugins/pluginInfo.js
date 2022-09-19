@@ -569,8 +569,64 @@ export const pluginInfo: StakePluginInfo = {
         { pluginId: 'fantom', currencyCode: 'LSHARE' }
       ],
       rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    },
+    {
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_33',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
+      parentPluginId: 'fantom',
+      parentCurrencyCode: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 33,
+        lpTokenContract: makeContract('TOMBSWAP_L3USD_USDC_LP'),
+        poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
+        swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
+        tokenAContract: makeContract('L3USD'),
+        tokenBContract: makeContract('USDC')
+      }),
+      stakeAssets: [
+        { pluginId: 'fantom', currencyCode: 'L3USD' },
+        { pluginId: 'fantom', currencyCode: 'USDC' }
+      ],
+      rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    },
+    {
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_34',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
+      parentPluginId: 'fantom',
+      parentCurrencyCode: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 34,
+        lpTokenContract: makeContract('TOMBSWAP_L3USD_FUSDT_LP'),
+        poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
+        swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
+        tokenAContract: makeContract('L3USD'),
+        tokenBContract: makeContract('FUSDT')
+      }),
+      stakeAssets: [
+        { pluginId: 'fantom', currencyCode: 'L3USD' },
+        { pluginId: 'fantom', currencyCode: 'FUSDT' }
+      ],
+      rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
+    },
+    {
+      stakePolicyId: 'ftm_tombswap_cemetery_v2_35',
+      stakeProviderInfo: tombCemeteryV2ProviderInfo,
+      parentPluginId: 'fantom',
+      parentCurrencyCode: 'FTM',
+      policy: makeCemeteryPolicy({
+        poolId: 35,
+        lpTokenContract: makeContract('TOMBSWAP_L3USD_DAI_LP'),
+        poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
+        swapRouterContract: makeContract('TOMB_SWAP_ROUTER'),
+        tokenAContract: makeContract('L3USD'),
+        tokenBContract: makeContract('DAI')
+      }),
+      stakeAssets: [
+        { pluginId: 'fantom', currencyCode: 'L3USD' },
+        { pluginId: 'fantom', currencyCode: 'DAI' }
+      ],
+      rewardAssets: [{ pluginId: 'fantom', currencyCode: 'LSHARE' }]
     }
-
     // TODO: After multi-hop swap support implemented OR if a direct swap route opens up for FTM->TREEB and FTM->FUSD, add those Cemetery V2 pools.
   ]
 }

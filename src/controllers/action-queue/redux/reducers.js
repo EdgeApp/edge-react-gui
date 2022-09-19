@@ -39,6 +39,9 @@ export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
           }
         }
       }
+      case 'LOGOUT': {
+        return {}
+      }
       default:
         return state
     }

@@ -1,6 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyWallet, type EdgeNetworkFee, type EdgeTransaction } from 'edge-core-js'
+import { type Subscriber } from 'yaob'
 
 // -----------------------------------------------------------------------------
 // Request Method Types
@@ -15,9 +16,7 @@ export type BorrowRequest = {
   fromWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[],
-  // Optional control over validation checks such as balance
-  skipChecks?: boolean
+  pendingTxs?: EdgeTransaction[]
 }
 
 // Make payment:
@@ -29,9 +28,7 @@ export type RepayRequest = {
   fromWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[],
-  // Optional control over validation checks such as balance
-  skipChecks?: boolean
+  pendingTxs?: EdgeTransaction[]
 }
 
 // Deposit collateral:
@@ -43,9 +40,7 @@ export type DepositRequest = {
   fromWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[],
-  // Optional control over validation checks such as balance
-  skipChecks?: boolean
+  pendingTxs?: EdgeTransaction[]
 }
 
 // Withdraw collateral:
@@ -57,9 +52,7 @@ export type WithdrawRequest = {
   toWallet?: EdgeCurrencyWallet,
 
   // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[],
-  // Optional control over validation checks such as balance
-  skipChecks?: boolean
+  pendingTxs?: EdgeTransaction[]
 }
 
 export type BroadcastTx = {
@@ -102,6 +95,9 @@ export type BorrowEngine = {
   debts: BorrowDebt[],
 
   loanToValue: number,
+
+  +watch: Subscriber<BorrowEngine>,
+  syncRatio: number,
 
   // Returns the APR for borrow a particular token
   getAprQuote: (tokenId?: string) => Promise<number>,

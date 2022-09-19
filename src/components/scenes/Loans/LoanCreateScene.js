@@ -48,18 +48,16 @@ type Props = {
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { borrowEngine, borrowPlugin } = route.params
-  const { currencyWallet: beWallet, debts } = borrowEngine
+  const { currencyWallet: beWallet } = borrowEngine
+
+  const debts = useWatch(borrowEngine, 'debts')
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId('loan-create', beWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
-
-  if (debts.length > 0) {
-    // TODO: transition to "advanced" loan details scene
-  }
+  if (existingProgramId != null) navigation.navigate('loanCreateStatus', { actionQueueId: existingProgramId })
 
   // Wallet/Token Data
   const account = useSelector(state => state.core.account)
@@ -101,10 +99,10 @@ export const LoanCreateScene = (props: Props) => {
   const [apr, setApr] = useState()
   useEffect(() => {
     if (destTokenId != null) {
-      const destDebt = borrowEngine.debts.find(debt => debt.tokenId === destTokenId)
+      const destDebt = debts.find(debt => debt.tokenId === destTokenId)
       if (destDebt != null) setApr(destDebt.apr)
     }
-  }, [borrowEngine.debts, destTokenId])
+  }, [debts, destTokenId])
 
   // Hard-coded src/dest, if src/dest don't involve the wallet from the BorrowEngine
   const { tokenId: hardSrcTokenAddr } = useMemo(() => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: bePluginId }), [account, bePluginId])
@@ -124,6 +122,7 @@ export const LoanCreateScene = (props: Props) => {
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
         showCreateWallet={!isSrc}
+        createWalletId={!isSrc ? beWallet.id : undefined}
         showWithdrawToBank={!isSrc}
         excludeWalletIds={!isSrc ? excludeWalletIds : undefined}
         allowedAssets={!isSrc ? hardAllowedDestAsset : hardAllowedSrcAsset}
@@ -186,7 +185,7 @@ export const LoanCreateScene = (props: Props) => {
           <EdgeText style={disabled ? styles.textInitialDisabled : styles.textInitial}>{emptyLabel}</EdgeText>
         ) : (
           <View style={styles.currencyRow}>
-            <CurrencyRow tokenId={tokenId} wallet={wallet} />
+            <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
           </View>
         )}
       </TappableCard>
@@ -342,13 +341,13 @@ export const LoanCreateScene = (props: Props) => {
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_required}</EdgeText>
-          <Card marginRem={[0.5, 0.5, 0.5, 0.5]} paddingRem={1}>
+          <Card marginRem={[0.5, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
-              <EdgeText style={styles.textInitial}>
+              <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
               </EdgeText>
             ) : (
-              <CryptoFiatAmountRow nativeAmount={nativeRequiredCrypto} tokenId={srcTokenId} wallet={srcWallet} />
+              <CryptoFiatAmountRow nativeAmount={nativeRequiredCrypto} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
             )}
           </Card>
 
@@ -409,7 +408,7 @@ const getStyles = cacheStyles(theme => {
       alignSelf: 'flex-start',
       fontSize: theme.rem(0.75),
       fontFamily: theme.fontFaceMedium,
-      margin: theme.rem(0.5)
+      margin: theme.rem(1)
     },
     textInitialDisabled: {
       alignSelf: 'center',

@@ -4,9 +4,12 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { enableNotifications, fetchSettings } from '../../actions/NotificationActions.js'
+import { newPriceChangeEvent, serverSettingsToState, setDeviceSettings } from '../../actions/NotificationActions.js'
+import { type NewPushEvent } from '../../controllers/action-queue/types/pushTypes.js'
+import { useHandler } from '../../hooks/useHandler.js'
 import s from '../../locales/strings.js'
-import { connect } from '../../types/reactRedux.js'
+import { useCallback, useMemo } from '../../types/reactHooks.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
@@ -16,79 +19,64 @@ type OwnProps = {
   navigation: NavigationProp<'currencyNotificationSettings'>,
   route: RouteProp<'currencyNotificationSettings'>
 }
-type StateProps = {
-  userId: string
-}
-type DispatchProps = {
-  enableNotifications: (currencyCode: string, hours: string, enabled: boolean) => void
-}
-type Props = StateProps & DispatchProps & OwnProps
 
-type State = {
-  hours: { [hours: string]: boolean }
-}
+type Props = OwnProps
 
-export class CurrencyNotificationComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      hours: {}
-    }
-  }
+export const CurrencyNotificationScene = (props: Props) => {
+  const { route } = props
+  const { currencyInfo } = route.params
+  const { pluginId } = currencyInfo
+  const dispatch = useDispatch()
 
-  async componentDidMount() {
-    const { userId, navigation, route } = this.props
-    const { currencyCode } = route.params.currencyInfo
-    try {
-      const settings = await fetchSettings(userId, currencyCode)
-      if (settings) this.setState({ hours: settings })
-    } catch (err) {
-      showError(err)
-      navigation.goBack()
-    }
-  }
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const settings = useSelector(state => state.priceChangeNotifications)
 
-  render() {
-    const { enableNotifications, route } = this.props
-    const { currencyCode } = route.params.currencyInfo
-    const rows = []
-    for (const hours of Object.keys(this.state.hours)) {
-      const enabled: boolean = this.state.hours[hours]
-      const num = Number(hours)
-      const percent = num === 1 ? 3 : 10
-      const label =
-        num === 1
-          ? sprintf(s.strings.settings_currency_notifications_percent_change_hour, percent)
-          : sprintf(s.strings.settings_currency_notifications_percent_change_hours, percent, hours)
-
-      rows.push(
-        <SettingsSwitchRow
-          key={hours}
-          label={label}
-          value={enabled}
-          onPress={() => {
-            this.setState(state => ({ hours: { ...state.hours, [hours]: !enabled } }))
-            enableNotifications(currencyCode, hours, !enabled)
-          }}
-        />
-      )
-    }
-
-    return (
-      <SceneWrapper background="theme" hasTabs={false}>
-        <ScrollView>{rows}</ScrollView>
-      </SceneWrapper>
-    )
-  }
-}
-
-export const CurrencyNotificationScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    userId: state.core.account.rootLoginId
-  }),
-  dispatch => ({
-    enableNotifications(currencyCode, hours, enabled) {
-      dispatch(enableNotifications(currencyCode, hours, enabled))
-    }
+  const toggleHourlySetting = useHandler(async () => {
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings[pluginId].hourlyChange, !!settings[pluginId].dailyChange)
+    await updateSettings(newEvent)
   })
-)(CurrencyNotificationComponent)
+
+  const toggleDailySetting = useHandler(async () => {
+    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings[pluginId].hourlyChange, !settings[pluginId].dailyChange)
+    await updateSettings(newEvent)
+  })
+
+  const updateSettings = useCallback(
+    async (event: NewPushEvent) => {
+      try {
+        const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
+        dispatch({
+          type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
+          data: serverSettingsToState(newSettings)
+        })
+      } catch (e) {
+        showError(`Failed to reach notification server: ${e}`)
+      }
+    },
+    [dispatch]
+  )
+
+  const rows = useMemo(
+    () => [
+      <SettingsSwitchRow
+        key="hourly"
+        label={sprintf(s.strings.settings_currency_notifications_percent_change_hour, 3)}
+        value={settings[pluginId].hourlyChange != null}
+        onPress={toggleHourlySetting}
+      />,
+      <SettingsSwitchRow
+        key="daily"
+        label={sprintf(s.strings.settings_currency_notifications_percent_change_hours, 10, 24)}
+        value={settings[pluginId].dailyChange != null}
+        onPress={toggleDailySetting}
+      />
+    ],
+    [pluginId, settings, toggleDailySetting, toggleHourlySetting]
+  )
+
+  return (
+    <SceneWrapper background="theme" hasTabs={false}>
+      <ScrollView>{rows}</ScrollView>
+    </SceneWrapper>
+  )
+}

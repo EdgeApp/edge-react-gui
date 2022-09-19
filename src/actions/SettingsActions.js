@@ -21,6 +21,7 @@ import { Actions } from '../types/routerTypes.js'
 import { DECIMAL_PRECISION } from '../util/utils.js'
 import { validatePassword } from './AccountActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
+import { registerNotificationsV2 } from './NotificationActions.js'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -90,6 +91,8 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
         data: { spendingLimits: nextSpendingLimits }
       })
       dispatch(updateExchangeRates())
+      // Update push notifications
+      dispatch(registerNotificationsV2(true))
     })
     .catch(showError)
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import { type Cleaner, asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { type Cleaner, asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import {
@@ -27,7 +27,8 @@ export const asAddressBalanceTrigger: Cleaner<AddressBalanceTrigger> = asObject(
 export const asPriceChangeTrigger: Cleaner<PriceChangeTrigger> = asObject({
   type: asValue('price-change'),
   pluginId: asString,
-  tokenId: asOptional(asString),
+  currencyPair: asString, // From our rates server
+  directions: asOptional(asTuple(asString, asString, asString, asString)),
   dailyChange: asOptional(asNumber), // Percentage
   hourlyChange: asOptional(asNumber) // Percentage
 })
@@ -59,12 +60,11 @@ export const asPushMessage: Cleaner<PushMessage> = asObject({
   data: asOptional(asObject(asString))
 })
 
-export const asPushEventState: Cleaner<PushEventState> = asValue('waiting', 'cancelled', 'complete')
+export const asPushEventState: Cleaner<PushEventState> = asValue('waiting', 'cancelled', 'triggered', 'hidden')
 
 export const asNewPushEvent: Cleaner<NewPushEvent> = asObject({
   eventId: asString,
   broadcastTxs: asOptional(asArray(asBroadcastTx)),
   pushMessage: asOptional(asPushMessage),
-  recurring: asBoolean,
   trigger: asPushTrigger
 })

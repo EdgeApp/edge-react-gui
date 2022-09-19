@@ -14,6 +14,8 @@ import {
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { exhaustiveCheck } from '../../util/exhaustiveCheck'
+import { filterNull } from '../../util/safeFilters'
 
 export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
   return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
@@ -47,11 +49,12 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
               }
               // Otherwise the effect should be a seq matching the seq actionOp:
               if (effect.type === 'seq') {
-                if (effect.childEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+                const checkedEffects = filterNull(effect.childEffects)
+                if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
                 // Use the opIndex on the effect to determine which child ops are
                 // done and which one inherits the pending effect
                 if (index < effect.opIndex) childEffect = { type: 'done' }
-                if (index === effect.opIndex) childEffect = effect.childEffect
+                if (index === effect.opIndex) childEffect = checkedEffects[effect.opIndex]
               }
             }
 
@@ -176,39 +179,17 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_loan_withdraw_message, displayAmount)
       }
     }
-    case 'toast': {
-      return {
-        title: s.strings.action_queue_display_toast_title,
-        message: s.strings.action_queue_display_toast_message,
-        ...baseDisplayInfo
-      }
-    }
-    case 'delay': {
-      const { ms } = actionOp
-
-      if (effect == null || effect.type !== 'unixtime') {
-        return {
-          title: s.strings.action_queue_display_delay_title,
-          message: sprintf(s.strings.action_queue_display_delay_message_pending, ms),
-          ...baseDisplayInfo
-        }
-      }
-
-      const timestamp = effect.timestamp
-      const moment = new Date(timestamp).toUTCString()
-
-      return {
-        title: s.strings.action_queue_display_delay_title,
-        message: sprintf(s.strings.action_queue_display_delay_message_doing, moment),
-        ...baseDisplayInfo
-      }
-    }
-    default:
+    case 'broadcast-tx': {
       return {
         title: sprintf(s.strings.action_queue_display_unknown_title),
         message: sprintf(s.strings.action_queue_display_unknown_message),
         ...baseDisplayInfo
       }
+    }
+    default: {
+      // $ExpectError
+      throw exhaustiveCheck(actionOp.type)
+    }
   }
 }
 

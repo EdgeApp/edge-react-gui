@@ -18,9 +18,9 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (0.19.27):
+  - edge-core-js (0.19.29):
     - React-Core
-  - edge-login-ui-rn (0.10.7):
+  - edge-login-ui-rn (0.10.8):
     - React
   - FBLazyVector (0.67.2)
   - FBReactNativeSpec (0.67.2):
@@ -428,16 +428,14 @@ PODS:
     - React
   - react-native-contacts (7.0.4):
     - React-Core
-  - react-native-fast-crypto (2.2.0):
-    - React
   - react-native-flipper (0.143.0):
     - React-Core
   - react-native-image-picker (4.0.6):
     - React-Core
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-mymonero-core (0.2.3):
-    - React
+  - react-native-mymonero-core (0.2.5):
+    - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
   - react-native-safari-view (1.0.0):
@@ -449,7 +447,7 @@ PODS:
     - React-Core
   - react-native-webview (11.18.2):
     - React-Core
-  - react-native-zcash (0.2.2):
+  - react-native-zcash (0.2.3):
     - React
     - ZcashLightClientKit (= 0.14.0-beta)
   - React-perflogger (0.67.2)
@@ -751,7 +749,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
-  - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mail (from `../node_modules/react-native-mail`)
@@ -920,8 +917,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
-  react-native-fast-crypto:
-    :path: "../node_modules/react-native-fast-crypto"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-image-picker:
@@ -1035,8 +1030,8 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  edge-core-js: 04c5e07fcc807dc884e3788ee6484de22e682f70
-  edge-login-ui-rn: ba9307c44838e81ab51eacb54eaa3c9cede2f78f
+  edge-core-js: d52d6a7f0f26c6ac766061dbd0f326c26a107d8d
+  edge-login-ui-rn: 92cbf6272fef43423ff4af63983bc8a012a63894
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
   FBReactNativeSpec: c94002c1d93da3658f4d5119c6994d19961e3d52
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
@@ -1089,17 +1084,16 @@ SPEC CHECKSUMS:
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: 1bff4c47816d611f26b06fa8b3eaf2db4d1b2c86
-  react-native-fast-crypto: 5943c42466b86ad70be60d3a5f64bd22251e5d9e
   react-native-flipper: df8e2a7e5dcc857033d925ad8c7e8c52760b8e06
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
-  react-native-mymonero-core: 4b05f04573dce4e837dc8018fb7e322a613a95ee
+  react-native-mymonero-core: 74240a44d33d95eff85d2aecba2dfaf969682566
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
   react-native-webview: 8ec7ddf9eb4ddcd92b32cee7907efec19a9ec7cb
-  react-native-zcash: c6ef38f1b3f2cbd3eb5986e095b45399f0e7bb66
+  react-native-zcash: f95f29b89c7c8e0ba0daa631584b3afb447c0dc9
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
   React-RCTActionSheet: 052606483045a408693aa7e864410b4a052f541a
   React-RCTAnimation: 08d4cac13222bb1348c687a0158dfd3b577cdb63

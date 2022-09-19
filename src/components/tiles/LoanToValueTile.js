@@ -3,8 +3,10 @@
 import { add, div, mul } from 'biggystring'
 import * as React from 'react'
 
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings.js'
-import type { BorrowEngine } from '../../plugins/borrow-plugins/types.js'
+import { type BorrowEngine } from '../../plugins/borrow-plugins/types'
+import type {} from '../../plugins/borrow-plugins/types.js'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { memo } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux.js'
@@ -22,6 +24,10 @@ type Props = {
 
 const LoanToValueTileComponent = (props: Props) => {
   const { borrowEngine, direction, nativeAmount, tokenId, type } = props
+
+  const collaterals = useWatch(borrowEngine, 'collaterals')
+  const debts = useWatch(borrowEngine, 'debts')
+
   const { currencyWallet } = borrowEngine
   const {
     currencyConfig: { allTokens },
@@ -33,8 +39,8 @@ const LoanToValueTileComponent = (props: Props) => {
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${fiatCurrencyCode}`] ?? '0')
   const multiplier = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode).multiplier)
 
-  let totalDebtFiatValue = TotalFiatAmount(currencyWallet, borrowEngine.debts)
-  let totalCollateralFiatValue = TotalFiatAmount(currencyWallet, borrowEngine.collaterals)
+  let totalDebtFiatValue = TotalFiatAmount(currencyWallet, debts)
+  let totalCollateralFiatValue = TotalFiatAmount(currencyWallet, collaterals)
   const currentValue = div(totalDebtFiatValue, totalCollateralFiatValue, 2)
 
   const changeAmount = mul(mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRate), direction === 'increase' ? '1' : '-1')
