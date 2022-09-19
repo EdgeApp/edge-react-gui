@@ -1,5 +1,6 @@
 import childProcess from 'child_process'
 import fs from 'fs'
+import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
 const argv = process.argv
@@ -88,7 +89,7 @@ function main() {
 }
 
 function makeCommonPre(argv: string[], buildObj: BuildObj) {
-  buildObj.guiDir = __dirname
+  buildObj.guiDir = join(__dirname, '../')
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
