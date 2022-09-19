@@ -353,7 +353,6 @@ export type Theme = {
   paymentTypeLogoGooglePay: ImageSourcePropType
   paymentTypeLogoIdeal: ImageSourcePropType
   paymentTypeLogoInterac: ImageSourcePropType
-  paymentTypeLogoNewsagent: ImageSourcePropType
   paymentTypeLogoPayid: ImageSourcePropType
   paymentTypeLogoPaynow: ImageSourcePropType
   paymentTypeLogoPoli: ImageSourcePropType
