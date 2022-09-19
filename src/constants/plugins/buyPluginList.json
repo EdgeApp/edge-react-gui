@@ -405,9 +405,7 @@
     "description": "Fee: 5.5% / Settlement: 5 min - 24 hours\nMonthly Limit: $2000",
     "title": "Cash with Newsagent",
     "partnerIconPath": "banxa.png",
-    "forCountries": [
-      "AU"
-    ],
+    "forCountries": [],
     "cryptoCodes": [
       "BTC",
       "LTC",
