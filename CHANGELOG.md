@@ -1,5 +1,38 @@
 # edge-react-gui
 
+## 2.22.0 (2022-09-19)
+
+- Add new swap provider Thorchain
+- FTM: Add L3USD pools
+- Upgrade to react-native-mymonero-core v0.2.5
+- Fix Polkadot sends
+- Re-implement price change notifications to use Push Server v2
+- Add ability to filter promo cards by device characteristics and Wyre account status
+- Remove Newsagent support
+- Allow all local accounts to edit device price notification settings
+- Prevent stale swap quotes from reappearing on confirmation scene
+- Change swap timeout to 60s
+- Remove react-native-fast-crypto
+- Upgrade edge-core-js to v0.19.29
+- Upgrade edge-currency-accountbased to #aab0c48
+  - ETH: Fix spending with empty memo field
+  - FTM: Add L3USD token
+  - Update ZEC checkpoints
+  - Allow EVM data to be passed through memo field
+  - Rename engine.js:makeSpend to makeSpendCheck since it has a different return signature than the asset specific makeSpend
+  - Restore internal transaction support for etherscan providers. Remove transaction queries from blockbook providers since they don't support internal txs
+  - Fix broken ethEngine skipChecks
+  - Upgrade @polkadot/api SDK to v9.3.3
+- Upgrade edge-currency-plugins to v1.2.0
+  - Add: outputSort param for makeSpend to allow for sorting outputs
+- Upgrade edge-exchange-plugins to v0.13.10
+  - Add Thorchain
+- Upgrade edge-login-ui-rn to v0.10.8
+  - Fix off center alert error text
+  - Enforce 100 character max password length
+  - Fix >4 digit pin length
+  - Update translations
+
 ## 2.21.0 (2022-09-05)
 
 - Wyre: Fix Ethereum purchases
