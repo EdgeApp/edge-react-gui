@@ -98,7 +98,7 @@ export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
  * POST /v2/device response payload.
  */
 export const asDevicePayload = asObject({
-  loginIds: asOptional(asArray(asBase64)),
+  loginIds: asArray(asBase64),
   events: asArray(asPushEventStatus),
   ignorePriceChanges: asBoolean
 })

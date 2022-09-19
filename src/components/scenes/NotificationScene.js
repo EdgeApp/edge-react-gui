@@ -27,14 +27,13 @@ export const NotificationScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const settings = useSelector(state => state.priceChangeNotifications)
-  const deviceId = useSelector(state => state.core.context.clientId)
   const account = useSelector(state => state.core.account)
 
   const currencyConfigs = useWatch(account, 'currencyConfig')
 
   const toggleNotifications = useHandler(async () => {
     try {
-      const newSettings = await setDeviceSettings(deviceId, { ignorePriceChanges: !settings.ignorePriceChanges })
+      const newSettings = await dispatch(setDeviceSettings({ ignorePriceChanges: !settings.ignorePriceChanges }))
       dispatch({
         type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
         data: serverSettingsToState(newSettings)

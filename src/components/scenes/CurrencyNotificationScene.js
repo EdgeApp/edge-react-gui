@@ -29,7 +29,6 @@ export const CurrencyNotificationScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const deviceId = useSelector(state => state.core.context.clientId)
   const settings = useSelector(state => state.priceChangeNotifications)
 
   const toggleHourlySetting = useHandler(async () => {
@@ -45,7 +44,7 @@ export const CurrencyNotificationScene = (props: Props) => {
   const updateSettings = useCallback(
     async (event: NewPushEvent) => {
       try {
-        const newSettings = await setDeviceSettings(deviceId, { createEvents: [event] })
+        const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
         dispatch({
           type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
           data: serverSettingsToState(newSettings)
@@ -54,7 +53,7 @@ export const CurrencyNotificationScene = (props: Props) => {
         showError(`Failed to reach notification server: ${e}`)
       }
     },
-    [deviceId, dispatch]
+    [dispatch]
   )
 
   const rows = useMemo(
