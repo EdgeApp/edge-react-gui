@@ -24,6 +24,7 @@ import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import { ScamWarningCard } from '../cards/ScamWarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../modals/FlipInputModal'
@@ -381,6 +382,10 @@ class SendComponent extends React.PureComponent<Props, State> {
     return null
   }
 
+  renderScamWarning() {
+    return <ScamWarningCard marginRem={[1.5, 1]} />
+  }
+
   renderAmount() {
     const {
       exchangeRates,
@@ -573,6 +578,7 @@ class SendComponent extends React.PureComponent<Props, State> {
         <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
+          {this.renderScamWarning()}
           {this.renderAmount()}
           {this.renderError()}
           {this.renderFees()}
