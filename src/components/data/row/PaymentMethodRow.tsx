@@ -1,9 +1,11 @@
 import * as React from 'react'
+import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
+import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { asGuiPluginJson } from '../../../types/GuiPluginTypes'
 import { memo, useState } from '../../../types/reactHooks'
@@ -17,13 +19,14 @@ type Props = {
   marginRem?: number[] | number
   paymentMethod: PaymentMethod
   pluginId: string
+  onPress?: (paymentMethodId: string, pluginId: string) => void
 }
 
 // -----------------------------------------------------------------------------
 // A view representing the data from a wallet, used for rows, cards, etc.
 // -----------------------------------------------------------------------------
 const PaymentMethodRowComponent = (props: Props) => {
-  const { marginRem, paymentMethod, pluginId } = props
+  const { marginRem, paymentMethod, pluginId, onPress } = props
 
   // #region Initialization
 
@@ -41,7 +44,7 @@ const PaymentMethodRowComponent = (props: Props) => {
   if (isFirstRun) {
     for (const row of pluginJson) {
       if (typeof row === 'string') continue
-      if (row.pluginId === pluginId && row.partnerIconPath != undefined) {
+      if (row.pluginId === pluginId && row.partnerIconPath !== undefined) {
         setPartnerIconPath(row.partnerIconPath)
         setIsFirstRun(false)
       }
@@ -63,6 +66,14 @@ const PaymentMethodRowComponent = (props: Props) => {
 
   // #endregion Constants
 
+  // #region Handlers
+
+  const handlePress = useHandler(() => {
+    if (onPress != null) onPress(paymentMethod.id, pluginId)
+  })
+
+  // #endregion Handlers
+
   // #region Renderers
 
   const renderPluginDisplay = () => (
@@ -75,14 +86,16 @@ const PaymentMethodRowComponent = (props: Props) => {
   // #endregion Renderers
 
   return (
-    <IconDataRow
-      icon={mainIcon}
-      leftText={fiatCurrencyCode}
-      leftSubtext={name}
-      rightSubText={s.strings.plugin_powered_by_space}
-      rightSubTextExtended={renderPluginDisplay()}
-      marginRem={marginRem}
-    />
+    <TouchableOpacity onPress={handlePress}>
+      <IconDataRow
+        icon={mainIcon}
+        leftText={fiatCurrencyCode}
+        leftSubtext={name}
+        rightSubText={s.strings.plugin_powered_by_space + ' '}
+        rightSubTextExtended={renderPluginDisplay()}
+        marginRem={marginRem}
+      />
+    </TouchableOpacity>
   )
 }
 
