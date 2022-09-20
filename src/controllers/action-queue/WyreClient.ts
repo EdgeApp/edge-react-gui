@@ -85,6 +85,7 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
       paymentMethodsResponse.forEach(paymentMethod => {
         const { blockchains, id } = paymentMethod
         if (blockchains == null) return
+        if (paymentMethod.status !== 'ACTIVE') return
 
         // Special cases for testnets, if they don't yet support (they currently do not)
         if (blockchains.MUMBAI == null) blockchains.MUMBAI = blockchains.MATIC
