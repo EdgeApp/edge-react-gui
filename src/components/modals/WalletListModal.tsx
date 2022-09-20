@@ -141,6 +141,9 @@ export function WalletListModal(props: Props) {
   const handleCancel = useHandler(() => {
     bridge.resolve({})
   })
+  const handlePaymentMethodPress = useHandler((paymentMethodId: string, pluginId: string) => {
+    bridge.resolve({ wyreAccountId: paymentMethodId })
+  })
   const handleWalletListPress = useHandler((walletId: string, currencyCode: string) => {
     if (walletId === '') {
       handleCancel()
@@ -180,7 +183,7 @@ export function WalletListModal(props: Props) {
   )
 
   const renderPaymentMethod = useHandler(item => {
-    return <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
+    return <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" onPress={handlePaymentMethodPress} key={item.item.id} />
   })
 
   const renderBankSection = () =>
