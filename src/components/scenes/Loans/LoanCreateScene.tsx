@@ -30,7 +30,7 @@ import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -76,11 +76,9 @@ export const LoanCreateScene = (props: Props) => {
   const srcAssetName = srcToken != null ? srcToken.displayName : srcWallet != null ? srcWallet.currencyInfo.displayName : ''
 
   // Destination Wallet Data
-  // @ts-expect-error
-  const [destWallet, setDestWallet] = useState<EdgeCurrencyWallet | undefined>()
-  // @ts-expect-error
-  const [destTokenId, setDestTokenId] = useState<string | undefined>()
-  const [isDestBank, setIsDestBank] = useState<boolean>(false)
+  const [destWallet, setDestWallet] = useState<EdgeCurrencyWallet | undefined>(undefined)
+  const [destTokenId, setDestTokenId] = useState<string | undefined>(undefined)
+  const [destBankId, setDestBankId] = useState<string | undefined>(undefined)
 
   // Borrow Amounts
   const [borrowAmountFiat, setBorrowAmountFiat] = useState('0')
@@ -89,7 +87,8 @@ export const LoanCreateScene = (props: Props) => {
 
   // APR
   const [isLoading, setIsLoading] = useState(false)
-  const [apr, setApr] = useState<number | undefined>(undefined)
+  // @ts-expect-error
+  const [apr, setApr] = useState()
 
   const debts = useWatch(borrowEngine, 'debts')
   // @ts-expect-error
@@ -126,7 +125,7 @@ export const LoanCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest }) => {
+      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId }) => {
         if (isBankSignupRequest) {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
@@ -134,6 +133,12 @@ export const LoanCreateScene = (props: Props) => {
             deepPath: '',
             deepQuery: {}
           })
+        } else if (wyreAccountId != null) {
+          // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
+          // use for the bank sell step that comes after the initial loan
+          setDestBankId(wyreAccountId)
+          setDestWallet(borrowEngineWallet)
+          setDestTokenId(hardDestTokenAddr)
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
           const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
@@ -142,7 +147,7 @@ export const LoanCreateScene = (props: Props) => {
             setSrcTokenId(tokenId)
             setSrcCurrencyCode(currencyCode)
           } else {
-            setIsDestBank(false)
+            setDestBankId(undefined)
             setDestWallet(selectedWallet)
             setDestTokenId(tokenId)
 
@@ -195,7 +200,7 @@ export const LoanCreateScene = (props: Props) => {
    */
 
   // User has made input to all required fields
-  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || isDestBank) && !zeroString(borrowAmountFiat)
+  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
 
   // Required Collateral
   // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
@@ -302,7 +307,7 @@ export const LoanCreateScene = (props: Props) => {
 
           <WalletCard
             emptyLabel={s.strings.loan_select_receiving_wallet}
-            withdrawToBankLabel={isDestBank ? s.strings.deposit_to_bank : undefined}
+            withdrawToBankLabel={destBankId != null ? s.strings.deposit_to_bank : undefined}
             isSrc={false}
             wallet={destWallet ?? undefined}
             tokenId={destTokenId}
@@ -336,7 +341,7 @@ export const LoanCreateScene = (props: Props) => {
                   borrowPlugin,
                   destWallet,
                   destTokenId,
-                  isDestBank,
+                  destBankId,
                   nativeDestAmount: nativeCryptoBorrowAmount,
                   nativeSrcAmount: nativeRequiredCrypto,
                   srcWallet,
@@ -352,52 +357,69 @@ export const LoanCreateScene = (props: Props) => {
   )
 }
 
-// @ts-expect-error
-const getStyles = cacheStyles((theme: Theme) => ({
+const getStyles = cacheStyles(theme => ({
   cardContainer: {
     alignItems: 'center',
     alignSelf: 'center',
     flexDirection: 'column',
+    // @ts-expect-error
     margin: theme.rem(0.5)
   },
   currencyRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    // @ts-expect-error
     marginTop: theme.rem(0.5),
+    // @ts-expect-error
     marginBottom: theme.rem(0.5)
   },
   icon: {
+    // @ts-expect-error
     size: theme.rem(2.5)
   },
   textCardHeader: {
+    // @ts-expect-error
     fontFamily: theme.fontFaceMedium
   },
   textInitial: {
     alignSelf: 'flex-start',
+    // @ts-expect-error
     fontSize: theme.rem(0.75),
+    // @ts-expect-error
     fontFamily: theme.fontFaceMedium,
+    // @ts-expect-error
     margin: theme.rem(1)
   },
   textInitialDisabled: {
     alignSelf: 'center',
+    // @ts-expect-error
     color: theme.deactivatedText,
+    // @ts-expect-error
     fontSize: theme.rem(0.75),
+    // @ts-expect-error
     fontFamily: theme.fontFaceMedium,
+    // @ts-expect-error
     marginLeft: theme.rem(0.5)
   },
   textTitle: {
     alignSelf: 'flex-start',
+    // @ts-expect-error
     color: theme.secondaryText,
+    // @ts-expect-error
     fontFamily: theme.fontFaceBold,
+    // @ts-expect-error
     fontSize: theme.rem(0.75),
+    // @ts-expect-error
     margin: theme.rem(0.5),
     textAlign: 'left'
   },
   sceneContainer: {
     flex: 1,
     flexDirection: 'column',
+    // @ts-expect-error
     margin: theme.rem(0.5),
+    // @ts-expect-error
     marginTop: theme.rem(0)
   }
 }))

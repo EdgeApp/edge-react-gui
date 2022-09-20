@@ -111,14 +111,6 @@ Array [
       </Text>
     </View>
     <View
-      style={
-        Object {
-          "padding": 0,
-          "width": "100%",
-        }
-      }
-    />
-    <View
       accessible={true}
       focusable={true}
       onClick={[Function]}

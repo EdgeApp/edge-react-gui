@@ -33,9 +33,7 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
   const { account } = opt
   const dataStore = account.dataStore
 
-  //
-  // State:
-  //
+  // #region State
 
   const wyreSecret = await dataStore.getItem('co.edgesecure.wyre', 'wyreSecret').catch(async _ => dataStore.getItem('co.edgesecure.wyre', 'wyreAccountId'))
   const isAccountSetup = !!wyreSecret
@@ -45,14 +43,16 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
     Accept: 'application/json'
   }
 
-  //
-  // Private methods:
-  //
+  // #endregion State
+
+  // #region Private Methods
 
   const handleHttpError = (requestUri: string, responseStatus: number, responseData: string) => {
     console.info(`Failed HTTP exchange-sell response: ${responseData}`)
     throw new Error(`Request to ${requestUri} failed with HTTP ${responseStatus}`)
   }
+
+  // #endregion Private Methods
 
   //
   // Public
@@ -88,10 +88,10 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
         if (paymentMethod.status !== 'ACTIVE') return
 
         // Special cases for testnets, if they don't yet support (they currently do not)
-        if (blockchains.MUMBAI == null) blockchains.MUMBAI = blockchains.MATIC
+        if (blockchains.MUMBAI == null && blockchains.MATIC != null) blockchains.MUMBAI = blockchains.MATIC
         if (blockchains.TESTBTC == null) {
           const address = blockchains.BTC
-          if (['m', 'n', '2'].includes(address[0])) blockchains.TESTBTC = address
+          if (address != null && ['m', 'n', '2'].includes(address[0])) blockchains.TESTBTC = address
         }
         paymentMethod.blockchains = blockchains
 
