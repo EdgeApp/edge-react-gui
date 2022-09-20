@@ -6,7 +6,6 @@ import {
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
   EdgeCurrencyWallet,
-  EdgeMetadata,
   EdgeSpendInfo,
   EdgeSwapQuote,
   EdgeSwapRequest,
@@ -322,10 +321,20 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
 
   const { fromDisplayAmount, quote, request, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
   const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate } = quote
-  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
+  const { toWallet, fromCurrencyCode, toCurrencyCode } = request
   try {
     logEvent('SwapStart')
-    const result: EdgeSwapResult = await quote.approve()
+    const { swapInfo } = account.swapConfig[pluginId]
+
+    // Build the category string:
+    const isTransfer = pluginId === 'transfer'
+    const toWalletName = toWallet.name ?? ''
+    const name = isTransfer ? toWalletName : swapInfo.displayName
+    const swapType = isTransfer ? 'transfer' : 'exchange'
+    const swapTarget = isTransfer ? toWalletName : toCurrencyCode
+    const category = `${swapType}:${fromCurrencyCode} ${s.strings.word_to_in_convert_from_to_string} ${swapTarget}`
+
+    const result: EdgeSwapResult = await quote.approve({ metadata: { name, category } })
 
     logActivity(`Swap Exchange Executed: ${account.username}`)
     logActivity(`
@@ -346,24 +355,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo, onApprove: () => void
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-    await fromWallet.saveTx(result.transaction)
-
-    const { swapInfo } = account.swapConfig[pluginId]
-
-    // Build the category string:
-    const isTransfer = pluginId === 'transfer'
-    const toWalletName = toWallet.name ?? ''
-    const name = isTransfer ? toWalletName : swapInfo.displayName
-    const swapType = isTransfer ? 'transfer' : 'exchange'
-    const swapTarget = isTransfer ? toWalletName : toCurrencyCode
-    const category = `${swapType}:${fromCurrencyCode} ${s.strings.word_to_in_convert_from_to_string} ${swapTarget}`
-
-    const edgeMetaData: EdgeMetadata = {
-      name,
-      category
-    }
     Actions.push('exchangeSuccess', {})
-    await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     // Dispatch the success action and callback
     dispatch({ type: 'SHIFT_COMPLETE' })
