@@ -76,6 +76,12 @@ const strings = {
     'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',
 
+  warning_scam_title: 'Scam Warning',
+  warning_scam_message_financial_advice: 'Edge will not give financial advice.',
+  warning_scam_message_irreversibility: 'Cryptocurrency transactions are irreversible.',
+  warning_scam_message_unknown_recipients: 'Do not send money to people or organizations you do not know.',
+  warning_scam_footer: 'If you have any questions or concerns regarding this send please contact support@edge.app',
+
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
