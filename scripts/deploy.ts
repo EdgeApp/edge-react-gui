@@ -6,6 +6,8 @@ import { sprintf } from 'sprintf-js'
 const argv = process.argv
 const mylog = console.log
 
+const _rootProjectDir = join(__dirname, '../')
+
 let _currentPath = __dirname
 
 /**
@@ -89,7 +91,7 @@ function main() {
 }
 
 function makeCommonPre(argv: string[], buildObj: BuildObj) {
-  buildObj.guiDir = join(__dirname, '../')
+  buildObj.guiDir = _rootProjectDir
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
@@ -226,7 +228,7 @@ function buildAndroid(buildObj: BuildObj) {
 
   chdir(buildObj.guiDir)
 
-  process.env.ORG_GRADLE_PROJECT_storeFile = sprintf('/%s/keystores/%s', __dirname, buildObj.androidKeyStore)
+  process.env.ORG_GRADLE_PROJECT_storeFile = sprintf('/%s/keystores/%s', _rootProjectDir, buildObj.androidKeyStore)
   process.env.ORG_GRADLE_PROJECT_storePassword = buildObj.androidKeyStorePassword
   process.env.ORG_GRADLE_PROJECT_keyAlias = buildObj.androidKeyStoreAlias
   process.env.ORG_GRADLE_PROJECT_keyPassword = buildObj.androidKeyStorePassword
