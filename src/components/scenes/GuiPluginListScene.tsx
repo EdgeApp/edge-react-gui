@@ -48,7 +48,6 @@ const paymentTypeLogosById = {
   googlepay: 'paymentTypeLogoGooglePay',
   ideal: 'paymentTypeLogoIdeal',
   interac: 'paymentTypeLogoInterac',
-  newsagent: 'paymentTypeLogoNewsagent',
   payid: 'paymentTypeLogoPayid',
   paynow: 'paymentTypeLogoPaynow',
   poli: 'paymentTypeLogoPoli',

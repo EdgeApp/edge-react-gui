@@ -397,30 +397,6 @@
     }
   },
   {
-    "id": "banxa.cash",
-    "pluginId": "banxa",
-    "paymentTypes": [
-      "cash"
-    ],
-    "description": "Fee: 5.5% / Settlement: 5 min - 24 hours\nMonthly Limit: $2000",
-    "title": "Cash with Newsagent",
-    "partnerIconPath": "banxa.png",
-    "forCountries": [
-      "AU"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "LTC",
-      "ETH",
-      "USDT"
-    ],
-    "paymentTypeLogoKey": "newsagent",
-    "deepQuery": {
-      "country": "AU",
-      "payment_id": "5022"
-    }
-  },
-  {
     "id": "banxa.payid",
     "pluginId": "banxa",
     "paymentTypes": [
@@ -625,10 +601,6 @@
   {
     "id": "banxa.sofort",
     "sortIndex": 1.5
-  },
-  {
-    "id": "banxa.cash",
-    "sortIndex": 7
   },
   {
     "id": "banxa.payid",

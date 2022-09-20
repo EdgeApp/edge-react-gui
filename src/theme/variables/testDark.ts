@@ -16,7 +16,6 @@ import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTyp
 import paymentTypeLogoGooglePay from '../../assets/images/paymentTypes/paymentTypeLogoGooglePay.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
-import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
@@ -374,7 +373,6 @@ export const testDark: Theme = {
   paymentTypeLogoGooglePay,
   paymentTypeLogoIdeal: paymentTypeLogoIdeal,
   paymentTypeLogoInterac: paymentTypeLogoInterac,
-  paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
   paymentTypeLogoPayid: paymentTypeLogoPayid,
   paymentTypeLogoPoli: paymentTypeLogoPoli,
   paymentTypeLogoPaynow,
