@@ -288,6 +288,7 @@ export type ParamList = {
   testScene: {}
   transactionDetails: {
     edgeTransaction: EdgeTransaction
+    amountFiat?: number
     thumbnailPath?: string
   }
   transactionList: {}
