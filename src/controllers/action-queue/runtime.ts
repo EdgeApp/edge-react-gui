@@ -385,6 +385,7 @@ async function evaluateAction(
         },
         execute: async () => {
           const output = await childOutput.execute()
+          const childEffect = output.effect
           return {
             effect: {
               type: 'seq',
