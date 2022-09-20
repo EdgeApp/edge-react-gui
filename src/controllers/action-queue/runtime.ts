@@ -590,26 +590,21 @@ async function evaluateAction(
         quoteFor: amountFor
       })
 
-      const execute = async () => {
+      const execute = async (): Promise<ExecutionOutput> => {
         const swapResult = await swapQuote.approve()
         const { transaction } = swapResult
+        const { swapData } = transaction
 
-        // TOOD: Enable this when we can query wallet address balances
-        if (swapResult.destinationAddress) {
-          // const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode })).nativeAmount
-          // const aboveAmount = add(currentAddressBalance, swapQuote.toNativeAmount)
-          // return {
-          //   type: 'balance',
-          //   address: swapResult.destinationAddress,
-          //   aboveAmount,
-          //   walletId: toWalletId,
-          //   tokenId: toTokenId
-          // }
-        }
+        if (swapData == null) throw new Error(`Expected swapData from EdgeTransaction for swap provider '${swapQuote.pluginId}'`)
 
-        // Fallback to wallet balance:
+        // TODO: Pass the payoutAddress to a wallet method like getReceiveAddress but specifically for getting an address balance's balance (for UTXO-based currency support).
+        // const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode }))?.nativeAmount ?? '0'
+        // const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)
+
+        // Assume the wallet balance and the address balance are the same.
+        // This method will work for account-based currencies, so it's safe for now.
         const walletBalance = toWallet.balances[toCurrencyCode] ?? '0'
-        const aboveAmount = add(walletBalance, swapQuote.toNativeAmount)
+        const aboveAmount = add(walletBalance, swapData.payoutNativeAmount)
 
         const broadcastTxs: BroadcastTx[] = [
           {
@@ -622,7 +617,7 @@ async function evaluateAction(
         return {
           effect: {
             type: 'address-balance',
-            address: '',
+            address: swapData.payoutAddress,
             aboveAmount,
             walletId: toWalletId,
             tokenId: toTokenId
@@ -632,7 +627,6 @@ async function evaluateAction(
       }
       return {
         dryrunOutput: null, // Support dryrun when EdgeSwapQuote returns a signed tx
-        // @ts-expect-error
         execute
       }
     }
