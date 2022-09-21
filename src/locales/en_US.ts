@@ -947,6 +947,8 @@ const strings = {
   loan_fragment_loan: 'Loan',
   loan_fragment_repay: 'Repayment',
   loan_fragment_withdraw: 'Withdrawal',
+  loan_fund_source: 'Fund Source',
+  loan_fund_destination: 'Fund Destination',
   loan_insufficient_funds_warning:
     'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
   loan_interest_rate: 'Interest Rate',
