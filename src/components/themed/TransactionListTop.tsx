@@ -14,6 +14,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
+import { MapObject } from '../../types/types'
 import { stakePlugin } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -385,7 +386,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
-    const stakingBalances = {}
+    const stakingBalances: MapObject<{ crypto: string; fiat: string }> = {}
 
     // Crypto Amount Formatting
     const currencyDenomination = getDisplayDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
@@ -400,7 +401,6 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
-        // @ts-expect-error
         const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
@@ -411,7 +411,6 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
         const stakingFiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
-        // @ts-expect-error
         stakingBalances[stakingCurrencyCode] = {
           crypto: stakingCryptoAmountFormat,
           fiat: stakingFiatBalanceFormat

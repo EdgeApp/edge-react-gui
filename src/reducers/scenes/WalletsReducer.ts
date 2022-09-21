@@ -153,7 +153,6 @@ function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   })
   if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
     for (const cCodeKey in STAKING_BALANCES) {
-      // @ts-expect-error
       const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
       nativeBalances[stakingCurrencyCode] = wallet.balances[stakingCurrencyCode] ?? '0'
     }

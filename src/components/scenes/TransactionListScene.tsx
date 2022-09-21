@@ -177,8 +177,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={this.renderEmptyComponent}
           ListHeaderComponent={this.renderTop}
-          // @ts-expect-error
-          contentOffset={{ y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
+          contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
           refreshControl={
             transactions.length !== 0 ? (
               <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
