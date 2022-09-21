@@ -20,6 +20,7 @@ import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useMemo, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, ParamList } from '../../../types/routerTypes'
+import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { zeroString } from '../../../util/utils'
@@ -172,7 +173,21 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   useAsyncEffect(async () => {
     const actionOp: ActionOp = {
       type: 'seq',
-      actions: [
+      actions: []
+    }
+
+    // Build the sequence ops:
+    if (actionOpType === 'loan-deposit') {
+      actionOp.actions = await makeAaveDepositAction({
+        borrowPluginId,
+        depositTokenId: hardAllowedCollateralAsset[0].tokenId,
+        nativeAmount: actionNativeCryptoAmount,
+        borrowEngineWallet: borrowEngineWallet,
+        srcTokenId: selectedTokenId,
+        srcWallet: borrowEngineWallet
+      })
+    } else {
+      actionOp.actions = [
         {
           type: actionOpType,
           borrowPluginId,
@@ -182,6 +197,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         }
       ]
     }
+
     setActionOp(actionOp)
   }, [actionNativeCryptoAmount, borrowEngineWallet, selectedTokenId])
 
