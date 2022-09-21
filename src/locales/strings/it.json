@@ -762,6 +762,8 @@
   "notification_hourly_price_change_down": "%1$s %2$s (%3$s) is down %4$s to %5$s in the last hour.",
   "notification_daily_price_change_up": "%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.",
   "notification_daily_price_change_down": "%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.",
+  "price_change_notification": "Price Notification",
+  "price_change_buy_sell_trade": "Would you like to buy, sell, or exchange %1$s?",
   "update_notice_deprecate_electrum_servers_title": "Aggiornamento Blockbook",
   "update_notice_deprecate_electrum_servers_message": "%s non utilizza più i server Electrum. Se desideri continuare a usare server personalizzati, inserisci indirizzi compatibili con Blockbook.\n\nNOTA: se hai abilitato dei server personalizzati, questi portafogli non verranno sincronizzati fino a quando non userai Blockbook o disattiverai i server personalizzati.",
   "error_boundary_title": "Oops!",
