@@ -762,6 +762,8 @@
   "notification_hourly_price_change_down": "%1$s %2$s (%3$s) is down %4$s to %5$s in the last hour.",
   "notification_daily_price_change_up": "%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.",
   "notification_daily_price_change_down": "%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.",
+  "price_change_notification": "Price Notification",
+  "price_change_buy_sell_trade": "Would you like to buy, sell, or exchange %1$s?",
   "update_notice_deprecate_electrum_servers_title": "Blockbuch-Upgrade",
   "update_notice_deprecate_electrum_servers_message": "%s verwendet keine Electrum Server. Wenn Sie weiterhin CUSTOM NODES verwenden möchten, geben Sie bitte Blockbook kompatible Adressen ein.\n\nHINWEIS: Wenn Sie benutzerdefinierte Knoten aktiviert haben, werden diese Wallets erst synchronisiert, wenn sie korrigiert wurden.",
   "error_boundary_title": "Hoppla!",
