@@ -5,7 +5,6 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { truncateDecimals } from '../../locales/intl'
-import s from '../../locales/strings'
 import { memo, useCallback, useMemo, useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -16,7 +15,7 @@ type Props = {
   wallet: EdgeCurrencyWallet
   iconUri: string
   inputModalMessage: string
-  inputModalTitle: string
+  title: string
   tokenId?: string
   // @ts-expect-error
   onAmountChanged: ({ fiatAmount: string, nativeCryptoAmount: string }) => void
@@ -27,7 +26,7 @@ type Props = {
  * and taking fiat as an input, and returns the result in both fiat and crypto,
  * based on the given wallet.
  */
-const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, inputModalTitle, tokenId, onAmountChanged }: Props) => {
+const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, title, tokenId, onAmountChanged }: Props) => {
   const [fiatAmount, setFiatAmount] = useState('0')
 
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({ tokenId, wallet: wallet })
@@ -48,25 +47,19 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, inpu
   onAmountChanged({ fiatAmount, nativeCryptoAmount })
 
   const handleEditActionfiatAmount = useCallback(() => {
-    Airship.show<string | undefined>(bridge => (
-      <TextInputModal title={inputModalTitle} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />
-    )).then(inputAmount => {
-      if (inputAmount != null) {
-        setFiatAmount(inputAmount)
+    Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
+      inputAmount => {
+        if (inputAmount != null) {
+          setFiatAmount(inputAmount)
+        }
       }
-    })
-  }, [inputModalMessage, inputModalTitle])
+    )
+  }, [inputModalMessage, title])
 
   const formattedFiatAmount = useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
 
   return (
-    <UnderlinedNumInputCard
-      currencyCode="USD"
-      formattedAmount={formattedFiatAmount}
-      iconUri={iconUri}
-      title={s.strings.loan_amount_borrow}
-      onPress={handleEditActionfiatAmount}
-    />
+    <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />
   )
 }
 
