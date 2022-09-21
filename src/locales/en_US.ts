@@ -841,7 +841,8 @@ const strings = {
   // Ethereum (ETH) is up +15% to $2,290 in the last 24 hours.
   notification_daily_price_change_up: '%1$s %2$s (%3$s) is up %4$s to %5$s in the last 24 hours.',
   notification_daily_price_change_down: '%1$s %2$s (%3$s) is down %4$s to %5$s in the last 24 hours.',
-
+  price_change_notification: 'Price Notification',
+  price_change_buy_sell_trade: 'Would you like to buy, sell, or exchange %1$s?',
   // Update notices
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
   update_notice_deprecate_electrum_servers_message:
