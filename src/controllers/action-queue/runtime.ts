@@ -93,7 +93,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
        * index of it's childEffects.
        */
       // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
-      if (effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
+      if (effective && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
         // Progress the partially completed effect forward
         const nextEffect: SeqEffect = {
           ...effect,
@@ -597,12 +597,35 @@ async function evaluateAction(
 
         if (swapData == null) throw new Error(`Expected swapData from EdgeTransaction for swap provider '${swapQuote.pluginId}'`)
 
-        // TODO: Pass the payoutAddress to a wallet method like getReceiveAddress but specifically for getting an address balance's balance (for UTXO-based currency support).
-        // const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode }))?.nativeAmount ?? '0'
-        // const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)
+        // We can only assume the wallet balance and the address balance are the same for account-based currencies.
+        // So we must assert the currency type matches a whitelist of plugins which are account-based.
+        // In order to fully implement SwapActionOp, we require a getAddressBalance method on EdgeCurrencyWallet.
+        const supportedDestniationPlugins = [
+          'binancesmartchain',
+          'ethereum',
+          'ethereumclassic',
+          'ethDev',
+          'fantom',
+          'goerli',
+          'kovan',
+          'rinkeby',
+          'ropsten',
+          'rsk',
+          'polygon',
+          'celo',
+          'avalanche'
+        ]
+        if (!supportedDestniationPlugins.includes(toWallet.currencyInfo.pluginId))
+          throw new Error(`SwapActionOp only implemented for destination wallets for plugins: ${supportedDestniationPlugins.join(', ')}`)
 
-        // Assume the wallet balance and the address balance are the same.
-        // This method will work for account-based currencies, so it's safe for now.
+        /*
+        // TODO: For UTXO-based currency support, pass the payoutAddress to a 
+        // wallet method like getReceiveAddress (e.g. getAddressBalance), but 
+        // specifically for getting an address's balance.
+        const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode }))?.nativeAmount ?? '0'
+        const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)
+        */
+
         const walletBalance = toWallet.balances[toCurrencyCode] ?? '0'
         const aboveAmount = add(walletBalance, swapData.payoutNativeAmount)
 
