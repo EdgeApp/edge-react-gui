@@ -298,7 +298,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
           wallet={borrowEngineWallet}
           iconUri={iconUri}
           inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
-          inputModalTitle={sprintf(s.strings.loan_enter_s_amount_s, opTypeStringMap[actionOpType].amountCard, fiatCurrencyCode)}
+          title={sprintf(s.strings.loan_enter_s_amount_s, opTypeStringMap[actionOpType].amountCard, fiatCurrencyCode)}
           tokenId={selectedTokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
