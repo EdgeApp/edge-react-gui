@@ -67,20 +67,36 @@ type Props<T extends keyof ParamList> = {
 }
 
 export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>) => {
-  // #region Constants
-
   const { action, actionOperand, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
+
+  // -----------------------------------------------------------------------------
+  // #region Initialization
+  // -----------------------------------------------------------------------------
+
+  const { borrowEngine, borrowPlugin } = loanAccount
+  const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
+
+  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
+  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
+  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
+
+  // #endregion Initialization
+
+  // -----------------------------------------------------------------------------
+  // #region Constants
+  // -----------------------------------------------------------------------------
+
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
 
-  const { borrowEngine, borrowPlugin } = loanAccount
-  const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
+  const borrowPluginInfo = borrowPlugin.borrowInfo
+  const borrowPluginId = borrowPluginInfo.borrowPluginId
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
@@ -99,19 +115,24 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // Selected debt/collateral
   const isDebt = actionOperand === 'debts'
   const defaultTokenId = isDebt ? hardDebtAddr : hardCollateralAddr
-  const [selectedTokenId, setSelectedTokenId] = useState(defaultTokenId)
 
   // Amount card
-  const iconUri = getBorrowPluginIconUri(borrowPlugin.borrowInfo)
+  const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+
+  // User input display strings
+  const opTypeStringMap = {
+    'loan-borrow': { amountCard: s.strings.loan_fragment_loan, srcDestCard: s.strings.loan_fund_destination },
+    'loan-deposit': { amountCard: s.strings.loan_fragment_deposit, srcDestCard: s.strings.loan_fund_source },
+    'loan-repay': { amountCard: s.strings.loan_fragment_repay, srcDestCard: s.strings.loan_fund_source },
+    'loan-withdraw': { amountCard: s.strings.loan_fragment_withdraw, srcDestCard: s.strings.loan_fund_destination }
+  }
 
   // #endregion Constants
 
-  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
-
+  // -----------------------------------------------------------------------------
   // #region State
+  // -----------------------------------------------------------------------------
 
   const [approvalAction, setApprovalAction] = useState<ApprovableAction | null>(null)
   const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = useState('0')
@@ -119,10 +140,23 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const [actionOp, setActionOp] = useState<ActionOp | undefined>(undefined)
   const [bankAccountsMap, setBankAccountsMap] = useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
   const [destBankId, setDestBankId] = useState<string | undefined>(undefined)
+  const [selectedTokenId, setSelectedTokenId] = useState(defaultTokenId)
 
-  // #endregion
+  // New debt/collateral amount
+  const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
+  const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
 
+  // Fees
+  const feeNativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
+
+  // APR change
+  const newDebt = { nativeAmount: actionNativeCryptoAmount, tokenId: selectedTokenId, apr: newDebtApr }
+
+  // #endregion State
+
+  // -----------------------------------------------------------------------------
   // #region Hooks
+  // -----------------------------------------------------------------------------
 
   // @ts-expect-error
   useAsyncEffect(async () => {
@@ -136,19 +170,18 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // @ts-expect-error
   useAsyncEffect(async () => {
-    const actionOp = {
+    const actionOp: ActionOp = {
       type: 'seq',
       actions: [
         {
           type: actionOpType,
-          borrowPluginId: borrowPlugin.borrowInfo.borrowPluginId,
+          borrowPluginId,
           nativeAmount: actionNativeCryptoAmount,
           walletId: borrowEngineWallet.id,
           tokenId: selectedTokenId
         }
       ]
     }
-    // @ts-expect-error
     setActionOp(actionOp)
   }, [actionNativeCryptoAmount, borrowEngineWallet, selectedTokenId])
 
@@ -159,12 +192,18 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       return
     }
 
-    // @ts-expect-error
-    const request: ManageCollateralRequest = {
-      nativeAmount: actionNativeCryptoAmount,
-      [actionWallet]: borrowEngineWallet,
-      tokenId: selectedTokenId
-    }
+    const request: ManageCollateralRequest =
+      actionWallet === 'fromWallet'
+        ? {
+            nativeAmount: actionNativeCryptoAmount,
+            fromWallet: borrowEngineWallet,
+            tokenId: selectedTokenId
+          }
+        : {
+            nativeAmount: actionNativeCryptoAmount,
+            toWallet: borrowEngineWallet,
+            tokenId: selectedTokenId
+          }
 
     const approvalAction = await action(request)
     setApprovalAction(approvalAction)
@@ -177,7 +216,9 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // #endregion Hooks
 
+  // -----------------------------------------------------------------------------
   // #region Handlers
+  // -----------------------------------------------------------------------------
 
   const handleFiatAmountChanged = useHandler(({ fiatAmount, nativeCryptoAmount }) => {
     setActionNativeCryptoAmount(nativeCryptoAmount)
@@ -197,7 +238,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
     }
   })
 
-  const handleShowWalletPickerModal = () => {
+  const handleShowWalletPickerModal = useHandler(() => {
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
@@ -230,31 +271,9 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         }
       })
       .catch(e => showError(e.message))
-  }
+  })
 
   // #endregion Handlers
-
-  // #region Dependent Constants
-
-  // Text input modal
-  const opTypeStringMap = {
-    'loan-borrow': { amountCard: s.strings.loan_fragment_loan, srcDestCard: s.strings.loan_fund_destination },
-    'loan-deposit': { amountCard: s.strings.loan_fragment_deposit, srcDestCard: s.strings.loan_fund_source },
-    'loan-repay': { amountCard: s.strings.loan_fragment_repay, srcDestCard: s.strings.loan_fund_source },
-    'loan-withdraw': { amountCard: s.strings.loan_fragment_withdraw, srcDestCard: s.strings.loan_fund_destination }
-  }
-
-  // New debt/collateral amount
-  const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
-  const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedTokenId, apr: 0 }
-
-  // Fees
-  const feeNativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
-
-  // APR change
-  const newDebt = { nativeAmount: actionNativeCryptoAmount, tokenId: selectedTokenId, apr: newDebtApr }
-
-  // #endregion Dependent Constants
 
   return (
     <FormScene headerText={headerText} onSliderComplete={handleSliderComplete} sliderDisabled={approvalAction == null}>
