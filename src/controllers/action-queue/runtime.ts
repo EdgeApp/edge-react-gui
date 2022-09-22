@@ -93,7 +93,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
        * index of it's childEffects.
        */
       // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
-      if (effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
+      if (effective && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
         // Progress the partially completed effect forward
         const nextEffect: SeqEffect = {
           ...effect,
@@ -590,26 +590,44 @@ async function evaluateAction(
         quoteFor: amountFor
       })
 
-      const execute = async () => {
+      const execute = async (): Promise<ExecutionOutput> => {
         const swapResult = await swapQuote.approve()
         const { transaction } = swapResult
+        const { swapData } = transaction
 
-        // TOOD: Enable this when we can query wallet address balances
-        if (swapResult.destinationAddress) {
-          // const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode })).nativeAmount
-          // const aboveAmount = add(currentAddressBalance, swapQuote.toNativeAmount)
-          // return {
-          //   type: 'balance',
-          //   address: swapResult.destinationAddress,
-          //   aboveAmount,
-          //   walletId: toWalletId,
-          //   tokenId: toTokenId
-          // }
-        }
+        if (swapData == null) throw new Error(`Expected swapData from EdgeTransaction for swap provider '${swapQuote.pluginId}'`)
 
-        // Fallback to wallet balance:
+        // We can only assume the wallet balance and the address balance are the same for account-based currencies.
+        // So we must assert the currency type matches a whitelist of plugins which are account-based.
+        // In order to fully implement SwapActionOp, we require a getAddressBalance method on EdgeCurrencyWallet.
+        const supportedDestniationPlugins = [
+          'binancesmartchain',
+          'ethereum',
+          'ethereumclassic',
+          'ethDev',
+          'fantom',
+          'goerli',
+          'kovan',
+          'rinkeby',
+          'ropsten',
+          'rsk',
+          'polygon',
+          'celo',
+          'avalanche'
+        ]
+        if (!supportedDestniationPlugins.includes(toWallet.currencyInfo.pluginId))
+          throw new Error(`SwapActionOp only implemented for destination wallets for plugins: ${supportedDestniationPlugins.join(', ')}`)
+
+        /*
+        // TODO: For UTXO-based currency support, pass the payoutAddress to a 
+        // wallet method like getReceiveAddress (e.g. getAddressBalance), but 
+        // specifically for getting an address's balance.
+        const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode }))?.nativeAmount ?? '0'
+        const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)
+        */
+
         const walletBalance = toWallet.balances[toCurrencyCode] ?? '0'
-        const aboveAmount = add(walletBalance, swapQuote.toNativeAmount)
+        const aboveAmount = add(walletBalance, swapData.payoutNativeAmount)
 
         const broadcastTxs: BroadcastTx[] = [
           {
@@ -622,7 +640,7 @@ async function evaluateAction(
         return {
           effect: {
             type: 'address-balance',
-            address: '',
+            address: swapData.payoutAddress,
             aboveAmount,
             walletId: toWalletId,
             tokenId: toTokenId
@@ -632,7 +650,6 @@ async function evaluateAction(
       }
       return {
         dryrunOutput: null, // Support dryrun when EdgeSwapQuote returns a signed tx
-        // @ts-expect-error
         execute
       }
     }
