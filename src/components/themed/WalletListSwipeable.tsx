@@ -5,9 +5,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { FlatListItem, WalletListItem } from '../../types/types'
+import { FlatListItem } from '../../types/types'
+import { normalizeForSearch } from '../../util/utils'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
+import { getCreateWalletList, WalletCreateItem } from './WalletList'
+import { WalletListCreateRow } from './WalletListCreateRow'
 import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow'
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 
@@ -42,6 +45,25 @@ export function WalletListSwipeable(props: Props) {
   // Subscriptions:
   const theme = useTheme()
   const sortedWalletList = useSelector(state => state.sortedWalletList)
+  const account = useSelector(state => state.core.account)
+
+  // This list is shown when we're in a searching state
+  const createWalletList = React.useMemo(
+    () => (searching ? getCreateWalletList(account, { filteredWalletList: sortedWalletList }) : []),
+    [account, searching, sortedWalletList]
+  )
+
+  const searchedCreateWalletList = React.useMemo(() => {
+    const out: WalletCreateItem[] = []
+    const searchTarget = normalizeForSearch(searchText)
+    for (const item of createWalletList) {
+      const { currencyCode, displayName } = item
+      if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
+        out.push(item)
+      }
+    }
+    return out
+  }, [createWalletList, searchText])
 
   // Filter based on the search text:
   const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
@@ -53,7 +75,21 @@ export function WalletListSwipeable(props: Props) {
   }, [theme, onRefresh])
 
   // Renders a single row:
-  const renderRow = useHandler((item: FlatListItem<WalletListItem>) => {
+  const renderRow = useHandler((item: FlatListItem<any>) => {
+    if (item.item.key.includes('create-')) {
+      const createItem: WalletCreateItem = item.item
+      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
+      return (
+        <WalletListCreateRow
+          currencyCode={currencyCode}
+          currencyName={displayName}
+          pluginId={pluginId}
+          walletType={walletType}
+          createWalletIds={createWalletIds}
+        />
+      )
+    }
+
     const { token, tokenId, wallet, walletId } = item.item
 
     if (wallet != null) {
@@ -79,7 +115,7 @@ export function WalletListSwipeable(props: Props) {
     // @ts-expect-error
     <FlatList
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
-      data={searchedWalletList}
+      data={[...searchedWalletList, ...searchedCreateWalletList]}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
       ListHeaderComponent={header}

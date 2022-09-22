@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, SectionList } from 'react-native'
 
@@ -35,7 +36,7 @@ type Props = {
   onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
 }
 
-type WalletCreateItem = {
+export type WalletCreateItem = {
   key: string
   currencyCode: string
   displayName: string
@@ -135,58 +136,10 @@ export function WalletList(props: Props) {
   }, [filteredWalletList, mostRecentWallets])
 
   // Assemble create-wallet rows:
-  const createWalletList: WalletCreateItem[] = React.useMemo(() => {
-    const out: WalletCreateItem[] = []
-
-    // Add top-level wallet types:
-    const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
-    for (const createWalletCurrency of createWalletCurrencies) {
-      const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
-      out.push({
-        key: `create-${pluginId}`,
-        currencyCode,
-        displayName: currencyName,
-        pluginId,
-        walletType
-      })
-    }
-
-    // Add token types:
-    for (const pluginId of Object.keys(account.currencyConfig)) {
-      const currencyConfig = account.currencyConfig[pluginId]
-      const { builtinTokens, currencyInfo } = currencyConfig
-
-      // Identify which wallets could add the token
-      const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
-
-      for (const tokenId of Object.keys(builtinTokens)) {
-        const { currencyCode, displayName } = builtinTokens[tokenId]
-
-        // Fix for when the token code and chain code are the same (like EOS/TLOS)
-        if (currencyCode === currencyInfo.currencyCode) continue
-
-        out.push({
-          key: `create-${currencyInfo.pluginId}-${tokenId}`,
-          currencyCode,
-          displayName,
-          pluginId,
-          tokenId,
-          createWalletIds
-        })
-      }
-    }
-
-    // Filter this list:
-    const existingWallets: EdgeTokenId[] = []
-    for (const { wallet, tokenId } of filteredWalletList) {
-      if (wallet == null) continue
-      existingWallets.push({
-        pluginId: wallet.currencyInfo.pluginId,
-        tokenId
-      })
-    }
-    return out.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
-  }, [account, allowedAssets, excludeAssets, filterActivation, filteredWalletList])
+  const createWalletList: WalletCreateItem[] = React.useMemo(
+    () => getCreateWalletList(account, { allowedAssets, excludeAssets, filteredWalletList, filterActivation }),
+    [account, allowedAssets, excludeAssets, filteredWalletList, filterActivation]
+  )
 
   // Merge the lists, filtering based on the search term:
   const { walletList, sectionList } = React.useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>; sectionList?: Section[] }>(() => {
@@ -272,6 +225,67 @@ export function WalletList(props: Props) {
       getItemLayout={handleItemLayout}
     />
   )
+}
+
+type CreateWalletListOpts = {
+  filteredWalletList?: WalletListItem[]
+  filterActivation?: boolean
+  allowedAssets?: EdgeTokenId[]
+  excludeAssets?: EdgeTokenId[]
+}
+
+export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
+  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets } = opts
+  const out: WalletCreateItem[] = []
+
+  // Add top-level wallet types:
+  const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
+  for (const createWalletCurrency of createWalletCurrencies) {
+    const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
+    out.push({
+      key: `create-${pluginId}`,
+      currencyCode,
+      displayName: currencyName,
+      pluginId,
+      walletType
+    })
+  }
+
+  // Add token types:
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    const currencyConfig = account.currencyConfig[pluginId]
+    const { builtinTokens, currencyInfo } = currencyConfig
+
+    // Identify which wallets could add the token
+    const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+
+    for (const tokenId of Object.keys(builtinTokens)) {
+      const { currencyCode, displayName } = builtinTokens[tokenId]
+
+      // Fix for when the token code and chain code are the same (like EOS/TLOS)
+      if (currencyCode === currencyInfo.currencyCode) continue
+
+      out.push({
+        key: `create-${currencyInfo.pluginId}-${tokenId}`,
+        currencyCode,
+        displayName,
+        pluginId,
+        tokenId,
+        createWalletIds
+      })
+    }
+  }
+
+  // Filter this list:
+  const existingWallets: EdgeTokenId[] = []
+  for (const { wallet, tokenId } of filteredWalletList) {
+    if (wallet == null) continue
+    existingWallets.push({
+      pluginId: wallet.currencyInfo.pluginId,
+      tokenId
+    })
+  }
+  return out.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
 }
 
 function checkFilterWallet(details: EdgeTokenId, allowedAssets?: EdgeTokenId[], excludeAssets?: EdgeTokenId[]): boolean {
