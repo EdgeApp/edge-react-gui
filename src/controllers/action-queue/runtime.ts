@@ -18,6 +18,7 @@ import {
   ExecutionOutput,
   ExecutionResults,
   PendingTxMap,
+  PushEventEffect,
   SeqEffect
 } from './types'
 import { makeWyreClient } from './WyreClient'
@@ -40,7 +41,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
       await uploadPushEvents(context, { createEvents: newPushEvents })
 
       // Mutate the nextState accordingly; effect should be awaiting push events:
-      const nextChildEffects = newPushEvents.map(event => ({
+      const nextChildEffects: PushEventEffect[] = newPushEvents.map(event => ({
         type: 'push-event',
         eventId: event.eventId
       }))
@@ -52,12 +53,10 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
         nextEffect = {
           type: 'seq',
           opIndex: prevOpIndex,
-          // @ts-expect-error
           childEffects: [...prevChildEffects, ...nextChildEffects]
         }
       } else {
         if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
-        // @ts-expect-error
         nextEffect = nextChildEffects[0]
       }
 
