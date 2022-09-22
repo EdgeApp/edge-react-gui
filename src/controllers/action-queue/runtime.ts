@@ -5,7 +5,6 @@ import ENV from '../../../env'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
@@ -283,11 +282,6 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
         delay: 0,
         isEffective: true
       }
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(effect.type)
     }
   }
 }
@@ -667,12 +661,6 @@ async function evaluateAction(
     }
     case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(actionOp.type)
     }
   }
 }
