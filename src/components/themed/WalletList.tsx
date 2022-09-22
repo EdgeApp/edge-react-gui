@@ -42,6 +42,7 @@ type WalletCreateItem = {
   pluginId: string
   tokenId?: string // Used for creating tokens
   walletType?: string // Used for creating wallets
+  createWalletIds?: string[]
 }
 
 type Section = {
@@ -155,6 +156,9 @@ export function WalletList(props: Props) {
       const currencyConfig = account.currencyConfig[pluginId]
       const { builtinTokens, currencyInfo } = currencyConfig
 
+      // Identify which wallets could add the token
+      const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+
       for (const tokenId of Object.keys(builtinTokens)) {
         const { currencyCode, displayName } = builtinTokens[tokenId]
 
@@ -166,7 +170,8 @@ export function WalletList(props: Props) {
           currencyCode,
           displayName,
           pluginId,
-          tokenId
+          tokenId,
+          createWalletIds
         })
       }
     }
@@ -227,7 +232,7 @@ export function WalletList(props: Props) {
   const renderRow = useHandler((item: FlatListItem<any>) => {
     if (item.item.walletId == null) {
       const createItem: WalletCreateItem = item.item
-      const { currencyCode, displayName, pluginId, walletType } = createItem
+      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
       return (
         <WalletListCreateRow
           currencyCode={currencyCode}
@@ -235,7 +240,7 @@ export function WalletList(props: Props) {
           pluginId={pluginId}
           walletType={walletType}
           onPress={handlePress}
-          createWalletId={createWalletId}
+          createWalletIds={createWalletId != null ? [createWalletId] : createWalletIds}
         />
       )
     }

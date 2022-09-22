@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -5,21 +6,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { createWallet, CreateWalletOptions } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner'
-import { showError } from '../../components/services/AirshipInstance'
+import { Airship, showError } from '../../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useDispatch } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch, GetState } from '../../types/reduxTypes'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { ListModal } from '../modals/ListModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
 export type WalletListCreateRowProps = {
   currencyCode: string
   currencyName: string
-  createWalletId?: string
+  createWalletIds?: string[]
   pluginId?: string
   walletType?: string
 
@@ -30,13 +34,16 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const {
     currencyCode = '',
     currencyName = '',
-    createWalletId,
+    createWalletIds = [],
     walletType,
     pluginId,
 
     // Callbacks:
     onPress
   } = props
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -47,7 +54,33 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
     } else if (pluginId != null) {
-      dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId })).then(handleRes)
+      if (createWalletIds.length < 2) {
+        dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId: createWalletIds[0] })).then(handleRes)
+      } else {
+        Airship.show(bridge => {
+          const renderRow = (wallet: EdgeCurrencyWallet) => (
+            <WalletListCurrencyRow
+              wallet={wallet}
+              onPress={walletId => {
+                dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId: currencyWallets[walletId].currencyInfo.pluginId, createWalletId: walletId }))
+                  .then(handleRes)
+                  .finally(() => bridge.resolve())
+              }}
+            />
+          )
+
+          return (
+            <ListModal<EdgeCurrencyWallet>
+              bridge={bridge}
+              title={s.strings.select_wallet}
+              textInput={false}
+              fullScreen={false}
+              rowComponent={renderRow}
+              rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}
+            />
+          )
+        })
+      }
     }
   })
 
