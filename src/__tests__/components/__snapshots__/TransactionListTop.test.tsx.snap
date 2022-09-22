@@ -203,6 +203,17 @@ exports[`TransactionListTop should render with loading props 1`] = `
             Send
           </WithTheme(EdgeTextComponent)>
         </TouchableOpacity>
+        <ActivityIndicator
+          color="#66EDA8"
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "paddingRight": 22,
+            }
+          }
+        />
       </View>
     </React.Fragment>
   </View>
