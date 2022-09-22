@@ -3,6 +3,7 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { useSelector } from '../../types/reactRedux'
+import { NavigationProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { TransactionListTop } from '../themed/TransactionListTop'
@@ -11,6 +12,8 @@ type Props = {
   walletId: string
   isEmpty: boolean
   searching: boolean
+  tokenId?: string
+  navigation: NavigationProp<'transactionList'>
   onChangeSortingState: (isSearching: boolean) => void
   onSearchTransaction: (searchString: string) => void
 }
@@ -24,6 +27,8 @@ export const Top = (props: Props) => {
     <TransactionListTop
       walletId={props.walletId}
       isEmpty={props.isEmpty}
+      tokenId={props.tokenId}
+      navigation={props.navigation}
       searching={props.searching}
       onChangeSortingState={props.onChangeSortingState}
       onSearchTransaction={props.onSearchTransaction}
