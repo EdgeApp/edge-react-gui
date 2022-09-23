@@ -87,7 +87,6 @@ exports[`Request should render with loaded props 1`] = `
         forceUpdateGuiCounter={0}
         headerCallback={[Function]}
         headerText="Receive to No name"
-        inputAccessoryViewID=""
         isEditable={true}
         isFiatOnTop={true}
         isFocus={false}

@@ -360,7 +360,7 @@ export class RequestComponent extends React.Component<Props, State> {
               isFocus={false}
               onNext={this.onNext}
               topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
+              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
               headerCallback={this.handleOpenWalletListModal}
               onError={this.onError}
             />
