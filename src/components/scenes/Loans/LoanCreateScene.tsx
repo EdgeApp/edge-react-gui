@@ -293,7 +293,7 @@ export const LoanCreateScene = (props: Props) => {
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
             iconUri={iconUri}
-            inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
+            inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less, displayLtvLimit)}
             title={sprintf(s.strings.loan_enter_s_amount_s, s.strings.loan_fragment_loan, fiatCurrencyCode)}
             tokenId={destTokenId}
             onAmountChanged={handleBorrowAmountChanged}
