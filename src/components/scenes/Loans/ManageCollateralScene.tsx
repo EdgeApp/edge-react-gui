@@ -292,7 +292,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   return (
     <FormScene headerText={headerText} onSliderComplete={handleSliderComplete} sliderDisabled={approvalAction == null}>
-      <Space veritcal around={0.5}>
+      <Space vertical around={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
@@ -311,7 +311,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
           paymentMethod={paymentMethod}
         />
       </Space>
-      <Space veritcal around={0.25}>
+      <Space vertical around={0.25}>
         <TotalDebtCollateralTile
           title={isDebt ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
           wallet={borrowEngineWallet}

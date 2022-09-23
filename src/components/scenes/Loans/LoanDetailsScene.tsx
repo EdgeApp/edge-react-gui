@@ -156,7 +156,7 @@ export const LoanDetailsScene = (props: Props) => {
             const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
             return (
               <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <Space sideways>
+                <Space isSideways>
                   <Space right>
                     <CryptoIcon currencyCode={currencyCode} hideSecondary />
                   </Space>

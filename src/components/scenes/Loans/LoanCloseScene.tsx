@@ -74,14 +74,14 @@ export const LoanCloseScene = (props: Props) => {
         {/* TODO: Show a single source wallet picker */}
         <Tile title={s.strings.loan_remaining_principal} type="static">
           {debts.map(debt => (
-            <Space key={debt.tokenId} veritcal={0.5}>
+            <Space key={debt.tokenId} vertical={0.5}>
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={wallet} />
             </Space>
           ))}
         </Tile>
         <Tile title={s.strings.loan_collateral_amount} type="static">
           {collaterals.map(collateral => (
-            <Space key={collateral.tokenId} veritcal={0.5}>
+            <Space key={collateral.tokenId} vertical={0.5}>
               <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={wallet} />
             </Space>
           ))}
