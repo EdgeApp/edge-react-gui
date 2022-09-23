@@ -61,6 +61,12 @@ export function WalletListScene(props: Props) {
     setSearching(true)
   })
 
+  // Turn off searching mode when a wallet is selected
+  const handlReset = useHandler(() => {
+    setSearchText('')
+    setSearching(false)
+  })
+
   // Show the tutorial or password reminder on mount:
   useAsyncEffect(
     // @ts-expect-error
@@ -139,6 +145,7 @@ export function WalletListScene(props: Props) {
             searchText={searchText}
             showSlidingTutorial={showSlidingTutorial}
             onRefresh={handleRefresh}
+            onReset={handlReset}
           />
           <WalletListSortable key="sortList" />
         </CrossFade>
