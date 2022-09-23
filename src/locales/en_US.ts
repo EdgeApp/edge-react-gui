@@ -976,7 +976,7 @@ const strings = {
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_withdraw_collateral: 'Withdraw Collateral',
 
-  loan_aave: 'AAVE',
+  loan_aave_fragment: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
   loan_status_cancel_txs_modal_msg:
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",
