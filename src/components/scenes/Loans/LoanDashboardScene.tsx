@@ -50,9 +50,11 @@ export const LoanDashboardScene = (props: Props) => {
 
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+  const loanAccountsMap = useSelector(state => state.loanManager.loanAccounts)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
+
+  const isLoansLoading = syncRatio < 0
 
   const wallets = useWatch(account, 'currencyWallets')
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
@@ -142,7 +144,7 @@ export const LoanDashboardScene = (props: Props) => {
             <FillLoader />
           </Card>
         ) : null}
-        {syncRatio < 1 ? (
+        {isLoansLoading ? (
           <Space around>
             <FillLoader />
           </Space>
@@ -169,14 +171,35 @@ export const LoanDashboardScene = (props: Props) => {
     <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
-      <FlatList
-        data={Object.values(loanAccounts)}
-        keyboardShouldPersistTaps="handled"
-        renderItem={renderLoanCard}
-        style={margin}
-        ListFooterComponent={renderFooter()}
-        keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
-      />
+      {Object.keys(loanAccountsMap).length === 0 ? (
+        <>
+          {isLoansLoading ? (
+            <Space isFill isGroupCenter isItemCenter horizontal bottom={2.5}>
+              <EdgeText style={styles.emptyText}>{s.strings.loan_loading_loans}</EdgeText>
+            </Space>
+          ) : (
+            <>
+              <Space isFill isGroupCenter isItemCenter horizontal top>
+                <EdgeText style={styles.emptyText} numberOfLines={4}>
+                  {s.strings.loan_no_active_loans}
+                </EdgeText>
+              </Space>
+              <Space bottom>{renderFooter()}</Space>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <FlatList
+            data={Object.values(loanAccountsMap)}
+            keyboardShouldPersistTaps="handled"
+            renderItem={renderLoanCard}
+            style={margin}
+            ListFooterComponent={renderFooter()}
+            keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
+          />
+        </>
+      )}
     </SceneWrapper>
   )
 }
@@ -186,7 +209,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     addButtonsContainer: {
       alignItems: 'center',
       backgroundColor: theme.tileBackground,
-      flex: 1,
       flexDirection: 'row',
       height: theme.rem(3.25),
       justifyContent: 'center'
@@ -202,6 +224,11 @@ const getStyles = cacheStyles((theme: Theme) => {
     cardEmptyContainer: {
       marginLeft: theme.rem(1),
       marginRight: theme.rem(1)
+    },
+    emptyText: {
+      fontFamily: theme.fontFaceMedium,
+      color: theme.secondaryText,
+      textAlign: 'center'
     },
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,
