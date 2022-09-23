@@ -1,3 +1,4 @@
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -30,6 +31,8 @@ import { SceneHeader } from '../../themed/SceneHeader'
 type Props = {
   navigation: NavigationProp<'loanDashboard'>
 }
+
+// First-element is the default wallet plugin used to create new wallet
 const SUPPORTED_WALLET_PLUGIN_IDS = ['ethereum', 'polygon']
 
 export const LoanDashboardScene = (props: Props) => {
@@ -57,10 +60,6 @@ export const LoanDashboardScene = (props: Props) => {
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const hardPluginWalletIds = Object.keys(wallets).filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(wallets[walletId].currencyInfo.pluginId))
-
-  const isCompatibleWalletsAvailable =
-    hardPluginWalletIds.length === 0 ||
-    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
 
   //
   // Effects
@@ -93,9 +92,12 @@ export const LoanDashboardScene = (props: Props) => {
       newLoanWallet = wallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
-      const hardCurrencyInfo = getCurrencyInfos(account).find(currencyInfo => SUPPORTED_WALLET_PLUGIN_IDS.includes(currencyInfo.pluginId))
-      if (hardCurrencyInfo == null) throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
-      newLoanWallet = await createWallet(account, { walletName: `AAVE ${hardCurrencyInfo.displayName}`, walletType: hardCurrencyInfo.walletType })
+      const filteredCurrencyInfo = SUPPORTED_WALLET_PLUGIN_IDS.reduce((info: EdgeCurrencyInfo | undefined, pluginId) => {
+        if (info != null) return info // Already found
+        return getCurrencyInfos(account).find(currencyInfo => pluginId === currencyInfo.pluginId)
+      }, undefined)
+      if (filteredCurrencyInfo == null) throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+      newLoanWallet = await createWallet(account, { walletName: `AAVE Loan Account`, walletType: filteredCurrencyInfo.walletType })
     }
 
     if (newLoanWallet != null) {
