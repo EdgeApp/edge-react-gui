@@ -959,10 +959,12 @@ const strings = {
   loan_insufficient_funds_warning:
     'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
   loan_interest_rate: 'Interest Rate',
+  loan_loading_loans: 'Loading Loans...',
   loan_loan_breakdown_title: 'Loan Breakdown',
   loan_loan_to_value_ratio: 'Loan to Value Ratio',
   loan_make_payment: 'Make Payment',
   loan_must_be_s_or_less: 'Loan must be less than %1$s of your total collateral value',
+  loan_no_active_loans: 'You have no active loans.\nCreate a loan and start earning with AAVE!',
   loan_new_loan: 'New Loan',
   loan_new_collateral: 'New Collateral',
   loan_new_principal: 'New Principal',
