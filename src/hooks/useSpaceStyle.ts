@@ -6,7 +6,7 @@ export type SpaceProps = {
   // Compond space adjectives:
   around?: boolean | number
   horizontal?: boolean | number
-  veritcal?: boolean | number
+  vertical?: boolean | number
   // Unit space adjectives:
   top?: boolean | number
   right?: boolean | number
@@ -22,10 +22,10 @@ export type SpaceProps = {
 
 export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const theme = useTheme()
-  const { around, horizontal, veritcal } = props
+  const { around, horizontal, vertical } = props
 
-  const top = around ?? veritcal ?? props.top
-  const bottom = around ?? veritcal ?? props.bottom
+  const top = around ?? vertical ?? props.top
+  const bottom = around ?? vertical ?? props.bottom
   const left = around ?? horizontal ?? props.left
   const right = around ?? horizontal ?? props.right
 
