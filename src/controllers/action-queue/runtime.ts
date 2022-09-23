@@ -446,6 +446,9 @@ async function evaluateAction(
       const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
       const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
+        // Get any pending txs for this wallet
+        const pendingTxs = pendingTxMap[walletId] ?? []
+
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
           skipChecks: dryrun,
@@ -454,7 +457,8 @@ async function evaluateAction(
               nativeAmount,
               publicAddress: paymentAddress
             }
-          ]
+          ],
+          pendingTxs
         })
         const signedTx = await wallet.signTx(unsignedTx)
         const networkFee = {
