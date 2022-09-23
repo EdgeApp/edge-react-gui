@@ -74,12 +74,12 @@ export type LoanWithdrawActionOp = {
 }
 export type SwapActionOp = {
   type: 'swap'
-  fromWalletId: string
-  toWalletId: string
-  fromTokenId?: string
-  toTokenId?: string
-  nativeAmount: string
   amountFor: 'from' | 'to'
+  fromTokenId?: string
+  fromWalletId: string
+  nativeAmount: string
+  toTokenId?: string
+  toWalletId: string
 }
 export type ActionOp =
   | SeqActionOp
