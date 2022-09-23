@@ -5,7 +5,6 @@ import CreateWalletSvg from '../../assets/images/create-wallet.svg'
 import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'
 import s from '../../locales/strings'
-import { useMemo } from '../../types/reactHooks'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -46,7 +45,7 @@ export const CreateWalletChoiceScene = (props: Props) => {
   const svgHeight = iconContainerLayout.height
   const svgWidth = svgHeightToWidthRatio * svgHeight
 
-  const sceneHeader = useMemo(() => <SceneHeader withTopMargin title={s.strings.title_create_wallet} />, [])
+  const sceneHeader = React.useMemo(() => <SceneHeader withTopMargin title={s.strings.title_create_wallet} />, [])
 
   return (
     <SceneWrapper avoidKeyboard background="theme">

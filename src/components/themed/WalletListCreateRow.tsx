@@ -9,7 +9,6 @@ import { showError } from '../../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { memo } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { Dispatch, GetState } from '../../types/reduxTypes'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers'
@@ -154,4 +153,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListCreateRow = memo(WalletListCreateRowComponent)
+export const WalletListCreateRow = React.memo(WalletListCreateRowComponent)

@@ -94,9 +94,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
           <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={s.strings.export_transaction_date_range} />
           <SettingsRow label={s.strings.export_transaction_this_month} onPress={this.setThisMonth} />
           <SettingsRow label={s.strings.export_transaction_last_month} onPress={this.setLastMonth} />
-          {/* @ts-expect-error */}
           <SettingsLabelRow label={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
-          {/* @ts-expect-error */}
           <SettingsLabelRow label={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
           <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={s.strings.export_transaction_export_type} />
           {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}

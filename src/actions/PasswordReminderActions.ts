@@ -15,7 +15,7 @@ export const postponePasswordReminder = () => ({
 })
 
 // Saving data to account local folder
-export const setPasswordReminder = (passwordReminder: Object) => (dispatch: Dispatch, getState: GetState) => {
+export const setPasswordReminder = (passwordReminder: object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
   // @ts-expect-error

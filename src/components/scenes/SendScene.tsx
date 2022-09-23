@@ -36,7 +36,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SelectFioAddress } from '../themed/SelectFioAddress'
-import { AddressTile } from '../tiles/AddressTile'
+import { AddressTile, AddressTileRef } from '../tiles/AddressTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
@@ -91,8 +91,7 @@ type State = {
 } & WalletStates
 
 class SendComponent extends React.PureComponent<Props, State> {
-  // @ts-expect-error
-  addressTile: AddressTile | undefined
+  addressTile: AddressTileRef | null = null
   pinInput: { current: TextInput | null } = React.createRef()
 
   constructor(props: Props) {
@@ -373,7 +372,6 @@ class SendComponent extends React.PureComponent<Props, State> {
           resetSendTransaction={this.resetSendTransaction}
           lockInputs={lockInputs || lockTilesMap.address}
           isCameraOpen={!!isCameraOpen}
-          // @ts-expect-error
           ref={ref => (this.addressTile = ref)}
         />
       )

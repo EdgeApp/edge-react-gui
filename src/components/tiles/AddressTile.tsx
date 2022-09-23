@@ -10,7 +10,6 @@ import { addressWarnings } from '../../actions/ScanActions'
 import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError'
-import { forwardRef } from '../../types/reactHooks'
 import { connect } from '../../types/reactRedux'
 import { GuiMakeSpendInfo } from '../../types/types'
 import { parseDeepLink } from '../../util/DeepLinkParser'
@@ -41,6 +40,10 @@ type State = {
   loading: boolean
 }
 type Props = OwnProps & StateProps & ThemeProps
+
+export interface AddressTileRef {
+  onChangeAddress: (address: string) => Promise<void>
+}
 
 export class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -262,4 +265,6 @@ const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   dispatch => ({})
 )(withTheme(AddressTileComponent))
 
-export const AddressTile = forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />)
+export const AddressTile = React.forwardRef<AddressTileRef, Omit<OwnProps, 'addressTileRef'>>((props, ref) => (
+  <AddressTileConnector {...props} addressTileRef={ref} />
+))

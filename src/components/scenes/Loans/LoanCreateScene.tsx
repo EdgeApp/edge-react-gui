@@ -19,7 +19,6 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
-import { useCallback, useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -79,11 +78,11 @@ export const LoanCreateScene = (props: Props) => {
   // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
-  const { tokenId: hardSrcTokenAddr } = useMemo(
+  const { tokenId: hardSrcTokenAddr } = React.useMemo(
     () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
-  const { tokenId: hardDestTokenAddr } = useMemo(
+  const { tokenId: hardDestTokenAddr } = React.useMemo(
     () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
@@ -92,7 +91,7 @@ export const LoanCreateScene = (props: Props) => {
 
   const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
 
-  const iconUri = useMemo(() => getBorrowPluginIconUri(borrowPlugin.borrowInfo), [borrowPlugin.borrowInfo])
+  const iconUri = React.useMemo(() => getBorrowPluginIconUri(borrowPlugin.borrowInfo), [borrowPlugin.borrowInfo])
 
   // #endregion Constants
 
@@ -101,24 +100,27 @@ export const LoanCreateScene = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   // #region Source Wallet Data
-  const [srcWalletId, setSrcWalletId] = useState<string | undefined>(undefined)
-  const [srcTokenId, setSrcTokenId] = useState<string | undefined>(undefined)
-  const [srcCurrencyCode, setSrcCurrencyCode] = useState<string | undefined>(undefined)
+  const [srcWalletId, setSrcWalletId] = React.useState<string | undefined>(undefined)
+  const [srcTokenId, setSrcTokenId] = React.useState<string | undefined>(undefined)
+  const [srcCurrencyCode, setSrcCurrencyCode] = React.useState<string | undefined>(undefined)
 
   const srcWallet = srcWalletId == null ? null : wallets[srcWalletId]
   const srcPluginId = srcWallet == null ? null : srcWallet.currencyInfo.pluginId
-  const srcToken = useMemo(() => (srcTokenId != null && srcPluginId != null ? allTokens[srcPluginId][srcTokenId] : null), [allTokens, srcPluginId, srcTokenId])
+  const srcToken = React.useMemo(
+    () => (srcTokenId != null && srcPluginId != null ? allTokens[srcPluginId][srcTokenId] : null),
+    [allTokens, srcPluginId, srcTokenId]
+  )
   const srcBalance = useWalletBalance(srcWallet ?? borrowEngineWallet, srcTokenId) // HACK: Balance isn't being used anyway if the src wallet hasn't been chosen yet. Default to the borrow engine wallet in this case so this hook can be used
   const srcWalletName = useWalletName(srcWallet ?? borrowEngineWallet) // HACK: srcWalletName is used for the warning card display, which would never show unless the srcWallet has been set.
   const srcAssetName = srcToken != null ? srcToken.displayName : srcWallet != null ? srcWallet.currencyInfo.displayName : ''
   // #endregion Source Wallet Data
 
   // #region Destination Wallet/Bank Data
-  const [destWallet, setDestWallet] = useState<EdgeCurrencyWallet | undefined>(undefined)
-  const [destTokenId, setDestTokenId] = useState<string | undefined>(undefined)
-  const [destBankId, setDestBankId] = useState<string | undefined>(undefined)
+  const [destWallet, setDestWallet] = React.useState<EdgeCurrencyWallet | undefined>(undefined)
+  const [destTokenId, setDestTokenId] = React.useState<string | undefined>(undefined)
+  const [destBankId, setDestBankId] = React.useState<string | undefined>(undefined)
 
-  const [bankAccountsMap, setBankAccountsMap] = useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
+  const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
 
   // @ts-expect-error
   useAsyncEffect(async () => {
@@ -131,18 +133,16 @@ export const LoanCreateScene = (props: Props) => {
   // #endregion Destination Wallet/Bank Data
 
   // #region Borrow Amounts
-  const [borrowAmountFiat, setBorrowAmountFiat] = useState('0')
-  const [nativeCryptoBorrowAmount, setNativeCryptoBorrowAmount] = useState('0')
+  const [borrowAmountFiat, setBorrowAmountFiat] = React.useState('0')
+  const [nativeCryptoBorrowAmount, setNativeCryptoBorrowAmount] = React.useState('0')
   // #endregion Borrow Amounts
 
   // #region APR
-  const [isLoading, setIsLoading] = useState(false)
-  // @ts-expect-error
-  const [apr, setApr] = useState()
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [apr, setApr] = React.useState(0)
 
   const debts = useWatch(borrowEngine, 'debts')
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (destTokenId != null) {
       const destDebt = debts.find(debt => debt.tokenId === destTokenId)
       if (destDebt != null) setApr(destDebt.apr)
@@ -153,7 +153,7 @@ export const LoanCreateScene = (props: Props) => {
   // #region Required Collateral, LTV
   const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
   // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
-  const requiredFiat = useMemo(() => div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION), [borrowAmountFiat, ltvRatio])
+  const requiredFiat = React.useMemo(() => div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION), [borrowAmountFiat, ltvRatio])
 
   // Convert collateral in fiat -> collateral crypto
   const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
@@ -173,7 +173,7 @@ export const LoanCreateScene = (props: Props) => {
   const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
 
   const isLtvExceeded = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
-  const displayLtvLimit = useMemo(() => toPercentString(ltvRatio), [ltvRatio])
+  const displayLtvLimit = React.useMemo(() => toPercentString(ltvRatio), [ltvRatio])
   // #endregion Required Collateral, LTV
 
   // #endregion State
@@ -240,7 +240,7 @@ export const LoanCreateScene = (props: Props) => {
       .catch(e => showError(e.message))
   }
 
-  const handleBorrowAmountChanged = useCallback(({ fiatAmount, nativeCryptoAmount }) => {
+  const handleBorrowAmountChanged = React.useCallback((fiatAmount, nativeCryptoAmount) => {
     setBorrowAmountFiat(fiatAmount)
     setNativeCryptoBorrowAmount(nativeCryptoAmount)
   }, [])
@@ -251,7 +251,7 @@ export const LoanCreateScene = (props: Props) => {
   // #region Renderers
   // -----------------------------------------------------------------------------
 
-  const collateralWarningMsg = useMemo(
+  const collateralWarningMsg = React.useMemo(
     () => sprintf(s.strings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
     [srcAssetName, srcCurrencyCode, srcWalletName]
   )
@@ -304,8 +304,7 @@ export const LoanCreateScene = (props: Props) => {
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
             <View style={styles.cardContainer}>
-              {/* @ts-expect-error */}
-              <AprCard paddingRem={[0.5, 1]} apr={apr} />
+              <AprCard apr={apr} />
             </View>
           )}
 

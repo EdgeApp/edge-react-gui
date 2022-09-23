@@ -2,7 +2,6 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { memo } from '../../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
@@ -72,4 +71,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoFiatAmountRow = memo(CryptoFiatAmountRowComponent)
+export const CryptoFiatAmountRow = React.memo(CryptoFiatAmountRowComponent)

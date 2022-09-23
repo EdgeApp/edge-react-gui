@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -48,4 +47,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SceneHeader = memo(SceneHeaderComponent)
+export const SceneHeader = React.memo(SceneHeaderComponent)

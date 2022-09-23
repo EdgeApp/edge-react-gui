@@ -2,7 +2,6 @@ import { eq, mul, toFixed } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -85,4 +84,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const PercentageChangeArrowTile = memo(PercentageChangeArrowTileComponent)
+export const PercentageChangeArrowTile = React.memo(PercentageChangeArrowTileComponent)

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { ActivityIndicator, Text, TouchableHighlight } from 'react-native'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import { memo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 type Props = {
@@ -80,4 +79,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const SettingsRow = memo(SettingsRowComponent)
+export const SettingsRow = React.memo(SettingsRowComponent)

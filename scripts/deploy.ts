@@ -15,7 +15,7 @@ let _currentPath = __dirname
  */
 type BuildConfigFile = {
   // Common build options:
-  envJson: { [repoBranch: string]: Object }
+  envJson: { [repoBranch: string]: object }
 
   // Android build options:
   androidKeyStore: string

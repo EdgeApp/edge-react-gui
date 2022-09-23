@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -50,4 +49,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const LineTextDivider = memo(LineTextDividerComponent)
+export const LineTextDivider = React.memo(LineTextDividerComponent)

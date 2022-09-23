@@ -1,24 +1,21 @@
-import { useState } from '../types/reactHooks'
+import * as React from 'react'
 
 const CACHE_MAX_SIZE = 10
 
 // @ts-expect-error
 export function useFilter<T>(allData: T[], filterData?: (filter: string, item: T, index: number) => boolean = () => true): [T[], (filter: string) => void] {
-  const [filteredData, setFilteredData] = useState(allData)
-  const [filteredDataCache, setFilteredDataCache] = useState({ '': allData })
-  const [fifoCache, setFifoCache] = useState([''])
+  const [filteredData, setFilteredData] = React.useState(allData)
+  const [filteredDataCache, setFilteredDataCache] = React.useState<{ [search: string]: T[] }>({ '': allData })
+  const [fifoCache, setFifoCache] = React.useState([''])
 
   const setFilter = (filter: string) => {
     // If already existing in cache just return the existing sort
-    // @ts-expect-error
     if (filteredDataCache[filter] != null) {
-      // @ts-expect-error
       setFilteredData(filteredDataCache[filter])
     } else {
       // Create the new filtered Array
       const newFilteredData = allData.filter((item, index) => filterData(filter, item, index))
       // Updated the cache
-      // @ts-expect-error
       filteredDataCache[filter] = newFilteredData
       fifoCache.unshift(filter)
       // Check if over maximum cache size

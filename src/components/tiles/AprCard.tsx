@@ -4,7 +4,6 @@ import { sprintf } from 'sprintf-js'
 
 import { toPercentString } from '../../locales/intl'
 import s from '../../locales/strings'
-import { memo, useMemo } from '../../types/reactHooks'
 import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -19,7 +18,7 @@ const AprCardComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const aprValue = apr == null || apr === 0 ? '-- ' : toPercentString(apr)
-  const displayApr = useMemo(() => sprintf(s.strings.loan_s_apr, aprValue), [aprValue])
+  const displayApr = React.useMemo(() => sprintf(s.strings.loan_s_apr, aprValue), [aprValue])
 
   return (
     <View style={styles.cardContainer}>
@@ -39,4 +38,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AprCard = memo(AprCardComponent)
+export const AprCard = React.memo(AprCardComponent)

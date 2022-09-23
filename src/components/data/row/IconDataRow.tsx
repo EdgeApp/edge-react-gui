@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { memo } from '../../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -95,4 +94,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const IconDataRow = memo(IconDataRowComponent)
+export const IconDataRow = React.memo(IconDataRowComponent)

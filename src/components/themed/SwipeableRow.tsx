@@ -13,7 +13,6 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 
-import { forwardRef, useImperativeHandle } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 
 type Props = {
@@ -56,7 +55,7 @@ type Props = {
  * Create a ref object using `useRef<SwipableRowRef>(null)` or
  * `const ref: { current: SwipableRowRef | null } = createRef()`
  */
-declare class SwipableRowRef extends React.Component<Props> {
+export interface SwipableRowRef {
   // Snap the row to its resting position:
   close: () => void
 
@@ -72,8 +71,7 @@ declare class SwipableRowRef extends React.Component<Props> {
 /**
  * A row that can be slid left or right to reveal underlying buttons.
  */
-// @ts-expect-error
-export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref) => {
+export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>((props: Props, ref) => {
   // Tracks the width of the row:
   const width = useSharedValue(0)
   // @ts-expect-error
@@ -120,7 +118,7 @@ export const SwipeableRow: Class<SwipableRowRef> = forwardRef((props: Props, ref
   }
 
   // Imperative methods:
-  useImperativeHandle(ref, () => ({
+  React.useImperativeHandle(ref, () => ({
     close() {
       pan.value = withTiming(0, { duration })
     },

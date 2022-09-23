@@ -8,7 +8,6 @@ import s from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
-import { useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -46,24 +45,21 @@ export const StakeOverviewScene = (props: Props) => {
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
-  // @ts-expect-error
-  const [stakeAllocations, setStakeAllocations] = useState<PositionAllocation[] | undefined>()
-  // @ts-expect-error
-  const [rewardAllocations, setRewardAllocations] = useState<PositionAllocation[] | undefined>()
-  // @ts-expect-error
-  const [stakePosition, setStakePosition] = useState<StakePosition | undefined>()
+  const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>()
+  const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>()
+  const [stakePosition, setStakePosition] = React.useState<StakePosition>()
 
   // Background loop to force fetchStakePosition updates
-  const [updateCounter, setUpdateCounter] = useState<number>(0)
+  const [updateCounter, setUpdateCounter] = React.useState<number>(0)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setUpdateCounter(updateCounter => updateCounter + 1)
     }, 10 * 1000) // ten seconds
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
+  React.useEffect(() => {
     let abort = false
     stakePlugin
       .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
@@ -103,7 +99,7 @@ export const StakeOverviewScene = (props: Props) => {
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
   }
 
-  const sceneHeader = useMemo(
+  const sceneHeader = React.useMemo(
     () => <SceneHeader style={styles.sceneHeader} title={getPolicyTitleName(stakePolicy)} withTopMargin />,
     [stakePolicy, styles.sceneHeader]
   )

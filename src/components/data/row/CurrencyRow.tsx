@@ -3,7 +3,6 @@ import * as React from 'react'
 
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
-import { memo } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { CryptoText } from '../../text/CryptoText'
@@ -52,4 +51,4 @@ const CurrencyRowComponent = (props: Props) => {
   )
 }
 
-export const CurrencyRow = memo(CurrencyRowComponent)
+export const CurrencyRow = React.memo(CurrencyRowComponent)

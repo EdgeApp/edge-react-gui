@@ -6,7 +6,6 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useMemo, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial'
@@ -34,10 +33,10 @@ export function WalletListScene(props: Props) {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const [sorting, setSorting] = useState(false)
-  const [searching, setSearching] = useState(false)
-  const [searchText, setSearchText] = useState('')
-  const [showSlidingTutorial, setShowTutorial] = useState(false)
+  const [sorting, setSorting] = React.useState(false)
+  const [searching, setSearching] = React.useState(false)
+  const [searchText, setSearchText] = React.useState('')
+  const [showSlidingTutorial, setShowTutorial] = React.useState(false)
 
   const account = useSelector(state => state.core.account)
   const disklet = useSelector(state => state.core.disklet)
@@ -100,11 +99,11 @@ export function WalletListScene(props: Props) {
 
   // rendering -------------------------------------------------------------
 
-  const footer = useMemo(() => {
+  const footer = React.useMemo(() => {
     return <WalletListFooter navigation={navigation} />
   }, [navigation])
 
-  const header = useMemo(() => {
+  const header = React.useMemo(() => {
     return (
       <WalletListHeader
         sorting={sorting}

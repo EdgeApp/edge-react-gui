@@ -11,7 +11,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useMemo, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeTokenId } from '../../types/types'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
@@ -97,10 +96,10 @@ export function WalletListModal(props: Props) {
 
   // #region State
 
-  const [searching, setSearching] = useState(false)
-  const [searchText, setSearchText] = useState('')
+  const [searching, setSearching] = React.useState(false)
+  const [searchText, setSearchText] = React.useState('')
 
-  const [bankAccountsMap, setBankAccountsMap] = useState<PaymentMethodsMap | undefined>(undefined)
+  const [bankAccountsMap, setBankAccountsMap] = React.useState<PaymentMethodsMap | undefined>(undefined)
 
   useAsyncEffect(
     // @ts-expect-error
@@ -118,7 +117,7 @@ export function WalletListModal(props: Props) {
   // #region Init
 
   // Upgrade deprecated props
-  const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
+  const [legacyAllowedAssets, legacyExcludeAssets] = React.useMemo(() => {
     if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
 
     const lookup = makeCurrencyCodeTable(account.currencyConfig)
@@ -129,7 +128,7 @@ export function WalletListModal(props: Props) {
   }, [account, allowedCurrencyCodes, excludeCurrencyCodes])
 
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
-  const walletListExcludeAssets = useMemo(() => {
+  const walletListExcludeAssets = React.useMemo(() => {
     const result = excludeAssets ?? legacyExcludeAssets
     return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets, legacyExcludeAssets])
@@ -195,6 +194,7 @@ export function WalletListModal(props: Props) {
           <View>
             <FlatList
               data={Object.values(bankAccountsMap)}
+              keyboardShouldPersistTaps="handled"
               renderItem={renderPaymentMethod}
               getItemLayout={handleItemLayout}
               keyExtractor={item => item.id}

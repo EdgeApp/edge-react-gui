@@ -7,7 +7,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { usePendingPressAnimation } from '../../hooks/usePendingPress'
-import { memo } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
@@ -147,4 +146,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const ManageTokensRow = memo(ManageTokensRowComponent)
+export const ManageTokensRow = React.memo(ManageTokensRowComponent)

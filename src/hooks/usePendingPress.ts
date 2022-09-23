@@ -1,7 +1,7 @@
+import * as React from 'react'
 import { SharedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { showError } from '../components/services/AirshipInstance'
-import { useRef, useState } from '../types/reactHooks'
 
 export type OnPress = () => void | Promise<void>
 
@@ -11,7 +11,7 @@ export type OnPress = () => void | Promise<void>
  * and showing errors.
  */
 export function usePendingPress(onPress?: OnPress): [boolean, () => void] {
-  const [pending, setPending] = useState(false)
+  const [pending, setPending] = React.useState(false)
 
   function handlePress() {
     if (onPress == null || pending) return
@@ -37,7 +37,7 @@ export function usePendingPress(onPress?: OnPress): [boolean, () => void] {
  * This looks nicer, and avoids a re-render.
  */
 export function usePendingPressAnimation(onPress?: OnPress): [SharedValue<number>, () => void] {
-  const pending = useRef(false)
+  const pending = React.useRef(false)
   const animation = useSharedValue(0)
 
   function handlePress() {

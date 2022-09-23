@@ -9,7 +9,6 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { useEffect, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
@@ -54,7 +53,7 @@ export const LoanDashboardScene = (props: Props) => {
   const wallets = useWatch(account, 'currencyWallets')
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
 
-  const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
+  const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
   const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
@@ -67,8 +66,7 @@ export const LoanDashboardScene = (props: Props) => {
   // Effects
   //
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     // Only resync on scene mount every 5 minutes
     if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
       dispatch(resyncLoanAccounts(account))

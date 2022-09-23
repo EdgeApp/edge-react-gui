@@ -1,6 +1,5 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
-
-import { useEffect, useRef } from '../types/reactHooks'
+import * as React from 'react'
 
 type Cleanup = (() => void) | undefined
 
@@ -22,7 +21,7 @@ type State = {
  * but they will always be stale if you try to read them in here.
  */
 export function useWalletsSubscriber(account: EdgeAccount, subscribe: (wallet: EdgeCurrencyWallet) => Cleanup): void {
-  const state = useRef<State>({
+  const state = React.useRef<State>({
     cleanups: new Map(),
     lastWallets: {},
 
@@ -31,7 +30,7 @@ export function useWalletsSubscriber(account: EdgeAccount, subscribe: (wallet: E
     subscribe
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     function update(wallets: WalletMap) {
       const { cleanups, lastWallets, subscribe } = state.current
 

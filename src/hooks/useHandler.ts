@@ -1,4 +1,4 @@
-import { useRef } from '../types/reactHooks'
+import * as React from 'react'
 
 type State<T> = {
   callback: T
@@ -14,7 +14,7 @@ type State<T> = {
  */
 export function useHandler<T extends (...args: any[]) => any>(callback: T): T {
   const bouncer: any = (...args: any[]) => stateRef.current.callback(...args)
-  const stateRef = useRef<State<T>>({ callback, bouncer })
+  const stateRef = React.useRef<State<T>>({ callback, bouncer })
   stateRef.current.callback = callback
 
   return stateRef.current.bouncer

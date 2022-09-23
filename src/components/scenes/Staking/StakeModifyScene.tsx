@@ -10,7 +10,6 @@ import { Slider } from '../../../modules/UI/components/Slider/Slider'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
-import { useEffect, useMemo, useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -56,15 +55,14 @@ export const StakeModifyScene = (props: Props) => {
   })
 
   // Current Allocation Info
-  // @ts-expect-error
-  const [existingAllocations, setExistingAllocations] = useState<{ staked: PositionAllocation[]; earned: PositionAllocation[] } | undefined>()
+  const [existingAllocations, setExistingAllocations] = React.useState<{ staked: PositionAllocation[]; earned: PositionAllocation[] } | undefined>()
 
   // ChangeQuote that gets rendered in the rows
-  const [changeQuote, setChangeQuote] = useState<ChangeQuote | null>(null)
+  const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
   const changeQuoteAllocations = changeQuote?.allocations ?? []
 
   // Request that the user will modify, triggering a ChangeQuote recalculation
-  const [changeQuoteRequest, setChangeQuoteRequest] = useState<ChangeQuoteRequest>({
+  const [changeQuoteRequest, setChangeQuoteRequest] = React.useState<ChangeQuoteRequest>({
     action: modification,
     stakePolicyId: stakePolicy.stakePolicyId,
     currencyCode: '',
@@ -73,14 +71,13 @@ export const StakeModifyScene = (props: Props) => {
   })
 
   // Slider state
-  const [sliderLocked, setSliderLocked] = useState(false)
+  const [sliderLocked, setSliderLocked] = React.useState(false)
 
   // Error message tile contents
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = React.useState('')
 
   // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     const existingAllocations = getPositionAllocations(stakePosition)
     setExistingAllocations(existingAllocations)
 
@@ -95,7 +92,7 @@ export const StakeModifyScene = (props: Props) => {
   }, [])
 
   // An Effect for updating the ChangeQuote triggered by changes to changeQuoteRequest
-  useEffect(() => {
+  React.useEffect(() => {
     let abort = false
     if (changeQuoteRequest.nativeAmount !== '0') {
       setChangeQuote(null)
@@ -283,7 +280,7 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  const sceneTitleMap = useMemo(
+  const sceneTitleMap = React.useMemo(
     () => ({
       stake: getPolicyTitleName(stakePolicy),
       claim: s.strings.stake_claim_rewards,
@@ -293,12 +290,12 @@ export const StakeModifyScene = (props: Props) => {
   )
 
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
-  const icon = useMemo(
+  const icon = React.useMemo(
     () => (modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />),
     [modification, policyIcons.rewardAssetUris, styles.icon]
   )
 
-  const sceneHeader = useMemo(
+  const sceneHeader = React.useMemo(
     () => (
       <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
         {icon}

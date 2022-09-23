@@ -3,7 +3,6 @@ import { FlatList, Keyboard } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
-import { useState } from '../../types/reactHooks'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -50,7 +49,7 @@ export function ListModal<T>({
   onSubmitEditing,
   ...textProps
 }: Props<T>) {
-  const [text, setText] = useState<string>(initialValue)
+  const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   // @ts-expect-error
   const renderItem = ({ item }) => (rowComponent ? rowComponent(item) : null)

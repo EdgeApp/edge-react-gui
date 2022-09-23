@@ -16,7 +16,6 @@ import { formatFiatString } from '../../../hooks/useFiatText'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { useState } from '../../../types/reactHooks'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
@@ -75,7 +74,7 @@ export const LoanDetailsScene = (props: Props) => {
     return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
-  const [runningProgramMessage, setRunningProgramMessage] = useState<string | undefined>(undefined)
+  const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
 
   // @ts-expect-error
   useAsyncEffect(async () => {

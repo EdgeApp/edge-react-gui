@@ -125,8 +125,7 @@ export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo =
 }
 
 // @ts-expect-error
-export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: Object, selectedCurrencyCode: string): EdgeSpendInfo => {
-  // @ts-expect-error
+export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: any, selectedCurrencyCode: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || sceneState.guiMakeSpendInfo.uniqueIdentifier || ''
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
@@ -134,27 +133,21 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
   } else {
     spendTargets = [
       {
-        // @ts-expect-error
         nativeAmount: newSpendInfo.nativeAmount || sceneState.nativeAmount,
-        // @ts-expect-error
         publicAddress: newSpendInfo.publicAddress || initialState.guiMakeSpendInfo.publicAddress || sceneState.spendInfo.spendTargets[0].publicAddress,
         otherParams: {
           uniqueIdentifier,
-          // @ts-expect-error
           ...sceneState.spendInfo.spendTargets[0].otherParams
         }
       }
     ]
   }
-  // @ts-expect-error
   const metaData = sceneState.guiMakeSpendInfo.metadata || initialState.guiMakeSpendInfo.metadata
-  // @ts-expect-error
   const customNetworkFee = sceneState.guiMakeSpendInfo.customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee
   return {
     currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
     metadata: newSpendInfo.metadata ? { ...metaData, ...newSpendInfo.metadata } : metaData,
     spendTargets,
-    // @ts-expect-error
     networkFeeOption: newSpendInfo.networkFeeOption || sceneState.guiMakeSpendInfo.networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption,
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...customNetworkFee, ...newSpendInfo.customNetworkFee } : customNetworkFee,
     otherParams: newSpendInfo.otherParams || {}

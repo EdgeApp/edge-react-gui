@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 type Props = {
@@ -53,4 +52,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SettingsHeaderRow = memo(SettingsHeaderRowComponent)
+export const SettingsHeaderRow = React.memo(SettingsHeaderRowComponent)

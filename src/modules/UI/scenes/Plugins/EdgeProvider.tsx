@@ -486,7 +486,7 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // window.fetch.catch(console log then throw)
-  async deprecatedAndNotSupportedDouble(request: Object, firstURL: string, url2: string): Promise<unknown> {
+  async deprecatedAndNotSupportedDouble(request: any, firstURL: string, url2: string): Promise<unknown> {
     console.log('Bity firstURL: ' + firstURL)
     // @ts-expect-error
     const response = await window.fetch(firstURL, request).catch(e => {

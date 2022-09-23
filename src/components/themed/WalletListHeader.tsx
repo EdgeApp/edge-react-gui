@@ -9,7 +9,6 @@ import { PromoCard } from '../cards/PromoCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox'
-// @ts-expect-error
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 
 type OwnProps = {

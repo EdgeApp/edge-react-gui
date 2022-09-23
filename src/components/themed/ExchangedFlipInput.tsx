@@ -33,7 +33,7 @@ export type ExchangedFlipInputOwnProps = {
   isFiatOnTop: boolean
   isFocus: boolean
 
-  topReturnKeyType?: string
+  topReturnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
   inputAccessoryViewID?: string
   headerText: string
   headerCallback?: () => void
@@ -160,7 +160,6 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
 
   toggleCryptoOnBottom = () => {
     if (this.flipInput != null) {
-      // @ts-expect-error
       this.flipInput.toggleCryptoOnBottom()
     }
   }
@@ -184,9 +183,8 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         onNext={this.props.onNext}
         onFocus={this.props.onFocus}
         onBlur={this.props.onBlur}
-        topReturnKeyType={this.props.topReturnKeyType}
+        topReturnKeyType={this.props.topReturnKeyType as any}
         inputAccessoryViewID={this.props.inputAccessoryViewID}
-        // @ts-expect-error
         ref={ref => (this.flipInput = ref)}
       />
     )
