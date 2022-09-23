@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
+import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePolicy, StakePosition } from '../plugins/stake-plugins'
@@ -204,9 +205,9 @@ export type ParamList = {
     borrowPlugin: BorrowPlugin
     destTokenId: string
     destWallet: EdgeCurrencyWallet
-    destBankId?: string
     nativeDestAmount: string
     nativeSrcAmount: string
+    paymentMethod?: PaymentMethod
     srcTokenId?: string
     srcWallet: EdgeCurrencyWallet
   }

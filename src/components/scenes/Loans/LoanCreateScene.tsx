@@ -357,9 +357,9 @@ export const LoanCreateScene = (props: Props) => {
                   borrowPlugin,
                   destWallet,
                   destTokenId,
-                  destBankId,
                   nativeDestAmount: nativeCryptoBorrowAmount,
                   nativeSrcAmount: nativeRequiredCrypto,
+                  paymentMethod,
                   srcWallet,
                   srcTokenId
                 })

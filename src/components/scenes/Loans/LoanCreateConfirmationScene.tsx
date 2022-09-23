@@ -16,6 +16,7 @@ import { translateError } from '../../../util/translateError'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
+import { PaymentMethodRow } from '../../data/row/PaymentMethodRow'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
@@ -32,7 +33,7 @@ type Props = {
 
 export const LoanCreateConfirmationScene = (props: Props) => {
   const { navigation, route } = props
-  const { borrowPlugin, borrowEngine, destWallet, destTokenId, destBankId, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
+  const { borrowPlugin, borrowEngine, destWallet, destTokenId, nativeDestAmount, nativeSrcAmount, paymentMethod, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
@@ -83,7 +84,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
             borrowTokenId: destTokenId,
             nativeAmount: nativeDestAmount,
             borrowEngineWallet: borrowEngineWallet,
-            destBankId
+            destBankId: paymentMethod?.id
           })
         ])
       ).reduce((accum, subActions) => accum.concat(subActions), [])
@@ -145,7 +146,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       </Tile>
 
       <Tile type="static" title={s.strings.loan_debt_destination}>
-        <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
+        {paymentMethod != null ? (
+          <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={0} />
+        ) : (
+          <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
+        )}
       </Tile>
 
       {renderFeeTile}
