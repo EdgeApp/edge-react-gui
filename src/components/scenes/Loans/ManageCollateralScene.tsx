@@ -55,7 +55,6 @@ type ActionOpType = 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdr
 type Props<T extends keyof ParamList> = {
   // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
   action: (request: ManageCollateralRequest) => Promise<ApprovableAction>
-  actionOperand: 'debts' | 'collaterals'
   actionOpType: ActionOpType
   actionWallet: 'fromWallet' | 'toWallet'
   amountChange?: 'increase' | 'decrease'
@@ -68,7 +67,8 @@ type Props<T extends keyof ParamList> = {
 }
 
 export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>) => {
-  const { action, actionOperand, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
+  const { action, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
+  const sceneType = ['loan-borrow', 'loan-repay'].includes(actionOpType) ? 'debts' : 'collaterals'
 
   // -----------------------------------------------------------------------------
   // #region Initialization
@@ -114,8 +114,8 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtAddr }]
 
   // Selected debt/collateral
-  const isDebt = actionOperand === 'debts'
-  const defaultTokenId = isDebt ? hardDebtAddr : hardCollateralAddr
+  const isSceneTypeDebts = sceneType === 'debts'
+  const defaultTokenId = isSceneTypeDebts ? hardDebtAddr : hardCollateralAddr
 
   // Amount card
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
@@ -257,11 +257,11 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
-        showCreateWallet={isDebt}
-        createWalletId={isDebt ? borrowEngineWallet.id : undefined}
-        showWithdrawToBank={isDebt}
-        excludeWalletIds={isDebt ? excludeWalletIds : undefined}
-        allowedAssets={isDebt ? hardAllowedDebtAsset : hardAllowedCollateralAsset}
+        showCreateWallet={isSceneTypeDebts}
+        createWalletId={isSceneTypeDebts ? borrowEngineWallet.id : undefined}
+        showWithdrawToBank={isSceneTypeDebts}
+        excludeWalletIds={isSceneTypeDebts ? excludeWalletIds : undefined}
+        allowedAssets={isSceneTypeDebts ? hardAllowedDebtAsset : hardAllowedCollateralAsset}
         filterActivation
       />
     ))
@@ -306,21 +306,21 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       </Space>
       <Space vertical around={0.25}>
         <TotalDebtCollateralTile
-          title={isDebt ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
+          title={isSceneTypeDebts ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isDebt ? debts : collaterals}
+          debtsOrCollaterals={isSceneTypeDebts ? debts : collaterals}
           key="currentAmount"
         />
         <TotalDebtCollateralTile
-          title={isDebt ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
+          title={isSceneTypeDebts ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isDebt ? [...debts, pendingDebtOrCollateral] : [...collaterals, pendingDebtOrCollateral]}
+          debtsOrCollaterals={isSceneTypeDebts ? [...debts, pendingDebtOrCollateral] : [...collaterals, pendingDebtOrCollateral]}
           key="newAmount"
         />
         <TotalDebtCollateralTile
-          title={isDebt ? s.strings.loan_collateral_value : s.strings.loan_principal_value}
+          title={isSceneTypeDebts ? s.strings.loan_collateral_value : s.strings.loan_principal_value}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isDebt ? collaterals : debts}
+          debtsOrCollaterals={isSceneTypeDebts ? collaterals : debts}
           key="counterAsset"
         />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={feeNativeAmount} key="fee" />
@@ -329,7 +329,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
           borrowEngine={borrowEngine}
           tokenId={selectedAsset.tokenId}
           nativeAmount={actionNativeCryptoAmount}
-          type={actionOperand}
+          type={sceneType}
           direction={amountChange}
           key="ltv"
         />
