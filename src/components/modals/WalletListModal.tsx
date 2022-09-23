@@ -48,7 +48,7 @@ type Props = {
 
   // Visuals:
   headerTitle: string
-  showWithdrawToBank?: boolean
+  showBankOptions?: boolean
   showCreateWallet?: boolean
   createWalletId?: string
 
@@ -78,7 +78,7 @@ export function WalletListModal(props: Props) {
 
     // Visuals:
     headerTitle,
-    showWithdrawToBank = false,
+    showBankOptions = false,
     showCreateWallet,
     createWalletId,
 
@@ -183,7 +183,7 @@ export function WalletListModal(props: Props) {
   })
 
   const renderBankSection = () =>
-    showWithdrawToBank ? (
+    showBankOptions ? (
       <>
         {bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? (
           renderBankSignupButton()

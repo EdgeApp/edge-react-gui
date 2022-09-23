@@ -194,7 +194,7 @@ export const LoanCreateScene = (props: Props) => {
         headerTitle={s.strings.select_wallet}
         showCreateWallet={!isSrc}
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}
-        showWithdrawToBank={!isSrc}
+        showBankOptions={!isSrc}
         excludeWalletIds={!isSrc ? excludeWalletIds : undefined}
         allowedAssets={!isSrc ? hardAllowedDestAsset : hardAllowedSrcAsset}
         filterActivation

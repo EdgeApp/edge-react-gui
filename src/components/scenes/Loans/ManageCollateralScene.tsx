@@ -259,7 +259,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         headerTitle={s.strings.select_wallet}
         showCreateWallet={isSceneTypeDebts}
         createWalletId={isSceneTypeDebts ? borrowEngineWallet.id : undefined}
-        showWithdrawToBank={actionOpType === 'loan-borrow'}
+        showBankOptions={actionOpType === 'loan-borrow'}
         excludeWalletIds={isSceneTypeDebts ? excludeWalletIds : undefined}
         allowedAssets={isSceneTypeDebts ? hardAllowedDebtAsset : hardAllowedCollateralAsset}
         filterActivation
