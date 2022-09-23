@@ -146,11 +146,12 @@ export const LoanDashboardScene = (props: Props) => {
           <Space around>
             <FillLoader />
           </Space>
-        ) : null}
-        <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
-          <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-          <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
+            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
+          </TouchableOpacity>
+        )}
       </>
     )
   }
