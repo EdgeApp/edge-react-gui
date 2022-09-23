@@ -29,7 +29,7 @@ const strings = {
   action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
   // swap
   action_queue_display_swap_title: `Swap %1$s into %2$s`,
-  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
+  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s (%5$s).`,
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
