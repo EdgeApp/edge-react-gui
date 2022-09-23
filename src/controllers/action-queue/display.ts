@@ -5,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { ActionDisplayInfo, ActionDisplayStatus, ActionEffect, ActionOp, ActionProgram, ActionProgramState } from '../../controllers/action-queue/types'
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
+import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { filterNull } from '../../util/safeFilters'
 import { checkEffectIsDone, getEffectErrors } from './runtime'
@@ -85,7 +86,10 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       }
     }
     case 'swap': {
-      const { fromWalletId, fromTokenId, toWalletId, toTokenId } = actionOp
+      const { fromWalletId, fromTokenId, toWalletId, toTokenId, walletId } = actionOp
+
+      const borrowEngineWallet = await account.waitForCurrencyWallet(walletId)
+      if (borrowEngineWallet == null) throw new Error(`Wallet '${walletId}' not found for borrowEngineWallet`)
 
       const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
@@ -99,7 +103,14 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       return {
         ...baseDisplayInfo,
         title: sprintf(s.strings.action_queue_display_swap_title, fromCurrencyCode, toCurrencyCode),
-        message: sprintf(s.strings.action_queue_display_swap_message, fromCurrencyCode, toCurrencyCode)
+        message: sprintf(
+          s.strings.action_queue_display_swap_message,
+          fromCurrencyCode,
+          config.appName,
+          toCurrencyCode,
+          s.strings.loan_aave_fragment,
+          borrowEngineWallet.currencyInfo.currencyCode
+        )
       }
     }
     case 'wyre-buy': {

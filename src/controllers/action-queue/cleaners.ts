@@ -119,12 +119,13 @@ const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
 })
 const asSwapActionOp = asObject<SwapActionOp>({
   type: asValue('swap'),
-  fromWalletId: asString,
-  toWalletId: asString,
+  amountFor: asValue('from', 'to'),
+  walletId: asString,
   fromTokenId: asOptional(asString),
-  toTokenId: asOptional(asString),
+  fromWalletId: asString,
   nativeAmount: asString,
-  amountFor: asValue('from', 'to')
+  toTokenId: asOptional(asString),
+  toWalletId: asString
 })
 export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
