@@ -29,7 +29,7 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
 
   const renderAccount = () => (
     <View style={styles.currencyRow}>
-      {paymentMethod ? <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" onPress={handlePress} marginRem={[0, 0.5, 0, 0.5]} /> : null}
+      {paymentMethod ? <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} /> : null}
       {wallet ? <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} /> : null}
     </View>
   )
