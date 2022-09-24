@@ -7,7 +7,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Fontello } from '../../assets/vector/index'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { Actions, NavigationProp } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -36,13 +36,13 @@ export class MenuTabComponent extends React.PureComponent<Props> {
 
     switch (route) {
       case 'walletList':
-        return Actions.jump('walletListScene', {})
+        return navigation.navigate('walletListScene', {})
       case 'pluginListBuy':
-        return Actions.jump('pluginListBuy', { direction: 'buy' })
+        return navigation.navigate('pluginListBuy', { direction: 'buy' })
       case 'pluginListSell':
-        return Actions.jump('pluginListSell', { direction: 'sell' })
+        return navigation.navigate('pluginListSell', { direction: 'sell' })
       case 'exchange':
-        return Actions.jump('exchange', {})
+        return navigation.navigate('exchange', {})
       case 'extraTab':
         return navigation.navigate('extraTab', undefined)
     }
