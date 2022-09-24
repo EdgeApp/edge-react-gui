@@ -18,7 +18,6 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
 
   return ManageCollateralScene({
     action: async req => await borrowEngine.repay(req),
-    actionOperand: 'debts',
     actionOpType: 'loan-repay',
     actionWallet: 'fromWallet',
     amountChange: 'decrease',

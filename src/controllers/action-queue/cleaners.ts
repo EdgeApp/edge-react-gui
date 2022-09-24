@@ -9,14 +9,21 @@ import {
   ActionOp,
   ActionProgram,
   ActionProgramState,
+  AddressBalanceEffect,
   BroadcastTxActionOp,
+  DoneEffect,
   LoanBorrowActionOp,
   LoanDepositActionOp,
   LoanRepayActionOp,
   LoanWithdrawActionOp,
   ParActionOp,
+  ParEffect,
+  PriceLevelEffect,
+  PushEventEffect,
   SeqActionOp,
+  SeqEffect,
   SwapActionOp,
+  TxConfsEffect,
   WyreBuyActionOp,
   WyreSellActionOp
 } from './types'
@@ -56,68 +63,69 @@ const asError = asCodec(
   asJsonError
 )
 
-const asSeqActionOp: Cleaner<SeqActionOp> = asObject({
+const asSeqActionOp = asObject<SeqActionOp>({
   type: asValue('seq'),
   actions: asArray((raw: any) => asActionOp(raw))
 })
-const asParActionOp: Cleaner<ParActionOp> = asObject({
+const asParActionOp = asObject<ParActionOp>({
   type: asValue('par'),
   actions: asArray((raw: any) => asActionOp(raw))
 })
-const asBroadcastTxActionOp: Cleaner<BroadcastTxActionOp> = asObject({
+const asBroadcastTxActionOp = asObject<BroadcastTxActionOp>({
   type: asValue('broadcast-tx'),
   pluginId: asString,
   rawTx: asBase64
 })
-const asWyreBuyActionOp: Cleaner<WyreBuyActionOp> = asObject({
+const asWyreBuyActionOp = asObject<WyreBuyActionOp>({
   type: asValue('wyre-buy'),
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asWyreSellActionOp: Cleaner<WyreSellActionOp> = asObject({
+const asWyreSellActionOp = asObject<WyreSellActionOp>({
   type: asValue('wyre-sell'),
   wyreAccountId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanBorrowActionOp: Cleaner<LoanBorrowActionOp> = asObject({
+const asLoanBorrowActionOp = asObject<LoanBorrowActionOp>({
   type: asValue('loan-borrow'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanDepositActionOp: Cleaner<LoanDepositActionOp> = asObject({
+const asLoanDepositActionOp = asObject<LoanDepositActionOp>({
   type: asValue('loan-deposit'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanRepayActionOp: Cleaner<LoanRepayActionOp> = asObject({
+const asLoanRepayActionOp = asObject<LoanRepayActionOp>({
   type: asValue('loan-repay'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asLoanWithdrawActionOp: Cleaner<LoanWithdrawActionOp> = asObject({
+const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
   type: asValue('loan-withdraw'),
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asSwapActionOp: Cleaner<SwapActionOp> = asObject({
+const asSwapActionOp = asObject<SwapActionOp>({
   type: asValue('swap'),
-  fromWalletId: asString,
-  toWalletId: asString,
+  amountFor: asValue('from', 'to'),
+  walletId: asString,
   fromTokenId: asOptional(asString),
-  toTokenId: asOptional(asString),
+  fromWalletId: asString,
   nativeAmount: asString,
-  amountFor: asValue('from', 'to')
+  toTokenId: asOptional(asString),
+  toWalletId: asString
 })
 export const asActionOp: Cleaner<ActionOp> = asEither(
   asSeqActionOp,
@@ -136,16 +144,16 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
 // Action Effects
 //
 
-const asSeqEffect = asObject({
+const asSeqEffect = asObject<SeqEffect>({
   type: asValue('seq'),
   opIndex: asNumber,
   childEffects: asArray(asEither((raw: any) => asActionEffect(raw), asNull))
 })
-const asParEffect = asObject({
+const asParEffect = asObject<ParEffect>({
   type: asValue('par'),
   childEffects: asArray(asEither((raw: any) => asActionEffect(raw), asNull))
 })
-const asAddressBalanceEffect = asObject({
+const asAddressBalanceEffect = asObject<AddressBalanceEffect>({
   type: asValue('address-balance'),
   address: asString,
   aboveAmount: asOptional(asString),
@@ -153,28 +161,27 @@ const asAddressBalanceEffect = asObject({
   walletId: asString,
   tokenId: asOptional(asString)
 })
-const asPushEventEffect = asObject({
+const asPushEventEffect = asObject<PushEventEffect>({
   type: asValue('push-event'),
   eventId: asString
 })
-const asPriceLevelEffect = asObject({
+const asPriceLevelEffect = asObject<PriceLevelEffect>({
   type: asValue('price-level'),
   currencyPair: asString,
   aboveRate: asOptional(asNumber),
   belowRate: asOptional(asNumber)
 })
-const asTxConfsEffect = asObject({
+const asTxConfsEffect = asObject<TxConfsEffect>({
   type: asValue('tx-confs'),
   txId: asString,
   walletId: asString,
   confirmations: asNumber
 })
-const asDoneEffect = asObject({
+const asDoneEffect = asObject<DoneEffect>({
   type: asValue('done'),
   error: asOptional(asError),
   cancelled: asOptional(asBoolean)
 })
-// @ts-expect-error
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
   asSeqEffect,
   asParEffect,
@@ -189,13 +196,13 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 // Action Program
 //
 
-export const asActionProgram: Cleaner<ActionProgram> = asObject({
+export const asActionProgram = asObject<ActionProgram>({
   programId: asString,
   actionOp: asActionOp,
   mockMode: asOptional(asBoolean)
 })
 
-export const asActionProgramState: Cleaner<ActionProgramState> = asObject({
+export const asActionProgramState = asObject<ActionProgramState>({
   clientId: asString,
   programId: asString,
   effect: asOptional(asActionEffect),

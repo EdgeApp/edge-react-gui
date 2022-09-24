@@ -4,7 +4,6 @@ import { asMaybe } from 'cleaners'
 import ENV from '../../../env'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput } from './types'
 import { asErrorResponse, asLoginPayload, LoginUpdatePayload, PushRequestBody, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
@@ -160,7 +159,7 @@ export async function uploadPushEvents(context: ExecutionContext, payload: Login
   }
 }
 
-async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | undefined> {
+async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | null> {
   const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while converting to PushTrigger. ` + `This could be caused by a partial dryrun not properly short-circuiting.`
@@ -210,19 +209,14 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     }
 
     case 'done': {
-      return
+      return null
     }
     case 'par': {
-      return
+      return null
     }
     // Would this cause infinite recursion? We may never want to add conversion support for this.
     case 'push-event': {
-      return
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(effect.type)
+      return null
     }
   }
 }

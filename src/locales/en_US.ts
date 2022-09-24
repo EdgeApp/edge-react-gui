@@ -29,7 +29,7 @@ const strings = {
   action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
   // swap
   action_queue_display_swap_title: `Swap %1$s into %2$s`,
-  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
+  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s (%5$s).`,
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
@@ -976,7 +976,7 @@ const strings = {
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_withdraw_collateral: 'Withdraw Collateral',
 
-  loan_aave: 'AAVE',
+  loan_aave_fragment: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
   loan_status_cancel_txs_modal_msg:
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",

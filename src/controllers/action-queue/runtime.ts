@@ -5,7 +5,6 @@ import ENV from '../../../env'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
@@ -18,6 +17,7 @@ import {
   ExecutionOutput,
   ExecutionResults,
   PendingTxMap,
+  PushEventEffect,
   SeqEffect
 } from './types'
 import { makeWyreClient } from './WyreClient'
@@ -33,36 +33,36 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
     try {
       const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
 
-      // Convert each dryrun result into an array of push events for the push-server.
-      const newPushEvents = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
+      if (dryrunOutputs.length > 0) {
+        // Convert each dryrun result into an array of push events for the push-server.
+        const newPushEvents = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
 
-      // Send PushEvents to the push server:
-      await uploadPushEvents(context, { createEvents: newPushEvents })
+        // Send PushEvents to the push server:
+        await uploadPushEvents(context, { createEvents: newPushEvents })
 
-      // Mutate the nextState accordingly; effect should be awaiting push events:
-      const nextChildEffects = newPushEvents.map(event => ({
-        type: 'push-event',
-        eventId: event.eventId
-      }))
-      let nextEffect: ActionEffect
-      if (effect.type === 'seq') {
-        // Drop the last effect because it is to be replaced by the first push-event effect
-        const prevOpIndex = effect.opIndex // Same opIndex because the first of nextChildEffects replaces the last or prevChildEffects
-        const prevChildEffects = effect.childEffects.slice(0, -1) // Slice to drop the last of prevChildEffects
-        nextEffect = {
-          type: 'seq',
-          opIndex: prevOpIndex,
-          // @ts-expect-error
-          childEffects: [...prevChildEffects, ...nextChildEffects]
+        // Mutate the nextState accordingly; effect should be awaiting push events:
+        const nextChildEffects: PushEventEffect[] = newPushEvents.map(event => ({
+          type: 'push-event',
+          eventId: event.eventId
+        }))
+        let nextEffect: ActionEffect
+        if (effect.type === 'seq') {
+          // Drop the last effect because it is to be replaced by the first push-event effect
+          const prevOpIndex = effect.opIndex // Same opIndex because the first of nextChildEffects replaces the last or prevChildEffects
+          const prevChildEffects = effect.childEffects.slice(0, -1) // Slice to drop the last of prevChildEffects
+          nextEffect = {
+            type: 'seq',
+            opIndex: prevOpIndex,
+            childEffects: [...prevChildEffects, ...nextChildEffects]
+          }
+        } else {
+          if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
+          nextEffect = nextChildEffects[0]
         }
-      } else {
-        if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
-        // @ts-expect-error
-        nextEffect = nextChildEffects[0]
-      }
 
-      // Exit early with dryrun results:
-      return { nextState: { ...state, effect: nextEffect } }
+        // Exit early with dryrun results:
+        return { nextState: { ...state, effect: nextEffect } }
+      }
     } catch (error: any) {
       // Silently fail dryrun
       console.error(error)
@@ -284,11 +284,6 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
         delay: 0,
         isEffective: true
       }
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(effect.type)
     }
   }
 }
@@ -668,12 +663,6 @@ async function evaluateAction(
     }
     case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(actionOp.type)
     }
   }
 }

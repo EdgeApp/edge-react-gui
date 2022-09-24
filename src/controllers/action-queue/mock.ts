@@ -1,6 +1,5 @@
 import { EdgeAccount, EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
 import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionOutput, ExecutionResults, PendingTxMap } from './types'
@@ -92,11 +91,6 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
         delay: 0,
         isEffective: true
       }
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(effect.type)
     }
   }
 }
@@ -298,12 +292,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     }
     case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(actionOp.type)
     }
   }
 }
