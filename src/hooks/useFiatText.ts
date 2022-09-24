@@ -55,13 +55,12 @@ export const useFiatText = (props: Props): string => {
   return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
-export const formatFiatString = (props: { autoPrecision?: boolean; fiatAmount: string; noGrouping?: boolean; minPrecision?: string }): string => {
-  const { fiatAmount, minPrecision = 2, autoPrecision = false, noGrouping = false } = props
+export const formatFiatString = (props: { autoPrecision?: boolean; fiatAmount: string; noGrouping?: boolean; maxPrecision?: number }): string => {
+  const { fiatAmount, maxPrecision = 2, autoPrecision = false, noGrouping = false } = props
 
-  // Use US locale delimeters for determining precision
+  // Use US locale delimiters for determining precision
   const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
-  // @ts-expect-error
-  let precision: number = parseInt(minPrecision)
+  let precision: number = maxPrecision
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
     if (Math.log10(tempFiatAmount) >= 3) {
@@ -70,7 +69,7 @@ export const formatFiatString = (props: { autoPrecision?: boolean; fiatAmount: s
     }
     while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
       tempFiatAmount *= 10
-      precision++
+      precision += precision < maxPrecision ? 1 : 0
     }
   }
 
