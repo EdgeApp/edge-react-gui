@@ -3,6 +3,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { checkLoanHasFunds } from '../../../controllers/loan-manager/util/checkLoanHasFunds'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useRefresher } from '../../../hooks/useRefresher'
 import { useWatch } from '../../../hooks/useWatch'
@@ -56,7 +57,10 @@ export const LoanCloseScene = (props: Props) => {
   const onSliderComplete = async (reset: () => void) => {
     if (approvableAction == null) return
 
-    await approvableAction.approve()
+    if (checkLoanHasFunds(borrowEngine)) {
+      await approvableAction.approve()
+    }
+
     await dispatch(updateLoanAccount({ ...loanAccount, closed: true }))
     navigation.popToTop()
   }
