@@ -838,7 +838,7 @@
   "loan_collateral_required": "Erforderlicher Sicherungsbetrag",
   "loan_collateral_source": "Collateral Source",
   "loan_collateral_value": "Sicherungswert",
-  "loan_create_confirmation_title": "Ausleihdetails",
+  "loan_create_confirmation_title": "Loan Confirmation",
   "loan_create_title": "Ausleihen mit Aave",
   "loan_current_collateral": "Current Collateral",
   "loan_current_principal": "Current Principal",
