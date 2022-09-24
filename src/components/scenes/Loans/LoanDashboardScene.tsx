@@ -50,7 +50,7 @@ export const LoanDashboardScene = (props: Props) => {
 
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
-  const loanAccountsMap = useSelector(state => state.loanManager.loanAccounts)
+  const loanAccountMap = useSelector(state => state.loanManager.loanAccountMap)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
 
@@ -171,7 +171,7 @@ export const LoanDashboardScene = (props: Props) => {
     <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
-      {Object.keys(loanAccountsMap).length === 0 ? (
+      {Object.keys(loanAccountMap).length === 0 ? (
         <>
           {isLoansLoading ? (
             <Space isFill isGroupCenter isItemCenter horizontal bottom={2.5}>
@@ -191,7 +191,7 @@ export const LoanDashboardScene = (props: Props) => {
       ) : (
         <>
           <FlatList
-            data={Object.values(loanAccountsMap)}
+            data={Object.values(loanAccountMap)}
             keyboardShouldPersistTaps="handled"
             renderItem={renderLoanCard}
             style={margin}

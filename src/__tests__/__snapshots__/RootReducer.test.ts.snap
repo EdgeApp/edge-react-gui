@@ -83,7 +83,7 @@ Object {
   "exchangeRates": Object {},
   "loanManager": Object {
     "lastResyncTimestamp": 0,
-    "loanAccounts": Object {},
+    "loanAccountMap": Object {},
     "syncRatio": 0,
   },
   "network": Object {

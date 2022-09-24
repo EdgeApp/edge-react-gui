@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 export const LoanManagerService = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
-  const loanAccountMap: LoanAccountMap = useSelector(state => state.loanManager.loanAccounts)
+  const loanAccountMap: LoanAccountMap = useSelector(state => state.loanManager.loanAccountMap)
 
   //
   // Initialization

@@ -4,13 +4,13 @@ import { Action } from '../../../types/reduxTypes'
 import { LoanAccountMap } from '../types'
 
 export type LoanManagerState = {
-  readonly loanAccounts: LoanAccountMap
+  readonly loanAccountMap: LoanAccountMap
   readonly lastResyncTimestamp: number
   readonly syncRatio: number
 }
 
 export const loanManager: Reducer<LoanManagerState, Action> = combineReducers({
-  loanAccounts(state: LoanAccountMap = {}, action: Action): LoanAccountMap {
+  loanAccountMap(state: LoanAccountMap = {}, action: Action): LoanAccountMap {
     switch (action.type) {
       case 'LOAN_MANAGER/SET_LOAN_ACCOUNT': {
         const { loanAccount } = action

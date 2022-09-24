@@ -45,12 +45,12 @@ export const LoanDetailsScene = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const actionQueueMap = useSelector(state => state.actionQueue.queue)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+  const loanAccountMap = useSelector(state => state.loanManager.loanAccountMap)
 
   const { route, navigation } = props
   const { params } = route
   const { loanAccountId } = params
-  const loanAccount = loanAccounts[loanAccountId]
+  const loanAccount = loanAccountMap[loanAccountId]
   const { borrowEngine } = loanAccount
 
   // Derive state from borrowEngine:

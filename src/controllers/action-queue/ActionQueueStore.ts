@@ -119,7 +119,7 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
 
 export const useRunningActionQueueId = (programType: LoanProgramType, walletId: string): string | undefined => {
   const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  const loanAccount = useSelector(state => state.loanManager.loanAccounts[walletId])
+  const loanAccount = useSelector(state => state.loanManager.loanAccountMap[walletId])
   if (loanAccount == null) return
 
   const programEdge = loanAccount.programEdges.find((programEdge: LoanProgramEdge) => {

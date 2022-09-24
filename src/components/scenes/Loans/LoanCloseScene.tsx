@@ -32,11 +32,11 @@ export const LoanCloseScene = (props: Props) => {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+  const loanAccountMap = useSelector(state => state.loanManager.loanAccountMap)
 
   const { navigation, route } = props
   const { loanAccountId } = route.params
-  const loanAccount = loanAccounts[loanAccountId]
+  const loanAccount = loanAccountMap[loanAccountId]
   const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
 
   // Async State:
