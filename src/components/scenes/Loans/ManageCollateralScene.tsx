@@ -28,6 +28,7 @@ import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
 import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -302,7 +303,11 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         />
         {showAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
         <EdgeText style={styles.textTitle}>{opTypeStringMap[actionOpType].srcDestCard}</EdgeText>
-        <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
+        {bankAccountsMap != null ? (
+          <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
+        ) : (
+          <FillLoader />
+        )}
       </Space>
       <Space vertical around={0.25}>
         <TotalDebtCollateralTile
