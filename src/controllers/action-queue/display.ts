@@ -6,7 +6,6 @@ import { ActionDisplayInfo, ActionDisplayStatus, ActionEffect, ActionOp, ActionP
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { checkEffectIsDone, getEffectErrors } from './runtime'
 
@@ -175,11 +174,6 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_unknown_message),
         ...baseDisplayInfo
       }
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(actionOp.type)
     }
   }
 }
