@@ -86,10 +86,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       }
     }
     case 'swap': {
-      const { fromWalletId, fromTokenId, toWalletId, toTokenId, walletId } = actionOp
-
-      const borrowEngineWallet = await account.waitForCurrencyWallet(walletId)
-      if (borrowEngineWallet == null) throw new Error(`Wallet '${walletId}' not found for borrowEngineWallet`)
+      const { fromWalletId, fromTokenId, toWalletId, toTokenId } = actionOp
 
       const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
@@ -109,7 +106,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
           config.appName,
           toCurrencyCode,
           s.strings.loan_aave_fragment,
-          borrowEngineWallet.currencyInfo.currencyCode
+          toWallet.currencyInfo.currencyCode
         )
       }
     }

@@ -120,7 +120,6 @@ const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
 const asSwapActionOp = asObject<SwapActionOp>({
   type: asValue('swap'),
   amountFor: asValue('from', 'to'),
-  walletId: asString,
   fromTokenId: asOptional(asString),
   fromWalletId: asString,
   nativeAmount: asString,

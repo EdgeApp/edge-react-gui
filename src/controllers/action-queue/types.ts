@@ -75,7 +75,6 @@ export type LoanWithdrawActionOp = {
 export type SwapActionOp = {
   type: 'swap'
   amountFor: 'from' | 'to'
-  walletId: string
   fromTokenId?: string
   fromWalletId: string
   nativeAmount: string
