@@ -838,7 +838,7 @@
   "loan_collateral_required": "Collateral Amount Required",
   "loan_collateral_source": "Collateral Source",
   "loan_collateral_value": "Collateral Value",
-  "loan_create_confirmation_title": "Borrow Details",
+  "loan_create_confirmation_title": "Loan Confirmation",
   "loan_create_title": "Borrow With Aave",
   "loan_current_collateral": "Current Collateral",
   "loan_current_principal": "Current Principal",
