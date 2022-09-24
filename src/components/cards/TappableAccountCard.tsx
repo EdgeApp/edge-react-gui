@@ -13,13 +13,18 @@ import { TappableCard } from './TappableCard'
 type TappableAccountCardProps = {
   emptyLabel: string
   onPress: () => void
-  paymentMethod?: PaymentMethod
-  tokenId?: string
+  selectedAsset: SelectableAsset
+}
+
+export interface SelectableAsset {
   wallet?: EdgeCurrencyWallet
+  tokenId?: string
+  paymentMethod?: PaymentMethod
 }
 
 const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
-  const { emptyLabel, onPress, paymentMethod, tokenId, wallet } = props
+  const { emptyLabel, onPress, selectedAsset } = props
+  const { paymentMethod, tokenId, wallet } = selectedAsset
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -29,8 +34,11 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
 
   const renderAccount = () => (
     <View style={styles.currencyRow}>
-      {paymentMethod ? <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} /> : null}
-      {wallet ? <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} /> : null}
+      {paymentMethod ? (
+        <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} />
+      ) : wallet ? (
+        <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
+      ) : null}
     </View>
   )
 

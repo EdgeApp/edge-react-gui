@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { makeWyreClient, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
@@ -99,18 +99,11 @@ export function WalletListModal(props: Props) {
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
-  const [bankAccountsMap, setBankAccountsMap] = React.useState<PaymentMethodsMap | undefined>(undefined)
-
-  useAsyncEffect(
-    // @ts-expect-error
-    async () => {
-      const wyreClient = await makeWyreClient({ account })
-      if (wyreClient.isAccountSetup) {
-        setBankAccountsMap(await wyreClient.getPaymentMethods())
-      }
-    },
-    [account]
-  )
+  const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap> => {
+    const wyreClient = await makeWyreClient({ account })
+    if (!wyreClient.isAccountSetup) return {}
+    return await wyreClient.getPaymentMethods()
+  }, [account])
 
   // #endregion State
 

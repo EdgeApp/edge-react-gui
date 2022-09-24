@@ -104,7 +104,7 @@ export const LoanCreateScene = (props: Props) => {
   const [srcTokenId, setSrcTokenId] = React.useState<string | undefined>(undefined)
   const [srcCurrencyCode, setSrcCurrencyCode] = React.useState<string | undefined>(undefined)
 
-  const srcWallet = srcWalletId == null ? null : wallets[srcWalletId]
+  const srcWallet = srcWalletId == null ? undefined : wallets[srcWalletId]
   const srcPluginId = srcWallet == null ? null : srcWallet.currencyInfo.pluginId
   const srcToken = React.useMemo(
     () => (srcTokenId != null && srcPluginId != null ? allTokens[srcPluginId][srcTokenId] : null),
@@ -313,8 +313,7 @@ export const LoanCreateScene = (props: Props) => {
 
           <TappableAccountCard
             emptyLabel={s.strings.loan_select_source_collateral}
-            wallet={srcWallet ?? undefined}
-            tokenId={srcTokenId}
+            selectedAsset={{ wallet: srcWallet, tokenId: srcTokenId }}
             onPress={handleShowWalletPickerModal('source')}
           />
 
@@ -323,10 +322,8 @@ export const LoanCreateScene = (props: Props) => {
 
           <TappableAccountCard
             emptyLabel={s.strings.loan_select_receiving_wallet}
-            wallet={paymentMethod == null ? destWallet ?? undefined : undefined}
-            tokenId={destTokenId}
             onPress={handleShowWalletPickerModal('destination')}
-            paymentMethod={paymentMethod}
+            selectedAsset={{ wallet: destWallet, tokenId: destTokenId, paymentMethod }}
           />
 
           {/* Collateral Amount Required / Collateral Amount */}
