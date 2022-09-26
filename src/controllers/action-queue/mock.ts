@@ -285,11 +285,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    // @ts-expect-error
-    case 'done': {
-      // @ts-expect-error
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
     case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
