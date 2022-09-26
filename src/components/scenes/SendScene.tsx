@@ -383,7 +383,11 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderScamWarning() {
-    return <ScamWarningCard marginRem={[1.5, 1]} />
+    const { recipientAddress } = this.state
+    if (recipientAddress === '') {
+      return <ScamWarningCard marginRem={[1.5, 1]} />
+    }
+    return null
   }
 
   renderAmount() {
