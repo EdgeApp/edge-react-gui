@@ -243,7 +243,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
   for (const createWalletCurrency of createWalletCurrencies) {
     const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
     out.push({
-      key: `create-${pluginId}`,
+      key: `create-${walletType}-${pluginId}`,
       currencyCode,
       displayName: currencyName,
       pluginId,
