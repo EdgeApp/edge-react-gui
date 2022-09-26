@@ -154,9 +154,12 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         const subProgram: ActionProgram = { programId, actionOp }
         return await evaluateAction(account, subProgram, state, pendingTxMap)
       })
-      const childOutputs = await Promise.all(promises)
-      // @ts-expect-error
-      const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
+      const childExecutableActions = await Promise.all(promises)
+      const childOutputs = childExecutableActions.map(executableAciton => executableAciton.dryrunOutput)
+      const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
+        (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
+        []
+      )
 
       return {
         dryrunOutput: {
@@ -164,21 +167,17 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
             type: 'par',
             childEffects
           },
-          // @ts-expect-error
-          broadcastTxs: childOutputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+          broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
         },
-        // @ts-expect-error
         execute: async () => {
-          const outputs = await Promise.all(childOutputs.map(async output => await output.execute()))
-          // @ts-expect-error
-          const effects = outputs.reduce((effects, output) => [...effects, output.effect], [])
+          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
+          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
-            // @ts-expect-error
-            broadcastTxs: outputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output.broadcastTxs ?? [])], [])
           }
         }
       }
