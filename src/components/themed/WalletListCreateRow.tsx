@@ -114,17 +114,24 @@ const createAndSelectToken =
       const { currencyWallets } = account
       const parentWalletId =
         createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === parentCurrencyCode)
-      let wallet = parentWalletId != null ? currencyWallets[parentWalletId] : null
-
-      // If no parent chain wallet exists, create it
-      if (wallet == null) {
-        const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
-        if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
-      } else {
-        await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([tokenCode]))
-        return wallet.id
-      }
+      const wallet: EdgeCurrencyWallet =
+        parentWalletId != null
+          ? currencyWallets[parentWalletId]
+          : // If no parent chain wallet exists, create it
+            await showFullScreenSpinner(
+              s.strings.wallet_list_modal_enabling_token,
+              (async (): Promise<EdgeCurrencyWallet> => {
+                const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
+                if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
+                return await createWallet(account, {
+                  walletType,
+                  walletName: getSpecialCurrencyInfo(walletType).initWalletName,
+                  fiatCurrencyCode: defaultIsoFiat
+                })
+              })()
+            )
+      await wallet.enableTokens([tokenCode])
+      return wallet.id
     } catch (error: any) {
       showError(error)
     }
