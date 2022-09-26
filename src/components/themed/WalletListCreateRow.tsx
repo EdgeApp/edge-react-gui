@@ -165,6 +165,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    marginLeft: theme.rem(0.5),
     minHeight: theme.rem(4.25)
   },
   labelColumn: {
