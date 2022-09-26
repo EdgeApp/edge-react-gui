@@ -399,9 +399,12 @@ async function evaluateAction(
         const subProgram: ActionProgram = { programId, actionOp }
         return await evaluateAction(context, subProgram, state, pendingTxMap)
       })
-      const childOutputs = await Promise.all(promises)
-      // @ts-expect-error
-      const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
+      const childExecutableActions = await Promise.all(promises)
+      const childOutputs = childExecutableActions.map(executableAction => executableAction.dryrunOutput)
+      const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
+        (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
+        []
+      )
 
       return {
         dryrunOutput: {
@@ -409,21 +412,17 @@ async function evaluateAction(
             type: 'par',
             childEffects
           },
-          // @ts-expect-error
-          broadcastTxs: childOutputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+          broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
         },
-        // @ts-expect-error
         execute: async () => {
-          const outputs = await Promise.all(childOutputs.map(async output => await output.execute()))
-          // @ts-expect-error
-          const effects = outputs.reduce((effects, output) => [...effects, output.effect], [])
+          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
+          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
-            // @ts-expect-error
-            broadcastTxs: outputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...output.broadcastTxs], [])
           }
         }
       }
@@ -664,7 +663,7 @@ async function evaluateAction(
 
 async function approvableActionToExecutableAction(approvableAction: ApprovableAction): Promise<ExecutableAction> {
   // Execute:
-  const execute = async () => {
+  const execute = async (): Promise<ExecutionOutput> => {
     const broadcastTxs = await approvableAction.approve()
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {
@@ -681,7 +680,7 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   // Dryrun:
   const broadcastTxs = await approvableAction.dryrun()
   const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
-  const dryrun = {
+  const dryrun: ExecutionOutput = {
     effect: {
       type: 'tx-confs',
       txId: broadcastTx.tx.txid,
@@ -692,9 +691,7 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   }
 
   return {
-    // @ts-expect-error
     dryrunOutput: dryrun,
-    // @ts-expect-error
     execute
   }
 }
