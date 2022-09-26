@@ -125,8 +125,7 @@ export const useRunningActionQueueId = (programType: LoanProgramType, walletId: 
   const programEdge = loanAccount.programEdges.find((programEdge: LoanProgramEdge) => {
     if (programEdge.programType === programType) {
       const actionQueueItem = actionQueueMap[programEdge.programId]
-      // @ts-expect-error
-      return actionQueueItem != null && actionQueueItem.state?.effect !== 'done'
+      return actionQueueItem != null && actionQueueItem.state.effect?.type !== 'done'
     }
     return false
   })
