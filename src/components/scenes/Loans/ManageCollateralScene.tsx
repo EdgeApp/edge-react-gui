@@ -1,4 +1,4 @@
-import { mul } from 'biggystring'
+import { div, gt, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
@@ -16,14 +16,16 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
+import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, ParamList } from '../../../types/routerTypes'
 import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
+import { useTotalFiatAmount } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { zeroString } from '../../../util/utils'
+import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
 import { Space } from '../../layout/Space'
@@ -31,6 +33,7 @@ import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
+import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { AprCard } from '../../tiles/AprCard'
 import { InterestRateChangeTile } from '../../tiles/InterestRateChangeTile'
@@ -160,6 +163,18 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // APR change
   const newDebt = { nativeAmount: actionNativeCryptoAmount, tokenId: selectedAsset.tokenId, apr: newDebtApr }
 
+  // LTV exceeded checks
+  const pendingDebts = isSceneTypeDebts ? [...debts, pendingDebtOrCollateral] : debts
+  const pendingDebtsFiatValue = useTotalFiatAmount(borrowEngineWallet, pendingDebts)
+  const pendingCollaterals = isSceneTypeDebts ? collaterals : [...collaterals, pendingDebtOrCollateral]
+  const pendingCollateralsFiatValue = useTotalFiatAmount(borrowEngineWallet, pendingCollaterals)
+
+  // TODO: When new asset support is added, we need to implement calculation of aggregated liquidation thresholds
+  const hardLtvRatio = '0.74'
+  const isLtvExceeded =
+    (actionOpType === 'loan-borrow' || actionOpType === 'loan-withdraw') &&
+    (zeroString(pendingCollateralsFiatValue) || gt(div(pendingDebtsFiatValue, pendingCollateralsFiatValue, DECIMAL_PRECISION), hardLtvRatio))
+
   // #endregion State
 
   // -----------------------------------------------------------------------------
@@ -200,7 +215,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // @ts-expect-error
   useAsyncEffect(async () => {
-    if (zeroString(actionNativeCryptoAmount)) {
+    if (zeroString(actionNativeCryptoAmount) || isLtvExceeded) {
       setApprovalAction(null)
       return
     }
@@ -319,7 +334,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
         <TotalDebtCollateralTile
           title={isSceneTypeDebts ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isSceneTypeDebts ? [...debts, pendingDebtOrCollateral] : [...collaterals, pendingDebtOrCollateral]}
+          debtsOrCollaterals={isSceneTypeDebts ? pendingDebts : pendingCollaterals}
           key="newAmount"
         />
         <TotalDebtCollateralTile
@@ -338,6 +353,15 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
           direction={amountChange}
           key="ltv"
         />
+        {isLtvExceeded && (
+          <Alert
+            numberOfLines={0}
+            marginRem={[1.5, 0.5, -0.75, 0.5]}
+            title={s.strings.exchange_insufficient_funds_title}
+            message={sprintf(s.strings.loan_amount_exceeds_s_collateral, toPercentString(hardLtvRatio))}
+            type="error"
+          />
+        )}
       </Space>
     </FormScene>
   )
