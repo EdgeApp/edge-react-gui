@@ -21,7 +21,7 @@ export const mockActionProgram = async (account: EdgeAccount, program: ActionPro
   }
 
   // Execute Action
-  const executableAction = await evaluateAction(account, program, state, {})
+  const executableAction = await evaluateAction(account, program, state)
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
 
@@ -95,7 +95,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
   }
 }
 
-async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, pendingTxMap: PendingTxMap): Promise<ExecutableAction> {
+async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
   const { actionOp } = program
   const { effect } = state
 
@@ -120,11 +120,11 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childExecutableAction = await evaluateAction(account, nextProgram, state, pendingTxMap)
+      const childExecutableAction = await evaluateAction(account, nextProgram, state)
 
       return {
-        dryrun: async () => {
-          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun()
+        dryrun: async (pendingTxMap: PendingTxMap) => {
+          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
           const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
           const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
           return {
@@ -155,13 +155,13 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(account, subProgram, state, pendingTxMap)
+        return await evaluateAction(account, subProgram, state)
       })
       const childExecutableActions = await Promise.all(promises)
 
       return {
-        dryrun: async () => {
-          const childOutputs = await Promise.all(childExecutableActions.map(async executableAciton => await executableAciton.dryrun()))
+        dryrun: async (pendingTxMap: PendingTxMap) => {
+          const childOutputs = await Promise.all(childExecutableActions.map(async executableAciton => await executableAciton.dryrun(pendingTxMap)))
           const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
             (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
             []
