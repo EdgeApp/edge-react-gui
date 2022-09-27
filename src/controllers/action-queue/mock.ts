@@ -21,7 +21,7 @@ export const mockActionProgram = async (account: EdgeAccount, program: ActionPro
   }
 
   // Execute Action
-  const executableAction = await evaluateAction(account, program, state, {})
+  const executableAction = await evaluateAction(account, program, state)
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
 
@@ -95,7 +95,7 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
   }
 }
 
-async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState, pendingTxMap: PendingTxMap): Promise<ExecutableAction> {
+async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
   const { actionOp } = program
   const { effect } = state
 
@@ -106,10 +106,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       // Handle done case
       if (nextOpIndex > actionOp.actions.length - 1) {
         return {
-          dryrunOutput: {
+          dryrun: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
-          },
+          }),
           execute: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
@@ -120,27 +120,30 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childOutput = await evaluateAction(account, nextProgram, state, pendingTxMap)
-      const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
-      const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
-      const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
+      const childExecutableAction = await evaluateAction(account, nextProgram, state)
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'seq',
-            opIndex: nextOpIndex,
-            childEffects: [...prevChildEffects, childEffect]
-          },
-          broadcastTxs: childBroadcastTxs
-        },
-        execute: async () => {
-          const output = await childOutput.execute()
+        dryrun: async (pendingTxMap: PendingTxMap) => {
+          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
+          const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
+          const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
           return {
             effect: {
               type: 'seq',
               opIndex: nextOpIndex,
               childEffects: [...prevChildEffects, childEffect]
+            },
+            broadcastTxs: childBroadcastTxs
+          }
+        },
+        execute: async () => {
+          const output = await childExecutableAction.execute()
+          const effect = output.effect
+          return {
+            effect: {
+              type: 'seq',
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, effect]
             },
             broadcastTxs: output.broadcastTxs
           }
@@ -152,33 +155,34 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(account, subProgram, state, pendingTxMap)
+        return await evaluateAction(account, subProgram, state)
       })
-      const childOutputs = await Promise.all(promises)
-      // @ts-expect-error
-      const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
+      const childExecutableActions = await Promise.all(promises)
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'par',
-            childEffects
-          },
-          // @ts-expect-error
-          broadcastTxs: childOutputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+        dryrun: async (pendingTxMap: PendingTxMap) => {
+          const childOutputs = await Promise.all(childExecutableActions.map(async executableAciton => await executableAciton.dryrun(pendingTxMap)))
+          const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
+            (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
+            []
+          )
+          return {
+            effect: {
+              type: 'par',
+              childEffects
+            },
+            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+          }
         },
-        // @ts-expect-error
         execute: async () => {
-          const outputs = await Promise.all(childOutputs.map(async output => await output.execute()))
-          // @ts-expect-error
-          const effects = outputs.reduce((effects, output) => [...effects, output.effect], [])
+          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
+          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
-            // @ts-expect-error
-            broadcastTxs: outputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output.broadcastTxs ?? [])], [])
           }
         }
       }
@@ -285,11 +289,6 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    // @ts-expect-error
-    case 'done': {
-      // @ts-expect-error
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
     case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
@@ -298,7 +297,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
 async function mockExecutableAction(account: EdgeAccount, fn: () => ExecutionOutput): Promise<ExecutableAction> {
   return {
-    dryrunOutput: fn(),
+    dryrun: async () => fn(),
     execute: async () => {
       return fn()
     }

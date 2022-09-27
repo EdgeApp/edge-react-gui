@@ -1,6 +1,8 @@
 import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 import { Subscriber } from 'yaob'
 
+import { PendingTxMap } from '../../controllers/action-queue/types'
+
 // -----------------------------------------------------------------------------
 // Request Method Types
 // -----------------------------------------------------------------------------
@@ -12,9 +14,6 @@ export type BorrowRequest = {
 
   // Optional source for the funds which will borrow on behalf of the borrow engine's currencyWallet
   fromWallet?: EdgeCurrencyWallet
-
-  // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
 }
 
 // Make payment:
@@ -24,9 +23,6 @@ export type RepayRequest = {
 
   // Optional source for the funds which will repay on behalf of the borrow engine's currencyWallet
   fromWallet?: EdgeCurrencyWallet
-
-  // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
 }
 
 // Deposit collateral:
@@ -36,9 +32,6 @@ export type DepositRequest = {
 
   // Optional source for the funds which will deposit on behalf of the borrow engine's currencyWallet
   fromWallet?: EdgeCurrencyWallet
-
-  // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
 }
 
 // Withdraw collateral:
@@ -48,9 +41,6 @@ export type WithdrawRequest = {
 
   // Optional destination for the funds
   toWallet?: EdgeCurrencyWallet
-
-  // Optional pending txs to pass along to the wallet when making transactions
-  pendingTxs?: EdgeTransaction[]
 }
 
 export type BroadcastTx = {
@@ -63,7 +53,8 @@ export type BroadcastTx = {
 export type ApprovableAction = {
   readonly networkFee: EdgeNetworkFee
   readonly unsignedTxs: EdgeTransaction[]
-  readonly dryrun: () => Promise<BroadcastTx[]>
+  // Optional pending txs to pass along to the wallet when making transactions
+  readonly dryrun: (pendingTxMap: PendingTxMap) => Promise<BroadcastTx[]>
   readonly approve: () => Promise<BroadcastTx[]>
 }
 
