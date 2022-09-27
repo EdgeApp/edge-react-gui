@@ -74,9 +74,9 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
               }
               // Otherwise the effect should be a seq matching the seq actionOp:
               if (effect.type === 'par') {
-                if (effect.childEffects[index] === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-                // @ts-expect-error
-                childEffect = effect.childEffects[index]
+                const currentChildEffect: ActionEffect | null = effect.childEffects[index]
+                if (currentChildEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+                childEffect = currentChildEffect
               }
             }
 
