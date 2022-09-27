@@ -161,7 +161,8 @@ export async function dryrunActionProgram(
   const outputs: ExecutionOutput[] = []
   const simulatedState = { ...state }
   while (true) {
-    const { dryrunOutput } = await evaluateAction(context, program, simulatedState, pendingTxMap)
+    const executableAction = await evaluateAction(context, program, simulatedState, pendingTxMap)
+    const dryrunOutput = await executableAction.dryrun()
 
     // In order to avoid infinite loops, we must break when we reach the end
     // of the program or detect that the last effect in sequence is null, which
@@ -350,10 +351,10 @@ async function evaluateAction(
       // Handle done case
       if (nextOpIndex > actionOp.actions.length - 1) {
         return {
-          dryrunOutput: {
+          dryrun: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
-          },
+          }),
           execute: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
@@ -364,22 +365,25 @@ async function evaluateAction(
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childOutput: ExecutableAction = await evaluateAction(context, nextProgram, state, pendingTxMap)
-      const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
-      const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
-      const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
+      const childExecutableAction: ExecutableAction = await evaluateAction(context, nextProgram, state, pendingTxMap)
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'seq',
-            opIndex: nextOpIndex,
-            childEffects: [...prevChildEffects, childEffect]
-          },
-          broadcastTxs: childBroadcastTxs
+        dryrun: async () => {
+          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun()
+          const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
+          const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
+
+          return {
+            effect: {
+              type: 'seq',
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, childEffect]
+            },
+            broadcastTxs: childBroadcastTxs
+          }
         },
         execute: async () => {
-          const output = await childOutput.execute()
+          const output = await childExecutableAction.execute()
           const childEffect = output.effect
           return {
             effect: {
@@ -400,19 +404,22 @@ async function evaluateAction(
         return await evaluateAction(context, subProgram, state, pendingTxMap)
       })
       const childExecutableActions = await Promise.all(promises)
-      const childOutputs = childExecutableActions.map(executableAction => executableAction.dryrunOutput)
-      const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
-        (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
-        []
-      )
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'par',
-            childEffects
-          },
-          broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+        dryrun: async () => {
+          const childOutputs = await Promise.all(childExecutableActions.map(async executableAction => executableAction.dryrun()))
+          const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
+            (effects: ActionEffect[], output) => (output != null ? [...effects, output.effect] : effects),
+            []
+          )
+
+          return {
+            effect: {
+              type: 'par',
+              childEffects
+            },
+            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+          }
         },
         execute: async () => {
           const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
@@ -647,7 +654,7 @@ async function evaluateAction(
         }
       }
       return {
-        dryrunOutput: null, // Support dryrun when EdgeSwapQuote returns a signed tx
+        dryrun: async () => null, // Support dryrun when EdgeSwapQuote returns a signed tx
         execute
       }
     }
@@ -678,20 +685,22 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   }
 
   // Dryrun:
-  const broadcastTxs = await approvableAction.dryrun()
-  const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
-  const dryrun: ExecutionOutput = {
-    effect: {
-      type: 'tx-confs',
-      txId: broadcastTx.tx.txid,
-      walletId: broadcastTx.walletId,
-      confirmations: 1
-    },
-    broadcastTxs
+  const dryrun = async (): Promise<ExecutionOutput> => {
+    const broadcastTxs = await approvableAction.dryrun()
+    const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
+    return {
+      effect: {
+        type: 'tx-confs',
+        txId: broadcastTx.tx.txid,
+        walletId: broadcastTx.walletId,
+        confirmations: 1
+      },
+      broadcastTxs
+    }
   }
 
   return {
-    dryrunOutput: dryrun,
+    dryrun,
     execute
   }
 }
@@ -703,9 +712,8 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  */
 async function makeExecutableAction(context: ExecutionContext, fn: (dryrun: boolean) => Promise<ExecutionOutput>): Promise<ExecutableAction> {
   const { account } = context
-  const dryrunOutput = await fn(true)
   return {
-    dryrunOutput,
+    dryrun: async () => fn(true),
     execute: async () => {
       const output = await fn(false)
 

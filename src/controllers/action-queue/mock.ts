@@ -106,10 +106,10 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       // Handle done case
       if (nextOpIndex > actionOp.actions.length - 1) {
         return {
-          dryrunOutput: {
+          dryrun: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
-          },
+          }),
           execute: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
@@ -120,27 +120,30 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childOutput = await evaluateAction(account, nextProgram, state, pendingTxMap)
-      const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
-      const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
-      const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
+      const childExecutableAction = await evaluateAction(account, nextProgram, state, pendingTxMap)
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'seq',
-            opIndex: nextOpIndex,
-            childEffects: [...prevChildEffects, childEffect]
-          },
-          broadcastTxs: childBroadcastTxs
-        },
-        execute: async () => {
-          const output = await childOutput.execute()
+        dryrun: async () => {
+          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun()
+          const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
+          const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
           return {
             effect: {
               type: 'seq',
               opIndex: nextOpIndex,
               childEffects: [...prevChildEffects, childEffect]
+            },
+            broadcastTxs: childBroadcastTxs
+          }
+        },
+        execute: async () => {
+          const output = await childExecutableAction.execute()
+          const effect = output.effect
+          return {
+            effect: {
+              type: 'seq',
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, effect]
             },
             broadcastTxs: output.broadcastTxs
           }
@@ -155,19 +158,21 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         return await evaluateAction(account, subProgram, state, pendingTxMap)
       })
       const childExecutableActions = await Promise.all(promises)
-      const childOutputs = childExecutableActions.map(executableAciton => executableAciton.dryrunOutput)
-      const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
-        (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
-        []
-      )
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'par',
-            childEffects
-          },
-          broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+        dryrun: async () => {
+          const childOutputs = await Promise.all(childExecutableActions.map(async executableAciton => await executableAciton.dryrun()))
+          const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
+            (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],
+            []
+          )
+          return {
+            effect: {
+              type: 'par',
+              childEffects
+            },
+            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+          }
         },
         execute: async () => {
           const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
@@ -292,7 +297,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
 
 async function mockExecutableAction(account: EdgeAccount, fn: () => ExecutionOutput): Promise<ExecutableAction> {
   return {
-    dryrunOutput: fn(),
+    dryrun: async () => fn(),
     execute: async () => {
       return fn()
     }

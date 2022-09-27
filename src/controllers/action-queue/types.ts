@@ -177,7 +177,7 @@ export type BroadcastTx = {
   tx: EdgeTransaction
 }
 export type ExecutableAction = {
-  dryrunOutput: ExecutionOutput | null
+  dryrun: () => Promise<ExecutionOutput | null>
   execute: () => Promise<ExecutionOutput>
 }
 export type ExecutionContext = {
