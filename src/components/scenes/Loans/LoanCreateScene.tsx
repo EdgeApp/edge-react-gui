@@ -275,7 +275,7 @@ export const LoanCreateScene = (props: Props) => {
           numberOfLines={0}
           marginRem={[0.5, 0.5, 0.5, 0.5]}
           title={s.strings.exchange_insufficient_funds_title}
-          message={sprintf(s.strings.loan_amount_exceeds_s_collateral, displayLtvLimit, srcCurrencyCode)}
+          message={sprintf(s.strings.loan_amount_exceeds_s_collateral, displayLtvLimit)}
           type="error"
         />
       )
