@@ -23,11 +23,21 @@ export const composeApprovableActions = (...actions: ApprovableAction[]): Approv
     },
     unsignedTxs,
     dryrun: async (pendingTxMap: PendingTxMap) => {
-      const outputs: BroadcastTx[] = []
+      // Copy map so as not to mutate it for the caller.
+      const pendingTxMapCopy = { ...pendingTxMap }
+
+      const out: BroadcastTx[] = []
       for (const action of actions) {
-        outputs.push(...(await action.dryrun(pendingTxMap)))
+        const outputs = await action.dryrun(pendingTxMapCopy)
+        // Add dryrun outputs to pendingTxMap
+        for (const output of outputs) {
+          const { walletId, tx } = output
+          pendingTxMapCopy[walletId] = [...(pendingTxMapCopy[output.walletId] ?? []), tx]
+        }
+        // Push dryrun outputs to return value
+        out.push(...outputs)
       }
-      return outputs
+      return out
     },
     approve: async () => {
       const outputs: BroadcastTx[] = []
