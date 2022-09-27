@@ -826,7 +826,7 @@
   "loan_add_collateral": "Sicherheiten hinzufügen",
   "loan_add_from": "Hinzufügen von %s",
   "loan_amount_borrow": "Ausleihbetrag",
-  "loan_amount_exceeds_s_collateral": "Darlehen überschreitet %1$s der Sicherheiten in Ihrer %2$s Wallet",
+  "loan_amount_exceeds_s_collateral": "Total loan value exceeds %1$s of total collateral value.",
   "loan_available_equity": "Verfügbares Eigenkapital",
   "loan_borrow_details_title": "Ausleihdetails",
   "loan_borrow_more": "Mehr ausleihen",
