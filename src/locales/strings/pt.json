@@ -826,7 +826,7 @@
   "loan_add_collateral": "Add Collateral",
   "loan_add_from": "Add from %s",
   "loan_amount_borrow": "Amount to Borrow",
-  "loan_amount_exceeds_s_collateral": "Loan exceeds %1$s of collateral value in your %2$s wallet",
+  "loan_amount_exceeds_s_collateral": "Total loan value exceeds %1$s of total collateral value.",
   "loan_available_equity": "Available Equity",
   "loan_borrow_details_title": "Borrow Details",
   "loan_borrow_more": "Borrow More",
