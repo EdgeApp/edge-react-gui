@@ -24,7 +24,7 @@ type Option = {
 
 type Props = {
   bridge: AirshipBridge<void>
-  navigation: NavigationProp<'walletList'>
+  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>
 
   // Wallet identity:
   tokenId?: string

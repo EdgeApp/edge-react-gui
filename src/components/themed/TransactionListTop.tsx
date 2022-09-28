@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
+import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
@@ -13,10 +14,12 @@ import { StakePolicy } from '../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { Actions, NavigationProp } from '../../types/routerTypes'
+import { MapObject } from '../../types/types'
 import { stakePlugin } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -27,7 +30,9 @@ import { SceneHeader } from './SceneHeader'
 type OwnProps = {
   walletId: string
   isEmpty: boolean
+  navigation: NavigationProp<'transactionList'>
   searching: boolean
+  tokenId?: string
   onChangeSortingState: (isSearching: boolean) => void
   onSearchTransaction: (searchString: string) => void
 }
@@ -99,6 +104,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     )
   }
 
+  handleMenu = () => {
+    Airship.show(bridge => (
+      <WalletListMenuModal bridge={bridge} tokenId={this.props.tokenId} navigation={this.props.navigation} walletId={this.props.walletId} />
+    ))
+  }
+
   renderBalanceBox = () => {
     const { cryptoAmount, currencyCode, denominationName, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } =
       this.props
@@ -110,10 +121,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           <View style={styles.balanceBoxBalanceContainer}>
             <View style={styles.balanceBoxWalletNameCurrencyContainer}>
               <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+                <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={walletId} />
                 <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
-              <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={walletId} />
+              <TouchableOpacity onPress={this.handleMenu} style={styles.settingsIcon}>
+                <Fontello name="control-panel-settings" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
@@ -291,7 +305,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   // Balance Box
   balanceBoxContainer: {
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(1.5)
   },
   balanceBoxRow: {
     flexDirection: 'row'
@@ -311,6 +325,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceBoxWalletName: {
     flexShrink: 1,
+    marginLeft: theme.rem(0.5),
     marginRight: theme.rem(0.25),
     fontSize: theme.rem(1.25)
   },
@@ -324,7 +339,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceFiatShow: {
     fontSize: theme.rem(2)
   },
-
+  settingsIcon: {
+    alignSelf: 'center'
+  },
   // Send/Receive Buttons
   buttonsContainer: {
     marginTop: theme.rem(1),
@@ -385,7 +402,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
-    const stakingBalances = {}
+    const stakingBalances: MapObject<{ crypto: string; fiat: string }> = {}
 
     // Crypto Amount Formatting
     const currencyDenomination = getDisplayDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
@@ -400,7 +417,6 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
-        // @ts-expect-error
         const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
@@ -411,7 +427,6 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
         const stakingFiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
-        // @ts-expect-error
         stakingBalances[stakingCurrencyCode] = {
           crypto: stakingCryptoAmountFormat,
           fiat: stakingFiatBalanceFormat

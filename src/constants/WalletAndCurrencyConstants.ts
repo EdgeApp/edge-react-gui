@@ -1,5 +1,6 @@
 import { WalletListMenuKey } from '../actions/WalletListMenuActions'
 import s from '../locales/strings'
+import { StringMap } from '../types/types'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -893,7 +894,7 @@ export const FIAT_CODES_SYMBOLS = {
   ZMW: 'ZK'
 }
 
-export const STAKING_BALANCES = {
+export const STAKING_BALANCES: StringMap = {
   staked: ':STAKED',
   locked: ':LOCKED'
 }

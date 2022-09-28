@@ -370,7 +370,6 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
 
     if (SPECIAL_CURRENCY_INFO[currencyWallet.currencyInfo.pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
-        // @ts-expect-error
         const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'

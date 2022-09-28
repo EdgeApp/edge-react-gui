@@ -18,6 +18,7 @@ import { Theme } from './Theme'
 export type BooleanMap = { [key: string]: boolean }
 export type NumberMap = { [key: string]: number }
 export type StringMap = { [key: string]: string }
+export type MapObject<T> = { [key: string]: T }
 
 export type GuiWallet = {
   id: string

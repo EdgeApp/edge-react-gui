@@ -44,7 +44,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
       <View
         style={
           Object {
-            "marginTop": 22,
+            "marginTop": 34,
           }
         }
       >
@@ -81,11 +81,16 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   }
                 }
               >
+                <Memo(CryptoIconComponent)
+                  currencyCode="string"
+                  sizeRem={1.5}
+                />
                 <WithTheme(EdgeTextComponent)
                   style={
                     Object {
                       "flexShrink": 1,
                       "fontSize": 28,
+                      "marginLeft": 11,
                       "marginRight": 6,
                     }
                   }
@@ -99,10 +104,21 @@ exports[`TransactionListTop should render with loading props 1`] = `
                   size={34}
                 />
               </TouchableOpacity>
-              <Memo(CryptoIconComponent)
-                currencyCode="string"
-                sizeRem={1.5}
-              />
+              <TouchableOpacity
+                onPress={[Function]}
+                style={
+                  Object {
+                    "alignSelf": "center",
+                  }
+                }
+              >
+                <Icon
+                  allowFontScaling={false}
+                  color="#66EDA8"
+                  name="control-panel-settings"
+                  size={34}
+                />
+              </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={[Function]}
