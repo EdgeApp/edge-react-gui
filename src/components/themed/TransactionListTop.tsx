@@ -3,6 +3,7 @@ import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
@@ -153,7 +154,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, currencyCode, stakingBalances } = this.props
+    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
     const styles = getStyles(theme)
 
     const lockedBalance = stakingBalances != null ? stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`] : null
@@ -161,7 +162,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return lockedBalance != null && lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
-          sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)
+          {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
         </EdgeText>
       </View>
     ) : null
