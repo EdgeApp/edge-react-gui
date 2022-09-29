@@ -50,22 +50,6 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   zcash: true
 }
 
-export const ratePlugins = {
-  bitmax: true,
-  'shapeshift-rate': false,
-  compound: true,
-  coinbase: true,
-  coincap: true,
-  coinmonitor: true,
-  coingecko: true,
-  constantRate: true,
-  coincapLegacy: false,
-  edgeRates: true,
-  nomics: ENV.NOMICS_INIT,
-  currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
-  wazirx: true
-}
-
 export const swapPlugins = {
   // Centralized Swaps
   changehero: ENV.CHANGEHERO_INIT,
@@ -88,6 +72,5 @@ export const swapPlugins = {
 
 export const allPlugins = {
   ...currencyPlugins,
-  ...ratePlugins,
   ...swapPlugins
 }
