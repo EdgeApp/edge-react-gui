@@ -45,9 +45,9 @@ const Component = (props: Props) => {
           <Path
             d={`
               M ${holeX + strokeWidth} ${holeY + cornerRadius + strokeWidth + cornerLegroom}
-              l ${0} ${-cornerLegroom} 
+              l ${0} ${-cornerLegroom}
               q ${0} ${-cornerRadius} ${cornerRadius} ${-cornerRadius}
-              l ${cornerLegroom} ${0} 
+              l ${cornerLegroom} ${0}
             `}
             x={-strokeWidth}
             y={-strokeWidth}
@@ -57,8 +57,8 @@ const Component = (props: Props) => {
           />
           <Path
             d={`
-              M ${holeX + holeSize - cornerRadius + strokeWidth - cornerLegroom} ${holeY + strokeWidth} 
-              l ${cornerLegroom} ${0} 
+              M ${holeX + holeSize - cornerRadius + strokeWidth - cornerLegroom} ${holeY + strokeWidth}
+              l ${cornerLegroom} ${0}
               q ${cornerRadius} ${0} ${cornerRadius} ${cornerRadius}
               l ${0} ${cornerLegroom}
             `}
@@ -70,8 +70,8 @@ const Component = (props: Props) => {
           />
           <Path
             d={`
-              M ${holeX + holeSize + strokeWidth} ${holeY + holeSize - cornerRadius + strokeWidth - cornerLegroom} 
-              l ${0} ${cornerLegroom} 
+              M ${holeX + holeSize + strokeWidth} ${holeY + holeSize - cornerRadius + strokeWidth - cornerLegroom}
+              l ${0} ${cornerLegroom}
               q ${0} ${cornerRadius} ${-cornerRadius} ${cornerRadius}
               l ${-cornerLegroom} ${0}
             `}
@@ -83,8 +83,8 @@ const Component = (props: Props) => {
           />
           <Path
             d={`
-              M ${holeX + cornerRadius + strokeWidth + cornerLegroom} ${holeY + holeSize + strokeWidth} 
-              l ${-cornerLegroom} ${0} 
+              M ${holeX + cornerRadius + strokeWidth + cornerLegroom} ${holeY + holeSize + strokeWidth}
+              l ${-cornerLegroom} ${0}
               q ${-cornerRadius} ${0} ${-cornerRadius} ${-cornerRadius}
               l ${0} ${-cornerLegroom}
             `}
