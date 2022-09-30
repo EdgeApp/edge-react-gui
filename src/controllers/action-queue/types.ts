@@ -1,5 +1,3 @@
-/* eslint-disable no-use-before-define */
-
 import { EdgeAccount, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
 //
