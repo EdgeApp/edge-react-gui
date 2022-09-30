@@ -115,6 +115,7 @@ export type AddressBalanceEffect = {
 export type PushEventEffect = {
   type: 'push-event'
   eventId: string
+  effect?: ActionEffect
 }
 export type PriceLevelEffect = {
   type: 'price-level'
