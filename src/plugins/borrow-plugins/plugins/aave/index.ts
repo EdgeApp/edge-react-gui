@@ -6,7 +6,7 @@ import { makeBorrowEngineFactory } from './BorrowEngineFactory'
 import { asEthTokenContractAddress } from './cleaners/asEthTokenContractAddress'
 
 // -----------------------------------------------------------------------------
-// Matic Mainnet
+// #region Matic Mainnet
 // -----------------------------------------------------------------------------
 const maticNetwork = {
   name: 'matic',
@@ -20,7 +20,8 @@ const aaveMaticNetwork = makeAaveNetworkFactory({
 
   contractAddresses: {
     lendingPool: '0x8dff5e27ea6b7ac08ebfdf9eb090f32ee9a30fcf',
-    protocolDataProvider: '0x7551b5D2763519d4e37e8B81929D336De671d46d'
+    protocolDataProvider: '0x7551b5D2763519d4e37e8B81929D336De671d46d',
+    paraSwapRepayAdapter: '0xe84cf064a0a65290ae5673b500699f3753063936'
   },
   enabledTokens: {
     USDC: true,
@@ -43,9 +44,10 @@ const aaveMaticBlueprint: BorrowPluginBlueprint = {
 }
 
 export const makeAaveMaticBorrowPlugin = makeBorrowPluginFactory(aaveMaticBlueprint)
+// #endregion
 
 // -----------------------------------------------------------------------------
-// Ethereum Mainnet
+// #region Ethereum Mainnet
 // -----------------------------------------------------------------------------
 
 const aaveEthNetwork = makeAaveNetworkFactory({
@@ -53,7 +55,8 @@ const aaveEthNetwork = makeAaveNetworkFactory({
 
   contractAddresses: {
     lendingPool: '0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9',
-    protocolDataProvider: '0x057835ad21a177dbdd3090bb1cae03eacf78fc6d'
+    protocolDataProvider: '0x057835ad21a177dbdd3090bb1cae03eacf78fc6d',
+    paraSwapRepayAdapter: '0x135896de8421be2ec868e0b811006171d9df802a'
   },
   enabledTokens: {
     USDC: true,
@@ -76,9 +79,10 @@ const aaveEthBlueprint: BorrowPluginBlueprint = {
 }
 
 export const makeAaveEthBorrowPlugin = makeBorrowPluginFactory(aaveEthBlueprint)
+// #endregion
 
 // -----------------------------------------------------------------------------
-// Kovan Testnet
+// #region Kovan Testnet
 // -----------------------------------------------------------------------------
 
 const aaveKovanNetwork = makeAaveNetworkFactory({
@@ -86,7 +90,8 @@ const aaveKovanNetwork = makeAaveNetworkFactory({
 
   contractAddresses: {
     lendingPool: '0xE0fBa4Fc209b4948668006B2bE61711b7f465bAe',
-    protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6'
+    protocolDataProvider: '0x3c73a5e5785cac854d468f727c606c07488a29d6',
+    paraSwapRepayAdapter: '0xc18451d36aa370fdace8d45839bf975f48f7aea1'
   },
   enabledTokens: {
     AAVE: true,
@@ -137,3 +142,4 @@ const aaveKovBlueprint: BorrowPluginBlueprint = {
 }
 
 export const makeAaveKovBorrowPlugin = makeBorrowPluginFactory(aaveKovBlueprint)
+// #endregion
