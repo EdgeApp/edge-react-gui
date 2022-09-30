@@ -1,10 +1,10 @@
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, ethers, Overrides } from 'ethers'
 
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
-import { asTxInfo, CallInfo, makeApprovableCall, makeTxCalls } from '../../common/ApprovableCall'
+import { asTxInfo, CallInfo, makeApprovableCall, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
 import { ApprovableAction, BorrowCollateral, BorrowDebt, BorrowEngine, BorrowRequest, DepositRequest, RepayRequest, WithdrawRequest } from '../../types'
@@ -58,6 +58,24 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         throw new Error(
           `Wallet parameter's plugin ID ${walletParam.currencyInfo.pluginId} must match borrow engine's wallet plugin ID ${wallet.currencyInfo.pluginId}`
         )
+    }
+    const getApproveAllowanceTx = async (
+      allowanceAmount: string,
+      ownerAddress: string,
+      spenderAddress: string,
+      tokenContract: ethers.Contract,
+      overrides?: Overrides
+    ): Promise<TxInfo | null> => {
+      const allowance = await tokenContract.allowance(ownerAddress, spenderAddress)
+      if (!allowance.sub(allowanceAmount).gte(0)) {
+        return asGracefulTxInfo(
+          await tokenContract.populateTransaction.approve(spenderAddress, ethers.constants.MaxUint256, {
+            gasLimit: '500000',
+            ...overrides
+          })
+        )
+      }
+      return null
     }
 
     //
@@ -149,14 +167,8 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
 
-        const allowance = await tokenContract.allowance(onBehalfOf, aaveNetwork.lendingPool.address)
-        if (!allowance.sub(nativeAmount).gte(0)) {
-          const approveTx = asGracefulTxInfo(
-            await tokenContract.populateTransaction.approve(aaveNetwork.lendingPool.address, ethers.constants.MaxUint256, {
-              gasLimit: '500000',
-              gasPrice
-            })
-          )
+        const approveTx = await getApproveAllowanceTx(nativeAmount, onBehalfOf, aaveNetwork.lendingPool.address, tokenContract, { gasPrice })
+        if (approveTx != null) {
           txCallInfos.push({
             tx: approveTx,
             wallet,
@@ -265,14 +277,8 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const gasPrice = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
 
-        const allowance = await tokenContract.allowance(onBehalfOf, aaveNetwork.lendingPool.address)
-        if (!allowance.sub(amountToCover).gte(0)) {
-          const approveTx = asGracefulTxInfo(
-            await tokenContract.populateTransaction.approve(aaveNetwork.lendingPool.address, ethers.constants.MaxUint256, {
-              gasLimit: '500000',
-              gasPrice
-            })
-          )
+        const approveTx = await getApproveAllowanceTx(amountToCover.toString(), onBehalfOf, aaveNetwork.lendingPool.address, tokenContract, { gasPrice })
+        if (approveTx != null) {
           txCallInfos.push({
             tx: approveTx,
             wallet,
