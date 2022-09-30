@@ -109,7 +109,6 @@ export class CreateWalletImportComponent extends React.Component<Props, State> {
               error={error}
             />
             <View style={styles.buttons}>
-              {/* @ts-expect-error */}
               <PrimaryButton style={styles.next} onPress={this.handleNext} disabled={isProcessing}>
                 {isProcessing ? (
                   <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />

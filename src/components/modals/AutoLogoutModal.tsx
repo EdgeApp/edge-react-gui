@@ -80,14 +80,12 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
           {/* @ts-expect-error */}
           <Text style={dayText('title')}>{s.strings.dialog_title}</Text>
           <View style={{ flexDirection: 'row' }}>
-            {/* @ts-expect-error */}
             <LadderLayout horizontal padding={THEME.rem(1)}>
               {numberPicker}
               {measurementPicker}
             </LadderLayout>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            {/* @ts-expect-error */}
             <LadderLayout horizontal padding={THEME.rem(1)}>
               <SecondaryButton onPress={this.handleCancel} style={{ flex: 1 }}>
                 <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>

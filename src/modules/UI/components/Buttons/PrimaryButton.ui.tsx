@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Text as RNText, TextStyle, TouchableHighlight, View } from 'react-native'
+import { Text as RNText, TextStyle, TouchableHighlight, TouchableHighlightProps, View } from 'react-native'
 
 import { primaryButtonUnderlay, styles } from './style'
 
-export type TextProps = {
+type TextProps = {
   children: React.ReactNode
   style?: TextStyle
 }
@@ -18,11 +18,12 @@ class Text extends React.Component<TextProps> {
   }
 }
 
-export type Props = {
+interface Props extends TouchableHighlightProps {
   children: React.ReactNode
   style?: TextStyle
   onPress?: () => unknown
 }
+
 export class PrimaryButton extends React.Component<Props> {
   static Text = Text
   render() {
