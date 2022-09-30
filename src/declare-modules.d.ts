@@ -15,10 +15,22 @@ declare module '*.jpeg' {
 declare module '*.jpg' {
   export default imageRequire
 }
+
+// Powered by react-native-svg-transformer:
 declare module '*.svg' {
-  export default imageRequire
+  import * as React from 'react'
+  import { SvgProps } from 'react-native-svg'
+
+  const SvgComponent: React.FunctionComponent<SvgProps>
+  export default SvgComponent
 }
 
 // These modules lack type definitions:
+declare module 'csv-stringify/lib/browser/sync' {
+  export default function stringify(input: any[], options?: any): string
+}
+declare module 'edge-currency-accountbased/lib/react-native-io'
+declare module 'edge-currency-monero/lib/react-native-io'
 declare module 'react-native-smart-splash-screen'
 declare module 'react-native-sortable-listview'
+declare module 'rn-id-blurview'

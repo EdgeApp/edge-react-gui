@@ -2,8 +2,7 @@ import { asEither, Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'

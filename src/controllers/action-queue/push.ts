@@ -1,7 +1,6 @@
 import { asMaybe } from 'cleaners'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { filterNull } from '../../util/safeFilters'

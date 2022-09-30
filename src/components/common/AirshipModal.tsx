@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { AirshipBridge, AirshipModal as RealAirshipModal } from 'react-native-airship'
-// @ts-expect-error
 import { BlurView } from 'rn-id-blurview'
 
 import { THEME } from '../../theme/variables/airbitz'

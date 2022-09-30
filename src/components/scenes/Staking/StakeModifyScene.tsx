@@ -1,5 +1,4 @@
-// @ts-expect-error
-import { bns } from 'biggystring'
+import { gt } from 'biggystring'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -232,10 +231,10 @@ export const StakeModifyScene = (props: Props) => {
     let warningMessage = null
     if (existingAllocations?.staked.length === 1 && changeQuote !== null) {
       const modStakedAmount =
-        changeQuoteAllocations.find(allocation => allocation.allocationType === 'stake' && bns.gt(allocation.nativeAmount, '0'))?.nativeAmount || '0'
+        changeQuoteAllocations.find(allocation => allocation.allocationType === 'stake' && gt(allocation.nativeAmount, '0'))?.nativeAmount || '0'
       const stakedAmount = existingAllocations?.staked[0].nativeAmount ?? '0'
 
-      const isRemainingStakedAmount = bns.gt(stakedAmount, modStakedAmount)
+      const isRemainingStakedAmount = gt(stakedAmount, modStakedAmount)
 
       if (modification === 'stake') warningMessage = s.strings.stake_warning_stake
       if (modification === 'claim') warningMessage = s.strings.stake_warning_claim
@@ -312,7 +311,7 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => bns.gt(quoteAllocation.nativeAmount, '0'))
+  const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => gt(quoteAllocation.nativeAmount, '0'))
 
   return (
     <SceneWrapper scroll background="theme">

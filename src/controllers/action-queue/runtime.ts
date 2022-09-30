@@ -1,7 +1,6 @@
 import { add, gte, lte } from 'biggystring'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
