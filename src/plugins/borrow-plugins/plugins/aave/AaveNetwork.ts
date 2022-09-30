@@ -29,7 +29,7 @@ export type AaveNetwork = {
 
   // Helpers
   getAllReservesTokens: () => Promise<Array<{ symbol: string; address: string }>>
-  getReserveTokenAddresses: (address: string) => Promise<{
+  getReserveTokenContracts: (address: string) => Promise<{
     aToken: any
     sToken: any
     vToken: any
@@ -67,7 +67,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     },
 
     // TODO: Cache the response for this function
-    async getReserveTokenAddresses(address) {
+    async getReserveTokenContracts(address) {
       const [aTokenAddress, sTokenAddress, vTokenAddress] = await protocolDataProvider.getReserveTokensAddresses(address)
       const aToken = new ethers.Contract(aTokenAddress, A_TOKEN_ABI, provider)
       const sToken = new ethers.Contract(sTokenAddress, STABLE_DEBT_TOKEN_ABI, provider)
@@ -79,7 +79,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     async getReserveTokenBalances(address) {
       const reserveTokens = await instance.getAllReservesTokens()
       const whenReserveTokenBalances = reserveTokens.map(async token => {
-        const { aToken, vToken } = await instance.getReserveTokenAddresses(token.address)
+        const { aToken, vToken } = await instance.getReserveTokenContracts(token.address)
         const aBalance = await aToken.balanceOf(address)
         const vBalance = await vToken.balanceOf(address)
         const { variableApr } = await instance.getReserveTokenRates(token.address)
