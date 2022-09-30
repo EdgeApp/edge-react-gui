@@ -32,8 +32,7 @@ const UnderlinedNumInputCardComponent = (props: {
 
   return (
     <View style={styles.container}>
-      {/* @ts-expect-error */}
-      <TouchableOpacity onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
+      <TouchableOpacity onPress={onPress}>
         <Card>
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>
