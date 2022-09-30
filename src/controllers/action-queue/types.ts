@@ -194,7 +194,7 @@ export type PendingTxMap = {
 }
 
 //
-// Aciton Display API
+// Action Display API
 //
 
 export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error
