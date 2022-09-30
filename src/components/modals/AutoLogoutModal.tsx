@@ -77,8 +77,12 @@ export class AutoLogoutModalComponent extends React.Component<Props, State> {
           <IonIcon name="ios-time" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
         </IconCircle>
         <ContentArea>
-          {/* @ts-expect-error */}
-          <Text style={dayText('title')}>{s.strings.dialog_title}</Text>
+          <Text
+            // @ts-expect-error
+            style={dayText('title')}
+          >
+            {s.strings.dialog_title}
+          </Text>
           <View style={{ flexDirection: 'row' }}>
             <LadderLayout horizontal padding={THEME.rem(1)}>
               {numberPicker}

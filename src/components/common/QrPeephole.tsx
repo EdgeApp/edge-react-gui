@@ -36,8 +36,15 @@ const Component = (props: Props) => {
           <Stop offset="0.8" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
           <Stop offset="1" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
         </LinearGradient>
-        {/* @ts-expect-error */}
-        <Mask id="Mask" maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
+        <Mask
+          id="Mask"
+          // @ts-expect-error
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width={width}
+          height={height}
+        >
           <Rect x="0" y="0" width={width} height={height} fill="white" />
           <Rect x={holeX} y={holeY} height={holeSize} width={holeSize} fill="black" rx={cornerRadius} />
         </Mask>

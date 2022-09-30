@@ -470,6 +470,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       edgeTransaction.otherParams?.nonceUsed
     )
 
+    // @ts-expect-error
+    const categoriesText = categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')
+
     return (
       <SceneWrapper background="theme">
         <ScrollView>
@@ -505,8 +508,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               </View>
             </Tile>
             <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
-              {/* @ts-expect-error */}
-              <EdgeText style={styles.tileCategory}>{categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')}</EdgeText>
+              <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData(crypto.symbolString)}

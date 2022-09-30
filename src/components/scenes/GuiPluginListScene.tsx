@@ -299,8 +299,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <View style={styles.pluginRowContainer}>
         <TouchableOpacity onPress={async () => this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
-            {/* @ts-expect-error */}
-            <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
+            <Image
+              style={styles.logo}
+              // @ts-expect-error
+              source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
+            />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
               <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>

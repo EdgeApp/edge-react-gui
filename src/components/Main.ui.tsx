@@ -144,8 +144,12 @@ export class MainComponent extends React.Component<Props> {
     return (
       <>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
-          {/* @ts-expect-error */}
-          <Stack key="root" hideNavBar panHandlers={null}>
+          <Stack
+            key="root"
+            hideNavBar
+            // @ts-expect-error
+            panHandlers={null}
+          >
             <Scene key="login" component={withNavigation(LoginScene)} initial />
             <Scene
               key="edgeLogin"
@@ -583,8 +587,11 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          {/* @ts-expect-error */}
-          <Stack key="settingsOverviewTab" hideDrawerButton>
+          <Stack
+            key="settingsOverviewTab"
+            // @ts-expect-error
+            hideDrawerButton
+          >
             <Scene
               key="settingsOverview"
               component={withNavigation(ifLoggedIn(SettingsScene))}
@@ -718,8 +725,11 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          {/* @ts-expect-error */}
-          <Stack key="pluginView" hideDrawerButton>
+          <Stack
+            key="pluginView"
+            // @ts-expect-error
+            hideDrawerButton
+          >
             <Scene
               key="pluginView"
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}

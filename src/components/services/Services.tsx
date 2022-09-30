@@ -84,8 +84,10 @@ export function Services(props: Props) {
 
   return (
     <Provider store={store}>
-      {/* @ts-expect-error */}
-      <LoginUiProvider themeOverride={theme}>
+      <LoginUiProvider
+        // @ts-expect-error
+        themeOverride={theme}
+      >
         <MenuProvider>
           <Airship>
             <Main />
