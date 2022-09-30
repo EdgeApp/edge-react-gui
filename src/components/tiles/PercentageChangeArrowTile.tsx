@@ -1,6 +1,6 @@
 import { eq, mul, toFixed } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
 import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -46,9 +46,8 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
   )
 }
 
-// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonArrow = {
+  const commonArrow: ViewStyle = {
     position: 'absolute',
     width: theme.thinLineWidth * 2,
     height: theme.rem(0.625),
