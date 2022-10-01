@@ -459,6 +459,7 @@
   "title_wallets": "월렛",
   "title_buy": "Buy",
   "title_sell": "Sell",
+  "title_map": "Map",
   "no_exchanges_available": "거래소가 활성화되어 있지 않습니다.",
   "check_exchange_settings": "거래소 설정에서 거래소를 활성화 시키십시오.",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
