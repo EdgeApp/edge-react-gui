@@ -459,6 +459,7 @@
   "title_wallets": "Portefeuilles",
   "title_buy": "Buy",
   "title_sell": "Sell",
+  "title_map": "Map",
   "no_exchanges_available": "Impossible d'effectuer l'échange",
   "check_exchange_settings": "Veuillez les activer dans le réglages d’Echange.",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
