@@ -459,6 +459,7 @@
   "title_wallets": "Кошельки",
   "title_buy": "Купить",
   "title_sell": "Продать",
+  "title_map": "Map",
   "no_exchanges_available": "Нет включённых обменников",
   "check_exchange_settings": "Пожалуйста включите их в настройках обменников.",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
