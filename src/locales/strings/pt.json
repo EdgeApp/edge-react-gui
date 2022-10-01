@@ -459,6 +459,7 @@
   "title_wallets": "Carteiras",
   "title_buy": "Comprar",
   "title_sell": "Vender",
+  "title_map": "Map",
   "no_exchanges_available": "Não Há Câmbios Ativos",
   "check_exchange_settings": "Por favor, habilite-os nas Configurações de Câmbio.",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
