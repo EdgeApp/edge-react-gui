@@ -93,8 +93,7 @@ export class CrossFade extends React.Component<Props, State> {
   render() {
     const { activeKey, children } = this.props
 
-    // @ts-expect-error
-    const out: Array<React.Element<any>> = []
+    const out: Array<React.ReactElement<any>> = []
     const opacities: Opacities = {}
     forEachKey(children, (key, child) => {
       // Ensure we have an opacity animation for this child:

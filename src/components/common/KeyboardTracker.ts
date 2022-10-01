@@ -2,14 +2,13 @@ import * as React from 'react'
 import { Animated, Keyboard, KeyboardEvent, Platform } from 'react-native'
 
 type Props = {
-  // @ts-expect-error
-  children: (animation: Animated.Value, layout: number) => React.ChildrenArray<React.ReactNode>
+  children: (animation: Animated.Value, layout: number) => React.ReactNode
   downValue?: number
   upValue?: number | ((keyboardHeight: number) => number)
 }
 
 /**
- * Tracks the currect keyboard state,
+ * Tracks the current keyboard state,
  * and updates an animated value as the keyboard moves up or down.
  *
  * The animation moves smoothly between a "down value" and an "up value".
@@ -28,10 +27,8 @@ type Props = {
  */
 export class KeyboardTracker extends React.Component<Props> {
   animation: Animated.Value
-  // @ts-expect-error
-  animationGoal: number
+  animationGoal: number | undefined
   nextDuration: number
-  // eslint-disable-next-line no-use-before-define
   sub: KeyboardSubscriber
 
   constructor(props: Props) {

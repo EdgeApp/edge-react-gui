@@ -15,8 +15,8 @@ import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 
 type Props = {
-  footer?: React.ReactNode
-  header?: React.ReactNode
+  footer?: React.ComponentType<{}> | React.ReactElement
+  header?: React.ComponentType<{}> | React.ReactElement
   navigation: NavigationProp<'walletList'>
   searching: boolean
   searchText: string
@@ -67,7 +67,7 @@ export function WalletListSwipeable(props: Props) {
 
   // Render the refresh control:
   const refreshControl = React.useMemo(() => {
-    if (onRefresh == null) return null
+    if (onRefresh == null) return undefined
     return <RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={theme.searchListRefreshControlIndicator} />
   }, [theme, onRefresh])
 
@@ -110,7 +110,6 @@ export function WalletListSwipeable(props: Props) {
   const handleItemLayout = useRowLayout()
 
   return (
-    // @ts-expect-error
     <FlatList
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
       data={[...searchedWalletList, ...createWalletList]}
