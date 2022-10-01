@@ -31,25 +31,6 @@ pipeline {
       }
     }
 
-    stage ("Get build number and version") {
-      steps {
-        // Install dependencies for the versioning script:
-        sh "npm i disklet cleaners sucrase"
-
-        // Copy release-version.json from the previous build:
-        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
-
-        // Pick the new build number and version:
-        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
-
-        // Update our description:
-        script {
-          def versionFile = readJSON file: "./release-version.json"
-          currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
-        }
-      }
-    }
-
     stage ("Load credentials") {
       steps {
         // Import the settings files
@@ -67,12 +48,48 @@ pipeline {
           sh "cp ${edge_release_keystore} ./keystores/edge-release-keystore.jks"
           sh "cp ${env_json} ./env.json"
         }
+
+        // beta credentials
+        withCredentials([
+          file(credentialsId: "46441f81-81fb-4b74-a9cd-d9ac06dbd164", variable: "GoogleService_Info"),
+          file(credentialsId: "d843d89b-855f-4fb9-b45a-092ae0ea3be8", variable: "google_services"),
+        ]) {
+          sh "cp ${GoogleService_Info} ./deployPatches/edge/beta/GoogleService-Info.plist"
+          sh "cp ${google_services} ./deployPatches/edge/beta/google-services.json"
+        }
       }
     }
 
     stage ("Install dependencies") {
       steps {
         sh "yarn"
+      }
+    }
+
+    stage ("Patch files") {
+      steps {
+        sh "node -r sucrase/register ./scripts/patchFiles.ts edge ${BRANCH_NAME}"
+      }
+    }
+
+    stage ("Get build number and version") {
+      steps {
+        // Copy release-version.json from the previous build:
+        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
+
+        // Pick the new build number and version:
+        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
+
+        // Update our description:
+        script {
+          def versionFile = readJSON file: "./release-version.json"
+          currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
+        }
+      }
+    }
+
+    stage ("Pre-build") {
+      steps {
         sh "yarn prepare"
       }
     }

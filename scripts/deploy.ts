@@ -38,6 +38,7 @@ type BuildConfigFile = {
   hockeyAppTags: string
   hockeyAppToken: string
   productName: string
+  projectName: string
 }
 
 /**
@@ -78,7 +79,7 @@ function main() {
   const buildObj: BuildObj = {} as any
 
   makeCommonPre(argv, buildObj)
-  makeProject(argv[2], buildObj)
+  makeProject(buildObj)
   makeCommonPost(buildObj)
 
   // buildCommonPre()
@@ -94,11 +95,13 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.guiDir = _rootProjectDir
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
+  buildObj.projectName = argv[2]
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}/temp`
 }
 
-function makeProject(project: string, buildObj: BuildObj) {
+function makeProject(buildObj: BuildObj) {
+  const project = buildObj.projectName
   const config = JSON.parse(fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8'))
 
   Object.assign(buildObj, config[project])
@@ -146,7 +149,10 @@ function makeCommonPost(buildObj: BuildObj) {
 function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
 
-  if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
+  const patchDir = getPatchDir(buildObj)
+  if (fs.existsSync(join(patchDir, 'GoogleService-Info.plist'))) {
+    call(`cp -a ${join(patchDir, 'GoogleService-Info.plist')} ios/edge/`)
+  } else if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
     call(`cp -a ${buildObj.guiDir}/GoogleService-Info.plist ${buildObj.guiPlatformDir}/edge/`)
   }
 
@@ -184,10 +190,10 @@ function buildIos(buildObj: BuildObj) {
   const archiveDirArray = archiveDir.split('\n')
   archiveDir = archiveDirArray[0]
 
-  buildObj.dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
+  buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.dSYM.zip`
-  buildObj.ipaFile = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.ipa`
+  buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.dSYM.zip`)
+  buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.ipa`)
 
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
@@ -214,15 +220,19 @@ function buildIos(buildObj: BuildObj) {
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
-  cmdStr = `/usr/bin/zip -r "${buildObj.dSymZip}" "${buildObj.dSymFile}"`
+  cmdStr = `/usr/bin/zip -r ${buildObj.dSymZip} ${buildObj.dSymFile}`
   call(cmdStr)
 
-  cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.xcodeScheme}.app/main.jsbundle" "${buildObj.guiPlatformDir}/"`
+  cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.productName}.app/main.jsbundle" ${buildObj.guiPlatformDir}/`
   call(cmdStr)
 }
 
 function buildAndroid(buildObj: BuildObj) {
-  if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
+  const patchDir = getPatchDir(buildObj)
+
+  if (fs.existsSync(join(patchDir, 'google-services.json'))) {
+    call(`cp -a ${join(patchDir, 'google-services.json')} android/app/`)
+  } else if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
     call(`cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`)
   }
 
@@ -274,9 +284,12 @@ function buildCommonPost(buildObj: BuildObj) {
     mylog('\n\nUploading to Bugsnag')
     mylog('*********************\n')
 
-    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
+    const cpa = `cp -a ${buildObj.dSymFile}/Contents/Resources/DWARF/${escapePath(buildObj.productName)} ${buildObj.tmpDir}/`
     call(cpa)
-    curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
+    curl =
+      '/usr/bin/curl https://upload.bugsnag.com/ ' +
+      `-F dsym=@${buildObj.tmpDir}/${escapePath(buildObj.productName)} ` +
+      `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
   }
 
@@ -329,4 +342,13 @@ function cmd(cmdstring: string) {
     killSignal: 'SIGKILL'
   })
   return r
+}
+
+function getPatchDir(buildObj: BuildObj): string {
+  const { projectName, guiDir, repoBranch } = buildObj
+  return join(guiDir, 'deployPatches', projectName, repoBranch)
+}
+
+function escapePath(path: string): string {
+  return path.replace(/(\s+)/g, '\\$1')
 }

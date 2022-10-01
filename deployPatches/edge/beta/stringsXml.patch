@@ -1,0 +1,9 @@
+diff --git a/android/app/src/main/res/values/strings.xml b/android/app/src/main/res/values/strings.xml
+index 806da3845..898fa5c84 100644
+--- a/android/app/src/main/res/values/strings.xml
++++ b/android/app/src/main/res/values/strings.xml
+@@ -1,3 +1,3 @@
+ <resources>
+-    <string name="app_name">Edge</string>
++    <string name="app_name">Edge Beta</string>
+ </resources>

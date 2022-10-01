@@ -27,6 +27,7 @@ import { asLegacyBuildNumFile, asVersionFile, VersionFile } from './cleaners'
 const specialBranches: { [branch: string]: string } = {
   develop: '-d',
   master: '',
+  beta: '',
   test: '-t',
   yolo: '-yolo',
   'test-cheddar': '-cheddar',
