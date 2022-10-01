@@ -459,6 +459,7 @@
   "title_wallets": "Ví",
   "title_buy": "Buy",
   "title_sell": "Sell",
+  "title_map": "Map",
   "no_exchanges_available": "Không có trao đổi được kích hoạt",
   "check_exchange_settings": "Xin vui lòng cho phép trong thiết lập giao dịch của bạn.",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
