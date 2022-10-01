@@ -459,6 +459,7 @@
   "title_wallets": "Portafogli",
   "title_buy": "Compra",
   "title_sell": "Vendi",
+  "title_map": "Map",
   "no_exchanges_available": "Nessun cambio valuta abilitato",
   "check_exchange_settings": "Abilitali nelle Impostazioni Cambio Valuta.",
   "amount_above_limit": "L'importo è superiore al limite massimo di %1$s %2$s. Questo limite massimo è soggetto a modifiche in base alle condizioni di mercato",
