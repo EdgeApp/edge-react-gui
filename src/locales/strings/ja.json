@@ -459,6 +459,7 @@
   "title_wallets": "ウォレット",
   "title_buy": "Buy",
   "title_sell": "Sell",
+  "title_map": "Map",
   "no_exchanges_available": "取引所を有効化していません",
   "check_exchange_settings": "エクスチェンジ設定で取引所を有効化してください。",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
