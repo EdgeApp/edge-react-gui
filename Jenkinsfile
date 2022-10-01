@@ -49,6 +49,15 @@ pipeline {
           sh "cp ${env_json} ./env.json"
         }
 
+        // develop credentials
+        withCredentials([
+          file(credentialsId: "efbd6cab-a1b3-4027-9a15-8c76fe7c1350", variable: "GoogleService_Info"),
+          file(credentialsId: "36c06912-38a6-466c-98dd-9ddd98ec7fd4", variable: "google_services"),
+        ]) {
+          sh "cp ${GoogleService_Info} ./deployPatches/edge/develop/GoogleService-Info.plist"
+          sh "cp ${google_services} ./deployPatches/edge/develop/google-services.json"
+        }
+
         // beta credentials
         withCredentials([
           file(credentialsId: "46441f81-81fb-4b74-a9cd-d9ac06dbd164", variable: "GoogleService_Info"),
