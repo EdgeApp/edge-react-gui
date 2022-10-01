@@ -459,6 +459,7 @@
   "title_wallets": "钱包",
   "title_buy": "Buy",
   "title_sell": "Sell",
+  "title_map": "Map",
   "no_exchanges_available": "没有可用的交易。",
   "check_exchange_settings": "请在交易设置中启用它们。",
   "amount_above_limit": "Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions",
