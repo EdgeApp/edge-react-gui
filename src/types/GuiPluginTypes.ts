@@ -105,4 +105,11 @@ const asGuiPluginJsonRow = asObject({
   sortIndex: asOptional(asNumber)
 })
 export const asGuiPluginJson = asArray(asEither(asString, asGuiPluginJsonRow))
+export const asBuySellPlugins = asObject({
+  // If either buy or sell is undefined, fallback to app defaults and purge disk cache
+  buy: asOptional(asGuiPluginJson),
+  sell: asOptional(asGuiPluginJson)
+})
+
 export type GuiPluginJson = ReturnType<typeof asGuiPluginJson>
+export type BuySellPlugins = ReturnType<typeof asBuySellPlugins>
