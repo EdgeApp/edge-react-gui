@@ -459,6 +459,7 @@
   "title_wallets": "Wallets",
   "title_buy": "Kaufen",
   "title_sell": "Verkaufen",
+  "title_map": "Map",
   "no_exchanges_available": "Kein Umtausch möglich",
   "check_exchange_settings": "Bitte aktivieren sie diese in ihrern Tauschbörsen-Einstellungen.",
   "amount_above_limit": "Der Betrag liegt über dem Maximallimit von %1$s %2$s. Dieses Maximallimit kann je nach Marktbedingungen geändert werden",
