@@ -51,6 +51,8 @@ interface BuildObj extends BuildConfigFile {
   platformType: string // 'android' | 'ios'
   repoBranch: string // 'develop' | 'master' | 'test'
   tmpDir: string
+  buildArchivesDir: string
+  bundleToolPath: string
 
   // Set in makeCommonPost:
   buildNum: string
@@ -98,6 +100,7 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.projectName = argv[2]
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}/temp`
+  buildObj.buildArchivesDir = '/Users/jenkins/buildArchives'
 }
 
 function makeProject(buildObj: BuildObj) {
@@ -228,6 +231,19 @@ function buildIos(buildObj: BuildObj) {
 }
 
 function buildAndroid(buildObj: BuildObj) {
+  const {
+    buildArchivesDir,
+    buildNum,
+    platformType,
+    repoBranch,
+    guiPlatformDir,
+    bundleToolPath,
+    androidKeyStore,
+    androidKeyStoreAlias,
+    androidKeyStorePassword
+  } = buildObj
+
+  const keyStoreFile = join('/', _rootProjectDir, 'keystores', androidKeyStore)
   const patchDir = getPatchDir(buildObj)
 
   if (fs.existsSync(join(patchDir, 'google-services.json'))) {
@@ -238,7 +254,7 @@ function buildAndroid(buildObj: BuildObj) {
 
   chdir(buildObj.guiDir)
 
-  process.env.ORG_GRADLE_PROJECT_storeFile = sprintf('/%s/keystores/%s', _rootProjectDir, buildObj.androidKeyStore)
+  process.env.ORG_GRADLE_PROJECT_storeFile = keyStoreFile
   process.env.ORG_GRADLE_PROJECT_storePassword = buildObj.androidKeyStorePassword
   process.env.ORG_GRADLE_PROJECT_keyAlias = buildObj.androidKeyStoreAlias
   process.env.ORG_GRADLE_PROJECT_keyPassword = buildObj.androidKeyStorePassword
@@ -248,9 +264,20 @@ function buildAndroid(buildObj: BuildObj) {
   call('./gradlew signingReport')
   call(sprintf('./gradlew %s', buildObj.androidTask))
 
-  // Reset gradle file back
-  // call('git reset --hard origin/' + buildObj.repoBranch)
-  buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
+  // Process the AAB files created into APK format and place in archive directory
+  const archiveDir = join(buildArchivesDir, repoBranch, platformType, String(buildNum))
+  fs.mkdirSync(archiveDir, { recursive: true })
+  const aabPath = join(archiveDir, 'app-release.aab')
+  const apksPath = join(archiveDir, 'app-release.apks')
+  const apkPathDir = join(archiveDir, 'apk_container')
+  fs.copyFileSync(join(guiPlatformDir, '/app/build/outputs/bundle/release/app-release.aab'), aabPath)
+
+  call(
+    `java -jar ${bundleToolPath} build-apks --overwrite --mode=universal --bundle=${aabPath} --output=${apksPath} --ks=${keyStoreFile} --ks-key-alias=${androidKeyStoreAlias} --ks-pass=pass:${androidKeyStorePassword}`
+  )
+  call(`unzip ${apksPath} -d ${apkPathDir}`)
+
+  buildObj.ipaFile = join(apkPathDir, 'universal.apk')
 }
 
 function buildCommonPost(buildObj: BuildObj) {
