@@ -5,10 +5,15 @@ import ENV from '../../../env'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { filterNull } from '../../util/safeFilters'
-import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput } from './types'
+import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput, PushEventEffect } from './types'
 import { asErrorResponse, asLoginPayload, LoginUpdatePayload, PushRequestBody, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
 import { BroadcastTx, NewPushEvent, PushEventState, PushEventStatus, PushMessage, PushTrigger } from './types/pushTypes'
 import { base58 } from './util/encoding'
+
+export interface PushEventInfo {
+  newPushEvent: NewPushEvent
+  pushEventEffect: PushEventEffect
+}
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
@@ -35,7 +40,7 @@ export async function prepareNewPushEvents(
   program: ActionProgram,
   initEffect: ActionEffect,
   dryrunOutputs: ExecutionOutput[]
-): Promise<NewPushEvent[]> {
+): Promise<PushEventInfo[]> {
   const { account } = context
   const { programId } = program
 
@@ -45,9 +50,9 @@ export async function prepareNewPushEvents(
     body: s.strings.action_queue_push_notification_body
   }
 
-  const pushEvents: NewPushEvent[] = await Promise.all(
+  const pushEventInfos: PushEventInfo[] = await Promise.all(
     dryrunOutputs.map(async (output, index) => {
-      const prevEffect = index > 0 ? dryrunOutputs[index - 1].effect : initEffect
+      const triggeringEffect = index > 0 ? dryrunOutputs[index - 1].effect : initEffect
 
       const callStackId = getCallStackId(output.effect)
       const eventId = `${programId}:${callStackId}`
@@ -62,14 +67,14 @@ export async function prepareNewPushEvents(
           return broadcastTx
         })
       )
-      const trigger = await actionEffectToPushTrigger(context, prevEffect)
+      const trigger = await actionEffectToPushTrigger(context, triggeringEffect)
 
       // Assert that the given prevEffect is a convertible to a PushTrigger
       if (trigger == null) {
-        throw new Error(`Unsupported effect type ${prevEffect.type} in conversion to PushTrigger`)
+        throw new Error(`Unsupported effect type ${triggeringEffect.type} in conversion to PushTrigger`)
       }
 
-      const pushEvent: NewPushEvent = {
+      const newPushEvent: NewPushEvent = {
         eventId,
         broadcastTxs,
         // Include pushMessage only for the last event because device should only wake up when the server finishes all push events.
@@ -77,11 +82,20 @@ export async function prepareNewPushEvents(
         trigger
       }
 
-      return pushEvent
+      const pushEventEffect: PushEventEffect = {
+        type: 'push-event',
+        eventId: eventId,
+        effect: triggeringEffect
+      }
+
+      return {
+        newPushEvent,
+        pushEventEffect
+      }
     })
   )
 
-  return pushEvents
+  return pushEventInfos
 }
 
 export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {

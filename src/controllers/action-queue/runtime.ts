@@ -17,7 +17,6 @@ import {
   ExecutionOutput,
   ExecutionResults,
   PendingTxMap,
-  PushEventEffect,
   SeqEffect
 } from './types'
 import { makeWyreClient } from './WyreClient'
@@ -35,16 +34,14 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
 
       if (dryrunOutputs.length > 0) {
         // Convert each dryrun result into an array of push events for the push-server.
-        const newPushEvents = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
+        const pushEventInfos = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
 
         // Send PushEvents to the push server:
+        const newPushEvents = pushEventInfos.map(({ newPushEvent }) => newPushEvent)
         await uploadPushEvents(context, { createEvents: newPushEvents })
 
         // Mutate the nextState accordingly; effect should be awaiting push events:
-        const nextChildEffects: PushEventEffect[] = newPushEvents.map(event => ({
-          type: 'push-event',
-          eventId: event.eventId
-        }))
+        const nextChildEffects = pushEventInfos.map(({ pushEventEffect }) => pushEventEffect)
         let nextEffect: ActionEffect
         if (effect.type === 'seq') {
           // Drop the last effect because it is to be replaced by the first push-event effect

@@ -1,5 +1,3 @@
-/* eslint-disable no-use-before-define */
-
 import { EdgeAccount, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
 //
@@ -117,6 +115,7 @@ export type AddressBalanceEffect = {
 export type PushEventEffect = {
   type: 'push-event'
   eventId: string
+  effect?: ActionEffect
 }
 export type PriceLevelEffect = {
   type: 'price-level'
@@ -196,7 +195,7 @@ export type PendingTxMap = {
 }
 
 //
-// Aciton Display API
+// Action Display API
 //
 
 export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error

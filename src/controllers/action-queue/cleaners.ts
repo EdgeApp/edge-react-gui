@@ -162,7 +162,8 @@ const asAddressBalanceEffect = asObject<AddressBalanceEffect>({
 })
 const asPushEventEffect = asObject<PushEventEffect>({
   type: asValue('push-event'),
-  eventId: asString
+  eventId: asString,
+  effect: raw => asOptional(asActionEffect)(raw)
 })
 const asPriceLevelEffect = asObject<PriceLevelEffect>({
   type: asValue('price-level'),

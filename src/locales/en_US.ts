@@ -33,7 +33,7 @@ const strings = {
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
-  action_queue_push_notification_body: `Edge has finished working on your behalf.`,
+  action_queue_push_notification_body: `Edge has completed processing your loan operation.`,
 
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
