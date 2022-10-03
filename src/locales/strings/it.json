@@ -20,7 +20,7 @@
   "action_queue_display_swap_title": "Scambia %1$s in %2$s",
   "action_queue_display_swap_message": "To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s (%5$s).",
   "action_queue_push_notification_title": "Azione completata",
-  "action_queue_push_notification_body": "Edge ha terminato di lavorare per tuo conto.",
+  "action_queue_push_notification_body": "Edge has completed processing your loan operation.",
   "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s ricevuti",
   "dialog_title": "Imposta il tempo di auto disconnessione",
