@@ -1,5 +1,37 @@
 # edge-react-gui
 
+## 2.23.0 (2022-09-28)
+
+- Convert project to Typescript
+- Add price change notification modal to buy/sell/trade
+- Add scam warning to send scene
+- Add historical exchange rate fetching for transactions with incorrect saved amount
+- Send metadata on quote.approve()
+- Support sweep WIF private key format or 5 address private keys for BTC
+- Reduce fetch calls and add spinner for Stake button and Overview scene
+- Enable IP Validation for loginIds with no createdApiKey
+- Fix double password modal
+- Add Firebase configs to prepare script
+- Update unit tests
+- Various visual fixes
+- Upgrade edge-currency-accountbased to v0.18.4
+  - BNB: Fix Beacon Chain transaction processing
+  - XLM: Add dynamic fee support
+  - Fix parseUriCommon protocol parsing
+  - EVM: Fix broken baseFee from accidental boolean coercion
+  - SOL: Update explorer URLs
+  - CELO: Update server list
+  - ZEC: update checkpoints
+- Upgrade edge-currency-plugins v1.2.1
+  - Fix: Correctly import uncompressed WIFs
+- Upgrade edge-exchange-plugins v0.14.0
+  - Convert project to Typescript
+  - Update Changehero plugin to support arbitrary chains and tokens with reverse quoting
+- Upgrade edge-core-js to v0.19.29
+  - Plugins will receive metadata as part of their approve method in include in the tx object
+- Upgrade edge-login-ui-rn v0.10.10
+  - Add a spinner to ChangePasswordSceneComponent to prevent double submission
+
 ## 2.22.0 (2022-09-19)
 
 - Add new swap provider Thorchain
