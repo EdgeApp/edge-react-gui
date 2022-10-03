@@ -137,8 +137,9 @@ export function WalletList(props: Props) {
 
   // Assemble create-wallet rows:
   const createWalletList: WalletCreateItem[] = React.useMemo(
-    () => getCreateWalletList(account, { allowedAssets, excludeAssets, filteredWalletList, filterActivation }),
-    [account, allowedAssets, excludeAssets, filteredWalletList, filterActivation]
+    () =>
+      filterWalletCreateItemListBySearchText(getCreateWalletList(account, { allowedAssets, excludeAssets, filteredWalletList, filterActivation }), searchText),
+    [account, allowedAssets, excludeAssets, searchText, filteredWalletList, filterActivation]
   )
 
   // Merge the lists, filtering based on the search term:
@@ -150,13 +151,7 @@ export function WalletList(props: Props) {
 
     // Show the create-wallet list, filtered by the search term:
     if (showCreateWallet) {
-      const searchTarget = normalizeForSearch(searchText)
-      for (const item of createWalletList) {
-        const { currencyCode, displayName } = item
-        if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
-          walletList.push(item)
-        }
-      }
+      walletList.push(...createWalletList)
     }
 
     // Show a flat list if we are searching, or have no recent wallets:
@@ -286,6 +281,22 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     })
   }
   return out.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
+}
+
+export const filterWalletCreateItemListBySearchText = (createWalletList: WalletCreateItem[], searchText: string): WalletCreateItem[] => {
+  const out: WalletCreateItem[] = []
+  const searchTarget = normalizeForSearch(searchText)
+  for (const item of createWalletList) {
+    const { currencyCode, displayName, pluginId } = item
+    if (
+      normalizeForSearch(currencyCode).includes(searchTarget) ||
+      normalizeForSearch(displayName).includes(searchTarget) ||
+      normalizeForSearch(pluginId).includes(searchTarget)
+    ) {
+      out.push(item)
+    }
+  }
+  return out
 }
 
 function checkFilterWallet(details: EdgeTokenId, allowedAssets?: EdgeTokenId[], excludeAssets?: EdgeTokenId[]): boolean {

@@ -7,10 +7,9 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
-import { normalizeForSearch } from '../../util/utils'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
-import { getCreateWalletList, WalletCreateItem } from './WalletList'
+import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
 import { WalletListCreateRow } from './WalletListCreateRow'
 import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow'
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
@@ -53,21 +52,9 @@ export function WalletListSwipeable(props: Props) {
 
   // This list is shown when we're in a searching state
   const createWalletList = React.useMemo(
-    () => (searching ? getCreateWalletList(account, { filteredWalletList: sortedWalletList }) : []),
-    [account, searching, sortedWalletList]
+    () => (searching ? filterWalletCreateItemListBySearchText(getCreateWalletList(account, { filteredWalletList: sortedWalletList }), searchText) : []),
+    [account, searching, searchText, sortedWalletList]
   )
-
-  const searchedCreateWalletList = React.useMemo(() => {
-    const out: WalletCreateItem[] = []
-    const searchTarget = normalizeForSearch(searchText)
-    for (const item of createWalletList) {
-      const { currencyCode, displayName } = item
-      if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
-        out.push(item)
-      }
-    }
-    return out
-  }, [createWalletList, searchText])
 
   const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
     dispatch(selectWallet(walletId, currencyCode))
@@ -126,7 +113,7 @@ export function WalletListSwipeable(props: Props) {
     // @ts-expect-error
     <FlatList
       contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
-      data={[...searchedWalletList, ...searchedCreateWalletList]}
+      data={[...searchedWalletList, ...createWalletList]}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
       ListHeaderComponent={header}
