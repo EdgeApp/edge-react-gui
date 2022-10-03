@@ -10,6 +10,56 @@ import { enableToken } from './CurrencyWalletHelpers'
 //  create the ActionProgram.
 // -----------------------------------------------------------------------------
 
+export type LoanAsset = {
+  wallet: EdgeCurrencyWallet
+  nativeAmount: string
+  paymentMethodId?: string
+  tokenId?: string
+}
+
+interface AaveCreateActionParams {
+  borrowEngineWallet: EdgeCurrencyWallet
+  borrowPluginId: string
+
+  source: LoanAsset
+  destination: LoanAsset
+}
+
+export const makeAaveCreateAction = async (params: AaveCreateActionParams): Promise<ActionOp> => {
+  const { borrowEngineWallet, borrowPluginId, source, destination } = params
+
+  const actionPromises: Array<Promise<ActionOp[]>> = []
+
+  actionPromises.push(
+    makeAaveDepositAction({
+      // swap & deposit
+      borrowEngineWallet: borrowEngineWallet,
+      borrowPluginId,
+      depositTokenId: source.tokenId,
+      nativeAmount: source.nativeAmount,
+      srcTokenId: source.tokenId,
+      srcWallet: source.wallet
+    })
+  )
+  actionPromises.push(
+    makeAaveBorrowAction({
+      // borrow & wyre
+      borrowEngineWallet: borrowEngineWallet,
+      borrowPluginId,
+      borrowTokenId: destination.tokenId,
+      nativeAmount: destination.nativeAmount,
+      destBankId: destination.paymentMethodId
+    })
+  )
+
+  const actions: ActionOp[] = (await Promise.all(actionPromises)).flat()
+
+  return {
+    type: 'seq',
+    actions
+  }
+}
+
 export const makeAaveBorrowAction = async ({
   borrowEngineWallet,
   borrowPluginId,
