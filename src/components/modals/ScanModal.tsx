@@ -35,7 +35,6 @@ export const ScanModal = (props: Props) => {
   const { width: windowWidth, height: windowHeight } = useWindowSize()
   const isLandscape = windowWidth > windowHeight
 
-  // @ts-expect-error
   const cameraPermission = useSelector(state => state.permissions.camera)
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
