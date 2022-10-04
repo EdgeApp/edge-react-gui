@@ -2,7 +2,7 @@ import { EdgeAccount, EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from
 
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
-import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionOutput, ExecutionResults, PendingTxMap } from './types'
+import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionOutput, ExecutionResults } from './types'
 
 export const mockActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
@@ -123,7 +123,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const childExecutableAction = await evaluateAction(account, nextProgram, state)
 
       return {
-        dryrun: async (pendingTxMap: PendingTxMap) => {
+        dryrun: async pendingTxMap => {
           const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
           const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
           const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
@@ -160,7 +160,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const childExecutableActions = await Promise.all(promises)
 
       return {
-        dryrun: async (pendingTxMap: PendingTxMap) => {
+        dryrun: async pendingTxMap => {
           const childOutputs = await Promise.all(childExecutableActions.map(async executableAciton => await executableAciton.dryrun(pendingTxMap)))
           const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
             (effects: Array<ActionEffect | null>, output) => [...effects, output?.effect ?? null],

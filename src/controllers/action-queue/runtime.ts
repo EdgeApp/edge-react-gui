@@ -359,7 +359,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       const childExecutableAction: ExecutableAction = await evaluateAction(context, nextProgram, state)
 
       return {
-        dryrun: async (pendingTxMap: PendingTxMap) => {
+        dryrun: async pendingTxMap => {
           const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
           const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
           const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
@@ -397,7 +397,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       const childExecutableActions = await Promise.all(promises)
 
       return {
-        dryrun: async (pendingTxMap: PendingTxMap) => {
+        dryrun: async pendingTxMap => {
           const childOutputs = await Promise.all(childExecutableActions.map(async executableAction => executableAction.dryrun(pendingTxMap)))
           const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
             (effects: ActionEffect[], output) => (output != null ? [...effects, output.effect] : effects),
@@ -437,7 +437,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
 
       const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
-      const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
         // Get any pending txs for this wallet
         const pendingTxs = pendingTxMap[walletId] ?? []
 
@@ -664,7 +664,7 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   }
 
   // Dryrun:
-  const dryrun = async (pendingTxMap: PendingTxMap): Promise<ExecutionOutput> => {
+  const dryrun = async (pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
     const broadcastTxs = await approvableAction.dryrun(pendingTxMap)
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {
@@ -691,11 +691,11 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  */
 async function makeExecutableAction(
   context: ExecutionContext,
-  fn: (dryrun: boolean, pendingTxMap: PendingTxMap) => Promise<ExecutionOutput>
+  fn: (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput>
 ): Promise<ExecutableAction> {
   const { account } = context
   return {
-    dryrun: async (pendingTxMap: PendingTxMap) => fn(true, pendingTxMap),
+    dryrun: async pendingTxMap => fn(true, pendingTxMap),
     execute: async () => {
       const output = await fn(false, {})
 
