@@ -60,8 +60,14 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
     })
   }
 
-  // Construct the deposit action
+  const loanParallelActions: ActionOp[] = []
   sequenceActions.push({
+    type: 'par',
+    actions: loanParallelActions
+  })
+
+  // Construct the deposit action
+  loanParallelActions.push({
     type: 'loan-deposit',
     borrowPluginId,
     nativeAmount: source.nativeAmount,
@@ -89,7 +95,7 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
 
   // Construct the borrow action
   if (destination.tokenId != null || defaultTokenId != null)
-    sequenceActions.push({
+    loanParallelActions.push({
       type: 'loan-borrow',
       borrowPluginId,
       nativeAmount: destination.nativeAmount,
@@ -99,7 +105,7 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
 
   // Construct the Withdraw to Bank action
   if (destination.paymentMethodId != null) {
-    sequenceActions.push({
+    loanParallelActions.push({
       type: 'wyre-sell',
       wyreAccountId: destination.paymentMethodId,
       nativeAmount: destination.nativeAmount,
