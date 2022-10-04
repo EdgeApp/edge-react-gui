@@ -160,7 +160,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_loan_repay_title,
-        message: sprintf(s.strings.action_queue_display_loan_repay_message)
+        message: s.strings.action_queue_display_loan_repay_message
       }
     }
     case 'loan-withdraw': {
