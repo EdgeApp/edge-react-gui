@@ -208,12 +208,15 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
       if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       // Check all child effects concurrently
-      const promises = checkedEffects.map(async (childEffect, index) => {
+      const childEffectPromises = checkedEffects.map(async childEffect => {
         return await checkActionEffect(context, childEffect)
       })
+      const childEffectChecks = await Promise.all(childEffectPromises)
+      const isEffective = childEffectChecks.every(result => result.isEffective)
+
       return {
         delay: 0,
-        isEffective: (await Promise.all(promises)).every(yes => yes)
+        isEffective
       }
     }
     case 'address-balance': {
