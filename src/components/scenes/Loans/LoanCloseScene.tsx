@@ -99,7 +99,7 @@ export const LoanCloseScene = (props: Props) => {
             </TappableRow>
           ))}
         </Tile> */}
-        <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_message} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
         {approvableActionError != null ? (
           <Alert title={s.strings.loan_error_title} message={translateError(approvableActionError)} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
         ) : null}
