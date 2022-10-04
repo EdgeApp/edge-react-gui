@@ -418,8 +418,7 @@ export class EdgeProvider extends Bridgeable {
   async _makeSpendRequest(
     guiMakeSpendInfo: GuiMakeSpendInfo,
     coreWallet: EdgeCurrencyWallet,
-    orderId?: string,
-    // @ts-expect-error
+    orderId: string | undefined,
     selectedCurrencyCode: string
   ): Promise<EdgeTransaction | undefined> {
     const transaction: EdgeTransaction | undefined = await new Promise((resolve, reject) => {
