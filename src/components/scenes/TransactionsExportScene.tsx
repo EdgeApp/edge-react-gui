@@ -1,11 +1,11 @@
-import { EdgeGetTransactionsOptions } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { exportTransactionsToCSV, exportTransactionsToQBO } from '../../actions/TransactionExportActions'
+import { exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
@@ -36,7 +36,11 @@ type StateProps = {
   multiplier: string
 }
 
-type Props = StateProps & OwnProps & ThemeProps
+type DispatchProps = {
+  updateTxsFiatDispatch: (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) => void
+}
+
+type Props = StateProps & OwnProps & ThemeProps & DispatchProps
 
 type State = {
   startDate: Date
@@ -195,6 +199,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const files: File[] = []
     const formats: string[] = []
 
+    // Update the transactions that are missing fiat amounts
+    await this.props.updateTxsFiatDispatch(sourceWallet, currencyCode, txs)
+
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
     const csvFile = await exportTransactionsToCSV(sourceWallet, txs, transactionOptions)
@@ -266,9 +273,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 }
 
-export const TransactionsExportScene = connect<StateProps, {}, OwnProps>(
+export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
     multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier
   }),
-  dispatch => ({})
+  dispatch => ({
+    updateTxsFiatDispatch: async (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) =>
+      dispatch(updateTxsFiat(wallet, currencyCode, txs))
+  })
 )(withTheme(TransactionsExportSceneComponent))

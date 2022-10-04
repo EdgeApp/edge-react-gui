@@ -3,7 +3,12 @@ import { abs, add, div, gt, lt, mul } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 
+import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { Dispatch, GetState } from '../types/reduxTypes'
+import { getHistoricalRate } from '../util/exchangeRates'
 import { DECIMAL_PRECISION } from '../util/utils'
+
+const UPDATE_TXS_MAX_PROMISES = 10
 
 export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, txs: EdgeTransaction[], opts: EdgeGetTransactionsOptions): Promise<string> {
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
@@ -19,6 +24,36 @@ export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, txs: E
     if (denomObj != null) denomName = denomObj.name
   }
   return exportTransactionsToCSVInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, denomName)
+}
+
+export const updateTxsFiat = (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const exchangeDenom = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+  const { fiatCurrencyCode } = wallet
+
+  let promises: Array<Promise<void>> = []
+  for (const tx of txs) {
+    if ((tx.metadata?.amountFiat ?? 0) === 0) {
+      const date = new Date(tx.date * 1000).toISOString()
+      promises.push(
+        getHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, date)
+          .then(rate => {
+            if (tx.metadata == null) {
+              tx.metadata = {}
+            }
+            tx.metadata.amountFiat = rate * Number(div(tx.nativeAmount, exchangeDenom.multiplier, DECIMAL_PRECISION))
+          })
+          .catch(e => console.warn(e.message))
+      )
+      if (promises.length >= UPDATE_TXS_MAX_PROMISES) {
+        await Promise.all(promises)
+        promises = []
+      }
+    }
+  }
+  if (promises.length > 0) {
+    await Promise.all(promises)
+  }
 }
 
 function padZero(val: string): string {
