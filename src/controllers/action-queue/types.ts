@@ -192,7 +192,7 @@ export type ExecutionResults = {
   nextState: ActionProgramState
 }
 export type PendingTxMap = {
-  [walletId: string]: EdgeTransaction[]
+  [walletId: string]: EdgeTransaction[] | undefined
 }
 
 //

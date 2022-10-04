@@ -439,7 +439,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
 
       const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
         // Get any pending txs for this wallet
-        const pendingTxs = pendingTxMap[walletId] ?? []
+        const pendingTxs = pendingTxMap[walletId]
 
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
