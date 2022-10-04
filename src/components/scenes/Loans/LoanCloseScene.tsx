@@ -10,6 +10,7 @@ import s from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
+import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
@@ -45,8 +46,12 @@ export const LoanCloseScene = (props: Props) => {
   const networkFee = approvableAction != null ? approvableAction.networkFee.nativeAmount : '0'
   const { currencyWallet: wallet } = borrowEngine
 
-  const collaterals = useWatch(borrowEngine, 'collaterals')
-  const debts = useWatch(borrowEngine, 'debts')
+  const borrowEngineCollaterals = useWatch(borrowEngine, 'collaterals')
+  const borrowEngineDebts = useWatch(borrowEngine, 'debts')
+  const debts = React.useMemo(() => borrowEngineDebts.filter(debt => !zeroString(debt.nativeAmount)), [borrowEngineDebts])
+  const collaterals = React.useMemo(() => borrowEngineCollaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [borrowEngineCollaterals])
+
+  const isLoanCloseSupported = collaterals.length === 1 && debts.length === 1
 
   // Handlers:
   const onSliderComplete = async (reset: () => void) => {
@@ -85,16 +90,11 @@ export const LoanCloseScene = (props: Props) => {
             </Space>
           ))}
         </Tile>
-        {/* TODO: Show a single destination wallet picker */}
-        {/* Hide destination wallet picker because we can get away using the loan account wallet as the source and destination */}
-        {/* <Tile title={s.strings.loan_collateral_destination} type="static">
-          {collaterals.map(collateral => (
-            <TappableRow veritcal={0.5} key={collateral.tokenId}>
-              <CurrencyRow wallet={wallet} tokenId={collateral.tokenId} />
-            </TappableRow>
-          ))}
-        </Tile> */}
-        <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        {!isLoanCloseSupported ? (
+          <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
+        ) : (
+          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        )}
         {approvableActionError != null ? (
           <Alert title={s.strings.loan_error_title} message={translateError(approvableActionError)} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
         ) : null}
