@@ -1,9 +1,7 @@
 import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
-// @ts-expect-error
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io'
-// @ts-expect-error
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'

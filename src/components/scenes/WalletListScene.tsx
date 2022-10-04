@@ -139,7 +139,7 @@ export function WalletListScene(props: Props) {
           <WalletListSwipeable
             key="fullList"
             header={header}
-            footer={searching ? null : footer}
+            footer={searching ? undefined : footer}
             navigation={navigation}
             searching={searching}
             searchText={searchText}

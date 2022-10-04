@@ -19,7 +19,11 @@ type Props = {
   route: RouteProp<'guiPluginEnterAmount'>
 }
 
-export type EnterAmountPoweredBy = { poweredByIcon: string; poweredByText: string; poweredByOnClick: () => void | Promise<void> }
+export type EnterAmountPoweredBy = {
+  poweredByIcon: string
+  poweredByText: string
+  poweredByOnClick: () => void
+}
 
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
@@ -148,8 +152,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           <View style={styles.cardContainer}>
             <TouchableOpacity onPress={poweredBy.poweredByOnClick}>
               <Card paddingRem={0.5}>
-                {/* @ts-expect-error */}
-                <View style={styles.poweredByContainer} onPress={poweredBy.poweredByOnClick}>
+                <View style={styles.poweredByContainer}>
                   <Image style={styles.poweredByIcon} source={poweredByIconPath} />
 
                   <View style={styles.poweredByContainerColumn}>

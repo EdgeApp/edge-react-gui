@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Text, TouchableOpacity, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -101,9 +101,8 @@ export function MainButton(props: Props) {
   )
 }
 
-// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonButton = {
+  const commonButton: ViewStyle = {
     alignItems: 'center',
     borderRadius: theme.rem(theme.buttonBorderRadiusRem),
     flexDirection: 'row',
@@ -111,7 +110,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     minHeight: theme.rem(3),
     minWidth: theme.rem(9)
   }
-  const commonText = {
+  const commonText: ViewStyle = {
     marginHorizontal: theme.rem(0),
     paddingTop: theme.rem(0.5),
     paddingBottom: theme.rem(0.5),

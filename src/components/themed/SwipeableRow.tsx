@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { I18nManager, StyleSheet, View } from 'react-native'
-// @ts-expect-error
-import { Gesture, GestureDetector, HitSlop } from 'react-native-gesture-handler'
+import { I18nManager, Insets, StyleSheet, View } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   AnimationCallback,
   runOnJS,
@@ -47,7 +46,7 @@ type Props = {
   onRightSwipe?: () => void
 
   // Gesture Slop Settings:
-  slopOpts?: HitSlop
+  slopOpts?: Insets
 }
 
 /**

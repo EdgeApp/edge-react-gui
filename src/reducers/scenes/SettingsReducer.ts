@@ -1,7 +1,6 @@
 import { EdgeAccount, EdgeCurrencyInfo } from 'edge-core-js'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
 import { Action } from '../../types/reduxTypes'

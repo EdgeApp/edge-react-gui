@@ -370,16 +370,12 @@ export const LoanCreateScene = (props: Props) => {
   )
 }
 
-// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     alignItems: 'center',
     alignSelf: 'center',
     flexDirection: 'column',
     margin: theme.rem(0.5)
-  },
-  icon: {
-    size: theme.rem(2.5)
   },
   textInitial: {
     alignSelf: 'flex-start',

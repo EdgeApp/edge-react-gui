@@ -9,8 +9,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { parseScannedUri } from '../../actions/ScanActions'

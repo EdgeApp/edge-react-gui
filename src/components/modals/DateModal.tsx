@@ -1,6 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
-import { Appearance, Platform, Text, TouchableOpacity } from 'react-native'
+import { Appearance, Platform, Text, TextStyle, TouchableOpacity } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 
 import s from '../../locales/strings'
@@ -49,7 +49,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
     const { bridge, theme } = this.props
     const { darkMode, date } = this.state
 
-    const textStyle = {
+    const textStyle: TextStyle = {
       color: darkMode ? theme.dateModalTextDark : theme.dateModalTextLight,
       fontSize: theme.rem(1),
       textAlign: 'right',
@@ -65,7 +65,6 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         backgroundColor={darkMode ? theme.dateModalBackgroundDark : theme.dateModalBackgroundLight}
       >
         <TouchableOpacity onPress={this.handleDone}>
-          {/* @ts-expect-error */}
           <Text style={textStyle}>{s.strings.string_done_cap}</Text>
         </TouchableOpacity>
         <DateTimePicker display="spinner" mode="date" onChange={this.handleChange} value={date} />

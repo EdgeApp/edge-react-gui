@@ -448,8 +448,14 @@ class SendComponent extends React.PureComponent<Props, State> {
 
       return (
         <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
-          {/* @ts-expect-error */}
-          <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
+          <EdgeText
+            style={{
+              // @ts-expect-error
+              color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
+            }}
+          >
+            {feeSyntax}
+          </EdgeText>
         </Tile>
       )
     }

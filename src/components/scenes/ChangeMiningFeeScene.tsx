@@ -120,8 +120,11 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
                 // @ts-expect-error
                 onPress={() => this.setState({ networkFeeOption: feeSetting })}
               >
-                {/* @ts-expect-error */}
-                <MaterialCommunityIcons name={feeOptions[feeSetting].icon} style={styles.settingsIcon} />
+                <MaterialCommunityIcons
+                  // @ts-expect-error
+                  name={feeOptions[feeSetting].icon}
+                  style={styles.settingsIcon}
+                />
               </SettingsRadioRow>
             )
           })}

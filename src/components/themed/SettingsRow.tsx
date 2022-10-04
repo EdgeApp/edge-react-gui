@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableHighlight } from 'react-native'
+import { ActivityIndicator, Text, TextStyle, TouchableHighlight } from 'react-native'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -37,7 +37,6 @@ const SettingsRowComponent = (props: Props) => {
     <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
-        {/* @ts-expect-error */}
         <Text style={disabled ? styles.disabledText : styles.text}>{label}</Text>
         {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </>
@@ -46,7 +45,7 @@ const SettingsRowComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonText = {
+  const commonText: TextStyle = {
     flexGrow: 1,
     flexShrink: 1,
     fontFamily: theme.fontFaceDefault,

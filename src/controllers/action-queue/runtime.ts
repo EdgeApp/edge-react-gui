@@ -1,7 +1,6 @@
 import { add, gte, lte } from 'biggystring'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -604,8 +603,8 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
           throw new Error(`SwapActionOp only implemented for destination wallets for plugins: ${supportedDestniationPlugins.join(', ')}`)
 
         /*
-        // TODO: For UTXO-based currency support, pass the payoutAddress to a 
-        // wallet method like getReceiveAddress (e.g. getAddressBalance), but 
+        // TODO: For UTXO-based currency support, pass the payoutAddress to a
+        // wallet method like getReceiveAddress (e.g. getAddressBalance), but
         // specifically for getting an address's balance.
         const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode }))?.nativeAmount ?? '0'
         const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)

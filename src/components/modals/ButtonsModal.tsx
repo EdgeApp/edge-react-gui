@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { showError } from '../services/AirshipInstance'
@@ -49,30 +49,26 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
 
   const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
 
-  const styles = {
-    container: {
-      flex: fullScreen ? 1 : 0
-    },
-    text: {
-      justifyContent: 'flex-start'
-    },
-    buttons: {
-      justifyContent: 'flex-end'
-    }
+  const containerStyle: ViewStyle = {
+    flex: fullScreen ? 1 : 0
+  }
+  const textStyle: ViewStyle = {
+    justifyContent: 'flex-start'
+  }
+  const buttonsStyle: ViewStyle = {
+    justifyContent: 'flex-end'
   }
 
   return (
     <ThemedModal warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
-      <View style={styles.container}>
-        {/* @ts-expect-error */}
-        <View style={styles.text}>
+      <View style={containerStyle}>
+        <View style={textStyle}>
           {title != null ? <ModalTitle>{title}</ModalTitle> : null}
           {message != null ? <ModalMessage>{message}</ModalMessage> : null}
           {children}
         </View>
       </View>
-      {/* @ts-expect-error */}
-      <View style={styles.buttons}>
+      <View style={buttonsStyle}>
         {Object.keys(buttons).map((key, i, arr) => {
           let defaultType
           if (theme.preferPrimaryButton) {
@@ -83,8 +79,10 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
           const { type = defaultType, label, onPress } = buttons[key]
 
           const handlePress = (): Promise<void> | undefined => {
-            // @ts-expect-error
-            if (onPress == null) return bridge.resolve(key)
+            if (onPress == null) {
+              bridge.resolve(key)
+              return
+            }
             return onPress().then(
               result => {
                 if (result) bridge.resolve(key)
