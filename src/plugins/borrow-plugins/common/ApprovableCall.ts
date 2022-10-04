@@ -32,8 +32,6 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
   const makeApprovableCallSpend = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<EdgeTransaction> => {
     const pendingTxs = pendingTxMap[walletId] ?? []
     const edgeSpendInfo: EdgeSpendInfo = {
-      // @ts-expect-error
-      pluginId: wallet.currencyInfo.pluginId,
       currencyCode: spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode,
       skipChecks: dryrun,
       spendTargets: [
