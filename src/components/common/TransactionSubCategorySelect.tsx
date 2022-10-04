@@ -37,9 +37,8 @@ export class SubCategorySelect extends React.Component<Props, State> {
   render() {
     const { categories } = this.props
     const filteredSubcats = !this.props.enteredSubcategory ? this.props.subcategoriesList : this.filterSubcategory()
-    let newPotentialSubCategories = []
-    // @ts-expect-error
-    let newPotentialSubCategoriesFiltered = []
+    let newPotentialSubCategories: string[] = []
+    let newPotentialSubCategoriesFiltered: string[] = []
     if (this.props.enteredSubcategory) {
       newPotentialSubCategories = categories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
       newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter(cat => !this.props.subcategoriesList.includes(cat))
@@ -49,12 +48,10 @@ export class SubCategorySelect extends React.Component<Props, State> {
       <FlatList
         style={styles.resultList}
         contentContainerStyle={{ paddingBottom: this.props.bottomGap }}
-        // @ts-expect-error
         data={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         initialNumToRender={12}
         keyboardShouldPersistTaps="handled"
         keyExtractor={this.keyExtractor}
-        // @ts-expect-error
         renderItem={rowData => this.renderSubcategory(rowData, newPotentialSubCategoriesFiltered)}
       />
     )

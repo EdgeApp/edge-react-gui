@@ -93,8 +93,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
 
         const eitherError = error ?? removedError
         if (eitherError != null) {
-          const walletsToConnectLeft = []
-          const walletsToDisconnectLeft = []
+          const walletsToConnectLeft: FioConnectionWalletItem[] = []
+          const walletsToDisconnectLeft: FioConnectionWalletItem[] = []
           if (updatedCcWallets.length) {
             for (const walletToConnect of walletsToConnect) {
               if (

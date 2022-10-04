@@ -67,7 +67,7 @@ export const WcConnectionsScene = (props: Props) => {
 
   // Populate the list of dAppConnections
   const getdAppconnections = async (): Promise<WcConnectionInfo[]> => {
-    const dAppConnections = []
+    const dAppConnections: WcConnectionInfo[] = []
     if (wcEnabledWalletIds.length > 0) {
       for (const enabledWalletId of wcEnabledWalletIds) {
         const connections = await currencyWallets[enabledWalletId].otherMethods.wcGetConnections()

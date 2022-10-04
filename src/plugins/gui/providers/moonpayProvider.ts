@@ -121,7 +121,7 @@ export const moonpayProvider: FiatProviderFactory = {
         if (response == null || !response.ok) return allowedCurrencyCodes
 
         const result = await response.json()
-        let moonpayCurrencies = []
+        let moonpayCurrencies: MoonpayCurrency[] = []
         try {
           moonpayCurrencies = asMoonpayCurrencies(result)
         } catch (error: any) {

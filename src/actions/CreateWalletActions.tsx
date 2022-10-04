@@ -9,6 +9,7 @@ import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSe
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { getPluginId } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
+import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { Dispatch, GetState } from '../types/reduxTypes'
@@ -109,13 +110,12 @@ export const checkHandleAvailability = (walletType: string, accountName: string)
     }
   } catch (error: any) {
     console.log('checkHandleAvailability error: ', error)
-    let data = 'UNKNOWN_ERROR'
+    let data: HandleAvailableStatus = 'UNKNOWN_ERROR'
     if (error.name === 'ErrorAccountUnavailable') {
       data = 'UNAVAILABLE'
     } else if (error.name === 'ErrorInvalidAccountName') {
       data = 'INVALID'
     }
-    // @ts-expect-error
     dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
   }
 }

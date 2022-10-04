@@ -309,11 +309,9 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
  * so we may need to enable tokens on some of the created wallets.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
-  // @ts-expect-error
-  const currencyInfos = []
+  const currencyInfos: EdgeCurrencyInfo[] = []
   for (const code of currencyCodes) {
     const [parent] = code.split(':')
-    // @ts-expect-error
     if (currencyInfos.find(info => info.currencyCode === parent)) continue
     const currencyInfo = findCurrencyInfo(account, parent)
     if (currencyInfo != null) currencyInfos.push(currencyInfo)
