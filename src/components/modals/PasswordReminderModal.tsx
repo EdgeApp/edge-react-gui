@@ -3,7 +3,6 @@ import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
@@ -117,16 +116,19 @@ export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps
   }),
   dispatch => ({
     onSuccess() {
-      // @ts-expect-error
-      dispatch(passwordReminderSuccess())
+      dispatch({
+        type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
+      })
     },
     onRequestChangePassword() {
-      // @ts-expect-error
-      dispatch(requestChangePassword())
+      dispatch({
+        type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
+      })
     },
     onPostpone() {
-      // @ts-expect-error
-      dispatch(postponePasswordReminder())
+      dispatch({
+        type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
+      })
     }
   })
 )(withTheme(PasswordReminderModalComponent))
