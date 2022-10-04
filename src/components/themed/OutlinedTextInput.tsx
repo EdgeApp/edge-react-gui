@@ -479,9 +479,12 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-// @ts-expect-error
-const getIterpolatedColor = (fromColor, toColor, errorColor) => (errorValue, focusValue) => {
-  'worklet'
-  const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
-  return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+type ColorInterpolator = (errorValue: number, focusValue: number) => string
+
+function getIterpolatedColor(fromColor: string, toColor: string, errorColor: string): ColorInterpolator {
+  return (errorValue, focusValue) => {
+    'worklet'
+    const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
+    return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+  }
 }

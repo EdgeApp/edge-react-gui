@@ -37,8 +37,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     )
   }
 
-  // @ts-expect-error
-  const rowDataFilter = (searchText, country) => {
+  const rowDataFilter = (searchText: string, country: CountryData) => {
     const lowerCaseText = searchText.toLowerCase()
     const upperCaseText = searchText.toUpperCase()
     return (
@@ -54,8 +53,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     else countryCodes.push(country)
   }
 
-  // @ts-expect-error
-  const handleSubmitEditing = newCountry => {
+  const handleSubmitEditing = (newCountry: string) => {
     const result = countryCodes.find(({ 'alpha-2': alpha, filename = alpha, name = alpha }) =>
       [alpha, name, filename].find(country => country.toLowerCase() === newCountry.toLowerCase())
     ) ?? { 'alpha-2': countryCode }

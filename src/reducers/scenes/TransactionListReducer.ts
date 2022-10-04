@@ -12,7 +12,7 @@ export type TransactionListState = {
   readonly transactions: TransactionListTx[]
 }
 
-const transactions = (state = [], action: Action): TransactionListTx[] => {
+const transactions: Reducer<TransactionListTx[], Action> = (state = [], action) => {
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
       return action.data.transactions
@@ -86,7 +86,6 @@ const currentEndIndex = (state = 0, action: Action): number => {
   }
 }
 
-// @ts-expect-error
 export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,

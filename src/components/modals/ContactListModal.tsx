@@ -45,16 +45,14 @@ export function ContactListModal({ bridge, contactType, contacts, contactName }:
     )
   }
 
-  // @ts-expect-error
-  const rowDataFilter = (searchText, contact) => {
+  const rowDataFilter = (searchText: string, contact: GuiContact) => {
     const formattedSearchText = normalizeForSearch(searchText)
     const { givenName, familyName } = contact
     const fullName = normalizeForSearch(`${givenName ?? ''}${familyName ?? ''} `)
     return fullName.includes(formattedSearchText)
   }
 
-  // @ts-expect-error
-  const handleSubmitEditing = contactName => bridge.resolve({ contactName, thumbnailPath: null })
+  const handleSubmitEditing = (contactName: string) => bridge.resolve({ contactName, thumbnailPath: null })
 
   return (
     <ListModal

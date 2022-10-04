@@ -64,8 +64,7 @@ export class SceneWrapper extends React.Component<Props> {
             top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
           }
           const downValue = metrics.layout.height - gap.top
-          // @ts-expect-error
-          const upValue = keyboardHeight => downValue - keyboardHeight
+          const upValue = (keyboardHeight: number) => downValue - keyboardHeight
 
           return avoidKeyboard ? (
             <KeyboardTracker downValue={downValue} upValue={upValue}>
