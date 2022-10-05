@@ -246,8 +246,11 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
           }
         : undefined
 
+      // Let delay be the maximum delay of the remaining ineffective effects or zero
+      const delay = childEffectChecks.reduce((max, result) => (result.isEffective ? max : Math.max(result.delay, max)), 0)
+
       return {
-        delay: 0,
+        delay,
         isEffective,
         updatedEffect
       }
