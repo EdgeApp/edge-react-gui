@@ -95,19 +95,6 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     setBorrowApprovalAction(await borrowEngine.borrow(borrowRequest))
   }, [destTokenId, nativeDestAmount, borrowEngine])
 
-  const renderFeeTile = React.useMemo(() => {
-    return (
-      <NetworkFeeTile
-        wallet={borrowEngineWallet}
-        nativeAmount={
-          depositApprovalAction == null || borrowApprovalAction == null
-            ? '0'
-            : add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)
-        }
-      />
-    )
-  }, [borrowApprovalAction, depositApprovalAction, borrowEngineWallet])
-
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
       try {
@@ -151,7 +138,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         )}
       </Tile>
 
-      {renderFeeTile}
+      <NetworkFeeTile
+        wallet={borrowEngineWallet}
+        nativeAmount={
+          depositApprovalAction == null || borrowApprovalAction == null
+            ? '0'
+            : add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)
+        }
+      />
     </FormScene>
   )
 }
