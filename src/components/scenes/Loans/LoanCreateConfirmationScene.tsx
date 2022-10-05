@@ -2,14 +2,12 @@ import { add } from 'biggystring'
 import * as React from 'react'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { ActionProgram } from '../../../controllers/action-queue/types'
+import { dryrunActionProgram } from '../../../controllers/action-queue/runtime'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import s from '../../../locales/strings'
-import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
-import { useDispatch } from '../../../types/reactRedux'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateAction } from '../../../util/ActionProgramUtils'
 import { translateError } from '../../../util/translateError'
@@ -22,6 +20,7 @@ import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
+import { ErrorTile } from '../../tiles/ErrorTile'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
 import { FormScene } from '../FormScene'
@@ -36,35 +35,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const { borrowPlugin, borrowEngine, destWallet, destTokenId, nativeDestAmount, nativeSrcAmount, paymentMethod, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
+  const clientId = useSelector(state => state.core.context.clientId)
+  const account = useSelector(state => state.core.account)
+
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
-  // Setup Borrow Engine transaction requests/actions
-  const [depositApprovalAction, setDepositApprovalAction] = React.useState<ApprovableAction | null>(null)
-  const [borrowApprovalAction, setBorrowApprovalAction] = React.useState<ApprovableAction | null>(null)
-
   const dispatch = useDispatch()
-  const [actionProgram, setActionProgram] = React.useState<ActionProgram>()
-  // @ts-expect-error
-  useAsyncEffect(async () => {
-    // TODO: These default tokens will be removed when fee calculations are done using dryruns instead of ApprovableActions
-    const allTokens = borrowEngineWallet.currencyConfig.allTokens
-    const defaultSrcTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
-    const defaultDestTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'USDC')
 
-    const depositRequest = {
-      tokenId: srcTokenId ?? defaultSrcTokenId,
-      nativeAmount: nativeSrcAmount,
-      fromWallet: borrowEngineWallet,
-      skipChecks: true
-    }
-
-    const borrowRequest = {
-      tokenId: destTokenId ?? defaultDestTokenId,
-      nativeAmount: nativeDestAmount,
-      fromWallet: borrowEngineWallet,
-      skipChecks: true
-    }
-
+  const [[actionProgram, networkFeeAmountAggregate = '0'] = [], actionProgramError] = useAsyncValue(async () => {
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
 
     const source: LoanAsset = {
@@ -89,10 +67,33 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     })
 
     const actionProgram = await makeActionProgram(actionOp)
-    setActionProgram(actionProgram)
 
-    setDepositApprovalAction(await borrowEngine.deposit(depositRequest))
-    setBorrowApprovalAction(await borrowEngine.borrow(borrowRequest))
+    const actionProgramState = {
+      clientId,
+      programId: actionProgram.programId,
+      effective: false,
+      executing: false,
+      lastExecutionTime: 0,
+      nextExecutionTime: 0
+    }
+
+    const executionContext = { account, clientId }
+    const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, actionProgramState, false)
+
+    // Map: currencyCode -> nativeAmount
+    const networkFeeAmountMap: { [currencyCode: string]: string | undefined } = {}
+    for (const output of executionOutputs ?? []) {
+      for (const tx of output.broadcastTxs) {
+        const { currencyCode, nativeAmount } = tx.networkFee
+        const currentFeeAmount = networkFeeAmountMap[currencyCode] ?? '0'
+        networkFeeAmountMap[currencyCode] = add(currentFeeAmount, nativeAmount)
+      }
+    }
+
+    // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
+    const networkFeeAmountAggregate = networkFeeAmountMap[borrowEngineWallet.currencyInfo.currencyCode]
+
+    return [actionProgram, networkFeeAmountAggregate] as const
   }, [destTokenId, nativeDestAmount, borrowEngine])
 
   const handleSliderComplete = async (resetSlider: () => void) => {
@@ -116,7 +117,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       <FillLoader />
     </SceneWrapper>
   ) : (
-    <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={false} onSliderComplete={handleSliderComplete}>
+    <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={actionProgram == null} onSliderComplete={handleSliderComplete}>
       <Tile type="static" title={s.strings.loan_amount_borrow}>
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
@@ -137,15 +138,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
           <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
         )}
       </Tile>
-
-      <NetworkFeeTile
-        wallet={borrowEngineWallet}
-        nativeAmount={
-          depositApprovalAction == null || borrowApprovalAction == null
-            ? '0'
-            : add(depositApprovalAction.networkFee.nativeAmount, borrowApprovalAction.networkFee.nativeAmount)
-        }
-      />
+      {actionProgramError != null ? <ErrorTile message={actionProgramError.message} /> : null}
+      <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
     </FormScene>
   )
 }
