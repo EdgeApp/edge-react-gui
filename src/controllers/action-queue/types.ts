@@ -176,6 +176,11 @@ export type BroadcastTx = {
   networkFee: EdgeNetworkFee
   tx: EdgeTransaction
 }
+export type EffectCheckResult = {
+  delay: number
+  isEffective: boolean
+  updatedEffect?: ActionEffect
+}
 export type ExecutableAction = {
   dryrun: (pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput | null>
   execute: () => Promise<ExecutionOutput>

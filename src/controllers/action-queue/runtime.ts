@@ -11,6 +11,7 @@ import {
   ActionProgram,
   ActionProgramState,
   BroadcastTx,
+  EffectCheckResult,
   ExecutableAction,
   ExecutionContext,
   ExecutionOutput,
@@ -70,57 +71,30 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   //
 
   if (!state.effective && effect != null) {
-    let effective = false
-    let delay = 0
-
+    let effectCheck: EffectCheckResult
     try {
-      const result = await checkActionEffect(context, effect)
-      effective = result.isEffective
-
-      if (!effective) delay = result.delay
-
-      /**
-       * Partially Complete Effect Check:
-       *
-       * SeqEffect introduced the concept of "partially completed effect" (PCE) in
-       * order to support tracking the progress of precomputed effects which are
-       * delegated to an external execution environment (e.g. push-server).
-       * A SeqEffect is partially-completed when it's opIndex is less then the last
-       * index of it's childEffects.
-       */
-      // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
-      if (effective && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
-        // Progress the partially completed effect forward
-        const nextEffect: SeqEffect = {
-          ...effect,
-          opIndex: effect.opIndex + 1
-        }
-        return {
-          nextState: {
-            ...state,
-            effect: nextEffect,
-            effective: false,
-            lastExecutionTime: Date.now(),
-            nextExecutionTime: Date.now()
-          }
-        }
-      }
+      effectCheck = await checkActionEffect(context, effect)
     } catch (err: any) {
       console.warn(`Action effect check failed:\n\t${String(err)}`)
       console.error(err)
-
       // Increase retry delay (min 2 seconds and max 10 minutes)
       const lastDelay = state.nextExecutionTime - state.lastExecutionTime
-      delay = Math.min(Math.max(lastDelay * 1.2, 2000, 10 * 60 * 1000))
+      const delay = Math.min(Math.max(lastDelay * 1.2, 2000, 10 * 60 * 1000))
+      // Shim an ineffective check result
+      effectCheck = {
+        delay,
+        isEffective: false
+      }
     }
 
-    // Update the nextExecutionTime with the retryDelay
+    // Return the updated next state using the fields from effectCheck
     return {
       nextState: {
         ...state,
-        effective,
+        ...(effectCheck.updatedEffect ? { effect: effectCheck.updatedEffect } : {}),
+        effective: effectCheck.isEffective,
         lastExecutionTime: Date.now(),
-        nextExecutionTime: Date.now() + delay
+        nextExecutionTime: Date.now() + effectCheck.delay
       }
     }
   }
@@ -189,7 +163,27 @@ export async function dryrunActionProgram(
   return outputs
 }
 
-async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<{ isEffective: boolean; delay: number }> {
+/**
+ * Check whether an ActionEffect is observed as effective (completed).
+ *
+ * @param context Execution context for the action queue (same param as evaluateAction)
+ * @param effect The effect to check for effectiveness (completed)
+ * @returns `EffectCheckResult` object containing:
+ * 1. `isEffective`: boolean indicating whether the effect is effective.
+ *     Partially complete effects are not effective and so the boolean must be false.
+ * 2. `delay`: in milliseconds to let the caller know how long to delay the
+ *    `nextExecutionTime`.
+ * 3. `updatedEffect`: for if the effect is partially effective.
+ *
+ * ### Partially Completed Effects
+ *
+ * SeqEffect introduced the concept of a "partially completed effect" in
+ * order to support tracking the progress of precomputed effects which are
+ * delegated to an external execution environment (e.g. push-server).
+ * A SeqEffect is partially-completed when it's opIndex is less then the last
+ * index of it's childEffects.
+ */
+async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<EffectCheckResult> {
   const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
@@ -201,7 +195,35 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
-      return await checkActionEffect(context, childEffect)
+      const childEffectCheck = await checkActionEffect(context, childEffect)
+
+      // Completely effective
+      if (childEffectCheck.isEffective && effect.opIndex >= effect.childEffects.length - 1) {
+        return {
+          delay: 0,
+          isEffective: true
+        }
+      }
+
+      // Partially effective
+      if (childEffectCheck.isEffective) {
+        // Progress the partially completed effect forward
+        const updatedEffect: SeqEffect = {
+          ...effect,
+          opIndex: effect.opIndex + 1
+        }
+        return {
+          delay: 0,
+          isEffective: false,
+          updatedEffect
+        }
+      }
+
+      // Ineffective
+      return {
+        delay: childEffectCheck.delay,
+        isEffective: false
+      }
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
