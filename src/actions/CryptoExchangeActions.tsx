@@ -22,6 +22,7 @@ import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import s from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { convertCurrency } from '../selectors/WalletSelectors'
 import { Dispatch, GetState, RootState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
@@ -176,7 +177,6 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-  const currencyConverter = account.rateCache
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -186,7 +186,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   // Format from fiat:
   const fromExchangeDenomination = getExchangeDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
   const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
-  const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
+  const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
   const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   // Format crypto fee:
@@ -197,11 +197,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
   // Format fiat fee:
   const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
-  const feeFiatAmountRaw = await currencyConverter.convertCurrency(
-    request.fromWallet.currencyInfo.currencyCode,
-    fromWallet.fiatCurrencyCode,
-    Number(feeDenominatedAmount)
-  )
+  const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeDenominatedAmount))
   const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
   const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
@@ -214,7 +210,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   // Format to fiat:
   const toExchangeDenomination = getExchangeDenomination(state, toWallet.currencyInfo.pluginId, toCurrencyCode)
   const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
-  const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.fiatCurrencyCode, Number(toBalanceInCryptoDisplay))
+  const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const swapInfo: GuiSwapInfo = {
@@ -435,14 +431,13 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
 
 async function getBalanceMessage(state: RootState, walletId: string, currencyCode: string) {
   const { account } = state.core
-  const { currencyWallets, rateCache } = account
-  const currencyConverter = rateCache
+  const { currencyWallets } = account
   const wallet = currencyWallets[walletId]
   const balanceInCrypto = wallet.balances[currencyCode] ?? '0'
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
   const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
-  const balanceInFiat = await currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, Number(balanceInCryptoDisplay))
+  const balanceInFiat = parseFloat(convertCurrency(state, currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay))
 
   const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
 

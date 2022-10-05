@@ -1,3 +1,4 @@
+import { convertCurrency } from '../selectors/WalletSelectors'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { AccountReferral } from '../types/ReferralTypes'
 import { logEvent, TrackingEvent, TrackingValues } from '../util/tracking'
@@ -20,8 +21,7 @@ export const trackConversion =
     const { currencyCode, exchangeAmount, pluginId, orderId } = opts
 
     // Look up the dollar value:
-    const { account } = state.core
-    const dollarValue: number = await account.rateCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
+    const dollarValue: number = parseFloat(await convertCurrency(state, currencyCode, 'iso:USD', String(exchangeAmount)))
 
     // Record the event:
     const { accountReferral } = state.account
