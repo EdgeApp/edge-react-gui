@@ -1,0 +1,492 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OutlinedTextInput should render with some props 1`] = `
+<TouchableWithoutFeedback
+  onPress={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "borderRadius": 11,
+          "justifyContent": "center",
+          "minHeight": 67,
+          "paddingHorizontal": 22,
+        },
+        Object {
+          "flexGrow": 1,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+          "paddingLeft": 65,
+          "paddingRight": 65,
+          "paddingVertical": 14,
+        },
+      ]
+    }
+  >
+    <ForwardRef
+      style={
+        Array [
+          Object {
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "left": 22,
+            "position": "absolute",
+            "right": 22,
+          },
+          Object {
+            "animatedStyle": Object {
+              "current": Object {},
+            },
+            "initial": Object {
+              "updater": [Function],
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "right": 34,
+              },
+            },
+            "viewDescriptors": Object {
+              "add": [Function],
+              "batchToRemove": Set {},
+              "items": Array [],
+              "rebuildsharableViewDescriptors": [Function],
+              "remove": [Function],
+              "sharableViewDescriptors": MutableValue {
+                "_animation": null,
+                "_id": 6,
+                "_listeners": Array [],
+                "_setter": [Function],
+                "_value": Array [],
+              },
+              "tags": Set {},
+              "waitForInsertSync": false,
+              "waitForRemoveSync": false,
+            },
+            "viewsRef": Object {
+              "add": [Function],
+              "items": Set {},
+              "remove": [Function],
+            },
+          },
+        ]
+      }
+    />
+    <ForwardRef
+      style={
+        Array [
+          Object {
+            "borderBottomLeftRadius": 11,
+            "borderBottomWidth": 1,
+            "borderLeftWidth": 1,
+            "borderRightWidth": 0,
+            "borderTopLeftRadius": 11,
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "top": 0,
+            "width": 22,
+          },
+          Object {
+            "animatedStyle": Object {
+              "current": Object {},
+            },
+            "initial": Object {
+              "updater": [Function],
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+              },
+            },
+            "viewDescriptors": Object {
+              "add": [Function],
+              "batchToRemove": Set {},
+              "items": Array [],
+              "rebuildsharableViewDescriptors": [Function],
+              "remove": [Function],
+              "sharableViewDescriptors": MutableValue {
+                "_animation": null,
+                "_id": 9,
+                "_listeners": Array [],
+                "_setter": [Function],
+                "_value": Array [],
+              },
+              "tags": Set {},
+              "waitForInsertSync": false,
+              "waitForRemoveSync": false,
+            },
+            "viewsRef": Object {
+              "add": [Function],
+              "items": Set {},
+              "remove": [Function],
+            },
+          },
+        ]
+      }
+    />
+    <ForwardRef
+      style={
+        Array [
+          Object {
+            "borderBottomRightRadius": 11,
+            "borderBottomWidth": 1,
+            "borderLeftWidth": 0,
+            "borderRightWidth": 1,
+            "borderTopRightRadius": 11,
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "width": 22,
+          },
+          Object {
+            "animatedStyle": Object {
+              "current": Object {},
+            },
+            "initial": Object {
+              "updater": [Function],
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+              },
+            },
+            "viewDescriptors": Object {
+              "add": [Function],
+              "batchToRemove": Set {},
+              "items": Array [],
+              "rebuildsharableViewDescriptors": [Function],
+              "remove": [Function],
+              "sharableViewDescriptors": MutableValue {
+                "_animation": null,
+                "_id": 12,
+                "_listeners": Array [],
+                "_setter": [Function],
+                "_value": Array [],
+              },
+              "tags": Set {},
+              "waitForInsertSync": false,
+              "waitForRemoveSync": false,
+            },
+            "viewsRef": Object {
+              "add": [Function],
+              "items": Set {},
+              "remove": [Function],
+            },
+          },
+        ]
+      }
+    />
+    <ForwardRef
+      style={
+        Array [
+          Object {
+            "borderTopWidth": 1,
+            "left": 22,
+            "position": "absolute",
+            "right": 22,
+            "top": 0,
+          },
+          Object {
+            "animatedStyle": Object {
+              "current": Object {},
+            },
+            "initial": Object {
+              "updater": [Function],
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "left": 34,
+              },
+            },
+            "viewDescriptors": Object {
+              "add": [Function],
+              "batchToRemove": Set {},
+              "items": Array [],
+              "rebuildsharableViewDescriptors": [Function],
+              "remove": [Function],
+              "sharableViewDescriptors": MutableValue {
+                "_animation": null,
+                "_id": 15,
+                "_listeners": Array [],
+                "_setter": [Function],
+                "_value": Array [],
+              },
+              "tags": Set {},
+              "waitForInsertSync": false,
+              "waitForRemoveSync": false,
+            },
+            "viewsRef": Object {
+              "add": [Function],
+              "items": Set {},
+              "remove": [Function],
+            },
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "height": 67,
+            "justifyContent": "center",
+            "left": 0,
+            "paddingHorizontal": 22,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          Object {
+            "paddingLeft": 65,
+            "paddingRight": 65,
+          },
+        ]
+      }
+    >
+      <ForwardRef
+        numberOfLines={1}
+        onLayout={[Function]}
+        style={
+          Array [
+            Object {
+              "alignSelf": "flex-start",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "padding": 0,
+            },
+            Object {
+              "animatedStyle": Object {
+                "current": Object {},
+              },
+              "initial": Object {
+                "updater": [Function],
+                "value": Object {
+                  "color": "rgba(164, 199, 223, 1)",
+                  "transform": Array [
+                    Object {
+                      "translateX": -36,
+                    },
+                    Object {
+                      "translateY": -34,
+                    },
+                    Object {
+                      "scale": 0.75,
+                    },
+                  ],
+                },
+              },
+              "viewDescriptors": Object {
+                "add": [Function],
+                "batchToRemove": Set {},
+                "items": Array [],
+                "rebuildsharableViewDescriptors": [Function],
+                "remove": [Function],
+                "sharableViewDescriptors": MutableValue {
+                  "_animation": null,
+                  "_id": 18,
+                  "_listeners": Array [],
+                  "_setter": [Function],
+                  "_value": Array [],
+                },
+                "tags": Set {},
+                "waitForInsertSync": false,
+                "waitForRemoveSync": false,
+              },
+              "viewsRef": Object {
+                "add": [Function],
+                "items": Set {},
+                "remove": [Function],
+              },
+            },
+          ]
+        }
+      >
+        string
+      </ForwardRef>
+    </View>
+    <ForwardRef
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "bottom": -28,
+            "color": "#E85466",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "left": 28,
+            "position": "absolute",
+          },
+          Object {
+            "animatedStyle": Object {
+              "current": Object {},
+            },
+            "initial": Object {
+              "updater": [Function],
+              "value": Object {
+                "opacity": 0,
+              },
+            },
+            "viewDescriptors": Object {
+              "add": [Function],
+              "batchToRemove": Set {},
+              "items": Array [],
+              "rebuildsharableViewDescriptors": [Function],
+              "remove": [Function],
+              "sharableViewDescriptors": MutableValue {
+                "_animation": null,
+                "_id": 24,
+                "_listeners": Array [],
+                "_setter": [Function],
+                "_value": Array [],
+              },
+              "tags": Set {},
+              "waitForInsertSync": false,
+              "waitForRemoveSync": false,
+            },
+            "viewsRef": Object {
+              "add": [Function],
+              "items": Set {},
+              "remove": [Function],
+            },
+          },
+        ]
+      }
+    >
+      string
+    </ForwardRef>
+    <ForwardRef
+      numberOfLines={1}
+      onLayout={[Function]}
+      style={
+        Array [
+          Object {
+            "bottom": -10,
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "position": "absolute",
+            "right": 28,
+          },
+          Object {
+            "animatedStyle": Object {
+              "current": Object {},
+            },
+            "initial": Object {
+              "updater": [Function],
+              "value": Object {
+                "color": "rgba(164, 199, 223, 1)",
+                "opacity": 1,
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "scale": 1,
+                  },
+                ],
+              },
+            },
+            "viewDescriptors": Object {
+              "add": [Function],
+              "batchToRemove": Set {},
+              "items": Array [],
+              "rebuildsharableViewDescriptors": [Function],
+              "remove": [Function],
+              "sharableViewDescriptors": MutableValue {
+                "_animation": null,
+                "_id": 21,
+                "_listeners": Array [],
+                "_setter": [Function],
+                "_value": Array [],
+              },
+              "tags": Set {},
+              "waitForInsertSync": false,
+              "waitForRemoveSync": false,
+            },
+            "viewsRef": Object {
+              "add": [Function],
+              "items": Set {},
+              "remove": [Function],
+            },
+          },
+        ]
+      }
+    >
+      5
+    </ForwardRef>
+    <Icon
+      allowFontScaling={false}
+      name="search1"
+      size={12}
+      style={
+        Object {
+          "color": "rgba(255, 255, 255, .75)",
+          "fontSize": 22,
+          "left": 0,
+          "padding": 22,
+          "position": "absolute",
+          "top": 0,
+        }
+      }
+    />
+    <TouchableOpacity
+      onPress={[Function]}
+      style={
+        Object {
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <Icon
+        allowFontScaling={false}
+        name="close"
+        size={12}
+        style={
+          Object {
+            "color": "rgba(255, 255, 255, .75)",
+            "fontSize": 22,
+            "padding": 22,
+          }
+        }
+      />
+    </TouchableOpacity>
+    <TextInput
+      autoCapitalize="none"
+      autoCorrect={true}
+      autoFocus={true}
+      blurOnSubmit={true}
+      editable={true}
+      inputAccessoryViewID="string"
+      keyboardType="default"
+      maxLength={11}
+      multiline={true}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      returnKeyType="done"
+      secureTextEntry={false}
+      selectionColor="#E85466"
+      style={
+        Array [
+          Object {
+            "alignSelf": "stretch",
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "padding": 0,
+          },
+          Object {
+            "flexGrow": 1,
+          },
+        ]
+      }
+      testID="string"
+      textAlignVertical="top"
+      value="string"
+    />
+  </View>
+</TouchableWithoutFeedback>
+`;

@@ -40,7 +40,7 @@ pipeline {
         copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
 
         // Pick the new build number and version:
-        sh "./scripts/updateVersion.js ${BRANCH_NAME}"
+        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
 
         // Update our description:
         script {
@@ -104,15 +104,15 @@ pipeline {
           when { equals expected: true, actual: params.IOS_BUILD }
           steps {
             sh "npm run prepare.ios"
-            sh "node ./deploy.js edge ios ${BRANCH_NAME}"
-            sh "./scripts/uploadSourcemaps.js ios"
+            sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME}"
+            sh "node -r sucrase/register ./scripts/uploadSourcemaps.ts ios"
           }
         }
         stage("android") {
           when { equals expected: true, actual: params.ANDROID_BUILD }
           steps {
-            sh "node ./deploy.js edge android ${BRANCH_NAME}"
-            sh "./scripts/uploadSourcemaps.js android"
+            sh "node -r sucrase/register ./scripts/deploy.ts edge android ${BRANCH_NAME}"
+            sh "node -r sucrase/register ./scripts/uploadSourcemaps.ts android"
           }
         }
       }

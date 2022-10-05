@@ -2,10 +2,8 @@
 const config = {
   preset: 'react-native',
   coverageDirectory: './coverage',
-  setupFiles: ['./jestSetupFakeTimer.js', './jestSetup.js'],
-
-  // Ignore tests in the e2e folder:
-  testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/e2e', '<rootDir>/src/__tests_async__'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  setupFiles: ['./jestSetup.js'],
 
   // Don't run node_modules through Babel, except specific ones that still need it:
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@react-native|react-native|react-navigation))']

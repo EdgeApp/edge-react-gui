@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CryptoIcon should render with loading props 1`] = `
+<View
+  style={
+    Object {
+      "height": 45,
+      "marginBottom": 22,
+      "marginLeft": 22,
+      "marginRight": 22,
+      "marginTop": 22,
+      "width": 45,
+    }
+  }
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={61}
+    bbWidth={61}
+    focusable={false}
+    height={61}
+    meetOrSlice={0}
+    minX={-8}
+    minY={-8}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        Object {
+          "left": -8,
+          "position": "absolute",
+          "top": -8,
+          "transform": Array [
+            Object {
+              "rotateZ": "-90deg",
+            },
+          ],
+        },
+        Object {
+          "flex": 0,
+          "height": 61,
+          "width": 61,
+        },
+      ]
+    }
+    vbHeight={61}
+    vbWidth={61}
+    width={61}
+  >
+    <RNSVGGroup
+      matrix={
+        Array [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+        ]
+      }
+    >
+      <RNSVGCircle
+        cx={22.5}
+        cy={22.5}
+        opacity={1}
+        propList={
+          Array [
+            "stroke",
+            "strokeWidth",
+            "strokeDasharray",
+            "strokeDashoffset",
+            "strokeLinecap",
+          ]
+        }
+        r={24}
+        stroke={4284935592}
+        strokeDasharray={
+          Array [
+            150.79644737231007,
+            150.79644737231007,
+          ]
+        }
+        strokeDashoffset={null}
+        strokeLinecap={1}
+        strokeWidth={4}
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <View
+    style={
+      Array [
+        Object {
+          "overflow": "hidden",
+        },
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
+    }
+  >
+    <FastImageView
+      resizeMode="cover"
+      source={
+        Object {
+          "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+        }
+      }
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>
+</View>
+`;

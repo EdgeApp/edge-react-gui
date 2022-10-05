@@ -1,4 +1,3 @@
-// @flow
 /* global window, Event */
 
 import { Bridge, bridgifyObject } from 'yaob'
