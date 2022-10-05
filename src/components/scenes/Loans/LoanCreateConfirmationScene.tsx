@@ -108,7 +108,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     )
   }, [borrowApprovalAction, depositApprovalAction, borrowEngineWallet])
 
-  const onSliderComplete = async (resetSlider: () => void) => {
+  const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
       try {
         await dispatch(createLoanAccount(loanAccount))
@@ -129,7 +129,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       <FillLoader />
     </SceneWrapper>
   ) : (
-    <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={false} onSliderComplete={onSliderComplete}>
+    <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={false} onSliderComplete={handleSliderComplete}>
       <Tile type="static" title={s.strings.loan_amount_borrow}>
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
