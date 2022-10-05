@@ -236,9 +236,20 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
       const childEffectChecks = await Promise.all(childEffectPromises)
       const isEffective = childEffectChecks.every(result => result.isEffective)
 
+      // Include an updated effect if partially completed
+      const updatedEffect: ActionEffect | undefined = !isEffective
+        ? {
+            type: 'par',
+            childEffects: checkedEffects.map((effect, index) => {
+              return childEffectChecks[index].isEffective ? { type: 'done' } : effect
+            })
+          }
+        : undefined
+
       return {
         delay: 0,
-        isEffective
+        isEffective,
+        updatedEffect
       }
     }
     case 'address-balance': {
