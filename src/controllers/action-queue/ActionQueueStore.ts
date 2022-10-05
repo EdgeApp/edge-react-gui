@@ -2,8 +2,7 @@ import { asEither, Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
@@ -15,8 +14,7 @@ const { debugStore } = ENV.ACTION_QUEUE
 
 export const ACTION_QUEUE_DATASTORE_ID = 'actionQueue'
 
-// @ts-expect-error
-export const asStoreItem = asEither<ActionProgram, ActionProgramState>(asActionProgram, asActionProgramState)
+export const asStoreItem = asEither(asActionProgram, asActionProgramState)
 export type StoreItem = ReturnType<typeof asStoreItem>
 
 export type ActionQueueStore = {
@@ -93,15 +91,15 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
     },
     async getActionQueueItems(): Promise<ActionQueueItem[]> {
       const listing = await disklet.list()
-      // @ts-expect-error
-      const programIds = Object.entries(listing).reduce((ids, [id, type]) => (type === 'folder' ? [...ids, id] : ids), [])
-      const promises = programIds.map(async programId =>
-        instance.getActionQueueItem(programId).catch(err => {
-          // Silently fail on reads
-          console.error(`Failed to get ActionQueueItem for '${programId}'`, { err })
-        })
+      const programIds = Object.entries(listing).reduce((ids: string[], [id, type]) => (type === 'folder' ? [...ids, id] : ids), [])
+      const promises = programIds.map(
+        async programId =>
+          await instance.getActionQueueItem(programId).catch(err => {
+            // Silently fail on reads
+            console.error(`Failed to get ActionQueueItem for '${programId}'`, { err })
+            return undefined
+          })
       )
-      // @ts-expect-error
       const items: ActionQueueItem[] = filterUndefined(await Promise.all(promises))
 
       return items
@@ -125,8 +123,7 @@ export const useRunningActionQueueId = (programType: LoanProgramType, walletId: 
   const programEdge = loanAccount.programEdges.find((programEdge: LoanProgramEdge) => {
     if (programEdge.programType === programType) {
       const actionQueueItem = actionQueueMap[programEdge.programId]
-      // @ts-expect-error
-      return actionQueueItem != null && actionQueueItem.state?.effect !== 'done'
+      return actionQueueItem != null && actionQueueItem.state.effect?.type !== 'done'
     }
     return false
   })

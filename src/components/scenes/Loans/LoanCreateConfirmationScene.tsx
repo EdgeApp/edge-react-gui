@@ -9,7 +9,6 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
-import { useMemo, useState } from '../../../types/reactHooks'
 import { useDispatch } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
@@ -17,6 +16,7 @@ import { translateError } from '../../../util/translateError'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
+import { PaymentMethodRow } from '../../data/row/PaymentMethodRow'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { showError } from '../../services/AirshipInstance'
 import { FiatText } from '../../text/FiatText'
@@ -33,17 +33,17 @@ type Props = {
 
 export const LoanCreateConfirmationScene = (props: Props) => {
   const { navigation, route } = props
-  const { borrowPlugin, borrowEngine, destWallet, destTokenId, destBankId, nativeDestAmount, nativeSrcAmount, srcTokenId, srcWallet } = route.params
+  const { borrowPlugin, borrowEngine, destWallet, destTokenId, nativeDestAmount, nativeSrcAmount, paymentMethod, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
   // Setup Borrow Engine transaction requests/actions
-  const [depositApprovalAction, setDepositApprovalAction] = useState<ApprovableAction | null>(null)
-  const [borrowApprovalAction, setBorrowApprovalAction] = useState<ApprovableAction | null>(null)
+  const [depositApprovalAction, setDepositApprovalAction] = React.useState<ApprovableAction | null>(null)
+  const [borrowApprovalAction, setBorrowApprovalAction] = React.useState<ApprovableAction | null>(null)
 
   const dispatch = useDispatch()
-  const [actionProgram, setActionProgram] = useState<ActionProgram | undefined>(undefined)
+  const [actionProgram, setActionProgram] = React.useState<ActionProgram>()
   // @ts-expect-error
   useAsyncEffect(async () => {
     // TODO: These default tokens will be removed when fee calculations are done using dryruns instead of ApprovableActions
@@ -84,7 +84,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
             borrowTokenId: destTokenId,
             nativeAmount: nativeDestAmount,
             borrowEngineWallet: borrowEngineWallet,
-            destBankId
+            destBankId: paymentMethod?.id
           })
         ])
       ).reduce((accum, subActions) => accum.concat(subActions), [])
@@ -97,7 +97,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     setBorrowApprovalAction(await borrowEngine.borrow(borrowRequest))
   }, [destTokenId, nativeDestAmount, borrowEngine])
 
-  const renderFeeTile = useMemo(() => {
+  const renderFeeTile = React.useMemo(() => {
     return (
       <NetworkFeeTile
         wallet={borrowEngineWallet}
@@ -146,7 +146,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       </Tile>
 
       <Tile type="static" title={s.strings.loan_debt_destination}>
-        <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
+        {paymentMethod != null ? (
+          <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={0} />
+        ) : (
+          <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
+        )}
       </Tile>
 
       {renderFeeTile}

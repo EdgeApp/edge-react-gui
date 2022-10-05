@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -5,22 +6,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { createWallet, CreateWalletOptions } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner'
-import { showError } from '../../components/services/AirshipInstance'
+import { Airship, showError } from '../../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { memo } from '../../types/reactHooks'
-import { useDispatch } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch, GetState } from '../../types/reduxTypes'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { ListModal } from '../modals/ListModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
 export type WalletListCreateRowProps = {
   currencyCode: string
   currencyName: string
-  createWalletId?: string
+  createWalletIds?: string[]
   pluginId?: string
   walletType?: string
 
@@ -31,13 +34,16 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const {
     currencyCode = '',
     currencyName = '',
-    createWalletId,
+    createWalletIds = [],
     walletType,
     pluginId,
 
     // Callbacks:
     onPress
   } = props
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -48,7 +54,33 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
     } else if (pluginId != null) {
-      dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId })).then(handleRes)
+      if (createWalletIds.length < 2) {
+        dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId: createWalletIds[0] })).then(handleRes)
+      } else {
+        Airship.show(bridge => {
+          const renderRow = (wallet: EdgeCurrencyWallet) => (
+            <WalletListCurrencyRow
+              wallet={wallet}
+              onPress={walletId => {
+                dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId: currencyWallets[walletId].currencyInfo.pluginId, createWalletId: walletId }))
+                  .then(handleRes)
+                  .finally(() => bridge.resolve())
+              }}
+            />
+          )
+
+          return (
+            <ListModal<EdgeCurrencyWallet>
+              bridge={bridge}
+              title={s.strings.select_wallet}
+              textInput={false}
+              fullScreen={false}
+              rowComponent={renderRow}
+              rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}
+            />
+          )
+        })
+      }
     }
   })
 
@@ -82,17 +114,24 @@ const createAndSelectToken =
       const { currencyWallets } = account
       const parentWalletId =
         createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === parentCurrencyCode)
-      let wallet = parentWalletId != null ? currencyWallets[parentWalletId] : null
-
-      // If no parent chain wallet exists, create it
-      if (wallet == null) {
-        const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
-        if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await createWallet(account, { walletType, walletName: getSpecialCurrencyInfo(walletType).initWalletName, fiatCurrencyCode: defaultIsoFiat })
-      } else {
-        await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.enableTokens([tokenCode]))
-        return wallet.id
-      }
+      const wallet: EdgeCurrencyWallet =
+        parentWalletId != null
+          ? currencyWallets[parentWalletId]
+          : // If no parent chain wallet exists, create it
+            await showFullScreenSpinner(
+              s.strings.wallet_list_modal_enabling_token,
+              (async (): Promise<EdgeCurrencyWallet> => {
+                const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
+                if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
+                return await createWallet(account, {
+                  walletType,
+                  walletName: getSpecialCurrencyInfo(walletType).initWalletName,
+                  fiatCurrencyCode: defaultIsoFiat
+                })
+              })()
+            )
+      await wallet.enableTokens([tokenCode])
+      return wallet.id
     } catch (error: any) {
       showError(error)
     }
@@ -126,6 +165,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    marginLeft: theme.rem(0.5),
     minHeight: theme.rem(4.25)
   },
   labelColumn: {
@@ -154,4 +194,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListCreateRow = memo(WalletListCreateRowComponent)
+export const WalletListCreateRow = React.memo(WalletListCreateRowComponent)

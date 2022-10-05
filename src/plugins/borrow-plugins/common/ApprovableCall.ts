@@ -2,6 +2,7 @@ import { asObject, asOptional, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeToken, EdgeTransaction } from 'edge-core-js'
 import { ethers } from 'ethers'
 
+import { PendingTxMap } from '../../../controllers/action-queue/types'
 import { ApprovableAction } from '../types'
 import { asBigNumber } from './cleaners/asBigNumber'
 
@@ -19,17 +20,17 @@ export type CallInfo = {
   wallet: EdgeCurrencyWallet
   spendToken?: EdgeToken
   metadata?: EdgeMetadata
-  pendingTxs: EdgeTransaction[]
 }
 
 export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAction> => {
-  const { tx: txInfo, wallet, spendToken, metadata, pendingTxs } = params
+  const { tx: txInfo, wallet, spendToken, metadata } = params
   const { id: walletId } = wallet
   const { gasLimit, gasPrice } = txInfo
 
   if (gasPrice == null || gasLimit == null) throw new Error('Explicit gas price and limit required for ApprovableAction.')
 
-  const makeSpend = async (dryrun: boolean): Promise<EdgeTransaction> => {
+  const makeSpend = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<EdgeTransaction> => {
+    const pendingTxs = pendingTxMap[walletId] ?? []
     const edgeSpendInfo: EdgeSpendInfo = {
       // @ts-expect-error
       pluginId: wallet.currencyInfo.pluginId,
@@ -55,21 +56,26 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
     return edgeUnsignedTx
   }
 
-  const dryrunUnsignedTx = await makeSpend(true)
+  const placeholderTx = await makeSpend(true, {})
   const networkFee = {
     currencyCode: wallet.currencyInfo.currencyCode,
-    nativeAmount: dryrunUnsignedTx.parentNetworkFee ?? dryrunUnsignedTx.networkFee ?? '0'
+    nativeAmount: placeholderTx.parentNetworkFee ?? placeholderTx.networkFee ?? '0'
   }
 
   return {
     networkFee,
-    unsignedTxs: [dryrunUnsignedTx],
-    dryrun: async () => {
-      const tx = await wallet.signTx(dryrunUnsignedTx)
+    unsignedTxs: [placeholderTx],
+    dryrun: async (pendingTxMap: PendingTxMap) => {
+      const unsignedTx = await makeSpend(true, pendingTxMap)
+      const tx = await wallet.signTx(unsignedTx)
+      const networkFee = {
+        currencyCode: wallet.currencyInfo.currencyCode,
+        nativeAmount: tx.parentNetworkFee ?? tx.networkFee ?? '0'
+      }
       return [{ walletId, networkFee, tx }]
     },
     approve: async () => {
-      const edgeUnsignedTx = await makeSpend(false)
+      const edgeUnsignedTx = await makeSpend(false, {})
       const tx = await wallet.signTx(edgeUnsignedTx)
       await wallet.broadcastTx(tx)
       await wallet.saveTx(tx)

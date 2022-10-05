@@ -8,7 +8,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { useEffect, useRef, useState } from '../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
 import { GuiContact, TransactionListTx } from '../../types/types'
@@ -37,7 +37,7 @@ export function TransactionListRow(props: Props) {
   const { currencyCode, walletId, transaction } = props
   const { metadata } = transaction
   const { name, amountFiat: defaultAmountFiat } = metadata ?? {}
-  const isMounted = useRef(true)
+  const isMounted = React.useRef(true)
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -59,7 +59,7 @@ export function TransactionListRow(props: Props) {
   // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       isMounted.current = false
     }

@@ -5,7 +5,6 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { truncateDecimals } from '../../locales/intl'
-import { memo, useCallback, useMemo, useState } from '../../types/reactHooks'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
@@ -17,8 +16,7 @@ type Props = {
   inputModalMessage: string
   title: string
   tokenId?: string
-  // @ts-expect-error
-  onAmountChanged: ({ fiatAmount: string, nativeCryptoAmount: string }) => void
+  onAmountChanged: (fiatAmount: string, nativeCryptoAmount: string) => void
 }
 
 /**
@@ -27,7 +25,7 @@ type Props = {
  * based on the given wallet.
  */
 const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, title, tokenId, onAmountChanged }: Props) => {
-  const [fiatAmount, setFiatAmount] = useState('0')
+  const [fiatAmount, setFiatAmount] = React.useState('0')
 
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({ tokenId, wallet: wallet })
   const {
@@ -44,9 +42,9 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     0
   )
 
-  onAmountChanged({ fiatAmount, nativeCryptoAmount })
+  onAmountChanged(fiatAmount, nativeCryptoAmount)
 
-  const handleEditActionfiatAmount = useCallback(() => {
+  const handleEditActionfiatAmount = React.useCallback(() => {
     Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
       inputAmount => {
         if (inputAmount != null) {
@@ -56,11 +54,11 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     )
   }, [inputModalMessage, title])
 
-  const formattedFiatAmount = useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
+  const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
 
   return (
     <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />
   )
 }
 
-export const FiatAmountInputCard = memo(FiatAmountInputCardComponent)
+export const FiatAmountInputCard = React.memo(FiatAmountInputCardComponent)

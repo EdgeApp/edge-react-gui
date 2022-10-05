@@ -14,11 +14,12 @@ type Props = {
 /**
  * Lays out a collection of children with equal space between each one.
  */
-export function LadderLayout(props: Props) {
+export function LadderLayout(props: Props): React.ReactElement {
   const { horizontal = false, padding } = props
   const children = React.Children.toArray(props.children)
 
   // We don't need to do anything in these cases:
+  // @ts-expect-error
   if (children.length <= 1 || padding === 0) return children
 
   // Copy the array, inserting spacers if necessary:

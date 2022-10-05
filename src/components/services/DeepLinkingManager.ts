@@ -1,13 +1,13 @@
 /* global requestAnimationFrame */
 
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import * as React from 'react'
 import { Linking } from 'react-native'
 
 import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions'
 import { pushMessagePayloadToEdgeUri } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useEffect } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { showError } from './AirshipInstance'
@@ -23,8 +23,7 @@ export function DeepLinkingManager(props: Props) {
   const wallets = useSelector(state => state.ui.wallets)
 
   // Retry links that need a different app state:
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (pendingDeepLink == null) return
 
     // Wait a bit, since logging in can sometimes stomp us:

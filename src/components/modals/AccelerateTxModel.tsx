@@ -41,9 +41,8 @@ type State = {
 }
 
 export class AccelerateTxModelComponent extends PureComponent<Props, State> {
-  constructor() {
-    // @ts-expect-error
-    super()
+  constructor(props: Props) {
+    super(props)
 
     this.state = {
       edgeUnsignedTransaction: undefined,

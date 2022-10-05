@@ -22,7 +22,7 @@ type CategoriesType = Array<{
 
 type Props = {
   bridge: AirshipBridge<CategoryModalResult | undefined>
-  categories: Object
+  categories: object
   subCategories: string[]
   category: string
   subCategory: string
@@ -43,7 +43,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
     this.state = { categories, category, subCategory }
   }
 
-  formattedCategories = (categories: Object): CategoriesType => {
+  formattedCategories = (categories: object): CategoriesType => {
     return Object.keys(categories).map(key => {
       return {
         // @ts-expect-error

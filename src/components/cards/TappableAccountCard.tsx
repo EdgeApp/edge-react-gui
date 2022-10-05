@@ -4,7 +4,6 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { PaymentMethod } from '../../controllers/action-queue/WyreClient'
-import { memo, useCallback } from '../../types/reactHooks'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -14,24 +13,32 @@ import { TappableCard } from './TappableCard'
 type TappableAccountCardProps = {
   emptyLabel: string
   onPress: () => void
-  paymentMethod?: PaymentMethod
-  tokenId?: string
+  selectedAsset: SelectableAsset
+}
+
+export interface SelectableAsset {
   wallet?: EdgeCurrencyWallet
+  tokenId?: string
+  paymentMethod?: PaymentMethod
 }
 
 const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
-  const { emptyLabel, onPress, paymentMethod, tokenId, wallet } = props
+  const { emptyLabel, onPress, selectedAsset } = props
+  const { paymentMethod, tokenId, wallet } = selectedAsset
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handlePress = useCallback(() => onPress(), [onPress])
+  const handlePress = React.useCallback(() => onPress(), [onPress])
 
   const renderInitial = () => (paymentMethod == null && wallet == null ? <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText> : null)
 
   const renderAccount = () => (
     <View style={styles.currencyRow}>
-      {paymentMethod ? <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" onPress={handlePress} marginRem={[0, 0.5, 0, 0.5]} /> : null}
-      {wallet ? <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} /> : null}
+      {paymentMethod ? (
+        <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} />
+      ) : wallet ? (
+        <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
+      ) : null}
     </View>
   )
 
@@ -61,4 +68,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const TappableAccountCard = memo(TappableAccountCardComponent)
+export const TappableAccountCard = React.memo(TappableAccountCardComponent)

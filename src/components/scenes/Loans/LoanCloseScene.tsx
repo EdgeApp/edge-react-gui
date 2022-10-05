@@ -3,12 +3,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { checkLoanHasFunds } from '../../../controllers/loan-manager/util/checkLoanHasFunds'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useRefresher } from '../../../hooks/useRefresher'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { BorrowEngine } from '../../../plugins/borrow-plugins/types'
-import { useCallback } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
@@ -42,7 +42,7 @@ export const LoanCloseScene = (props: Props) => {
 
   // Async State:
   // Refreshing borrowEngine TODO: refactor common method
-  const borrowEngineRefresher = useCallback(async () => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
+  const borrowEngineRefresher = React.useCallback(async () => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
   const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
   const [approvableAction, approvableActionError] = useAsyncValue(async () => borrowEngine.close(), [borrowEngine])
 
@@ -57,7 +57,10 @@ export const LoanCloseScene = (props: Props) => {
   const onSliderComplete = async (reset: () => void) => {
     if (approvableAction == null) return
 
-    await approvableAction.approve()
+    if (checkLoanHasFunds(borrowEngine)) {
+      await approvableAction.approve()
+    }
+
     await dispatch(updateLoanAccount({ ...loanAccount, closed: true }))
     navigation.popToTop()
   }
@@ -75,14 +78,14 @@ export const LoanCloseScene = (props: Props) => {
         {/* TODO: Show a single source wallet picker */}
         <Tile title={s.strings.loan_remaining_principal} type="static">
           {debts.map(debt => (
-            <Space key={debt.tokenId} veritcal={0.5}>
+            <Space key={debt.tokenId} vertical={0.5}>
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={wallet} />
             </Space>
           ))}
         </Tile>
         <Tile title={s.strings.loan_collateral_amount} type="static">
           {collaterals.map(collateral => (
-            <Space key={collateral.tokenId} veritcal={0.5}>
+            <Space key={collateral.tokenId} vertical={0.5}>
               <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={wallet} />
             </Space>
           ))}

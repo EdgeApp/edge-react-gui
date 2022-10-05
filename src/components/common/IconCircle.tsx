@@ -5,8 +5,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 
 type Props = {
-  // @ts-expect-error
-  children: React.ChildrenArray<React.ReactNode>
+  children: React.ReactNode
 }
 
 export const iconSize = THEME.rem(3.5)

@@ -6,26 +6,32 @@ export type SpaceProps = {
   // Compond space adjectives:
   around?: boolean | number
   horizontal?: boolean | number
-  veritcal?: boolean | number
+  vertical?: boolean | number
+  isFill?: boolean
   // Unit space adjectives:
   top?: boolean | number
   right?: boolean | number
   bottom?: boolean | number
   left?: boolean | number
   // Direction:
-  sideways?: boolean
+  isSideways?: boolean
   // Alignment:
-  start?: boolean
-  center?: boolean
-  end?: boolean
+  isGroupStart?: boolean
+  isGroupCenter?: boolean
+  isGroupEnd?: boolean
+  isItemStart?: boolean
+  isItemCenter?: boolean
+  isItemEnd?: boolean
 }
 
 export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const theme = useTheme()
-  const { around, horizontal, veritcal } = props
+  const { around, horizontal, vertical } = props
 
-  const top = around ?? veritcal ?? props.top
-  const bottom = around ?? veritcal ?? props.bottom
+  const flex = props.isFill ? 1 : undefined
+
+  const top = around ?? vertical ?? props.top
+  const bottom = around ?? vertical ?? props.bottom
   const left = around ?? horizontal ?? props.left
   const right = around ?? horizontal ?? props.right
 
@@ -35,19 +41,22 @@ export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const paddingRight = theme.rem(typeof right === 'number' ? right : right ? 1 : 0)
 
   // Direction:
-  const { sideways = false } = props
+  const { isSideways: sideways = false } = props
   const flexDirection = sideways ? 'row' : 'column'
 
   // Alignment:
-  const { start = false, center = false, end = false } = props
-  const alignItems = start ? 'flex-start' : center ? 'center' : end ? 'flex-end' : undefined
+  const { isItemStart = false, isItemCenter = false, isItemEnd = false, isGroupStart = false, isGroupCenter = false, isGroupEnd = false } = props
+  const alignItems = isItemStart ? 'flex-start' : isItemCenter ? 'center' : isItemEnd ? 'flex-end' : undefined
+  const justifyContent = isGroupStart ? 'flex-start' : isGroupCenter ? 'center' : isGroupEnd ? 'flex-end' : undefined
 
   return {
     paddingTop,
     paddingBottom,
     paddingLeft,
     paddingRight,
+    flex,
     flexDirection,
-    alignItems
+    alignItems,
+    justifyContent
   }
 }

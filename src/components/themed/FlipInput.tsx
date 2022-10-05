@@ -1,15 +1,13 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { div, eq, mul } from 'biggystring'
 import * as React from 'react'
-// @ts-expect-error
-import { Animated, Event, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, NativeSyntheticEvent, Platform, TextInput, TextInputKeyPressEventData, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl'
 import s from '../../locales/strings'
-import { forwardRef } from '../../types/reactHooks'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
@@ -414,7 +412,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     this.onKeyPress(value.slice(value.length - 1), this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
   }
 
-  onPrimaryKeyPress = (e: Event) => {
+  onPrimaryKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
     if (Platform.OS === 'android' && e.nativeEvent.key.match(/[0-9]/)) return
     this.onKeyPress(e.nativeEvent.key, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
   }
@@ -449,7 +447,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     this.onKeyPress(value.slice(value.length - 1), this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
   }
 
-  onSecondaryKeyPress = (e: Event) => {
+  onSecondaryKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
     if (Platform.OS === 'android' && e.nativeEvent.key.match(/[0-9]/)) return
     this.onKeyPress(e.nativeEvent.key, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
   }
@@ -677,4 +675,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const FlipInputThemed = withTheme(FlipInputComponent)
 
-export const FlipInput = forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />)
+export const FlipInput = React.forwardRef<FlipInputComponent, Omit<FlipInputOwnProps, 'flipInputRef'>>((props, ref) => (
+  <FlipInputThemed
+    {...props}
+    // @ts-expect-error
+    flipInputRef={ref}
+  />
+))

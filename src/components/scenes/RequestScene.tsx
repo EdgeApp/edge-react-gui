@@ -2,8 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { gt, lt, lte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
-// @ts-expect-error
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, RefObject, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -243,7 +242,7 @@ export class RequestComponent extends React.Component<Props, State> {
     }
   }
 
-  flipInputRef = (ref: RefObject) => {
+  flipInputRef = (ref: ExchangedFlipInput | null) => {
     if (ref?.flipInput) {
       this.flipInput = ref.flipInput
     }
@@ -507,7 +506,6 @@ export class RequestComponent extends React.Component<Props, State> {
 
   fioMode = () => {
     if (this.flipInput && Platform.OS === 'ios') {
-      // @ts-expect-error
       this.flipInput.textInputBottomFocus()
       this.setState({ isFioMode: true })
     }
@@ -516,7 +514,6 @@ export class RequestComponent extends React.Component<Props, State> {
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
       if (this.flipInput) {
-        // @ts-expect-error
         this.flipInput.textInputBottomBlur()
       }
     })
@@ -527,7 +524,6 @@ export class RequestComponent extends React.Component<Props, State> {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
-        // @ts-expect-error
         this.flipInput.textInputBottomBlur()
       }
       this.onNext()

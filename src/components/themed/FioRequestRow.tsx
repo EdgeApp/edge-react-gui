@@ -17,7 +17,6 @@ import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
-// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from './SwipeableRow'
 
 type OwnProps = {

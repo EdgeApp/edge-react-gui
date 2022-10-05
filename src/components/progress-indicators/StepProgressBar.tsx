@@ -3,7 +3,6 @@ import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { ActionDisplayInfo } from '../../controllers/action-queue/types'
-import { memo, useMemo } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -27,7 +26,7 @@ const StepProgressRowComponent = ({
   const styles = getStyles(theme)
 
   // Circular part of the step progress bar
-  const node = useMemo(() => {
+  const node = React.useMemo(() => {
     if (isNodeActive) {
       // 'start' and 'end' LinearGradient coordinates close to each other give
       // the illusion of a partial solid fill.
@@ -67,7 +66,7 @@ const StepProgressRowComponent = ({
   )
 }
 
-const StepProgressRow = memo(StepProgressRowComponent)
+const StepProgressRow = React.memo(StepProgressRowComponent)
 
 // -----------------------------------------------------------------------------
 // StepProgressBar visualizes the completed, active, and pending steps with a
@@ -83,7 +82,7 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo
   const totalSteps = actionDisplayInfos.length
 
   // Render nodes and their connecting segments, starting from the top
-  const renderRows = useMemo(() => {
+  const renderRows = React.useMemo(() => {
     const actionRows = []
     for (let i = 0; i < totalSteps; i++) {
       // Render a completed, active/in-progress, or queued node.
@@ -183,4 +182,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const StepProgressBar = memo(StepProgressBarComponent)
+export const StepProgressBar = React.memo(StepProgressBarComponent)

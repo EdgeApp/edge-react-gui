@@ -5,6 +5,7 @@ import { RefreshControl, SectionList } from 'react-native'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
+import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -35,7 +36,11 @@ type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => void
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type OwnProps = {
+  navigation: NavigationProp<'transactionList'>
+}
+
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {
   reset: boolean
@@ -152,6 +157,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
       walletId={this.props.selectedWalletId}
       isEmpty={this.props.transactions.length < 1}
       searching={this.state.searching}
+      navigation={this.props.navigation}
+      tokenId={this.props.tokenId}
       onChangeSortingState={this.handleChangeSortingState}
       onSearchTransaction={this.handleSearchTransaction}
     />
@@ -177,8 +184,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={this.renderEmptyComponent}
           ListHeaderComponent={this.renderTop}
-          // @ts-expect-error
-          contentOffset={{ y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
+          contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
           refreshControl={
             transactions.length !== 0 ? (
               <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
@@ -192,7 +198,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const TransactionList = connect<StateProps, DispatchProps, {}>(
+export const TransactionList = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode

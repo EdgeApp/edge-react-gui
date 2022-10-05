@@ -1,11 +1,9 @@
 import { add, gte, lte } from 'biggystring'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
@@ -33,36 +31,34 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
     try {
       const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
 
-      // Convert each dryrun result into an array of push events for the push-server.
-      const newPushEvents = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
+      if (dryrunOutputs.length > 0) {
+        // Convert each dryrun result into an array of push events for the push-server.
+        const pushEventInfos = await prepareNewPushEvents(context, program, effect, dryrunOutputs)
 
-      // Send PushEvents to the push server:
-      await uploadPushEvents(context, { createEvents: newPushEvents })
+        // Send PushEvents to the push server:
+        const newPushEvents = pushEventInfos.map(({ newPushEvent }) => newPushEvent)
+        await uploadPushEvents(context, { createEvents: newPushEvents })
 
-      // Mutate the nextState accordingly; effect should be awaiting push events:
-      const nextChildEffects = newPushEvents.map(event => ({
-        type: 'push-event',
-        eventId: event.eventId
-      }))
-      let nextEffect: ActionEffect
-      if (effect.type === 'seq') {
-        // Drop the last effect because it is to be replaced by the first push-event effect
-        const prevOpIndex = effect.opIndex // Same opIndex because the first of nextChildEffects replaces the last or prevChildEffects
-        const prevChildEffects = effect.childEffects.slice(0, -1) // Slice to drop the last of prevChildEffects
-        nextEffect = {
-          type: 'seq',
-          opIndex: prevOpIndex,
-          // @ts-expect-error
-          childEffects: [...prevChildEffects, ...nextChildEffects]
+        // Mutate the nextState accordingly; effect should be awaiting push events:
+        const nextChildEffects = pushEventInfos.map(({ pushEventEffect }) => pushEventEffect)
+        let nextEffect: ActionEffect
+        if (effect.type === 'seq') {
+          // Drop the last effect because it is to be replaced by the first push-event effect
+          const prevOpIndex = effect.opIndex // Same opIndex because the first of nextChildEffects replaces the last or prevChildEffects
+          const prevChildEffects = effect.childEffects.slice(0, -1) // Slice to drop the last of prevChildEffects
+          nextEffect = {
+            type: 'seq',
+            opIndex: prevOpIndex,
+            childEffects: [...prevChildEffects, ...nextChildEffects]
+          }
+        } else {
+          if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
+          nextEffect = nextChildEffects[0]
         }
-      } else {
-        if (nextChildEffects.length > 1) throw new Error('Unexpected push events length for non-seq/par program')
-        // @ts-expect-error
-        nextEffect = nextChildEffects[0]
-      }
 
-      // Exit early with dryrun results:
-      return { nextState: { ...state, effect: nextEffect } }
+        // Exit early with dryrun results:
+        return { nextState: { ...state, effect: nextEffect } }
+      }
     } catch (error: any) {
       // Silently fail dryrun
       console.error(error)
@@ -93,7 +89,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
        * index of it's childEffects.
        */
       // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
-      if (effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
+      if (effective && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
         // Progress the partially completed effect forward
         const nextEffect: SeqEffect = {
           ...effect,
@@ -134,7 +130,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   //
 
   // Execute Action
-  const executableAction = await evaluateAction(context, program, state, {})
+  const executableAction = await evaluateAction(context, program, state)
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
   const isEffectDone = checkEffectIsDone(nextEffect)
@@ -161,7 +157,8 @@ export async function dryrunActionProgram(
   const outputs: ExecutionOutput[] = []
   const simulatedState = { ...state }
   while (true) {
-    const { dryrunOutput } = await evaluateAction(context, program, simulatedState, pendingTxMap)
+    const executableAction = await evaluateAction(context, program, simulatedState)
+    const dryrunOutput = await executableAction.dryrun(pendingTxMap)
 
     // In order to avoid infinite loops, we must break when we reach the end
     // of the program or detect that the last effect in sequence is null, which
@@ -285,11 +282,6 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
         isEffective: true
       }
     }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(effect.type)
-    }
   }
 }
 
@@ -338,12 +330,7 @@ export function getEffectPushEventIds(effect?: ActionEffect | null): string[] {
  * be valid except for some special cases which must be specified by the
  * developer (via comments).
  */
-async function evaluateAction(
-  context: ExecutionContext,
-  program: ActionProgram,
-  state: ActionProgramState,
-  pendingTxMap: PendingTxMap
-): Promise<ExecutableAction> {
+async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
   const { account } = context
   const { actionOp } = program
   const { effect } = state
@@ -355,10 +342,10 @@ async function evaluateAction(
       // Handle done case
       if (nextOpIndex > actionOp.actions.length - 1) {
         return {
-          dryrunOutput: {
+          dryrun: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
-          },
+          }),
           execute: async () => ({
             effect: { type: 'done' },
             broadcastTxs: []
@@ -369,22 +356,25 @@ async function evaluateAction(
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childOutput: ExecutableAction = await evaluateAction(context, nextProgram, state, pendingTxMap)
-      const childDryrun: ExecutionOutput | null = childOutput.dryrunOutput
-      const childEffect: ActionEffect | null = childDryrun != null ? childDryrun.effect : null
-      const childBroadcastTxs: BroadcastTx[] = childDryrun != null ? childDryrun.broadcastTxs : []
+      const childExecutableAction: ExecutableAction = await evaluateAction(context, nextProgram, state)
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'seq',
-            opIndex: nextOpIndex,
-            childEffects: [...prevChildEffects, childEffect]
-          },
-          broadcastTxs: childBroadcastTxs
+        dryrun: async (pendingTxMap: PendingTxMap) => {
+          const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
+          const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
+          const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
+
+          return {
+            effect: {
+              type: 'seq',
+              opIndex: nextOpIndex,
+              childEffects: [...prevChildEffects, childEffect]
+            },
+            broadcastTxs: childBroadcastTxs
+          }
         },
         execute: async () => {
-          const output = await childOutput.execute()
+          const output = await childExecutableAction.execute()
           const childEffect = output.effect
           return {
             effect: {
@@ -402,33 +392,35 @@ async function evaluateAction(
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(context, subProgram, state, pendingTxMap)
+        return await evaluateAction(context, subProgram, state)
       })
-      const childOutputs = await Promise.all(promises)
-      // @ts-expect-error
-      const childEffects: Array<ActionEffect | null> = childOutputs.reduce((effects, output) => [...effects, output.dryrunOutput.effect], [])
+      const childExecutableActions = await Promise.all(promises)
 
       return {
-        dryrunOutput: {
-          effect: {
-            type: 'par',
-            childEffects
-          },
-          // @ts-expect-error
-          broadcastTxs: childOutputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+        dryrun: async (pendingTxMap: PendingTxMap) => {
+          const childOutputs = await Promise.all(childExecutableActions.map(async executableAction => executableAction.dryrun(pendingTxMap)))
+          const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
+            (effects: ActionEffect[], output) => (output != null ? [...effects, output.effect] : effects),
+            []
+          )
+
+          return {
+            effect: {
+              type: 'par',
+              childEffects
+            },
+            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+          }
         },
-        // @ts-expect-error
         execute: async () => {
-          const outputs = await Promise.all(childOutputs.map(async output => await output.execute()))
-          // @ts-expect-error
-          const effects = outputs.reduce((effects, output) => [...effects, output.effect], [])
+          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
+          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
-            // @ts-expect-error
-            broadcastTxs: outputs.reduce((broadcastTxs, output) => [...broadcastTxs, ...output.dryrun.broadcastTxs], [])
+            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...output.broadcastTxs], [])
           }
         }
       }
@@ -445,7 +437,10 @@ async function evaluateAction(
 
       const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
-      const makeExecutionOutput = async (dryrun: boolean): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<ExecutionOutput> => {
+        // Get any pending txs for this wallet
+        const pendingTxs = pendingTxMap[walletId] ?? []
+
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
           skipChecks: dryrun,
@@ -454,7 +449,8 @@ async function evaluateAction(
               nativeAmount,
               publicAddress: paymentAddress
             }
-          ]
+          ],
+          pendingTxs
         })
         const signedTx = await wallet.signTx(unsignedTx)
         const networkFee = {
@@ -487,9 +483,6 @@ async function evaluateAction(
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get any pending txs for this wallet
-      const pendingTxs = pendingTxMap[walletId] ?? []
-
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -499,7 +492,7 @@ async function evaluateAction(
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId, pendingTxs })
+      const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -509,9 +502,6 @@ async function evaluateAction(
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get any pending txs for this wallet
-      const pendingTxs = pendingTxMap[walletId] ?? []
-
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -521,7 +511,7 @@ async function evaluateAction(
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId, pendingTxs })
+      const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -531,9 +521,6 @@ async function evaluateAction(
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get any pending txs for this wallet
-      const pendingTxs = pendingTxMap[walletId] ?? []
-
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -543,7 +530,7 @@ async function evaluateAction(
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, pendingTxs })
+      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -553,9 +540,6 @@ async function evaluateAction(
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get any pending txs for this wallet
-      const pendingTxs = pendingTxMap[walletId] ?? []
-
       // Get the borrow-plugin
       const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
 
@@ -565,7 +549,7 @@ async function evaluateAction(
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId, pendingTxs })
+      const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
@@ -590,26 +574,44 @@ async function evaluateAction(
         quoteFor: amountFor
       })
 
-      const execute = async () => {
+      const execute = async (): Promise<ExecutionOutput> => {
         const swapResult = await swapQuote.approve()
         const { transaction } = swapResult
+        const { swapData } = transaction
 
-        // TOOD: Enable this when we can query wallet address balances
-        if (swapResult.destinationAddress) {
-          // const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode })).nativeAmount
-          // const aboveAmount = add(currentAddressBalance, swapQuote.toNativeAmount)
-          // return {
-          //   type: 'balance',
-          //   address: swapResult.destinationAddress,
-          //   aboveAmount,
-          //   walletId: toWalletId,
-          //   tokenId: toTokenId
-          // }
-        }
+        if (swapData == null) throw new Error(`Expected swapData from EdgeTransaction for swap provider '${swapQuote.pluginId}'`)
 
-        // Fallback to wallet balance:
+        // We can only assume the wallet balance and the address balance are the same for account-based currencies.
+        // So we must assert the currency type matches a whitelist of plugins which are account-based.
+        // In order to fully implement SwapActionOp, we require a getAddressBalance method on EdgeCurrencyWallet.
+        const supportedDestniationPlugins = [
+          'binancesmartchain',
+          'ethereum',
+          'ethereumclassic',
+          'ethDev',
+          'fantom',
+          'goerli',
+          'kovan',
+          'rinkeby',
+          'ropsten',
+          'rsk',
+          'polygon',
+          'celo',
+          'avalanche'
+        ]
+        if (!supportedDestniationPlugins.includes(toWallet.currencyInfo.pluginId))
+          throw new Error(`SwapActionOp only implemented for destination wallets for plugins: ${supportedDestniationPlugins.join(', ')}`)
+
+        /*
+        // TODO: For UTXO-based currency support, pass the payoutAddress to a
+        // wallet method like getReceiveAddress (e.g. getAddressBalance), but
+        // specifically for getting an address's balance.
+        const currentAddressBalance = (await toWallet.getReceiveAddress({ currencyCode: toCurrencyCode }))?.nativeAmount ?? '0'
+        const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)
+        */
+
         const walletBalance = toWallet.balances[toCurrencyCode] ?? '0'
-        const aboveAmount = add(walletBalance, swapQuote.toNativeAmount)
+        const aboveAmount = add(walletBalance, swapData.payoutNativeAmount)
 
         const broadcastTxs: BroadcastTx[] = [
           {
@@ -622,7 +624,7 @@ async function evaluateAction(
         return {
           effect: {
             type: 'address-balance',
-            address: '',
+            address: swapData.payoutAddress,
             aboveAmount,
             walletId: toWalletId,
             tokenId: toTokenId
@@ -631,8 +633,7 @@ async function evaluateAction(
         }
       }
       return {
-        dryrunOutput: null, // Support dryrun when EdgeSwapQuote returns a signed tx
-        // @ts-expect-error
+        dryrun: async () => null, // Support dryrun when EdgeSwapQuote returns a signed tx
         execute
       }
     }
@@ -640,26 +641,15 @@ async function evaluateAction(
     case 'broadcast-tx': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
-    // @ts-expect-error
-    case 'done': {
-      // @ts-expect-error
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
     case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(actionOp.type)
     }
   }
 }
 
 async function approvableActionToExecutableAction(approvableAction: ApprovableAction): Promise<ExecutableAction> {
   // Execute:
-  const execute = async () => {
+  const execute = async (): Promise<ExecutionOutput> => {
     const broadcastTxs = await approvableAction.approve()
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {
@@ -674,22 +664,22 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   }
 
   // Dryrun:
-  const broadcastTxs = await approvableAction.dryrun()
-  const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
-  const dryrun = {
-    effect: {
-      type: 'tx-confs',
-      txId: broadcastTx.tx.txid,
-      walletId: broadcastTx.walletId,
-      confirmations: 1
-    },
-    broadcastTxs
+  const dryrun = async (pendingTxMap: PendingTxMap): Promise<ExecutionOutput> => {
+    const broadcastTxs = await approvableAction.dryrun(pendingTxMap)
+    const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
+    return {
+      effect: {
+        type: 'tx-confs',
+        txId: broadcastTx.tx.txid,
+        walletId: broadcastTx.walletId,
+        confirmations: 1
+      },
+      broadcastTxs
+    }
   }
 
   return {
-    // @ts-expect-error
-    dryrunOutput: dryrun,
-    // @ts-expect-error
+    dryrun,
     execute
   }
 }
@@ -699,13 +689,15 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  * which returns a ExecutionOutput. This is a very basic contract between the
  * two interfaces.
  */
-async function makeExecutableAction(context: ExecutionContext, fn: (dryrun: boolean) => Promise<ExecutionOutput>): Promise<ExecutableAction> {
+async function makeExecutableAction(
+  context: ExecutionContext,
+  fn: (dryrun: boolean, pendingTxMap: PendingTxMap) => Promise<ExecutionOutput>
+): Promise<ExecutableAction> {
   const { account } = context
-  const dryrunOutput = await fn(true)
   return {
-    dryrunOutput,
+    dryrun: async (pendingTxMap: PendingTxMap) => fn(true, pendingTxMap),
     execute: async () => {
-      const output = await fn(false)
+      const output = await fn(false, {})
 
       await Promise.all(
         output.broadcastTxs.map(async broadcastTx => {

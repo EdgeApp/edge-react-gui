@@ -9,7 +9,6 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useMemo, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
@@ -43,7 +42,7 @@ export function ManageTokensScene(props: Props) {
   const walletName = useWalletName(wallet)
   const isCustomTokensSupported = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isCustomTokensSupported ?? false
 
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = React.useState('')
 
   // Subscribe to the account's token lists:
   const { currencyConfig } = wallet
@@ -54,10 +53,10 @@ export function ManageTokensScene(props: Props) {
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
 
   // Optimize the enabled tokens:
-  const enabledTokenSet = useMemo(() => new Set(enabledTokenIds), [enabledTokenIds])
+  const enabledTokenSet = React.useMemo(() => new Set(enabledTokenIds), [enabledTokenIds])
 
   // Sort the token list:
-  const sortedTokenIds = useMemo(() => {
+  const sortedTokenIds = React.useMemo(() => {
     // Make a table of preferred tokenId's:
     const preferredIds = new Set<string>()
     for (const currencyCode of PREFERRED_TOKENS) {
@@ -77,7 +76,7 @@ export function ManageTokensScene(props: Props) {
   }, [allTokens])
 
   // Filter the list of tokens based on the search term:
-  const filteredTokenIds = useMemo(() => {
+  const filteredTokenIds = React.useMemo(() => {
     const target = normalizeForSearch(searchValue)
     return sortedTokenIds.filter(tokenId => {
       const token = allTokens[tokenId]
@@ -126,10 +125,10 @@ export function ManageTokensScene(props: Props) {
     )
   })
 
-  const extraData = useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
+  const extraData = React.useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
   const handleItemLayout = useRowLayout()
 
-  const sceneHeader = useMemo(
+  const sceneHeader = React.useMemo(
     () => (
       <SceneHeader underline>
         <TouchableOpacity onPress={handleSelectWallet}>

@@ -36,8 +36,15 @@ const Component = (props: Props) => {
           <Stop offset="0.8" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
           <Stop offset="1" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
         </LinearGradient>
-        {/* @ts-expect-error */}
-        <Mask id="Mask" maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
+        <Mask
+          id="Mask"
+          // @ts-expect-error
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width={width}
+          height={height}
+        >
           <Rect x="0" y="0" width={width} height={height} fill="white" />
           <Rect x={holeX} y={holeY} height={holeSize} width={holeSize} fill="black" rx={cornerRadius} />
         </Mask>
@@ -45,9 +52,9 @@ const Component = (props: Props) => {
           <Path
             d={`
               M ${holeX + strokeWidth} ${holeY + cornerRadius + strokeWidth + cornerLegroom}
-              l ${0} ${-cornerLegroom} 
+              l ${0} ${-cornerLegroom}
               q ${0} ${-cornerRadius} ${cornerRadius} ${-cornerRadius}
-              l ${cornerLegroom} ${0} 
+              l ${cornerLegroom} ${0}
             `}
             x={-strokeWidth}
             y={-strokeWidth}
@@ -57,8 +64,8 @@ const Component = (props: Props) => {
           />
           <Path
             d={`
-              M ${holeX + holeSize - cornerRadius + strokeWidth - cornerLegroom} ${holeY + strokeWidth} 
-              l ${cornerLegroom} ${0} 
+              M ${holeX + holeSize - cornerRadius + strokeWidth - cornerLegroom} ${holeY + strokeWidth}
+              l ${cornerLegroom} ${0}
               q ${cornerRadius} ${0} ${cornerRadius} ${cornerRadius}
               l ${0} ${cornerLegroom}
             `}
@@ -70,8 +77,8 @@ const Component = (props: Props) => {
           />
           <Path
             d={`
-              M ${holeX + holeSize + strokeWidth} ${holeY + holeSize - cornerRadius + strokeWidth - cornerLegroom} 
-              l ${0} ${cornerLegroom} 
+              M ${holeX + holeSize + strokeWidth} ${holeY + holeSize - cornerRadius + strokeWidth - cornerLegroom}
+              l ${0} ${cornerLegroom}
               q ${0} ${cornerRadius} ${-cornerRadius} ${cornerRadius}
               l ${-cornerLegroom} ${0}
             `}
@@ -83,8 +90,8 @@ const Component = (props: Props) => {
           />
           <Path
             d={`
-              M ${holeX + cornerRadius + strokeWidth + cornerLegroom} ${holeY + holeSize + strokeWidth} 
-              l ${-cornerLegroom} ${0} 
+              M ${holeX + cornerRadius + strokeWidth + cornerLegroom} ${holeY + holeSize + strokeWidth}
+              l ${-cornerLegroom} ${0}
               q ${-cornerRadius} ${0} ${-cornerRadius} ${-cornerRadius}
               l ${0} ${-cornerLegroom}
             `}

@@ -1,3 +1,4 @@
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -9,7 +10,6 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { useEffect, useState } from '../../../types/reactHooks'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
@@ -31,7 +31,10 @@ import { SceneHeader } from '../../themed/SceneHeader'
 type Props = {
   navigation: NavigationProp<'loanDashboard'>
 }
-const HARD_WALLET_PLUGIN_ID = 'polygon'
+
+// First-element is the default wallet plugin used to create new wallet
+const SUPPORTED_WALLET_PLUGIN_IDS = ['ethereum']
+if (__DEV__) SUPPORTED_WALLET_PLUGIN_IDS.push('polygon')
 
 export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
@@ -47,28 +50,25 @@ export const LoanDashboardScene = (props: Props) => {
 
   const sortedWalletList = useSelector(state => state.sortedWalletList)
   const account = useSelector(state => state.core.account)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+  const loanAccountsMap = useSelector(state => state.loanManager.loanAccounts)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
+
+  const isLoansLoading = syncRatio < 0
 
   const wallets = useWatch(account, 'currencyWallets')
   const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
 
-  const [isNewLoanLoading, setIsNewLoanLoading] = useState(false)
+  const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
-  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => wallets[walletId].currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
-
-  const isCompatibleWalletsAvailable =
-    hardPluginWalletIds.length === 0 ||
-    hardPluginWalletIds.some(walletId => Object.keys(loanAccounts).find(loanAccountWalletId => loanAccountWalletId === walletId) == null)
+  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(wallets[walletId].currencyInfo.pluginId))
 
   //
   // Effects
   //
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     // Only resync on scene mount every 5 minutes
     if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
       dispatch(resyncLoanAccounts(account))
@@ -83,9 +83,11 @@ export const LoanDashboardScene = (props: Props) => {
     let newLoanWallet
 
     if (hardPluginWalletIds.length > 1) {
+      const allowedAssets = SUPPORTED_WALLET_PLUGIN_IDS.map(pluginId => ({ pluginId }))
+
       // Only show the wallet picker if the user owns more than one polygon wallet.
       const { walletId: newWalletId } = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={[{ pluginId: HARD_WALLET_PLUGIN_ID }]} />
+        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={allowedAssets} excludeWalletIds={Object.keys(loanAccountsMap)} />
       ))
       newLoanWallet = newWalletId != null ? wallets[newWalletId] : null
     } else if (hardPluginWalletIds.length === 1) {
@@ -93,9 +95,12 @@ export const LoanDashboardScene = (props: Props) => {
       newLoanWallet = wallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
-      const hardCurrencyInfo = getCurrencyInfos(account).find(currencyInfo => currencyInfo.pluginId === HARD_WALLET_PLUGIN_ID)
-      if (hardCurrencyInfo == null) throw new Error(`Could not auto-create ${HARD_WALLET_PLUGIN_ID} wallet`)
-      newLoanWallet = await createWallet(account, { walletName: `AAVE ${hardCurrencyInfo.displayName}`, walletType: hardCurrencyInfo.walletType })
+      const filteredCurrencyInfo = SUPPORTED_WALLET_PLUGIN_IDS.reduce((info: EdgeCurrencyInfo | undefined, pluginId) => {
+        if (info != null) return info // Already found
+        return getCurrencyInfos(account).find(currencyInfo => pluginId === currencyInfo.pluginId)
+      }, undefined)
+      if (filteredCurrencyInfo == null) throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
+      newLoanWallet = await createWallet(account, { walletName: `AAVE Loan Account`, walletType: filteredCurrencyInfo.walletType })
     }
 
     if (newLoanWallet != null) {
@@ -139,17 +144,16 @@ export const LoanDashboardScene = (props: Props) => {
             <FillLoader />
           </Card>
         ) : null}
-        {syncRatio < 1 ? (
+        {isLoansLoading ? (
           <Space around>
             <FillLoader />
           </Space>
-        ) : null}
-        {isCompatibleWalletsAvailable ? (
+        ) : (
           <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
             <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
           </TouchableOpacity>
-        ) : null}
+        )}
       </>
     )
   }
@@ -167,14 +171,35 @@ export const LoanDashboardScene = (props: Props) => {
     <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_dashboard_title} />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
-      <FlatList
-        data={Object.values(loanAccounts)}
-        keyboardShouldPersistTaps="handled"
-        renderItem={renderLoanCard}
-        style={margin}
-        ListFooterComponent={renderFooter()}
-        keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
-      />
+      {Object.keys(loanAccountsMap).length === 0 ? (
+        <>
+          {isLoansLoading ? (
+            <Space isFill isGroupCenter isItemCenter horizontal bottom={2.5}>
+              <EdgeText style={styles.emptyText}>{s.strings.loan_loading_loans}</EdgeText>
+            </Space>
+          ) : (
+            <>
+              <Space isFill isGroupCenter isItemCenter horizontal top>
+                <EdgeText style={styles.emptyText} numberOfLines={4}>
+                  {s.strings.loan_no_active_loans}
+                </EdgeText>
+              </Space>
+              <Space bottom>{renderFooter()}</Space>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <FlatList
+            data={Object.values(loanAccountsMap)}
+            keyboardShouldPersistTaps="handled"
+            renderItem={renderLoanCard}
+            style={margin}
+            ListFooterComponent={renderFooter()}
+            keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
+          />
+        </>
+      )}
     </SceneWrapper>
   )
 }
@@ -184,7 +209,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     addButtonsContainer: {
       alignItems: 'center',
       backgroundColor: theme.tileBackground,
-      flex: 1,
       flexDirection: 'row',
       height: theme.rem(3.25),
       justifyContent: 'center'
@@ -200,6 +224,11 @@ const getStyles = cacheStyles((theme: Theme) => {
     cardEmptyContainer: {
       marginLeft: theme.rem(1),
       marginRight: theme.rem(1)
+    },
+    emptyText: {
+      fontFamily: theme.fontFaceMedium,
+      color: theme.secondaryText,
+      textAlign: 'center'
     },
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,

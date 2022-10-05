@@ -13,7 +13,6 @@ import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
-import { useEffect, useState } from '../../types/reactHooks'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FioAddress } from '../../types/types'
@@ -69,13 +68,13 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
   const maxApy = SPECIAL_CURRENCY_INFO[pluginId]?.stakeMaxApy
 
-  const [nativeAmount, setNativeAmount] = useState('0')
-  const [exchangeAmount, setExchangeAmount] = useState('0')
-  const [apy, setApy] = useState(0)
-  const [error, setError] = useState<Error | string | undefined>(undefined)
-  const [loading, setLoading] = useState(false)
-  const [tx, setTx] = useState<EdgeTransaction | undefined>(undefined)
-  const [selectedFioAddress, setSelectedFioAddress] = useState<string | undefined>(undefined)
+  const [nativeAmount, setNativeAmount] = React.useState('0')
+  const [exchangeAmount, setExchangeAmount] = React.useState('0')
+  const [apy, setApy] = React.useState(0)
+  const [error, setError] = React.useState<Error | string | undefined>(undefined)
+  const [loading, setLoading] = React.useState(false)
+  const [tx, setTx] = React.useState<EdgeTransaction | undefined>(undefined)
+  const [selectedFioAddress, setSelectedFioAddress] = React.useState<string | undefined>(undefined)
   const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
 
   const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
@@ -158,14 +157,12 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     })
   }
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     props.refreshAllFioAddresses()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
       currencyPlugin.otherMethods
         .getStakeEstReturn(exchangeAmount)
@@ -177,8 +174,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     }
   }, [exchangeAmount, currencyPlugin])
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (!selectedFioAddress && fioAddresses?.length > 0) {
       const fioAddress = fioAddresses
         .filter(({ walletId: fioAddressWalletId }) => fioAddressWalletId === walletId)
@@ -195,7 +191,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }, [...fioAddresses, selectedFioAddress])
 
   // Make spend transaction after amount change
-  useEffect(() => {
+  React.useEffect(() => {
     if (nativeAmount === '0') return
 
     let abort = false
@@ -374,7 +370,6 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
 
     if (SPECIAL_CURRENCY_INFO[currencyWallet.currencyInfo.pluginId]?.isStakingSupported) {
       for (const cCodeKey in STAKING_BALANCES) {
-        // @ts-expect-error
         const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
 
         const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'

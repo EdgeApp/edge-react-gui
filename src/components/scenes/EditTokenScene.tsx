@@ -5,7 +5,6 @@ import { ScrollView } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { useMemo, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
@@ -32,14 +31,14 @@ export function EditTokenScene(props: Props) {
   const wallet = account.currencyWallets[walletId]
 
   // Extract our initial state from the token:
-  const [currencyCode, setCurrencyCode] = useState(route.params.currencyCode ?? '')
-  const [displayName, setDisplayName] = useState(route.params.displayName ?? '')
-  const [contractAddress, setContractAddress] = useState<string>(() => {
+  const [currencyCode, setCurrencyCode] = React.useState(route.params.currencyCode ?? '')
+  const [displayName, setDisplayName] = React.useState(route.params.displayName ?? '')
+  const [contractAddress, setContractAddress] = React.useState<string>(() => {
     const clean = asMaybeContractLocation(route.params.networkLocation)
     if (clean == null) return ''
     return clean.contractAddress
   })
-  const [decimalPlaces, setDecimalPlaces] = useState<string>(() => {
+  const [decimalPlaces, setDecimalPlaces] = React.useState<string>(() => {
     const { multiplier } = route.params
     if (multiplier == null || !/^10*$/.test(multiplier)) return '18'
     return (multiplier.length - 1).toString()
@@ -110,7 +109,7 @@ export function EditTokenScene(props: Props) {
     navigation.goBack()
   })
 
-  const sceneHeader = useMemo(() => <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />, [tokenId])
+  const sceneHeader = React.useMemo(() => <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />, [tokenId])
 
   return (
     <SceneWrapper avoidKeyboard>

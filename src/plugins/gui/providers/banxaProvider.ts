@@ -360,8 +360,8 @@ const banxaFetch = async (params: {
   url: string
   path: string
   apiKey: string
-  bodyParams?: Object
-  queryParams?: Object
+  bodyParams?: object
+  queryParams?: object
 }): Promise<string> => {
   const { method, url, path, apiKey, bodyParams, queryParams } = params
   const urlObj = new URL(url + '/' + path, true)

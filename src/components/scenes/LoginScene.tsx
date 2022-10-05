@@ -4,7 +4,6 @@ import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
-// @ts-expect-error
 import { BlurView } from 'rn-id-blurview'
 
 import ENV from '../../../env.json'

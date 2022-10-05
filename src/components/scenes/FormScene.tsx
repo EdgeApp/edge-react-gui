@@ -2,7 +2,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import { useMemo } from '../../types/reactHooks'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SafeSlider } from '../themed/SafeSlider'
@@ -22,7 +21,7 @@ export const FormScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const sceneHeader = useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} underline />, [headerText, styles.sceneHeader])
+  const sceneHeader = React.useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} underline />, [headerText, styles.sceneHeader])
 
   return (
     <SceneWrapper background="theme">

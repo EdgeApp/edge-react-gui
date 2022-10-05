@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Switch, View } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
@@ -56,4 +55,4 @@ const SettingsSwitchRowComponent = (props: Props) => {
   )
 }
 
-export const SettingsSwitchRow = memo(SettingsSwitchRowComponent)
+export const SettingsSwitchRow = React.memo(SettingsSwitchRowComponent)

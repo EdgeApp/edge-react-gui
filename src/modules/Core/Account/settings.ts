@@ -178,7 +178,7 @@ export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   }
 }
 
-export async function setSyncedSettings(account: EdgeAccount, settings: Object): Promise<void> {
+export async function setSyncedSettings(account: EdgeAccount, settings: object): Promise<void> {
   const text = JSON.stringify(settings)
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
@@ -234,24 +234,22 @@ export const getLocalSettings = async (account: EdgeAccount) => {
     })
 }
 
-export const setLocalSettings = async (account: EdgeAccount, settings: Object) => {
+export const setLocalSettings = async (account: EdgeAccount, settings: object) => {
   const text = JSON.stringify(settings)
   return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
-export const updateCurrencySettings = (currentSettings: Object, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {
+export const updateCurrencySettings = (currentSettings: any, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {
   // update with new settings
   const updatedSettings = {
     ...currentSettings
   }
-  // @ts-expect-error
   if (updatedSettings.denominationSettings[pluginId] == null) updatedSettings.denominationSettings[pluginId] = {}
-  // @ts-expect-error
   updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
   return updatedSettings
 }
 
-export const updateSettings = (currentSettings: Object, newSettings: Object) => {
+export const updateSettings = (currentSettings: any, newSettings: object) => {
   // update with new settings
   const updatedSettings = {
     ...currentSettings,

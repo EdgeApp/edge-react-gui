@@ -1,5 +1,4 @@
 import { abs, add, div, gt, lt, mul } from 'biggystring'
-// @ts-expect-error
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 

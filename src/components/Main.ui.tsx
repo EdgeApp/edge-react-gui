@@ -16,6 +16,7 @@ import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene'
 import { CryptoExchangeSuccessScene } from '../components/scenes/CryptoExchangeSuccessScene'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene'
+import { ExtraTabScene } from '../components/scenes/ExtraTabScene'
 import { FioAddressDetailsScene } from '../components/scenes/FioAddressDetailsScene'
 import { FioAddressListScene } from '../components/scenes/FioAddressListScene'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
@@ -143,8 +144,12 @@ export class MainComponent extends React.Component<Props> {
     return (
       <>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
-          {/* @ts-expect-error */}
-          <Stack key="root" hideNavBar panHandlers={null}>
+          <Stack
+            key="root"
+            hideNavBar
+            // @ts-expect-error
+            panHandlers={null}
+          >
             <Scene key="login" component={withNavigation(LoginScene)} initial />
             <Scene
               key="edgeLogin"
@@ -487,6 +492,17 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={this.renderEmptyButton()}
               />
             </Stack>
+            <Stack key="extraTab">
+              <Scene
+                key="extraTab"
+                component={withNavigation(ifLoggedIn(ExtraTabScene))}
+                navTransparent
+                // @ts-expect-error
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                // @ts-expect-error
+                renderRightButton={<SideMenuButton />}
+              />
+            </Stack>
           </Tabs>
 
           <Stack key="request" hideTabBar>
@@ -571,8 +587,11 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          {/* @ts-expect-error */}
-          <Stack key="settingsOverviewTab" hideDrawerButton>
+          <Stack
+            key="settingsOverviewTab"
+            // @ts-expect-error
+            hideDrawerButton
+          >
             <Scene
               key="settingsOverview"
               component={withNavigation(ifLoggedIn(SettingsScene))}
@@ -706,8 +725,11 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          {/* @ts-expect-error */}
-          <Stack key="pluginView" hideDrawerButton>
+          <Stack
+            key="pluginView"
+            // @ts-expect-error
+            hideDrawerButton
+          >
             <Scene
               key="pluginView"
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}

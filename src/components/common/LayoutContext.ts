@@ -19,8 +19,7 @@ export type LayoutMetrics = {
 type Props = {
   // Expects a single child, which is a function
   // that accepts the current layout and returns an element.
-  // @ts-expect-error
-  children: (layout: LayoutMetrics) => React.ChildrenArray<React.ReactNode>
+  children: (layout: LayoutMetrics) => React.ReactElement
 }
 
 /**

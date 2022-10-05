@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { FlatList, Keyboard } from 'react-native'
+import { FlatList, Keyboard, ListRenderItem } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
-import { useState } from '../../types/reactHooks'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -31,7 +30,7 @@ type Props<T> = {
   // List Props
   rowsData?: T[] // Defaults to []
   fullScreen?: boolean
-  rowComponent?: (props: T) => React.ReactNode
+  rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
   // Footer Props
   closeArrow?: boolean // Defaults to 'true'
@@ -50,12 +49,10 @@ export function ListModal<T>({
   onSubmitEditing,
   ...textProps
 }: Props<T>) {
-  const [text, setText] = useState<string>(initialValue)
+  const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
-  // @ts-expect-error
-  const renderItem = ({ item }) => (rowComponent ? rowComponent(item) : null)
-  // @ts-expect-error
-  const handleCancel = () => bridge.resolve()
+  const renderItem: ListRenderItem<T> = ({ item }) => (rowComponent ? rowComponent(item) : null)
+  const handleCancel = () => bridge.resolve(undefined)
   const handleChangeText = (text: string) => {
     setText(text)
     setFilteredRows(text)
@@ -88,7 +85,6 @@ export function ListModal<T>({
         initialNumToRender={12}
         onScroll={() => Keyboard.dismiss()}
         keyboardShouldPersistTaps="handled"
-        // @ts-expect-error
         renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
       />

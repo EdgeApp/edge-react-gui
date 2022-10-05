@@ -1,9 +1,7 @@
 import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
-// @ts-expect-error
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io'
-// @ts-expect-error
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -13,7 +11,6 @@ import SplashScreen from 'react-native-smart-splash-screen'
 import ENV from '../../../env.json'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import { useRef, useState } from '../../types/reactHooks'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
@@ -61,11 +58,11 @@ const crashReporter: EdgeCrashReporter = {
  * once the core context is ready.
  */
 export function EdgeCoreManager(props: Props) {
-  const [context, setContext] = useState<EdgeContext | null>(null)
+  const [context, setContext] = React.useState<EdgeContext | null>(null)
 
   // Scratchpad values that should not trigger re-renders:
-  const counter = useRef<number>(0)
-  const splashHidden = useRef<boolean>(false)
+  const counter = React.useRef<number>(0)
+  const splashHidden = React.useRef<boolean>(false)
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()

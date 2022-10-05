@@ -5,8 +5,8 @@ import { sprintf } from 'sprintf-js'
 import { ActionDisplayInfo, ActionDisplayStatus, ActionEffect, ActionOp, ActionProgram, ActionProgramState } from '../../controllers/action-queue/types'
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
+import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
 import { checkEffectIsDone, getEffectErrors } from './runtime'
 
@@ -74,9 +74,9 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
               }
               // Otherwise the effect should be a seq matching the seq actionOp:
               if (effect.type === 'par') {
-                if (effect.childEffects[index] === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
-                // @ts-expect-error
-                childEffect = effect.childEffects[index]
+                const currentChildEffect: ActionEffect | null = effect.childEffects[index]
+                if (currentChildEffect === null) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+                childEffect = currentChildEffect
               }
             }
 
@@ -100,7 +100,14 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       return {
         ...baseDisplayInfo,
         title: sprintf(s.strings.action_queue_display_swap_title, fromCurrencyCode, toCurrencyCode),
-        message: sprintf(s.strings.action_queue_display_swap_message, fromCurrencyCode, toCurrencyCode)
+        message: sprintf(
+          s.strings.action_queue_display_swap_message,
+          fromCurrencyCode,
+          config.appName,
+          toCurrencyCode,
+          s.strings.loan_aave_fragment,
+          toWallet.currencyInfo.currencyCode
+        )
       }
     }
     case 'wyre-buy': {
@@ -175,11 +182,6 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         message: sprintf(s.strings.action_queue_display_unknown_message),
         ...baseDisplayInfo
       }
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(actionOp.type)
     }
   }
 }

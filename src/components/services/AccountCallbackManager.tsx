@@ -8,7 +8,6 @@ import { newTransactionsRequest, refreshTransactionsRequest } from '../../action
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
-import { useEffect, useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
 import { isReceivedTransaction, snooze } from '../../util/utils'
@@ -35,7 +34,7 @@ const notDirty: DirtyList = {
 export function AccountCallbackManager(props: Props) {
   const { account } = props
   const dispatch = useDispatch()
-  const [dirty, setDirty] = useState<DirtyList>(notDirty)
+  const [dirty, setDirty] = React.useState<DirtyList>(notDirty)
 
   // Helper for marking wallets dirty:
   function addWallet(wallet: EdgeCurrencyWallet) {
@@ -47,7 +46,7 @@ export function AccountCallbackManager(props: Props) {
   }
 
   // Subscribe to the account:
-  useEffect(() => {
+  React.useEffect(() => {
     const cleanups = [
       account.watch('currencyWallets', () =>
         setDirty(dirty => ({

@@ -23,7 +23,7 @@ type WyreClientOptions = {
 
 type WyreClient = {
   readonly isAccountSetup: boolean
-  getPaymentMethods: () => Promise<PaymentMethodsMap | undefined>
+  getPaymentMethods: () => Promise<PaymentMethodsMap>
   getCryptoPaymentAddress: (wyreAccountId: string, walletId: string) => Promise<string>
 }
 
@@ -66,7 +66,7 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
     isAccountSetup,
 
     // Methods:
-    async getPaymentMethods(): Promise<PaymentMethodsMap | undefined> {
+    async getPaymentMethods(): Promise<PaymentMethodsMap> {
       if (!isAccountSetup) throw new Error('Wyre account not found for EdgeAccount')
 
       const uri = `${baseUri}/v2/paymentMethods`
@@ -79,7 +79,7 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
         handleHttpError(uri, response.status, responseData)
       }
       if (response.status === 204) {
-        return
+        return {}
       }
 
       const { data: paymentMethodsResponse } = asPaymentMethodsResponse(JSON.parse(responseData))

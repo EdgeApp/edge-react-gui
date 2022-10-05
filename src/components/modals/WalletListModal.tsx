@@ -1,17 +1,16 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { makeWyreClient, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useMemo, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeTokenId } from '../../types/types'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
@@ -49,7 +48,7 @@ type Props = {
 
   // Visuals:
   headerTitle: string
-  showWithdrawToBank?: boolean
+  showBankOptions?: boolean
   showCreateWallet?: boolean
   createWalletId?: string
 
@@ -79,7 +78,7 @@ export function WalletListModal(props: Props) {
 
     // Visuals:
     headerTitle,
-    showWithdrawToBank = false,
+    showBankOptions = false,
     showCreateWallet,
     createWalletId,
 
@@ -97,28 +96,21 @@ export function WalletListModal(props: Props) {
 
   // #region State
 
-  const [searching, setSearching] = useState(false)
-  const [searchText, setSearchText] = useState('')
+  const [searching, setSearching] = React.useState(false)
+  const [searchText, setSearchText] = React.useState('')
 
-  const [bankAccountsMap, setBankAccountsMap] = useState<PaymentMethodsMap | undefined>(undefined)
-
-  useAsyncEffect(
-    // @ts-expect-error
-    async () => {
-      const wyreClient = await makeWyreClient({ account })
-      if (wyreClient.isAccountSetup) {
-        setBankAccountsMap(await wyreClient.getPaymentMethods())
-      }
-    },
-    [account]
-  )
+  const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap> => {
+    const wyreClient = await makeWyreClient({ account })
+    if (!wyreClient.isAccountSetup) return {}
+    return await wyreClient.getPaymentMethods()
+  }, [account])
 
   // #endregion State
 
   // #region Init
 
   // Upgrade deprecated props
-  const [legacyAllowedAssets, legacyExcludeAssets] = useMemo(() => {
+  const [legacyAllowedAssets, legacyExcludeAssets] = React.useMemo(() => {
     if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
 
     const lookup = makeCurrencyCodeTable(account.currencyConfig)
@@ -129,7 +121,7 @@ export function WalletListModal(props: Props) {
   }, [account, allowedCurrencyCodes, excludeCurrencyCodes])
 
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
-  const walletListExcludeAssets = useMemo(() => {
+  const walletListExcludeAssets = React.useMemo(() => {
     const result = excludeAssets ?? legacyExcludeAssets
     return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets, legacyExcludeAssets])
@@ -141,7 +133,7 @@ export function WalletListModal(props: Props) {
   const handleCancel = useHandler(() => {
     bridge.resolve({})
   })
-  const handlePaymentMethodPress = useHandler((paymentMethodId: string, pluginId: string) => {
+  const handlePaymentMethodPress = useHandler((paymentMethodId: string) => () => {
     bridge.resolve({ wyreAccountId: paymentMethodId })
   })
   const handleWalletListPress = useHandler((walletId: string, currencyCode: string) => {
@@ -183,11 +175,15 @@ export function WalletListModal(props: Props) {
   )
 
   const renderPaymentMethod = useHandler(item => {
-    return <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" onPress={handlePaymentMethodPress} key={item.item.id} />
+    return (
+      <TouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
+        <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
+      </TouchableOpacity>
+    )
   })
 
   const renderBankSection = () =>
-    showWithdrawToBank ? (
+    showBankOptions ? (
       <>
         {bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? (
           renderBankSignupButton()
@@ -195,6 +191,7 @@ export function WalletListModal(props: Props) {
           <View>
             <FlatList
               data={Object.values(bankAccountsMap)}
+              keyboardShouldPersistTaps="handled"
               renderItem={renderPaymentMethod}
               getItemLayout={handleItemLayout}
               keyExtractor={item => item.id}

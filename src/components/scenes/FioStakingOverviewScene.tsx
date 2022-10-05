@@ -12,7 +12,6 @@ import { formatNumber, formatTimeDate } from '../../locales/intl'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
-import { useEffect, useState } from '../../types/reactHooks'
 import { connect } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -60,16 +59,14 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     fiatSymbol
   } = props
   const styles = getStyles(theme)
-  const [locks, setLocks] = useState<Lock[]>([])
+  const [locks, setLocks] = React.useState<Lock[]>([])
   const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     refreshAllFioAddresses()
   }, [refreshAllFioAddresses])
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     setLocks(
       stakingStatus.stakedAmounts
         .filter(({ unlockDate }) => unlockDate != null && new Date(unlockDate).getTime() >= new Date().getTime())
