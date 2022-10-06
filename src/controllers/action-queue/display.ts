@@ -157,10 +157,18 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       }
     }
     case 'loan-repay': {
-      return {
-        ...baseDisplayInfo,
-        title: s.strings.action_queue_display_loan_repay_title,
-        message: s.strings.action_queue_display_loan_repay_message
+      if (actionOp.fromTokenId != null) {
+        return {
+          ...baseDisplayInfo,
+          title: s.strings.action_queue_display_loan_repay_with_collateral_title,
+          message: s.strings.action_queue_display_loan_repay_with_collateral_message
+        }
+      } else {
+        return {
+          ...baseDisplayInfo,
+          title: s.strings.action_queue_display_loan_repay_title,
+          message: s.strings.action_queue_display_loan_repay_message
+        }
       }
     }
     case 'loan-withdraw': {
