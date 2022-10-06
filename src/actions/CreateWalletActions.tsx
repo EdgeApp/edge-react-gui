@@ -7,6 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene'
 import { Airship, showError } from '../components/services/AirshipInstance'
+import { WalletCreateItem } from '../components/themed/WalletList'
 import { getPluginId } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
@@ -202,4 +203,51 @@ export const createHandleUnavailableModal = (newWalletId: string, accountName: s
     />
   ))
   Actions.pop()
+}
+
+export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
+export interface MainWalletCreateItem extends WalletCreateItem {
+  walletType: string
+}
+interface TokenWalletCreateItem extends WalletCreateItem {
+  tokenId: string
+  createWalletIds: string[]
+}
+
+export const splitCreateWalletItems = (createItems: WalletCreateItem[]): { newWalletItems: MainWalletCreateItem[]; newTokenItems: TokenWalletCreateItem[] } => {
+  const newWalletItems: MainWalletCreateItem[] = []
+  const newTokenItems: TokenWalletCreateItem[] = []
+  createItems.forEach(item => {
+    if (item.walletType != null) {
+      newWalletItems.push(item as MainWalletCreateItem)
+    } else if (item.tokenId != null) {
+      if (item.createWalletIds == null) item.createWalletIds = []
+      newTokenItems.push(item as TokenWalletCreateItem)
+    }
+  })
+  return { newWalletItems, newTokenItems }
+}
+
+export const enableTokensAcrossWallets = (newTokenItems: TokenWalletCreateItem[]) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { currencyWallets } = state.core.account
+
+  const walletIdTokenMap = newTokenItems.reduce((map: { [walletId: string]: string[] }, item) => {
+    const { createWalletIds, tokenId } = item
+
+    const walletId = createWalletIds[0]
+    if (map[walletId] == null) map[walletId] = []
+    map[walletId].push(tokenId)
+
+    return map
+  }, {})
+
+  // Create the enableToken promises to be promise.all'd later
+  const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
+    const wallet = currencyWallets[walletId]
+    if (wallet == null) return
+    return wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
+  })
+
+  await Promise.all(promises)
 }
