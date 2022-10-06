@@ -4,7 +4,7 @@ import { asArray, asBoolean, asJSON, asObject, asOptional, asString, asValue, Cl
 // Store Types
 //
 
-export type LoanProgramType = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw'
+export type LoanProgramType = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw' | 'loan-close'
 export type LoanProgramEdge = {
   programId: string
   programType: LoanProgramType

@@ -24,6 +24,9 @@ const strings = {
   // loan_repay
   action_queue_display_loan_repay_title: `Repay loan principal`,
   action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
+  // loan_repay_with_collateral
+  action_queue_display_loan_repay_with_collateral_title: `Repay loan principal with collateral`,
+  action_queue_display_loan_repay_with_collateral_message: `Make a payment towards your loan principal using your collateral on AAVE.`,
   // loan_withdraw
   action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
   action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
