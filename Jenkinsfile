@@ -31,25 +31,6 @@ pipeline {
       }
     }
 
-    stage ("Get build number and version") {
-      steps {
-        // Install dependencies for the versioning script:
-        sh "npm i disklet cleaners sucrase"
-
-        // Copy release-version.json from the previous build:
-        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
-
-        // Pick the new build number and version:
-        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
-
-        // Update our description:
-        script {
-          def versionFile = readJSON file: "./release-version.json"
-          currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
-        }
-      }
-    }
-
     stage ("Load credentials") {
       steps {
         // Import the settings files
@@ -67,12 +48,61 @@ pipeline {
           sh "cp ${edge_release_keystore} ./keystores/edge-release-keystore.jks"
           sh "cp ${env_json} ./env.json"
         }
+
+        // develop credentials
+        withCredentials([
+          file(credentialsId: "efbd6cab-a1b3-4027-9a15-8c76fe7c1350", variable: "GoogleService_Info"),
+          file(credentialsId: "36c06912-38a6-466c-98dd-9ddd98ec7fd4", variable: "google_services"),
+          file(credentialsId: "5bbb9f5b-fa33-4f76-9796-0e0638840fe6", variable: "edge_develop_keystore"),
+        ]) {
+          sh "cp ${GoogleService_Info} ./deployPatches/edge/develop/GoogleService-Info.plist"
+          sh "cp ${google_services} ./deployPatches/edge/develop/google-services.json"
+          sh "cp ${edge_develop_keystore} ./keystores/edge-develop-keystore.jks"
+        }
+
+        // beta credentials
+        withCredentials([
+          file(credentialsId: "46441f81-81fb-4b74-a9cd-d9ac06dbd164", variable: "GoogleService_Info"),
+          file(credentialsId: "d843d89b-855f-4fb9-b45a-092ae0ea3be8", variable: "google_services"),
+          file(credentialsId: "f66a749b-e89e-4971-a3b4-a1b6df037a85", variable: "edge_beta_keystore"),
+        ]) {
+          sh "cp ${GoogleService_Info} ./deployPatches/edge/beta/GoogleService-Info.plist"
+          sh "cp ${google_services} ./deployPatches/edge/beta/google-services.json"
+          sh "cp ${edge_beta_keystore} ./keystores/edge-beta-keystore.jks"
+        }
       }
     }
 
     stage ("Install dependencies") {
       steps {
         sh "yarn"
+      }
+    }
+
+    stage ("Patch files") {
+      steps {
+        sh "node -r sucrase/register ./scripts/patchFiles.ts edge ${BRANCH_NAME}"
+      }
+    }
+
+    stage ("Get build number and version") {
+      steps {
+        // Copy release-version.json from the previous build:
+        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
+
+        // Pick the new build number and version:
+        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
+
+        // Update our description:
+        script {
+          def versionFile = readJSON file: "./release-version.json"
+          currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
+        }
+      }
+    }
+
+    stage ("Pre-build") {
+      steps {
         sh "yarn prepare"
       }
     }

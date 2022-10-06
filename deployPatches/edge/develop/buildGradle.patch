@@ -1,0 +1,13 @@
+diff --git a/android/app/build.gradle b/android/app/build.gradle
+index c49fd8caf..c1b0cbe3e 100644
+--- a/android/app/build.gradle
++++ b/android/app/build.gradle
+@@ -128,7 +128,7 @@ android {
+
+     defaultConfig {
+         multiDexEnabled true
+-        applicationId "co.edgesecure.app"
++        applicationId "app.edge.develop"
+         minSdkVersion rootProject.ext.minSdkVersion
+         targetSdkVersion rootProject.ext.targetSdkVersion
+         versionCode 21000000

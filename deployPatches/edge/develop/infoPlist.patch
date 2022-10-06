@@ -1,0 +1,22 @@
+diff --git a/ios/edge/Info.plist b/ios/edge/Info.plist
+index 58d1ff436..bf3e7f714 100644
+--- a/ios/edge/Info.plist
++++ b/ios/edge/Info.plist
+@@ -35,7 +35,7 @@
+ 			<key>CFBundleTypeRole</key>
+ 			<string>Editor</string>
+ 			<key>CFBundleURLName</key>
+-			<string>co.edgesecure.app</string>
++			<string>app.edge.develop</string>
+ 			<key>CFBundleURLSchemes</key>
+ 			<array>
+ 				<string>edge</string>
+@@ -48,7 +48,7 @@
+ 			<key>CFBundleTypeRole</key>
+ 			<string>Viewer</string>
+ 			<key>CFBundleURLName</key>
+-			<string>co.edgesecure.app</string>
++			<string>app.edge.develop</string>
+ 			<key>CFBundleURLSchemes</key>
+ 			<array>
+ 				<string>dash</string>
