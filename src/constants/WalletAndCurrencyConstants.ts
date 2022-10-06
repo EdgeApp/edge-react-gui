@@ -372,6 +372,18 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     }
   },
+  ethereumpow: {
+    initWalletName: s.strings.string_first_ethereum_pow_wallet_name,
+    chainCode: 'ETHW',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isBitPayProtocolSupported: false
+  },
   tezos: {
     initWalletName: s.strings.string_first_tezos_wallet_name,
     chainCode: 'XTZ',
