@@ -5,10 +5,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { checkLoanHasFunds } from '../../../controllers/loan-manager/util/checkLoanHasFunds'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
-import { useRefresher } from '../../../hooks/useRefresher'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
-import { BorrowEngine } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { translateError } from '../../../util/translateError'
@@ -38,12 +36,9 @@ export const LoanCloseScene = (props: Props) => {
   const { navigation, route } = props
   const { loanAccountId } = route.params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
+  const { borrowEngine } = loanAccount
 
   // Async State:
-  // Refreshing borrowEngine TODO: refactor common method
-  const borrowEngineRefresher = React.useCallback(async () => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
   const [approvableAction, approvableActionError] = useAsyncValue(async () => borrowEngine.close(), [borrowEngine])
 
   // Derived State:
