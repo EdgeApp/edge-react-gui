@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
 
 import { ActionOp } from '../controllers/action-queue/types'
+import { MAX_AMOUNT } from './../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 
@@ -112,29 +113,36 @@ export const makeAaveDepositAction = async ({
   return out
 }
 
-export const makeAaveRepayAction = async (borrowPluginId: string, nativeAmount: string, tokenId: string, wallet: EdgeCurrencyWallet): Promise<ActionOp> => {
-  // TODO: Spec out behavior for potentially repaying with a different asset.
-  const repayToken = getToken(wallet, tokenId)
-  if (repayToken == null) throw new Error(`Could not find repayment token ${tokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
-  await enableToken(repayToken.currencyCode, wallet)
-  return {
+export const makeAaveCloseAction = async ({
+  borrowPluginId,
+  collateralTokenId,
+  debtTokenId,
+  wallet
+}: {
+  borrowPluginId: string
+  collateralTokenId: string
+  debtTokenId: string
+  wallet: EdgeCurrencyWallet
+}): Promise<ActionOp[]> => {
+  const repayActionOp: ActionOp = {
     type: 'loan-repay',
+    nativeAmount: MAX_AMOUNT.toString(),
     borrowPluginId,
-    nativeAmount,
-    tokenId,
+    fromTokenId: collateralTokenId,
+    tokenId: debtTokenId,
     walletId: wallet.id
   }
-}
 
-export const makeAaveWithdrawAction = async (borrowPluginId: string, nativeAmount: string, tokenId: string, wallet: EdgeCurrencyWallet): Promise<ActionOp> => {
-  const withdrawalToken = getToken(wallet, tokenId)
-  if (withdrawalToken == null) throw new Error(`Could not find withdrawal token ${tokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
+  const withdrawalToken = getToken(wallet, collateralTokenId)
+  if (withdrawalToken == null) throw new Error(`Could not find withdrawal token ${collateralTokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
   await enableToken(withdrawalToken.currencyCode, wallet)
-  return {
+  const withdrawActionOp: ActionOp = {
     type: 'loan-withdraw',
     borrowPluginId,
-    nativeAmount,
-    tokenId,
+    nativeAmount: MAX_AMOUNT.toString(),
+    tokenId: collateralTokenId,
     walletId: wallet.id
   }
+  const out = [repayActionOp, withdrawActionOp]
+  return out
 }
