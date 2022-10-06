@@ -1,6 +1,8 @@
+import { gt } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
-import { BigNumber, ethers, Overrides } from 'ethers'
+import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
+import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
@@ -9,6 +11,10 @@ import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
 import { ApprovableAction, BorrowCollateral, BorrowDebt, BorrowEngine, BorrowRequest, DepositRequest, RepayRequest, WithdrawRequest } from '../../types'
 import { AaveNetwork } from './AaveNetwork'
+export { ContractMethod, SwapSide } from 'paraswap-core'
+
+const PARASWAP_SLIPPAGE_PERCENT = 1
+export const MAX_AMOUNT = ethers.constants.MaxUint256
 
 export type BorrowEngineBlueprint = {
   aaveNetwork: AaveNetwork
@@ -257,60 +263,159 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         })
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, fromWallet = wallet } = request
+        const { nativeAmount, fromTokenId, tokenId, fromWallet = wallet } = request
         if (zeroString(nativeAmount)) throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
-        const token = getToken(tokenId)
-        const tokenAddress = getTokenAddress(token)
+        const walletAddress = (await fromWallet.getReceiveAddress()).publicAddress
 
-        const spenderAddress = (await wallet.getReceiveAddress()).publicAddress
-
-        const asset = tokenAddress
-        const amount = BigNumber.from(nativeAmount)
-        const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress()).publicAddress
-        const amountToCover = amount.eq(ethers.constants.MaxUint256)
-          ? BigNumber.from(instance.debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0)
-          : amount
-
-        const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
-
-        const gasPrice = await aaveNetwork.provider.getGasPrice()
-        const txCallInfos: CallInfo[] = []
-
-        const approveTx = await getApproveAllowanceTx(amountToCover.toString(), onBehalfOf, aaveNetwork.lendingPool.address, tokenContract, { gasPrice })
-        if (approveTx != null) {
-          txCallInfos.push({
-            tx: approveTx,
-            wallet,
-            spendToken: token,
-            metadata: {
-              name: 'AAVE',
-              category: 'expense',
-              notes: `AAVE contract approval`
+        const debtToken = getToken(tokenId)
+        const debtTokenAddress = getTokenAddress(getToken(tokenId))
+        // HACK: Action queue doesn't wait until borrowEngine has synced before using it
+        if (instance.debts.find(debt => debt.tokenId === tokenId) == null) {
+          const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+          // @ts-expect-error
+          instance.debts = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: vBalance.toString(),
+              apr: variableApr
             }
           })
         }
+        const debt = instance.debts.find(debt => debt.tokenId === tokenId)
+        if (debt == null) throw new Error(`No debts to repay for ${tokenId}`)
 
-        const repayTx = asGracefulTxInfo(
-          await aaveNetwork.lendingPool.populateTransaction.repay(asset, amount, INTEREST_RATE_MODE, onBehalfOf, {
-            gasLimit: '800000',
-            gasPrice
+        const amount = BigNumber.from(nativeAmount)
+        const amountToCover =
+          amount.eq(MAX_AMOUNT) || gt(debt.nativeAmount, nativeAmount)
+            ? BigNumber.from(instance.debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0)
+            : amount
+
+        const gasPrice: BigNumberish = (await aaveNetwork.provider.getGasPrice()).mul(2)
+        const txCallInfos: CallInfo[] = []
+
+        // Repay with collateral
+        if (fromTokenId != null) {
+          if (fromTokenId == null) throw new Error('Native wrapped collateral not supported for closeWithCollateral')
+          if (tokenId == null) throw new Error('Native wrapped debt not supported for closeWithCollateral')
+
+          const collateralToken = getToken(fromTokenId)
+          const collateralTokenAddress = getTokenAddress(collateralToken)
+
+          // Build ParaSwap swap info
+          // Cap the amount to swap at the debt amount
+          const amountToSwap = amountToCover.mul(100 + PARASWAP_SLIPPAGE_PERCENT).div(100)
+          const chainId = fromWallet.currencyInfo.defaultSettings.otherSettings.chainParams.chainId
+          const paraswap = new ParaSwap(chainId, 'https://apiv5.paraswap.io')
+          const priceRoute = await paraswap.getRate(collateralTokenAddress, debtTokenAddress, amountToSwap.toString(), walletAddress, SwapSide.BUY, {
+            partner: 'aave',
+            excludeContractMethods: [ContractMethod.simpleBuy]
           })
-        )
 
-        txCallInfos.push({
-          tx: repayTx,
-          wallet,
-          spendToken: token,
-          metadata: {
-            name: 'AAVE',
-            category: 'transfer',
-            notes: `Repay ${token.displayName} loan`
+          if ('message' in priceRoute) throw new Error('BorrowEngine: Error getting priceRoute: ' + priceRoute.message)
+          const priceWithSlippage = ethers.BigNumber.from(priceRoute.srcAmount).mul(101).div(100).toString()
+          const swapTxParams = await paraswap.buildTx(
+            collateralTokenAddress,
+            debtTokenAddress,
+            priceWithSlippage,
+            priceRoute.destAmount,
+            priceRoute,
+            walletAddress,
+            'aave',
+            undefined,
+            undefined,
+            undefined,
+            { ignoreChecks: true }
+          )
+          if ('message' in swapTxParams) throw new Error('BorrowEngine: Error getting swapTxParams: ' + swapTxParams.message)
+
+          // Approve the AAVE aToken
+          const aCollateralContract = (await aaveNetwork.getReserveTokenContracts(collateralTokenAddress)).aToken
+          const { paraSwapRepayAdapter } = aaveNetwork
+          const approveTx = await getApproveAllowanceTx(amountToSwap.toString(), walletAddress, paraSwapRepayAdapter.address, aCollateralContract)
+          if (approveTx != null) {
+            txCallInfos.push({
+              tx: approveTx,
+              wallet,
+              metadata: {
+                name: 'AAVE',
+                category: 'expense',
+                notes: `AAVE contract approval`
+              }
+            })
           }
-        })
 
+          const repayTx = asGracefulTxInfo(
+            await paraSwapRepayAdapter.populateTransaction.swapAndRepay(
+              fromTokenId,
+              tokenId,
+              priceWithSlippage,
+              priceRoute.destAmount,
+              2, // 1 = stable, 2 = variable
+              164, // buyAllBalanceOffset 164 = Augustus V5 buy. Function call to handle the slight interest accrued after the tx is broadcasted
+              ethers.utils.defaultAbiCoder.encode(['bytes', 'address'], [swapTxParams.data, swapTxParams.to]),
+              {
+                amount: '0',
+                deadline: '0',
+                v: 0,
+                r: '0x0000000000000000000000000000000000000000000000000000000000000000',
+                s: '0x0000000000000000000000000000000000000000000000000000000000000000'
+              },
+              { gasLimit: '1800000', gasPrice }
+            )
+          )
+
+          txCallInfos.push({
+            tx: repayTx,
+            wallet,
+            metadata: {
+              name: 'AAVE',
+              category: 'transfer',
+              notes: `AAVE repay ${debtToken.displayName} with ${collateralToken.displayName} collateral`
+            }
+          })
+
+          const actions = await makeTxCalls(txCallInfos)
+          return composeApprovableActions(...actions)
+        } else {
+          // Repay with wallet funds
+          const tokenContract = await aaveNetwork.makeTokenContract(debtTokenAddress)
+
+          const gasPrice = await aaveNetwork.provider.getGasPrice()
+
+          const approveTx = await getApproveAllowanceTx(amountToCover.toString(), walletAddress, aaveNetwork.lendingPool.address, tokenContract, { gasPrice })
+          if (approveTx != null) {
+            txCallInfos.push({
+              tx: approveTx,
+              wallet,
+              spendToken: debtToken,
+              metadata: {
+                name: 'AAVE',
+                category: 'expense',
+                notes: `AAVE contract approval`
+              }
+            })
+          }
+
+          const repayTx = asGracefulTxInfo(
+            await aaveNetwork.lendingPool.populateTransaction.repay(debtTokenAddress, amount, INTEREST_RATE_MODE, walletAddress, {
+              gasLimit: '800000',
+              gasPrice
+            })
+          )
+
+          txCallInfos.push({
+            tx: repayTx,
+            wallet,
+            spendToken: debtToken,
+            metadata: {
+              name: 'AAVE',
+              category: 'transfer',
+              notes: `Repay ${debtToken.displayName} loan`
+            }
+          })
+        }
         const actions = await makeTxCalls(txCallInfos)
-
         return composeApprovableActions(...actions)
       },
       async close(): Promise<ApprovableAction> {
