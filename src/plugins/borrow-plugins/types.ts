@@ -99,9 +99,6 @@ export type BorrowEngine = {
   // Debt modification
   borrow: (request: BorrowRequest) => Promise<ApprovableAction>
   repay: (request: RepayRequest) => Promise<ApprovableAction>
-
-  // Close loan account
-  close: () => Promise<ApprovableAction>
 }
 
 // -----------------------------------------------------------------------------

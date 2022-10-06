@@ -415,30 +415,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         }
         const actions = await makeTxCalls(txCallInfos)
         return composeApprovableActions(...actions)
-      },
-      async close(): Promise<ApprovableAction> {
-        const repayActions = await Promise.all(
-          instance.debts.map(async debt => {
-            const { tokenId } = debt
-
-            return await instance.repay({
-              tokenId,
-              nativeAmount: ethers.constants.MaxUint256.toString()
-            })
-          })
-        )
-        const withdrawActions = await Promise.all(
-          instance.collaterals.map(async collateral => {
-            const { tokenId } = collateral
-
-            return await instance.withdraw({
-              tokenId,
-              nativeAmount: ethers.constants.MaxUint256.toString()
-            })
-          })
-        )
-
-        return composeApprovableActions(...repayActions, ...withdrawActions)
       }
     })
 
