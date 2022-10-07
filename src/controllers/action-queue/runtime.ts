@@ -629,16 +629,15 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
       const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
-      const swapQuote = await account.fetchSwapQuote({
-        fromWallet,
-        toWallet,
-        fromCurrencyCode,
-        toCurrencyCode,
-        nativeAmount,
-        quoteFor: amountFor
-      })
-
       const execute = async (): Promise<ExecutionOutput> => {
+        const swapQuote = await account.fetchSwapQuote({
+          fromWallet,
+          toWallet,
+          fromCurrencyCode,
+          toCurrencyCode,
+          nativeAmount,
+          quoteFor: amountFor
+        })
         const swapResult = await swapQuote.approve()
         const { transaction } = swapResult
         const { swapData } = transaction
