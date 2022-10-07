@@ -415,17 +415,15 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
             childOutputs.push(output)
           }
 
-          const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
-            (effects: ActionEffect[], output) => (output != null ? [...effects, output.effect] : effects),
-            []
-          )
+          const childEffects = childOutputs.flatMap(output => output.effect)
+          const broadcastTxs = childOutputs.flatMap(output => output.broadcastTxs)
 
           return {
             effect: {
               type: 'par',
               childEffects
             },
-            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+            broadcastTxs
           }
         },
         execute: async () => {
@@ -439,13 +437,15 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
             childOutputs.push(output)
           }
 
-          const effects = childOutputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
+          const childEffects = childOutputs.flatMap(output => output.effect)
+          const broadcastTxs = childOutputs.flatMap(output => output.broadcastTxs)
+
           return {
             effect: {
               type: 'par',
-              childEffects: effects
+              childEffects
             },
-            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...output.broadcastTxs], [])
+            broadcastTxs
           }
         }
       }
