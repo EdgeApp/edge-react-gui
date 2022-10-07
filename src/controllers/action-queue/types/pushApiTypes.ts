@@ -1,14 +1,17 @@
-import { asArray, asBoolean, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, Cleaner, uncleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, uncleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
-import { asBroadcastTx, asNewPushEvent, asPushEventState, asPushMessage, asPushTrigger, asPushTriggerState } from './pushCleaners'
-import { NewPushEvent, PushEventStatus } from './pushTypes'
+import { asBroadcastTx, asPushEventState, asPushMessage, asPushTrigger, asPushTriggerState } from './pushCleaners'
+import { BroadcastTx, PushEvent, PushMessage, PushTrigger } from './pushTypes'
 
 // ---------------------------------------------------------------------------
 // Request types
 // ---------------------------------------------------------------------------
 
-export type PushRequestBody = {
+/**
+ * All v2 requests use this request body.
+ */
+export interface PushRequestBody {
   // The request payload:
   data?: unknown
 
@@ -21,18 +24,40 @@ export type PushRequestBody = {
   loginId?: Uint8Array
 }
 
-export type DeviceUpdatePayload = {
-  loginIds?: Uint8Array[]
+/**
+ * Template for creating new push events.
+ */
+export interface NewPushEvent {
+  readonly eventId: string
+  readonly broadcastTxs?: BroadcastTx[]
+  readonly pushMessage?: PushMessage
+  readonly trigger: PushTrigger
+}
+
+/**
+ * PUSH /v2/device/update payload.
+ */
+export interface DeviceUpdatePayload {
   createEvents?: NewPushEvent[]
   removeEvents?: string[]
+
   ignorePriceChanges?: boolean
+  loginIds?: Uint8Array[]
+}
+
+/**
+ * PUSH /v2/login/update payload.
+ */
+export interface LoginUpdatePayload {
+  createEvents?: NewPushEvent[]
+  removeEvents?: string[]
 }
 
 // ---------------------------------------------------------------------------
 // Request cleaners
 // ---------------------------------------------------------------------------
 
-export const asPushRequestBody: Cleaner<PushRequestBody> = asObject({
+export const asPushRequestBody = asObject<PushRequestBody>({
   // The request payload:
   data: asUnknown,
 
@@ -47,39 +72,38 @@ export const asPushRequestBody: Cleaner<PushRequestBody> = asObject({
 
 export const wasPushRequestBody = uncleaner(asJSON(asPushRequestBody))
 
-/**
- * PUSH /v2/device/update payload.
- */
-export const asDeviceUpdatePayload = asObject({
-  loginIds: asArray(asBase64),
-  ignorePriceChanges: asOptional(asBoolean),
-  createEvents: asOptional(asArray(asNewPushEvent), []),
-  removeEvents: asOptional(asArray(asString), [])
+export const asNewPushEvent = asObject<NewPushEvent>({
+  eventId: asString,
+  broadcastTxs: asOptional(asArray(asBroadcastTx)),
+  pushMessage: asOptional(asPushMessage),
+  trigger: asPushTrigger
 })
 
-/**
- * PUSH /v2/login/update payload.
- */
+export const asDeviceUpdatePayload = asObject<DeviceUpdatePayload>({
+  createEvents: asOptional(asArray(asNewPushEvent), []),
+  removeEvents: asOptional(asArray(asString), []),
 
-export type LoginUpdatePayload = {
-  createEvents?: NewPushEvent[]
-  removeEvents?: string[]
-}
-export const asLoginUpdatePayload: Cleaner<LoginUpdatePayload> = asObject({
-  createEvents: asOptional(asArray(asNewPushEvent)),
-  removeEvents: asOptional(asArray(asString))
+  ignorePriceChanges: asOptional(asBoolean),
+  loginIds: asOptional(asArray(asBase64))
+})
+
+export const asLoginUpdatePayload = asObject<LoginUpdatePayload>({
+  createEvents: asOptional(asArray(asNewPushEvent), []),
+  removeEvents: asOptional(asArray(asString), [])
 })
 
 export const wasLoginUpdatePayload = uncleaner(asLoginUpdatePayload)
 
 // ---------------------------------------------------------------------------
-// Response types
+// Response cleaners
 // ---------------------------------------------------------------------------
 
 /**
  * A push event returned from a query.
  */
-export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
+
+export type PushEventStatus = ReturnType<typeof asPushEventStatus>
+export const asPushEventStatus = asObject<Omit<PushEvent, 'created' | 'deviceId' | 'loginId'>>({
   eventId: asString,
 
   broadcastTxs: asOptional(asArray(asBroadcastTx)),
@@ -90,7 +114,6 @@ export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
   broadcastTxErrors: asOptional(asArray(asEither(asString, asNull))),
   pushMessageEmits: asOptional(asNumber), // Number of devices we sent to
   pushMessageFails: asOptional(asNumber), // Number of devices that failed
-  pushMessageError: asOptional(asString),
   state: asPushEventState,
   triggered: asPushTriggerState
 })
@@ -99,9 +122,9 @@ export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
  * POST /v2/device response payload.
  */
 export const asDevicePayload = asObject({
-  loginIds: asArray(asBase64),
   events: asArray(asPushEventStatus),
-  ignorePriceChanges: asBoolean
+  ignorePriceChanges: asBoolean,
+  loginIds: asArray(asBase64)
 })
 
 /**

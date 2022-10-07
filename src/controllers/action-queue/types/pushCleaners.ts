@@ -1,12 +1,12 @@
 import { asArray, asDate, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue, Cleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
+import { NewPushEvent } from './pushApiTypes'
 import {
   AddressBalanceTrigger,
   AllTrigger,
   AnyTrigger,
   BroadcastTx,
-  NewPushEvent,
   PriceChangeTrigger,
   PriceLevelTrigger,
   PushEventState,

@@ -1,8 +1,8 @@
 //
-// Events that devices or logins may subscribe to.
+// Triggers that may cause an event to fire.
 //
 
-export type AddressBalanceTrigger = {
+export interface AddressBalanceTrigger {
   readonly type: 'address-balance'
   readonly pluginId: string
   readonly tokenId?: string
@@ -21,23 +21,28 @@ export interface AnyTrigger {
   readonly triggers: PushTrigger[]
 }
 
-export type PriceChangeTrigger = {
+/**
+ * The price change trigger is recurring, which makes it special.
+ * It will not broadcast transactions,
+ * and it will leave the the event status as "waiting".
+ */
+export interface PriceChangeTrigger {
   readonly type: 'price-change'
   readonly pluginId: string
   readonly currencyPair: string // From our rates server
-  readonly directions?: [string, string, string, string]
+  readonly directions?: string[] // [hourUp, hourDown, dayUp, dayDown]
   readonly dailyChange?: number // Percentage
   readonly hourlyChange?: number // Percentage
 }
 
-export type PriceLevelTrigger = {
+export interface PriceLevelTrigger {
   readonly type: 'price-level'
   readonly currencyPair: string // From our rates server
   readonly aboveRate?: number
   readonly belowRate?: number
 }
 
-export type TxConfirmTrigger = {
+export interface TxConfirmTrigger {
   readonly type: 'tx-confirm'
   readonly pluginId: string
   readonly confirmations: number
@@ -56,10 +61,14 @@ export type PushTriggerState =
   // For normal triggers:
   | Date
 
+//
+// Events that happen when a trigger fires.
+//
+
 /**
  * Broadcasts a transaction to a blockchain.
  */
-export type BroadcastTx = {
+export interface BroadcastTx {
   readonly pluginId: string
   readonly rawTx: Uint8Array // asBase64
 }
@@ -67,7 +76,7 @@ export type BroadcastTx = {
 /**
  * Sends a push notification.
  */
-export type PushMessage = {
+export interface PushMessage {
   readonly title?: string
   readonly body?: string
   readonly data?: { [key: string]: string } // JSON to push to device
@@ -83,8 +92,11 @@ export type PushEventState =
  * Combines a trigger with an action.
  * This the in-memory format, independent of the database.
  */
-export type PushEventStatus = {
+export interface PushEvent {
+  readonly created: Date
   readonly eventId: string // From the client, not globally unique
+  readonly deviceId?: string
+  readonly loginId?: Uint8Array
 
   readonly broadcastTxs?: BroadcastTx[]
   readonly pushMessage?: PushMessage
@@ -96,14 +108,4 @@ export type PushEventStatus = {
   pushMessageFails?: number // Number of devices that failed
   state: PushEventState
   triggered: PushTriggerState // When did we see the trigger?
-}
-
-/**
- * Template for creating new push events.
- */
-export type NewPushEvent = {
-  readonly eventId: string
-  readonly broadcastTxs?: BroadcastTx[]
-  readonly pushMessage?: PushMessage
-  readonly trigger: PushTrigger
 }
