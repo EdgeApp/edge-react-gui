@@ -102,8 +102,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
           // then add it
           ...tx,
           dateString: date,
-          time,
-          key
+          time
         })
         key++
       }

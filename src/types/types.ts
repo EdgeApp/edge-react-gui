@@ -116,7 +116,6 @@ export type GuiFiatType = {
 
 export type TransactionListTx = EdgeTransaction & {
   dateString: string
-  key: number
   time: string
   unfilteredIndex: number
 }
