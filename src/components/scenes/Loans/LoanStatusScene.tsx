@@ -40,7 +40,6 @@ export const LoanStatusScene = (props: Props) => {
 
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const [steps, setSteps] = React.useState<ActionDisplayInfo[]>()
-  // @ts-expect-error
   useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]
 
@@ -68,6 +67,7 @@ export const LoanStatusScene = (props: Props) => {
     } else {
       // 3. ActionQueueItem does not yet exist...
     }
+    return () => {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionQueue])
 
