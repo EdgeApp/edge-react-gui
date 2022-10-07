@@ -398,7 +398,23 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
 
       return {
         dryrun: async pendingTxMap => {
-          const childOutputs = await Promise.all(childExecutableActions.map(async executableAction => executableAction.dryrun(pendingTxMap)))
+          // Clone because we can't mutate pendingTxMap
+          const pendingTxMapLocal: PendingTxMap = { ...pendingTxMap }
+
+          const childOutputs: ExecutionOutput[] = []
+          for (const executableAction of childExecutableActions) {
+            const output = await executableAction.dryrun(pendingTxMapLocal)
+            // Exit early if the child effect cannot be dryrun
+            if (output == null) return null
+            // Add broadcastTxs to localPendingTxMap to be used in the next iteration of this loop
+            for (const broadcastTx of output.broadcastTxs) {
+              const walletId = broadcastTx.walletId
+              pendingTxMapLocal[walletId] = [...(pendingTxMapLocal[walletId] ?? []), broadcastTx.tx]
+            }
+            // Add output to childOutputs
+            childOutputs.push(output)
+          }
+
           const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
             (effects: ActionEffect[], output) => (output != null ? [...effects, output.effect] : effects),
             []
@@ -413,14 +429,23 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
           }
         },
         execute: async () => {
-          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
-          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
+          // Execute actions serially in order to make sure transaction state is saved to wallets
+          // before continuing to next action. This is important for state like correct nonce or
+          // UTXO selection.
+          const childOutputs: ExecutionOutput[] = []
+          for (const executableAction of childExecutableActions) {
+            const output = await executableAction.execute()
+            // Add output to childOutputs
+            childOutputs.push(output)
+          }
+
+          const effects = childOutputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
           return {
             effect: {
               type: 'par',
               childEffects: effects
             },
-            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...output.broadcastTxs], [])
+            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...output.broadcastTxs], [])
           }
         }
       }
