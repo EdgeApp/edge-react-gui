@@ -23,6 +23,7 @@ export type RepayRequest = {
 
   // Optional source for the funds which will repay on behalf of the borrow engine's currencyWallet
   fromWallet?: EdgeCurrencyWallet
+  fromTokenId?: string
 }
 
 // Deposit collateral:
@@ -37,7 +38,7 @@ export type DepositRequest = {
 // Withdraw collateral:
 export type WithdrawRequest = {
   tokenId?: string
-  nativeAmount: string
+  nativeAmount?: string
 
   // Optional destination for the funds
   toWallet?: EdgeCurrencyWallet
@@ -98,9 +99,6 @@ export type BorrowEngine = {
   // Debt modification
   borrow: (request: BorrowRequest) => Promise<ApprovableAction>
   repay: (request: RepayRequest) => Promise<ApprovableAction>
-
-  // Close loan account
-  close: () => Promise<ApprovableAction>
 }
 
 // -----------------------------------------------------------------------------

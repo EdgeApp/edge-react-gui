@@ -24,6 +24,9 @@ const strings = {
   // loan_repay
   action_queue_display_loan_repay_title: `Repay loan principal`,
   action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
+  // loan_repay_with_collateral
+  action_queue_display_loan_repay_with_collateral_title: `Repay loan principal with collateral`,
+  action_queue_display_loan_repay_with_collateral_message: `Make a payment towards your loan principal using your collateral on AAVE.`,
   // loan_withdraw
   action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
   action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
@@ -930,9 +933,11 @@ const strings = {
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
   loan_breakdown_title: 'Loan Breakdown',
-  loan_close_loan_message:
+  loan_close_loan_warning:
     "Closing your loan will liquidate some of the collateral to pay of the remaining principle and interest of your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principle isn't repaid.",
   loan_close_loan_title: 'Close Loan',
+  loan_close_loan_error:
+    'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
   loan_collateral_amount: 'Collateral Amount',
   loan_collateral_destination: 'Collateral Destination',
   loan_collateral_required: 'Collateral Amount Required',

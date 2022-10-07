@@ -29,11 +29,9 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
 
   if (gasPrice == null || gasLimit == null) throw new Error('Explicit gas price and limit required for ApprovableAction.')
 
-  const makeSpend = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<EdgeTransaction> => {
+  const makeApprovableCallSpend = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<EdgeTransaction> => {
     const pendingTxs = pendingTxMap[walletId] ?? []
     const edgeSpendInfo: EdgeSpendInfo = {
-      // @ts-expect-error
-      pluginId: wallet.currencyInfo.pluginId,
       currencyCode: spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode,
       skipChecks: dryrun,
       spendTargets: [
@@ -56,7 +54,7 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
     return edgeUnsignedTx
   }
 
-  const placeholderTx = await makeSpend(true, {})
+  const placeholderTx = await makeApprovableCallSpend(true, {})
   const networkFee = {
     currencyCode: wallet.currencyInfo.currencyCode,
     nativeAmount: placeholderTx.parentNetworkFee ?? placeholderTx.networkFee ?? '0'
@@ -66,7 +64,7 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
     networkFee,
     unsignedTxs: [placeholderTx],
     dryrun: async (pendingTxMap: PendingTxMap) => {
-      const unsignedTx = await makeSpend(true, pendingTxMap)
+      const unsignedTx = await makeApprovableCallSpend(true, pendingTxMap)
       const tx = await wallet.signTx(unsignedTx)
       const networkFee = {
         currencyCode: wallet.currencyInfo.currencyCode,
@@ -75,7 +73,7 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
       return [{ walletId, networkFee, tx }]
     },
     approve: async () => {
-      const edgeUnsignedTx = await makeSpend(false, {})
+      const edgeUnsignedTx = await makeApprovableCallSpend(false, {})
       const tx = await wallet.signTx(edgeUnsignedTx)
       await wallet.broadcastTx(tx)
       await wallet.saveTx(tx)

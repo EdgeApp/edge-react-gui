@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
 
-import { ActionOp, ActionProgram } from '../controllers/action-queue/types'
+import { ActionOp } from '../controllers/action-queue/types'
+import { MAX_AMOUNT } from './../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 
@@ -22,7 +23,7 @@ export const makeAaveBorrowAction = async ({
   destBankId?: string
   nativeAmount: string
 }): Promise<ActionOp[]> => {
-  const out = []
+  const out: ActionOp[] = []
   const borrowToken = getToken(borrowEngineWallet, borrowTokenId)
 
   // If no borrow token specified (withdraw to bank), default to USDC for intermediate borrow step prior to withdrawing to bank
@@ -58,7 +59,6 @@ export const makeAaveBorrowAction = async ({
     })
   }
 
-  // @ts-expect-error
   return out
 }
 
@@ -77,7 +77,7 @@ export const makeAaveDepositAction = async ({
   srcTokenId?: string
   srcWallet: EdgeCurrencyWallet
 }): Promise<ActionOp[]> => {
-  const out = []
+  const out: ActionOp[] = []
   // TODO: Handle buy from fiat onramp in a separate method
 
   const depositToken = getToken(borrowEngineWallet, depositTokenId)
@@ -110,42 +110,39 @@ export const makeAaveDepositAction = async ({
     walletId: borrowEngineWallet.id
   })
 
-  // @ts-expect-error
   return out
 }
 
-export const makeAaveRepayAction = async (borrowPluginId: string, nativeAmount: string, tokenId: string, wallet: EdgeCurrencyWallet) => {
-  // TODO: Spec out behavior for potentially repaying with a different asset.
-  const repayToken = getToken(wallet, tokenId)
-  if (repayToken == null) throw new Error(`Could not find repayment token ${tokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
-  await enableToken(repayToken.currencyCode, wallet)
-  return {
+export const makeAaveCloseAction = async ({
+  borrowPluginId,
+  collateralTokenId,
+  debtTokenId,
+  wallet
+}: {
+  borrowPluginId: string
+  collateralTokenId: string
+  debtTokenId: string
+  wallet: EdgeCurrencyWallet
+}): Promise<ActionOp[]> => {
+  const repayActionOp: ActionOp = {
     type: 'loan-repay',
+    nativeAmount: MAX_AMOUNT.toString(),
     borrowPluginId,
-    nativeAmount,
-    tokenId,
+    fromTokenId: collateralTokenId,
+    tokenId: debtTokenId,
     walletId: wallet.id
   }
-}
 
-export const makeAaveWithdrawAction = async (borrowPluginId: string, nativeAmount: string, tokenId: string, wallet: EdgeCurrencyWallet) => {
-  const withdrawalToken = getToken(wallet, tokenId)
-  if (withdrawalToken == null) throw new Error(`Could not find withdrawal token ${tokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
+  const withdrawalToken = getToken(wallet, collateralTokenId)
+  if (withdrawalToken == null) throw new Error(`Could not find withdrawal token ${collateralTokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
   await enableToken(withdrawalToken.currencyCode, wallet)
-  return {
+  const withdrawActionOp: ActionOp = {
     type: 'loan-withdraw',
     borrowPluginId,
-    nativeAmount,
-    tokenId,
+    nativeAmount: MAX_AMOUNT.toString(),
+    tokenId: collateralTokenId,
     walletId: wallet.id
   }
-}
-
-export async function makeActionProgram(actionOp: ActionOp, id?: string): Promise<ActionProgram> {
-  const programId = Date.now().toString() + (id ?? '')
-
-  return {
-    programId,
-    actionOp
-  }
+  const out = [repayActionOp, withdrawActionOp]
+  return out
 }

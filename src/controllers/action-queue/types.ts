@@ -62,6 +62,7 @@ export type LoanRepayActionOp = {
   nativeAmount: string
   walletId: string
   tokenId?: string
+  fromTokenId?: string
 }
 export type LoanWithdrawActionOp = {
   type: 'loan-withdraw'

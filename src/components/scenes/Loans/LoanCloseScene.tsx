@@ -1,17 +1,24 @@
+import { add } from 'biggystring'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
-import { checkLoanHasFunds } from '../../../controllers/loan-manager/util/checkLoanHasFunds'
+import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
+import { ActionOp } from '../../../controllers/action-queue/types'
+import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
-import { useRefresher } from '../../../hooks/useRefresher'
+import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
-import { BorrowEngine } from '../../../plugins/borrow-plugins/types'
+import { MAX_AMOUNT } from '../../../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
+import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { makeAaveCloseAction } from '../../../util/ActionProgramUtils'
+import { filterNull } from '../../../util/safeFilters'
 import { translateError } from '../../../util/translateError'
+import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
@@ -38,32 +45,68 @@ export const LoanCloseScene = (props: Props) => {
   const { navigation, route } = props
   const { loanAccountId } = route.params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowPlugin, borrowEngine: initBorrowEngine } = loanAccount
+  const { borrowPlugin, borrowEngine } = loanAccount
+  const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
+  const { currencyWallet: borrowEngineWallet } = borrowEngine
 
-  // Async State:
-  // Refreshing borrowEngine TODO: refactor common method
-  const borrowEngineRefresher = React.useCallback(async () => borrowPlugin.makeBorrowEngine(initBorrowEngine.currencyWallet), [borrowPlugin, initBorrowEngine])
-  const borrowEngine = useRefresher<BorrowEngine>(borrowEngineRefresher, initBorrowEngine, 10000)
-  const [approvableAction, approvableActionError] = useAsyncValue(async () => borrowEngine.close(), [borrowEngine])
+  const borrowEngineCollaterals = useWatch(borrowEngine, 'collaterals')
+  const collaterals = React.useMemo(() => borrowEngineCollaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [borrowEngineCollaterals])
+  const collateral = collaterals[0]
+  const collateralTokenId = collateral?.tokenId
+
+  const borrowEngineDebts = useWatch(borrowEngine, 'debts')
+  const debts = React.useMemo(() => borrowEngineDebts.filter(debt => !zeroString(debt.nativeAmount)), [borrowEngineDebts])
+  const debt = debts[0]
+  const debtTokenId = debt?.tokenId
+
+  const isLoanCloseSupported = collaterals.length === 1 && debts.length === 1
 
   // Derived State:
-  const networkFee = approvableAction != null ? approvableAction.networkFee.nativeAmount : '0'
-  const { currencyWallet: wallet } = borrowEngine
 
-  const collaterals = useWatch(borrowEngine, 'collaterals')
-  const debts = useWatch(borrowEngine, 'debts')
+  // Approval actions validity checks
+  const [repayApprovalAction, repayApprovalActionError] = useAsyncValue<ApprovableAction | null>(async () => {
+    if (collateralTokenId == null || debtTokenId == null) return null
+    return await borrowEngine.repay({ nativeAmount: MAX_AMOUNT.toString(), tokenId: debtTokenId, fromTokenId: collateralTokenId })
+  }, [borrowEngine, debtTokenId, collateralTokenId])
 
-  // Handlers:
-  const onSliderComplete = async (reset: () => void) => {
-    if (approvableAction == null) return
+  const [withdrawApprovalAction, withdrawApprovalActionError] = useAsyncValue<ApprovableAction | null>(async () => {
+    if (debtTokenId == null) return null
+    return await borrowEngine.withdraw({ tokenId: collateralTokenId, nativeAmount: collateral?.nativeAmount })
+  }, [borrowEngine, debtTokenId])
 
-    if (checkLoanHasFunds(borrowEngine)) {
-      await approvableAction.approve()
+  const isApprovableActionValid = repayApprovalAction != null && withdrawApprovalAction != null
+
+  const approvalErrors = filterNull([repayApprovalActionError, withdrawApprovalActionError].map(err => (err != null ? translateError(err.message) : null)))
+
+  // Create Action Ops
+  const [actionOps, setActionOps] = React.useState<ActionOp | null>(null)
+  useAsyncEffect(async () => {
+    if (collateral != null && collateralTokenId != null && debtTokenId != null) {
+      setActionOps({
+        type: 'seq',
+        actions: await makeAaveCloseAction({
+          borrowPluginId,
+          collateralTokenId,
+          debtTokenId,
+          wallet: borrowEngineWallet
+        })
+      })
+    } else {
+      setActionOps(null)
     }
 
-    await dispatch(updateLoanAccount({ ...loanAccount, closed: true }))
-    navigation.popToTop()
-  }
+    return () => {}
+  }, [borrowEngine, borrowEngineWallet, borrowPluginId, collateral, collateralTokenId, debt, debtTokenId])
+
+  const networkFee = !isApprovableActionValid ? '0' : add(repayApprovalAction.networkFee.nativeAmount, withdrawApprovalAction.networkFee.nativeAmount)
+
+  // Handlers:
+  const handleSliderComplete = useHandler(async (reset: () => void) => {
+    if (actionOps == null) return
+    const actionProgram = await makeActionProgram(actionOps)
+    await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-close'))
+    navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
+  })
 
   return (
     <SceneWrapper>
@@ -73,39 +116,39 @@ export const LoanCloseScene = (props: Props) => {
         </Space>
       </SceneHeader>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={wallet} debtsOrCollaterals={debts} />
-        <NetworkFeeTile wallet={wallet} nativeAmount={networkFee} />
-        {/* TODO: Show a single source wallet picker */}
+        <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
+        <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFee} />
         <Tile title={s.strings.loan_remaining_principal} type="static">
           {debts.map(debt => (
             <Space key={debt.tokenId} vertical={0.5}>
-              <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={wallet} />
+              <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} />
             </Space>
           ))}
         </Tile>
         <Tile title={s.strings.loan_collateral_amount} type="static">
           {collaterals.map(collateral => (
             <Space key={collateral.tokenId} vertical={0.5}>
-              <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={wallet} />
+              <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} />
             </Space>
           ))}
         </Tile>
-        {/* TODO: Show a single destination wallet picker */}
-        {/* Hide destination wallet picker because we can get away using the loan account wallet as the source and destination */}
-        {/* <Tile title={s.strings.loan_collateral_destination} type="static">
-          {collaterals.map(collateral => (
-            <TappableRow veritcal={0.5} key={collateral.tokenId}>
-              <CurrencyRow wallet={wallet} tokenId={collateral.tokenId} />
-            </TappableRow>
-          ))}
-        </Tile> */}
-        <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_message} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
-        {approvableActionError != null ? (
-          <Alert title={s.strings.loan_error_title} message={translateError(approvableActionError)} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
+        {!isLoanCloseSupported ? (
+          <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
+        ) : (
+          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        )}
+        {approvalErrors.length > 0 ? (
+          <Alert
+            title={s.strings.loan_error_title}
+            message={translateError(approvalErrors.concat('\n\n'))}
+            type="error"
+            numberOfLines={7}
+            marginRem={[1, 1, 0]}
+          />
         ) : null}
 
         <Space top bottom={2}>
-          <SafeSlider onSlidingComplete={onSliderComplete} disabled={approvableAction === null} />
+          <SafeSlider onSlidingComplete={handleSliderComplete} disabled={!isApprovableActionValid} />
         </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>

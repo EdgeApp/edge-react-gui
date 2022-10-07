@@ -516,7 +516,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       return await approvableActionToExecutableAction(approvableAction)
     }
     case 'loan-repay': {
-      const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
+      const { borrowPluginId, nativeAmount, walletId, tokenId, fromTokenId } = actionOp
 
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
@@ -530,7 +530,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
 
       // Do the thing
-      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId })
+      const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, fromTokenId })
 
       return await approvableActionToExecutableAction(approvableAction)
     }
