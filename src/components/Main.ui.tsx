@@ -1155,10 +1155,6 @@ export class MainComponent extends React.Component<Props> {
         return true
       }
     }
-    if (this.isCurrentScene('loanStatus')) {
-      Actions.jump('loanDashboard', {})
-      return true
-    }
     Actions.pop()
     return true
   }

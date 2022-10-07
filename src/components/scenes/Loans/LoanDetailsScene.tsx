@@ -113,7 +113,7 @@ export const LoanDetailsScene = (props: Props) => {
   }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
-    navigation.navigate('loanStatus', { actionQueueId: programEdge.programId })
+    navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
   }
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {

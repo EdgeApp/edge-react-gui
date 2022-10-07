@@ -147,7 +147,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       try {
         await dispatch(createLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
-        navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
+        navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
       } catch (e: any) {
         showError(e)
       } finally {
