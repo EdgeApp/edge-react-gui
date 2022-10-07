@@ -127,7 +127,7 @@ export type Action =
       data: {
         numTransactions: number
         transactions: TransactionListTx[]
-        transactionIdMap: { [txid: string]: TransactionListTx }
+        transactionIdMap: { [txid: string]: boolean }
         currentCurrencyCode: string
         currentWalletId: string
         currentEndIndex: number

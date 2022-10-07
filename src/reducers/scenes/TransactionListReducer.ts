@@ -8,7 +8,7 @@ export type TransactionListState = {
   readonly currentEndIndex: number
   readonly currentWalletId: string
   readonly numTransactions: number
-  readonly transactionIdMap: { [txid: string]: TransactionListTx }
+  readonly transactionIdMap: { [txid: string]: boolean }
   readonly transactions: TransactionListTx[]
 }
 
@@ -27,7 +27,7 @@ const transactions = (state = [], action: Action): TransactionListTx[] => {
   }
 }
 
-const transactionIdMap = (state = {}, action: Action): { [txid: string]: TransactionListTx } => {
+const transactionIdMap = (state = {}, action: Action): { [txid: string]: boolean } => {
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
       return action.data.transactionIdMap
