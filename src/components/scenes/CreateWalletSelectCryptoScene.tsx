@@ -1,6 +1,7 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, FlatList, View } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
@@ -79,19 +80,14 @@ export class CreateWalletSelectCryptoComponent extends React.Component<Props, St
   }
 
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
+    const { theme } = this.props
     const { currencyCode, pluginId } = data.item
     // Ripple hack:
     let { currencyName } = data.item
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
-    return (
-      <CreateWalletSelectCryptoRow
-        currencyCode={currencyCode}
-        pluginId={pluginId}
-        walletName={currencyName}
-        onPress={() => this.handleSelectWalletType(data.item)}
-      />
-    )
+    const svg = <IonIcon size={theme.rem(1.5)} color={theme.iconTappable} name="chevron-forward-outline" />
+    return <CreateWalletSelectCryptoRow pluginId={pluginId} walletName={currencyName} onPress={() => this.handleSelectWalletType(data.item)} rightSide={svg} />
   }
 
   keyExtractor = (item: CreateWalletType, index: number): string => {
