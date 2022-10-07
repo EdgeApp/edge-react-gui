@@ -215,16 +215,16 @@ export type ParamList = {
   loanClose: {
     loanAccountId: string
   }
-  loanAddCollateralScene: {
+  loanDeposit: {
     loanAccountId: string
   }
-  loanBorrowMoreScene: {
+  loanBorrow: {
     loanAccountId: string
   }
-  loanWithdrawCollateralScene: {
+  loanWithdraw: {
     loanAccountId: string
   }
-  loanRepayScene: {
+  loanRepay: {
     loanAccountId: string
   }
   loanStatus: {

@@ -1039,7 +1039,7 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key="loanAddCollateralScene"
+              key="loanDeposit"
               component={withNavigation(ifLoggedIn(LoanAddCollateralScene))}
               navTransparent
               // @ts-expect-error
@@ -1050,7 +1050,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
             />
             <Scene
-              key="loanWithdrawCollateralScene"
+              key="loanWithdraw"
               component={withNavigation(ifLoggedIn(LoanWithdrawCollateralScene))}
               navTransparent
               // @ts-expect-error
@@ -1061,7 +1061,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
             />
             <Scene
-              key="loanRepayScene"
+              key="loanRepay"
               component={withNavigation(ifLoggedIn(LoanMakeLoanPaymentScene))}
               navTransparent
               // @ts-expect-error
@@ -1072,7 +1072,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={<SideMenuButton />}
             />
             <Scene
-              key="loanBorrowMoreScene"
+              key="loanBorrow"
               component={withNavigation(ifLoggedIn(LoanBorrowMoreScene))}
               navTransparent
               // @ts-expect-error

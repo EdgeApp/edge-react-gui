@@ -97,19 +97,19 @@ export const LoanDetailsScene = (props: Props) => {
   ]
 
   const handleAddCollateralPress = () => {
-    navigation.navigate('loanAddCollateralScene', { loanAccountId })
+    navigation.navigate('loanDeposit', { loanAccountId })
   }
   const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanWithdrawCollateralScene', { loanAccountId })
+    navigation.navigate('loanWithdraw', { loanAccountId })
   }
   const handleLoanClosePress = () => {
     navigation.navigate('loanClose', { loanAccountId })
   }
   const handleBorrowMorePress = () => {
-    navigation.navigate('loanBorrowMoreScene', { loanAccountId })
+    navigation.navigate('loanBorrow', { loanAccountId })
   }
   const handleRepayPress = () => {
-    navigation.navigate('loanRepayScene', { loanAccountId })
+    navigation.navigate('loanRepay', { loanAccountId })
   }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
