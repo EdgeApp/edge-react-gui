@@ -113,9 +113,7 @@ export const LoanDetailsScene = (props: Props) => {
   }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
-    // Go to LoanDetailsStatusScene or LoanCreateStatusScene, depending on the action program
-    const statusScene = programEdge.programType === 'loan-create' ? 'loanCreateStatus' : 'loanDetailsStatus'
-    navigation.navigate(statusScene, { actionQueueId: programEdge.programId })
+    navigation.navigate('loanStatus', { actionQueueId: programEdge.programId })
   }
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {

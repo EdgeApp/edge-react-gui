@@ -1095,17 +1095,7 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key="loanCreateStatus"
-              component={withNavigation(ifLoggedIn(LoanStatusScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-            />
-            <Scene
-              key="loanDetailsStatus"
+              key="loanStatus"
               component={withNavigation(ifLoggedIn(LoanStatusScene))}
               navTransparent
               // @ts-expect-error
@@ -1165,7 +1155,7 @@ export class MainComponent extends React.Component<Props> {
         return true
       }
     }
-    if (this.isCurrentScene('loanCreateStatus')) {
+    if (this.isCurrentScene('loanStatus')) {
       Actions.jump('loanDashboard', {})
       return true
     }

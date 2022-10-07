@@ -230,12 +230,6 @@ export type ParamList = {
   loanStatus: {
     actionQueueId: string
   }
-  loanCreateStatus: {
-    actionQueueId: string
-  }
-  loanDetailsStatus: {
-    actionQueueId: string
-  }
   manageTokens: {
     walletId: string
   }

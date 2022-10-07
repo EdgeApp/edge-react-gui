@@ -55,7 +55,7 @@ export const LoanCreateScene = (props: Props) => {
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId('loan-create', borrowEngineWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanCreateStatus', { actionQueueId: existingProgramId })
+  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId })
 
   // #endregion Initialization
 
