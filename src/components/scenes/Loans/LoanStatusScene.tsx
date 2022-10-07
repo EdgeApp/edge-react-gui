@@ -58,8 +58,13 @@ export const LoanStatusScene = (props: Props) => {
       // 2. The first step of a seq does not get set to 'active'
       const { program, state } = actionQueueItem
       const displayInfo = await getActionProgramDisplayInfo(account, program, state)
-      if (displayInfo.steps[0].status === 'pending') displayInfo.steps[0].status = 'active'
-      setSteps([...displayInfo.steps])
+
+      // Flatten steps
+      const steps = [...displayInfo.steps].reduce((steps: ActionDisplayInfo[], step) => [...steps, ...(step.steps.length > 0 ? step.steps : [step])], [])
+
+      if (steps[0].status === 'pending') steps[0].status = 'active'
+
+      setSteps(steps)
     } else {
       // 3. ActionQueueItem does not yet exist...
     }

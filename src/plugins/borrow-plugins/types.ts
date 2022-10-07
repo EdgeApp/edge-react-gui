@@ -55,7 +55,7 @@ export type ApprovableAction = {
   readonly networkFee: EdgeNetworkFee
   readonly unsignedTxs: EdgeTransaction[]
   // Optional pending txs to pass along to the wallet when making transactions
-  readonly dryrun: (pendingTxMap: PendingTxMap) => Promise<BroadcastTx[]>
+  readonly dryrun: (pendingTxMap: Readonly<PendingTxMap>) => Promise<BroadcastTx[]>
   readonly approve: () => Promise<BroadcastTx[]>
 }
 

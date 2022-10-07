@@ -4,11 +4,11 @@ const strings = {
   action_queue_display_unknown_title: `Unknown action`,
   action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
   // seq
-  action_queue_display_seq_title: `Action sequence`,
-  action_queue_display_seq_message: `Doing a sequence of actions`,
+  action_queue_display_seq_title: `Action steps`,
+  action_queue_display_seq_message: `Doing a sequence of actions.`,
   // par
-  action_queue_display_par_title: `Action concurrency`,
-  action_queue_display_par_message: `Doing multiple things at once`,
+  action_queue_display_par_title: `Action group`,
+  action_queue_display_par_message: `Doing multiple actions at once.`,
   // fiat_buy
   action_queue_display_fiat_buy_title: `Purchase %s`,
   action_queue_display_fiat_buy_message: `Purchase %1$s from %3$s.`,

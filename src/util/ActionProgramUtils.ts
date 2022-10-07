@@ -10,6 +10,113 @@ import { enableToken } from './CurrencyWalletHelpers'
 //  create the ActionProgram.
 // -----------------------------------------------------------------------------
 
+export type LoanAsset = {
+  wallet: EdgeCurrencyWallet
+  nativeAmount: string
+  paymentMethodId?: string
+  tokenId?: string
+}
+
+interface AaveCreateActionParams {
+  borrowEngineWallet: EdgeCurrencyWallet
+  borrowPluginId: string
+
+  source: LoanAsset
+  destination: LoanAsset
+}
+
+export const makeAaveCreateAction = async (params: AaveCreateActionParams): Promise<ActionOp> => {
+  const { borrowEngineWallet, borrowPluginId, source, destination } = params
+  const allTokens = borrowEngineWallet.currencyConfig.allTokens
+
+  const sequenceActions: ActionOp[] = []
+  const actionOp: ActionOp = {
+    type: 'seq',
+    actions: sequenceActions
+  }
+
+  //
+  // Swap and Deposit steps
+  //
+
+  const depositToken = getToken(borrowEngineWallet, source.tokenId)
+
+  // If no deposit token provided (i.e. buy from exchange provider), default to WBTC
+  const depositTokenCc = depositToken == null ? 'WBTC' : depositToken.currencyCode
+  await enableToken(depositTokenCc, borrowEngineWallet)
+
+  const toTokenId = source.tokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
+
+  // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
+  if (source.wallet.id !== borrowEngineWallet.id) {
+    sequenceActions.push({
+      type: 'swap',
+      fromTokenId: source.tokenId,
+      fromWalletId: source.wallet.id,
+      nativeAmount: source.nativeAmount,
+      toTokenId: toTokenId,
+      toWalletId: borrowEngineWallet.id,
+      amountFor: 'to'
+    })
+  }
+
+  const loanParallelActions: ActionOp[] = []
+  sequenceActions.push({
+    type: 'par',
+    actions: loanParallelActions
+  })
+
+  // Construct the deposit action
+  loanParallelActions.push({
+    type: 'loan-deposit',
+    borrowPluginId,
+    nativeAmount: source.nativeAmount,
+    tokenId: toTokenId,
+    walletId: borrowEngineWallet.id
+  })
+
+  //
+  // Borrow and ACH steps
+  //
+
+  const borrowToken = getToken(borrowEngineWallet, destination.tokenId)
+
+  // If no borrow token specified (withdraw to bank), default to USDC for intermediate borrow step prior to withdrawing to bank
+  const borrowTokenCc = borrowToken == null ? 'USDC' : borrowToken.currencyCode
+  await enableToken(borrowTokenCc, borrowEngineWallet)
+
+  // TODO: ASSUMPTION: The only borrow destinations are:
+  // 1. USDC
+  // 2. Bank (sell/fiat off-ramp), to be handled in a separate method
+  if (borrowTokenCc !== 'USDC') throw new Error('Non-USDC token borrowing not yet implemented') // Should not happen...
+
+  const defaultTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === borrowTokenCc)
+  if (defaultTokenId == null) throw new Error(`Could not find default token ${borrowTokenCc} for borrow request`)
+
+  // Construct the borrow action
+  if (destination.tokenId != null || defaultTokenId != null)
+    loanParallelActions.push({
+      type: 'loan-borrow',
+      borrowPluginId,
+      nativeAmount: destination.nativeAmount,
+      tokenId: destination.tokenId ?? defaultTokenId,
+      walletId: borrowEngineWallet.id
+    })
+
+  // Construct the Withdraw to Bank action
+  if (destination.paymentMethodId != null) {
+    loanParallelActions.push({
+      type: 'wyre-sell',
+      wyreAccountId: destination.paymentMethodId,
+      nativeAmount: destination.nativeAmount,
+      tokenId: destination.tokenId ?? defaultTokenId,
+      walletId: borrowEngineWallet.id
+    })
+  }
+
+  return actionOp
+}
+
 export const makeAaveBorrowAction = async ({
   borrowEngineWallet,
   borrowPluginId,

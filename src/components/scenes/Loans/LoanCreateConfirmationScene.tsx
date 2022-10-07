@@ -2,7 +2,7 @@ import { add } from 'biggystring'
 import * as React from 'react'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types'
+import { ActionProgram } from '../../../controllers/action-queue/types'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -11,7 +11,7 @@ import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useDispatch } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
-import { makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
+import { LoanAsset, makeAaveCreateAction } from '../../../util/ActionProgramUtils'
 import { translateError } from '../../../util/translateError'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
@@ -67,30 +67,28 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
 
-    const actionOps: ActionOp = {
-      type: 'seq',
-      actions: (
-        await Promise.all([
-          makeAaveDepositAction({
-            borrowEngineWallet: borrowEngineWallet,
-            borrowPluginId,
-            depositTokenId: srcTokenId,
-            nativeAmount: nativeSrcAmount,
-            srcTokenId,
-            srcWallet
-          }),
-          makeAaveBorrowAction({
-            borrowPluginId,
-            borrowTokenId: destTokenId,
-            nativeAmount: nativeDestAmount,
-            borrowEngineWallet: borrowEngineWallet,
-            destBankId: paymentMethod?.id
-          })
-        ])
-      ).reduce((accum, subActions) => accum.concat(subActions), [])
+    const source: LoanAsset = {
+      wallet: srcWallet,
+      nativeAmount: nativeSrcAmount,
+      ...(srcTokenId != null ? { tokenId: srcTokenId } : {})
     }
 
-    const actionProgram = await makeActionProgram(actionOps)
+    const destination: LoanAsset = {
+      wallet: destWallet,
+      tokenId: destTokenId,
+      nativeAmount: nativeDestAmount,
+      ...(paymentMethod != null ? { paymentMethodId: paymentMethod.id } : {}),
+      ...(destTokenId != null ? { tokenId: destTokenId } : {})
+    }
+
+    const actionOp = await makeAaveCreateAction({
+      borrowEngineWallet,
+      borrowPluginId,
+      source,
+      destination
+    })
+
+    const actionProgram = await makeActionProgram(actionOp)
     setActionProgram(actionProgram)
 
     setDepositApprovalAction(await borrowEngine.deposit(depositRequest))

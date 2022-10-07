@@ -11,6 +11,7 @@ import {
   ActionProgram,
   ActionProgramState,
   BroadcastTx,
+  EffectCheckResult,
   ExecutableAction,
   ExecutionContext,
   ExecutionOutput,
@@ -70,57 +71,30 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   //
 
   if (!state.effective && effect != null) {
-    let effective = false
-    let delay = 0
-
+    let effectCheck: EffectCheckResult
     try {
-      const result = await checkActionEffect(context, effect)
-      effective = result.isEffective
-
-      if (!effective) delay = result.delay
-
-      /**
-       * Partially Complete Effect Check:
-       *
-       * SeqEffect introduced the concept of "partially completed effect" (PCE) in
-       * order to support tracking the progress of precomputed effects which are
-       * delegated to an external execution environment (e.g. push-server).
-       * A SeqEffect is partially-completed when it's opIndex is less then the last
-       * index of it's childEffects.
-       */
-      // TODO: Possibly move this logic into checkActionEffect (return {isEffective: false, nextEffect} or similar to indicate an effect is partially complete)
-      if (effective && effect.type === 'seq' && effect.opIndex < effect.childEffects.length - 1) {
-        // Progress the partially completed effect forward
-        const nextEffect: SeqEffect = {
-          ...effect,
-          opIndex: effect.opIndex + 1
-        }
-        return {
-          nextState: {
-            ...state,
-            effect: nextEffect,
-            effective: false,
-            lastExecutionTime: Date.now(),
-            nextExecutionTime: Date.now()
-          }
-        }
-      }
+      effectCheck = await checkActionEffect(context, effect)
     } catch (err: any) {
       console.warn(`Action effect check failed:\n\t${String(err)}`)
       console.error(err)
-
       // Increase retry delay (min 2 seconds and max 10 minutes)
       const lastDelay = state.nextExecutionTime - state.lastExecutionTime
-      delay = Math.min(Math.max(lastDelay * 1.2, 2000, 10 * 60 * 1000))
+      const delay = Math.min(Math.max(lastDelay * 1.2, 2000, 10 * 60 * 1000))
+      // Shim an ineffective check result
+      effectCheck = {
+        delay,
+        isEffective: false
+      }
     }
 
-    // Update the nextExecutionTime with the retryDelay
+    // Return the updated next state using the fields from effectCheck
     return {
       nextState: {
         ...state,
-        effective,
+        ...(effectCheck.updatedEffect ? { effect: effectCheck.updatedEffect } : {}),
+        effective: effectCheck.isEffective,
         lastExecutionTime: Date.now(),
-        nextExecutionTime: Date.now() + delay
+        nextExecutionTime: Date.now() + effectCheck.delay
       }
     }
   }
@@ -189,7 +163,27 @@ export async function dryrunActionProgram(
   return outputs
 }
 
-async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<{ isEffective: boolean; delay: number }> {
+/**
+ * Check whether an ActionEffect is observed as effective (completed).
+ *
+ * @param context Execution context for the action queue (same param as evaluateAction)
+ * @param effect The effect to check for effectiveness (completed)
+ * @returns `EffectCheckResult` object containing:
+ * 1. `isEffective`: boolean indicating whether the effect is effective.
+ *     Partially complete effects are not effective and so the boolean must be false.
+ * 2. `delay`: in milliseconds to let the caller know how long to delay the
+ *    `nextExecutionTime`.
+ * 3. `updatedEffect`: for if the effect is partially effective.
+ *
+ * ### Partially Completed Effects
+ *
+ * SeqEffect introduced the concept of a "partially completed effect" in
+ * order to support tracking the progress of precomputed effects which are
+ * delegated to an external execution environment (e.g. push-server).
+ * A SeqEffect is partially-completed when it's opIndex is less then the last
+ * index of it's childEffects.
+ */
+async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<EffectCheckResult> {
   const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
@@ -201,19 +195,64 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
-      return await checkActionEffect(context, childEffect)
+      const childEffectCheck = await checkActionEffect(context, childEffect)
+
+      // Completely effective
+      if (childEffectCheck.isEffective && effect.opIndex >= effect.childEffects.length - 1) {
+        return {
+          delay: 0,
+          isEffective: true
+        }
+      }
+
+      // Partially effective
+      if (childEffectCheck.isEffective) {
+        // Progress the partially completed effect forward
+        const updatedEffect: SeqEffect = {
+          ...effect,
+          opIndex: effect.opIndex + 1
+        }
+        return {
+          delay: 0,
+          isEffective: false,
+          updatedEffect
+        }
+      }
+
+      // Ineffective
+      return {
+        delay: childEffectCheck.delay,
+        isEffective: false
+      }
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
       if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
       // Check all child effects concurrently
-      const promises = checkedEffects.map(async (childEffect, index) => {
+      const childEffectPromises = checkedEffects.map(async childEffect => {
         return await checkActionEffect(context, childEffect)
       })
+      const childEffectChecks = await Promise.all(childEffectPromises)
+      const isEffective = childEffectChecks.every(result => result.isEffective)
+
+      // Include an updated effect if partially completed
+      const updatedEffect: ActionEffect | undefined = !isEffective
+        ? {
+            type: 'par',
+            childEffects: checkedEffects.map((effect, index) => {
+              return childEffectChecks[index].isEffective ? { type: 'done' } : effect
+            })
+          }
+        : undefined
+
+      // Let delay be the maximum delay of the remaining ineffective effects or zero
+      const delay = childEffectChecks.reduce((max, result) => (result.isEffective ? max : Math.max(result.delay, max)), 0)
+
       return {
-        delay: 0,
-        isEffective: (await Promise.all(promises)).every(yes => yes)
+        delay,
+        isEffective,
+        updatedEffect
       }
     }
     case 'address-balance': {
@@ -359,7 +398,7 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       const childExecutableAction: ExecutableAction = await evaluateAction(context, nextProgram, state)
 
       return {
-        dryrun: async (pendingTxMap: PendingTxMap) => {
+        dryrun: async pendingTxMap => {
           const childOutput: ExecutionOutput | null = await childExecutableAction.dryrun(pendingTxMap)
           const childEffect: ActionEffect | null = childOutput != null ? childOutput.effect : null
           const childBroadcastTxs: BroadcastTx[] = childOutput != null ? childOutput.broadcastTxs : []
@@ -397,30 +436,55 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
       const childExecutableActions = await Promise.all(promises)
 
       return {
-        dryrun: async (pendingTxMap: PendingTxMap) => {
-          const childOutputs = await Promise.all(childExecutableActions.map(async executableAction => executableAction.dryrun(pendingTxMap)))
-          const childEffects: Array<ActionEffect | null> = childOutputs.reduce(
-            (effects: ActionEffect[], output) => (output != null ? [...effects, output.effect] : effects),
-            []
-          )
+        dryrun: async pendingTxMap => {
+          // Clone because we can't mutate pendingTxMap
+          const pendingTxMapLocal: PendingTxMap = { ...pendingTxMap }
+
+          const childOutputs: ExecutionOutput[] = []
+          for (const executableAction of childExecutableActions) {
+            const output = await executableAction.dryrun(pendingTxMapLocal)
+            // Exit early if the child effect cannot be dryrun
+            if (output == null) return null
+            // Add broadcastTxs to localPendingTxMap to be used in the next iteration of this loop
+            for (const broadcastTx of output.broadcastTxs) {
+              const walletId = broadcastTx.walletId
+              pendingTxMapLocal[walletId] = [...(pendingTxMapLocal[walletId] ?? []), broadcastTx.tx]
+            }
+            // Add output to childOutputs
+            childOutputs.push(output)
+          }
+
+          const childEffects = childOutputs.flatMap(output => output.effect)
+          const broadcastTxs = childOutputs.flatMap(output => output.broadcastTxs)
 
           return {
             effect: {
               type: 'par',
               childEffects
             },
-            broadcastTxs: childOutputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...(output?.broadcastTxs ?? [])], [])
+            broadcastTxs
           }
         },
         execute: async () => {
-          const outputs = await Promise.all(childExecutableActions.map(async output => await output.execute()))
-          const effects = outputs.reduce((effects: ActionEffect[], output) => [...effects, output.effect], [])
+          // Execute actions serially in order to make sure transaction state is saved to wallets
+          // before continuing to next action. This is important for state like correct nonce or
+          // UTXO selection.
+          const childOutputs: ExecutionOutput[] = []
+          for (const executableAction of childExecutableActions) {
+            const output = await executableAction.execute()
+            // Add output to childOutputs
+            childOutputs.push(output)
+          }
+
+          const childEffects = childOutputs.flatMap(output => output.effect)
+          const broadcastTxs = childOutputs.flatMap(output => output.broadcastTxs)
+
           return {
             effect: {
               type: 'par',
-              childEffects: effects
+              childEffects
             },
-            broadcastTxs: outputs.reduce((broadcastTxs: BroadcastTx[], output) => [...broadcastTxs, ...output.broadcastTxs], [])
+            broadcastTxs
           }
         }
       }
@@ -437,9 +501,9 @@ async function evaluateAction(context: ExecutionContext, program: ActionProgram,
 
       const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
-      const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
         // Get any pending txs for this wallet
-        const pendingTxs = pendingTxMap[walletId] ?? []
+        const pendingTxs = pendingTxMap[walletId]
 
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
@@ -664,7 +728,7 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
   }
 
   // Dryrun:
-  const dryrun = async (pendingTxMap: PendingTxMap): Promise<ExecutionOutput> => {
+  const dryrun = async (pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
     const broadcastTxs = await approvableAction.dryrun(pendingTxMap)
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {
@@ -691,11 +755,11 @@ async function approvableActionToExecutableAction(approvableAction: ApprovableAc
  */
 async function makeExecutableAction(
   context: ExecutionContext,
-  fn: (dryrun: boolean, pendingTxMap: PendingTxMap) => Promise<ExecutionOutput>
+  fn: (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput>
 ): Promise<ExecutableAction> {
   const { account } = context
   return {
-    dryrun: async (pendingTxMap: PendingTxMap) => fn(true, pendingTxMap),
+    dryrun: async pendingTxMap => fn(true, pendingTxMap),
     execute: async () => {
       const output = await fn(false, {})
 

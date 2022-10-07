@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { newPriceChangeEvent, serverSettingsToState, setDeviceSettings } from '../../actions/NotificationActions'
-import { NewPushEvent } from '../../controllers/action-queue/types/pushTypes'
+import { NewPushEvent } from '../../controllers/action-queue/types/pushApiTypes'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'

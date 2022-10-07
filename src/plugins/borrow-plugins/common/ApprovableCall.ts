@@ -29,8 +29,8 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
 
   if (gasPrice == null || gasLimit == null) throw new Error('Explicit gas price and limit required for ApprovableAction.')
 
-  const makeApprovableCallSpend = async (dryrun: boolean, pendingTxMap: PendingTxMap): Promise<EdgeTransaction> => {
-    const pendingTxs = pendingTxMap[walletId] ?? []
+  const makeApprovableCallSpend = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<EdgeTransaction> => {
+    const pendingTxs = pendingTxMap[walletId]
     const edgeSpendInfo: EdgeSpendInfo = {
       currencyCode: spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode,
       skipChecks: dryrun,
@@ -63,7 +63,7 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
   return {
     networkFee,
     unsignedTxs: [placeholderTx],
-    dryrun: async (pendingTxMap: PendingTxMap) => {
+    dryrun: async pendingTxMap => {
       const unsignedTx = await makeApprovableCallSpend(true, pendingTxMap)
       const tx = await wallet.signTx(unsignedTx)
       const networkFee = {
