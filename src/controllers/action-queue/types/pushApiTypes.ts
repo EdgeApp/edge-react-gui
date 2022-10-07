@@ -1,7 +1,7 @@
-import { asArray, asBoolean, asDate, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, Cleaner, uncleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, Cleaner, uncleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
-import { asBroadcastTx, asNewPushEvent, asPushEventState, asPushMessage, asPushTrigger } from './pushCleaners'
+import { asBroadcastTx, asNewPushEvent, asPushEventState, asPushMessage, asPushTrigger, asPushTriggerState } from './pushCleaners'
 import { NewPushEvent, PushEventStatus } from './pushTypes'
 
 // ---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ export const asPushEventStatus: Cleaner<PushEventStatus> = asObject({
   pushMessageFails: asOptional(asNumber), // Number of devices that failed
   pushMessageError: asOptional(asString),
   state: asPushEventState,
-  triggered: asOptional(asDate)
+  triggered: asPushTriggerState
 })
 
 /**

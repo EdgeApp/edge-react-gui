@@ -1,8 +1,10 @@
-import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue, Cleaner } from 'cleaners'
+import { asArray, asDate, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue, Cleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import {
   AddressBalanceTrigger,
+  AllTrigger,
+  AnyTrigger,
   BroadcastTx,
   NewPushEvent,
   PriceChangeTrigger,
@@ -10,6 +12,7 @@ import {
   PushEventState,
   PushMessage,
   PushTrigger,
+  PushTriggerState,
   TxConfirmTrigger
 } from './pushTypes'
 
@@ -20,6 +23,16 @@ export const asAddressBalanceTrigger: Cleaner<AddressBalanceTrigger> = asObject(
   address: asString,
   aboveAmount: asOptional(asString), // Satoshis or Wei or such
   belowAmount: asOptional(asString) // Satoshis or Wei or such
+})
+
+export const asAllTrigger = asObject<AllTrigger>({
+  type: asValue('all'),
+  triggers: asArray(raw => asPushTrigger(raw))
+})
+
+export const asAnyTrigger = asObject<AnyTrigger>({
+  type: asValue('any'),
+  triggers: asArray(raw => asPushTrigger(raw))
 })
 
 export const asPriceChangeTrigger: Cleaner<PriceChangeTrigger> = asObject({
@@ -45,7 +58,21 @@ export const asTxConfirmTrigger: Cleaner<TxConfirmTrigger> = asObject({
   txid: asString
 })
 
-export const asPushTrigger: Cleaner<PushTrigger> = asEither(asAddressBalanceTrigger, asPriceChangeTrigger, asPriceLevelTrigger, asTxConfirmTrigger)
+export const asPushTrigger: Cleaner<PushTrigger> = asEither(
+  asAddressBalanceTrigger,
+  asAllTrigger,
+  asAnyTrigger,
+  asPriceChangeTrigger,
+  asPriceLevelTrigger,
+  asTxConfirmTrigger
+)
+
+export const asPushTriggerState: Cleaner<PushTriggerState> = asOptional(
+  asEither(
+    asArray(raw => asPushTriggerState(raw)),
+    asDate
+  )
+)
 
 export const asBroadcastTx: Cleaner<BroadcastTx> = asObject({
   pluginId: asString,

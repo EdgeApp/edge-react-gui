@@ -225,7 +225,24 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
       return null
     }
     case 'par': {
-      return null
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Get an array of triggers for every child effect
+      const triggers: PushTrigger[] = []
+
+      for (const effect of checkedEffects) {
+        const trigger = await actionEffectToPushTrigger(context, effect)
+
+        if (trigger == null) return null
+
+        triggers.push(trigger)
+      }
+
+      return {
+        type: 'all',
+        triggers
+      }
     }
     // Would this cause infinite recursion? We may never want to add conversion support for this.
     case 'push-event': {

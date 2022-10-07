@@ -11,6 +11,16 @@ export type AddressBalanceTrigger = {
   readonly belowAmount?: string // Satoshis or Wei or such
 }
 
+export interface AllTrigger {
+  readonly type: 'all'
+  readonly triggers: PushTrigger[]
+}
+
+export interface AnyTrigger {
+  readonly type: 'any'
+  readonly triggers: PushTrigger[]
+}
+
 export type PriceChangeTrigger = {
   readonly type: 'price-change'
   readonly pluginId: string
@@ -34,7 +44,17 @@ export type TxConfirmTrigger = {
   readonly txid: string
 }
 
-export type PushTrigger = AddressBalanceTrigger | PriceChangeTrigger | PriceLevelTrigger | TxConfirmTrigger
+export type PushTrigger = AddressBalanceTrigger | AllTrigger | AnyTrigger | PriceChangeTrigger | PriceLevelTrigger | TxConfirmTrigger
+
+/**
+ * Records when a trigger took place.
+ */
+export type PushTriggerState =
+  | undefined
+  // For "any" and "all" triggers:
+  | PushTriggerState[]
+  // For normal triggers:
+  | Date
 
 /**
  * Broadcasts a transaction to a blockchain.
@@ -75,7 +95,7 @@ export type PushEventStatus = {
   pushMessageEmits?: number // Number of devices we sent to
   pushMessageFails?: number // Number of devices that failed
   state: PushEventState
-  triggered?: Date // When did we see the trigger?
+  triggered: PushTriggerState // When did we see the trigger?
 }
 
 /**
