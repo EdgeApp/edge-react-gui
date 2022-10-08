@@ -31,10 +31,11 @@ const palette = {
   white: '#FFFFFF',
   black: '#000000',
   royalBlue: '#003B65',
-  darkerNavy: '#0c1134',
-  edgeNavy: '#12194e',
-  lighterNavy: '#172164',
-  edgeBlue: '#0c1134',
+  darkerNavy: '#00041c',
+  edgeNavy: '#00072f',
+  navyMint: '#0D2148',
+  // lighterNavy: '#172164',
+  edgeBlue: '#00072f',
   lightMint: '#a6f5cc',
   edgeMint: '#66EDA8',
   blueGray: '#A4C7DF',
@@ -87,7 +88,7 @@ export const edgeDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkerNavy,
 
   // Background
-  backgroundGradientColors: [palette.edgeNavy, palette.edgeNavy],
+  backgroundGradientColors: [palette.edgeNavy, palette.navyMint],
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
@@ -152,12 +153,19 @@ export const edgeDark: Theme = {
 
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 1,
-  primaryButton: [palette.edgeMint, palette.lightMint],
+  primaryButton: [palette.navyMint, palette.navyMint],
   primaryButtonColorStart: { x: 0.25, y: 0 },
   primaryButtonColorEnd: { x: 0.75, y: 1 },
-  primaryButtonText: palette.edgeBlue,
+  primaryButtonText: palette.edgeMint,
   primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: themeNoShadow,
+  // primaryButtonShadow: {
+  //   shadowColor: palette.edgeMint,
+  //   shadowOffset: { width: 0, height: 0 },
+  //   shadowOpacity: 0.7,
+  //   shadowRadius: 4,
+  //   elevation: 3
+  // },
   primaryButtonFontSizeRem: 1,
   primaryButtonFont: palette.QuicksandMedium,
 
@@ -207,7 +215,7 @@ export const edgeDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: [palette.darkerNavy, palette.lighterNavy],
+  tabBarBackground: [palette.darkerNavy, palette.darkerNavy],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
   tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeNavy],
@@ -275,7 +283,7 @@ export const edgeDark: Theme = {
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.darkerNavy, palette.lighterNavy],
+  settingsRowHeaderBackground: [palette.darkerNavy, palette.darkerNavy],
   settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
   settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
