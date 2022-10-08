@@ -1,11 +1,13 @@
-import { add } from 'biggystring'
+import { add, gt, mul, sub } from 'biggystring'
 import * as React from 'react'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime'
+import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -38,13 +40,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const clientId = useSelector(state => state.core.context.clientId)
   const account = useSelector(state => state.core.account)
 
+  const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet)
+
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
   const dispatch = useDispatch()
 
   const [[actionProgram, networkFeeAmountAggregate = '0'] = [], actionProgramError] = useAsyncValue(async () => {
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
-
     const source: LoanAsset = {
       wallet: srcWallet,
       nativeAmount: nativeSrcAmount,
@@ -76,7 +79,6 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       lastExecutionTime: 0,
       nextExecutionTime: 0
     }
-
     const executionContext = { account, clientId }
     const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, actionProgramState, false)
 
@@ -93,8 +95,52 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
     const networkFeeAmountAggregate = networkFeeAmountMap[borrowEngineWallet.currencyInfo.currencyCode]
 
+    // Add an extra swap for mainnet native currency to cover transaction fees.
+    const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
+    if (
+      srcWallet.id !== borrowEngineWallet.id && // Source of funds is not the same wallet as the "main-chain wallet"
+      networkFeeAmountAggregate != null && // Mainnet native currency fee must exist
+      gt(networkFeeAmountAggregate, borrowWalletNativeBalance) && // Fee must be larger than available balance
+      seq != null // type assertion
+    ) {
+      // Collect all initial swap actions (if any)
+      const swapActions: SwapActionOp[] = []
+      for (const action of seq.actions) {
+        if (action.type !== 'swap') {
+          break
+        }
+        swapActions.push(action)
+      }
+      // Get the rest of the actions which are not swap actions
+      const otherActions: ActionOp[] = seq.actions.slice(swapActions.length)
+
+      // Target mainnet native balance should be double the fees estimate to be
+      // extra generous when accounting for fee volatility.
+      const nativeAmount = sub(mul(networkFeeAmountAggregate, '2'), borrowWalletNativeBalance)
+      // Create a new fee swap action for mainnet fees
+      const feesSwap: SwapActionOp = {
+        type: 'swap',
+        fromWalletId: srcWallet.id,
+        fromTokenId: srcTokenId,
+        toWalletId: borrowEngineWallet.id,
+        nativeAmount,
+        amountFor: 'to'
+      }
+      // Include new fee swap action in swapActions
+      swapActions.push(feesSwap)
+
+      // Redefine actions in sequence
+      seq.actions = [
+        {
+          type: 'par',
+          actions: swapActions
+        },
+        ...otherActions
+      ]
+    }
+
     return [actionProgram, networkFeeAmountAggregate] as const
-  }, [destTokenId, nativeDestAmount, borrowEngine])
+  }, [destTokenId, nativeDestAmount, borrowEngine, borrowWalletNativeBalance])
 
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
