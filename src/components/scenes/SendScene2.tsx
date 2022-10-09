@@ -44,9 +44,15 @@ const SendComponent = (props: Props) => {
 
   const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
 
-  const handleChangeAddress = useHandler(async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-    // TODO: handle address change
-  })
+  const handleChangeAddress =
+    (spendTarget: EdgeSpendTarget) =>
+    async (changeAddressResult: ChangeAddressResult): Promise<void> => {
+      spendTarget.publicAddress = changeAddressResult.parsedUri?.publicAddress ?? ''
+
+      // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
+      // should properly re-render with new spendTargets
+      setSpendInfo({ ...spendInfo })
+    }
 
   const renderAddressTile = (spendTarget: EdgeSpendTarget) => {
     if (coreWallet != null && !hiddenTilesMap.address) {
@@ -58,7 +64,7 @@ const SendComponent = (props: Props) => {
           recipientAddress={publicAddress}
           coreWallet={coreWallet}
           currencyCode={currencyCode}
-          onChangeAddress={handleChangeAddress}
+          onChangeAddress={handleChangeAddress(spendTarget)}
           resetSendTransaction={() => {
             spendTarget.publicAddress = undefined
             setSpendInfo({ ...spendInfo })
