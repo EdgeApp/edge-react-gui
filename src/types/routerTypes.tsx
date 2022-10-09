@@ -1,4 +1,4 @@
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
@@ -255,6 +255,30 @@ export type ParamList = {
       fioAddressSelect?: boolean
     }
     infoTiles?: Array<{ label: string; value: string }>
+  }
+  send2: {
+    walletId: string
+    spendInfo?: EdgeSpendInfo
+    openCamera?: boolean
+    lockTilesMap?: {
+      address?: boolean
+      wallet?: boolean
+      amount?: boolean
+    }
+    hiddenTilesMap?: {
+      address?: boolean
+      amount?: boolean
+      fioAddressSelect?: boolean
+    }
+    infoTiles?: Array<{ label: string; value: string }>
+    dismissAlert?: boolean
+    fioAddress?: string
+    fioPendingRequest?: FioRequest
+    isSendUsingFioAddress?: boolean
+    onBack?: () => void
+    onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+    beforeTransaction?: () => Promise<void>
+    alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
   }
   settingsOverview: {}
   settingsOverviewTab: {}

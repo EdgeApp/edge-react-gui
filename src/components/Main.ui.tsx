@@ -82,6 +82,7 @@ import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene'
 import { Request } from './scenes/RequestScene'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene'
 import { SendScene } from './scenes/SendScene'
+import { SendScene2 } from './scenes/SendScene2'
 import { SettingsScene } from './scenes/SettingsScene'
 import { SpendingLimitsScene } from './scenes/SpendingLimitsScene'
 import { StakeModifyScene } from './scenes/Staking/StakeModifyScene'
@@ -523,6 +524,20 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
               renderRightButton={<HeaderTextButton type="help" placement="right" />}
+            />
+          </Stack>
+
+          <Stack key="send2" hideTabBar>
+            <Scene
+              key="send2"
+              component={withNavigation(ifLoggedIn(SendScene2))}
+              navTransparent
+              onEnter={props => {
+                this.props.checkAndShowGetCryptoModal(props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
+              }}
+              onExit={this.props.dispatchDisableScan}
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
           </Stack>
 
