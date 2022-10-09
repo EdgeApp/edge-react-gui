@@ -1,13 +1,4 @@
-import {
-  asMaybeNoAmountSpecifiedError,
-  EdgeAccount,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeMetadata,
-  EdgeParsedUri,
-  EdgeSpendTarget,
-  EdgeTransaction
-} from 'edge-core-js'
+import { asMaybeNoAmountSpecifiedError, EdgeAccount, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -36,7 +27,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SelectFioAddress } from '../themed/SelectFioAddress'
-import { AddressTile, AddressTileRef } from '../tiles/AddressTile'
+import { AddressTile, AddressTileRef, ChangeAddressResult } from '../tiles/AddressTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
@@ -93,6 +84,11 @@ type State = {
   recipientAddress: string
   fioSender: FioSenderInfo
 } & WalletStates
+
+interface SpendInfoOtherParams {
+  fioAddress?: string
+  isSendUsingFioAddress?: boolean
+}
 
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: AddressTileRef | null = null
@@ -190,20 +186,19 @@ class SendComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
-  handleChangeAddress = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
+  handleChangeAddress = async (changeAddressResult: ChangeAddressResult) => {
+    const { parsedUri, fioAddress } = changeAddressResult
     const { sendConfirmationUpdateTx, route } = this.props
     const { guiMakeSpendInfo } = route.params
-    const { spendTargets } = newGuiMakeSpendInfo
-    const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
+    const recipientAddress = parsedUri?.publicAddress ?? ''
+    let newGuiMakeSpendInfo: GuiMakeSpendInfo = {}
 
     if (parsedUri) {
       const nativeAmount = parsedUri.nativeAmount || ''
-      const otherParams = {}
-      if (newGuiMakeSpendInfo.fioAddress != null) {
-        // @ts-expect-error
-        otherParams.fioAddress = newGuiMakeSpendInfo.fioAddress
-        // @ts-expect-error
-        otherParams.isSendUsingFioAddress = newGuiMakeSpendInfo.isSendUsingFioAddress
+      const otherParams: SpendInfoOtherParams = {}
+      if (fioAddress != null) {
+        otherParams.fioAddress = fioAddress
+        otherParams.isSendUsingFioAddress = true
       }
       const spendTargets: EdgeSpendTarget[] = [
         {
@@ -219,11 +214,11 @@ class SendComponent extends React.PureComponent<Props, State> {
         metadata: parsedUri.metadata,
         uniqueIdentifier: parsedUri.uniqueIdentifier,
         nativeAmount,
-        ...newGuiMakeSpendInfo
+        fioAddress,
+        isSendUsingFioAddress: !!fioAddress
       }
     }
     sendConfirmationUpdateTx(newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
-    // @ts-expect-error
     this.setState({ recipientAddress })
   }
 

@@ -12,7 +12,6 @@ import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError'
 import { connect } from '../../types/reactRedux'
-import { GuiMakeSpendInfo } from '../../types/types'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -21,12 +20,17 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
+export interface ChangeAddressResult {
+  fioAddress?: string
+  parsedUri?: EdgeParsedUri
+}
+
 type OwnProps = {
   coreWallet: EdgeCurrencyWallet
   currencyCode: string
   title: string
   recipientAddress: string
-  onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>
+  onChangeAddress: (changeAddressResult: ChangeAddressResult) => Promise<void>
   resetSendTransaction: () => void
   lockInputs?: boolean
   addressTileRef: any
@@ -135,7 +139,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
+      onChangeAddress({ fioAddress, parsedUri })
     } catch (e: any) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''

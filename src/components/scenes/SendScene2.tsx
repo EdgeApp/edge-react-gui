@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget } from 'edge-core-js'
+import { EdgeAccount, EdgeSpendInfo, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -10,10 +10,10 @@ import s from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
-import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
+import { GuiExchangeRates } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { useTheme } from '../services/ThemeContext'
-import { AddressTile } from '../tiles/AddressTile'
+import { AddressTile, ChangeAddressResult } from '../tiles/AddressTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 
 type Props = {
@@ -44,7 +44,7 @@ const SendComponent = (props: Props) => {
 
   const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
 
-  const handleChangeAddress = useHandler(async (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri): Promise<void> => {
+  const handleChangeAddress = useHandler(async (changeAddressResult: ChangeAddressResult): Promise<void> => {
     // TODO: handle address change
   })
 
