@@ -4,12 +4,14 @@ import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { useDispatch } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../../assets/vector'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
+import { deleteLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
@@ -42,6 +44,7 @@ type Props = {
 export const LoanDetailsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
   const actionQueueMap = useSelector(state => state.actionQueue.queue)
@@ -103,7 +106,14 @@ export const LoanDetailsScene = (props: Props) => {
     navigation.navigate('loanWithdraw', { loanAccountId })
   }
   const handleLoanClosePress = () => {
-    navigation.navigate('loanClose', { loanAccountId })
+    if ([...borrowEngine.debts, ...borrowEngine.collaterals].filter(debtOrCollateral => !zeroString(debtOrCollateral.nativeAmount)).length === 0) {
+      // Loan was emptied of all assets without using Edge's Close Loan feature. Cleanup the local cached copy of the LoanAccount.
+      // TODO: Nicer UI/UX implementation in LoanCloseScene
+      dispatch(deleteLoanAccount(loanAccountId))
+      navigation.replace('loanDashboard', {})
+    } else {
+      navigation.navigate('loanClose', { loanAccountId })
+    }
   }
   const handleBorrowMorePress = () => {
     navigation.navigate('loanBorrow', { loanAccountId })
