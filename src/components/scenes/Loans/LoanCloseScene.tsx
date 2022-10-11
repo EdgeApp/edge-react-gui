@@ -80,18 +80,14 @@ export const LoanCloseScene = (props: Props) => {
   // Create Action Ops
   const [actionOp] = useAsyncValue<ActionOp | null>(async () => {
     if (collateral != null && collateralTokenId != null && debtTokenId != null) {
-      return {
-        type: 'seq',
-        actions: await makeAaveCloseAction({
-          borrowPluginId,
-          collateralTokenId,
-          debtTokenId,
-          wallet: borrowEngineWallet
-        })
-      }
-    } else {
-      return null
+      return await makeAaveCloseAction({
+        borrowPluginId,
+        collateralTokenId,
+        debtTokenId,
+        wallet: borrowEngineWallet
+      })
     }
+    return null
   }, [borrowEngine, borrowEngineWallet, borrowPluginId, collateral, collateralTokenId, debt, debtTokenId])
 
   const networkFee = !isApprovableActionValid ? '0' : add(repayApprovalAction.networkFee.nativeAmount, withdrawApprovalAction.networkFee.nativeAmount)
