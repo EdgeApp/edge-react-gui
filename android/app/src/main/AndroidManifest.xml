@@ -24,7 +24,6 @@
 
   <queries>
     <package android:name="com.bankid.bus" />
-    <package android:name="se.bankgirot.swish" />
     <intent>
       <action android:name="android.intent.action.VIEW" />
       <category android:name="android.intent.category.BROWSABLE" />

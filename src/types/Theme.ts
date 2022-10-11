@@ -343,7 +343,6 @@ export type Theme = {
 
   paymentTypeLogoApplePay: ImageSourcePropType
   paymentTypeLogoAuspost: ImageSourcePropType
-  paymentTypeLogoBankgirot: ImageSourcePropType
   paymentTypeLogoBankTransfer: ImageSourcePropType
   paymentTypeLogoCash: ImageSourcePropType
   paymentTypeLogoCreditCard: ImageSourcePropType
@@ -357,7 +356,6 @@ export type Theme = {
   paymentTypeLogoPaynow: ImageSourcePropType
   paymentTypeLogoPoli: ImageSourcePropType
   paymentTypeLogoSofort: ImageSourcePropType
-  paymentTypeLogoSwish: ImageSourcePropType
   paymentTypeLogoUpi: ImageSourcePropType
 
   primaryLogo: ImageSourcePropType

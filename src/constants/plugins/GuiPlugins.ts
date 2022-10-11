@@ -55,20 +55,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
       ZRX: { pluginId: 'ethereum', tokenId: 'e41d2489571d322189246dafa5ebde1f4699f498' }
     }
   },
-  safello: {
-    pluginId: 'safello',
-    storeId: 'com.safello',
-    baseUri: 'https://safello.com/edge',
-    displayName: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
-  },
-  'safello-sell': {
-    pluginId: 'safello-sell',
-    storeId: 'com.safello',
-    baseUri: 'https://app.safello.com',
-    displayName: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
-  },
   bitsofgold: {
     pluginId: 'bitsofgold',
     storeId: 'bitsofgold',

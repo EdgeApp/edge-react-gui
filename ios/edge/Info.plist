@@ -69,7 +69,6 @@
 		<string>https</string>
 		<string>http</string>
 		<string>bankid</string>
-		<string>swish</string>
 	</array>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
