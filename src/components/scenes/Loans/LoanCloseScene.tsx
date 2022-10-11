@@ -6,7 +6,6 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { ActionOp } from '../../../controllers/action-queue/types'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
@@ -79,10 +78,9 @@ export const LoanCloseScene = (props: Props) => {
   const approvalErrors = filterNull([repayApprovalActionError, withdrawApprovalActionError].map(err => (err != null ? translateError(err.message) : null)))
 
   // Create Action Ops
-  const [actionOps, setActionOps] = React.useState<ActionOp | null>(null)
-  useAsyncEffect(async () => {
+  const [actionOp] = useAsyncValue<ActionOp | null>(async () => {
     if (collateral != null && collateralTokenId != null && debtTokenId != null) {
-      setActionOps({
+      return {
         type: 'seq',
         actions: await makeAaveCloseAction({
           borrowPluginId,
@@ -90,20 +88,18 @@ export const LoanCloseScene = (props: Props) => {
           debtTokenId,
           wallet: borrowEngineWallet
         })
-      })
+      }
     } else {
-      setActionOps(null)
+      return null
     }
-
-    return () => {}
   }, [borrowEngine, borrowEngineWallet, borrowPluginId, collateral, collateralTokenId, debt, debtTokenId])
 
   const networkFee = !isApprovableActionValid ? '0' : add(repayApprovalAction.networkFee.nativeAmount, withdrawApprovalAction.networkFee.nativeAmount)
 
   // Handlers:
   const handleSliderComplete = useHandler(async (reset: () => void) => {
-    if (actionOps == null) return
-    const actionProgram = await makeActionProgram(actionOps)
+    if (actionOp == null) return
+    const actionProgram = await makeActionProgram(actionOp)
     await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-close'))
     navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
   })
