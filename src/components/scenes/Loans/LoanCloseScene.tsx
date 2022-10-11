@@ -59,7 +59,7 @@ export const LoanCloseScene = (props: Props) => {
   const debt = debts[0]
   const debtTokenId = debt?.tokenId
 
-  const isLoanCloseSupported = collaterals.length === 1 && debts.length === 1
+  const isRepayWithCollateralSupported = collaterals.length === 1 && debts.length === 1
   const isWithdrawOnly = collaterals.length > 0 && debts.length === 0
 
   // Derived State:
@@ -71,8 +71,13 @@ export const LoanCloseScene = (props: Props) => {
   }, [borrowEngine, debtTokenId, collateralTokenId])
 
   const [withdrawApprovalAction, withdrawApprovalActionError] = useAsyncValue<ApprovableAction | null>(async () => {
-    if (debtTokenId == null) return null
-    return await borrowEngine.withdraw({ tokenId: collateralTokenId, nativeAmount: collateral?.nativeAmount })
+    if (isWithdrawOnly) {
+      // TODO
+    } else if (collateralTokenId != null) {
+      return await borrowEngine.withdraw({ tokenId: collateralTokenId, nativeAmount: collateral?.nativeAmount })
+    }
+
+    return Promise.resolve(null)
   }, [borrowEngine, debtTokenId])
 
   const isApprovableActionValid = repayApprovalAction != null && withdrawApprovalAction != null
@@ -138,7 +143,7 @@ export const LoanCloseScene = (props: Props) => {
           </Tile>
         ) : null}
         {!isWithdrawOnly ? (
-          !isLoanCloseSupported ? (
+          !isRepayWithCollateralSupported ? (
             <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
           ) : (
             <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
