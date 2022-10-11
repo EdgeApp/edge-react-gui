@@ -60,6 +60,7 @@ export const LoanCloseScene = (props: Props) => {
   const debtTokenId = debt?.tokenId
 
   const isLoanCloseSupported = collaterals.length === 1 && debts.length === 1
+  const isWithdrawOnly = collaterals.length > 0 && debts.length === 0
 
   // Derived State:
 
@@ -118,25 +119,31 @@ export const LoanCloseScene = (props: Props) => {
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFee} />
-        <Tile title={s.strings.loan_remaining_principal} type="static">
-          {debts.map(debt => (
-            <Space key={debt.tokenId} vertical={0.5}>
-              <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} />
-            </Space>
-          ))}
-        </Tile>
-        <Tile title={s.strings.loan_collateral_amount} type="static">
-          {collaterals.map(collateral => (
-            <Space key={collateral.tokenId} vertical={0.5}>
-              <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} />
-            </Space>
-          ))}
-        </Tile>
-        {!isLoanCloseSupported ? (
-          <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
-        ) : (
-          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
-        )}
+        {debts.length > 0 ? (
+          <Tile title={s.strings.loan_remaining_principal} type="static">
+            {debts.map(debt => (
+              <Space key={debt.tokenId} vertical={0.5}>
+                <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} />
+              </Space>
+            ))}
+          </Tile>
+        ) : null}
+        {collaterals.length > 0 ? (
+          <Tile title={s.strings.loan_collateral_amount} type="static">
+            {collaterals.map(collateral => (
+              <Space key={collateral.tokenId} vertical={0.5}>
+                <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} />
+              </Space>
+            ))}
+          </Tile>
+        ) : null}
+        {!isWithdrawOnly ? (
+          !isLoanCloseSupported ? (
+            <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
+          ) : (
+            <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+          )
+        ) : null}
         {approvalErrors.length > 0 ? (
           <Alert
             title={s.strings.loan_error_title}
