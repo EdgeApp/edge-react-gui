@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { Provider } from 'react-redux'
-import { createRenderer } from 'react-test-renderer/shallow'
+import renderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalletSelectCryptoRow'
@@ -12,9 +12,12 @@ describe('WalletListRow', () => {
   const mockState: any = {
     core: {
       account: {
-        currencyConfigs: {
+        currencyConfig: {
           bitcoin: {
-            pluginId: 'bitcoin'
+            currencyInfo: {
+              currencyCode: 'BTC',
+              pluginId: 'bitcoin'
+            }
           }
         }
       }
@@ -23,18 +26,14 @@ describe('WalletListRow', () => {
   const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
-    const renderer = createRenderer()
+    const pluginId = 'bitcoin'
+    const walletName = 'My bitcoin wallet'
+    const onPress = () => undefined
+    const rightSide = <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
 
-    const props = {
-      pluginId: 'bitcoin',
-      walletName: 'My bitcoin wallet',
-      onPress: () => undefined
-    }
-    const actual = renderer.render(
+    const actual = renderer.create(
       <Provider store={store}>
-        <CreateWalletSelectCryptoRow {...props}>
-          <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
-        </CreateWalletSelectCryptoRow>
+        <CreateWalletSelectCryptoRow pluginId={pluginId} walletName={walletName} onPress={onPress} rightSide={rightSide} />
       </Provider>
     )
 

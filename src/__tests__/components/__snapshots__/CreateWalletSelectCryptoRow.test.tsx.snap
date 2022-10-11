@@ -1,46 +1,162 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListRow should render with loading props 1`] = `
-<Context.Provider
-  value={
+<View
+  accessibilityState={
     Object {
-      "store": Object {
-        "@@observable": [Function],
-        "dispatch": [Function],
-        "getState": [Function],
-        "replaceReducer": [Function],
-        "subscribe": [Function],
-      },
-      "subscription": Subscription {
-        "handleChangeWrapper": [Function],
-        "listeners": Object {
-          "notify": [Function],
-        },
-        "onStateChange": [Function],
-        "parentSub": undefined,
-        "store": Object {
-          "@@observable": [Function],
-          "dispatch": [Function],
-          "getState": [Function],
-          "replaceReducer": [Function],
-          "subscribe": [Function],
-        },
-        "unsubscribe": null,
-      },
+      "disabled": false,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 96,
+      "opacity": 1,
     }
   }
 >
-  <Memo(CreateWalletSelectCryptoRowComponent)
-    onPress={[Function]}
-    pluginId="bitcoin"
-    walletName="My bitcoin wallet"
+  <View
+    style={
+      Object {
+        "height": 45,
+        "marginBottom": 22,
+        "marginLeft": 22,
+        "marginRight": 22,
+        "marginTop": 22,
+        "width": 45,
+      }
+    }
   >
-    <Icon
+    <View
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ]
+      }
+    >
+      <FastImageView
+        resizeMode="cover"
+        source={
+          Object {
+            "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+          }
+        }
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "marginRight": 11,
+      }
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "flexBasis": "auto",
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Medium",
+          },
+          null,
+        ]
+      }
+    >
+      BTC
+    </Text>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 17,
+          },
+          null,
+        ]
+      }
+    >
+      My bitcoin wallet
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "paddingRight": 11,
+      }
+    }
+  >
+    <Text
       allowFontScaling={false}
-      color="#66EDA8"
-      name="chevron-forward-outline"
-      size={26}
-    />
-  </Memo(CreateWalletSelectCryptoRowComponent)>
-</Context.Provider>
+      style={
+        Array [
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 26,
+          },
+          undefined,
+          Object {
+            "fontFamily": "Ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
 `;

@@ -39,7 +39,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
   const { currencyCode } = tokenId != null ? currencyConfigs[pluginId].builtinTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={onPress}>
       <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>

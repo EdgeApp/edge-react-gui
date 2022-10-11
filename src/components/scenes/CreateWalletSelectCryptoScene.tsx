@@ -1,144 +1,253 @@
-import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, FlatList, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import { FlatList, Switch, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { CreateWalletType, FlatListItem } from '../../types/types'
-import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { ListModal } from '../modals/ListModal'
+import { Airship, showError } from '../services/AirshipInstance'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
+import { EdgeText } from '../themed/EdgeText'
+import { Fade } from '../themed/Fade'
+import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
+import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../themed/WalletList'
+import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
-type OwnProps = {
-  navigation: NavigationProp<'createWalletReview'>
-}
-type StateProps = {
-  account: EdgeAccount
-}
-type Props = StateProps & OwnProps & ThemeProps
-
-type State = {
-  selectedWalletType: string
-  searchTerm: string
+type Props = {
+  navigation: NavigationProp<'createWalletSelectCrypto'>
 }
 
-export class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      selectedWalletType: '',
-      searchTerm: ''
-    }
-  }
+const CreateWalletSelectCryptoComponent = (props: Props) => {
+  const { navigation } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-  getWalletType(walletType: string): CreateWalletType | undefined {
-    const { account } = this.props
-    return getCreateWalletTypes(account).find(type => type.walletType === walletType)
-  }
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
 
-  onNext = () => {
-    const { navigation } = this.props
-    const { selectedWalletType } = this.state
+  const pluginIdWalletIdsMap = React.useMemo(
+    () =>
+      Object.keys(currencyWallets).reduce((map: { [key: string]: string[] }, walletId) => {
+        const { pluginId } = currencyWallets[walletId].currencyInfo
+        if (map[pluginId] == null) map[pluginId] = [walletId]
+        else map[pluginId].push(walletId)
+        return map
+      }, {}),
+    [currencyWallets]
+  )
+  const [searchTerm, setSearchTerm] = React.useState('')
 
-    // Find the details about the wallet type:
-    const createWalletType = this.getWalletType(selectedWalletType)
-    if (createWalletType == null) {
-      Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+  const createWalletList = React.useMemo(() => getCreateWalletList(account), [account])
+  const filteredCreateWalletList = React.useMemo(
+    () => filterWalletCreateItemListBySearchText(createWalletList, searchTerm.toLowerCase()),
+    [createWalletList, searchTerm]
+  )
+
+  const [selectedItems, setSelectedItems] = React.useState(
+    createWalletList.reduce((map: { [key: string]: boolean }, item) => {
+      map[item.key] = false
+      return map
+    }, {})
+  )
+  const [numSelected, setNumSelected] = React.useState(0)
+
+  const createMainnetItem = useHandler(pluginId => {
+    const newItem = createWalletList.find(item => item.pluginId === pluginId)
+    return newItem as MainWalletCreateItem
+  })
+
+  const handleCreateWalletToggle = useHandler((key: string) => {
+    setSelectedItems({ ...selectedItems, [key]: !selectedItems[key] })
+
+    // Update the count with the new value
+    setNumSelected(!selectedItems[key] ? numSelected + 1 : numSelected - 1)
+  })
+
+  const handleNext = useHandler(async () => {
+    if (numSelected === 0) {
+      showError(s.strings.create_wallet_no_assets_selected)
       return
     }
 
-    // Does this wallet support private key import?
-    const { walletType } = createWalletType
-    const { isImportKeySupported } = getSpecialCurrencyInfo(walletType)
+    const createItems = createWalletList.filter(item => selectedItems[item.key])
+    const { newWalletItems, newTokenItems } = splitCreateWalletItems(createItems)
 
-    // Go to the next screen:
-    if (isImportKeySupported) {
-      navigation.navigate('createWalletChoice', {
-        selectedWalletType: createWalletType
-      })
-    } else {
-      navigation.navigate('createWalletSelectFiat', {
-        selectedWalletType: createWalletType
-      })
+    // Filter duplicates
+    const uniquePluginIdList = newTokenItems.map(item => item.pluginId).filter((v, i, a) => a.findIndex(v2 => v2 === v) === i)
+    for (const pluginId of uniquePluginIdList) {
+      const existingWalletIds = [...(pluginIdWalletIdsMap[pluginId] ?? [])]
+
+      // Determine if the user selected a new wallet for this pluginId.
+      const newItem = createMainnetItem(pluginId)
+      if (selectedItems[newItem.key]) {
+        existingWalletIds.push(PLACEHOLDER_WALLET_ID)
+      }
+
+      if (existingWalletIds.length === 0) {
+        // If the user hasn't selected the parent wallet to create, add it for them
+        if (!newWalletItems.some(item => item.pluginId === pluginId)) {
+          const newItem = createMainnetItem(pluginId)
+          newWalletItems.push(newItem)
+        }
+        newTokenItems.forEach(item => {
+          if (item.pluginId === pluginId) {
+            item.createWalletIds = [PLACEHOLDER_WALLET_ID]
+          }
+        })
+      } else if (existingWalletIds.length === 1) {
+        // Automatically associate new tokens with existing wallet
+        newTokenItems.forEach(item => {
+          if (item.pluginId === pluginId) {
+            item.createWalletIds = existingWalletIds
+          }
+        })
+      } else {
+        // Prompt user to choose a wallet
+        const selectedWalletId = await Airship.show<string | undefined>(bridge => {
+          const renderRow = (walletId: string) => {
+            if (walletId === PLACEHOLDER_WALLET_ID) {
+              return (
+                <View style={{ marginLeft: theme.rem(0.5) }}>
+                  <CreateWalletSelectCryptoRow
+                    pluginId={pluginId}
+                    walletName=""
+                    onPress={() => {
+                      bridge.resolve(PLACEHOLDER_WALLET_ID)
+                    }}
+                    rightSide={<EdgeText>{s.strings.create_wallet_choice_new_button_fragment}</EdgeText>}
+                  />
+                </View>
+              )
+            }
+
+            const wallet = currencyWallets[walletId]
+            return <WalletListCurrencyRow wallet={wallet} onPress={walletId => bridge.resolve(walletId)} />
+          }
+
+          const displayNames = newTokenItems
+            .filter(item => item.pluginId === pluginId)
+            .map(item => item.displayName)
+            .join(', ')
+          return (
+            <ListModal<string>
+              bridge={bridge}
+              title={s.strings.select_wallet}
+              message={sprintf(s.strings.create_wallet_select_wallet_for_assets, displayNames)}
+              textInput={false}
+              fullScreen={false}
+              rowComponent={renderRow}
+              rowsData={existingWalletIds}
+            />
+          )
+        })
+
+        // Return to list if user cancelled the modal
+        if (selectedWalletId == null) return
+
+        // Update tokens with selected walletId
+        newTokenItems.forEach(item => {
+          if (item.pluginId === pluginId) {
+            item.createWalletIds = [selectedWalletId]
+          }
+        })
+      }
     }
-  }
 
-  handleSearchTermChange = (searchTerm: string): void => {
-    this.setState({
-      searchTerm
-    })
-  }
+    // Navigate to the fiat/name change scene if new wallets are being created. Otherwise enable the tokens and return to the main scene.
+    if (newWalletItems.length > 0) {
+      const newList = [...newWalletItems, ...newTokenItems]
+        .sort((a, b) => (a.pluginId < b.pluginId ? 1 : -1)) // Sort alphabetically by pluginId
+        .sort((a, b) => (a.pluginId === b.pluginId && (a.tokenId ?? '') > (b.tokenId ?? '') ? 1 : -1)) // Sort tokens below mainnet wallets
+      navigation.push('createWalletSelectFiat', { createWalletList: newList })
+    } else {
+      await dispatch(enableTokensAcrossWallets(newTokenItems))
+      navigation.navigate('walletListScene', {})
+    }
+  })
 
-  handleSelectWalletType = (item: CreateWalletType): void => {
-    this.setState({ selectedWalletType: item.walletType }, this.onNext)
-  }
+  const renderCreateWalletRow = useHandler((item: WalletCreateItem) => {
+    const { key, displayName, pluginId, tokenId } = item
 
-  renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
-    const { theme } = this.props
-    const { currencyCode, pluginId } = data.item
-    // Ripple hack:
-    let { currencyName } = data.item
-    if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
-
-    const svg = <IonIcon size={theme.rem(1.5)} color={theme.iconTappable} name="chevron-forward-outline" />
-    return <CreateWalletSelectCryptoRow pluginId={pluginId} walletName={currencyName} onPress={() => this.handleSelectWalletType(data.item)} rightSide={svg} />
-  }
-
-  keyExtractor = (item: CreateWalletType, index: number): string => {
-    return item.walletType
-  }
-
-  getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
-
-  render() {
-    const { account, theme } = this.props
-    const { searchTerm } = this.state
-    const lowerSearch = searchTerm.toLowerCase()
-    const styles = getStyles(theme)
-
-    // Sort and filter the available types:
-    const sortedArray = getCreateWalletTypes(account)
-    const filteredArray = sortedArray.filter(
-      entry => entry.currencyName.toLowerCase().includes(lowerSearch) || entry.currencyCode.toLowerCase().includes(lowerSearch)
+    const toggle = (
+      <Switch
+        ios_backgroundColor={theme.toggleButtonOff}
+        trackColor={{
+          false: theme.toggleButtonOff,
+          true: theme.toggleButton
+        }}
+        value={selectedItems[key]}
+        onValueChange={() => handleCreateWalletToggle(key)}
+      />
     )
 
     return (
-      <SceneWrapper avoidKeyboard background="theme">
-        {gap => (
-          <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
-            <OutlinedTextInput
-              autoCorrect={false}
-              autoCapitalize="words"
-              onChangeText={this.handleSearchTermChange}
-              value={this.state.searchTerm}
-              label={s.strings.create_wallet_choose_crypto}
-              returnKeyType="search"
-              marginRem={[0, 1.75]}
-              searchIcon
-            />
-            <FlatList
-              style={styles.resultList}
-              automaticallyAdjustContentInsets={false}
-              contentContainerStyle={{ paddingBottom: gap.bottom }}
-              data={filteredArray}
-              initialNumToRender={12}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={this.keyExtractor}
-              renderItem={this.renderWalletTypeResult}
-              getItemLayout={this.getItemLayout}
-            />
-          </View>
-        )}
-      </SceneWrapper>
+      <CreateWalletSelectCryptoRow
+        pluginId={pluginId}
+        tokenId={tokenId}
+        walletName={displayName}
+        onPress={() => handleCreateWalletToggle(key)}
+        rightSide={toggle}
+      />
     )
-  }
+  })
+
+  const renderNextButton = React.useMemo(
+    () => (
+      <Fade visible={numSelected > 0} duration={300}>
+        <View style={{ position: 'absolute', bottom: '1%', alignSelf: 'center' }}>
+          <MainButton label={s.strings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
+        </View>
+      </Fade>
+    ),
+    [handleNext, numSelected]
+  )
+
+  const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
+
+  return (
+    <SceneWrapper avoidKeyboard background="theme">
+      {gap => (
+        <View style={[styles.content, { marginBottom: -gap.bottom }]}>
+          <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
+          <OutlinedTextInput
+            autoCorrect={false}
+            autoCapitalize="words"
+            onChangeText={setSearchTerm}
+            value={searchTerm}
+            label={s.strings.wallet_list_wallet_search}
+            returnKeyType="next"
+            marginRem={[0, 1, 0.5]}
+            searchIcon
+            clearIcon
+            blurOnClear={false}
+            onClear={() => setSearchTerm('')}
+            onSubmitEditing={handleNext}
+          />
+          <FlatList
+            style={styles.resultList}
+            automaticallyAdjustContentInsets={false}
+            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            data={filteredCreateWalletList}
+            initialNumToRender={12}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={item => item.key}
+            renderItem={data => renderCreateWalletRow(data.item)}
+            getItemLayout={getItemLayout}
+          />
+          {renderNextButton}
+        </View>
+      )}
+    </SceneWrapper>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -150,9 +259,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    account: state.core.account
-  }),
-  dispatch => ({})
-)(withTheme(CreateWalletSelectCryptoComponent))
+export const CreateWalletSelectCryptoScene = React.memo(CreateWalletSelectCryptoComponent)

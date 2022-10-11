@@ -6,11 +6,8 @@ import { registerDevice } from '../actions/DeviceIdActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
-import { CreateWalletChoiceScene } from '../components/scenes/CreateWalletChoiceScene'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene'
-import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene'
 import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene'
-import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSelectFiatScene'
 import { CryptoExchangeQuote } from '../components/scenes/CryptoExchangeQuoteScene'
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene'
 import { CryptoExchangeSuccessScene } from '../components/scenes/CryptoExchangeSuccessScene'
@@ -56,7 +53,8 @@ import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
-import { CreateWalletName } from './scenes/CreateWalletNameScene'
+import { CreateWalletCompletionScene } from './scenes/CreateWalletCompletionScene'
+import { CreateWalletSelectFiatScene } from './scenes/CreateWalletSelectFiatScene'
 import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
 import { EdgeLoginScene } from './scenes/EdgeLoginScene'
@@ -216,21 +214,9 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key="createWalletChoice"
-                component={withNavigation(ifLoggedIn(CreateWalletChoiceScene))}
-                navTransparent
-                // @ts-expect-error
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                // @ts-expect-error
-                renderRightButton={this.renderEmptyButton()}
-              />
-
-              <Scene
                 key="createWalletImport"
                 component={withNavigation(ifLoggedIn(CreateWalletImportScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_import_title} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -240,16 +226,6 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key="createWalletSelectCrypto"
                 component={withNavigation(ifLoggedIn(CreateWalletSelectCryptoScene))}
-                navTransparent
-                // @ts-expect-error
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                // @ts-expect-error
-                renderRightButton={this.renderEmptyButton()}
-              />
-
-              <Scene
-                key="createWalletName"
-                component={withNavigation(ifLoggedIn(CreateWalletName))}
                 navTransparent
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -268,11 +244,11 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key="createWalletReview"
-                component={withNavigation(ifLoggedIn(CreateWalletReviewScene))}
+                key="createWalletCompletion"
+                component={withNavigation(ifLoggedIn(CreateWalletCompletionScene))}
                 navTransparent
                 // @ts-expect-error
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                renderLeftButton={this.renderEmptyButton()}
                 // @ts-expect-error
                 renderRightButton={this.renderEmptyButton()}
               />
