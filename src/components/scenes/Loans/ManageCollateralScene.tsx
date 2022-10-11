@@ -83,7 +83,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
   const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
+  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId, loanAccountId: loanAccount.id })
 
   // #endregion Initialization
 
@@ -257,7 +257,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       const actionProgram = await makeActionProgram(actionOp)
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
-        navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
+        navigation.replace('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
       } catch (e: any) {
         showError(e)
       } finally {

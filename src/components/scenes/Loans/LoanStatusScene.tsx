@@ -32,15 +32,16 @@ type Props = {
 
 export const LoanStatusScene = (props: Props) => {
   const { navigation, route } = props
-  const { actionQueueId } = route.params
+  const { actionQueueId, loanAccountId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const account: EdgeAccount = useSelector(state => state.core.account)
   const dispatch = useDispatch()
 
+  const buttonMargin = [2, 1, 2, 1]
+
   const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
   const [steps, setSteps] = React.useState<ActionDisplayInfo[]>()
-  // @ts-expect-error
   useAsyncEffect(async () => {
     const actionQueueItem = actionQueue[actionQueueId]
 
@@ -68,6 +69,7 @@ export const LoanStatusScene = (props: Props) => {
     } else {
       // 3. ActionQueueItem does not yet exist...
     }
+    return () => {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionQueue])
 
@@ -88,7 +90,13 @@ export const LoanStatusScene = (props: Props) => {
     }
   })
 
+  const handleDonePress = useHandler(() => {
+    if (loanAccountId != null) navigation.navigate('loanDetails', { loanAccountId })
+    else navigation.navigate('loanDashboard', {})
+  })
+
   const isProgramDone = steps != null && steps[steps.length - 1].status === 'done'
+
   return (
     <SceneWrapper background="theme" hasHeader hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_status_title} />
@@ -99,13 +107,18 @@ export const LoanStatusScene = (props: Props) => {
           <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
             <StepProgressBar actionDisplayInfos={steps} />
           </ScrollView>
+          <View style={styles.footerContainer}>
+            {isProgramDone ? (
+              <>
+                <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
+                <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
+              </>
+            ) : null}
+          </View>
           {isProgramDone ? (
-            <View style={styles.footerContainer}>
-              <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
-              <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
-            </View>
+            <MainButton label={s.strings.string_done_cap} type="secondary" onPress={handleDonePress} marginRem={buttonMargin} />
           ) : (
-            <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={[0.5, 1, 2, 1]} />
+            <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={buttonMargin} />
           )}
           {isProgramDone ? <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
         </View>
@@ -123,9 +136,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     footerContainer: {
       backgroundColor: theme.tileBackground,
-      flexDirection: 'column',
-      height: theme.rem(6),
-      marginBottom: theme.rem(1)
+      flexDirection: 'column'
     },
     textCompleteTitle: {
       width: '100%',

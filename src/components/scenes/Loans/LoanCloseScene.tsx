@@ -105,7 +105,7 @@ export const LoanCloseScene = (props: Props) => {
     if (actionOps == null) return
     const actionProgram = await makeActionProgram(actionOps)
     await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-close'))
-    navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
+    navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
   })
 
   return (

@@ -97,25 +97,23 @@ export const LoanDetailsScene = (props: Props) => {
   ]
 
   const handleAddCollateralPress = () => {
-    navigation.navigate('loanAddCollateralScene', { loanAccountId })
+    navigation.navigate('loanDeposit', { loanAccountId })
   }
   const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanWithdrawCollateralScene', { loanAccountId })
+    navigation.navigate('loanWithdraw', { loanAccountId })
   }
   const handleLoanClosePress = () => {
     navigation.navigate('loanClose', { loanAccountId })
   }
   const handleBorrowMorePress = () => {
-    navigation.navigate('loanBorrowMoreScene', { loanAccountId })
+    navigation.navigate('loanBorrow', { loanAccountId })
   }
   const handleRepayPress = () => {
-    navigation.navigate('loanRepayScene', { loanAccountId })
+    navigation.navigate('loanRepay', { loanAccountId })
   }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
-    // Go to LoanDetailsStatusScene or LoanCreateStatusScene, depending on the action program
-    const statusScene = programEdge.programType === 'loan-create' ? 'loanCreateStatus' : 'loanDetailsStatus'
-    navigation.navigate(statusScene, { actionQueueId: programEdge.programId })
+    navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
   }
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
