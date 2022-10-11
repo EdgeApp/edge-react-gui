@@ -10,7 +10,6 @@ import { MainButton } from '../../../components/themed/MainButton'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
-import { formatNumber, formatToNativeNumber, isValidInput } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
@@ -40,11 +39,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const lastUsed = React.useRef<number>(1)
 
   const formattedSetValue1 = useHandler((value: string) => {
-    setValue1(dotToLocale(value))
+    setValue1(value)
   })
 
   const formattedSetValue2 = useHandler((value: string) => {
-    setValue2(dotToLocale(value))
+    setValue2(value)
   })
 
   if (getMethods != null)
@@ -64,7 +63,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     setSpinner2(true)
     convertValue(1, initialAmount1).then(val => {
       if (typeof val === 'string') {
-        setValue2(dotToLocale(val))
+        setValue2(val)
         setSpinner2(false)
       }
     })
@@ -76,32 +75,24 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   }
 
   const handleChangeText1 = useHandler((value: string) => {
-    if (!isValidInput(value)) {
-      setValue1(value1)
-      return
-    }
     lastUsed.current = 1
-    onChangeText(1, forceDot(value))
+    onChangeText(1, value)
     setValue1(value)
     setValue2(' ')
     setSpinner2(true)
-    convertValue(1, forceDot(value)).then(v => {
-      if (typeof v === 'string') setValue2(dotToLocale(v))
+    convertValue(1, value).then(v => {
+      if (typeof v === 'string') setValue2(v)
       setSpinner2(false)
     })
   })
   const handleChangeText2 = useHandler((value: string) => {
-    if (!isValidInput(value)) {
-      setValue2(value2)
-      return
-    }
     lastUsed.current = 2
-    onChangeText(2, forceDot(value))
+    onChangeText(2, value)
     setValue2(value)
     setValue1(' ')
     setSpinner1(true)
-    convertValue(2, forceDot(value)).then(v => {
-      if (typeof v === 'string') setValue1(dotToLocale(v))
+    convertValue(2, value).then(v => {
+      if (typeof v === 'string') setValue1(v)
       setSpinner1(false)
     })
   })
@@ -125,6 +116,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       <View style={styles.container}>
         <View style={styles.textFields}>
           <OutlinedTextInput
+            numeric
+            maxDecimals={2}
             autoCorrect={false}
             autoFocus
             autoCapitalize="none"
@@ -136,6 +129,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             value={value1 ?? '0'}
           />
           <OutlinedTextInput
+            numeric
+            maxDecimals={6}
             autoCorrect={false}
             autoFocus={false}
             autoCapitalize="none"
@@ -247,11 +242,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     resizeMode: 'contain'
   }
 }))
-
-const forceDot = (amount: string): string => {
-  return formatToNativeNumber(amount, { noGrouping: true })
-}
-
-const dotToLocale = (amount: string): string => {
-  return formatNumber(amount, { noGrouping: true })
-}
