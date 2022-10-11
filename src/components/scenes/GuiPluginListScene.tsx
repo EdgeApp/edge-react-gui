@@ -43,7 +43,6 @@ const paymentTypeLogosById = {
   applepay: 'paymentTypeLogoApplePay',
   auspost: 'paymentTypeLogoAuspost',
   bank: 'paymentTypeLogoBankTransfer',
-  bankgirot: 'paymentTypeLogoBankgirot',
   cash: 'paymentTypeLogoCash',
   credit: 'paymentTypeLogoCreditCard',
   debit: 'paymentTypeLogoDebitCard',
@@ -56,7 +55,6 @@ const paymentTypeLogosById = {
   paynow: 'paymentTypeLogoPaynow',
   poli: 'paymentTypeLogoPoli',
   sofort: 'paymentTypeLogoSofort',
-  swish: 'paymentTypeLogoSwish',
   upi: 'paymentTypeLogoUpi'
 }
 
