@@ -49,7 +49,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
 
-  const [[actionProgram, networkFeeAmountAggregate = '0'] = [], actionProgramError] = useAsyncValue(async () => {
+  const [[actionProgram, networkFeeMap = {}] = [], actionProgramError] = useAsyncValue(async () => {
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
     const source: LoanAsset = {
       wallet: srcWallet,
@@ -86,16 +86,15 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
 
-    // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
-    const networkFeeAggregate = networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]
-    const networkFeeAmountAggregate = networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
+    const mainNetworkFee = networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]
+    const mainNetworkFeeAmount = mainNetworkFee != null ? mainNetworkFee.nativeAmount : '0'
 
     // Add an extra swap for BorrowEngine mainnet native currency to cover transaction fees.
     const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
     if (
       srcWallet.id !== borrowEngineWallet.id && // Source of funds is not the same wallet as the "main-chain wallet"
-      networkFeeAmountAggregate != null && // Fees must exist in BorrowEngine's native currency
-      gt(networkFeeAmountAggregate, borrowWalletNativeBalance) && // BorrowEngine wallet does not have enough balance to cover required fees
+      mainNetworkFeeAmount != null && // Fees must exist in BorrowEngine's native currency
+      gt(mainNetworkFeeAmount, borrowWalletNativeBalance) && // BorrowEngine wallet does not have enough balance to cover required fees
       seq != null // type assertion
     ) {
       // Collect all initial swap actions (if any)
@@ -111,7 +110,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
       // Target mainnet native balance should be double the fees estimate to be
       // extra generous when accounting for fee volatility.
-      const feeNativeAmount = sub(mul(networkFeeAmountAggregate, '2'), borrowWalletNativeBalance)
+      const feeNativeAmount = sub(mul(mainNetworkFeeAmount, '2'), borrowWalletNativeBalance)
       // Create a new fee swap action for mainnet fees
       const feesSwap: SwapActionOp = {
         type: 'swap',
@@ -134,8 +133,12 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ]
     }
 
-    return [actionProgram, networkFeeAmountAggregate] as const
+    return [actionProgram, networkFeeMap] as const
   }, [destTokenId, nativeDestAmount, borrowEngine, borrowWalletNativeBalance])
+
+  // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
+  const networkFeeAggregate = networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]
+  const networkFeeAmountAggregate = networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
 
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
