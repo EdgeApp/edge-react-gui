@@ -52,7 +52,12 @@ export function DeepLinkingManager(props: Props) {
 
   const handlePushMessage = (message: FirebaseMessagingTypes.RemoteMessage) => {
     try {
-      handleUrl(pushMessagePayloadToEdgeUri(message))
+      const url = pushMessagePayloadToEdgeUri(message)
+      if (url == null) {
+        // Unhandled push message ie. security alerts
+        return
+      }
+      handleUrl(url)
     } catch (error) {
       showError(error)
     }
