@@ -1,5 +1,5 @@
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
-import { asObject, asString, asValue } from 'cleaners'
+import { asMaybe, asObject, asString, asValue } from 'cleaners'
 import URL from 'url-parse'
 
 //
@@ -17,8 +17,10 @@ const asPriceChangePayloadData = asObject({
   pluginId: asString
 })
 
-export const pushMessagePayloadToEdgeUri = (message: FirebaseMessagingTypes.RemoteMessage): string => {
-  const { type, pluginId } = asPriceChangePayloadData(message.data)
+export const pushMessagePayloadToEdgeUri = (message: FirebaseMessagingTypes.RemoteMessage): string | undefined => {
+  const data = asMaybe(asPriceChangePayloadData)(message.data)
+  if (data == null) return
+  const { type, pluginId } = data
   const body = asString(message.notification?.body)
   return `edge://${type}?${URL.qs.stringify({ body, pluginId })}`
 }
