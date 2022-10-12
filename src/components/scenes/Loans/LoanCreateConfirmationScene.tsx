@@ -14,6 +14,7 @@ import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateAction } from '../../../util/ActionProgramUtils'
+import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
 import { DECIMAL_PRECISION } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -83,18 +84,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     const executionContext = { account, clientId }
     const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, actionProgramState, false)
 
-    // Map: currencyCode -> nativeAmount
-    const networkFeeAmountMap: { [currencyCode: string]: string | undefined } = {}
-    for (const output of executionOutputs ?? []) {
-      for (const tx of output.broadcastTxs) {
-        const { currencyCode, nativeAmount } = tx.networkFee
-        const currentFeeAmount = networkFeeAmountMap[currencyCode] ?? '0'
-        networkFeeAmountMap[currencyCode] = add(currentFeeAmount, nativeAmount)
-      }
-    }
+    const networkFeeMap = getExecutionNetworkFees(executionOutputs)
 
     // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
-    const networkFeeAmountAggregate = networkFeeAmountMap[borrowEngineWallet.currencyInfo.currencyCode]
+    const networkFeeAggregate = networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]
+    const networkFeeAmountAggregate = networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
 
     // Add an extra swap for BorrowEngine mainnet native currency to cover transaction fees.
     const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
