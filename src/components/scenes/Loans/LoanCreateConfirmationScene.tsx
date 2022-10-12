@@ -10,7 +10,7 @@ import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateAction } from '../../../util/ActionProgramUtils'
 import { translateError } from '../../../util/translateError'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -147,6 +147,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       try {
         await dispatch(createLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
+
+        // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
+        Actions.pop()
+        Actions.replace('loanDetails', { loanAccountId: loanAccount.id })
+
         navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
       } catch (e: any) {
         showError(e)
