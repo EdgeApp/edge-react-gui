@@ -1,6 +1,6 @@
 import { div, log10, mul, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { ActivityIndicator, Platform, TouchableOpacity } from 'react-native'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -81,11 +81,11 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
     { currencyName: fiatDenom.name.replace('iso:', ''), maxEntryDecimals: log10(fiatDenom.multiplier) }
   ]
 
-  const convertCurrency = (amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {
+  const convertCurrency = useHandler((amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {
     const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
     const rate = exchangeRates[rateKey] ?? '0'
     return mul(amount, rate)
-  }
+  })
 
   const getFlipInputMethods = useHandler(m => {
     methods = m
@@ -177,6 +177,8 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
     }
   }, [])
 
+  const overrideForceField = useMemo(() => (convertCurrency('100', cryptoCurrencyCode, fiatCurrencyCode) === '0' ? 'crypto' : forceField), [exchangeRates])
+
   return (
     <>
       {coreWallet != null ? (
@@ -189,7 +191,7 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
           <FlipInput2
             convertValue={convertValue}
             fieldInfos={fieldInfos}
-            forceFieldNum={forceFieldMap[forceField]}
+            forceFieldNum={forceFieldMap[overrideForceField]}
             getMethods={getFlipInputMethods}
             keyboardVisible={keyboardVisible}
             startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
