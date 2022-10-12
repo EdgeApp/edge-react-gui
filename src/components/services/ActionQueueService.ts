@@ -112,14 +112,10 @@ export const ActionQueueService = () => {
         // Set program state to executing
         await updateProgramState(state, true)
 
-        if (program.mockMode) {
-          const { nextState } = await mockActionProgram(executionContext, program, state)
-          // Update program state
-          await updateProgramState(nextState, false)
-          return
-        }
+        // Use mock execution function if program is marked as mockMode
+        const executeActionProgramFn = program.mockMode ? mockActionProgram : executeActionProgram
 
-        const { nextState } = await executeActionProgram(executionContext, program, state).catch((error: Error): ExecutionResults => {
+        const { nextState } = await executeActionProgramFn(executionContext, program, state).catch((error: Error): ExecutionResults => {
           console.warn(new Error('Action Program Exception: ' + error.message))
           console.error(error)
           return {
