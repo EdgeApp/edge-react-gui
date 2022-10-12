@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FlatList, Keyboard, ListRenderItem } from 'react-native'
+import { FlatList, Keyboard, ListRenderItem, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
@@ -33,6 +33,7 @@ type Props<T> = {
   fullScreen?: boolean
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
+  onViewableItemsChanged?: (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => void
   // Footer Props
   closeArrow?: boolean // Defaults to 'true'
 }
@@ -49,6 +50,7 @@ export function ListModal<T>({
   rowDataFilter,
   closeArrow = true,
   onSubmitEditing,
+  onViewableItemsChanged,
   ...textProps
 }: Props<T>) {
   const [text, setText] = React.useState<string>(initialValue)
@@ -90,6 +92,7 @@ export function ListModal<T>({
         keyboardShouldPersistTaps="handled"
         renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
+        onViewableItemsChanged={onViewableItemsChanged}
       />
       {closeArrow && <ModalCloseArrow onPress={handleCancel} />}
     </ThemedModal>
