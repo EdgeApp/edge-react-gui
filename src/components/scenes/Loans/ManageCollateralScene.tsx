@@ -242,7 +242,6 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
     if (actionOp != null) {
       const actionProgram = await makeActionProgram(actionOp)
-      await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
 
