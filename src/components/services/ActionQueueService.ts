@@ -73,7 +73,7 @@ export const ActionQueueService = () => {
     if (queue == null) return
     const serviceProgramStates = serviceProgramStatesRef.current
 
-    const { account, clientId } = executionContext
+    const { clientId } = executionContext
 
     // Loop function
     const task = async () => {
@@ -113,7 +113,7 @@ export const ActionQueueService = () => {
         await updateProgramState(state, true)
 
         if (program.mockMode) {
-          const { nextState } = await mockActionProgram(account, program, state)
+          const { nextState } = await mockActionProgram(executionContext, program, state)
           // Update program state
           await updateProgramState(nextState, false)
           return
