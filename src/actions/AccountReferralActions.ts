@@ -219,7 +219,7 @@ async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): 
   return validatePromoCardsInner(account.dataStore, cards, funcs)
 }
 export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
-  const out = []
+  const out: MessageTweak[] = []
   let wyreHasLinkedBank
 
   for (const card of cards) {

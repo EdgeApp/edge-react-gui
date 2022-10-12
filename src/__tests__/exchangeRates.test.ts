@@ -21,7 +21,7 @@ const TEST_MAX_QUERY_SIZE = 2
 
 it('get bulk rates', async () => {
   // async function main(): Promise<void> {
-  const promises = []
+  const promises: Array<Promise<unknown>> = []
   promises.push(
     getHistoricalRate('BTC_iso:USD', '2022-06-01T04:00:00.000Z', TEST_MAX_QUERY_SIZE, fetch).then(v => {
       console.log(`31616 === ${Math.floor(v)}`)

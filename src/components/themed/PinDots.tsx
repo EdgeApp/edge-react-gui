@@ -8,7 +8,7 @@ export function PinDots(props: { pinLength: number; maxLength: number }) {
   const styles = getStyles(theme)
 
   const renderCircle = () => {
-    const circle = []
+    const circle: React.ReactElement[] = []
     for (let i = 0; i < props.maxLength; i++) {
       circle.push(<View key={i} style={[styles.circle, props.pinLength > i && styles.circleFilled]} />)
     }

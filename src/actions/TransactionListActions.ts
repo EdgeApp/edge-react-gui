@@ -15,9 +15,6 @@ export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACT
 export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
-// @ts-expect-error
-const emptyArray = []
-
 export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state: RootState = getState()
   const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
@@ -28,8 +25,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   // if we are resetting then start over
   if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
     currentEndIndex = 0
-    // @ts-expect-error
-    existingTransactions = emptyArray
+    existingTransactions = []
   }
 
   // new batch will start with the first index after previous end index
@@ -155,7 +151,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
-  const receivedTxs = []
+  const receivedTxs: EdgeTransaction[] = []
   for (const transaction of edgeTransactions) {
     if (isReceivedTransaction(transaction)) {
       receivedTxs.push(transaction)

@@ -66,7 +66,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   _onContinuePress = (): void => {
     const { fioAddressName, fioWallet, walletItems } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
-    const walletsToDisconnect = []
+    const walletsToDisconnect: FioConnectionWalletItem[] = []
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (
         !Object.keys(connectWalletsMap).find(

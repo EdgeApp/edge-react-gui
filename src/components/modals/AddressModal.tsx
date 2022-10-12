@@ -104,7 +104,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   filterFioAddresses = (uri: string): void => {
     const { useUserFioAddressesOnly, userFioAddresses, isFioOnly } = this.props
     const { fioAddresses } = this.state
-    const fioAddressesArray = []
+    const fioAddressesArray: string[] = []
 
     if (useUserFioAddressesOnly) {
       for (const address of userFioAddresses) {

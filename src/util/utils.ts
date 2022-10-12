@@ -180,7 +180,7 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
 }
 
 export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string; value: string }> => {
-  const out = []
+  const out: Array<{ label: string; value: string }> = []
   // @ts-expect-error
   if (defaultCurrencyCode && FIAT_CODES_SYMBOLS[defaultCurrencyCode]) {
     out.push({

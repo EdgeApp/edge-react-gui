@@ -50,18 +50,13 @@ const calculateNewShownData = (userData: ConfettiShownTimes): ConfettiShownTimes
   return userData
 }
 
-// @ts-expect-error
-const setNewData = (data, userData, userId, disklet) => {
-  data[userId] = calculateNewShownData(userData)
-  setConfettiShownTimes(data, disklet)
-}
-
 export const needToShowConfetti = async (userId: string, disklet: Disklet): Promise<boolean> => {
   const data: { [key: string]: ConfettiShownTimes } = await getConfettiShownTimes(disklet)
   const userData: ConfettiShownTimes = data[userId] || { doneAmount: 0, showNext: true, randomShown: false }
 
   const needToShow = userData.showNext
   userData.doneAmount++
-  setNewData(data, userData, userId, disklet)
+  data[userId] = calculateNewShownData(userData)
+  setConfettiShownTimes(data, disklet)
   return needToShow
 }

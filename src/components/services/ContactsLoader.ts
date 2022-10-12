@@ -1,9 +1,8 @@
 import * as React from 'react'
 import Contacts from 'react-native-contacts'
-import RNPermissions from 'react-native-permissions'
+import { PermissionStatus } from 'react-native-permissions'
 
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
-import { PermissionStatus } from '../../reducers/PermissionsReducer'
 import { connect } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
@@ -226,7 +225,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { contactsPermission } = nextProps
 
-    if (this.props.contactsPermission !== RNPermissions.RESULTS.GRANTED && contactsPermission === RNPermissions.RESULTS.GRANTED) {
+    if (this.props.contactsPermission !== 'granted' && contactsPermission === 'granted') {
       this.loadContacts()
     }
   }
@@ -256,7 +255,6 @@ class ContactsLoaderComponent extends React.Component<Props> {
 
 export const ContactsLoader = connect<StateProps, DispatchProps, {}>(
   state => ({
-    // @ts-expect-error
     contactsPermission: state.permissions.contacts
   }),
   dispatch => ({

@@ -98,7 +98,7 @@ export type Action =
   | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
   | { type: 'LOGOUT'; data: { username?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN'; data: { messageId: string; source: TweakSource } }
-  | { type: 'PERMISSIONS/UPDATE'; data: PermissionsState }
+  | { type: 'PERMISSIONS/UPDATE'; data: Partial<PermissionsState> }
   | { type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE'; data: PriceChangeNotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }

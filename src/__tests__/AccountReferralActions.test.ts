@@ -42,9 +42,7 @@ const getPassFuncs = (countryCode: string, wyreHasLinked: boolean, buildNumber: 
 
 describe('validatePromoCardsInner', () => {
   test('No cards', async () => {
-    // @ts-expect-error
-    const cards = []
-    // @ts-expect-error
+    const cards: MessageTweak[] = []
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', ''))
     expect(result.length).toBe(0)
   })

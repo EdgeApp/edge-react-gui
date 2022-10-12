@@ -71,7 +71,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
       value: pubDomain,
       label: `${FIO_ADDRESS_DELIMITER}${pubDomain.name}`
     }))
-    const userDomainsConverted = []
+    const userDomainsConverted: Item[] = []
     for (const fioDomain of userDomains) {
       userDomainsConverted.push({ value: fioDomain, label: `${FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
     }
@@ -89,7 +89,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
     // Search Input Filter
     const inputLowerCase = input.toLowerCase()
-    const filteredRecords = []
+    const filteredRecords: Item[] = []
     for (const item of domains) {
       const { label, value } = item
 

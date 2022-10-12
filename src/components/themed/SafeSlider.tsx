@@ -22,12 +22,6 @@ type Props = {
   disabled: boolean
 }
 
-// @ts-expect-error
-const clamp = (value, lowerBound, upperBound) => {
-  'worklet'
-  return Math.min(Math.max(lowerBound, value), upperBound)
-}
-
 export const SafeSlider = (props: Props) => {
   const { disabledText, disabled, onSlidingComplete, parentStyle, completePoint = COMPLETE_POINT } = props
 
@@ -112,6 +106,13 @@ export const SafeSlider = (props: Props) => {
       </View>
     </View>
   )
+}
+
+type Clamp = (value: number, lowerBound: number, upperBound: number) => number
+
+const clamp: Clamp = (value, lowerBound, upperBound) => {
+  'worklet'
+  return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

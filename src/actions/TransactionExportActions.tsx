@@ -188,8 +188,7 @@ export function exportTransactionsToQBOInner(
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
   fiatCurrencyCode: string,
-  denom?: string,
-  // @ts-expect-error
+  denom: string | undefined,
   dateNow: number
 ): string {
   const STMTTRN: any[] = []
