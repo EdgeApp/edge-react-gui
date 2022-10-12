@@ -136,7 +136,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     return [actionProgram, networkFeeMap] as const
   }, [destTokenId, nativeDestAmount, borrowEngine, borrowWalletNativeBalance])
 
-  // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
+  // TODO: Pass networkFeeMap to a component which can display fee total for NetworkFeeMap interfaces
   const networkFeeAggregate = networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]
   const networkFeeAmountAggregate = networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
 
