@@ -27,11 +27,14 @@ export type FlipInputFieldInfo = {
   maxEntryDecimals: number
 }
 
+type TextInputTuple = [TextInput | null, TextInput | null]
 export interface FlipInputProps {
   onNext?: () => void
   convertValue: (sourceFieldNum: FieldNum, value: string) => Promise<string | undefined>
   getMethods?: (methods: FlipInputGetMethodsResponse) => void
   startAmounts: [string, string]
+  forceFieldNum?: FieldNum
+  keyboardVisible?: boolean
   inputAccessoryViewID?: string
   fieldInfos: FlipInputFieldInfo[]
   topReturnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
@@ -45,16 +48,26 @@ const flipField = (fieldNum: FieldNum): FieldNum => {
 export const FlipInput2 = React.memo((props: FlipInputProps) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const inputRefs = [React.useRef<TextInput>(null), React.useRef<TextInput>(null)]
+  const [inputRefs, setInputRefs] = useState<TextInputTuple>([null, null])
 
-  const { startAmounts, fieldInfos, topReturnKeyType = 'done', onNext, inputAccessoryViewID, getMethods, convertValue } = props
-  const animatedValue = useSharedValue(0)
+  const {
+    startAmounts,
+    fieldInfos,
+    keyboardVisible,
+    topReturnKeyType = 'done',
+    onNext,
+    inputAccessoryViewID,
+    getMethods,
+    convertValue,
+    forceFieldNum = 0
+  } = props
+  const animatedValue = useSharedValue(forceFieldNum)
 
   // `amounts` is always a 2-tuple
   const [amounts, setAmounts] = useState<[string, string]>(startAmounts)
 
   // primaryField is the index into the 2-tuple, 0 or 1
-  const [primaryField, setPrimaryField] = useState<FieldNum>(0)
+  const [primaryField, setPrimaryField] = useState<FieldNum>(forceFieldNum)
 
   const frontAnimatedStyle = useAnimatedStyle(() => {
     const degrees = interpolate(animatedValue.value, [0, 0.5, 1], [0, 90, 90])
@@ -74,8 +87,9 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
       'worklet'
       if (done) runOnJS(setPrimaryField)(primaryField ? 0 : 1)
     }
-    inputRefs[primaryField].current?.blur()
-    inputRefs[Number(!primaryField)].current?.focus()
+
+    inputRefs[primaryField]?.blur()
+    inputRefs[Number(!primaryField)]?.focus()
 
     if (primaryField) {
       console.log('animating to 0')
@@ -133,7 +147,13 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
             onChangeText={onNumericInputChange}
             autoCorrect={false}
             returnKeyType={topReturnKeyType}
-            ref={inputRefs[fieldNum]}
+            ref={ref => {
+              if (ref != null && inputRefs[fieldNum] == null) {
+                const tempRefsArray: TextInputTuple = [...inputRefs]
+                tempRefsArray[fieldNum] = ref
+                setInputRefs(tempRefsArray)
+              }
+            }}
             onSubmitEditing={onNext}
             inputAccessoryViewID={inputAccessoryViewID}
           />
@@ -165,7 +185,15 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
           setAmounts([amounts[0], amounts[1]])
         }
       })
-  }, [])
+  })
+
+  useEffect(() => {
+    if (inputRefs[0] != null && inputRefs[1] != null) {
+      if (keyboardVisible) {
+        inputRefs[primaryField]?.focus()
+      }
+    }
+  }, [inputRefs])
 
   return (
     <>

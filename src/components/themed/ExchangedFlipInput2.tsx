@@ -13,7 +13,7 @@ import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDec
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { FlipInput2, FlipInputFieldInfo, FlipInputGetMethodsResponse } from './FlipInput2'
+import { FieldNum, FlipInput2, FlipInputFieldInfo, FlipInputGetMethodsResponse } from './FlipInput2'
 import { RightChevronButton } from './ThemedButtons'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
@@ -33,10 +33,17 @@ export type ExchangedFlipInputProps = {
   walletId: string
   tokenId?: string
   startNativeAmount?: string
+  keyboardVisible?: boolean
   headerText: string
+  forceField?: 'fiat' | 'crypto'
   headerCallback?: () => void
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
   getMethods?: (methods: ExchangedFlipInputGetMethodsResponse) => void
+}
+
+const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
+  crypto: 0,
+  fiat: 1
 }
 
 // ExchangedFlipInput2 wraps FlipInput2
@@ -45,7 +52,7 @@ export type ExchangedFlipInputProps = {
 // 3. Returns values to parent in fiat exchange amt, crypto exchange amt, and crypto native amt
 
 export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) => {
-  const { walletId, tokenId, startNativeAmount, onAmountChanged, getMethods, headerText, headerCallback } = props
+  const { walletId, tokenId, startNativeAmount, onAmountChanged, getMethods, headerText, headerCallback, forceField = 'crypto', keyboardVisible = true } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -182,7 +189,9 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
           <FlipInput2
             convertValue={convertValue}
             fieldInfos={fieldInfos}
+            forceFieldNum={forceFieldMap[forceField]}
             getMethods={getFlipInputMethods}
+            keyboardVisible={keyboardVisible}
             startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
           />
         </>

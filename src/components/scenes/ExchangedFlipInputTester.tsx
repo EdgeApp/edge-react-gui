@@ -49,6 +49,12 @@ export function ExchangedFlipInputTester(props: {}) {
   const headerText = 'Select Wallet'
   const headerCallback = () => console.log('Header pressed')
 
+  // Hack. If wallet name first char is lowercase, start with crypto focused, otherwise default to fiat
+  const defaultField = (coreWallet?.name?.charAt(0).toLowerCase() ?? '') === (coreWallet?.name?.charAt(0) ?? '')
+
+  // Hack. If wallet name 2nd char is lowercase, start with keyboard down
+  const keyboardVisible = (coreWallet?.name?.charAt(1).toLowerCase() ?? '') !== (coreWallet?.name?.charAt(1) ?? '')
+
   return (
     <View style={styles.headerContainer}>
       <Card>
@@ -56,15 +62,17 @@ export function ExchangedFlipInputTester(props: {}) {
           walletId={walletId}
           headerText={headerText}
           headerCallback={headerCallback}
+          forceField={defaultField ? 'crypto' : 'fiat'}
+          keyboardVisible={keyboardVisible}
           getMethods={getMethods}
           tokenId={tokenId}
           startNativeAmount={balance}
           onAmountChanged={onAmountChanged}
         />
       </Card>
-      <OutlinedTextInput value={value0} onChangeText={onChangeText0} />
+      <OutlinedTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} />
       <MainButton label="Set Crypto Amt" onPress={onPress0} />
-      <OutlinedTextInput value={value1} onChangeText={onChangeText1} />
+      <OutlinedTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} />
       <MainButton label="Set Fiat Amt" onPress={onPress1} />
     </View>
   )
