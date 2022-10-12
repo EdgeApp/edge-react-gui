@@ -1,10 +1,8 @@
-import { div, eq } from 'biggystring'
 import { EdgeAccount } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { ActionDisplayInfo, ActionDisplayStatus, ActionEffect, ActionOp, ActionProgram, ActionProgramState } from '../../controllers/action-queue/types'
 import s from '../../locales/strings'
-import { MAX_AMOUNT } from '../../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -173,24 +171,14 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       }
     }
     case 'loan-withdraw': {
-      const { nativeAmount, walletId, tokenId } = actionOp
+      const { walletId, tokenId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
-      const { currencyCode, denominations } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
-      let assetDisplay = currencyCode
+      const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
 
-      // Special handling for display when trying to withdraw the entire balance.
-      // This withdraw could follow a repayment with collateral, in which case
-      // the final withdraw amount is not known beforehand.
-      // TODO: Handle this use case during ActionQueue display redesign.
-      if (eq(nativeAmount, MAX_AMOUNT.toString())) {
-        const { multiplier } = denominations[0]
-        const amount = div(nativeAmount, multiplier, multiplier.length)
-        assetDisplay = `${amount} ${assetDisplay}`
-      }
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_loan_withdraw_title,
-        message: sprintf(s.strings.action_queue_display_loan_withdraw_message, assetDisplay)
+        message: sprintf(s.strings.action_queue_display_loan_withdraw_message, currencyCode)
       }
     }
     case 'broadcast-tx': {
