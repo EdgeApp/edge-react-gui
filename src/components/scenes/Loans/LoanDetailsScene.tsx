@@ -44,7 +44,7 @@ export const LoanDetailsScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const actionQueueMap = useSelector(state => state.actionQueue.queue)
+  const actionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { route, navigation } = props

@@ -5,11 +5,11 @@ import { checkEffectIsDone } from '../runtime'
 import { ActionQueueMap } from '../types'
 
 export type ActionQueueState = {
-  readonly queue: ActionQueueMap
+  readonly actionQueueMap: ActionQueueMap
 }
 
 export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
-  queue(state: ActionQueueMap = {}, action: Action): ActionQueueMap {
+  actionQueueMap(state: ActionQueueMap = {}, action: Action): ActionQueueMap {
     switch (action.type) {
       case 'ACTION_QUEUE/LOAD_QUEUE': {
         return action.data

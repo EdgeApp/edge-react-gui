@@ -40,10 +40,10 @@ export const LoanStatusScene = (props: Props) => {
 
   const buttonMargin = [2, 1, 2, 1]
 
-  const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
   const [steps, setSteps] = React.useState<ActionDisplayInfo[]>()
   useAsyncEffect(async () => {
-    const actionQueueItem = actionQueue[actionQueueId]
+    const actionQueueItem = actionQueueMap[actionQueueId]
 
     // TODO: Make ActionQueue handle these cases correctly.
     // HACK: Status mutations:
@@ -71,7 +71,7 @@ export const LoanStatusScene = (props: Props) => {
     }
     return () => {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionQueue])
+  }, [actionQueueMap])
 
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {

@@ -15,7 +15,7 @@ Object {
     },
   },
   "actionQueue": Object {
-    "queue": Object {},
+    "actionQueueMap": Object {},
   },
   "contacts": Array [],
   "core": Object {

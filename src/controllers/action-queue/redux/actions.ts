@@ -56,7 +56,7 @@ export const cancelActionProgram = (programId: string) => async (dispatch: Dispa
   const account = state.core.account
   const clientId = state.core.context.clientId
   const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
-  const { state: programState } = state.actionQueue.queue[programId]
+  const { state: programState } = state.actionQueue.actionQueueMap[programId]
 
   const pushEventIds = getEffectPushEventIds(programState.effect)
   if (pushEventIds.length > 0) {
