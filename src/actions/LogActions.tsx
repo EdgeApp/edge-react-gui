@@ -12,24 +12,6 @@ import { sendLogs } from '../modules/Logs/api'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { log, logWithType, readLogs } from '../util/logger'
 
-type Accounts = {
-  username: string
-  userId: string // Not sure what this is used for, but adding the type anyway
-}
-
-type Wallets = {
-  currencyCode?: string
-  imported?: boolean
-  repoId?: string
-  pluginDump?: EdgeDataDump
-}
-
-type LoggedInUser = {
-  userName: string
-  userId: string
-  wallets: Wallets[]
-}
-
 type LogOutput = {
   isoDate: string
   uniqueId: string
@@ -41,6 +23,24 @@ type LogOutput = {
   accounts: Accounts[]
   loggedInUser?: LoggedInUser
   data: string
+}
+
+type Accounts = {
+  username: string
+  userId: string // Not sure what this is used for, but adding the type anyway
+}
+
+type LoggedInUser = {
+  userName: string
+  userId: string
+  wallets: Wallets[]
+}
+
+type Wallets = {
+  currencyCode?: string
+  imported?: boolean
+  repoId?: string
+  pluginDump?: EdgeDataDump
 }
 
 export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
