@@ -6,6 +6,7 @@ import { ActionQueueMap } from '../types'
 
 export type ActionQueueState = {
   readonly actionQueueMap: ActionQueueMap
+  readonly activeProgramIds: string[]
 }
 
 export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
@@ -22,13 +23,6 @@ export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
       }
       case 'ACTION_QUEUE/UPDATE_PROGRAM_STATE': {
         const { programId } = action.state
-        const { effect } = action.state
-
-        // Remove program from action queue if it has finished
-        if (checkEffectIsDone(effect)) {
-          const { [programId]: _removed, ...rest } = state
-          return rest
-        }
 
         return {
           ...state,
@@ -40,6 +34,33 @@ export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
       }
       case 'LOGOUT': {
         return {}
+      }
+      default:
+        return state
+    }
+  },
+  activeProgramIds(state: string[] = [], action: Action): string[] {
+    switch (action.type) {
+      case 'ACTION_QUEUE/LOAD_QUEUE': {
+        const ids = Object.keys(action.data)
+        return ids
+      }
+      case 'ACTION_QUEUE/QUEUE_ITEM': {
+        return [...state, action.programId]
+      }
+      case 'ACTION_QUEUE/UPDATE_PROGRAM_STATE': {
+        const { programId } = action.state
+        const { effect } = action.state
+
+        // Remove program from action queue if it has finished
+        if (checkEffectIsDone(effect)) {
+          return state.filter(id => id !== programId)
+        }
+
+        return state
+      }
+      case 'LOGOUT': {
+        return []
       }
       default:
         return state

@@ -25,6 +25,7 @@ export const ActionQueueService = () => {
   const account: EdgeAccount = useSelector(state => state.core.account)
   const clientId: string = useSelector(state => state.core.context.clientId)
   const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
+  const activeProgramIds = useSelector(state => state.actionQueue.activeProgramIds)
   const serviceProgramStatesRef = useRef<ServiceProgramStates>({})
 
   const executionContext: ExecutionContext = React.useMemo(
@@ -70,7 +71,6 @@ export const ActionQueueService = () => {
   //
 
   React.useEffect(() => {
-    if (actionQueueMap == null) return
     const serviceProgramStates = serviceProgramStatesRef.current
 
     const { clientId } = executionContext
@@ -78,7 +78,7 @@ export const ActionQueueService = () => {
     // Loop function
     const task = async () => {
       // Programs that require immediate attention
-      const urgentProgramIds = Object.keys(actionQueueMap).filter(programId => {
+      const urgentProgramIds = activeProgramIds.filter(programId => {
         const { state } = actionQueueMap[programId]
         // Don't execute programs which are assigned to another client.
         // This predicate must come first to avoid the device/client from
@@ -147,7 +147,7 @@ export const ActionQueueService = () => {
 
     // Cleanup loop
     return () => periodicTask.stop()
-  }, [dispatch, executionContext, updateProgramState, actionQueueMap])
+  }, [dispatch, executionContext, updateProgramState, actionQueueMap, activeProgramIds])
 
   // Return no component/view
   return null
