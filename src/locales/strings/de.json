@@ -830,6 +830,7 @@
   "loan_add_from": "Hinzufügen von %s",
   "loan_amount_borrow": "Ausleihbetrag",
   "loan_amount_exceeds_s_collateral": "Total loan value exceeds %1$s of total collateral value.",
+  "loan_amount_fees_exceeds_collateral": "Total collateral value plus fees exceeds wallet balance.",
   "loan_available_equity": "Verfügbares Eigenkapital",
   "loan_borrow_details_title": "Ausleihdetails",
   "loan_borrow_more": "Mehr ausleihen",
