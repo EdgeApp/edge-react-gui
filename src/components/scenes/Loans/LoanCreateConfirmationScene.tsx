@@ -5,7 +5,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime'
 import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
-import { createLoanAccount, runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
+import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
@@ -145,7 +145,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
       try {
-        await dispatch(createLoanAccount(loanAccount))
+        await dispatch(updateLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 
         // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
