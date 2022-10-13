@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { cancelActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { ActionDisplayInfo, ActionQueueMap } from '../../../controllers/action-queue/types'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
@@ -41,23 +41,19 @@ export const LoanStatusScene = (props: Props) => {
   const buttonMargin = [2, 1, 2, 1]
 
   const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
-  const [steps, setSteps] = React.useState<ActionDisplayInfo[]>()
-  useAsyncEffect(async () => {
+  const [steps] = useAsyncValue(async () => {
     const actionQueueItem = actionQueueMap[actionQueueId]
 
     // 2. The first step of a seq does not get set to 'active'
     const { program, state } = actionQueueItem
     const displayInfo = await getActionProgramDisplayInfo(account, program, state)
 
+    if (displayInfo.status instanceof Error) return [displayInfo]
+
     // Flatten steps
     const steps = [...displayInfo.steps].reduce((steps: ActionDisplayInfo[], step) => [...steps, ...(step.steps.length > 0 ? step.steps : [step])], [])
 
-    if (steps[0].status === 'pending') steps[0].status = 'active'
-
-    setSteps(steps)
-
-    return () => {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return steps
   }, [actionQueueMap])
 
   // Show a confirmation modal before aborting the ActionQueue
