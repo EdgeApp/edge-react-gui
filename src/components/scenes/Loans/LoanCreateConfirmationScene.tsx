@@ -149,7 +149,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 
         // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
-        Actions.pop()
+        Actions.popTo('loanCreate')
         Actions.replace('loanDetails', { loanAccountId: loanAccount.id })
 
         navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
