@@ -1,4 +1,4 @@
-import { add, gt, mul, sub } from 'biggystring'
+import { add, div, gt, mul, sub } from 'biggystring'
 import * as React from 'react'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
@@ -7,12 +7,15 @@ import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
+import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateAction } from '../../../util/ActionProgramUtils'
 import { translateError } from '../../../util/translateError'
+import { DECIMAL_PRECISION } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { CurrencyRow } from '../../data/row/CurrencyRow'
@@ -33,18 +36,17 @@ type Props = {
 }
 
 export const LoanCreateConfirmationScene = (props: Props) => {
+  const dispatch = useDispatch()
+
   const { navigation, route } = props
   const { borrowPlugin, borrowEngine, destWallet, destTokenId, nativeDestAmount, nativeSrcAmount, paymentMethod, srcTokenId, srcWallet } = route.params
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   const clientId = useSelector(state => state.core.context.clientId)
   const account = useSelector(state => state.core.account)
-
   const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet)
 
   const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
-
-  const dispatch = useDispatch()
 
   const [[actionProgram, networkFeeAmountAggregate = '0'] = [], actionProgramError] = useAsyncValue(async () => {
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
@@ -61,7 +63,6 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ...(paymentMethod != null ? { paymentMethodId: paymentMethod.id } : {}),
       ...(destTokenId != null ? { tokenId: destTokenId } : {})
     }
-
     const actionOp = await makeAaveCreateAction({
       borrowEngineWallet,
       borrowPluginId,
@@ -95,12 +96,12 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     // TODO: Show fees for swaps and other transactions that aren't on the main loan account wallet
     const networkFeeAmountAggregate = networkFeeAmountMap[borrowEngineWallet.currencyInfo.currencyCode]
 
-    // Add an extra swap for mainnet native currency to cover transaction fees.
+    // Add an extra swap for BorrowEngine mainnet native currency to cover transaction fees.
     const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
     if (
       srcWallet.id !== borrowEngineWallet.id && // Source of funds is not the same wallet as the "main-chain wallet"
-      networkFeeAmountAggregate != null && // Mainnet native currency fee must exist
-      gt(networkFeeAmountAggregate, borrowWalletNativeBalance) && // Fee must be larger than available balance
+      networkFeeAmountAggregate != null && // Fees must exist in BorrowEngine's native currency
+      gt(networkFeeAmountAggregate, borrowWalletNativeBalance) && // BorrowEngine wallet does not have enough balance to cover required fees
       seq != null // type assertion
     ) {
       // Collect all initial swap actions (if any)
@@ -116,14 +117,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
       // Target mainnet native balance should be double the fees estimate to be
       // extra generous when accounting for fee volatility.
-      const nativeAmount = sub(mul(networkFeeAmountAggregate, '2'), borrowWalletNativeBalance)
+      const feeNativeAmount = sub(mul(networkFeeAmountAggregate, '2'), borrowWalletNativeBalance)
       // Create a new fee swap action for mainnet fees
       const feesSwap: SwapActionOp = {
         type: 'swap',
         fromWalletId: srcWallet.id,
         fromTokenId: srcTokenId,
         toWalletId: borrowEngineWallet.id,
-        nativeAmount,
+        nativeAmount: feeNativeAmount,
         amountFor: 'to'
       }
       // Include new fee swap action in swapActions
@@ -161,6 +162,38 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     }
   }
 
+  // HACK: Interim solution before implementing a robust multi-asset fee aggregator for Action Programs
+  const {
+    currencyCode: srcCurrencyCode,
+    denomination: srcDenom,
+    isoFiatCurrencyCode: srcIsoFiatCurrencyCode
+  } = useTokenDisplayData({
+    tokenId: srcTokenId,
+    wallet: srcWallet
+  })
+  const {
+    currencyCode: feeCurrencyCode,
+    denomination: feeDenom,
+    isoFiatCurrencyCode: feeIsoFiatCurrencyCode
+  } = useTokenDisplayData({
+    tokenId: borrowEngineWallet.currencyInfo.currencyCode,
+    wallet: borrowEngineWallet
+  })
+  const srcWalletBalance = useWalletBalance(srcWallet, srcTokenId)
+  const srcBalanceFiatAmount = useSelector(state => {
+    const cryptoAmount = div(srcWalletBalance, srcDenom.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, srcCurrencyCode, srcIsoFiatCurrencyCode, cryptoAmount)
+  })
+  const swapFiatAmount = useSelector(state => {
+    const cryptoAmount = div(nativeSrcAmount, srcDenom.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, srcCurrencyCode, srcIsoFiatCurrencyCode, cryptoAmount)
+  })
+  const feeFiatAmount = useSelector(state => {
+    const cryptoAmount = div(networkFeeAmountAggregate, feeDenom.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, feeCurrencyCode, feeIsoFiatCurrencyCode, cryptoAmount)
+  })
+  const isFeesExceedCollateral = gt(add(swapFiatAmount, feeFiatAmount), srcBalanceFiatAmount)
+
   if (loanAccountError != null) return <Alert title={s.strings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
 
   return loanAccount == null ? (
@@ -168,7 +201,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       <FillLoader />
     </SceneWrapper>
   ) : (
-    <FormScene headerText={s.strings.loan_create_confirmation_title} sliderDisabled={actionProgram == null} onSliderComplete={handleSliderComplete}>
+    <FormScene
+      headerText={s.strings.loan_create_confirmation_title}
+      sliderDisabled={actionProgram == null || isFeesExceedCollateral}
+      onSliderComplete={handleSliderComplete}
+    >
       <Tile type="static" title={s.strings.loan_amount_borrow}>
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
@@ -191,6 +228,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       </Tile>
       {actionProgramError != null ? <ErrorTile message={actionProgramError.message} /> : null}
       <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
+      {isFeesExceedCollateral ? <ErrorTile message={s.strings.loan_amount_fees_exceeds_collateral} /> : null}
     </FormScene>
   )
 }
