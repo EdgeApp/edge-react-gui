@@ -77,7 +77,7 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
     data: ''
   }
 
-  const activityOutput = { ...logOutput }
+  const activityOutput: LogOutput = { ...logOutput }
   activityOutput.uniqueId = activityId
 
   const state = getState()
