@@ -929,6 +929,7 @@ const strings = {
   loan_add_from: 'Add from %s',
   loan_amount_borrow: 'Amount to Borrow',
   loan_amount_exceeds_s_collateral: 'Total loan value exceeds %1$s of total collateral value.',
+  loan_amount_fees_exceeds_collateral: 'Total collateral value plus fees exceeds wallet balance.',
   loan_available_equity: 'Available Equity',
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
