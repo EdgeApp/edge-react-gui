@@ -1,9 +1,11 @@
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
 
-import { ActionOp } from '../controllers/action-queue/types'
+import { ActionOp, SeqActionOp } from '../controllers/action-queue/types'
+import { BorrowEngine } from '../plugins/borrow-plugins/types'
 import { MAX_AMOUNT } from './../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
+import { zeroString } from './utils'
 
 // -----------------------------------------------------------------------------
 //  Given the user inputs made in the AAVE UI, return the Actions needed to
@@ -222,34 +224,57 @@ export const makeAaveDepositAction = async ({
 
 export const makeAaveCloseAction = async ({
   borrowPluginId,
-  collateralTokenId,
-  debtTokenId,
-  wallet
+  borrowEngine
 }: {
   borrowPluginId: string
-  collateralTokenId: string
-  debtTokenId: string
-  wallet: EdgeCurrencyWallet
-}): Promise<ActionOp[]> => {
-  const repayActionOp: ActionOp = {
-    type: 'loan-repay',
-    nativeAmount: MAX_AMOUNT.toString(),
-    borrowPluginId,
-    fromTokenId: collateralTokenId,
-    tokenId: debtTokenId,
-    walletId: wallet.id
+  borrowEngine: BorrowEngine
+}): Promise<ActionOp | null> => {
+  const { currencyWallet: wallet } = borrowEngine
+
+  const collaterals = borrowEngine.collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
+  const collateral = collaterals[0]
+  const collateralTokenId = collateral?.tokenId
+
+  const debts = borrowEngine.debts.filter(debt => !zeroString(debt.nativeAmount))
+  const debt = debts[0]
+  const debtTokenId = debt?.tokenId
+
+  const seqAction: SeqActionOp = {
+    type: 'seq',
+    actions: []
   }
 
-  const withdrawalToken = getToken(wallet, collateralTokenId)
-  if (withdrawalToken == null) throw new Error(`Could not find withdrawal token ${collateralTokenId} on ${wallet.currencyInfo.currencyCode} wallet`)
-  await enableToken(withdrawalToken.currencyCode, wallet)
-  const withdrawActionOp: ActionOp = {
-    type: 'loan-withdraw',
-    borrowPluginId,
-    nativeAmount: MAX_AMOUNT.toString(),
-    tokenId: collateralTokenId,
-    walletId: wallet.id
+  // Repay actions
+  if (debtTokenId != null) {
+    seqAction.actions.push({
+      type: 'loan-repay',
+      nativeAmount: MAX_AMOUNT.toString(),
+      borrowPluginId,
+      fromTokenId: collateralTokenId,
+      tokenId: debtTokenId,
+      walletId: wallet.id
+    })
   }
-  const out = [repayActionOp, withdrawActionOp]
-  return out
+
+  // Withdraw actions
+  const withdrawalToken = getToken(wallet, collateralTokenId)
+  if (withdrawalToken != null) {
+    // Make sure the collateralized token is enabled just because
+    await enableToken(withdrawalToken.currencyCode, wallet)
+
+    seqAction.actions.push({
+      type: 'loan-withdraw',
+      borrowPluginId,
+      nativeAmount: MAX_AMOUNT.toString(),
+      tokenId: collateralTokenId,
+      walletId: wallet.id
+    })
+  }
+
+  if (seqAction.actions.length > 0) {
+    return seqAction
+  }
+
+  // Returning null means no transactions are necessary in order to close the loan
+  return null
 }
