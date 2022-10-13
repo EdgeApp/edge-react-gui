@@ -1,6 +1,6 @@
 import { eq } from 'biggystring'
 import React, { useEffect } from 'react'
-import { Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Platform, ReturnKeyType, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { AnimationCallback, Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
@@ -37,7 +37,8 @@ export interface FlipInputProps {
   keyboardVisible?: boolean
   inputAccessoryViewID?: string
   fieldInfos: FlipInputFieldInfo[]
-  topReturnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  returnKeyType?: ReturnKeyType
+  editable?: boolean
 }
 
 const FLIP_DURATION = 500
@@ -54,12 +55,13 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
     startAmounts,
     fieldInfos,
     keyboardVisible,
-    topReturnKeyType = 'done',
+    returnKeyType = 'done',
     onNext,
     inputAccessoryViewID,
     getMethods,
     convertValue,
-    forceFieldNum = 0
+    forceFieldNum = 0,
+    editable
   } = props
   const animatedValue = useSharedValue(forceFieldNum)
 
@@ -146,7 +148,8 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
             placeholderTextColor={theme.deactivatedText}
             onChangeText={onNumericInputChange}
             autoCorrect={false}
-            returnKeyType={topReturnKeyType}
+            editable={editable}
+            returnKeyType={returnKeyType}
             ref={ref => {
               if (ref != null && inputRefs[fieldNum] == null) {
                 const tempRefsArray: TextInputTuple = [...inputRefs]

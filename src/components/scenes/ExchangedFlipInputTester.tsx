@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { ReturnKeyType, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
@@ -55,13 +55,18 @@ export function ExchangedFlipInputTester(props: {}) {
   // Hack. If wallet name 2nd char is lowercase, start with keyboard down
   const keyboardVisible = (coreWallet?.name?.charAt(1).toLowerCase() ?? '') !== (coreWallet?.name?.charAt(1) ?? '')
 
+  const editable = (coreWallet?.name?.charAt(2).toLowerCase() ?? '') === (coreWallet?.name?.charAt(2) ?? '')
+  const returnKeyType: ReturnKeyType = 'done'
+
   return (
     <View style={styles.headerContainer}>
       <Card>
         <ExchangedFlipInput2
           walletId={walletId}
           headerText={headerText}
+          editable={editable}
           headerCallback={headerCallback}
+          returnKeyType={returnKeyType}
           forceField={defaultField ? 'crypto' : 'fiat'}
           keyboardVisible={keyboardVisible}
           getMethods={getMethods}

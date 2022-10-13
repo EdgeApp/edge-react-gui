@@ -1,7 +1,7 @@
 import { div, log10, mul, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
-import { ActivityIndicator, Platform, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Platform, ReturnKeyType, TouchableOpacity } from 'react-native'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
@@ -36,6 +36,9 @@ export type ExchangedFlipInputProps = {
   keyboardVisible?: boolean
   headerText: string
   forceField?: 'fiat' | 'crypto'
+  returnKeyType?: ReturnKeyType
+  editable?: boolean
+  inputAccessoryViewID?: string
   headerCallback?: () => void
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
   getMethods?: (methods: ExchangedFlipInputGetMethodsResponse) => void
@@ -52,7 +55,20 @@ const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
 // 3. Returns values to parent in fiat exchange amt, crypto exchange amt, and crypto native amt
 
 export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) => {
-  const { walletId, tokenId, startNativeAmount, onAmountChanged, getMethods, headerText, headerCallback, forceField = 'crypto', keyboardVisible = true } = props
+  const {
+    walletId,
+    tokenId,
+    startNativeAmount,
+    onAmountChanged,
+    getMethods,
+    headerText,
+    headerCallback,
+    returnKeyType,
+    forceField = 'crypto',
+    keyboardVisible = true,
+    editable,
+    inputAccessoryViewID
+  } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -190,8 +206,11 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
 
           <FlipInput2
             convertValue={convertValue}
+            editable={editable}
             fieldInfos={fieldInfos}
+            returnKeyType={returnKeyType}
             forceFieldNum={forceFieldMap[overrideForceField]}
+            inputAccessoryViewID={inputAccessoryViewID}
             getMethods={getFlipInputMethods}
             keyboardVisible={keyboardVisible}
             startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
