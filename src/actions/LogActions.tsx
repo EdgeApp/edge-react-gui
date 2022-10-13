@@ -12,6 +12,35 @@ import { sendLogs } from '../modules/Logs/api'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { log, logWithType, readLogs } from '../util/logger'
 
+type Accounts = {
+  username: string
+}
+
+type Wallets = {
+  currencyCode?: string
+  repoId?: string
+  pluginDump?: EdgeDataDump
+}
+
+type LoggedInUser = {
+  userName: string
+  userId: string
+  wallets: Wallets[]
+}
+
+type LogOutput = {
+  isoDate: string
+  uniqueId: string
+  userMessage: string
+  deviceInfo: string
+  appVersion: string
+  OS: string
+  acctRepoId?: string
+  accounts: Accounts[]
+  loggedInUser?: LoggedInUser
+  data: string
+}
+
 export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { isConnected } = state.network
@@ -127,33 +156,4 @@ function getRepoId(key: string): string {
     return base16.stringify(base64.parse(key)).toLowerCase()
   }
   return 'Invalid syncKey type'
-}
-
-type Accounts = {
-  username: string
-}
-
-type Wallets = {
-  currencyCode?: string
-  repoId?: string
-  pluginDump?: EdgeDataDump
-}
-
-type LoggedInUser = {
-  userName: string
-  userId: string
-  wallets: Wallets[]
-}
-
-type LogOutput = {
-  isoDate: string
-  uniqueId: string
-  userMessage: string
-  deviceInfo: string
-  appVersion: string
-  OS: string
-  acctRepoId?: string
-  accounts: Accounts[]
-  loggedInUser?: LoggedInUser
-  data: string
 }
