@@ -33,10 +33,10 @@ type Accounts = {
 type LoggedInUser = {
   userName: string
   userId: string
-  wallets: Wallets[]
+  wallets: WalletData[]
 }
 
-type Wallets = {
+type WalletData = {
   currencyCode?: string
   imported?: boolean
   repoId?: string
