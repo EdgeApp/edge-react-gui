@@ -830,6 +830,7 @@
   "loan_add_from": "Aggiungi da %s",
   "loan_amount_borrow": "Importo da prendere in prestito",
   "loan_amount_exceeds_s_collateral": "Total loan value exceeds %1$s of total collateral value.",
+  "loan_amount_fees_exceeds_collateral": "Total collateral value plus fees exceeds wallet balance.",
   "loan_available_equity": "Capitale Disponibile",
   "loan_borrow_details_title": "Dettagli del prestito",
   "loan_borrow_more": "Chiedi altri prestiti",
