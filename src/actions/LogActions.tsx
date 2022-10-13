@@ -14,6 +14,7 @@ import { log, logWithType, readLogs } from '../util/logger'
 
 type Accounts = {
   username: string
+  userId: string // Not sure what this is used for, but adding the type anyway
 }
 
 type Wallets = {
@@ -85,7 +86,6 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
   if (context) {
     // Get local accounts
     for (const user of context.localUsers) {
-      // @ts-expect-error
       logOutput.accounts.push({ username: user.username, userId: '' })
     }
   }
