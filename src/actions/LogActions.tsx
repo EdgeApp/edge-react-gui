@@ -19,6 +19,7 @@ type Accounts = {
 
 type Wallets = {
   currencyCode?: string
+  imported?: boolean
   repoId?: string
   pluginDump?: EdgeDataDump
 }
@@ -116,9 +117,8 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
         const currencyCode = wallet.currencyInfo.currencyCode ?? ''
         logOutput.loggedInUser.wallets.push({
           currencyCode,
-          repoId: getRepoId(wallet.keys.syncKey),
-          // @ts-expect-error
           imported: wallet.keys.imported,
+          repoId: getRepoId(wallet.keys.syncKey),
           pluginDump: await wallet.dumpData()
         })
       }
