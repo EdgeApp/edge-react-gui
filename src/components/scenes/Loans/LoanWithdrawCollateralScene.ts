@@ -14,12 +14,9 @@ export const LoanWithdrawCollateralScene = (props: Props) => {
   const { navigation, route } = props
   const { loanAccountId } = route.params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowEngine } = loanAccount
 
   return ManageCollateralScene({
-    action: async req => await borrowEngine.withdraw(req),
     actionOpType: 'loan-withdraw',
-    actionWallet: 'toWallet',
     amountChange: 'decrease',
     loanAccount,
 

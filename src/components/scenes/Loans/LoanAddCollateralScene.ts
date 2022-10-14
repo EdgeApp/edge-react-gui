@@ -14,12 +14,9 @@ export const LoanAddCollateralScene = (props: Props) => {
   const { navigation, route } = props
   const { loanAccountId } = route.params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowEngine } = loanAccount
 
   return ManageCollateralScene({
-    action: async req => await borrowEngine.deposit(req),
     actionOpType: 'loan-deposit',
-    actionWallet: 'fromWallet',
     amountChange: 'increase',
     loanAccount,
 

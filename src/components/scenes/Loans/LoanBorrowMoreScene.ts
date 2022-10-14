@@ -14,12 +14,9 @@ export const LoanBorrowMoreScene = (props: Props) => {
   const { navigation, route } = props
   const { loanAccountId } = route.params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowEngine } = loanAccount
 
   return ManageCollateralScene({
-    action: async req => await borrowEngine.borrow(req),
     actionOpType: 'loan-borrow',
-    actionWallet: 'fromWallet',
     amountChange: 'increase',
     loanAccount,
 

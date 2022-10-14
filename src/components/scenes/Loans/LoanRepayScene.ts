@@ -14,12 +14,9 @@ export const LoanMakeLoanPaymentScene = (props: Props) => {
   const { navigation, route } = props
   const { loanAccountId } = route.params
   const loanAccount = loanAccounts[loanAccountId]
-  const { borrowEngine } = loanAccount
 
   return ManageCollateralScene({
-    action: async req => await borrowEngine.repay(req),
     actionOpType: 'loan-repay',
-    actionWallet: 'fromWallet',
     amountChange: 'decrease',
     loanAccount,
 
