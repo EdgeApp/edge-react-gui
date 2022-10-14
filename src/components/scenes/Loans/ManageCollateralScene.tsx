@@ -20,7 +20,7 @@ import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../../types/routerTypes'
-import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
+import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { useTotalFiatAmount } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -168,34 +168,57 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // #region Hooks
   // -----------------------------------------------------------------------------
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     // Build the sequence ops:
-    if (actionOpType === 'loan-deposit') {
-      setActionOp(
-        await makeAaveDepositAction({
-          borrowPluginId,
-          depositTokenId: hardAllowedCollateralAsset[0].tokenId,
-          nativeAmount: actionNativeCryptoAmount,
-          borrowEngineWallet: borrowEngineWallet,
-          srcTokenId: selectedAsset.tokenId,
-          srcWallet: borrowEngineWallet
-        })
-      )
-    } else {
-      setActionOp({
-        type: 'seq',
-        actions: [
-          {
-            type: actionOpType,
+    switch (actionOpType) {
+      case 'loan-deposit':
+        setActionOp(
+          await makeAaveDepositAction({
             borrowPluginId,
+            depositTokenId: hardAllowedCollateralAsset[0].tokenId,
             nativeAmount: actionNativeCryptoAmount,
-            walletId: borrowEngineWallet.id,
-            tokenId: selectedAsset.tokenId
+            borrowEngineWallet: borrowEngineWallet,
+            srcTokenId: selectedAsset.tokenId,
+            srcWallet: borrowEngineWallet
+          })
+        )
+        break
+      case 'loan-borrow':
+        {
+          const destination: LoanAsset = {
+            wallet: borrowEngineWallet,
+            tokenId: selectedAsset.tokenId,
+            nativeAmount: actionNativeCryptoAmount,
+            ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
+            ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
           }
-        ]
-      })
+          setActionOp(
+            await makeAaveBorrowAction({
+              borrowEngineWallet,
+              borrowPluginId,
+              destination
+            })
+          )
+        }
+        break
+      default: {
+        const actionOp: ActionOp = {
+          type: 'seq',
+          actions: [
+            {
+              type: actionOpType,
+              borrowPluginId,
+              nativeAmount: actionNativeCryptoAmount,
+              walletId: borrowEngineWallet.id,
+              tokenId: selectedAsset.tokenId
+            }
+          ]
+        }
+        setActionOp(actionOp)
+      }
     }
+
+    return () => {}
   }, [actionNativeCryptoAmount, actionOpType, borrowEngineWallet, borrowPluginId, selectedAsset])
 
   // @ts-expect-error
