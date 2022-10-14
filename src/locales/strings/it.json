@@ -203,7 +203,7 @@
   "create_wallet_account_amount_due": "Importo dovuto:",
   "create_wallet_account_error_sending_transaction": "Errore durante l'invio della transazione",
   "create_wallet_account_payment_sent_title": "Pagamento inviato",
-  "create_wallet_account_payment_sent_message": "Activation payment sent. Please wait for a 38confirmation on your transaction before using your new wallet.",
+  "create_wallet_account_payment_sent_message": "Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.",
   "create_wallet_account_handle_unavailable_modal_title": "Nome per l'account non disponibile",
   "create_wallet_account_handle_unavailable_modal_message": "Il nome scelto per l'account, %s, non è disponibile ora. Usane uno differente per continuare.",
   "create_wallet_account_metadata_name": "%s Network",
