@@ -4,6 +4,7 @@ import ENV from '../../../env.json'
 import { ApprovableAction } from '../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { logActivity } from '../../util/logger'
 import { filterNull } from '../../util/safeFilters'
 import { checkPushEvent, effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from './push'
 import {
@@ -30,6 +31,8 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
 
   if (ENV.ACTION_QUEUE?.enableDryrun && effect != null && (await effectCanBeATrigger(context, effect))) {
     try {
+      logActivity(`Starting action program dry-run`, { programId: program.programId })
+
       const dryrunOutputs = await dryrunActionProgram(context, program, state, true)
 
       if (dryrunOutputs.length > 0) {
@@ -57,9 +60,16 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
           nextEffect = nextChildEffects[0]
         }
 
+        // Update the state for the next evaluation
+        const nextState = { ...state, effect: nextEffect }
+
+        logActivity(`Completed dry-run`, { programId: program.programId, pushEventInfos })
+
         // Exit early with dryrun results:
-        return { nextState: { ...state, effect: nextEffect } }
+        return { nextState }
       }
+
+      logActivity(`No results for dry-run`, { programId: program.programId })
     } catch (error: any) {
       // Silently fail dryrun
       console.error(error)
@@ -103,21 +113,28 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   // Execution Phase
   //
 
+  logActivity(`Executing next action`, { programId: program.programId, program, state })
+
   // Execute Action
   const executableAction = await evaluateAction(context, program, state)
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
   const isEffectDone = checkEffectIsDone(nextEffect)
 
+  // Update the state for the next evaluation
+  const nextState = {
+    ...state,
+    effect: nextEffect,
+    effective: isEffectDone,
+    lastExecutionTime: Date.now(),
+    nextExecutionTime: isEffectDone ? -1 : Date.now() // -1 means never
+  }
+
+  logActivity(`Execution results`, { programId: program.programId, nextState })
+
   // Return results
   return {
-    nextState: {
-      ...state,
-      effect: nextEffect,
-      effective: isEffectDone,
-      lastExecutionTime: Date.now(),
-      nextExecutionTime: isEffectDone ? -1 : Date.now() // -1 means never
-    }
+    nextState
   }
 }
 
