@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { createWallet, enableTokensAcrossWallets, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { createWallet, enableTokensAcrossWallets, getUniqueWalletName, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -52,7 +52,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
   const [walletNames, setWalletNames] = React.useState(() =>
     createWalletList.reduce<{ [key: string]: string }>((map, item) => {
-      map[item.key] = sprintf(s.strings.my_crypto_wallet_name, item.displayName)
+      map[item.key] = getUniqueWalletName(account, item.pluginId)
       return map
     }, {})
   )

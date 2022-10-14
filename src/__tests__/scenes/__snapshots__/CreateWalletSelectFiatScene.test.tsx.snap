@@ -490,7 +490,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     ]
                   }
                 >
-                  My Bitcoin (no Segwit)
+                  My Bitcoin
                 </Text>
               </View>
               <View
@@ -653,7 +653,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     ]
                   }
                 >
-                  My Ethereum
+                  My Ether 2
                 </Text>
               </View>
               <View
@@ -850,7 +850,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     ]
                   }
                 >
-                  No name
+                  My Ether
                 </Text>
               </View>
               <View
