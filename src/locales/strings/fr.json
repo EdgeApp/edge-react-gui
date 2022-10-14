@@ -203,7 +203,7 @@
   "create_wallet_account_amount_due": "Montant à payer:",
   "create_wallet_account_error_sending_transaction": "Échec de la transaction",
   "create_wallet_account_payment_sent_title": "Paiement envoyé",
-  "create_wallet_account_payment_sent_message": "Activation payment sent. Please wait for a 38confirmation on your transaction before using your new wallet.",
+  "create_wallet_account_payment_sent_message": "Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.",
   "create_wallet_account_handle_unavailable_modal_title": "Compte Handle Indisponible ",
   "create_wallet_account_handle_unavailable_modal_message": "Votre identifiant de compte choisi, %s, n’est pas disponible actuellement. Veuillez utiliser un autre compte pour continuer. ",
   "create_wallet_account_metadata_name": "%s Réseau",
