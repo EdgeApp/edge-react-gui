@@ -71,8 +71,8 @@ import { LoanCreateConfirmationScene } from './scenes/Loans/LoanCreateConfirmati
 import { LoanCreateScene } from './scenes/Loans/LoanCreateScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
+import { LoanManageScene } from './scenes/Loans/LoanManageScene'
 import { LoanStatusScene } from './scenes/Loans/LoanStatusScene'
-import { ManageCollateralScene } from './scenes/Loans/ManageCollateralScene'
 import { LoginScene } from './scenes/LoginScene'
 import { ManageTokensScene } from './scenes/ManageTokensScene'
 import { NotificationScene } from './scenes/NotificationScene'
@@ -1013,7 +1013,7 @@ export class MainComponent extends React.Component<Props> {
             />
             <Scene
               key="loanManage"
-              component={withNavigation(ifLoggedIn(ManageCollateralScene))}
+              component={withNavigation(ifLoggedIn(LoanManageScene))}
               navTransparent
               // @ts-expect-error
               renderTitle={<EdgeLogoHeader />}

@@ -72,7 +72,7 @@ type Props = {
   route: RouteProp<'loanManage'>
 }
 
-export const ManageCollateralScene = (props: Props) => {
+export const LoanManageScene = (props: Props) => {
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
