@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { Fontello } from '../../../assets/vector'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
+import { checkEffectIsDone } from '../../../controllers/action-queue/runtime'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -44,7 +45,7 @@ export const LoanDetailsScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const actionQueueMap = useSelector(state => state.actionQueue.queue)
+  const actionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { route, navigation } = props
@@ -70,8 +71,7 @@ export const LoanDetailsScene = (props: Props) => {
   // Running action program display
   const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
     const actionQueueItem = actionQueueMap[programEdge.programId]
-    // @ts-expect-error
-    return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
+    return actionQueueItem != null && !checkEffectIsDone(actionQueueItem.state.effect)
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
   const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)

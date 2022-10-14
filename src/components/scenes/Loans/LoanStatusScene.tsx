@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { cancelActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { ActionDisplayInfo, ActionQueueMap } from '../../../controllers/action-queue/types'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
@@ -40,38 +40,21 @@ export const LoanStatusScene = (props: Props) => {
 
   const buttonMargin = [2, 1, 2, 1]
 
-  const actionQueue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
-  const [steps, setSteps] = React.useState<ActionDisplayInfo[]>()
-  useAsyncEffect(async () => {
-    const actionQueueItem = actionQueue[actionQueueId]
+  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
+  const [steps] = useAsyncValue(async () => {
+    const actionQueueItem = actionQueueMap[actionQueueId]
 
-    // TODO: Make ActionQueue handle these cases correctly.
-    // HACK: Status mutations:
-    if (actionQueueItem == null && steps != null) {
-      // 1. actionQueueItem gets removed from actionQueue when the last step completes, so we need to maintain and mutate a copy of the steps to reflect program completion since there's nothing to reference after completion.
-      setSteps(
-        steps.map(step => {
-          step.status = 'done'
-          return step
-        })
-      )
-    } else if (actionQueueItem != null) {
-      // 2. The first step of a seq does not get set to 'active'
-      const { program, state } = actionQueueItem
-      const displayInfo = await getActionProgramDisplayInfo(account, program, state)
+    // 2. The first step of a seq does not get set to 'active'
+    const { program, state } = actionQueueItem
+    const displayInfo = await getActionProgramDisplayInfo(account, program, state)
 
-      // Flatten steps
-      const steps = [...displayInfo.steps].reduce((steps: ActionDisplayInfo[], step) => [...steps, ...(step.steps.length > 0 ? step.steps : [step])], [])
+    if (displayInfo.status instanceof Error) return [displayInfo]
 
-      if (steps[0].status === 'pending') steps[0].status = 'active'
+    // Flatten steps
+    const steps = [...displayInfo.steps].reduce((steps: ActionDisplayInfo[], step) => [...steps, ...(step.steps.length > 0 ? step.steps : [step])], [])
 
-      setSteps(steps)
-    } else {
-      // 3. ActionQueueItem does not yet exist...
-    }
-    return () => {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionQueue])
+    return steps
+  }, [actionQueueMap])
 
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {

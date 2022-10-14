@@ -1,17 +1,28 @@
-import { EdgeAccount, EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
 import { filterNull } from '../../util/safeFilters'
 import { snooze } from '../../util/utils'
-import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionOutput, ExecutionResults } from './types'
+import {
+  ActionEffect,
+  ActionProgram,
+  ActionProgramState,
+  BroadcastTx,
+  EffectCheckResult,
+  ExecutableAction,
+  ExecutionContext,
+  ExecutionOutput,
+  ExecutionResults,
+  SeqEffect
+} from './types'
 
-export const mockActionProgram = async (account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
+export const mockActionProgram = async (context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
 
   // Await Effect
   while (true) {
     if (effect == null) break
 
-    const { isEffective, delay } = await checkActionEffect(account, effect)
+    const { isEffective, delay } = await checkActionEffect(context, effect)
 
     // Break out of effect check loop if the ActionEffect passes the check
     if (isEffective) break
@@ -21,7 +32,7 @@ export const mockActionProgram = async (account: EdgeAccount, program: ActionPro
   }
 
   // Execute Action
-  const executableAction = await evaluateAction(account, program, state)
+  const executableAction = await evaluateAction(context, program, state)
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
 
@@ -31,7 +42,7 @@ export const mockActionProgram = async (account: EdgeAccount, program: ActionPro
   }
 }
 
-async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Promise<{ isEffective: boolean; delay: number }> {
+async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<EffectCheckResult> {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
@@ -42,18 +53,64 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
-      return await checkActionEffect(account, childEffect)
+      const childEffectCheck = await checkActionEffect(context, childEffect)
+
+      // Completely effective
+      if (childEffectCheck.isEffective && effect.opIndex >= effect.childEffects.length - 1) {
+        return {
+          delay: 0,
+          isEffective: true
+        }
+      }
+
+      // Partially effective
+      if (childEffectCheck.isEffective) {
+        // Progress the partially completed effect forward
+        const updatedEffect: SeqEffect = {
+          ...effect,
+          opIndex: effect.opIndex + 1
+        }
+        return {
+          delay: 0,
+          isEffective: false,
+          updatedEffect
+        }
+      }
+
+      // Ineffective
+      return {
+        delay: childEffectCheck.delay,
+        isEffective: false
+      }
     }
     case 'par': {
       const checkedEffects = filterNull(effect.childEffects)
       if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
 
-      const promises = checkedEffects.map(async (childEffect, index) => {
-        return await checkActionEffect(account, childEffect)
+      // Check all child effects concurrently
+      const childEffectPromises = checkedEffects.map(async childEffect => {
+        return await checkActionEffect(context, childEffect)
       })
+      const childEffectChecks = await Promise.all(childEffectPromises)
+      const isEffective = childEffectChecks.every(result => result.isEffective)
+
+      // Include an updated effect if partially completed
+      const updatedEffect: ActionEffect | undefined = !isEffective
+        ? {
+            type: 'par',
+            childEffects: checkedEffects.map((effect, index) => {
+              return childEffectChecks[index].isEffective ? { type: 'done' } : effect
+            })
+          }
+        : undefined
+
+      // Let delay be the maximum delay of the remaining ineffective effects or zero
+      const delay = childEffectChecks.reduce((max, result) => (result.isEffective ? max : Math.max(result.delay, max)), 0)
+
       return {
-        delay: 0,
-        isEffective: (await Promise.all(promises)).every(yes => yes)
+        delay,
+        isEffective,
+        updatedEffect
       }
     }
     case 'address-balance': {
@@ -95,7 +152,8 @@ async function checkActionEffect(account: EdgeAccount, effect: ActionEffect): Pr
   }
 }
 
-async function evaluateAction(account: EdgeAccount, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
+async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
+  const { account } = context
   const { actionOp } = program
   const { effect } = state
 
@@ -120,7 +178,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childExecutableAction = await evaluateAction(account, nextProgram, state)
+      const childExecutableAction = await evaluateAction(context, nextProgram, state)
 
       return {
         dryrun: async pendingTxMap => {
@@ -155,7 +213,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(account, subProgram, state)
+        return await evaluateAction(context, subProgram, state)
       })
       const childExecutableActions = await Promise.all(promises)
 
@@ -192,7 +250,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(account, (): ExecutionOutput => {
+      return mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -209,7 +267,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(account, (): ExecutionOutput => {
+      return mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -225,7 +283,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(account, (): ExecutionOutput => {
+      return mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -241,7 +299,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(account, (): ExecutionOutput => {
+      return mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -257,7 +315,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(account, (): ExecutionOutput => {
+      return mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -273,7 +331,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
       const { toWalletId, toTokenId, fromWalletId: walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(account, (): ExecutionOutput => {
+      return mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'address-balance',
@@ -295,7 +353,7 @@ async function evaluateAction(account: EdgeAccount, program: ActionProgram, stat
   }
 }
 
-async function mockExecutableAction(account: EdgeAccount, fn: () => ExecutionOutput): Promise<ExecutableAction> {
+async function mockExecutableAction(_context: ExecutionContext, fn: () => ExecutionOutput): Promise<ExecutableAction> {
   return {
     dryrun: async () => fn(),
     execute: async () => {

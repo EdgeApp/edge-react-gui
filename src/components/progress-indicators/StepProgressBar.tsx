@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { ActionDisplayInfo } from '../../controllers/action-queue/types'
+import s from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -15,11 +16,13 @@ const StepProgressRowComponent = ({
   isLast,
   isNodeActive,
   isNodeCompleted,
+  nodeError,
   stepText
 }: {
   isLast: boolean
   isNodeActive: boolean
   isNodeCompleted: boolean
+  nodeError?: Error | undefined
   stepText: { title: string; message: string }
 }) => {
   const theme = useTheme()
@@ -55,12 +58,25 @@ const StepProgressRowComponent = ({
         {segment}
       </View>
       <View style={styles.childContainer}>
-        <EdgeText style={titleStyle} numberOfLines={3}>
-          {stepText.title}
-        </EdgeText>
-        <EdgeText style={bodyStyle} numberOfLines={100}>
-          {stepText.message}
-        </EdgeText>
+        {nodeError == null ? (
+          <>
+            <EdgeText style={titleStyle} numberOfLines={3}>
+              {stepText.title}
+            </EdgeText>
+            <EdgeText style={bodyStyle} numberOfLines={100}>
+              {stepText.message}
+            </EdgeText>
+          </>
+        ) : (
+          <>
+            <EdgeText style={titleStyle} numberOfLines={3}>
+              {s.strings.loan_status_failed_title}
+            </EdgeText>
+            <EdgeText style={bodyStyle} numberOfLines={100}>
+              {nodeError.message}
+            </EdgeText>
+          </>
+        )}
       </View>
     </View>
   )
@@ -85,23 +101,25 @@ const StepProgressBarComponent = (props: { actionDisplayInfos: ActionDisplayInfo
   const renderRows = React.useMemo(() => {
     const actionRows = []
     for (let i = 0; i < totalSteps; i++) {
+      const currentInfo = actionDisplayInfos[i]
+      const prevInfo = actionDisplayInfos[i - 1]
+
       // Render a completed, active/in-progress, or queued node.
       // Active/in-progress nodes are partially filled while queued or completed
       // nodes are solid filled.
       const isLast = totalSteps <= 1 || i >= totalSteps - 1
-      const isNodeCompleted = actionDisplayInfos[i].status === 'done' || actionDisplayInfos[i].status instanceof Error
+      const nodeError = currentInfo.status instanceof Error ? currentInfo.status : undefined
+      const isNodeCompleted = currentInfo.status === 'done' || currentInfo.status instanceof Error
       // HACK: Set active status of this node based on the status of the previous node. Check to be removed when ActionQueue properly handles updating the execution state of an 'active' step.
-      const isNodeActive =
-        !isNodeCompleted &&
-        (actionDisplayInfos[i].status === 'active' ||
-          (i > 0 && (actionDisplayInfos[i - 1].status === 'done' || actionDisplayInfos[i - 1].status instanceof Error)))
+      const isNodeActive = !isNodeCompleted && (currentInfo.status === 'active' || (i > 0 && (prevInfo.status === 'done' || prevInfo.status instanceof Error)))
 
       actionRows.push(
         <StepProgressRow
           isNodeActive={isNodeActive}
           isNodeCompleted={isNodeCompleted}
+          nodeError={nodeError}
           isLast={isLast}
-          stepText={{ title: actionDisplayInfos[i].title, message: actionDisplayInfos[i].message }}
+          stepText={{ title: currentInfo.title, message: currentInfo.message }}
           key={'spb' + i}
         />
       )

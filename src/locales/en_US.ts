@@ -992,6 +992,7 @@ const strings = {
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",
   loan_status_complete: 'Your loan has completed successfully!\nPlease allow time for your account to be credited.',
   loan_status_title: 'Loan Status',
+  loan_status_failed_title: 'Failed to process actions',
 
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
