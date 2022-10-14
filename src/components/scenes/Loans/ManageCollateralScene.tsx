@@ -170,34 +170,32 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // @ts-expect-error
   useAsyncEffect(async () => {
-    const actionOp: ActionOp = {
-      type: 'seq',
-      actions: []
-    }
-
     // Build the sequence ops:
     if (actionOpType === 'loan-deposit') {
-      actionOp.actions = await makeAaveDepositAction({
-        borrowPluginId,
-        depositTokenId: hardAllowedCollateralAsset[0].tokenId,
-        nativeAmount: actionNativeCryptoAmount,
-        borrowEngineWallet: borrowEngineWallet,
-        srcTokenId: selectedAsset.tokenId,
-        srcWallet: borrowEngineWallet
-      })
-    } else {
-      actionOp.actions = [
-        {
-          type: actionOpType,
+      setActionOp(
+        await makeAaveDepositAction({
           borrowPluginId,
+          depositTokenId: hardAllowedCollateralAsset[0].tokenId,
           nativeAmount: actionNativeCryptoAmount,
-          walletId: borrowEngineWallet.id,
-          tokenId: selectedAsset.tokenId
-        }
-      ]
+          borrowEngineWallet: borrowEngineWallet,
+          srcTokenId: selectedAsset.tokenId,
+          srcWallet: borrowEngineWallet
+        })
+      )
+    } else {
+      setActionOp({
+        type: 'seq',
+        actions: [
+          {
+            type: actionOpType,
+            borrowPluginId,
+            nativeAmount: actionNativeCryptoAmount,
+            walletId: borrowEngineWallet.id,
+            tokenId: selectedAsset.tokenId
+          }
+        ]
+      })
     }
-
-    setActionOp(actionOp)
   }, [actionNativeCryptoAmount, actionOpType, borrowEngineWallet, borrowPluginId, selectedAsset])
 
   // @ts-expect-error
