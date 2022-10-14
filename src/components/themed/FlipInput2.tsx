@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import React, { useEffect } from 'react'
+import * as React from 'react'
 import { Platform, ReturnKeyType, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { AnimationCallback, Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
@@ -14,7 +14,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
-export interface FlipInputGetMethodsResponse {
+export interface FlipInputRef {
   setAmounts: (value: string[]) => void
 }
 
@@ -27,11 +27,9 @@ export type FlipInputFieldInfo = {
   maxEntryDecimals: number
 }
 
-type TextInputTuple = [TextInput | null, TextInput | null]
-export interface FlipInputProps {
+export interface Props {
   onNext?: () => void
   convertValue: (sourceFieldNum: FieldNum, value: string) => Promise<string | undefined>
-  getMethods?: (methods: FlipInputGetMethodsResponse) => void
   startAmounts: [string, string]
   forceFieldNum?: FieldNum
   keyboardVisible?: boolean
@@ -46,23 +44,12 @@ const flipField = (fieldNum: FieldNum): FieldNum => {
   return fieldNum === 0 ? 1 : 0
 }
 
-export const FlipInput2 = React.memo((props: FlipInputProps) => {
+export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, ref) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [inputRefs, setInputRefs] = useState<TextInputTuple>([null, null])
+  const inputRefs = [React.useRef<TextInput>(null), React.useRef<TextInput>(null)]
 
-  const {
-    startAmounts,
-    fieldInfos,
-    keyboardVisible,
-    returnKeyType = 'done',
-    onNext,
-    inputAccessoryViewID,
-    getMethods,
-    convertValue,
-    forceFieldNum = 0,
-    editable
-  } = props
+  const { startAmounts, fieldInfos, keyboardVisible, returnKeyType = 'done', onNext, inputAccessoryViewID, convertValue, forceFieldNum = 0, editable } = props
   const animatedValue = useSharedValue(forceFieldNum)
 
   // `amounts` is always a 2-tuple
@@ -90,8 +77,8 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
       if (done) runOnJS(setPrimaryField)(primaryField ? 0 : 1)
     }
 
-    inputRefs[primaryField]?.blur()
-    inputRefs[Number(!primaryField)]?.focus()
+    inputRefs[primaryField]?.current?.blur()
+    inputRefs[Number(!primaryField)]?.current?.focus()
 
     if (primaryField) {
       console.log('animating to 0')
@@ -150,13 +137,8 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
             autoCorrect={false}
             editable={editable}
             returnKeyType={returnKeyType}
-            ref={ref => {
-              if (ref != null && inputRefs[fieldNum] == null) {
-                const tempRefsArray: TextInputTuple = [...inputRefs]
-                tempRefsArray[fieldNum] = ref
-                setInputRefs(tempRefsArray)
-              }
-            }}
+            autoFocus={primaryField === fieldNum && keyboardVisible}
+            ref={inputRefs[fieldNum]}
             onSubmitEditing={onNext}
             inputAccessoryViewID={inputAccessoryViewID}
           />
@@ -181,22 +163,11 @@ export const FlipInput2 = React.memo((props: FlipInputProps) => {
     )
   })
 
-  useEffect(() => {
-    if (getMethods != null)
-      getMethods({
-        setAmounts: amounts => {
-          setAmounts([amounts[0], amounts[1]])
-        }
-      })
-  })
-
-  useEffect(() => {
-    if (inputRefs[0] != null && inputRefs[1] != null) {
-      if (keyboardVisible) {
-        inputRefs[primaryField]?.focus()
-      }
+  React.useImperativeHandle(ref, () => ({
+    setAmounts: amounts => {
+      setAmounts([amounts[0], amounts[1]])
     }
-  }, [inputRefs])
+  }))
 
   return (
     <>

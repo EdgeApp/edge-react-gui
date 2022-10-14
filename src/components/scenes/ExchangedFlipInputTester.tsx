@@ -7,7 +7,7 @@ import { useState } from '../../types/reactHooks'
 import { consify } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { Theme, useTheme } from '../services/ThemeContext'
-import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputGetMethodsResponse } from '../themed/ExchangedFlipInput2'
+import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
@@ -21,28 +21,25 @@ export function ExchangedFlipInputTester(props: {}) {
   const [value1, setValue1] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId
-  const methods = React.useRef<ExchangedFlipInputGetMethodsResponse | undefined>()
+  const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
   const onAmountChanged = (amounts: ExchangedFlipInputAmounts): void => {
     consify(amounts)
   }
 
   const onPress0 = () => {
-    methods.current?.setAmount('crypto', value0)
+    exchangedFlipInputRef.current?.setAmount('crypto', value0)
   }
   const onChangeText0 = (text: string) => {
     setValue0(text)
   }
   const onPress1 = () => {
-    methods.current?.setAmount('fiat', value1)
+    exchangedFlipInputRef.current?.setAmount('fiat', value1)
   }
   const onChangeText1 = (text: string) => {
     setValue1(text)
   }
 
-  const getMethods = (m: ExchangedFlipInputGetMethodsResponse) => {
-    methods.current = m
-  }
   const coreWallet = selectedWallet?.wallet
   const currencyCode = coreWallet?.currencyInfo.currencyCode ?? ''
   const balance = coreWallet?.balances[currencyCode] ?? ''
@@ -62,6 +59,7 @@ export function ExchangedFlipInputTester(props: {}) {
     <View style={styles.headerContainer}>
       <Card>
         <ExchangedFlipInput2
+          ref={exchangedFlipInputRef}
           walletId={walletId}
           headerText={headerText}
           editable={editable}
@@ -69,7 +67,6 @@ export function ExchangedFlipInputTester(props: {}) {
           returnKeyType={returnKeyType}
           forceField={defaultField ? 'crypto' : 'fiat'}
           keyboardVisible={keyboardVisible}
-          getMethods={getMethods}
           tokenId={tokenId}
           startNativeAmount={balance}
           onAmountChanged={onAmountChanged}

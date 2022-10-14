@@ -13,12 +13,12 @@ import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDec
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { FieldNum, FlipInput2, FlipInputFieldInfo, FlipInputGetMethodsResponse } from './FlipInput2'
+import { FieldNum, FlipInput2, FlipInputFieldInfo, FlipInputRef } from './FlipInput2'
 import { RightChevronButton } from './ThemedButtons'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
-export interface ExchangedFlipInputGetMethodsResponse {
+export interface ExchangedFlipInputRef {
   setAmount: (field: ExchangeFlipInputFields, value: string) => void
 }
 
@@ -29,7 +29,7 @@ export type ExchangedFlipInputAmounts = {
   fieldChanged: 'fiat' | 'crypto'
 }
 
-export type ExchangedFlipInputProps = {
+export interface Props {
   walletId: string
   tokenId?: string
   startNativeAmount?: string
@@ -41,7 +41,6 @@ export type ExchangedFlipInputProps = {
   inputAccessoryViewID?: string
   headerCallback?: () => void
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
-  getMethods?: (methods: ExchangedFlipInputGetMethodsResponse) => void
 }
 
 const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
@@ -54,13 +53,12 @@ const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
 // 2. Has FlipInput2 only show "display" amounts (ie. sats, bits, mETH)
 // 3. Returns values to parent in fiat exchange amt, crypto exchange amt, and crypto native amt
 
-export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) => {
+const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Props>((props: Props, ref) => {
   const {
     walletId,
     tokenId,
     startNativeAmount,
     onAmountChanged,
-    getMethods,
     headerText,
     headerCallback,
     returnKeyType,
@@ -78,7 +76,7 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
   const currencyWallets = useWatch(account, 'currencyWallets')
   const coreWallet: EdgeCurrencyWallet | undefined = currencyWallets[walletId]
   const fiatCurrencyCode = useWatch(coreWallet, 'fiatCurrencyCode')
-  let methods: FlipInputGetMethodsResponse | undefined
+  const flipInputRef = React.useRef<FlipInputRef>(null)
 
   const pluginId = coreWallet?.currencyInfo.pluginId ?? ''
   const cryptoCurrencyCode = getCurrencyCode(coreWallet, tokenId)
@@ -101,10 +99,6 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
     const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
     const rate = exchangeRates[rateKey] ?? '0'
     return mul(amount, rate)
-  })
-
-  const getFlipInputMethods = useHandler(m => {
-    methods = m
   })
 
   const convertFromCryptoNative = useHandler((nativeAmount: string) => {
@@ -177,21 +171,20 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
     const initFiat = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
     setRenderDisplayAmount(displayAmount)
     setRenderFiatAmount(initFiat)
-    if (getMethods != null) {
-      getMethods({
-        setAmount: (field, value) => {
-          console.log(field, value)
-          if (field === 'crypto') {
-            const { displayAmount, fiatAmount } = convertFromCryptoNative(value)
-            methods?.setAmounts([displayAmount, fiatAmount])
-          } else if (field === 'fiat') {
-            const { displayAmount } = convertFromFiat(value)
-            methods?.setAmounts([displayAmount, value])
-          }
-        }
-      })
-    }
   }, [])
+
+  React.useImperativeHandle(ref, () => ({
+    setAmount: (field, value) => {
+      console.log(field, value)
+      if (field === 'crypto') {
+        const { displayAmount, fiatAmount } = convertFromCryptoNative(value)
+        flipInputRef.current?.setAmounts([displayAmount, fiatAmount])
+      } else if (field === 'fiat') {
+        const { displayAmount } = convertFromFiat(value)
+        flipInputRef.current?.setAmounts([displayAmount, value])
+      }
+    }
+  }))
 
   const overrideForceField = useMemo(() => (convertCurrency('100', cryptoCurrencyCode, fiatCurrencyCode) === '0' ? 'crypto' : forceField), [exchangeRates])
 
@@ -205,13 +198,13 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
           </TouchableOpacity>
 
           <FlipInput2
+            ref={flipInputRef}
             convertValue={convertValue}
             editable={editable}
             fieldInfos={fieldInfos}
             returnKeyType={returnKeyType}
             forceFieldNum={forceFieldMap[overrideForceField]}
             inputAccessoryViewID={inputAccessoryViewID}
-            getMethods={getFlipInputMethods}
             keyboardVisible={keyboardVisible}
             startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
           />
@@ -222,6 +215,8 @@ export const ExchangedFlipInput2 = React.memo((props: ExchangedFlipInputProps) =
     </>
   )
 })
+
+export const ExchangedFlipInput2 = React.memo(ExchangedFlipInput2Component)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // Header
