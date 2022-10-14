@@ -44,14 +44,34 @@ import { FormScene } from '../FormScene'
 
 type ActionOpType = 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw'
 
+// User input display strings
+const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCard: string } } = {
+  'loan-deposit': {
+    headerText: s.strings.loan_add_collateral,
+    amountCard: s.strings.loan_fragment_deposit,
+    srcDestCard: s.strings.loan_fund_source
+  },
+  'loan-withdraw': {
+    headerText: s.strings.loan_withdraw_collateral,
+    amountCard: s.strings.loan_fragment_withdraw,
+    srcDestCard: s.strings.loan_fund_destination
+  },
+  'loan-borrow': {
+    headerText: s.strings.loan_borrow_more,
+    amountCard: s.strings.loan_fragment_loan,
+    srcDestCard: s.strings.loan_fund_destination
+  },
+  'loan-repay': {
+    headerText: s.strings.loan_make_payment,
+    amountCard: s.strings.loan_fragment_repay,
+    srcDestCard: s.strings.loan_fund_source
+  }
+} as const
+
 type Props<T extends keyof ParamList> = {
   actionOpType: ActionOpType
-  amountChange?: 'increase' | 'decrease'
   loanAccount: LoanAccount
 
-  showAprChange?: boolean
-
-  headerText: string
   navigation: NavigationProp<T>
 }
 
@@ -59,7 +79,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
-  const { actionOpType, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
+  const { actionOpType, loanAccount, navigation } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -70,11 +90,13 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
+  const actionOpStrings = ACTIONOP_TYPE_STRING_MAP[actionOpType]
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
   const borrowPluginInfo = borrowPlugin.borrowInfo
   const borrowPluginId = borrowPluginInfo.borrowPluginId
+  const isShowAprChange = actionOpType === 'loan-repay' || actionOpType === 'loan-borrow'
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
@@ -99,14 +121,6 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
 
-  // User input display strings
-  const opTypeStringMap = {
-    'loan-borrow': { amountCard: s.strings.loan_fragment_loan, srcDestCard: s.strings.loan_fund_destination },
-    'loan-deposit': { amountCard: s.strings.loan_fragment_deposit, srcDestCard: s.strings.loan_fund_source },
-    'loan-repay': { amountCard: s.strings.loan_fragment_repay, srcDestCard: s.strings.loan_fund_source },
-    'loan-withdraw': { amountCard: s.strings.loan_fragment_withdraw, srcDestCard: s.strings.loan_fund_destination }
-  }
-
   // #endregion Constants
 
   // -----------------------------------------------------------------------------
@@ -127,6 +141,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
 
   // New debt/collateral amount
+  const amountChange = actionOpType === 'loan-borrow' || actionOpType === 'loan-deposit' ? 'increase' : 'decrease'
   const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
   const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedAsset.tokenId, apr: 0 }
 
@@ -227,12 +242,12 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
 
   // APR
   useAsyncEffect(async () => {
-    if (showAprChange) {
+    if (isShowAprChange) {
       const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
       setNewDebtApr(apr)
     }
     return () => {}
-  }, [borrowEngine, selectedAsset.tokenId, showAprChange])
+  }, [borrowEngine, selectedAsset.tokenId, isShowAprChange])
 
   // #endregion Hooks
 
@@ -299,18 +314,18 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // #endregion Handlers
 
   return (
-    <FormScene headerText={headerText} onSliderComplete={handleSliderComplete} sliderDisabled={actionProgram == null}>
+    <FormScene headerText={actionOpStrings.headerText} onSliderComplete={handleSliderComplete} sliderDisabled={actionProgram == null}>
       <Space vertical around={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
           inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
-          title={sprintf(s.strings.loan_enter_s_amount_s, opTypeStringMap[actionOpType].amountCard, fiatCurrencyCode)}
+          title={sprintf(s.strings.loan_enter_s_amount_s, actionOpStrings.amountCard, fiatCurrencyCode)}
           tokenId={selectedAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
-        {showAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
-        <EdgeText style={styles.textTitle}>{opTypeStringMap[actionOpType].srcDestCard}</EdgeText>
+        {isShowAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
+        <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCard}</EdgeText>
         {bankAccountsMap != null ? (
           <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
         ) : (
@@ -337,7 +352,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
           key="counterAsset"
         />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]?.nativeAmount ?? '0'} key="fee" />
-        {showAprChange ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
+        {isShowAprChange ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
         <LtvRatioTile
           borrowEngine={borrowEngine}
           tokenId={selectedAsset.tokenId}

@@ -1,4 +1,3 @@
-import s from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { ManageCollateralScene } from './ManageCollateralScene'
@@ -17,10 +16,8 @@ export const LoanAddCollateralScene = (props: Props) => {
 
   return ManageCollateralScene({
     actionOpType: 'loan-deposit',
-    amountChange: 'increase',
     loanAccount,
 
-    headerText: s.strings.loan_add_collateral,
     navigation: navigation
   })
 }
