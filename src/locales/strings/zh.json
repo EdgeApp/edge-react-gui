@@ -203,7 +203,7 @@
   "create_wallet_account_amount_due": "应付金额：",
   "create_wallet_account_error_sending_transaction": "发送事务时出错",
   "create_wallet_account_payment_sent_title": "已发送付款",
-  "create_wallet_account_payment_sent_message": "Activation payment sent. Please wait for a 38confirmation on your transaction before using your new wallet.",
+  "create_wallet_account_payment_sent_message": "Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.",
   "create_wallet_account_handle_unavailable_modal_title": "帐户名不可用",
   "create_wallet_account_handle_unavailable_modal_message": "您选择的帐户名 %s 现在不可用。请使用其他的用户名继续。",
   "create_wallet_account_metadata_name": "%s 网络",
