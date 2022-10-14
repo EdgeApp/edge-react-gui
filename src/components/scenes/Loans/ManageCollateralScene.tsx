@@ -11,7 +11,6 @@ import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types
 import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
 import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
-import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
@@ -19,7 +18,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { Actions, NavigationProp, ParamList } from '../../../types/routerTypes'
+import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { useTotalFiatAmount } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -42,7 +41,7 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 import { FormScene } from '../FormScene'
 
-type ActionOpType = 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw'
+export type LoanManageActionOpType = 'loan-deposit' | 'loan-withdraw' | 'loan-borrow' | 'loan-repay'
 
 // User input display strings
 const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCard: string } } = {
@@ -68,25 +67,26 @@ const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCar
   }
 } as const
 
-type Props<T extends keyof ParamList> = {
-  actionOpType: ActionOpType
-  loanAccount: LoanAccount
-
-  navigation: NavigationProp<T>
+type Props = {
+  navigation: NavigationProp<'loanManage'>
+  route: RouteProp<'loanManage'>
 }
 
-export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>) => {
+export const ManageCollateralScene = (props: Props) => {
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
-  const { actionOpType, loanAccount, navigation } = props
+  const { navigation, route } = props
+  const { actionOpType, loanAccountId } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
+  const loanAccount = loanAccounts[loanAccountId]
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
