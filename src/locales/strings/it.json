@@ -886,6 +886,7 @@
   "loan_status_cancel_txs_modal_msg": "L'annullamento delle transazioni interromperà il processo corrente, ma non può invertire i passaggi già effettuati. Se si desidera annullare le azioni, questi passi dovranno essere fatti manualmente.\n\nSe hai domande, contattaci via e-mail a %1$s",
   "loan_status_complete": "Il tuo prestito è stato completato con successo!\nAttendi affinche i fondi vengano accreditati sul tuo account.",
   "loan_status_title": "Stato del prestito",
+  "loan_status_failed_title": "Failed to process actions",
   "send_scene_send_from_wallet": "Invia da Wallet",
   "send_scene_send_to_address": "Invia all'indirizzo",
   "send_scene_error_title": "Errore:",
