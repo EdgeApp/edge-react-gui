@@ -7,8 +7,8 @@ import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
-import { checkEffectIsDone } from './runtime'
 import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from './types'
+import { checkEffectIsDone } from './util/checkEffectIsDone'
 
 const { debugStore } = ENV.ACTION_QUEUE
 

@@ -3,7 +3,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { dryrunActionProgram } from '../../../controllers/action-queue/runtime'
+import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'

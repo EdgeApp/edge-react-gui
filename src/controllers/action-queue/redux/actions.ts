@@ -2,8 +2,8 @@ import { Dispatch, GetState } from '../../../types/reduxTypes'
 import { logActivity } from '../../../util/logger'
 import { ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { uploadPushEvents } from '../push'
-import { getEffectPushEventIds } from '../runtime'
 import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from '../types'
+import { getEffectPushEventIds } from '../util/getEffectPushEventIds'
 
 type LoadActionQueueStateAction = {
   type: 'ACTION_QUEUE/LOAD_QUEUE'
