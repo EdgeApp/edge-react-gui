@@ -6572,10 +6572,10 @@ edge-core-js@^0.19.20, edge-core-js@^0.19.30:
     yaob "^0.3.8"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.18.4:
-  version "0.18.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.18.4.tgz#045f1f973496b9e77ec164d007704b8c8321503e"
-  integrity sha512-hrdl5cfozLi/CvMm0EFhUb8fsvpSZVEJQ0yWxvsX9BC3t4Tv9Ix2D2MLB1Uz7VhO/Bt57OLJt1eQV06WaQIeNg==
+edge-currency-accountbased@^0.18.5:
+  version "0.18.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.18.5.tgz#de744ba85587b589382efabfceed834ff60be5ff"
+  integrity sha512-3ioro5W0DbkeuYJylgmqnyR6VbaPl92WlRaG5g6VuwCDhbzWeX5X1lQnZvGKyTGlWRqSGDYJ+w3JemP9dbV13w==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -6650,10 +6650,10 @@ edge-currency-plugins@^1.2.1:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.15.0.tgz#17b3225fba76f6c3dc0d0e58ec9a39b022ea8733"
-  integrity sha512-l8ihCAEVlYr1xaTOIBJ2jFXLeON563kRfTG+GVKRFWCwU8BQUuYN+9KX3U0CkFuEtwkCM2AXgeE0DDJe5qtTDA==
+edge-exchange-plugins@^0.15.2:
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.15.2.tgz#d444f05f8aea5e96dceb8a3e398ca6efc831d24a"
+  integrity sha512-AJgI8c9XoVcXktTBD6uKNpV7FvqSa85aGj6kAVtK8xFafhJ5NrBvCkchRPGHJEQgCCtk5j9RlFdoKImBuUzlxA==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
