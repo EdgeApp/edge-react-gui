@@ -1,8 +1,9 @@
 import { EdgeAccount } from 'edge-core-js'
 
-import { checkActionEffect as mockCheckActionEffect, evaluateAction as mockEvaluateAction } from '../mock'
 import { checkActionEffect } from '../runtime/checkActionEffect'
 import { evaluateAction } from '../runtime/evaluateAction'
+import { checkActionEffect as mockCheckActionEffect } from '../runtime/mock/checkActionEffect'
+import { evaluateAction as mockEvaluateAction } from '../runtime/mock/evaluateAction'
 import { ExecutionContext } from '../types'
 
 export const makeExecutionContext = (properties: { account: EdgeAccount; clientId: string }, mockMode: boolean = false): ExecutionContext => {
