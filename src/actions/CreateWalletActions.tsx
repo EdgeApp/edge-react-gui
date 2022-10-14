@@ -8,7 +8,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
-import { getPluginId } from '../constants/WalletAndCurrencyConstants'
+import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
@@ -16,6 +16,7 @@ import { config } from '../theme/appConfig'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
+import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
 
 export type CreateWalletOptions = {
@@ -250,4 +251,26 @@ export const enableTokensAcrossWallets = (newTokenItems: TokenWalletCreateItem[]
   })
 
   await Promise.all(promises)
+}
+
+export const getUniqueWalletName = (account: EdgeAccount, pluginId: string): string => {
+  const { currencyWallets, currencyConfig } = account
+  const { displayName } = currencyConfig[pluginId].currencyInfo
+  const defaultName = SPECIAL_CURRENCY_INFO[pluginId]?.initWalletName ?? sprintf(s.strings.my_crypto_wallet_name, displayName)
+
+  const existingWalletNames = Object.keys(currencyWallets)
+    .filter(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+    .map(walletId => currencyWallets[walletId].name)
+  const filteredWalletNames = filterNull(existingWalletNames).filter((name: string) => name.startsWith(defaultName))
+
+  let newWalletName = defaultName
+  let count = 2
+
+  while (true) {
+    if (filteredWalletNames.includes(newWalletName)) {
+      newWalletName = `${defaultName} ${count++}`
+    } else {
+      return newWalletName
+    }
+  }
 }
