@@ -3,7 +3,6 @@ import * as React from 'react'
 import { useRef } from 'react'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
-import { mockActionProgram } from '../../controllers/action-queue/mock'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
 import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
@@ -28,15 +27,6 @@ export const ActionQueueService = () => {
   const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
   const activeProgramIds = useSelector(state => state.actionQueue.activeProgramIds)
   const serviceProgramStatesRef = useRef<ServiceProgramStates>({})
-
-  const executionContext = React.useMemo(
-    () =>
-      makeExecutionContext({
-        account,
-        clientId
-      }),
-    [account, clientId]
-  )
 
   const updateProgramState = useHandler(async (state: ActionProgramState, executing: boolean) => {
     const { programId } = state
@@ -74,8 +64,6 @@ export const ActionQueueService = () => {
 
   React.useEffect(() => {
     const serviceProgramStates = serviceProgramStatesRef.current
-
-    const { clientId } = executionContext
 
     // Loop function
     const task = async () => {
@@ -115,9 +103,9 @@ export const ActionQueueService = () => {
         await updateProgramState(state, true)
 
         // Use mock execution function if program is marked as mockMode
-        const executeActionProgramFn = program.mockMode ? mockActionProgram : executeActionProgram
+        const executionContext = makeExecutionContext({ account, clientId }, program.mockMode)
 
-        const { nextState } = await executeActionProgramFn(executionContext, program, state).catch((error: Error): ExecutionResults => {
+        const { nextState } = await executeActionProgram(executionContext, program, state).catch((error: Error): ExecutionResults => {
           console.warn(new Error('Action Program Exception: ' + error.message))
           console.error(error)
           return {
@@ -149,7 +137,7 @@ export const ActionQueueService = () => {
 
     // Cleanup loop
     return () => periodicTask.stop()
-  }, [dispatch, executionContext, updateProgramState, actionQueueMap, activeProgramIds])
+  }, [account, clientId, dispatch, updateProgramState, actionQueueMap, activeProgramIds])
 
   // Return no component/view
   return null

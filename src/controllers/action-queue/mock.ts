@@ -1,7 +1,6 @@
 import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
 import { filterNull } from '../../util/safeFilters'
-import { snooze } from '../../util/utils'
 import {
   ActionEffect,
   ActionProgram,
@@ -11,38 +10,10 @@ import {
   ExecutableAction,
   ExecutionContext,
   ExecutionOutput,
-  ExecutionResults,
   SeqEffect
 } from './types'
 
-export const mockActionProgram = async (context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
-  const { effect } = state
-
-  // Await Effect
-  while (true) {
-    if (effect == null) break
-
-    const { isEffective, delay } = await checkActionEffect(context, effect)
-
-    // Break out of effect check loop if the ActionEffect passes the check
-    if (isEffective) break
-
-    // Delay next check
-    await snooze(delay)
-  }
-
-  // Execute Action
-  const executableAction = await evaluateAction(context, program, state)
-  const output = await executableAction.execute()
-  const { effect: nextEffect } = output
-
-  // Return results
-  return {
-    nextState: { ...state, effect: nextEffect }
-  }
-}
-
-async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<EffectCheckResult> {
+export async function checkActionEffect(context: ExecutionContext, effect: ActionEffect): Promise<EffectCheckResult> {
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while running check. ` + `This could be caused by a dryrun effect leaking into program state when it shouldn't.`
 
@@ -53,7 +24,7 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
-      const childEffectCheck = await checkActionEffect(context, childEffect)
+      const childEffectCheck = await context.checkActionEffect(childEffect)
 
       // Completely effective
       if (childEffectCheck.isEffective && effect.opIndex >= effect.childEffects.length - 1) {
@@ -89,7 +60,7 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
 
       // Check all child effects concurrently
       const childEffectPromises = checkedEffects.map(async childEffect => {
-        return await checkActionEffect(context, childEffect)
+        return await context.checkActionEffect(childEffect)
       })
       const childEffectChecks = await Promise.all(childEffectPromises)
       const isEffective = childEffectChecks.every(result => result.isEffective)
@@ -152,7 +123,7 @@ async function checkActionEffect(context: ExecutionContext, effect: ActionEffect
   }
 }
 
-async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
+export async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
   const { account } = context
   const { actionOp } = program
   const { effect } = state
