@@ -32,6 +32,7 @@ import { Space } from '../../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
+import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
@@ -75,8 +76,8 @@ export const LoanDetailsScene = (props: Props) => {
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
   const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
+  const isActionProgramRunning = runningProgramMessage != null
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (runningActionQueueItem != null) {
       const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
@@ -85,6 +86,8 @@ export const LoanDetailsScene = (props: Props) => {
     } else {
       setRunningProgramMessage(undefined)
     }
+
+    return () => {}
   }, [account, runningActionQueueItem])
 
   const summaryDetails = [
@@ -111,10 +114,10 @@ export const LoanDetailsScene = (props: Props) => {
   const handleLoanClosePress = () => {
     navigation.navigate('loanClose', { loanAccountId })
   }
-
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
   }
+
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
@@ -174,36 +177,39 @@ export const LoanDetailsScene = (props: Props) => {
         <Space horizontal>
           <Space bottom>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
+            {isActionProgramRunning ? (
+              <Alert type="warning" title={s.strings.warning_please_wait_title} message={s.strings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
+            ) : null}
           </Space>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress} disabled={isActionProgramRunning}>
             <Space right>
-              <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
+              <Fontello name="add-collateral" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
             </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
+            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress} disabled={isActionProgramRunning}>
             <Space right>
-              <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
+              <Fontello name="withdraw-collateral" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
             </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
+            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress} disabled={isActionProgramRunning}>
             <Space right>
-              <Fontello name="borrow-more" size={theme.rem(2)} color={theme.iconTappable} />
+              <Fontello name="borrow-more" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
             </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
+            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress} disabled={isActionProgramRunning}>
             <Space right>
-              <Fontello name="make-payment" size={theme.rem(2)} color={theme.iconTappable} />
+              <Fontello name="make-payment" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
             </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
+            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress} disabled={isActionProgramRunning}>
             <Space right>
-              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
+              <Fontello name="close-loan" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
             </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
+            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
           </TappableCard>
         </Space>
       </KeyboardAwareScrollView>
@@ -219,6 +225,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1)
   },
   actionLabel: {
+    fontFamily: theme.fontFaceMedium,
+    alignSelf: 'center'
+  },
+  actionLabelDisabled: {
+    color: theme.deactivatedText,
     fontFamily: theme.fontFaceMedium,
     alignSelf: 'center'
   },
