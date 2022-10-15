@@ -57,12 +57,18 @@ export const LoanDetailsScene = (props: Props) => {
 
   // Derive state from borrowEngine:
   const { currencyWallet: wallet } = borrowEngine
+  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
+  const openCollaterals = React.useMemo(() => collaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [collaterals])
+  const isWithdrawAvailable = openCollaterals.length > 0
+
+  const openDebts = React.useMemo(() => debts.filter(debt => !zeroString(debt.nativeAmount)), [debts])
+  const isRepayAvailable = openDebts.length > 0
+
   const loanToValue = useWatch(borrowEngine, 'loanToValue')
 
-  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
 
@@ -187,11 +193,17 @@ export const LoanDetailsScene = (props: Props) => {
             </Space>
             <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress} disabled={isActionProgramRunning}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress} disabled={isActionProgramRunning || !isWithdrawAvailable}>
             <Space right>
-              <Fontello name="withdraw-collateral" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
+              <Fontello
+                name="withdraw-collateral"
+                size={theme.rem(2)}
+                color={isActionProgramRunning || !isWithdrawAvailable ? theme.deactivatedText : theme.iconTappable}
+              />
             </Space>
-            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
+            <EdgeText style={isActionProgramRunning || !isWithdrawAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
+              {s.strings.loan_action_withdraw_collateral}
+            </EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress} disabled={isActionProgramRunning}>
             <Space right>
@@ -199,11 +211,17 @@ export const LoanDetailsScene = (props: Props) => {
             </Space>
             <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress} disabled={isActionProgramRunning}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress} disabled={isActionProgramRunning || isActionProgramRunning || !isRepayAvailable}>
             <Space right>
-              <Fontello name="make-payment" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
+              <Fontello
+                name="make-payment"
+                size={theme.rem(2)}
+                color={isActionProgramRunning || !isRepayAvailable ? theme.deactivatedText : theme.iconTappable}
+              />
             </Space>
-            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
+            <EdgeText style={isActionProgramRunning || !isRepayAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
+              {s.strings.loan_make_payment}
+            </EdgeText>
           </TappableCard>
           <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress} disabled={isActionProgramRunning}>
             <Space right>
