@@ -28,6 +28,7 @@ const specialBranches: { [branch: string]: string } = {
   develop: '-d',
   master: '',
   beta: '',
+  coinhub: '',
   staging: '-rc',
   test: '-t',
   yolo: '-yolo',

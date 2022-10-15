@@ -33,7 +33,7 @@ async function main() {
       quietCopy(src, dest)
     })
     // Copy keystores directory
-    const keystoreSrc = join(filesDir, repoBranch, 'keystores')
+    const keystoreSrc = join(filesDir, branch, 'keystores')
     if (fs.existsSync(keystoreSrc)) {
       copySync(keystoreSrc, join(_rootProjectDir, 'keystores'))
     }
