@@ -1,0 +1,15 @@
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index 96f969818..9a01f66ac 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -34,8 +34,8 @@
+   <application
+     android:name=".MainApplication"
+     android:label="@string/app_name"
+-    android:icon="@mipmap/ic_launcher"
+-    android:roundIcon="@mipmap/ic_launcher_round"
++    android:icon="@mipmap/ic_launcher_beta"
++    android:roundIcon="@mipmap/ic_launcher_beta_round"
+     android:allowBackup="false"
+     android:extractNativeLibs="true"
+     android:usesCleartextTraffic="true"

@@ -1,7 +1,43 @@
 diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
-index 0ceb9106a..35a6f7095 100644
+index 0ceb9106a..bbf6b8bd2 100644
 --- a/ios/edge.xcodeproj/project.pbxproj
 +++ b/ios/edge.xcodeproj/project.pbxproj
+@@ -42,7 +42,7 @@
+ 
+ /* Begin PBXFileReference section */
+ 		0F91EE15341B486DB1AD6756 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Regular.otf"; path = "../src/assets/fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
+-		13B07F961A680F5B00A75B9A /* edge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = edge.app; sourceTree = BUILT_PRODUCTS_DIR; };
++		13B07F961A680F5B00A75B9A /* Edge Beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Edge Beta.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+ 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = edge/AppDelegate.h; sourceTree = "<group>"; };
+ 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = edge/AppDelegate.m; sourceTree = "<group>"; };
+ 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = edge/Images.xcassets; sourceTree = "<group>"; };
+@@ -188,7 +188,7 @@
+ 		83CBBA001A601CBA00E9B192 /* Products */ = {
+ 			isa = PBXGroup;
+ 			children = (
+-				13B07F961A680F5B00A75B9A /* edge.app */,
++				13B07F961A680F5B00A75B9A /* Edge Beta.app */,
+ 			);
+ 			name = Products;
+ 			sourceTree = "<group>";
+@@ -231,7 +231,7 @@
+ 			);
+ 			name = edge;
+ 			productName = "Hello World";
+-			productReference = 13B07F961A680F5B00A75B9A /* edge.app */;
++			productReference = 13B07F961A680F5B00A75B9A /* Edge Beta.app */;
+ 			productType = "com.apple.product-type.application";
+ 		};
+ /* End PBXNativeTarget section */
+@@ -455,7 +455,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = 550016E295D7C4722CD35EF9 /* Pods-edge.debug.xcconfig */;
+ 			buildSettings = {
+-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
++				ASSETCATALOG_COMPILER_APPICON_NAME = BetaAppIcon;
+ 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+ 				CLANG_ENABLE_MODULES = YES;
+ 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
 @@ -483,8 +483,8 @@
  					"-ObjC",
  					"-lc++",
@@ -13,6 +49,15 @@ index 0ceb9106a..35a6f7095 100644
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
+@@ -496,7 +496,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = A0587BF5EC0B93837E5E83BE /* Pods-edge.release.xcconfig */;
+ 			buildSettings = {
+-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
++				ASSETCATALOG_COMPILER_APPICON_NAME = BetaAppIcon;
+ 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+ 				CLANG_ENABLE_MODULES = YES;
+ 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
 @@ -524,8 +524,8 @@
  					"-ObjC",
  					"-lc++",
