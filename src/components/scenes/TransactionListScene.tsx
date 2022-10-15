@@ -15,9 +15,11 @@ import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered, Top } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
+import { ExchangedFlipInputTester } from './ExchangedFlipInputTester'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5
+const SHOW_FLIP_INPUT_TESTER = false
 
 type Section = {
   title: string
@@ -199,25 +201,29 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
-        <SectionList
-          sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
-          renderItem={this.renderTransaction}
-          renderSectionHeader={this.renderSectionHeader}
-          initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-          onEndReached={this.handleScrollEnd}
-          onEndReachedThreshold={SCROLL_THRESHOLD}
-          keyExtractor={this.keyExtractor}
-          ListEmptyComponent={this.renderEmptyComponent}
-          ListHeaderComponent={this.renderTop}
-          contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
-          refreshControl={
-            transactions.length !== 0 ? (
-              <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
-            ) : undefined
-          }
-          keyboardShouldPersistTaps="handled"
-          getItemLayout={this.getItemLayout}
-        />
+        {SHOW_FLIP_INPUT_TESTER ? (
+          <ExchangedFlipInputTester />
+        ) : (
+          <SectionList
+            sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
+            renderItem={this.renderTransaction}
+            renderSectionHeader={this.renderSectionHeader}
+            initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
+            onEndReached={this.handleScrollEnd}
+            onEndReachedThreshold={SCROLL_THRESHOLD}
+            keyExtractor={this.keyExtractor}
+            ListEmptyComponent={this.renderEmptyComponent}
+            ListHeaderComponent={this.renderTop}
+            contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
+            refreshControl={
+              transactions.length !== 0 ? (
+                <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
+              ) : undefined
+            }
+            keyboardShouldPersistTaps="handled"
+            getItemLayout={this.getItemLayout}
+          />
+        )}
       </SceneWrapper>
     )
   }
