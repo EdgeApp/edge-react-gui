@@ -30,15 +30,15 @@ export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
 
   const flex = props.isFill ? 1 : undefined
 
-  const top = around ?? vertical ?? props.top
-  const bottom = around ?? vertical ?? props.bottom
-  const left = around ?? horizontal ?? props.left
-  const right = around ?? horizontal ?? props.right
+  const top = numberify(around ?? vertical ?? props.top ?? 0)
+  const bottom = numberify(around ?? vertical ?? props.bottom ?? 0)
+  const left = numberify(around ?? horizontal ?? props.left ?? 0)
+  const right = numberify(around ?? horizontal ?? props.right ?? 0)
 
-  const paddingTop = theme.rem(typeof top === 'number' ? top : top ? 1 : 0)
-  const paddingBottom = theme.rem(typeof bottom === 'number' ? bottom : bottom ? 1 : 0)
-  const paddingLeft = theme.rem(typeof left === 'number' ? left : left ? 1 : 0)
-  const paddingRight = theme.rem(typeof right === 'number' ? right : right ? 1 : 0)
+  const marginTop = theme.rem(typeof top === 'number' ? top : top ? 1 : 0)
+  const marginBottom = theme.rem(typeof bottom === 'number' ? bottom : bottom ? 1 : 0)
+  const marginLeft = theme.rem(typeof left === 'number' ? left : left ? 1 : 0)
+  const marginRight = theme.rem(typeof right === 'number' ? right : right ? 1 : 0)
 
   // Direction:
   const { isSideways: sideways = false } = props
@@ -50,13 +50,15 @@ export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const justifyContent = isGroupStart ? 'flex-start' : isGroupCenter ? 'center' : isGroupEnd ? 'flex-end' : undefined
 
   return {
-    paddingTop,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
+    marginTop,
+    marginBottom,
+    marginLeft,
+    marginRight,
     flex,
     flexDirection,
     alignItems,
     justifyContent
   }
 }
+
+const numberify = (thing: boolean | number): number => (typeof thing === 'number' ? thing : thing ? 1 : 0)
