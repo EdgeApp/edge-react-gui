@@ -43,7 +43,7 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
   )
 
   return (
-    <TappableCard onPress={handlePress} marginRem={0.5} paddingRem={0.5}>
+    <TappableCard onPress={handlePress} paddingRem={0.5}>
       {renderInitial()}
       {renderAccount()}
     </TappableCard>

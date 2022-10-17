@@ -33,9 +33,10 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
+import { Peek } from '../../layout/Peek'
 import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
-import { FillLoader } from '../../progress-indicators/FillLoader'
+import { Shimmer } from '../../progress-indicators/Shimmer'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
@@ -361,11 +362,12 @@ export const LoanManageScene = (props: Props) => {
         />
         {isShowAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
         <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCard}</EdgeText>
-        {bankAccountsMap != null ? (
-          <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
-        ) : (
-          <FillLoader />
-        )}
+        <Space around={0.5}>
+          <Shimmer isShown={bankAccountsMap == null} />
+          <Peek isShown={bankAccountsMap != null}>
+            <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
+          </Peek>
+        </Space>
       </Space>
       <Space vertical around={0.25}>
         <TotalDebtCollateralTile
