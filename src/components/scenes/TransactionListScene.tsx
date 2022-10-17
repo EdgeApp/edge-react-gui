@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
 
@@ -23,7 +23,6 @@ type Section = {
 }
 
 type StateProps = {
-  getTransactions: (opts?: EdgeGetTransactionsOptions) => Promise<EdgeTransaction[]>
   numTransactions: number
   selectedWalletId: string
   selectedCurrencyCode: string
@@ -94,12 +93,13 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   handleSearchTransaction = (searchString: string) => {
-    const { getTransactions, selectedCurrencyCode, transactions } = this.props
+    const { wallet, selectedCurrencyCode, transactions } = this.props
     this.setState({ loading: true })
-    getTransactions({
-      currencyCode: selectedCurrencyCode,
-      searchString
-    })
+    wallet
+      .getTransactions({
+        currencyCode: selectedCurrencyCode,
+        searchString
+      })
       .then(filteredEdgeTransactions => {
         const filteredTransactions = transactions.filter(transaction => filteredEdgeTransactions.find(item => item.txid === transaction.txid))
         this.setState({ filteredTransactions, loading: false })
@@ -206,11 +206,9 @@ export const TransactionList = connect<StateProps, DispatchProps, OwnProps>(
     // getTransactions
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[selectedWalletId]
-    const { getTransactions } = currencyWallet
-    const tokenId = getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, selectedCurrencyCode)
+    const tokenId = currencyWallet == null ? undefined : getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, selectedCurrencyCode)
 
     return {
-      getTransactions,
       numTransactions: state.ui.scenes.transactionList.numTransactions,
       selectedCurrencyCode,
       selectedWalletId,
