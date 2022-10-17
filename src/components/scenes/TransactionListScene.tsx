@@ -26,7 +26,7 @@ type StateProps = {
   numTransactions: number
   selectedWalletId: string
   selectedCurrencyCode: string
-  wallet: EdgeCurrencyWallet
+  wallet?: EdgeCurrencyWallet
   tokenId?: string
   transactions: TransactionListTx[]
 }
@@ -94,6 +94,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   handleSearchTransaction = (searchString: string) => {
     const { wallet, selectedCurrencyCode, transactions } = this.props
+    if (wallet == null) return
+
     this.setState({ loading: true })
     wallet
       .getTransactions({
@@ -136,7 +138,14 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
 
-  renderEmptyComponent = () => (this.props.numTransactions ? <EmptyLoader /> : <BuyCrypto wallet={this.props.wallet} tokenId={this.props.tokenId} />)
+  renderEmptyComponent = () => {
+    const { tokenId, numTransactions, wallet } = this.props
+    if (wallet == null || numTransactions > 0) {
+      return <EmptyLoader />
+    } else {
+      return <BuyCrypto wallet={wallet} tokenId={tokenId} />
+    }
+  }
 
   renderSectionHeader = (section: { section: Section }) => {
     const { filteredTransactions, loading, searching } = this.state
