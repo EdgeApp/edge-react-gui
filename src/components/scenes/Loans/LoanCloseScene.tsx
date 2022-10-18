@@ -6,7 +6,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
-import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
@@ -101,7 +101,7 @@ export const LoanCloseScene = (props: Props) => {
     if (actionProgram === undefined) return
 
     // Always update the loan program marking it as close
-    await dispatch(updateLoanAccount({ ...loanAccount, closed: true }))
+    await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
 
     // No action program necessary to close loan
     if (actionProgram !== null) {

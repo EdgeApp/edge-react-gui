@@ -7,7 +7,7 @@ import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
-import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { selectLoanAccount } from '../../../controllers/loan-manager/redux/selectors'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
@@ -144,7 +144,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         // Make sure to start the borrow engine
         if (!loanAccount.borrowEngine.isRunning) await loanAccount.borrowEngine.startEngine()
 
-        await dispatch(updateLoanAccount(loanAccount))
+        await dispatch(saveLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 
         // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.

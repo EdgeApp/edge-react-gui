@@ -32,14 +32,16 @@ export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction 
  * Save a new LoanAccount to disk and sets it in the Redux state.
  * It will throw if specified LoanAccount exists already.
  */
-export function createLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<void>> {
+export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const account: EdgeAccount = state.core.account
     const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
     const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
+    const existingLoanAccountEntry = loanAccountMapRecord.data[loanAccount.id]
 
-    if (loanAccountMapRecord.data[loanAccount.id] == null) {
+    // Create loan account if it doesn't exist
+    if (existingLoanAccountEntry == null) {
       const { borrowPlugin, borrowEngine, closed, programEdges } = loanAccount
       const loanEntry: LoanAccountEntry = {
         closed,
@@ -49,8 +51,14 @@ export function createLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise
       }
 
       loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
-    } else {
-      throw new Error('Creating duplicate LoanAccount id: ' + loanAccount.id)
+    }
+
+    // Update loan account if it does exist
+    if (existingLoanAccountEntry != null) {
+      const { closed, programEdges } = loanAccount
+      loanAccountMapRecord.data[loanAccount.id].closed = closed
+      loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
+      loanAccountMapRecord.update(loanAccountMapRecord.data)
     }
 
     logActivity(`Create Loan Account`, { loanAccountId: loanAccount.id })
@@ -77,6 +85,7 @@ export function loadLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void
       const wallet = await account.waitForCurrencyWallet(walletId)
       const borrowPlugin = borrowPluginMap[borrowPluginId]
       const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      await borrowEngine.startEngine()
       const loanAccount: LoanAccount = {
         id: walletId,
         borrowPlugin,
@@ -89,35 +98,6 @@ export function loadLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void
         loanAccount
       })
     }
-  }
-}
-
-/**
- * Update an existing LoanAccount.
- * It will throw if specified LoanAccount is not found.
- */
-export function updateLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const account: EdgeAccount = state.core.account
-    const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
-    const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
-
-    // Create loan if it doesn't exist
-    if (loanAccountMapRecord.data[loanAccount.id] == null) {
-      await dispatch(createLoanAccount(loanAccount))
-      return
-    }
-
-    const { closed, programEdges } = loanAccount
-    loanAccountMapRecord.data[loanAccount.id].closed = closed
-    loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
-    loanAccountMapRecord.update(loanAccountMapRecord.data)
-
-    dispatch({
-      type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
-      loanAccount: loanAccount
-    })
   }
 }
 
@@ -159,7 +139,7 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
       programId: actionProgram.programId,
       programType
     }
-    await dispatch(updateLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge] }))
+    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge] }))
 
     return loanAccount
   }
@@ -209,7 +189,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
 
             if (checkLoanHasFunds(borrowEngine)) {
               // Save the new loan account if it has funds
-              await dispatch(createLoanAccount(loanAccount))
+              await dispatch(saveLoanAccount(loanAccount))
             } else {
               // Cleanup the new loan engine if it has no funds
               await borrowEngine.stopEngine()
