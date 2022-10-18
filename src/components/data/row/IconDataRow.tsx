@@ -9,7 +9,7 @@ type Props = {
   icon: React.ReactNode
   leftText: string
   leftTextExtended?: string | React.ReactNode
-  leftSubtext: string
+  leftSubtext: string | React.ReactNode
   rightText?: string | React.ReactNode
   rightSubText?: string | React.ReactNode
   rightSubTextExtended?: React.ReactNode

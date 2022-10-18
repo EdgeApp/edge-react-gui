@@ -1,20 +1,41 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
 import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalletSelectCryptoRow'
+import { rootReducer } from '../../reducers/RootReducer'
 
 describe('WalletListRow', () => {
-  it('should render with loading props', () => {
-    const renderer = createRenderer()
-
-    const props = {
-      currencyCode: 'BTC',
-      walletName: 'My bitcoin wallet',
-      onLongPress: () => undefined,
-      onPress: () => undefined
+  const mockState: any = {
+    core: {
+      account: {
+        currencyConfig: {
+          bitcoin: {
+            currencyInfo: {
+              currencyCode: 'BTC',
+              pluginId: 'bitcoin'
+            }
+          }
+        }
+      }
     }
-    const actual = renderer.render(<CreateWalletSelectCryptoRow {...props} />)
+  }
+  const store = createStore(rootReducer, mockState)
+
+  it('should render with loading props', () => {
+    const pluginId = 'bitcoin'
+    const walletName = 'My bitcoin wallet'
+    const onPress = () => undefined
+    const rightSide = <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
+
+    const actual = renderer.create(
+      <Provider store={store}>
+        <CreateWalletSelectCryptoRow pluginId={pluginId} walletName={walletName} onPress={onPress} rightSide={rightSide} />
+      </Provider>
+    )
 
     expect(actual).toMatchSnapshot()
   })
