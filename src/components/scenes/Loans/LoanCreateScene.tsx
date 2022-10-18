@@ -139,13 +139,15 @@ export const LoanCreateScene = (props: Props) => {
 
   // #region APR
   const [isLoading, setIsLoading] = React.useState(false)
-  const [apr, setApr] = React.useState(0)
-
   const debts = useWatch(borrowEngine, 'debts')
-  React.useEffect(() => {
+  const [apr, setApr] = React.useState(0)
+  useAsyncEffect(async () => {
     if (destTokenId != null) {
       const destDebt = debts.find(debt => debt.tokenId === destTokenId)
-      if (destDebt != null) setApr(destDebt.apr)
+      if (destDebt != null) {
+        const apr = await borrowEngine.getAprQuote(destTokenId)
+        setApr(apr)
+      }
     }
   }, [debts, destTokenId])
   // #endregion APR

@@ -7,9 +7,11 @@ import { logActivity } from '../../../util/logger'
 import { scheduleActionProgram } from '../../action-queue/redux/actions'
 import { ActionProgram } from '../../action-queue/types'
 import { borrowPluginMap } from '../borrowPluginConfig'
+import { makeLoanAccount } from '../LoanAccount'
 import { asLoanAccountMapRecord, LOAN_ACCOUNT_MAP, LOAN_MANAGER_STORE_ID, LoanAccountEntry, LoanProgramEdge, LoanProgramType } from '../store'
 import { LoanAccount } from '../types'
 import { checkLoanHasFunds } from '../util/checkLoanHasFunds'
+import { selectLoanAccount } from './selectors'
 
 type SetLoanAccountAction = {
   type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT'
@@ -165,14 +167,11 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
 
 export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
-    const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
-
     const typeHack: any = Object.values(borrowPluginMap)
     const borrowPlugins: BorrowPlugin[] = typeHack
 
     // `loanAccountIds` is synonymous to `walletIds`
-    const ids = Object.keys(account.currencyWallets)
+    const loanAccountIds = Object.keys(account.currencyWallets)
 
     dispatch({
       type: 'LOAN_MANAGER/SET_SYNC_RATIO',
@@ -180,9 +179,11 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
     })
 
     let progress = 0
-    const promises = ids
+    const promises = loanAccountIds
       .map(async (id, i) => {
         const loanAccountId = id
+        const existingLoanAccount = selectLoanAccount(getState(), loanAccountId)
+
         try {
           const wallet = await account.waitForCurrencyWallet(loanAccountId)
 
@@ -191,30 +192,47 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
 
           if (borrowPlugin == null) return
 
-          const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+          // Create new loan account and save it if it has funds
+          if (existingLoanAccount == null) {
+            const loanAccount = await makeLoanAccount(borrowPlugin, wallet)
+            const borrowEngine = loanAccount.borrowEngine
 
-          await new Promise(resolve => {
-            borrowEngine.watch('syncRatio', syncRatio => {
-              // @ts-expect-error
-              if (syncRatio >= 1) resolve()
+            // Start engine
+            await borrowEngine.startEngine()
+
+            // Wait for engine to fully synced
+            await new Promise<void>(resolve => {
+              borrowEngine.watch('syncRatio', syncRatio => {
+                if (syncRatio >= 1) resolve()
+              })
             })
-          })
 
-          if (checkLoanHasFunds(borrowEngine)) {
-            if (loanAccountMapRecord.data[loanAccountId]) return
-
-            // Create a loan account for the wallet
-            const loanAccount: LoanAccount = {
-              id: loanAccountId,
-              borrowPlugin,
-              borrowEngine,
-              closed: false,
-              programEdges: []
+            if (checkLoanHasFunds(borrowEngine)) {
+              // Save the new loan account if it has funds
+              await dispatch(createLoanAccount(loanAccount))
+            } else {
+              // Cleanup the new loan engine if it has no funds
+              await borrowEngine.stopEngine()
             }
-            await dispatch(createLoanAccount(loanAccount))
-          } else {
-            const existingLoanAccount = loanAccountMapRecord.data[loanAccountId]
-            if (existingLoanAccount != null && existingLoanAccount.closed) {
+          }
+
+          // Remove existing loan account if it is fully closed
+          if (existingLoanAccount != null) {
+            // Create new loan account for wallet if it doesn't exist
+            const loanAccount = existingLoanAccount
+            const borrowEngine = loanAccount.borrowEngine
+
+            // Wait if engine isn't fully synced
+            await new Promise(resolve => {
+              borrowEngine.watch('syncRatio', syncRatio => {
+                // @ts-expect-error
+                if (syncRatio >= 1) resolve()
+              })
+            })
+
+            if (!checkLoanHasFunds(borrowEngine) && existingLoanAccount.closed) {
+              // Cleanup and remove loan account if it's marked as closed
+              await existingLoanAccount.borrowEngine.stopEngine()
               await dispatch(deleteLoanAccount(loanAccountId))
             }
           }
@@ -224,7 +242,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
       })
       .map(async promise =>
         promise.then(() => {
-          const syncRatio = ++progress / ids.length
+          const syncRatio = ++progress / loanAccountIds.length
           // console.log('\n###\n', { total: ids.length, progress, syncRatio }, '\n###\n')
           dispatch({
             type: 'LOAN_MANAGER/SET_SYNC_RATIO',

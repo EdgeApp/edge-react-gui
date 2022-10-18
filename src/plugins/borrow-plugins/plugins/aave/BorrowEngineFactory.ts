@@ -88,7 +88,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Network Synchronization
     //
 
-    const loadNetworkData = async (): Promise<void> => {
+    const startNetworkSyncLoop = async (): Promise<void> => {
+      if (!instance.isRunning) return
+
       try {
         // Collaterals and Debts:
         const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
@@ -119,11 +121,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
         console.error(error)
         await snooze(2000)
-        return await loadNetworkData()
+        return await startNetworkSyncLoop()
       } finally {
         // Re-sync after delay
         await snooze(15000)
-        await loadNetworkData()
+        await startNetworkSyncLoop()
       }
     }
 
@@ -136,7 +138,17 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       collaterals: [] as BorrowCollateral[],
       debts: [] as BorrowDebt[],
       loanToValue: 0,
+      isRunning: false,
       syncRatio: 0,
+
+      async startEngine() {
+        if (instance.isRunning) return
+        instance.isRunning = true
+        startNetworkSyncLoop()
+      },
+      async stopEngine() {
+        instance.isRunning = false
+      },
 
       async getAprQuote(tokenId?: string): Promise<number> {
         const token = getToken(tokenId)
@@ -413,9 +425,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions)
       }
     })
-
-    // Initialization:
-    loadNetworkData()
 
     // Return instance:
     return instance

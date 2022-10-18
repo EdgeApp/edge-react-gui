@@ -8,6 +8,7 @@ import { makeExecutionContext } from '../../../controllers/action-queue/util/mak
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { selectLoanAccount } from '../../../controllers/loan-manager/redux/selectors'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
@@ -49,7 +50,11 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet)
 
-  const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
+  const existingLoanAccount = useSelector(state => selectLoanAccount(state, borrowEngineWallet.id))
+  const [loanAccount, loanAccountError] = useAsyncValue(
+    async () => existingLoanAccount ?? (await makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet)),
+    [borrowPlugin, borrowEngine]
+  )
 
   const [[actionProgram, networkFeeMap = {}] = [], actionProgramError] = useAsyncValue(async () => {
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
@@ -136,6 +141,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
       try {
+        // Make sure to start the borrow engine
+        if (!loanAccount.borrowEngine.isRunning) await loanAccount.borrowEngine.startEngine()
+
         await dispatch(updateLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 

@@ -81,13 +81,19 @@ export type BorrowEngine = {
   // Currency wallet for the loan account (e.g. Ethereum wallet)
   currencyWallet: EdgeCurrencyWallet
 
+  // Loan State
   collaterals: BorrowCollateral[]
   debts: BorrowDebt[]
-
   loanToValue: number
 
+  // Engine State
   readonly watch: Subscriber<BorrowEngine>
+  isRunning: boolean
   syncRatio: number
+
+  // Life-cycle
+  startEngine: () => Promise<void>
+  stopEngine: () => Promise<void>
 
   // Returns the APR for borrow a particular token
   getAprQuote: (tokenId?: string) => Promise<number>
