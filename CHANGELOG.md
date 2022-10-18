@@ -1,5 +1,31 @@
 # edge-react-gui
 
+## 2.24.0 (2022-10-17)
+
+- Thorchain: Enable AVAX swaps
+- MoonPay: Enable sell to bank account with ACH
+- Add ability to add assets from main scene search
+- Add wallet option button in transaction history scene
+- Fix Celo transaction query
+- Fix potential crash on transaction details scene
+- Disable core rates plugins
+- Thorchain: Disable same asset swaps
+- Deprecate Safello plugins
+- Disable Wyre account creation
+- Don't throw price-change errors when launching app from security notification
+- Various visual fixes
+- Allow GUI plugins to be configured by info server per appId
+- Add additional optional tab button
+- Upgrade edge-core-js to v0.19.30
+  - fixed: Correctly pass EdgeSpendInfo.pendingTxs to the currency plugin
+- Upgrade edge-currency-accountbased to v0.18.5
+  - CELO: Fix server url
+  - ZEC: Update checkpoints
+- Upgrade edge-exchange-plugins to v0.15.2
+  - Thorchain: Reject swap quotes between the same assets
+  - Add AVAX support to Thorchain
+  - Update Changehero plugin to support arbitrary chains and tokens with reverse quoting
+
 ## 2.23.0 (2022-09-28)
 
 - Convert project to Typescript
